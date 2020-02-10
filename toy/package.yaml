@@ -23,6 +23,9 @@ dependencies:
 - base >= 4.7 && < 5
 - megaparsec
 
+ghc-options:
+- -Wall
+
 library:
   source-dirs: src
 
