@@ -21,12 +21,11 @@ data Refinement
   deriving (Eq, Ord, Show)
 
 data RefinedBaseTy = RefinedBaseTy
- { piVarName :: Maybe VarName
- , baseType :: BaseTy
+ { baseType :: BaseTy
  , refinement :: Refinement
  } deriving (Eq, Ord, Show)
-
+ 
 data Ty
-  = TyArrow Ty Ty
+  = TyArrow (Maybe VarName) Ty Ty
   | TyBase RefinedBaseTy
   deriving (Eq, Ord, Show)
