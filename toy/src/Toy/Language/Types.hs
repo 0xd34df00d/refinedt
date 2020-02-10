@@ -24,8 +24,14 @@ data RefinedBaseTy = RefinedBaseTy
  { baseType :: BaseTy
  , refinement :: Refinement
  } deriving (Eq, Ord, Show)
- 
+
+data ArrowTy = ArrowTy
+ { piVarName :: Maybe VarName
+ , domTy :: Ty
+ , codTy :: Ty
+ } deriving (Eq, Ord, Show)
+
 data Ty
-  = TyArrow (Maybe VarName) Ty Ty
+  = TyArrow ArrowTy
   | TyBase RefinedBaseTy
   deriving (Eq, Ord, Show)
