@@ -20,7 +20,13 @@ data Refinement
   | RBase BaseRefinement
   deriving (Eq, Ord, Show)
 
+data RefinedBaseTy = RefinedBaseTy
+ { piVarName :: Maybe VarName
+ , baseType :: BaseTy
+ , refinement :: Refinement
+ } deriving (Eq, Ord, Show)
+
 data Ty
   = TyArrow Ty Ty
-  | TyRefined (Maybe VarName) BaseTy Refinement
+  | TyBase RefinedBaseTy
   deriving (Eq, Ord, Show)
