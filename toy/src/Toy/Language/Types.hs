@@ -11,14 +11,10 @@ data RefinementOp = ROpLe | ROpLeq | ROpEq | ROpNEq | ROpGe | ROpGeq deriving (E
 
 data RefinementArg = RArgZero | RArgVar VarName | RArgVarLen VarName deriving (Eq, Ord, Show)
 
-data BaseRefinement = BR RefinementOp RefinementArg
+data AtomicRefinement = AR RefinementOp RefinementArg
   deriving (Eq, Ord, Show)
 
-data Refinement
-  = RTrue
-  | RAnd Refinement Refinement
-  | RBase BaseRefinement
-  deriving (Eq, Ord, Show)
+newtype Refinement = Refinement { conjuncts :: [AtomicRefinement] } deriving (Eq, Ord, Show)
 
 data RefinedBaseTy = RefinedBaseTy
  { baseType :: BaseTy
