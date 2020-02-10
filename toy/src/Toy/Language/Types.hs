@@ -1,4 +1,4 @@
-module Toy.Toy.Language.Types where
+module Toy.Language.Types where
 
 newtype VarName = VarName { getName :: String } deriving (Eq, Ord, Show)
 
