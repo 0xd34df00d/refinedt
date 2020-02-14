@@ -25,7 +25,13 @@ parseBaseRT :: ToyMonad e s m => m RefinedBaseTy
 parseBaseRT = undefined
 
 parseAtomicRefinement :: ToyMonad e s m => m AtomicRefinement
-parseAtomicRefinement = undefined
+parseAtomicRefinement = lstring "ν" >> AR <$> parseTable ops <*> args
+  where
+    ops = [ ("<", ROpLe), ("<=", ROpLeq), ("=", ROpEq), ("/=", ROpNEq), (">", ROpGe), (">=", ROpGeq) ]
+    args = choice [ lstring "0" $> RArgZero
+                  , lstring "len" >> RArgVarLen <$> parseVarName
+                  , RArgVar <$> parseVarName
+                  ]
 
 parseBaseTy :: ToyMonad e s m => m BaseTy
 parseBaseTy = lstring "Bool" $> TBool
@@ -33,6 +39,11 @@ parseBaseTy = lstring "Bool" $> TBool
 
 parseVarName :: ToyMonad e s m => m VarName
 parseVarName = VarName . toList <$> takeWhile1P (Just "variable") isLetter
+
+-- Utils
+
+parseTable :: ToyMonad e s m => [(Tokens s, a)] -> m a
+parseTable table = choice [ lstring str $> op | (str, op) <- table ]
 
 lexeme' :: ToyMonad e s m => m a -> m a
 lexeme' = lexeme $ ML.space space1 empty empty
