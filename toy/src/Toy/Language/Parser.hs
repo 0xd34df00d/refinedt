@@ -22,7 +22,7 @@ tyParser :: ToyMonad e s m => m Ty
 tyParser = undefined
 
 parseBaseRT :: ToyMonad e s m => m RefinedBaseTy
-parseBaseRT = refinedTy <|> implicitTrue
+parseBaseRT = try refinedTy <|> implicitTrue
   where
     implicitTrue = RefinedBaseTy <$> parseBaseTy <*> pure trueRefinement
     refinedTy = do
