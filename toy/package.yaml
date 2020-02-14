@@ -50,3 +50,4 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - toy
+    - hspec
