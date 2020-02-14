@@ -16,6 +16,9 @@ data AtomicRefinement = AR RefinementOp RefinementArg
 
 newtype Refinement = Refinement { conjuncts :: [AtomicRefinement] } deriving (Eq, Ord, Show)
 
+trueRefinement :: Refinement
+trueRefinement = Refinement []
+
 data RefinedBaseTy = RefinedBaseTy
  { baseType :: BaseTy
  , refinement :: Refinement
