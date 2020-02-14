@@ -40,7 +40,7 @@ parseRefinement = Refinement <$> parseAtomicRefinement `sepBy` lstring "&"
 parseAtomicRefinement :: ToyMonad e s m => m AtomicRefinement
 parseAtomicRefinement = lstring "ν" >> AR <$> parseTable ops <*> args
   where
-    ops = [ ("<", ROpLe), ("<=", ROpLeq), ("=", ROpEq), ("/=", ROpNEq), (">", ROpGe), (">=", ROpGeq) ]
+    ops = [ ("<=", ROpLeq), ("<", ROpLe), ("=", ROpEq), ("/=", ROpNEq), (">=", ROpGeq), (">", ROpGe) ]
     args = choice [ lstring "0" $> RArgZero
                   , lstring "len" >> RArgVarLen <$> parseVarName
                   , RArgVar <$> parseVarName
