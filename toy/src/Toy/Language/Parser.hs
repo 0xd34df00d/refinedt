@@ -62,4 +62,4 @@ lexeme' :: ToyMonad e s m => m a -> m a
 lexeme' = lexeme $ ML.space space1 empty empty
 
 lstring :: ToyMonad e s m => Tokens s -> m (Tokens s)
-lstring = lexeme' . string
+lstring = try . lexeme' . string
