@@ -24,6 +24,9 @@ tyParser = undefined
 parseBaseRT :: ToyMonad e s m => m RefinedBaseTy
 parseBaseRT = undefined
 
+parseRefinement :: ToyMonad e s m => m Refinement
+parseRefinement = Refinement <$> parseAtomicRefinement `sepBy` lstring "&"
+
 parseAtomicRefinement :: ToyMonad e s m => m AtomicRefinement
 parseAtomicRefinement = lstring "ν" >> AR <$> parseTable ops <*> args
   where
