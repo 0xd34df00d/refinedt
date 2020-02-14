@@ -1,6 +1,6 @@
 {-# LANGUAGE TypeFamilies, FlexibleContexts #-}
 {-# LANGUAGE ConstraintKinds #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
 
 module Toy.Language.Parser where
 
@@ -22,7 +22,17 @@ tyParser :: ToyMonad e s m => m Ty
 tyParser = undefined
 
 parseBaseRT :: ToyMonad e s m => m RefinedBaseTy
-parseBaseRT = undefined
+parseBaseRT = refinedTy <|> implicitTrue
+  where
+    implicitTrue = RefinedBaseTy <$> parseBaseTy <*> pure trueRefinement
+    refinedTy = do
+      void $ lstring "{"
+      void $ lstring "ν"
+      void $ lstring ":"
+      baseType <- parseBaseTy
+      void $ lstring "|"
+      refinement <- parseRefinement
+      pure $ RefinedBaseTy { .. }
 
 parseRefinement :: ToyMonad e s m => m Refinement
 parseRefinement = Refinement <$> parseAtomicRefinement `sepBy` lstring "&"
