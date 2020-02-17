@@ -8,7 +8,7 @@ import Toy.Language.Parser
 import Toy.Language.Types
 
 parse' :: Parsec Void String a -> String -> Either (ParseErrorBundle String Void) a
-parse' p = parse p ""
+parse' p = parse (p <* eof) ""
 
 main :: IO ()
 main = hspec $
