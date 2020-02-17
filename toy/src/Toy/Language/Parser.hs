@@ -32,6 +32,7 @@ parseBaseRT = try refinedTy <|> implicitTrue
       baseType <- parseBaseTy
       void $ lstring "|"
       refinement <- parseRefinement
+      void $ lstring "}"
       pure $ RefinedBaseTy { .. }
 
 parseRefinement :: ToyMonad e s m => m Refinement
