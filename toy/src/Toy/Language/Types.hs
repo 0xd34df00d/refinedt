@@ -1,6 +1,10 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+
 module Toy.Language.Types where
 
-newtype VarName = VarName { getName :: String } deriving (Eq, Ord, Show)
+import Data.String
+
+newtype VarName = VarName { getName :: String } deriving (Eq, Ord, Show, IsString)
 
 data BaseTy = TBool | TInt
   deriving (Eq, Ord, Show)
