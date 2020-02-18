@@ -17,7 +17,7 @@ infixr 0 ~~>
 parseRes ~~> expected = parseRes `shouldBe` Right expected
 
 main :: IO ()
-main = hspec $
+main = hspec $ do
   describe "Parsing base refined types" $ let p = parse' parseBaseRT in do
     it "parses unrefined type" $
       p "Bool" ~~> RefinedBaseTy TBool trueRefinement
@@ -31,6 +31,11 @@ main = hspec $
       p "{ν:Bool|ν>=len arr}" ~~> RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVarLen "arr")]
     it "parses refined type with var name starting with len" $
       p "{ ν : Bool | ν >= lenarr }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVar "lenarr")]
+  describe "Parsing with conjunctions" $ let p = parse' parseBaseRT in do
+    it "parses types with conjunctions 1" $
+      p "{ ν : Bool | ν < x & ν > 0 }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLe (RArgVar "x"), AR ROpGe RArgZero]
+    it "parses types with conjunctions 2" $
+      p "{ ν : Bool | ν < x & ν < len arr }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLe (RArgVar "x"), AR ROpLe (RArgVarLen "arr")]
 
 -- Some helpers to make tests a tad more pleasant
 infixr 0 -->
