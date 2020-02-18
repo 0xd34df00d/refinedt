@@ -23,3 +23,5 @@ main = hspec $
       parse' parseBaseRT "{ ν : Bool | ν >= len arr }" `shouldBe` Right (RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVarLen "arr")])
     it "parses refined type without spaces" $
       parse' parseBaseRT "{ν:Bool|ν>=len arr}" `shouldBe` Right (RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVarLen "arr")])
+    it "parses refined type with var name starting with len" $
+      parse' parseBaseRT "{ ν : Bool | ν >= lenarr }" `shouldBe` Right (RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVar "lenarr")])
