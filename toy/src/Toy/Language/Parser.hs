@@ -80,7 +80,10 @@ parseBaseTy = lstring "Bool" $> TBool
           <|> lstring "Int" $> TInt
 
 parseVarName :: ToyMonad e s m => m VarName
-parseVarName = lexeme' $ VarName . toList <$> takeWhile1P (Just "variable") isLetter
+parseVarName = lexeme' $ VarName <$> do
+  firstLetter <- letterChar
+  rest <- takeWhileP (Just "variable") isAlphaNum
+  pure $ firstLetter : toList rest
 
 -- Utils
 
