@@ -31,3 +31,12 @@ main = hspec $
       p "{ν:Bool|ν>=len arr}" ~~> RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVarLen "arr")]
     it "parses refined type with var name starting with len" $
       p "{ ν : Bool | ν >= lenarr }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVar "lenarr")]
+
+-- Some helpers to make tests a tad more pleasant
+infixr 0 -->
+(-->) :: Ty -> Ty -> Ty
+a --> b = TyArrow $ ArrowTy Nothing a b
+
+bool, int :: Ty
+bool = TyBase $ RefinedBaseTy TBool trueRefinement
+int = TyBase $ RefinedBaseTy TInt trueRefinement
