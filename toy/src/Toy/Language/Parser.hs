@@ -65,6 +65,9 @@ lexeme' = lexeme lexSpace
 lstring :: ToyMonad e s m => Tokens s -> m (Tokens s)
 lstring = try . lexeme' . string
 
+lstringSpace :: ToyMonad e s m => Tokens s -> m (Tokens s)
+lstringSpace s = try $ lexeme' $ string s <* space1
+
 lsymbol :: ToyMonad e s m => Tokens s -> m (Tokens s)
 lsymbol = ML.symbol lexSpace
 
