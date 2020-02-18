@@ -64,7 +64,7 @@ parseBaseRT = try refinedTy <|> implicitTrue
       pure $ RefinedBaseTy { .. }
 
 parseRefinement :: ToyMonad e s m => m Refinement
-parseRefinement = Refinement <$> parseAtomicRefinement `sepBy` lstring "&"
+parseRefinement = Refinement <$> parseAtomicRefinement `sepBy1` lstring "&"
 
 parseAtomicRefinement :: ToyMonad e s m => m AtomicRefinement
 parseAtomicRefinement = lstring "ν" >> AR <$> parseTable ops <*> args
