@@ -1,14 +1,16 @@
 {-# LANGUAGE OverloadedStrings #-}
 
+import Control.Monad.State.Strict
+import Data.Default
 import Data.Void
 import Test.Hspec
-import Text.Megaparsec
+import Text.Megaparsec hiding (State)
 
 import Toy.Language.Parser
 import Toy.Language.Types
 
-parse' :: Parsec Void String a -> String -> Either (ParseErrorBundle String Void) a
-parse' p = parse (p <* eof) ""
+parse' :: ParsecT Void String (State ParseState) a -> String -> Either (ParseErrorBundle String Void) a
+parse' p str = evalState (runParserT (p <* eof) "" str) def
 
 infixr 0 ~~>
 (~~>) :: (Show a, Show b, Eq a, Eq b) => Either a b -> b -> Expectation

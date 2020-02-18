@@ -4,7 +4,10 @@
 
 module Toy.Language.Parser where
 
+import Control.Monad
+import Control.Monad.State.Strict
 import Data.Char
+import Data.Default
 import Data.Functor
 import Data.String
 import GHC.Exts
@@ -16,10 +19,19 @@ import Toy.Language.Types
 
 type ToyMonad e s m = (MonadParsec e s m,
                        Token s ~ Char, IsString (Tokens s),
-                       IsList (Tokens s), Item (Tokens s) ~ Char)
+                       IsList (Tokens s), Item (Tokens s) ~ Char,
+                       MonadState ParseState m)
 
 tyParser :: ToyMonad e s m => m Ty
 tyParser = undefined
+
+newtype ParseState = ParseState
+  { lastArrowPos :: Maybe SourcePos
+  } deriving (Eq, Ord, Show)
+
+instance Default ParseState where
+  def = ParseState Nothing
+
 
 parseBaseRT :: ToyMonad e s m => m RefinedBaseTy
 parseBaseRT = try refinedTy <|> implicitTrue
