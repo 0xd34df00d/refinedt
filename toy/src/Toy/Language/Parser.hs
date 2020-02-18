@@ -22,8 +22,10 @@ type ToyMonad e s m = (MonadParsec e s m,
                        IsList (Tokens s), Item (Tokens s) ~ Char,
                        MonadState ParseState m)
 
-tyParser :: ToyMonad e s m => m Ty
-tyParser = undefined
+parseTy :: ToyMonad e s m => m Ty
+parseTy = parens parseTy
+      <|> TyArrow <$> try parseArrow
+      <|> TyBase <$> parseBaseRT
 
 newtype ParseState = ParseState
   { lastArrowPos :: Maybe SourcePos
@@ -32,6 +34,20 @@ newtype ParseState = ParseState
 instance Default ParseState where
   def = ParseState Nothing
 
+parseArrow :: ToyMonad e s m => m ArrowTy
+parseArrow = do
+  let piVarName = Nothing
+
+  curPos <- getSourcePos
+  prevPos <- gets lastArrowPos
+  guard $ Just curPos /= prevPos
+
+  modify' $ \st -> st { lastArrowPos = Just curPos }
+
+  domTy <- parseTy
+  void $ lstring "->"
+  codTy <- parseTy
+  pure $ ArrowTy { .. }
 
 parseBaseRT :: ToyMonad e s m => m RefinedBaseTy
 parseBaseRT = try refinedTy <|> implicitTrue
