@@ -43,7 +43,7 @@ parseAtomicRefinement = lstring "ν" >> AR <$> parseTable ops <*> args
   where
     ops = [ ("<=", ROpLeq), ("<", ROpLe), ("=", ROpEq), ("/=", ROpNEq), (">=", ROpGeq), (">", ROpGe) ]
     args = choice [ lstring "0" $> RArgZero
-                  , lstring "len" >> RArgVarLen <$> parseVarName
+                  , lstringSpace "len" >> RArgVarLen <$> parseVarName
                   , RArgVar <$> parseVarName
                   ]
 
