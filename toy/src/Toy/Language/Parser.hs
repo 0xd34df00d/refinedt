@@ -23,8 +23,8 @@ type ToyMonad e s m = (MonadParsec e s m,
                        MonadState ParseState m)
 
 parseTy :: ToyMonad e s m => m Ty
-parseTy = parens parseTy
-      <|> TyArrow <$> try parseArrow
+parseTy = TyArrow <$> try parseArrow
+      <|> parens parseTy
       <|> TyBase <$> parseBaseRT
 
 newtype ParseState = ParseState
