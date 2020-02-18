@@ -10,18 +10,22 @@ import Toy.Language.Types
 parse' :: Parsec Void String a -> String -> Either (ParseErrorBundle String Void) a
 parse' p = parse (p <* eof) ""
 
+infixr 0 ~~>
+(~~>) :: (Show a, Show b, Eq a, Eq b) => Either a b -> b -> Expectation
+parseRes ~~> expected = parseRes `shouldBe` Right expected
+
 main :: IO ()
 main = hspec $
-  describe "Parsing base refined types" $ do
+  describe "Parsing base refined types" $ let p = parse' parseBaseRT in do
     it "parses unrefined type" $
-      parse' parseBaseRT "Bool" `shouldBe` Right (RefinedBaseTy TBool trueRefinement)
+      p "Bool" ~~> RefinedBaseTy TBool trueRefinement
     it "parses refined type with var" $
-      parse' parseBaseRT "{ ν : Bool | ν < x }" `shouldBe` Right (RefinedBaseTy TBool $ Refinement [AR ROpLe (RArgVar "x")])
+      p "{ ν : Bool | ν < x }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLe (RArgVar "x")]
     it "parses refined type with zero" $
-      parse' parseBaseRT "{ ν : Bool | ν <= 0 }" `shouldBe` Right (RefinedBaseTy TBool $ Refinement [AR ROpLeq RArgZero])
+      p "{ ν : Bool | ν <= 0 }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLeq RArgZero]
     it "parses refined type with len" $
-      parse' parseBaseRT "{ ν : Bool | ν >= len arr }" `shouldBe` Right (RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVarLen "arr")])
+      p "{ ν : Bool | ν >= len arr }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVarLen "arr")]
     it "parses refined type without spaces" $
-      parse' parseBaseRT "{ν:Bool|ν>=len arr}" `shouldBe` Right (RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVarLen "arr")])
+      p "{ν:Bool|ν>=len arr}" ~~> RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVarLen "arr")]
     it "parses refined type with var name starting with len" $
-      parse' parseBaseRT "{ ν : Bool | ν >= lenarr }" `shouldBe` Right (RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVar "lenarr")])
+      p "{ ν : Bool | ν >= lenarr }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVar "lenarr")]
