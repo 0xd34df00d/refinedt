@@ -53,6 +53,17 @@ main = hspec $ do
       p "(Bool -> Int) -> Bool" ~~> (bool --> int) --> bool
     it "parses more nested arrows" $
       p "((Bool -> Int) -> Bool) -> (Bool -> Bool)" ~~> ((bool --> int) --> bool) --> (bool --> bool)
+  describe "Parsing full refined types with arrows" $ let p = parse' parseTy in do
+    it "parses simple arrows" $
+      p "{ ν : Int | ν <= len arr } -> { ν : Int | ν > 0 }" ~~> intLeqLenArr --> intGe0
+    it "parses simple arrows in parens" $
+      p "({ ν : Int | ν <= len arr } -> { ν : Int | ν > 0 })" ~~> intLeqLenArr --> intGe0
+    it "parses nested arrows" $
+      p "{ ν : Int | ν <= len arr } -> { ν : Int | ν < var1 } -> { ν : Int | ν < var2 }"
+        ~~> intLeqLenArr --> intLe "var1" --> intLe "var2"
+    it "parses nested arrows with parens" $
+      p "({ ν : Int | ν <= len arr } -> { ν : Int | ν < var1 }) -> { ν : Int | ν < var2 }"
+        ~~> (intLeqLenArr --> intLe "var1") --> intLe "var2"
 
 -- Some helpers to make tests a tad more pleasant
 infixr 0 -->
@@ -62,3 +73,10 @@ a --> b = TyArrow $ ArrowTy Nothing a b
 bool, int :: Ty
 bool = TyBase $ RefinedBaseTy TBool trueRefinement
 int = TyBase $ RefinedBaseTy TInt trueRefinement
+
+intLeqLenArr, intGe0 :: Ty
+intLeqLenArr = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpLeq (RArgVarLen "arr")]
+intGe0 = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpGe RArgZero]
+
+intLe :: VarName -> Ty
+intLe var = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpLe (RArgVar var)]
