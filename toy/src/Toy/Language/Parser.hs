@@ -36,7 +36,7 @@ instance Default ParseState where
 
 parseArrow :: ToyMonad e s m => m ArrowTy
 parseArrow = do
-  let piVarName = Nothing
+  piVarName <- optional $ try $ parseVarName <* lstring ":"
 
   curPos <- getSourcePos
   prevPos <- gets lastArrowPos
