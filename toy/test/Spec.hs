@@ -64,11 +64,24 @@ main = hspec $ do
     it "parses nested arrows with parens" $
       p "({ ν : Int | ν <= len arr } -> { ν : Int | ν < var1 }) -> { ν : Int | ν < var2 }"
         ~~> (intLeqLenArr --> intLe "var1") --> intLe "var2"
+  describe "Parsing arrows and pi-bound variables" $ let p = parse' parseTy in do
+    it "parses pi-bound unrefined types" $
+      p "x : Bool -> Bool" ~~> "x".:bool ->> bool
+    it "parses pi-bound unrefined types in parens" $
+      p "x : Bool -> y : Int -> Bool" ~~> "x".:bool ->> ("y".:int ->> bool)
 
 -- Some helpers to make tests a tad more pleasant
 infixr 0 -->
 (-->) :: Ty -> Ty -> Ty
 a --> b = TyArrow $ ArrowTy Nothing a b
+
+infixr 2 ->>
+(->>) :: Ty -> Ty -> VarName -> Ty
+(->>) a b name = TyArrow $ ArrowTy (Just name) a b
+
+infixr 1 .:
+(.:) :: a -> (a -> b) -> b
+a .: f = f a
 
 bool, int :: Ty
 bool = TyBase $ RefinedBaseTy TBool trueRefinement
