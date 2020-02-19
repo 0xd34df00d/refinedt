@@ -36,6 +36,23 @@ main = hspec $ do
       p "{ ν : Bool | ν < x & ν > 0 }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLe (RArgVar "x"), AR ROpGe RArgZero]
     it "parses types with conjunctions 2" $
       p "{ ν : Bool | ν < x & ν < len arr }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLe (RArgVar "x"), AR ROpLe (RArgVarLen "arr")]
+  describe "Parsing arrows" $ let p = parse' parseTy in do
+    it "still parses base types" $
+      p "{ ν : Bool | ν >= len arr }" ~~> TyBase $ RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVarLen "arr")]
+    it "parses unrefined base types with parens" $
+      p "(Bool)" ~~> bool
+    it "parses simple arrows" $
+      p "Bool -> Int" ~~> bool --> int
+    it "parses simple arrows with parens" $
+      p "(Bool -> Int)" ~~> bool --> int
+    it "parses nested arrows (to the right)" $
+      p "Bool -> Int -> Bool" ~~> bool --> int --> bool
+    it "parses nested arrows (to the right, with parens)" $
+      p "Bool -> (Int -> Bool)" ~~> bool --> int --> bool
+    it "parses nested arrows (to the left)" $
+      p "(Bool -> Int) -> Bool" ~~> (bool --> int) --> bool
+    it "parses more nested arrows" $
+      p "((Bool -> Int) -> Bool) -> (Bool -> Bool)" ~~> ((bool --> int) --> bool) --> (bool --> bool)
 
 -- Some helpers to make tests a tad more pleasant
 infixr 0 -->
