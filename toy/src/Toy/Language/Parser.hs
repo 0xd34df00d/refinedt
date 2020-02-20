@@ -22,10 +22,10 @@ type ToyMonad e s m = (MonadParsec e s m,
                        IsList (Tokens s), Item (Tokens s) ~ Char,
                        MonadState ParseState m)
 
-parseTy :: ToyMonad e s m => m Ty
-parseTy = TyArrow <$> try parseArrow
-      <|> parens parseTy
-      <|> TyBase <$> parseBaseRT
+ty :: ToyMonad e s m => m Ty
+ty = TyArrow <$> try arrow
+ <|> parens ty
+ <|> TyBase <$> baseRT
 
 newtype ParseState = ParseState
   { lastArrowPos :: Maybe SourcePos
@@ -34,9 +34,9 @@ newtype ParseState = ParseState
 instance Default ParseState where
   def = ParseState Nothing
 
-parseArrow :: ToyMonad e s m => m ArrowTy
-parseArrow = do
-  piVarName <- optional $ try $ parseVarName <* lstring ":"
+arrow :: ToyMonad e s m => m ArrowTy
+arrow = do
+  piVarName <- optional $ try $ varName <* lstring ":"
 
   curPos <- getSourcePos
   prevPos <- gets lastArrowPos
@@ -44,43 +44,43 @@ parseArrow = do
 
   modify' $ \st -> st { lastArrowPos = Just curPos }
 
-  domTy <- parseTy
+  domTy <- ty
   void $ lstring "->"
-  codTy <- parseTy
+  codTy <- ty
   pure $ ArrowTy { .. }
 
-parseBaseRT :: ToyMonad e s m => m RefinedBaseTy
-parseBaseRT = try refinedTy <|> implicitTrue
+baseRT :: ToyMonad e s m => m RefinedBaseTy
+baseRT = try refinedTy <|> implicitTrue
   where
-    implicitTrue = RefinedBaseTy <$> parseBaseTy <*> pure trueRefinement
+    implicitTrue = RefinedBaseTy <$> baseTy <*> pure trueRefinement
     refinedTy = do
       void $ lstring "{"
       void $ lstring "ν"
       void $ lstring ":"
-      baseType <- parseBaseTy
+      baseType <- baseTy
       void $ lstring "|"
-      refinement <- parseRefinement
+      baseTyRefinement <- refinement
       void $ lstring "}"
       pure $ RefinedBaseTy { .. }
 
-parseRefinement :: ToyMonad e s m => m Refinement
-parseRefinement = Refinement <$> parseAtomicRefinement `sepBy1` lstring "&"
+refinement :: ToyMonad e s m => m Refinement
+refinement = Refinement <$> atomicRefinement `sepBy1` lstring "&"
 
-parseAtomicRefinement :: ToyMonad e s m => m AtomicRefinement
-parseAtomicRefinement = lstring "ν" >> AR <$> parseTable ops <*> args
+atomicRefinement :: ToyMonad e s m => m AtomicRefinement
+atomicRefinement = lstring "ν" >> AR <$> parseTable ops <*> args
   where
     ops = [ ("<=", ROpLeq), ("<", ROpLe), ("=", ROpEq), ("/=", ROpNEq), (">=", ROpGeq), (">", ROpGe) ]
     args = choice [ lstring "0" $> RArgZero
-                  , lstringSpace "len" >> RArgVarLen <$> parseVarName
-                  , RArgVar <$> parseVarName
+                  , lstringSpace "len" >> RArgVarLen <$> varName
+                  , RArgVar <$> varName
                   ]
 
-parseBaseTy :: ToyMonad e s m => m BaseTy
-parseBaseTy = lstring "Bool" $> TBool
-          <|> lstring "Int" $> TInt
+baseTy :: ToyMonad e s m => m BaseTy
+baseTy = lstring "Bool" $> TBool
+     <|> lstring "Int" $> TInt
 
-parseVarName :: ToyMonad e s m => m VarName
-parseVarName = lexeme' $ VarName <$> do
+varName :: ToyMonad e s m => m VarName
+varName = lexeme' $ VarName <$> do
   firstLetter <- letterChar
   rest <- takeWhileP (Just "variable") isAlphaNum
   pure $ firstLetter : toList rest

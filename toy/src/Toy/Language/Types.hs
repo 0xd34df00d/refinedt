@@ -25,7 +25,7 @@ trueRefinement = Refinement []
 
 data RefinedBaseTy = RefinedBaseTy
  { baseType :: BaseTy
- , refinement :: Refinement
+ , baseTyRefinement :: Refinement
  } deriving (Eq, Ord, Show)
 
 data ArrowTy = ArrowTy
