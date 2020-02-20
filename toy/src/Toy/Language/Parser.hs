@@ -2,7 +2,12 @@
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE OverloadedStrings, RecordWildCards #-}
 
-module Toy.Language.Parser where
+module Toy.Language.Parser
+( ty
+, baseRT
+
+, ParseState
+) where
 
 import Control.Monad
 import Control.Monad.State.Strict
