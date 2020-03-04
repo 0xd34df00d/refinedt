@@ -8,7 +8,7 @@ import Data.Void
 import Test.Hspec
 import Text.Megaparsec hiding (State)
 
-import Toy.Language.Parser
+import Toy.Language.Parser.Ty
 import Toy.Language.Types
 
 parse' :: ParsecT Void String (State ParseState) a -> String -> Either (ParseErrorBundle String Void) a
