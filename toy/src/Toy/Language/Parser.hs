@@ -85,7 +85,10 @@ baseTy = lstring "Bool" $> TBool
      <|> lstring "Int" $> TInt
 
 varName :: ToyMonad e s m => m VarName
-varName = lexeme' $ VarName <$> do
+varName = lexeme' $ VarName <$> identifier
+
+identifier :: ToyMonad e s m => m String
+identifier = do
   firstLetter <- letterChar
   rest <- takeWhileP (Just "variable") isAlphaNum
   pure $ firstLetter : toList rest
