@@ -9,7 +9,7 @@ import Test.Hspec
 import Text.Megaparsec hiding (State)
 
 import Toy.Language.Parser.Ty
-import Toy.Language.Types
+import Toy.Language.Syntax.Types
 
 parse' :: ParsecT Void String (State ParseState) a -> String -> Either (ParseErrorBundle String Void) a
 parse' p str = evalState (runParserT (p <* eof) "" str) def

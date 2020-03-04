@@ -16,7 +16,7 @@ import Data.Functor
 import Text.Megaparsec
 
 import Toy.Language.Parser.Util
-import Toy.Language.Types
+import Toy.Language.Syntax.Types
 
 ty :: (ToyMonad e s m, MonadState ParseState m) => m Ty
 ty = TyArrow <$> try arrow

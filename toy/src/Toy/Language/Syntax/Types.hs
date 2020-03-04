@@ -1,6 +1,6 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
-module Toy.Language.Types where
+module Toy.Language.Syntax.Types where
 
 import Data.String
 
