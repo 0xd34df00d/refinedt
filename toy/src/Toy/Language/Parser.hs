@@ -11,23 +11,14 @@ module Toy.Language.Parser
 
 import Control.Monad
 import Control.Monad.State.Strict
-import Data.Char
 import Data.Default
 import Data.Functor
-import Data.String
-import GHC.Exts
 import Text.Megaparsec
-import Text.Megaparsec.Char
-import Text.Megaparsec.Char.Lexer as ML
 
+import Toy.Language.Parser.Util
 import Toy.Language.Types
 
-type ToyMonad e s m = (MonadParsec e s m,
-                       Token s ~ Char, IsString (Tokens s),
-                       IsList (Tokens s), Item (Tokens s) ~ Char,
-                       MonadState ParseState m)
-
-ty :: ToyMonad e s m => m Ty
+ty :: (ToyMonad e s m, MonadState ParseState m) => m Ty
 ty = TyArrow <$> try arrow
  <|> parens ty
  <|> TyBase <$> baseRT
@@ -39,7 +30,7 @@ newtype ParseState = ParseState
 instance Default ParseState where
   def = ParseState Nothing
 
-arrow :: ToyMonad e s m => m ArrowTy
+arrow :: (ToyMonad e s m, MonadState ParseState m) => m ArrowTy
 arrow = do
   piVarName <- optional $ try $ varName <* lstring ":"
 
@@ -86,32 +77,3 @@ baseTy = lstring "Bool" $> TBool
 
 varName :: ToyMonad e s m => m VarName
 varName = lexeme' $ VarName <$> identifier
-
-identifier :: ToyMonad e s m => m String
-identifier = do
-  firstLetter <- letterChar
-  rest <- takeWhileP (Just "variable") isAlphaNum
-  pure $ firstLetter : toList rest
-
--- Utils
-
-parseTable :: ToyMonad e s m => [(Tokens s, a)] -> m a
-parseTable table = choice [ lstring str $> op | (str, op) <- table ]
-
-lexeme' :: ToyMonad e s m => m a -> m a
-lexeme' = lexeme lexSpace
-
-lstring :: ToyMonad e s m => Tokens s -> m (Tokens s)
-lstring = try . lexeme' . string
-
-lstringSpace :: ToyMonad e s m => Tokens s -> m (Tokens s)
-lstringSpace s = try $ lexeme' $ string s <* space1
-
-lsymbol :: ToyMonad e s m => Tokens s -> m (Tokens s)
-lsymbol = ML.symbol lexSpace
-
-parens :: ToyMonad e s m => m a -> m a
-parens = between (lsymbol "(") (lsymbol ")")
-
-lexSpace :: ToyMonad e s m => m ()
-lexSpace = ML.space space1 empty empty
