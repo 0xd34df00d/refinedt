@@ -2,8 +2,6 @@
 
 module ParserSpec(spec) where
 
-import Control.Monad.State.Strict
-import Data.Default
 import Data.Void
 import Test.Hspec
 import Text.Megaparsec hiding (State)
@@ -11,8 +9,8 @@ import Text.Megaparsec hiding (State)
 import Toy.Language.Parser.Ty
 import Toy.Language.Syntax.Types
 
-parse' :: ParsecT Void String (State ParseState) a -> String -> Either (ParseErrorBundle String Void) a
-parse' p str = evalState (runParserT (p <* eof) "" str) def
+parse' :: Parsec Void String a -> String -> Either (ParseErrorBundle String Void) a
+parse' p = runParser (p <* eof) ""
 
 infixr 0 ~~>
 (~~>) :: (Show a, Show b, Eq a, Eq b) => Either a b -> b -> Expectation

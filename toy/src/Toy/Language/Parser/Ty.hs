@@ -5,8 +5,6 @@
 module Toy.Language.Parser.Ty
 ( ty
 , baseRT
-
-, ParseState
 ) where
 
 import Control.Monad
@@ -18,9 +16,12 @@ import Text.Megaparsec
 import Toy.Language.Parser.Util
 import Toy.Language.Syntax.Types
 
-ty :: (ToyMonad e s m, MonadState ParseState m) => m Ty
-ty = TyArrow <$> try arrow
- <|> parens ty
+ty :: ToyMonad e s m => m Ty
+ty = evalStateT ty' def
+
+ty' :: (ToyMonad e s m, MonadState ParseState m) => m Ty
+ty' = TyArrow <$> try arrow
+ <|> parens ty'
  <|> TyBase <$> baseRT
 
 newtype ParseState = ParseState
@@ -40,9 +41,9 @@ arrow = do
 
   modify' $ \st -> st { lastArrowPos = Just curPos }
 
-  domTy <- ty
+  domTy <- ty'
   void $ lstring "->"
-  codTy <- ty
+  codTy <- ty'
   pure $ ArrowTy { .. }
 
 baseRT :: ToyMonad e s m => m RefinedBaseTy
