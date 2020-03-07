@@ -1,4 +1,4 @@
-{-# LANGUAGE QuasiQuotes, TemplateHaskell #-}
+{-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE GADTs #-}
 
@@ -19,7 +19,7 @@ import Data.String
 import Data.String.Interpolate.IsString
 import Data.Void
 import Numeric
-import System.IO(Handle, hPutStrLn, hGetLine)
+import System.IO(Handle, hPutStrLn)
 import System.Process
 import Text.Megaparsec
 import Text.SExpression
