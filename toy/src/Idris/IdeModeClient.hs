@@ -6,6 +6,9 @@ module Idris.IdeModeClient
 ( typeCheck
 
 , withIdris
+
+, sendCommand
+, readReply
 ) where
 
 import Control.Exception
@@ -26,6 +29,12 @@ data IdrisAction r where
   ReadReply :: IdrisAction SExpr
 
 type IdrisClient = Program IdrisAction
+
+sendCommand :: Command -> IdrisClient ()
+sendCommand = singleton . SendCommand
+
+readReply :: IdrisClient SExpr
+readReply = singleton ReadReply
 
 typeCheck :: String -> Command
 typeCheck ty = [i|((:type-of "#{ty}") 1)|]
