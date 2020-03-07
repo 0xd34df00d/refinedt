@@ -17,7 +17,8 @@ import Data.Default
 import Data.String
 import Data.String.Interpolate.IsString
 import Data.Void
-import System.IO(Handle)
+import Numeric
+import System.IO(Handle, hPutStrLn, hGetLine)
 import System.Process
 import Text.Megaparsec
 import Text.SExpression
@@ -49,4 +50,20 @@ withIdris prog = bracket
   (\(stdin, stdout, _, _) -> interpret stdin stdout prog)
 
 interpret :: Handle -> Handle -> IdrisClient r -> IO r
-interpret = undefined
+interpret idrStdin idrStdout = go . view
+  where
+    go (Return val) = pure val
+    go (act :>>= cont) = intAct act >>= go . view . cont
+
+    intAct :: IdrisAction r -> IO r
+    intAct (SendCommand cmd) = hPutStrLn idrStdin $ fmtLength cmd <> commandStr cmd
+    intAct ReadReply = do
+      line <- hGetLine idrStdout
+      case parseIdrisResponse line of
+           Right val -> pure val
+           Left err -> error $ show err
+
+fmtLength :: Command -> String
+fmtLength cmd = replicate (6 - length hex) '0' <> hex
+  where
+    hex = showHex (length (commandStr cmd) + 1) ""
