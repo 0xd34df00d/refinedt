@@ -11,6 +11,7 @@ module Idris.IdeModeClient
 , readReply
 ) where
 
+import qualified Data.ByteString.Char8 as BS
 import Control.Exception
 import Control.Monad.Operational
 import Data.Default
@@ -58,8 +59,9 @@ interpret idrStdin idrStdout = go . view
     intAct :: IdrisAction r -> IO r
     intAct (SendCommand cmd) = hPutStrLn idrStdin $ fmtLength cmd <> commandStr cmd
     intAct ReadReply = do
-      line <- hGetLine idrStdout
-      case parseIdrisResponse line of
+      countStr <- BS.unpack <$> BS.hGet idrStdout 6
+      line <- BS.hGet idrStdout $ read $ "0x" <> countStr
+      case parseIdrisResponse $ BS.unpack line of
            Right val -> pure val
            Left err -> error $ show err
 
