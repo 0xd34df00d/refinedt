@@ -25,6 +25,7 @@ dependencies:
 - interpolate
 - megaparsec
 - mtl
+- operational
 - process
 - sexpr-parser
 
