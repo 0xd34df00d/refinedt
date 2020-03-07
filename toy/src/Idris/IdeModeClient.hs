@@ -13,6 +13,8 @@ module Idris.IdeModeClient
 
 import qualified Data.ByteString.Char8 as BS
 import Control.Exception
+import Control.Monad
+import Control.Monad.IO.Class
 import Control.Monad.Operational
 import Data.Default
 import Data.String
@@ -30,12 +32,12 @@ data IdrisAction r where
   SendCommand :: Command -> IdrisAction ()
   ReadReply :: IdrisAction SExpr
 
-type IdrisClient = Program IdrisAction
+type IdrisClientT m = ProgramT IdrisAction m
 
-sendCommand :: Command -> IdrisClient ()
+sendCommand :: Command -> IdrisClientT m ()
 sendCommand = singleton . SendCommand
 
-readReply :: IdrisClient SExpr
+readReply :: IdrisClientT m SExpr
 readReply = singleton ReadReply
 
 typeCheck :: String -> Command
@@ -44,21 +46,21 @@ typeCheck ty = [i|((:type-of "#{ty}") 1)|]
 parseIdrisResponse :: String -> Either (ParseErrorBundle String Void) SExpr
 parseIdrisResponse = runParser (parseSExpr def <* eof) ""
 
-withIdris :: IdrisClient r -> IO r
+withIdris :: IdrisClientT IO r -> IO r
 withIdris prog = bracket
   (runInteractiveCommand "idris --ide-mode")
   (\(stdin, stdout, stderr, ph) -> cleanupProcess (Just stdin, Just stdout, Just stderr, ph))
   (\(stdin, stdout, _, _) -> interpret stdin stdout prog)
 
-interpret :: Handle -> Handle -> IdrisClient r -> IO r
-interpret idrStdin idrStdout = go . view
+interpret :: MonadIO m => Handle -> Handle -> IdrisClientT m r -> m r
+interpret idrStdin idrStdout = viewT >=> go
   where
     go (Return val) = pure val
-    go (act :>>= cont) = intAct act >>= go . view . cont
+    go (act :>>= cont) = intAct act >>= viewT . cont >>= go
 
-    intAct :: IdrisAction r -> IO r
-    intAct (SendCommand cmd) = hPutStrLn idrStdin $ fmtLength cmd <> commandStr cmd
-    intAct ReadReply = do
+    intAct :: MonadIO m => IdrisAction r -> m r
+    intAct (SendCommand cmd) = liftIO $ hPutStrLn idrStdin $ fmtLength cmd <> commandStr cmd
+    intAct ReadReply = liftIO $ do
       countStr <- BS.unpack <$> BS.hGet idrStdout 6
       line <- BS.hGet idrStdout $ read $ "0x" <> countStr
       case parseIdrisResponse $ BS.unpack line of
