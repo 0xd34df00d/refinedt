@@ -25,6 +25,7 @@ dependencies:
 - interpolate
 - megaparsec
 - mtl
+- process
 - sexpr-parser
 
 ghc-options:
