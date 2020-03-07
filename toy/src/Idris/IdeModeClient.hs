@@ -14,7 +14,7 @@ import Data.Default
 import Data.String
 import Data.String.Interpolate.IsString
 import Data.Void
-import System.IO
+import System.IO(Handle)
 import System.Process
 import Text.Megaparsec
 import Text.SExpression
