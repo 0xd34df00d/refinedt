@@ -30,11 +30,11 @@ import Text.SExpression
 
 newtype Command = Command { commandStr :: String } deriving (IsString)
 
-data IdrisAction :: Type -> Type where
-  SendCommand :: Command -> IdrisAction ()
-  ReadReply :: IdrisAction SExpr
+data IdrisAction :: (Type -> Type) -> Type -> Type where
+  SendCommand :: Command -> IdrisAction m ()
+  ReadReply :: IdrisAction m SExpr
 
-type IdrisClientT m = ProgramT IdrisAction m
+type IdrisClientT m = ProgramT (IdrisAction m) m
 
 sendCommand :: Command -> IdrisClientT m ()
 sendCommand = singleton . SendCommand
