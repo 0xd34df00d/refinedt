@@ -21,7 +21,7 @@ import Data.String
 import Data.String.Interpolate.IsString
 import Data.Void
 import Numeric
-import System.IO(Handle, hPutStrLn)
+import System.IO(Handle, hPutStrLn, hFlush)
 import System.Process
 import Text.Megaparsec
 import Text.SExpression
@@ -65,7 +65,9 @@ interpret idrStdin idrStdout = viewT >=> go
     go (act :>>= cont) = intAct act >>= viewT . cont >>= go
 
     intAct :: MonadIO m => IdrisAction r -> m r
-    intAct (SendCommand cmd) = liftIO $ hPutStrLn idrStdin $ fmtLength cmd <> commandStr cmd
+    intAct (SendCommand cmd) = do
+      liftIO $ hPutStrLn idrStdin $ fmtLength cmd <> commandStr cmd
+      liftIO $ hFlush idrStdin
     intAct ReadReply = liftIO $ do
       countStr <- BS.unpack <$> BS.hGet idrStdout 6
       line <- BS.hGet idrStdout $ read $ "0x" <> countStr
