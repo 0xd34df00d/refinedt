@@ -51,12 +51,13 @@ withIdris prog = bracket
   (runInteractiveCommand "idris --ide-mode")
   (\(stdin, stdout, stderr, ph) -> cleanupProcess (Just stdin, Just stdout, Just stderr, ph))
   (\(stdin, stdout, _, _) -> interpret stdin stdout $ checkVersion >> prog)
-  where
-    checkVersion = do
-      reply <- readReply
-      case reply of
-           List [Atom ":protocol-version", Number 1, Number 0] -> pure ()
-           _ -> error "Unknown protocol"
+
+checkVersion :: Monad m => IdrisClientT m ()
+checkVersion = do
+  reply <- readReply
+  case reply of
+       List [Atom ":protocol-version", Number 1, Number 0] -> pure ()
+       _ -> error "Unknown protocol"
 
 interpret :: MonadIO m => Handle -> Handle -> IdrisClientT m r -> m r
 interpret idrStdin idrStdout = viewT >=> go
