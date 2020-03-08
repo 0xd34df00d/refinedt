@@ -3,12 +3,14 @@
 {-# LANGUAGE GADTs #-}
 
 module Idris.IdeModeClient
-( typeCheck
+( sendCommand
+, readReply
+, typeCheck
 
 , withIdris
-
-, sendCommand
-, readReply
+, startIdris
+, stopIdris
+, interpret
 ) where
 
 import qualified Data.ByteString.Char8 as BS
@@ -48,9 +50,9 @@ parseIdrisResponse = runParser (parseSExpr def <* eof) ""
 
 withIdris :: IdrisClientT IO r -> IO r
 withIdris prog = bracket
-  (runInteractiveCommand "idris --ide-mode")
-  (\(stdin, stdout, stderr, ph) -> cleanupProcess (Just stdin, Just stdout, Just stderr, ph))
-  (\(stdin, stdout, _, _) -> interpret stdin stdout $ checkVersion >> prog)
+  startIdris
+  stopIdris
+  (`interpret` prog)
 
 checkVersion :: Monad m => IdrisClientT m ()
 checkVersion = do
@@ -59,8 +61,19 @@ checkVersion = do
        List [Atom ":protocol-version", Number 1, Number 0] -> pure ()
        _ -> error "Unknown protocol"
 
-interpret :: MonadIO m => Handle -> Handle -> IdrisClientT m r -> m r
-interpret idrStdin idrStdout = viewT >=> go
+newtype IdrisHandle = IdrisHandle (Handle, Handle, Handle, ProcessHandle)
+
+startIdris :: IO IdrisHandle
+startIdris = do
+  ih <- IdrisHandle <$> runInteractiveCommand "idris --ide-mode"
+  interpret ih checkVersion
+  pure ih
+
+stopIdris :: IdrisHandle -> IO ()
+stopIdris (IdrisHandle (stdin, stdout, stderr, ph)) = cleanupProcess (Just stdin, Just stdout, Just stderr, ph)
+
+interpret :: MonadIO m => IdrisHandle -> IdrisClientT m r -> m r
+interpret (IdrisHandle (idrStdin, idrStdout, _, _)) = viewT >=> go
   where
     go (Return val) = pure val
     go (act :>>= cont) = intAct act >>= viewT . cont >>= go
