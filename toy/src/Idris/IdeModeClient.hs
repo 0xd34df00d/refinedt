@@ -1,6 +1,6 @@
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE GADTs #-}
+{-# LANGUAGE GADTs, KindSignatures #-}
 
 module Idris.IdeModeClient
 ( sendCommand
@@ -30,7 +30,7 @@ import Text.SExpression
 
 newtype Command = Command { commandStr :: String } deriving (IsString)
 
-data IdrisAction r where
+data IdrisAction :: Type -> Type where
   SendCommand :: Command -> IdrisAction ()
   ReadReply :: IdrisAction SExpr
 
