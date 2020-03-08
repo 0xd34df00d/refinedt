@@ -26,11 +26,11 @@ isOkReply (List [Atom ":return", List (Atom ":ok" : _), _]) = True
 isOkReply _ = False
 
 spec :: Spec
-spec =
-  describe "Basic smoke tests" $
-    it "Parses base types" $ do
+spec = beforeAll startIdris $ afterAll stopIdris $
+  describe "Basic smoke tests" $ do
+    it "Parses base types" $ \ih -> do
       parsed <- parse' "someBool : Bool"
-      withIdris $ do
+      interpret ih $ do
         sendCommand $ typeCheck $ compileFunDecl parsed
         reply <- readReply
         liftIO $ reply `shouldSatisfy` isOkReply
