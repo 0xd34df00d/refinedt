@@ -10,7 +10,7 @@ module Idris.IdeModeClient
 , withIdris
 , startIdris
 , stopIdris
-, interpret
+, runIdrisClient
 ) where
 
 import qualified Data.ByteString.Char8 as BS
@@ -52,7 +52,7 @@ withIdris :: IdrisClientT IO r -> IO r
 withIdris prog = bracket
   startIdris
   stopIdris
-  (`interpret` prog)
+  (`runIdrisClient` prog)
 
 checkVersion :: Monad m => IdrisClientT m ()
 checkVersion = do
@@ -66,14 +66,14 @@ newtype IdrisHandle = IdrisHandle (Handle, Handle, Handle, ProcessHandle)
 startIdris :: IO IdrisHandle
 startIdris = do
   ih <- IdrisHandle <$> runInteractiveCommand "idris --ide-mode"
-  interpret ih checkVersion
+  runIdrisClient ih checkVersion
   pure ih
 
 stopIdris :: IdrisHandle -> IO ()
 stopIdris (IdrisHandle (stdin, stdout, stderr, ph)) = cleanupProcess (Just stdin, Just stdout, Just stderr, ph)
 
-interpret :: MonadIO m => IdrisHandle -> IdrisClientT m r -> m r
-interpret (IdrisHandle (idrStdin, idrStdout, _, _)) = viewT >=> go
+runIdrisClient :: MonadIO m => IdrisHandle -> IdrisClientT m r -> m r
+runIdrisClient (IdrisHandle (idrStdin, idrStdout, _, _)) = viewT >=> go
   where
     go (Return val) = pure val
     go (act :>>= cont) = intAct act >>= viewT . cont >>= go
