@@ -11,6 +11,7 @@ module Idris.IdeModeClient
 , typeCheck
 , loadFile
 
+, IdrisHandle
 , withIdris
 , startIdris
 , stopIdris
