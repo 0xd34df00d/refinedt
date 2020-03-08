@@ -3,6 +3,7 @@
 module CompilerSpec(spec) where
 
 import Control.Monad.IO.Class
+import Control.Monad.Loops
 import Data.Either
 import Data.Void
 import Test.Hspec
@@ -21,6 +22,10 @@ parse' str = do
   where
    parsed = runParser (funDecl <* eof) "" str :: Either (ParseErrorBundle String Void) FunDecl
 
+isReturn :: SExpr -> Bool
+isReturn (List (Atom ":return" : _)) = True
+isReturn _ = False
+
 isOkReply :: SExpr -> Bool
 isOkReply (List [Atom ":return", List (Atom ":ok" : _), _]) = True
 isOkReply _ = False
@@ -32,5 +37,5 @@ spec = beforeAll startIdris $ afterAll stopIdris $
       parsed <- parse' "someBool : Bool"
       runIdrisClient ih $ do
         sendCommand $ typeCheck $ compileFunDecl parsed
-        reply <- readReply
+        reply <- iterateUntil isReturn readReply
         liftIO $ reply `shouldSatisfy` isOkReply

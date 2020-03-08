@@ -26,6 +26,7 @@ dependencies:
 - exceptions
 - interpolate
 - megaparsec
+- monad-loops
 - mtl
 - operational
 - process
