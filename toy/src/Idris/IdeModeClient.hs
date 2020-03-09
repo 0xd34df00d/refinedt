@@ -112,7 +112,7 @@ runIdrisClient ih@(IdrisHandle (idrStdin, idrStdout, _, _)) = viewT >=> go
            Right val -> pure val
            Left err -> error $ show err
     intAct (Write f s) = liftIO $ hPutStrLn (handle f) s
-    intAct (WithFile act) = withSystemTempFile "toy-idris" $ \path handle -> runIdrisClient ih $ act File { .. }
+    intAct (WithFile act) = withSystemTempFile "toyidris.idr" $ \path handle -> runIdrisClient ih $ act File { .. }
 
 fmtLength :: Command -> String
 fmtLength cmd = replicate (6 - length hex) '0' <> hex
