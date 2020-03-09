@@ -35,7 +35,8 @@ spec = beforeAll startIdris $ afterAll stopIdris $
   describe "Basic smoke tests" $ do
     it "Parses base types" $ \ih -> do
       parsed <- parse' "someBool : Bool"
-      runIdrisClient ih $ do
-        sendCommand $ typeCheck $ compileFunDecl parsed
+      runIdrisClient ih $ withFile $ \file -> do
+        write file $ compileFunDecl parsed
+        sendCommand $ loadFile file
         reply <- iterateUntil isReturn readReply
         liftIO $ reply `shouldSatisfy` isOkReply
