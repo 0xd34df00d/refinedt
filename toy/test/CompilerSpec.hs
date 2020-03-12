@@ -30,13 +30,16 @@ isOkReply :: SExpr -> Bool
 isOkReply (List [Atom ":return", List (Atom ":ok" : _), _]) = True
 isOkReply _ = False
 
+checkIdris :: String -> IdrisHandle -> Expectation
+checkIdris declStr ih = do
+  parsed <- parse' declStr
+  runIdrisClient ih $ withFile $ \file -> do
+    write file $ compileFunDecl parsed
+    sendCommand $ loadFile file
+    reply <- iterateUntil isReturn readReply
+    liftIO $ reply `shouldSatisfy` isOkReply
+
 spec :: Spec
 spec = beforeAll startIdris $ afterAll stopIdris $
   describe "Basic smoke tests" $ do
-    it "Parses base types" $ \ih -> do
-      parsed <- parse' "someBool : Bool"
-      runIdrisClient ih $ withFile $ \file -> do
-        write file $ compileFunDecl parsed
-        sendCommand $ loadFile file
-        reply <- iterateUntil isReturn readReply
-        liftIO $ reply `shouldSatisfy` isOkReply
+    it "Parses base types" $ checkIdris "someBool : Bool"
