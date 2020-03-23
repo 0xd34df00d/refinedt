@@ -43,3 +43,5 @@ spec :: Spec
 spec = beforeAll startIdris $ afterAll stopIdris $
   describe "Basic smoke tests" $ do
     it "Parses base types" $ checkIdris "someBool : Bool"
+    it "Parses arrow types with base types" $ checkIdris "someFun : Int -> Bool"
+    it "Parses arrow types with refinements" $ checkIdris "someFun : { ν : Int | ν > 0 } -> Bool"
