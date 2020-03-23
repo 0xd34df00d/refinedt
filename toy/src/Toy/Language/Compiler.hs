@@ -14,7 +14,7 @@ compileFunDecl FunDecl { .. } = [i|#{funName} : #{compileTy funTy}|]
 compileTy :: Ty -> String
 compileTy (TyBase RefinedBaseTy { .. })
   | baseTyRefinement == trueRefinement = compileBaseTy baseType
-  | otherwise = [i| (ν : #{compileBaseTy baseType} ** #{compileRefinement baseTyRefinement}) |]
+  | otherwise = [i|(ν : #{compileBaseTy baseType} ** #{compileRefinement baseTyRefinement})|]
 compileTy (TyArrow ArrowTy { .. }) = [i|#{lhs} -> #{compileTy codTy}|]
   where
     lhs | Just name <- piVarName = [i|(#{getName name} : #{compileTy domTy})|]
