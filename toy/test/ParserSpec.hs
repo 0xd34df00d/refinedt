@@ -77,6 +77,9 @@ spec = do
       p "x : Bool -> y : Int -> Bool" ~~> "x".:bool ->> ("y".:int ->> bool)
     it "parses pi-bound nested unrefined types in parens" $
       p "(x : Bool -> y : Int -> Bool) -> Bool" ~~> ("x".:bool ->> ("y".:int ->> bool)) --> bool
+  describe "Parsing arrows, refinements and pi-bound variables" $ let p = parse' ty in
+    it "parses pi-bound refined types" $
+      p "x : { ν : Int | ν <= len arr } -> { ν : Int | ν >= 0 & ν < x }" ~~> "x".:intLeqLenArr ->> intBetween0andX
 
 -- Some helpers to make tests a tad more pleasant
 infixr 0 -->
@@ -95,9 +98,10 @@ bool, int :: Ty
 bool = TyBase $ RefinedBaseTy TBool trueRefinement
 int = TyBase $ RefinedBaseTy TInt trueRefinement
 
-intLeqLenArr, intGe0 :: Ty
+intLeqLenArr, intGe0, intBetween0andX :: Ty
 intLeqLenArr = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpLeq (RArgVarLen "arr")]
 intGe0 = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpGe RArgZero]
+intBetween0andX = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpGeq RArgZero, AR ROpLe $ RArgVar "x"]
 
 intLe :: VarName -> Ty
 intLe var = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpLe (RArgVar var)]
