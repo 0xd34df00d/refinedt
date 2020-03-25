@@ -73,8 +73,10 @@ spec = do
   describe "Parsing arrows and pi-bound variables" $ let p = parse' ty in do
     it "parses pi-bound unrefined types" $
       p "x : Bool -> Bool" ~~> "x".:bool ->> bool
-    it "parses pi-bound unrefined types in parens" $
+    it "parses pi-bound nested unrefined types" $
       p "x : Bool -> y : Int -> Bool" ~~> "x".:bool ->> ("y".:int ->> bool)
+    it "parses pi-bound nested unrefined types in parens" $
+      p "(x : Bool -> y : Int -> Bool) -> Bool" ~~> ("x".:bool ->> ("y".:int ->> bool)) --> bool
 
 -- Some helpers to make tests a tad more pleasant
 infixr 0 -->
