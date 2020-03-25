@@ -2,6 +2,7 @@
 
 module ParserSpec(spec) where
 
+import Data.Bifunctor
 import Data.Void
 import Test.Hspec
 import Text.Megaparsec hiding (State)
@@ -12,9 +13,14 @@ import Toy.Language.Syntax.Types
 parse' :: Parsec Void String a -> String -> Either (ParseErrorBundle String Void) a
 parse' p = runParser (p <* eof) ""
 
+newtype ErrorMsg = ErrorMsg { getErrorMsg :: String } deriving (Eq)
+
+instance Show ErrorMsg where
+  show = getErrorMsg
+
 infixr 0 ~~>
-(~~>) :: (Show a, Show b, Eq a, Eq b) => Either a b -> b -> Expectation
-parseRes ~~> expected = parseRes `shouldBe` Right expected
+(~~>) :: (Show r, Eq r) => Either (ParseErrorBundle String Void) r -> r -> Expectation
+parseRes ~~> expected = first (ErrorMsg . errorBundlePretty) parseRes `shouldBe` Right expected
 
 spec :: Spec
 spec = do
