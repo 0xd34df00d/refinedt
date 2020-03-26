@@ -58,6 +58,7 @@ atomicRefinement = lstring "ν" >> AR <$> parseTable ops <*> args
 baseTy :: ToyMonad e s m => m BaseTy
 baseTy = lstring "Bool" $> TBool
      <|> lstring "Int" $> TInt
+     <|> lstring "IntList" $> TIntList
 
 varName :: ToyMonad e s m => m VarName
 varName = lexeme' $ VarName <$> identifier

@@ -45,3 +45,4 @@ compileAR (AR op arg) = [i|ν #{opStr} #{argStr}|]
 compileBaseTy :: BaseTy -> String
 compileBaseTy TBool = "Bool"
 compileBaseTy TInt = "Int"
+compileBaseTy TIntList = "List Int"
