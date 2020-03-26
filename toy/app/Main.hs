@@ -17,5 +17,5 @@ main :: IO ()
 main = do
   args <- getArgs
   case args of
-       ["compileTy", funDeclStr] -> putStrLn $ compileFunDecl $ parseFunDecl funDeclStr
+       ("compileTy" : decls) -> mapM_ putStrLn $ compileFunDecl . parseFunDecl <$> decls
        _ -> putStrLn "Unrecognized arguments"
