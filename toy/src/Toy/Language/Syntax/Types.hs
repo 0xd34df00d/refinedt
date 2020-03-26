@@ -7,7 +7,7 @@ import Data.String
 newtype VarName = VarName { getName :: String } deriving (Eq, Ord, Show, IsString)
 
 data BaseTy = TBool | TInt | TIntList
-  deriving (Eq, Ord, Show)
+  deriving (Eq, Ord, Show, Enum, Bounded)
 
 -- Following liquid-types-08 paper, chapter 5
 

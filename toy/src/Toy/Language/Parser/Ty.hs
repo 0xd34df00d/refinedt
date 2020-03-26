@@ -1,6 +1,6 @@
 {-# LANGUAGE TypeFamilies, FlexibleContexts #-}
 {-# LANGUAGE ConstraintKinds #-}
-{-# LANGUAGE OverloadedStrings, RecordWildCards, TupleSections #-}
+{-# LANGUAGE OverloadedStrings, RecordWildCards, TupleSections, TransformListComp #-}
 
 module Toy.Language.Parser.Ty
 ( ty
@@ -9,6 +9,8 @@ module Toy.Language.Parser.Ty
 
 import Control.Monad
 import Data.Functor
+import Data.List
+import Data.String
 import Text.Megaparsec
 
 import Toy.Language.Parser.Util
@@ -61,9 +63,11 @@ atomicRefinement = lstring "ν" >> AR <$> parseTable ops <*> args
                   ]
 
 baseTy :: ToyMonad e s m => m BaseTy
-baseTy = lstring "Bool" $> TBool
-     <|> lstring "Int" $> TInt
-     <|> lstring "IntList" $> TIntList
+baseTy = choice [ try $ lstring (fromString str) $> bty
+                | bty <- [minBound .. maxBound]
+                , let str = tail $ show bty
+                , then sortOn by negate $ length str
+                ]
 
 varName :: ToyMonad e s m => m VarName
 varName = lexeme' $ VarName <$> identifier
