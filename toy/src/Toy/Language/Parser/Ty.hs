@@ -8,8 +8,6 @@ module Toy.Language.Parser.Ty
 ) where
 
 import Control.Monad
-import Control.Monad.State.Strict
-import Data.Default
 import Data.Functor
 import Text.Megaparsec
 
@@ -17,33 +15,18 @@ import Toy.Language.Parser.Util
 import Toy.Language.Syntax.Types
 
 ty :: ToyMonad e s m => m Ty
-ty = evalStateT ty' def
+ty = TyArrow <$> try arrow
+ <|> arrowLHS
 
-ty' :: (ToyMonad e s m, MonadState ParseState m) => m Ty
-ty' = TyArrow <$> try arrow
- <|> parens ty'
- <|> TyBase <$> baseRT
+arrowLHS :: ToyMonad e s m => m Ty
+arrowLHS = parens ty <|> TyBase <$> baseRT
 
-newtype ParseState = ParseState
-  { lastArrowPos :: Maybe SourcePos
-  } deriving (Eq, Ord, Show)
-
-instance Default ParseState where
-  def = ParseState Nothing
-
-arrow :: (ToyMonad e s m, MonadState ParseState m) => m ArrowTy
+arrow :: ToyMonad e s m => m ArrowTy
 arrow = do
   piVarName <- optional $ try $ varName <* lstring ":"
-
-  curPos <- getSourcePos
-  prevPos <- gets lastArrowPos
-  guard $ Just curPos /= prevPos
-
-  modify' $ \st -> st { lastArrowPos = Just curPos }
-
-  domTy <- ty'
+  domTy <- arrowLHS
   void $ lstring "->"
-  codTy <- ty'
+  codTy <- ty
   pure $ ArrowTy { .. }
 
 baseRT :: ToyMonad e s m => m RefinedBaseTy
@@ -78,4 +61,3 @@ baseTy = lstring "Bool" $> TBool
 
 varName :: ToyMonad e s m => m VarName
 varName = lexeme' $ VarName <$> identifier
-
