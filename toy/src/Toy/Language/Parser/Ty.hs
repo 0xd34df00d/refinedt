@@ -31,7 +31,7 @@ arrow = do
     unboundLHS = (Nothing,) <$> arrowLHS
     boundLHS = try $ parens $ do
       piVarName <- Just <$> varName <* lstring ":"
-      domTy <- arrowLHS
+      domTy <- ty
       pure (piVarName, domTy)
 
 baseRT :: ToyMonad e s m => m RefinedBaseTy

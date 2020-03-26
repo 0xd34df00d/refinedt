@@ -78,7 +78,7 @@ spec = do
     it "parses pi-bound nested unrefined types in parens" $
       p "((x : Bool) -> (y : Int) -> Bool) -> Bool" ~~> ("x".:bool ->> ("y".:int ->> bool)) --> bool
     it "parses pi-bound nested unrefined types in pi-bound parens" $
-      p "(f : ((x : Bool) -> (y : Int) -> Bool)) -> Bool" ~~> "f".:("x".:bool ->> ("y".:int ->> bool)) ->> bool
+      p "(f : (x : Bool) -> (y : Int) -> Bool) -> Bool" ~~> "f".:("x".:bool ->> ("y".:int ->> bool)) ->> bool
   describe "Parsing arrows, refinements and pi-bound variables" $ let p = parse' ty in do
     it "parses pi-bound refined types" $
       p "(x : { ν : Int | ν <= len arr }) -> { ν : Int | ν >= 0 & ν < x }"
@@ -87,7 +87,7 @@ spec = do
       p "(x : { ν : Int | ν <= len arr }) -> (y : { ν : Int | ν > 0 }) -> { ν : Int | ν >= 0 & ν < x }"
         ~~> "x".:intLeqLenArr ->> ("y".:intGe0 ->> intBetween0andX)
     it "parses pi-bound nested refinement types in pi-bound parens" $
-      p "(f : ((x : { ν : Int | ν <= len arr }) -> { ν : Int | ν > 0 })) -> { ν : Int | ν >= 0 & ν < x }"
+      p "(f : (x : { ν : Int | ν <= len arr }) -> { ν : Int | ν > 0 }) -> { ν : Int | ν >= 0 & ν < x }"
         ~~> "f".:("x".:intLeqLenArr ->> intGe0) ->> intBetween0andX
 
 -- Some helpers to make tests a tad more pleasant
