@@ -1,6 +1,6 @@
 {-# LANGUAGE TypeFamilies, FlexibleContexts #-}
 {-# LANGUAGE ConstraintKinds #-}
-{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
+{-# LANGUAGE OverloadedStrings, RecordWildCards, TupleSections #-}
 
 module Toy.Language.Parser.Ty
 ( ty
@@ -23,11 +23,16 @@ arrowLHS = parens ty <|> TyBase <$> baseRT
 
 arrow :: ToyMonad e s m => m ArrowTy
 arrow = do
-  piVarName <- optional $ try $ varName <* lstring ":"
-  domTy <- arrowLHS
+  (piVarName, domTy) <- boundLHS <|> unboundLHS
   void $ lstring "->"
   codTy <- ty
   pure $ ArrowTy { .. }
+  where
+    unboundLHS = (Nothing,) <$> arrowLHS
+    boundLHS = try $ parens $ do
+      piVarName <- Just <$> varName <* lstring ":"
+      domTy <- arrowLHS
+      pure (piVarName, domTy)
 
 baseRT :: ToyMonad e s m => m RefinedBaseTy
 baseRT = try refinedTy <|> implicitTrue
