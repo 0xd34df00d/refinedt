@@ -9,7 +9,7 @@ import Toy.Language.Parser.Decl
 import Toy.Language.Syntax.Decl
 
 parseFunDecl :: String -> FunDecl
-parseFunDecl str = either (error . show) id parsed
+parseFunDecl str = either (error . errorBundlePretty) id parsed
   where
    parsed = runParser (funDecl <* eof) "" str :: Either (ParseErrorBundle String Void) FunDecl
 
