@@ -11,7 +11,7 @@ data BaseTy = TBool | TInt | TIntList
 
 -- Following liquid-types-08 paper, chapter 5
 
-data RefinementOp = ROpLe | ROpLeq | ROpEq | ROpNEq | ROpGe | ROpGeq deriving (Eq, Ord, Show)
+data RefinementOp = ROpLe | ROpLeq | ROpEq | ROpNEq | ROpGe | ROpGeq deriving (Eq, Ord, Show, Enum, Bounded)
 
 data RefinementArg = RArgZero | RArgVar VarName | RArgVarLen VarName deriving (Eq, Ord, Show)
 
