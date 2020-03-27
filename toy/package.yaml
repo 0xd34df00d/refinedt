@@ -24,6 +24,7 @@ dependencies:
 - bytestring
 - data-default
 - exceptions
+- extra
 - interpolate
 - megaparsec
 - monad-loops

@@ -9,7 +9,7 @@ module Toy.Language.Parser.Ty
 
 import Control.Monad
 import Data.Functor
-import Data.List
+import Data.List.Extra
 import Data.String
 import Text.Megaparsec
 
@@ -64,7 +64,7 @@ atomicRefinement = lstring "ν" >> AR <$> parseTable ops <*> args
 
 baseTy :: ToyMonad e s m => m BaseTy
 baseTy = choice [ try $ lstring (fromString str) $> bty
-                | bty <- [minBound .. maxBound]
+                | bty <- enumerate
                 , let str = tail $ show bty
                 , then sortOn by negate $ length str
                 ]
