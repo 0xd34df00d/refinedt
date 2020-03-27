@@ -63,3 +63,4 @@ tests:
     - toy
     - hspec
     - QuickCheck
+    - QuickCheck-GenT
