@@ -47,8 +47,8 @@ checkIdris declStr ih = do
 spec :: Spec
 spec = beforeAll startIdris $ afterAll stopIdris $
   describe "Basic smoke tests" $ do
-    it "Parses base types" $ checkIdris "someBool : Bool"
-    describe "Parsing arrow types" $ do
+    it "Compiles base types" $ checkIdris "someBool : Bool"
+    describe "Compiles arrow types" $ do
       it "base types" $ checkIdris "someFun : Int -> Bool"
       it "refinements" $ checkIdris "someFun : { ν : Int | ν > 0 } -> Bool"
       it "pi-bound vars" $ checkIdris "someFun : (x : Int) -> Bool"
