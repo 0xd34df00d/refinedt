@@ -1,5 +1,6 @@
 {-# LANGUAGE FlexibleContexts, GADTs #-}
 {-# LANGUAGE FlexibleInstances, MultiParamTypeClasses, UndecidableInstances #-}
+{-# LANGUAGE RecordWildCards #-}
 
 module CompilerSpec(spec) where
 
@@ -58,20 +59,31 @@ instance Arbitrary Ty where
   arbitrary = (`evalState` []) <$> runGenT genTy
 
 genTy :: MonadState [(VarName, BaseTy)] m => GenT m Ty
-genTy = {-frequency [ (3, TyArrow <$> genTyArrow)
+genTy = frequency [ (3, TyArrow <$> genTyArrow)
                   , (2, TyBase <$> genTyBase)
-                  ]-} TyBase <$> genTyBase
+                  ]
   where
-    genTyArrow = undefined
+    genTyArrow = do
+      domTy <- genTy
+      piVarName <- case domTy of
+                        TyArrow {} -> pure Nothing
+                        TyBase rbTy -> do
+                          cnt <- gets length
+                          let name = VarName $ "a" <> show cnt
+                          modify' ((name, baseType rbTy) :)
+                          pure $ Just name
+      codTy <- genTy
+      pure ArrowTy { .. }
+
     genTyBase = RefinedBaseTy <$> elements enumerate <*> genRefinement
     genRefinement = Refinement <$> listOf genAtomicRefinement
     genAtomicRefinement = AR <$> genRefinementOp <*> genRefinementArg
     genRefinementOp = elements enumerate
     genRefinementArg = do
       vars <- get
-      oneof $ pure RArgZero
-            : [ pure $ RArgVar var | (var, TInt) <- vars ]
-           <> [ pure $ RArgVarLen var | (var, TIntList) <- vars ]
+      elements $ RArgZero
+               : [ RArgVar var | (var, TInt) <- vars ]
+              <> [ RArgVarLen var | (var, TIntList) <- vars ]
 
 instance MonadState s m => MonadState s (GenT m) where
   state = lift . state
