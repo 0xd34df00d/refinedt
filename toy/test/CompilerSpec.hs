@@ -1,6 +1,7 @@
 {-# LANGUAGE FlexibleContexts, GADTs #-}
 {-# LANGUAGE FlexibleInstances, MultiParamTypeClasses, UndecidableInstances #-}
 {-# LANGUAGE RecordWildCards #-}
+{-# OPTIONS_GHC -Wno-orphans #-}
 
 module CompilerSpec(spec) where
 
