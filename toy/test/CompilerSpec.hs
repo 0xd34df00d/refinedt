@@ -38,13 +38,14 @@ isOkReply (List [Atom ":return", List (Atom ":ok" : _), _]) = True
 isOkReply _ = False
 
 checkIdris :: String -> IdrisHandle -> Expectation
-checkIdris declStr ih = do
-  parsed <- parse' declStr
-  runIdrisClient ih $ withFile $ \file -> do
-    write file $ compileFunDecl parsed
-    sendCommand $ loadFile file
-    reply <- iterateUntil isReturn readReply
-    liftIO $ reply `shouldSatisfy` isOkReply
+checkIdris declStr ih = parse' declStr >>= checkIdrisTy ih
+
+checkIdrisFunDecl :: IdrisHandle -> FunDecl -> Expectation
+checkIdrisFunDecl ih ty = runIdrisClient ih $ withFile $ \file -> do
+  write file $ compileFunDecl ty
+  sendCommand $ loadFile file
+  reply <- iterateUntil isReturn readReply
+  liftIO $ reply `shouldSatisfy` isOkReply
 
 spec :: Spec
 spec = beforeAll startIdris $ afterAll stopIdris $
