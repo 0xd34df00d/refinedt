@@ -78,7 +78,12 @@ genTy n
       codTy <- genTy $ n `div` 2
       pure ArrowTy { .. }
 
-    genTyBase = RefinedBaseTy <$> elements enumerate <*> genRefinement
+    genTyBase = do
+      baseType <- elements enumerate
+      baseTyRefinement <- case baseType of
+                               TInt -> genRefinement
+                               _ -> pure trueRefinement
+      pure $ RefinedBaseTy { .. }
     genRefinement = Refinement <$> listOf genAtomicRefinement
     genAtomicRefinement = AR <$> genRefinementOp <*> genRefinementArg
     genRefinementOp = elements enumerate
