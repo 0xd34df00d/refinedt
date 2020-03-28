@@ -57,6 +57,7 @@ spec = beforeAll startIdris $ afterAll stopIdris $ do
       it "refinements" $ checkIdris "someFun : { ν : Int | ν > 0 } -> Bool"
       it "pi-bound vars" $ checkIdris "someFun : (x : Int) -> Bool"
       it "pi-bound vars and refinements" $ checkIdris "someFun : (x : { ν : Int | ν > 0 }) -> Bool"
+      it "pi-bound vars some more" $ checkIdris "someFun : (ls : IntList) -> { ν : Int | ν >= 0 & ν < len ls } -> Int"
   describe "QuickCheck fun" $
     it "Compiles arbitrarily generated types" $ \ih -> property $ checkIdrisFunDecl ih . FunDecl "testFun"
 
