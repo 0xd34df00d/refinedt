@@ -57,7 +57,7 @@ spec = beforeAll startIdris $ afterAll stopIdris $
       it "pi-bound vars and refinements" $ checkIdris "someFun : (x : { ν : Int | ν > 0 }) -> Bool"
 
 instance Arbitrary Ty where
-  arbitrary = (`evalState` []) <$> runGenT (sized $ genTy True)
+  arbitrary = (`evalState` []) <$> runGenT (scale (`div` 10) $ sized $ genTy True)
 
 genTy :: MonadState [(VarName, BaseTy)] m => Bool -> Int -> GenT m Ty
 genTy isRoot n
