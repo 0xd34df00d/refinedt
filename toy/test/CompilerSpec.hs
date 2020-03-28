@@ -57,17 +57,18 @@ spec = beforeAll startIdris $ afterAll stopIdris $
       it "pi-bound vars and refinements" $ checkIdris "someFun : (x : { ν : Int | ν > 0 }) -> Bool"
 
 instance Arbitrary Ty where
-  arbitrary = (`evalState` []) <$> runGenT (sized genTy)
+  arbitrary = (`evalState` []) <$> runGenT (sized $ genTy True)
 
-genTy :: MonadState [(VarName, BaseTy)] m => Int -> GenT m Ty
-genTy n
+genTy :: MonadState [(VarName, BaseTy)] m => Bool -> Int -> GenT m Ty
+genTy isRoot n
+  | isRoot = TyArrow <$> genTyArrow
   | n == 0 = TyBase <$> genTyBase
   | otherwise = frequency [ (3, TyArrow <$> genTyArrow)
                           , (2, TyBase <$> genTyBase)
                           ]
   where
     genTyArrow = do
-      domTy <- genTy $ n `div` 2
+      domTy <- genTy False $ n `div` 2
       piVarName <- case domTy of
                         TyArrow {} -> pure Nothing
                         TyBase rbTy -> do
@@ -75,7 +76,7 @@ genTy n
                           let name = VarName $ "a" <> show cnt
                           modify' ((name, baseType rbTy) :)
                           pure $ Just name
-      codTy <- genTy $ n `div` 2
+      codTy <- genTy False $ n `div` 2
       pure ArrowTy { .. }
 
     genTyBase = do
