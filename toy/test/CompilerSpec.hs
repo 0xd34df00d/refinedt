@@ -13,6 +13,7 @@ import Data.List.Extra
 import Data.Void
 import QuickCheck.GenT
 import Test.Hspec
+import Test.QuickCheck(property)
 import Text.Megaparsec hiding (State)
 import Text.SExpression
 
@@ -48,7 +49,7 @@ checkIdrisFunDecl ih ty = runIdrisClient ih $ withFile $ \file -> do
   liftIO $ reply `shouldSatisfy` isOkReply
 
 spec :: Spec
-spec = beforeAll startIdris $ afterAll stopIdris $
+spec = beforeAll startIdris $ afterAll stopIdris $ do
   describe "Basic smoke tests" $ do
     it "Compiles base types" $ checkIdris "someBool : Bool"
     describe "Compiles arrow types" $ do
@@ -56,6 +57,8 @@ spec = beforeAll startIdris $ afterAll stopIdris $
       it "refinements" $ checkIdris "someFun : { ν : Int | ν > 0 } -> Bool"
       it "pi-bound vars" $ checkIdris "someFun : (x : Int) -> Bool"
       it "pi-bound vars and refinements" $ checkIdris "someFun : (x : { ν : Int | ν > 0 }) -> Bool"
+  describe "QuickCheck fun" $
+    it "Compiles arbitrarily generated types" $ \ih -> property $ checkIdrisFunDecl ih . FunDecl "testFun"
 
 instance Arbitrary Ty where
   arbitrary = (`evalState` []) <$> runGenT (scale (`div` 10) $ sized $ genTy True)
