@@ -39,7 +39,7 @@ isOkReply (List [Atom ":return", List (Atom ":ok" : _), _]) = True
 isOkReply _ = False
 
 checkIdris :: String -> IdrisHandle -> Expectation
-checkIdris declStr ih = parse' declStr >>= checkIdrisTy ih
+checkIdris declStr ih = parse' declStr >>= checkIdrisFunDecl ih
 
 checkIdrisFunDecl :: IdrisHandle -> FunDecl -> Expectation
 checkIdrisFunDecl ih ty = runIdrisClient ih $ withFile $ \file -> do
