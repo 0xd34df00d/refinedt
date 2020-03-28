@@ -85,7 +85,7 @@ genTy isRoot n
                                TInt -> genRefinement
                                _ -> pure trueRefinement
       pure $ RefinedBaseTy { .. }
-    genRefinement = Refinement <$> listOf genAtomicRefinement
+    genRefinement = Refinement . nub <$> listOf genAtomicRefinement
     genAtomicRefinement = AR <$> genRefinementOp <*> genRefinementArg
     genRefinementOp = elements enumerate
     genRefinementArg = do
