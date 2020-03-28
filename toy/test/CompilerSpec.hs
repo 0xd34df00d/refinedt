@@ -57,15 +57,17 @@ spec = beforeAll startIdris $ afterAll stopIdris $
       it "pi-bound vars and refinements" $ checkIdris "someFun : (x : { ν : Int | ν > 0 }) -> Bool"
 
 instance Arbitrary Ty where
-  arbitrary = (`evalState` []) <$> runGenT genTy
+  arbitrary = (`evalState` []) <$> runGenT (sized genTy)
 
-genTy :: MonadState [(VarName, BaseTy)] m => GenT m Ty
-genTy = frequency [ (3, TyArrow <$> genTyArrow)
-                  , (2, TyBase <$> genTyBase)
-                  ]
+genTy :: MonadState [(VarName, BaseTy)] m => Int -> GenT m Ty
+genTy n
+  | n == 0 = TyBase <$> genTyBase
+  | otherwise = frequency [ (3, TyArrow <$> genTyArrow)
+                          , (2, TyBase <$> genTyBase)
+                          ]
   where
     genTyArrow = do
-      domTy <- genTy
+      domTy <- genTy $ n `div` 2
       piVarName <- case domTy of
                         TyArrow {} -> pure Nothing
                         TyBase rbTy -> do
@@ -73,7 +75,7 @@ genTy = frequency [ (3, TyArrow <$> genTyArrow)
                           let name = VarName $ "a" <> show cnt
                           modify' ((name, baseType rbTy) :)
                           pure $ Just name
-      codTy <- genTy
+      codTy <- genTy $ n `div` 2
       pure ArrowTy { .. }
 
     genTyBase = RefinedBaseTy <$> elements enumerate <*> genRefinement
