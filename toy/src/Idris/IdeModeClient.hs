@@ -31,6 +31,7 @@ import Data.Kind
 import Data.String
 import Data.String.Interpolate.IsString
 import Data.Void
+import GHC.Conc
 import Numeric
 import System.IO(Handle, hPutStrLn, hFlush)
 import System.IO.Temp
@@ -92,7 +93,7 @@ newtype IdrisHandle = IdrisHandle { instancesTVar :: TVar [IdrisInstance] }
 
 startIdris :: IO IdrisHandle
 startIdris = IdrisHandle <$> do
-  instances <- replicateConcurrently 12 startIdrisInstance
+  instances <- replicateConcurrently numCapabilities startIdrisInstance
   newTVarIO instances
 
 -- assumes all handles have been returned to the pool
