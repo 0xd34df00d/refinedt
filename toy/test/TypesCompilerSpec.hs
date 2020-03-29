@@ -3,7 +3,7 @@
 {-# LANGUAGE RecordWildCards #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
-module CompilerSpec(spec) where
+module TypesCompilerSpec(spec) where
 
 import Control.Monad.IO.Class
 import Control.Monad.Loops
