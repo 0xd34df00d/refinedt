@@ -19,6 +19,8 @@ module Idris.IdeModeClient
 ) where
 
 import qualified Data.ByteString.Char8 as BS
+import Control.Concurrent.Async
+import Control.Concurrent.STM
 import Control.Exception(bracket)
 import Control.Monad
 import Control.Monad.Catch(MonadMask)
@@ -85,19 +87,42 @@ checkVersion = do
        List [Atom ":protocol-version", Number 1, Number 0] -> pure ()
        _ -> error "Unknown protocol"
 
-newtype IdrisHandle = IdrisHandle (Handle, Handle, Handle, ProcessHandle)
+newtype IdrisInstance = IdrisInstance (Handle, Handle, Handle, ProcessHandle)
+newtype IdrisHandle = IdrisHandle { instancesTVar :: TVar [IdrisInstance] }
 
 startIdris :: IO IdrisHandle
-startIdris = do
-  ih <- IdrisHandle <$> runInteractiveCommand "idris --ide-mode"
-  runIdrisClient ih checkVersion
+startIdris = IdrisHandle <$> do
+  instances <- replicateConcurrently 12 startIdrisInstance
+  newTVarIO instances
+
+-- assumes all handles have been returned to the pool
+stopIdris :: IdrisHandle -> IO ()
+stopIdris IdrisHandle { .. } = do
+  instances <- readTVarIO instancesTVar
+  mapM_ stopIdrisInstance instances
+
+startIdrisInstance :: IO IdrisInstance
+startIdrisInstance = do
+  ih <- IdrisInstance <$> runInteractiveCommand "idris --ide-mode"
+  runIdrisClientInst ih checkVersion
   pure ih
 
-stopIdris :: IdrisHandle -> IO ()
-stopIdris (IdrisHandle (stdin, stdout, stderr, ph)) = cleanupProcess (Just stdin, Just stdout, Just stderr, ph)
+stopIdrisInstance :: IdrisInstance -> IO ()
+stopIdrisInstance (IdrisInstance (stdin, stdout, stderr, ph)) = cleanupProcess (Just stdin, Just stdout, Just stderr, ph)
 
 runIdrisClient :: (MonadMask m, MonadIO m) => IdrisHandle -> IdrisClientT m r -> m r
-runIdrisClient ih@(IdrisHandle (idrStdin, idrStdout, _, _)) = viewT >=> go
+runIdrisClient IdrisHandle { .. } act = do
+  inst <- liftIO $ atomically $ do
+    available <- readTVar instancesTVar
+    when (null available) retry
+    writeTVar instancesTVar $ tail available
+    pure $ head available
+  res <- runIdrisClientInst inst act
+  liftIO $ atomically $ modifyTVar' instancesTVar (inst:)
+  pure res
+
+runIdrisClientInst :: (MonadMask m, MonadIO m) => IdrisInstance -> IdrisClientT m r -> m r
+runIdrisClientInst ih@(IdrisInstance (idrStdin, idrStdout, _, _)) = viewT >=> go
   where
     go (Return val) = pure val
     go (act :>>= cont) = intAct act >>= viewT . cont >>= go
@@ -113,7 +138,7 @@ runIdrisClient ih@(IdrisHandle (idrStdin, idrStdout, _, _)) = viewT >=> go
            Right val -> pure val
            Left err -> error $ show err
     intAct (Write f s) = liftIO $ hPutStrLn (handle f) s
-    intAct (WithFile act) = withSystemTempFile "toyidris.idr" $ \path handle -> runIdrisClient ih $ act File { .. }
+    intAct (WithFile act) = withSystemTempFile "toyidris.idr" $ \path handle -> runIdrisClientInst ih $ act File { .. }
 
 fmtLength :: Command -> String
 fmtLength cmd = replicate (6 - length hex) '0' <> hex

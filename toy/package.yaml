@@ -21,6 +21,7 @@ description:         Please see the README on GitHub at <https://github.com/0xd3
 
 dependencies:
 - base >= 4.7 && < 5
+- async
 - bytestring
 - data-default
 - exceptions
@@ -32,6 +33,7 @@ dependencies:
 - operational
 - process
 - sexpr-parser
+- stm
 - temporary
 
 ghc-options:
@@ -64,3 +66,5 @@ tests:
     - hspec
     - QuickCheck
     - QuickCheck-GenT
+    - tasty
+    - tasty-quickcheck
