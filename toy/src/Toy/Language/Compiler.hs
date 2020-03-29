@@ -31,11 +31,11 @@ compileAR :: AtomicRefinement -> String
 compileAR (AR op arg) = [i|ν #{opStr} #{argStr}|]
   where
     opStr = case op of
-                 ROpLe -> "<"
+                 ROpLt -> "<"
                  ROpLeq -> "<="
                  ROpEq -> "=="
                  ROpNEq -> "/="
-                 ROpGe -> ">"
+                 ROpGt -> ">"
                  ROpGeq -> ">="
     argStr = case arg of
                   RArgZero -> "0"

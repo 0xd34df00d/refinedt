@@ -28,7 +28,7 @@ spec = do
     it "parses unrefined type" $
       p "Bool" ~~> RefinedBaseTy TBool trueRefinement
     it "parses refined type with var" $
-      p "{ ν : Bool | ν < x }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLe (RArgVar "x")]
+      p "{ ν : Bool | ν < x }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLt (RArgVar "x")]
     it "parses refined type with zero" $
       p "{ ν : Bool | ν <= 0 }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLeq RArgZero]
     it "parses refined type with len" $
@@ -39,9 +39,9 @@ spec = do
       p "{ ν : Bool | ν >= lenarr }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVar "lenarr")]
   describe "Parsing with conjunctions" $ let p = parse' baseRT in do
     it "parses types with conjunctions 1" $
-      p "{ ν : Bool | ν < x & ν > 0 }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLe (RArgVar "x"), AR ROpGe RArgZero]
+      p "{ ν : Bool | ν < x & ν > 0 }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLt (RArgVar "x"), AR ROpGt RArgZero]
     it "parses types with conjunctions 2" $
-      p "{ ν : Bool | ν < x & ν < len arr }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLe (RArgVar "x"), AR ROpLe (RArgVarLen "arr")]
+      p "{ ν : Bool | ν < x & ν < len arr }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLt (RArgVar "x"), AR ROpLt (RArgVarLen "arr")]
   describe "Parsing arrows" $ let p = parse' ty in do
     it "still parses base types" $
       p "{ ν : Bool | ν >= len arr }" ~~> TyBase $ RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVarLen "arr")]
@@ -109,8 +109,8 @@ int = TyBase $ RefinedBaseTy TInt trueRefinement
 
 intLeqLenArr, intGe0, intBetween0andX :: Ty
 intLeqLenArr = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpLeq (RArgVarLen "arr")]
-intGe0 = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpGe RArgZero]
-intBetween0andX = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpGeq RArgZero, AR ROpLe $ RArgVar "x"]
+intGe0 = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpGt RArgZero]
+intBetween0andX = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpGeq RArgZero, AR ROpLt $ RArgVar "x"]
 
 intLe :: VarName -> Ty
-intLe var = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpLe (RArgVar var)]
+intLe var = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpLt (RArgVar var)]
