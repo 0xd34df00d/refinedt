@@ -13,8 +13,9 @@ import Data.List.Extra
 import Data.String
 import Text.Megaparsec
 
-import Toy.Language.Parser.Util
 import Toy.Language.Syntax.Types
+import Toy.Language.Parser.Common
+import Toy.Language.Parser.Util
 
 ty :: ToyMonad e s m => m Ty
 ty = TyArrow <$> try arrow
@@ -68,6 +69,3 @@ baseTy = choice [ try $ lstring (fromString str) $> bty
                 , let str = tail $ show bty
                 , then sortOn by negate $ length str
                 ]
-
-varName :: ToyMonad e s m => m VarName
-varName = lexeme' $ VarName <$> identifier
