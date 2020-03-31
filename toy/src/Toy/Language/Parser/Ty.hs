@@ -1,6 +1,6 @@
 {-# LANGUAGE TypeFamilies, FlexibleContexts #-}
 {-# LANGUAGE ConstraintKinds #-}
-{-# LANGUAGE OverloadedStrings, RecordWildCards, TupleSections, TransformListComp #-}
+{-# LANGUAGE OverloadedStrings, RecordWildCards, TupleSections #-}
 
 module Toy.Language.Parser.Ty
 ( ty
@@ -64,8 +64,7 @@ atomicRefinement = lstring "ν" >> AR <$> parseTable ops <*> args
                   ]
 
 baseTy :: ToyMonad e s m => m BaseTy
-baseTy = choice [ try $ lstring (fromString str) $> bty
-                | bty <- enumerate
-                , let str = tail $ show bty
-                , then sortOn by negate $ length str
-                ]
+baseTy = parseTable [ (fromString str, bty)
+                    | bty <- enumerate
+                    , let str = tail $ show bty
+                    ]
