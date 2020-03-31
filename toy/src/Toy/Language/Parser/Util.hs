@@ -1,10 +1,11 @@
 {-# LANGUAGE ConstraintKinds, TypeFamilies, FlexibleContexts #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings, TransformListComp #-}
 
 module Toy.Language.Parser.Util where
 
 import Data.Char
 import Data.Functor
+import Data.List.Extra
 import Data.String
 import GHC.Exts
 import Text.Megaparsec
@@ -24,7 +25,10 @@ identifier = do
 -- Utils
 
 parseTable :: ToyMonad e s m => [(Tokens s, a)] -> m a
-parseTable table = choice [ lstring str $> op | (str, op) <- table ]
+parseTable table = choice [ lstring str $> op
+                          | (str, op) <- table
+                          , then sortOn by negate (length $ toList str)
+                          ]
 
 lexeme' :: ToyMonad e s m => m a -> m a
 lexeme' = lexeme lexSpace
