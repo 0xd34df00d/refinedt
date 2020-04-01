@@ -10,8 +10,8 @@ import Text.Megaparsec
 import Toy.Language.Parser.Ty
 import Toy.Language.Syntax.Types
 
-parse' :: Parsec Void String a -> String -> Either (ParseErrorBundle String Void) a
-parse' p = runParser (p <* eof) ""
+parse' :: Parsec Void String a -> String -> Either ErrorMsg a
+parse' p = first (ErrorMsg . errorBundlePretty) . runParser (p <* eof) ""
 
 newtype ErrorMsg = ErrorMsg { getErrorMsg :: String } deriving (Eq)
 
@@ -19,8 +19,8 @@ instance Show ErrorMsg where
   show = getErrorMsg
 
 infixr 0 ~~>
-(~~>) :: (Show r, Eq r) => Either (ParseErrorBundle String Void) r -> r -> Expectation
-parseRes ~~> expected = first (ErrorMsg . errorBundlePretty) parseRes `shouldBe` Right expected
+(~~>) :: (Show r, Eq r) => Either ErrorMsg r -> r -> Expectation
+parseRes ~~> expected = parseRes `shouldBe` Right expected
 
 spec :: Spec
 spec = do
