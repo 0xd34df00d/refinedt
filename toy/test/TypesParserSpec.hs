@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module ParserSpec(spec) where
+module TypesParserSpec(spec) where
 
 import Data.Bifunctor
 import Data.Void
