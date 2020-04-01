@@ -2,21 +2,12 @@
 
 module TypesParserSpec(spec) where
 
-import Data.Bifunctor
-import Data.Void
 import Test.Hspec
-import Text.Megaparsec
 
 import Toy.Language.Parser.Ty
 import Toy.Language.Syntax.Types
 
-parse' :: Parsec Void String a -> String -> Either ErrorMsg a
-parse' p = first (ErrorMsg . errorBundlePretty) . runParser (p <* eof) ""
-
-newtype ErrorMsg = ErrorMsg { getErrorMsg :: String } deriving (Eq)
-
-instance Show ErrorMsg where
-  show = getErrorMsg
+import TestUtils
 
 infixr 0 ~~>
 (~~>) :: (Show r, Eq r) => Either ErrorMsg r -> r -> Expectation
