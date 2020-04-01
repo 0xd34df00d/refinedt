@@ -3,7 +3,7 @@
 {-# LANGUAGE RecordWildCards #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
-module TypesCompilerSpec(spec) where
+module T05TypesCompilerSpec(spec) where
 
 import Control.Monad.IO.Class
 import Control.Monad.Loops
@@ -59,7 +59,7 @@ spec = parallel $ beforeAll startIdris $ afterAll stopIdris $ do
       it "pi-bound vars and refinements" $ checkIdris "someFun : (x : { ν : Int | ν > 0 }) -> Bool"
       it "pi-bound vars some more" $ checkIdris "someFun : (ls : IntList) -> { ν : Int | ν >= 0 & ν < len ls } -> Int"
   describe "QuickCheck fun" $
-    it "Compiles arbitrarily generated types" $ \ih -> property $ checkIdrisFunDecl ih . FunDecl "testFun"
+    xit "Compiles arbitrarily generated types" $ \ih -> property $ checkIdrisFunDecl ih . FunDecl "testFun"
 
 instance Arbitrary Ty where
   arbitrary = (`evalState` []) <$> runGenT (scale (`div` 10) $ sized $ genTy True)

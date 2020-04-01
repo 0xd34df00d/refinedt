@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module TypesParserSpec(spec) where
+module T00TypesParserSpec(spec) where
 
 import Test.Hspec
 
