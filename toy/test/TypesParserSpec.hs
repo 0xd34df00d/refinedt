@@ -5,7 +5,7 @@ module TypesParserSpec(spec) where
 import Data.Bifunctor
 import Data.Void
 import Test.Hspec
-import Text.Megaparsec hiding (State)
+import Text.Megaparsec
 
 import Toy.Language.Parser.Ty
 import Toy.Language.Syntax.Types

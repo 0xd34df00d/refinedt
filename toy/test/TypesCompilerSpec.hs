@@ -14,7 +14,7 @@ import Data.Void
 import QuickCheck.GenT
 import Test.Hspec
 import Test.QuickCheck(property)
-import Text.Megaparsec hiding (State)
+import Text.Megaparsec
 import Text.SExpression
 
 import Idris.IdeModeClient
