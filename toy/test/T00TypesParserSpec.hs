@@ -9,10 +9,6 @@ import Toy.Language.Syntax.Types
 
 import TestUtils
 
-infixr 0 ~~>
-(~~>) :: (Show r, Eq r) => Either ErrorMsg r -> r -> Expectation
-parseRes ~~> expected = parseRes `shouldBe` Right expected
-
 spec :: Spec
 spec = do
   describe "Parsing base refined types" $ let p = parse' baseRT in do
