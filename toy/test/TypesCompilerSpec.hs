@@ -10,11 +10,9 @@ import Control.Monad.Loops
 import Control.Monad.State.Strict
 import Data.Either
 import Data.List.Extra
-import Data.Void
 import QuickCheck.GenT
 import Test.Hspec
 import Test.QuickCheck(property)
-import Text.Megaparsec
 import Text.SExpression
 
 import Idris.IdeModeClient
@@ -23,12 +21,14 @@ import Toy.Language.Parser.Decl
 import Toy.Language.Syntax.Decl
 import Toy.Language.Syntax.Types
 
-parse' :: String -> IO FunDecl
-parse' str = do
+import TestUtils
+
+parseFunDecl :: String -> IO FunDecl
+parseFunDecl str = do
   parsed `shouldSatisfy` isRight
   pure $ either (error . show) id parsed
   where
-   parsed = runParser (funDecl <* eof) "" str :: Either (ParseErrorBundle String Void) FunDecl
+    parsed = parse' funDecl str
 
 isReturn :: SExpr -> Bool
 isReturn (List (Atom ":return" : _)) = True
@@ -39,7 +39,7 @@ isOkReply (List [Atom ":return", List (Atom ":ok" : _), _]) = True
 isOkReply _ = False
 
 checkIdris :: String -> IdrisHandle -> Expectation
-checkIdris declStr ih = parse' declStr >>= checkIdrisFunDecl ih
+checkIdris declStr ih = parseFunDecl declStr >>= checkIdrisFunDecl ih
 
 checkIdrisFunDecl :: IdrisHandle -> FunDecl -> Expectation
 checkIdrisFunDecl ih ty = runIdrisClient ih $ withFile $ \file -> do
