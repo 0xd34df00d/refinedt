@@ -22,5 +22,5 @@ data Term
   | TInteger Int
   | TOperator Op
   | TApp Term Term
-  | TIfThenElse { eif :: Term, ethen :: Term, eelse :: Term }
+  | TIfThenElse { tif :: Term, tthen :: Term, telse :: Term }
   deriving (Eq, Ord, Show)

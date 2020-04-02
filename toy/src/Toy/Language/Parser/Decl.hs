@@ -47,12 +47,12 @@ tapp = do
 tIfThenElse :: ToyMonad e s m => m (Term, Term, Term)
 tIfThenElse = do
   void $ lstring "if"
-  eif <- term
+  tif <- term
   void $ lstring "then"
-  ethen <- term
+  tthen <- term
   void $ lstring "else"
-  eelse <- term
-  pure (eif, ethen, eelse)
+  telse <- term
+  pure (tif, tthen, telse)
 
 op :: ToyMonad e s m => m Op
 op = parseTable [ ("+", OpPlus)
