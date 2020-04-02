@@ -29,12 +29,12 @@ funDef = do
   pure FunDef { .. }
 
 term :: ToyMonad e s m => m Term
-term = choice $ try <$> eparsers
+term = foldl1 TApp <$> atoms `sepBy1` lexSpace
   where
-    eparsers = [ TName <$> varName
+    atoms = choice $ try <$> subAtoms
+    subAtoms = [ TName <$> varName
                , TInteger <$> lexeme' decimal
                , TOperator <$> op
-       , uncurry TApp <$> tapp
       , uncurry3 TIfThenElse <$> tIfThenElse
                ]
 
