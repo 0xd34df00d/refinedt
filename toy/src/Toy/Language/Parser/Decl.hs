@@ -29,12 +29,12 @@ funDef = do
   pure FunDef { .. }
 
 term :: ToyMonad e s m => m Term
-term = foldl1 TApp <$> atoms `sepBy1` lexSpace
+term = foldl1 TApp <$> (tbinOp <|> atom) `sepBy1` lexSpace
   where
-    atoms = choice $ try <$> subAtoms
+    tbinOp = try $ TBinOp <$> atom <*> binOp <*> atom
+    atom = choice $ try <$> subAtoms
     subAtoms = [ TName <$> varName
                , TInteger <$> lexeme' decimal
-               , TOperator <$> op
       , uncurry3 TIfThenElse <$> tIfThenElse
                ]
 
@@ -54,9 +54,9 @@ tIfThenElse = do
   telse <- term
   pure (tif, tthen, telse)
 
-op :: ToyMonad e s m => m Op
-op = parseTable [ ("+", OpPlus)
-                , ("-", OpMinus)
-                , (">", OpGt)
-                , ("<", OpLt)
-                ]
+binOp :: ToyMonad e s m => m BinOp
+binOp = parseTable [ ("+", BinOpPlus)
+                   , ("-", BinOpMinus)
+                   , (">", BinOpGt)
+                   , ("<", BinOpLt)
+                   ]

@@ -15,12 +15,12 @@ data FunDef = FunDef
   , funBody :: Term
   } deriving (Eq, Ord, Show)
 
-data Op = OpPlus | OpMinus | OpGt | OpLt deriving (Eq, Ord, Show)
+data BinOp = BinOpPlus | BinOpMinus | BinOpGt | BinOpLt deriving (Eq, Ord, Show)
 
 data Term
   = TName VarName
   | TInteger Int
-  | TOperator Op
+  | TBinOp Term BinOp Term
   | TApp Term Term
   | TIfThenElse { tif :: Term, tthen :: Term, telse :: Term }
   deriving (Eq, Ord, Show)
