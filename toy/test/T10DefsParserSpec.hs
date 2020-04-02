@@ -12,5 +12,9 @@ import TestUtils
 spec :: Spec
 spec = do
   describe "Parsing basic fundefs" $ let p = parse' funDef in do
-    it "parses identity function" $ p "id x = x" ~~> FunDef "id" ["x"] (TName "x")
-    it "parses application" $ p "dot x y = x y" ~~> FunDef "dot" ["x", "y"] (TName "x" `TApp` TName "y")
+    it "parses identity function" $ p "id x = x" ~~> FunDef "id" ["x"] nx
+    it "parses application" $ p "dot x y = x y" ~~> FunDef "dot" ["x", "y"] (nx `TApp` ny)
+
+nx, ny :: Term
+nx = TName "x"
+ny = TName "y"
