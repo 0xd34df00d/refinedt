@@ -36,6 +36,7 @@ term = foldl1 TApp <$> (tbinOp <|> atom) `sepBy1` lexSpace
     subAtoms = [ TName <$> varName
                , TInteger <$> lexeme' decimal
       , uncurry3 TIfThenElse <$> tIfThenElse
+               , parens term
                ]
 
 tapp :: ToyMonad e s m => m (Term, Term)

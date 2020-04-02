@@ -18,6 +18,8 @@ spec =
       p "dot x y = x y" ~~> FunDef "dot" ["x", "y"] (nx `TApp` ny)
     it "parses ops" $
       p "f x y = x > y" ~~> FunDef "f" ["x", "y"] (TBinOp nx BinOpGt ny)
+    it "parses parens" $
+      p "f x y = x (y x)" ~~> FunDef "f" ["x", "y"] (nx `TApp` (ny `TApp` nx))
 
 nx, ny :: Term
 nx = TName "x"
