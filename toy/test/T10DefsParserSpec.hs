@@ -12,4 +12,4 @@ import TestUtils
 spec :: Spec
 spec = do
   describe "Parsing basic fundefs" $ let p = parse' funDef in do
-    it "parses identity function" $ p "id x = x" ~~> FunDef "id" ["x"] (EName "x")
+    it "parses identity function" $ p "id x = x" ~~> FunDef "id" ["x"] (TName "x")

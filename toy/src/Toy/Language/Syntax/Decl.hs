@@ -12,15 +12,15 @@ data FunDecl = FunDecl
 data FunDef = FunDef
   { funName :: String
   , funArgs :: [VarName]
-  , funBody :: Expr
+  , funBody :: Term
   } deriving (Eq, Ord, Show)
 
 data Op = OpPlus | OpMinus | OpGt | OpLt deriving (Eq, Ord, Show)
 
-data Expr
-  = EName VarName
-  | EInt Int
-  | EOperator Op
-  | EApp Expr Expr
-  | EIfThenElse { eif :: Expr, ethen :: Expr, eelse :: Expr }
+data Term
+  = TName VarName
+  | TInteger Int
+  | TOperator Op
+  | TApp Term Term
+  | TIfThenElse { eif :: Term, ethen :: Term, eelse :: Term }
   deriving (Eq, Ord, Show)

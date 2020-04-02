@@ -25,33 +25,33 @@ funDef = do
   funName <- lexeme' identifier
   funArgs <- many varName
   void $ lstring "="
-  funBody <- expr
+  funBody <- term
   pure FunDef { .. }
 
-expr :: ToyMonad e s m => m Expr
-expr = choice $ try <$> eparsers
+term :: ToyMonad e s m => m Term
+term = choice $ try <$> eparsers
   where
-    eparsers = [ EName <$> varName
-               , EInt <$> lexeme' decimal
-               , EOperator <$> op
-       , uncurry EApp <$> eapp
-      , uncurry3 EIfThenElse <$> eIfThenElse
+    eparsers = [ TName <$> varName
+               , TInteger <$> lexeme' decimal
+               , TOperator <$> op
+       , uncurry TApp <$> tapp
+      , uncurry3 TIfThenElse <$> tIfThenElse
                ]
 
-eapp :: ToyMonad e s m => m (Expr, Expr)
-eapp = do
-  lhs <- expr
-  rhs <- expr
+tapp :: ToyMonad e s m => m (Term, Term)
+tapp = do
+  lhs <- term
+  rhs <- term
   pure (lhs, rhs)
 
-eIfThenElse :: ToyMonad e s m => m (Expr, Expr, Expr)
-eIfThenElse = do
+tIfThenElse :: ToyMonad e s m => m (Term, Term, Term)
+tIfThenElse = do
   void $ lstring "if"
-  eif <- expr
+  eif <- term
   void $ lstring "then"
-  ethen <- expr
+  ethen <- term
   void $ lstring "else"
-  eelse <- expr
+  eelse <- term
   pure (eif, ethen, eelse)
 
 op :: ToyMonad e s m => m Op
