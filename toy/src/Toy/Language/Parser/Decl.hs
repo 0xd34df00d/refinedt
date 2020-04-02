@@ -24,6 +24,7 @@ funDef :: ToyMonad e s m => m FunDef
 funDef = do
   funName <- lexeme' identifier
   funArgs <- many varName
+  void $ lstring "="
   funBody <- expr
   pure FunDef { .. }
 
