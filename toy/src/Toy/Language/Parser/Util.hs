@@ -3,6 +3,7 @@
 
 module Toy.Language.Parser.Util where
 
+import Control.Monad
 import Data.Char
 import Data.Functor
 import Data.List.Extra
@@ -20,7 +21,9 @@ identifier :: ToyMonad e s m => m String
 identifier = do
   firstLetter <- letterChar
   rest <- takeWhileP (Just "variable") isAlphaNum
-  pure $ firstLetter : toList rest
+  let res = firstLetter : toList rest
+  guard $ res `notElem` ["if", "then", "else"]
+  pure res
 
 -- Utils
 
