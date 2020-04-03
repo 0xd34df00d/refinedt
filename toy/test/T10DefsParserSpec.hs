@@ -16,11 +16,14 @@ spec =
       p "id x = x" ~~> FunDef "id" ["x"] nx
     it "parses application" $
       p "dot x y = x y" ~~> FunDef "dot" ["x", "y"] (nx `TApp` ny)
+    it "parses n-ary application" $
+      p "f x y z = x y z" ~~> FunDef "f" ["x", "y", "z"] (nx `TApp` ny `TApp` nz)
     it "parses ops" $
       p "f x y = x > y" ~~> FunDef "f" ["x", "y"] (TBinOp nx BinOpGt ny)
     it "parses parens" $
       p "f x y = x (y x)" ~~> FunDef "f" ["x", "y"] (nx `TApp` (ny `TApp` nx))
 
-nx, ny :: Term
+nx, ny, nz :: Term
 nx = TName "x"
 ny = TName "y"
+nz = TName "z"
