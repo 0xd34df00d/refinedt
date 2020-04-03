@@ -14,5 +14,5 @@ instance Show ErrorMsg where
   show = getErrorMsg
 
 infixr 0 ~~>
-(~~>) :: (Show r, Eq r) => Either ErrorMsg r -> r -> Expectation
+(~~>) :: (Show err, Eq err, Show r, Eq r) => Either err r -> r -> Expectation
 parseRes ~~> expected = parseRes `shouldBe` Right expected
