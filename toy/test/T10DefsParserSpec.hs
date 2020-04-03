@@ -22,8 +22,14 @@ spec =
       p "f x y = x > y" ~~> FunDef "f" ["x", "y"] (TBinOp nx BinOpGt ny)
     it "parses parens" $
       p "f x y = x (y x)" ~~> FunDef "f" ["x", "y"] (nx `TApp` (ny `TApp` nx))
+    it "parses basic if-then-else" $
+      p "f b = if b then b else b" ~~> FunDef "f" ["b"] (TIfThenElse nb nb nb)
+    it "parses more interesting if-then-else" $
+      p "max x y = if x > y then x else y" ~~> FunDef "max" ["x", "y"]
+                                                  (TIfThenElse (TBinOp nx BinOpGt ny) nx ny)
 
-nx, ny, nz :: Term
+nb, nx, ny, nz :: Term
+nb = TName "b"
 nx = TName "x"
 ny = TName "y"
 nz = TName "z"
