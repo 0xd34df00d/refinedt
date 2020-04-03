@@ -22,7 +22,7 @@ identifier = do
   firstLetter <- letterChar
   rest <- takeWhileP (Just "variable") isAlphaNum
   let res = firstLetter : toList rest
-  guard $ res `notElem` ["if", "then", "else"]
+  when (res `elem` ["if", "then", "else"]) $ unexpected $ Label $ fromList $ "keyword \"" <> res <> "\""
   pure res
 
 -- Utils
