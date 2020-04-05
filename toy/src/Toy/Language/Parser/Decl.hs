@@ -21,8 +21,11 @@ funDecl = do
   pure FunSig { .. }
 
 funDef :: ToyMonad e s m => m FunDef
-funDef = do
-  funName <- lexeme' identifier
+funDef = funDefNamed identifier
+
+funDefNamed :: ToyMonad e s m => m String -> m FunDef
+funDefNamed funNameParser = do
+  funName <- lexeme' funNameParser
   funArgs <- many varName
   void $ lstring "="
   funBody <- term
