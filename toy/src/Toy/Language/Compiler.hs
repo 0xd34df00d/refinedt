@@ -5,7 +5,7 @@ module Toy.Language.Compiler where
 import Data.List
 import Data.String.Interpolate
 
-import Toy.Language.Syntax.Decl
+import Toy.Language.Syntax.Decls
 import Toy.Language.Syntax.Types
 
 compileFunDecl :: FunDecl -> String

@@ -5,7 +5,7 @@ module T10DefsParserSpec(spec) where
 import Test.Hspec
 
 import Toy.Language.Parser.Decl
-import Toy.Language.Syntax.Decl
+import Toy.Language.Syntax.Decls
 
 import TestUtils
 

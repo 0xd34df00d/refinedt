@@ -1,6 +1,6 @@
 {-# LANGUAGE DuplicateRecordFields #-}
 
-module Toy.Language.Syntax.Decl where
+module Toy.Language.Syntax.Decls where
 
 import Toy.Language.Syntax.Types
 

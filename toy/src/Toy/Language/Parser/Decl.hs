@@ -11,7 +11,7 @@ import Text.Megaparsec.Char.Lexer
 import Toy.Language.Parser.Common
 import Toy.Language.Parser.Ty
 import Toy.Language.Parser.Util
-import Toy.Language.Syntax.Decl
+import Toy.Language.Syntax.Decls
 
 funDecl :: ToyMonad e s m => m FunDecl
 funDecl = do

@@ -18,7 +18,7 @@ import Text.SExpression
 import Idris.IdeModeClient
 import Toy.Language.Compiler
 import Toy.Language.Parser.Decl
-import Toy.Language.Syntax.Decl
+import Toy.Language.Syntax.Decls
 import Toy.Language.Syntax.Types
 
 import TestUtils
