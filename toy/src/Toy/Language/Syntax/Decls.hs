@@ -4,7 +4,7 @@ module Toy.Language.Syntax.Decls where
 
 import Toy.Language.Syntax.Types
 
-data FunDecl = FunDecl
+data FunSig = FunSig
   { funName :: String
   , funTy :: Ty
   } deriving (Eq, Ord, Show)

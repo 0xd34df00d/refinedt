@@ -8,8 +8,8 @@ import Data.String.Interpolate
 import Toy.Language.Syntax.Decls
 import Toy.Language.Syntax.Types
 
-compileFunDecl :: FunDecl -> String
-compileFunDecl FunDecl { .. } = [i|#{funName} : #{compileTy funTy}|]
+compileFunDecl :: FunSig -> String
+compileFunDecl FunSig { .. } = [i|#{funName} : #{compileTy funTy}|]
 
 compileTy :: Ty -> String
 compileTy (TyBase RefinedBaseTy { .. })

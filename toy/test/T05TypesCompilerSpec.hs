@@ -23,7 +23,7 @@ import Toy.Language.Syntax.Types
 
 import TestUtils
 
-parseFunDecl :: String -> IO FunDecl
+parseFunDecl :: String -> IO FunSig
 parseFunDecl str = do
   parsed `shouldSatisfy` isRight
   pure $ either (error . show) id parsed
@@ -41,7 +41,7 @@ isOkReply _ = False
 checkIdris :: String -> IdrisHandle -> Expectation
 checkIdris declStr ih = parseFunDecl declStr >>= checkIdrisFunDecl ih
 
-checkIdrisFunDecl :: IdrisHandle -> FunDecl -> Expectation
+checkIdrisFunDecl :: IdrisHandle -> FunSig -> Expectation
 checkIdrisFunDecl ih ty = runIdrisClient ih $ withFile $ \file -> do
   write file $ compileFunDecl ty
   sendCommand $ loadFile file
@@ -59,7 +59,7 @@ spec = parallel $ beforeAll startIdris $ afterAll stopIdris $ do
       it "pi-bound vars and refinements" $ checkIdris "someFun : (x : { ν : Int | ν > 0 }) -> Bool"
       it "pi-bound vars some more" $ checkIdris "someFun : (ls : IntList) -> { ν : Int | ν >= 0 & ν < len ls } -> Int"
   describe "QuickCheck fun" $
-    xit "Compiles arbitrarily generated types" $ \ih -> property $ checkIdrisFunDecl ih . FunDecl "testFun"
+    xit "Compiles arbitrarily generated types" $ \ih -> property $ checkIdrisFunDecl ih . FunSig "testFun"
 
 instance Arbitrary Ty where
   arbitrary = (`evalState` []) <$> runGenT (scale (`div` 10) $ sized $ genTy True)

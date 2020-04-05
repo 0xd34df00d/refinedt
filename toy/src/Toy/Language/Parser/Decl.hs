@@ -13,12 +13,12 @@ import Toy.Language.Parser.Ty
 import Toy.Language.Parser.Util
 import Toy.Language.Syntax.Decls
 
-funDecl :: ToyMonad e s m => m FunDecl
+funDecl :: ToyMonad e s m => m FunSig
 funDecl = do
   funName <- lexeme' identifier
   void $ lsymbol ":"
   funTy <- ty
-  pure FunDecl { .. }
+  pure FunSig { .. }
 
 funDef :: ToyMonad e s m => m FunDef
 funDef = do
