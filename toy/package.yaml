@@ -26,6 +26,7 @@ dependencies:
 - data-default
 - exceptions
 - extra
+- hashable
 - interpolate
 - megaparsec
 - monad-loops

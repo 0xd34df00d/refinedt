@@ -2,9 +2,10 @@
 
 module Toy.Language.Syntax.Types where
 
+import Data.Hashable
 import Data.String
 
-newtype VarName = VarName { getName :: String } deriving (Eq, Ord, Show, IsString)
+newtype VarName = VarName { getName :: String } deriving (Eq, Ord, Show, IsString, Hashable)
 
 data BaseTy = TBool | TInt | TIntList
   deriving (Eq, Ord, Show, Enum, Bounded)
