@@ -18,8 +18,9 @@ spec =
       p "dot x y = x y" ~~> FunDef "dot" ["x", "y"] (nx `TApp` ny)
     it "parses n-ary application" $
       p "f x y z = x y z" ~~> FunDef "f" ["x", "y", "z"] (nx `TApp` ny `TApp` nz)
-    it "parses ops" $
+    it "parses ops" $ do
       p "f x y = x > y" ~~> FunDef "f" ["x", "y"] (TBinOp nx BinOpGt ny)
+      p "add x y = x + y" ~~> FunDef "add" ["x", "y"] (TBinOp nx BinOpPlus ny)
     it "parses parens" $
       p "f x y = x (y x)" ~~> FunDef "f" ["x", "y"] (nx `TApp` (ny `TApp` nx))
     it "parses basic if-then-else" $
