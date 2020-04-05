@@ -35,6 +35,7 @@ dependencies:
 - sexpr-parser
 - stm
 - temporary
+- unordered-containers
 - z3
 
 ghc-options:
