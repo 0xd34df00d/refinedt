@@ -34,7 +34,7 @@ funDefNamed funNameParser = do
 term :: ToyMonad e s m => m Term
 term = foldl1 TApp <$> (tbinOp <|> atom) `sepBy1` lexSpace
   where
-    tbinOp = try $ TBinOp <$> atom <*> binOp <*> atom
+    tbinOp = try $ TBinOp <$> atom <*> binOp <*> (tbinOp <|> atom)
     atom = choice $ try <$> subAtoms
     subAtoms = [ TName <$> varName
                , TInteger <$> lexeme' decimal

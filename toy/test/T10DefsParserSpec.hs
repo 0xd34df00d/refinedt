@@ -21,6 +21,8 @@ spec =
     it "parses ops" $ do
       p "f x y = x > y" ~~> FunDef "f" ["x", "y"] (TBinOp nx BinOpGt ny)
       p "add x y = x + y" ~~> FunDef "add" ["x", "y"] (TBinOp nx BinOpPlus ny)
+    it "parses nested ops" $
+      p "add x y z = x + y + z" ~~> FunDef "add" ["x", "y", "z"] (TBinOp nx BinOpPlus (TBinOp ny BinOpPlus nz))
     it "parses parens" $
       p "f x y = x (y x)" ~~> FunDef "f" ["x", "y"] (nx `TApp` (ny `TApp` nx))
     it "parses basic if-then-else" $
