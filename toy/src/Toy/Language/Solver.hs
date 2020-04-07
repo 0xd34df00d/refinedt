@@ -6,7 +6,6 @@ module Toy.Language.Solver where
 import qualified Data.HashMap.Strict as HM
 import Control.Arrow
 import Control.Monad
-import Data.Functor
 import Z3.Monad
 
 import Toy.Language.Syntax.Decls
@@ -28,22 +27,28 @@ type ArgTypes = HM.HashMap VarName Ty
 
 -- This expects that the pi-binders names in the type are equal to the argument names in the definition.
 -- TODO explicitly check for this.
-mkScript :: ArgTypes -> Ty -> Term -> Z3 SolveRes
+mkScript :: ArgTypes -> RefinedBaseTy -> Term -> Z3 SolveRes
 mkScript args target term = do
   z3vars <- HM.fromList <$> mapM sequence [ (var, mkFreshIntVar $ getName var)
                                           | (var, TyBase RefinedBaseTy { baseType = TInt }) <- HM.toList args
                                           ]
-  assertArgsCstrs $ HM.intersectionWith (,) args z3vars
-  pure undefined
+  let z3args = HM.intersectionWith (,) args z3vars
+
+  argsPresup <- genArgsPresup z3args
+
+  res <- mkFreshIntVar "_res$" -- TODO don't assume result : Int
+  resConcl <- genRefinementCstrs z3args target res >>= mkAnd
+
+  assert =<< argsPresup `mkImplies` resConcl
+
+  convertZ3Result <$> check
 
 type ArgZ3Types = HM.HashMap VarName (Ty, AST)
 
-assertArgsCstrs :: ArgZ3Types -> Z3 ()
-assertArgsCstrs args = do
-  allCstrs <- foldM addVar [] $ HM.elems args
-  mkAnd allCstrs >>= assert
+genArgsPresup :: ArgZ3Types -> Z3 AST
+genArgsPresup z3args = foldM addVar [] (HM.elems z3args) >>= mkAnd
   where
-    addVar cstrs (TyBase rbTy, z3var) = (cstrs <>) <$> genRefinementCstrs args rbTy z3var
+    addVar cstrs (TyBase rbTy, z3var) = (cstrs <>) <$> genRefinementCstrs z3args rbTy z3var
     addVar cstrs _ = pure cstrs
 
 genRefinementCstrs :: ArgZ3Types -> RefinedBaseTy -> AST -> Z3 [AST]
@@ -75,8 +80,8 @@ convertZ3Result Sat = Satisfied
 convertZ3Result Unsat = Unsatisfied
 convertZ3Result Undef = Unsatisfied -- TODO
 
-splitTypes :: FunSig -> ([Ty], Ty)
+splitTypes :: FunSig -> ([Ty], RefinedBaseTy)
 splitTypes = go . funTy
   where
-    go ty@TyBase {} = ([], ty)
+    go (TyBase rbTy) = ([], rbTy)
     go (TyArrow ArrowTy { .. }) = first (domTy :) $ go codTy
