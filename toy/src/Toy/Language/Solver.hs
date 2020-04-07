@@ -36,18 +36,24 @@ mkScript args target term = do
   assertArgsCstrs $ HM.intersectionWith (,) args z3vars
   pure undefined
 
-assertArgsCstrs :: HM.HashMap VarName (Ty, AST) -> Z3 ()
-assertArgsCstrs args = allCstrs $> ()
-  where
-    allCstrs = foldM addVar [] $ HM.elems args
+type ArgZ3Types = HM.HashMap VarName (Ty, AST)
 
-    addVar cstrs (TyBase rbt, z3var) | not $ null conjs = do
-      when (baseType rbt /= TInt) $ error "Non-int refinements unsupported for now"
-      varCstrs <- mapM (genCstr z3var) conjs
-      pure $ cstrs <> varCstrs
-      where
-        conjs = conjuncts $ baseTyRefinement rbt
+assertArgsCstrs :: ArgZ3Types -> Z3 ()
+assertArgsCstrs args = do
+  allCstrs <- foldM addVar [] $ HM.elems args
+  mkAnd allCstrs >>= assert
+  where
+    addVar cstrs (TyBase rbTy, z3var) = (cstrs <>) <$> genRefinementCstrs args rbTy z3var
     addVar cstrs _ = pure cstrs
+
+genRefinementCstrs :: ArgZ3Types -> RefinedBaseTy -> AST -> Z3 [AST]
+genRefinementCstrs args rbTy z3var
+  | not $ null conjs = do
+    when (baseType rbTy /= TInt) $ error "Non-int refinements unsupported for now"
+    mapM (genCstr z3var) conjs
+  | otherwise = pure []
+  where
+    conjs = conjuncts $ baseTyRefinement rbTy
 
     genCstr v (AR op arg) = do
       z3arg <- case arg of
