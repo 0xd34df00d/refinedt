@@ -42,9 +42,16 @@ mkScript args target term = do
   resConcl <- genRefinementCstrs z3args target res >>= mkAnd
 
   assert =<< genTermsCstrs z3args res term
-  assert =<< argsPresup `mkImplies` resConcl
 
-  convertZ3Result <$> check
+  assert =<< mkNot =<< argsPresup `mkImplies` resConcl
+
+  --getModel >>= modelToString . fromJust . snd >>= liftIO . putStrLn
+
+  convertZ3Result . invert <$> check
+  where
+    invert Sat = Unsat
+    invert Unsat = Sat
+    invert Undef = Undef
 
 type ArgZ3Types = HM.HashMap VarName (Ty, Z3VarName)
 
