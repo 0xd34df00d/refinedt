@@ -41,11 +41,29 @@ mkScript args target term = do
   res <- Z3VarName <$> mkFreshIntVar "_res$" -- TODO don't assume result : Int
   resConcl <- genRefinementCstrs z3args target res >>= mkAnd
 
+  assert =<< genTermsCstrs z3args res term
   assert =<< argsPresup `mkImplies` resConcl
 
   convertZ3Result <$> check
 
 type ArgZ3Types = HM.HashMap VarName (Ty, Z3VarName)
+
+genTermsCstrs :: ArgZ3Types -> Z3VarName -> Term -> Z3 AST
+genTermsCstrs z3args termVar (TBinOp t1 op t2) = do
+  t1var <- mkFreshIntVar "_linkVar_t1$"
+  t2var <- mkFreshIntVar "_linkVar_t2$"
+  t1cstrs <- genTermsCstrs z3args (Z3VarName t1var) t1
+  t2cstrs <- genTermsCstrs z3args (Z3VarName t2var) t2
+  bodyRes <- z3op t1var t2var
+  bodyCstr <- getZ3VarName termVar `mkEq` bodyRes
+  mkAnd [t1cstrs, t2cstrs, bodyCstr]
+  where
+    z3op = case op of
+                BinOpPlus -> \a b -> mkAdd [a, b]
+                BinOpMinus -> \a b -> mkSub [a, b]
+                BinOpGt -> mkGt
+                BinOpLt -> mkLt
+genTermsCstrs z3args termVar (TName varName) = getZ3VarName termVar `mkEq` getZ3VarName (snd $ z3args HM.! varName)
 
 genArgsPresup :: ArgZ3Types -> Z3 AST
 genArgsPresup z3args = foldM addVar [] (HM.elems z3args) >>= mkAnd
