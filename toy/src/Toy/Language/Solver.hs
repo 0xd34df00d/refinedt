@@ -11,7 +11,7 @@ import Z3.Monad
 import Toy.Language.Syntax.Decls
 import Toy.Language.Syntax.Types
 
-data SolveRes = Satisfied | Unsatisfied deriving (Eq, Show)
+data SolveRes = Correct | Wrong deriving (Eq, Show)
 
 newtype SolveContext = SolveContext
   { visibleSigs :: HM.HashMap String FunSig
@@ -103,9 +103,9 @@ genRefinementCstrs z3args rbTy z3var
                     ROpGeq -> mkGe
 
 convertZ3Result :: Result -> SolveRes
-convertZ3Result Sat = Satisfied
-convertZ3Result Unsat = Unsatisfied
-convertZ3Result Undef = Unsatisfied -- TODO
+convertZ3Result Sat = Correct
+convertZ3Result Unsat = Wrong
+convertZ3Result Undef = Wrong -- TODO
 
 splitTypes :: FunSig -> ([Ty], RefinedBaseTy)
 splitTypes = go . funTy
