@@ -1,7 +1,11 @@
 {-# LANGUAGE TypeFamilies, FlexibleContexts #-}
 {-# LANGUAGE RecordWildCards, OverloadedStrings #-}
 
-module Toy.Language.Parser.Decl where
+module Toy.Language.Parser.Decl
+( funDecl
+, funDef
+, funDefNamed
+) where
 
 import Data.Functor
 import Data.Tuple.Extra
@@ -41,12 +45,6 @@ term = foldl1 TApp <$> (tbinOp <|> atom) `sepBy1` lexSpace
       , uncurry3 TIfThenElse <$> tIfThenElse
                , parens term
                ]
-
-tapp :: ToyMonad e s m => m (Term, Term)
-tapp = do
-  lhs <- term
-  rhs <- term
-  pure (lhs, rhs)
 
 tIfThenElse :: ToyMonad e s m => m (Term, Term, Term)
 tIfThenElse = do
