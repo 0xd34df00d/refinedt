@@ -66,10 +66,9 @@ type ArgZ3Types = HM.HashMap VarName (Ty, Z3VarName)
 
 genTermsCstrs :: (MonadZ3 m, MonadReader SolveEnvironment m) => Z3VarName -> Term -> m AST
 genTermsCstrs termVar (TBinOp t1 op t2) = do
-  t1var <- mkFreshIntVar "_linkVar_t1$"
-  t2var <- mkFreshIntVar "_linkVar_t2$"
-  t1cstrs <- genTermsCstrs (Z3VarName t1var) t1
-  t2cstrs <- genTermsCstrs (Z3VarName t2var) t2
+  -- these are necessarily ints since binops are always working with ints
+  (t1var, t1cstrs) <- mkIntVarCstrs "_linkVar_t1$" t1
+  (t2var, t2cstrs) <- mkIntVarCstrs "_linkVar_t2$" t2
   bodyRes <- z3op t1var t2var
   bodyCstr <- getZ3VarName termVar `mkEq` bodyRes
   mkAnd [t1cstrs, t2cstrs, bodyCstr]
@@ -82,6 +81,12 @@ genTermsCstrs termVar (TBinOp t1 op t2) = do
 genTermsCstrs termVar (TName varName) = do
   z3Var <- askZ3VarName varName
   getZ3VarName termVar `mkEq` z3Var
+
+mkIntVarCstrs :: (MonadZ3 m, MonadReader SolveEnvironment m) => String -> Term -> m (AST, AST)
+mkIntVarCstrs name term = do
+  var <- mkFreshIntVar name
+  cstrs <- genTermsCstrs (Z3VarName var) term
+  pure (var, cstrs)
 
 genArgsPresup :: (MonadZ3 m, MonadReader SolveEnvironment m) => m AST
 genArgsPresup = do
