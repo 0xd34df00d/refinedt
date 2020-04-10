@@ -85,6 +85,24 @@ genTermsCstrs termVar (TBinOp t1 op t2) = do
 genTermsCstrs termVar (TName varName) = do
   z3Var <- askZ3VarName varName
   getZ3VarName termVar `mkEq` z3Var
+genTermsCstrs termVar TIfThenElse { .. } = do
+  condVar <- mkFreshBoolVar "_condVar$"
+  condCstrs <- genTermsCstrs (Z3VarName condVar) tcond
+
+  -- TODO this is not necessarily ints
+  (tthenVar, tthenCstrs) <- mkIntVarCstrs "_linkVar_tthen$" tthen
+  (telseVar, telseCstrs) <- mkIntVarCstrs "_linkVar_telse$" telse
+
+  thenClause <- do
+    thenEq <- getZ3VarName termVar `mkEq` tthenVar
+    mkAnd [tthenCstrs, condVar, thenEq]
+  elseClause <- do
+    elseEq <- getZ3VarName termVar `mkEq` telseVar
+    notCondVar <- mkNot condVar
+    mkAnd [telseCstrs, notCondVar, elseEq]
+
+  xor <- mkXor thenClause elseClause
+  mkAnd [condCstrs, xor]
 
 mkIntVarCstrs :: (MonadZ3 m, MonadReader SolveEnvironment m) => String -> Term -> m (AST, AST)
 mkIntVarCstrs name term = do
