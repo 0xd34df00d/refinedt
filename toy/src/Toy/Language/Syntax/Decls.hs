@@ -22,5 +22,5 @@ data Term
   | TInteger Int
   | TBinOp Term BinOp Term
   | TApp Term Term
-  | TIfThenElse { tif :: Term, tthen :: Term, telse :: Term }
+  | TIfThenElse { tcond :: Term, tthen :: Term, telse :: Term }
   deriving (Eq, Ord, Show)

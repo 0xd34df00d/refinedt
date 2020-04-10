@@ -50,12 +50,12 @@ term = tbinOp <|> tapps
 tIfThenElse :: ToyMonad e s m => m (Term, Term, Term)
 tIfThenElse = do
   void $ lstring "if"
-  tif <- term
+  tcond <- term
   void $ lstring "then"
   tthen <- term
   void $ lstring "else"
   telse <- term
-  pure (tif, tthen, telse)
+  pure (tcond, tthen, telse)
 
 binOp :: ToyMonad e s m => m BinOp
 binOp = parseTable [ ("+", BinOpPlus)
