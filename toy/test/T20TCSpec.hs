@@ -56,6 +56,11 @@ spec = do
            max : (x : Int) -> (y : Int) -> { ν : Int | ν >= x & ν >= y }
            max x y = if x > y then y else x
           |]
+    it "accepts 3-max" $ expectSolverOn mempty Correct
+        [i|
+           max : (x : Int) -> (y : Int) -> (z : Int) -> { ν : Int | ν >= x & ν >= y & ν >= z }
+           max x y z = if x > y then if x > z then x else z else if y > z then y else z
+          |]
 
 
 trimHeading :: String -> String
