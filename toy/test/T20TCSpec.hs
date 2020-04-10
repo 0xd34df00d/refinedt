@@ -40,6 +40,11 @@ spec =
            add : (x : { ν : Int | ν >= 0 }) -> (y : { ν : Int | ν >= 0 }) -> { ν : Int | ν >= x & ν >= y }
            add x y = x + y
           |]
+    it "accepts `a + b + a ≥ a, a + b + a ≥ b` on (nat, nat)" $ expectSolverOn mempty Correct
+        [i|
+           add : (x : { ν : Int | ν >= 0 }) -> (y : { ν : Int | ν >= 0 }) -> { ν : Int | ν >= x & ν >= y }
+           add x y = x + y + x
+          |]
 
 
 trimHeading :: String -> String
