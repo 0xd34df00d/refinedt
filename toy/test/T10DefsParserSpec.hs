@@ -30,6 +30,12 @@ spec =
     it "parses more interesting if-then-else" $
       p "max x y = if x > y then x else y" ~~> FunDef "max" ["x", "y"]
                                                   (TIfThenElse (TBinOp nx BinOpGt ny) nx ny)
+    it "parses nested if-then-else" $
+      p "max x y z = if x > y then if x > z then x else z else if y > z then y else z"
+                                           ~~> FunDef "max" ["x", "y", "z"]
+                                                  (TIfThenElse (TBinOp nx BinOpGt ny)
+                                                    (TIfThenElse (TBinOp nx BinOpGt nz) nx nz)
+                                                    (TIfThenElse (TBinOp ny BinOpGt nz) ny nz))
     it "parses ops and nested apps" $
       p "f x y = x y + y" ~~> FunDef "f" ["x", "y"] (TBinOp (nx `TApp` ny) BinOpPlus ny)
 
