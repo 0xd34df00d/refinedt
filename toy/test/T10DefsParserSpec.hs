@@ -30,6 +30,8 @@ spec =
     it "parses more interesting if-then-else" $
       p "max x y = if x > y then x else y" ~~> FunDef "max" ["x", "y"]
                                                   (TIfThenElse (TBinOp nx BinOpGt ny) nx ny)
+    it "parses ops and nested apps" $
+      p "f x y = x y + y" ~~> FunDef "f" ["x", "y"] (TBinOp (nx `TApp` ny) BinOpPlus ny)
 
 nb, nx, ny, nz :: Term
 nb = TName "b"
