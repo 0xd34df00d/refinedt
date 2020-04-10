@@ -23,8 +23,8 @@ expectSolverOn ctx expected str = do
     parseRes = parse' fun $ trimHeading str
 
 spec :: Spec
-spec =
-  describe "Basic smoke tests" $ do
+spec = do
+  describe "Basic arithmetic" $ do
     it "rejects `a + b ≥ a, a + b ≥ b` on (int, int)" $ expectSolverOn mempty Wrong
         [i|
            add : (x : Int) -> (y : Int) -> { ν : Int | ν >= x & ν >= y }
@@ -44,6 +44,17 @@ spec =
         [i|
            add : (x : { ν : Int | ν >= 0 }) -> (y : { ν : Int | ν >= 0 }) -> { ν : Int | ν >= x & ν >= y }
            add x y = x + y + x
+          |]
+  describe "Path sensitivity" $ do
+    it "accepts max" $ expectSolverOn mempty Correct
+        [i|
+           max : (x : Int) -> (y : Int) -> { ν : Int | ν >= x & ν >= y }
+           max x y = if x > y then x else y
+          |]
+    it "rejects min as max" $ expectSolverOn mempty Wrong
+        [i|
+           max : (x : Int) -> (y : Int) -> { ν : Int | ν >= x & ν >= y }
+           max x y = if x > y then y else x
           |]
 
 
