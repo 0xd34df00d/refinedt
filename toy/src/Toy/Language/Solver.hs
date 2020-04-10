@@ -2,7 +2,11 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE RecordWildCards #-}
 
-module Toy.Language.Solver where
+module Toy.Language.Solver
+( solve
+, SolveContext
+, SolveRes(..)
+) where
 
 import qualified Data.HashMap.Strict as HM
 import Control.Arrow
