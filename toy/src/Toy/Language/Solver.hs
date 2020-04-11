@@ -69,6 +69,12 @@ mkScript ctx args target term = do
 type ArgZ3Types = HM.HashMap VarName (Ty, Z3VarName)
 
 genTermsCstrs :: (MonadZ3 m, MonadReader SolveEnvironment m) => Z3VarName -> Term -> m AST
+genTermsCstrs termVar (TName varName) = do
+  z3Var <- askZ3VarName varName
+  getZ3VarName termVar `mkEq` z3Var
+genTermsCstrs termVar (TInteger n) = do
+  num <- mkIntNum n
+  getZ3VarName termVar `mkEq` num
 genTermsCstrs termVar (TBinOp t1 op t2) = do
   -- these are necessarily ints since binops are always working with ints
   (t1var, t1cstrs) <- mkIntVarCstrs "_linkVar_t1$" t1
@@ -82,9 +88,6 @@ genTermsCstrs termVar (TBinOp t1 op t2) = do
                 BinOpMinus -> \a b -> mkSub [a, b]
                 BinOpGt -> mkGt
                 BinOpLt -> mkLt
-genTermsCstrs termVar (TName varName) = do
-  z3Var <- askZ3VarName varName
-  getZ3VarName termVar `mkEq` z3Var
 genTermsCstrs termVar TIfThenElse { .. } = do
   condVar <- mkFreshBoolVar "_condVar$"
   condCstrs <- genTermsCstrs (Z3VarName condVar) tcond
