@@ -18,3 +18,11 @@ fun = do
   let nameParser = string (fromString funName) $> funName
   def <- funDefNamed nameParser <* optional eol
   pure (sig, def)
+
+funWithCtx :: ToyMonad e s m => m ([FunSig], (FunSig, FunDef))
+funWithCtx = do
+  decls <- some $ try $ funDecl <* eol
+  let sig@FunSig { .. } = last decls
+  let nameParser = string (fromString funName) $> funName
+  def <- funDefNamed nameParser <* optional eol
+  pure (init decls, (sig, def))
