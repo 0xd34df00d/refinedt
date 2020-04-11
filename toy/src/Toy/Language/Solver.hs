@@ -6,6 +6,8 @@ module Toy.Language.Solver
 ( solve
 , SolveContext
 , SolveRes(..)
+
+, buildCtx
 ) where
 
 import qualified Data.HashMap.Strict as HM
@@ -22,6 +24,9 @@ data SolveRes = Correct | Wrong deriving (Eq, Show)
 newtype SolveContext = SolveContext
   { visibleSigs :: HM.HashMap String FunSig
   } deriving (Eq, Ord, Show, Semigroup, Monoid)
+
+buildCtx :: [FunSig] -> SolveContext
+buildCtx sigs = SolveContext $ HM.fromList [ (funName, sig) | sig@FunSig { .. } <- sigs ]
 
 solve :: SolveContext -> FunSig -> FunDef -> IO SolveRes
 solve ctx sig def = evalZ3 $ mkScript ctx arg2type resType (funBody def)
