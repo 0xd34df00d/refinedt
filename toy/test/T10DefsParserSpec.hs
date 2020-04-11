@@ -38,6 +38,9 @@ spec =
                                                     (TIfThenElse (ny .>. nz) ny nz))
     it "parses ops and nested apps" $
       p "f x y = x y + y" ~~> FunDef "f" ["x", "y"] ((nx `TApp` ny) .+. ny)
+    it "parses operators priorities" $ do
+      p "f x y = x + y > 0" ~~> FunDef "f" ["x", "y"] ((nx .+. ny) .>. TInteger 0)
+      p "f x y = 0 > x + y" ~~> FunDef "f" ["x", "y"] (TInteger 0 .>. (nx .+. ny))
 
 nb, nx, ny, nz :: Term
 nb = TName "b"
