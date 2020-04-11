@@ -7,10 +7,11 @@ module Toy.Language.Parser.Decl
 , funDefNamed
 ) where
 
+import Control.Monad.Combinators.Expr
 import Data.Functor
 import Data.Tuple.Extra
 import Text.Megaparsec
-import Text.Megaparsec.Char.Lexer
+import Text.Megaparsec.Char.Lexer hiding(binary)
 
 import Toy.Language.Parser.Common
 import Toy.Language.Parser.Ty
@@ -36,9 +37,8 @@ funDefNamed funNameParser = do
   pure FunDef { .. }
 
 term :: ToyMonad e s m => m Term
-term = tbinOp <|> tapps
+term = makeExprParser tapps table
   where
-    tbinOp = try $ TBinOp <$> tapps <*> binOp <*> (tbinOp <|> tapps)
     tapps = foldl1 TApp <$> atom `sepBy1` lexSpace
     atom = choice $ try <$> subAtoms
     subAtoms = [ TName <$> varName
@@ -46,6 +46,14 @@ term = tbinOp <|> tapps
       , uncurry3 TIfThenElse <$> tIfThenElse
                , parens term
                ]
+    table = [ [ binary "+" BinOpPlus
+              , binary "-" BinOpMinus
+              ]
+            , [ binary ">" BinOpGt
+              , binary "<" BinOpLt
+              ]
+            ]
+    binary name fun = InfixL $ lstring name $> (\a b -> TBinOp a fun b)
 
 tIfThenElse :: ToyMonad e s m => m (Term, Term, Term)
 tIfThenElse = do
@@ -56,10 +64,3 @@ tIfThenElse = do
   void $ lstring "else"
   telse <- term
   pure (tcond, tthen, telse)
-
-binOp :: ToyMonad e s m => m BinOp
-binOp = parseTable [ ("+", BinOpPlus)
-                   , ("-", BinOpMinus)
-                   , (">", BinOpGt)
-                   , ("<", BinOpLt)
-                   ]
