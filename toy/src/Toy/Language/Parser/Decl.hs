@@ -39,11 +39,11 @@ funDefNamed funNameParser = do
 term :: ToyMonad e s m => m Term
 term = makeExprParser tapps table
   where
-    tapps = foldl1 TApp <$> atom `sepBy1` lexSpace
+    tapps = foldl1 (TApp ()) <$> atom `sepBy1` lexSpace
     atom = choice $ try <$> subAtoms
-    subAtoms = [ TName <$> varName
-               , TInteger <$> lexeme' decimal
-      , uncurry3 TIfThenElse <$> tIfThenElse
+    subAtoms = [ TName () <$> varName
+               , TInteger () <$> lexeme' decimal
+     , uncurry3 (TIfThenElse ()) <$> tIfThenElse
                , parens term
                ]
     table = [ [ binary "+" BinOpPlus
@@ -53,7 +53,7 @@ term = makeExprParser tapps table
               , binary "<" BinOpLt
               ]
             ]
-    binary name fun = InfixL $ lstring name $> (\a b -> TBinOp a fun b)
+    binary name fun = InfixL $ lstring name $> (\a b -> TBinOp () a fun b)
 
 tIfThenElse :: ToyMonad e s m => m (Term, Term, Term)
 tIfThenElse = do
