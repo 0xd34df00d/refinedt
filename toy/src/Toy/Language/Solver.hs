@@ -1,6 +1,6 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE RecordWildCards, QuasiQuotes, TupleSections #-}
+{-# LANGUAGE RecordWildCards, QuasiQuotes #-}
 
 module Toy.Language.Solver
 ( solve
@@ -11,7 +11,6 @@ module Toy.Language.Solver
 ) where
 
 import qualified Data.HashMap.Strict as HM
-import Data.Functor
 import Data.String.Interpolate
 import Control.Arrow
 import Control.Monad
@@ -61,7 +60,8 @@ mkScript ctx args target term = do
     res <- Z3VarName <$> mkFreshIntVar "_res$" -- TODO don't assume result : Int
     resConcl <- genRefinementCstrs target res >>= mkAnd
 
-    assert =<< genTermsCstrs res term
+    typedTerm <- annotateTypes term
+    assert =<< genTermsCstrs res typedTerm
 
     assert =<< mkNot =<< argsPresup `mkImplies` resConcl
 
@@ -73,7 +73,43 @@ mkScript ctx args target term = do
     invert Unsat = Sat
     invert Undef = Undef
 
-genTermsCstrs :: (MonadZ3 m, MonadReader SolveEnvironment m) => Z3VarName -> Term -> m AST
+annotateTypes :: MonadReader SolveEnvironment m => Term -> m TypedTerm
+annotateTypes (TName _ varName) = (`TName` varName) <$> askVarTy varName
+annotateTypes (TInteger _ n) = pure $ TInteger (TyBase $ RefinedBaseTy TInt trueRefinement) n
+annotateTypes (TBinOp _ t1 op t2) = do
+  t1' <- annotateTypes t1
+  t2' <- annotateTypes t2
+  expectBaseTy TInt $ annotation t1'
+  expectBaseTy TInt $ annotation t2'
+  let resTy = case op of
+                   BinOpPlus -> TInt
+                   BinOpMinus -> TInt
+                   BinOpGt -> TBool
+                   BinOpLt -> TBool
+  let fullTy = TyBase $ RefinedBaseTy resTy trueRefinement
+  pure $ TBinOp fullTy t1' op t2'
+annotateTypes TIfThenElse { .. } = do
+  tcond' <- annotateTypes tcond
+  expectBaseTy TBool $ annotation tcond'
+
+  tthen' <- annotateTypes tthen
+  telse' <- annotateTypes telse
+
+  when (annotation tthen' /= annotation telse') $ error [i|Type mismatch between #{tthen} and #{telse}|]
+
+  pure $ TIfThenElse (annotation tthen') tcond' tthen' telse'
+annotateTypes (TApp _ t1 t2) = do
+  t1' <- annotateTypes t1
+  t2' <- annotateTypes t2
+  resTy <- case annotation t1' of
+                TyArrow ArrowTy { .. } -> if domTy == annotation t2'
+                                          then pure codTy
+                                          else error [i|Type mismatch: expected #{domTy}, got #{annotation t2'}|]
+                _ -> error [i|Expected arrow type, got #{annotation t1'}|]
+  pure $ TApp resTy t1' t2'
+
+-- TODO shall we generate more precise refinements here?
+genTermsCstrs :: (MonadZ3 m, MonadReader SolveEnvironment m) => Z3VarName -> TypedTerm -> m AST
 genTermsCstrs termVar (TName _ varName) = do
   z3Var <- askZ3VarName varName
   getZ3VarName termVar `mkEq` z3Var
@@ -113,7 +149,7 @@ genTermsCstrs termVar TIfThenElse { .. } = do
 genTermsCstrs termVar (TApp _ fun arg) = do
   undefined -- genTermsCstrs fun
 
-mkVarCstrs :: (MonadZ3 m, MonadReader SolveEnvironment m) => String -> Term -> m (AST, AST)
+mkVarCstrs :: (MonadZ3 m, MonadReader SolveEnvironment m) => String -> TypedTerm -> m (AST, AST)
 mkVarCstrs name term = do
   var <- mkFreshIntVar name
   cstrs <- genTermsCstrs (Z3VarName var) term
