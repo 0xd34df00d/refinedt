@@ -1,6 +1,6 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE RecordWildCards, QuasiQuotes, TupleSections #-}
 
 module Toy.Language.Solver
 ( solve
@@ -11,6 +11,8 @@ module Toy.Language.Solver
 ) where
 
 import qualified Data.HashMap.Strict as HM
+import Data.Functor
+import Data.String.Interpolate
 import Control.Arrow
 import Control.Monad
 import Control.Monad.Reader
@@ -59,7 +61,7 @@ mkScript ctx args target term = do
     res <- Z3VarName <$> mkFreshIntVar "_res$" -- TODO don't assume result : Int
     resConcl <- genRefinementCstrs target res >>= mkAnd
 
-    assert =<< genTermsCstrs res term
+    assert . snd =<< genTermsCstrs res term
 
     assert =<< mkNot =<< argsPresup `mkImplies` resConcl
 
@@ -73,29 +75,31 @@ mkScript ctx args target term = do
 
 type ArgZ3Types = HM.HashMap VarName (Ty, Z3VarName)
 
-genTermsCstrs :: (MonadZ3 m, MonadReader SolveEnvironment m) => Z3VarName -> Term -> m AST
+-- TODO shall we generate more precise refinements here?
+genTermsCstrs :: (MonadZ3 m, MonadReader SolveEnvironment m) => Z3VarName -> Term -> m (Ty, AST)
 genTermsCstrs termVar (TName varName) = do
-  z3Var <- askZ3VarName varName
-  getZ3VarName termVar `mkEq` z3Var
+  (varTy, z3Var) <- askZ3VarName varName
+  getZ3VarName termVar `mkEq` z3Var <&> (varTy,)
 genTermsCstrs termVar (TInteger n) = do
   num <- mkIntNum n
-  getZ3VarName termVar `mkEq` num
+  getZ3VarName termVar `mkEq` num <&> (TyBase $ RefinedBaseTy TInt trueRefinement,)
 genTermsCstrs termVar (TBinOp t1 op t2) = do
-  -- these are necessarily ints since binops are always working with ints
   (t1var, t1cstrs) <- mkIntVarCstrs "_linkVar_t1$" t1
   (t2var, t2cstrs) <- mkIntVarCstrs "_linkVar_t2$" t2
   bodyRes <- z3op t1var t2var
   bodyCstr <- getZ3VarName termVar `mkEq` bodyRes
-  mkAnd [t1cstrs, t2cstrs, bodyCstr]
+  mkAnd [t1cstrs, t2cstrs, bodyCstr] <&> (TyBase $ RefinedBaseTy resTy trueRefinement,)
   where
-    z3op = case op of
-                BinOpPlus -> \a b -> mkAdd [a, b]
-                BinOpMinus -> \a b -> mkSub [a, b]
-                BinOpGt -> mkGt
-                BinOpLt -> mkLt
+    (resTy, z3op) =
+      case op of
+           BinOpPlus -> (TInt, \a b -> mkAdd [a, b])
+           BinOpMinus -> (TInt, \a b -> mkSub [a, b])
+           BinOpGt -> (TBool, mkGt)
+           BinOpLt -> (TBool, mkLt)
 genTermsCstrs termVar TIfThenElse { .. } = do
   condVar <- mkFreshBoolVar "_condVar$"
-  condCstrs <- genTermsCstrs (Z3VarName condVar) tcond
+  (condTy, condCstrs) <- genTermsCstrs (Z3VarName condVar) tcond
+  expectBaseTy TBool condTy
 
   -- TODO this is not necessarily ints
   (tthenVar, tthenCstrs) <- mkIntVarCstrs "_linkVar_tthen$" tthen
@@ -110,13 +114,20 @@ genTermsCstrs termVar TIfThenElse { .. } = do
     mkAnd [telseCstrs, notCondVar, elseEq]
 
   xor <- mkXor thenClause elseClause
-  mkAnd [condCstrs, xor]
+  mkAnd [condCstrs, xor] <&> (TyBase $ RefinedBaseTy TInt trueRefinement,)
+genTermsCstrs termVar (TApp fun arg) = do
+  undefined
 
 mkIntVarCstrs :: (MonadZ3 m, MonadReader SolveEnvironment m) => String -> Term -> m (AST, AST)
 mkIntVarCstrs name term = do
   var <- mkFreshIntVar name
-  cstrs <- genTermsCstrs (Z3VarName var) term
+  (ty, cstrs) <- genTermsCstrs (Z3VarName var) term
+  expectBaseTy TInt ty
   pure (var, cstrs)
+
+expectBaseTy :: Monad m => BaseTy -> Ty -> m ()
+expectBaseTy expected (TyBase RefinedBaseTy { .. }) | baseType == expected = pure ()
+expectBaseTy expected ty = error [i|Expected #{expected}, got #{ty} instead|]
 
 genArgsPresup :: (MonadZ3 m, MonadReader SolveEnvironment m) => m AST
 genArgsPresup = do
@@ -138,7 +149,7 @@ genRefinementCstrs rbTy z3var
     genCstr v (AR op arg) = do
       z3arg <- case arg of
                     RArgZero -> mkInteger 0
-                    RArgVar var -> askZ3VarName var
+                    RArgVar var -> snd <$> askZ3VarName var
                     RArgVarLen _ -> error "TODO" -- TODO
       v `z3op` z3arg
       where
@@ -150,8 +161,8 @@ genRefinementCstrs rbTy z3var
                     ROpGt -> mkGt
                     ROpGeq -> mkGe
 
-askZ3VarName :: MonadReader SolveEnvironment m => VarName -> m AST
-askZ3VarName var = getZ3VarName <$> asks (snd . (HM.! var) . z3args)
+askZ3VarName :: MonadReader SolveEnvironment m => VarName -> m (Ty, AST)
+askZ3VarName var = second getZ3VarName <$> asks ((HM.! var) . z3args)
 
 convertZ3Result :: Result -> SolveRes
 convertZ3Result Sat = Correct
