@@ -4,6 +4,7 @@
 module Toy.Language.Syntax.Types where
 
 import Data.Data
+import Data.Generics.Uniplate.Data
 import Data.Hashable
 import Data.String
 
@@ -43,4 +44,4 @@ data Ty
   deriving (Eq, Ord, Show, Data)
 
 stripRefinements :: Ty -> Ty
-stripRefinements = undefined
+stripRefinements = transformBi $ const trueRefinement

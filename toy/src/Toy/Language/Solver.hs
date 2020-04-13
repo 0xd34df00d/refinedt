@@ -126,7 +126,7 @@ annotateTypes (TApp _ t1 t2) = do
   t1' <- annotateTypes t1
   t2' <- annotateTypes t2
   resTy <- case annotation t1' of
-                TyArrow ArrowTy { .. } -> if True || stripRefinements domTy == stripRefinements (annotation t2') -- TODO
+                TyArrow ArrowTy { .. } -> if stripRefinements domTy == stripRefinements (annotation t2')
                                           then pure codTy -- TODO substitute pi-bound occurrences
                                           else error [i|Type mismatch: expected #{domTy}, got #{annotation t2'}|]
                 _ -> error [i|Expected arrow type, got #{annotation t1'}|]
