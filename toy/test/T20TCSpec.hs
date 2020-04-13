@@ -93,6 +93,13 @@ spec = do
            f : (x : Int) -> (x1 : { ν : Int | ν > x }) -> (x2 : { ν : Int | ν > x1 }) -> Int
            f x x1 x2 = g x x1 x2
           |]
+    it "accepts correct dependent subtyping queries (substituting)" $ expectSolverOn Correct
+        [i|
+           g : (z : Int) -> (z1 : { ν : Int | ν >= z }) -> (z2 : { ν : Int | ν >= z1 }) -> Int
+
+           f : (x : Int) -> (x1 : { ν : Int | ν > x }) -> (x2 : { ν : Int | ν > x1 }) -> Int
+           f x x1 x2 = g x x1 x2
+          |]
     it "rejects incorrect dependent subtyping queries" $ expectSolverOn Wrong
         [i|
            g : (x : Int) -> (x1 : { ν : Int | ν > x }) -> (x2 : { ν : Int | ν > x1 }) -> Int
@@ -106,6 +113,13 @@ spec = do
 
            f : (x : { ν : Int | ν >= 0 }) -> (y : { ν : Int | ν >= x }) -> Int
            f x y = g 0 x y
+          |]
+    it "accepts max(x, 0)" $ expectSolverOn Correct
+        [i|
+           max : (x : Int) -> (y : Int) -> { ν : Int | ν >= x & ν >= y }
+
+           f : Int -> { ν : Int | ν >= 0 }
+           f x = max x 0
           |]
 
 
