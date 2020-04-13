@@ -71,6 +71,42 @@ spec = do
            max : (x : Int) -> (y : Int) -> (z : Int) -> { ν : Int | ν >= x & ν >= y & ν >= z }
            max x y z = if x > y then if x > z then x else z else if y > z then y else z
           |]
+  describe "Basic function application" $ do
+    it "accepts correct subtyping queries" $ expectSolverOn Correct
+        [i|
+           g : { ν : Int | ν >= 0 } -> Int
+
+           f : { ν : Int | ν > 0 } -> Int
+           f x = g x
+          |]
+    it "rejects incorrect subtyping queries" $ expectSolverOn Wrong
+        [i|
+           g : { ν : Int | ν > 0 } -> Int
+
+           f : { ν : Int | ν >= 0 } -> Int
+           f x = g x
+          |]
+    it "accepts correct dependent subtyping queries" $ expectSolverOn Correct
+        [i|
+           g : (x : Int) -> (x1 : { ν : Int | ν >= x }) -> (x2 : { ν : Int | ν >= x1 }) -> Int
+
+           f : (x : Int) -> (x1 : { ν : Int | ν > x }) -> (x2 : { ν : Int | ν > x1 }) -> Int
+           f x x1 x2 = g x x1 x2
+          |]
+    it "rejects incorrect dependent subtyping queries" $ expectSolverOn Wrong
+        [i|
+           g : (x : Int) -> (x1 : { ν : Int | ν > x }) -> (x2 : { ν : Int | ν > x1 }) -> Int
+
+           f : (x : Int) -> (x1 : { ν : Int | ν >= x }) -> (x2 : { ν : Int | ν >= x1 }) -> Int
+           f x x1 x2 = g x x1 x2
+          |]
+    it "rejects incorrect dependent subtyping queries (substituting)" $ expectSolverOn Wrong
+        [i|
+           g : (x : Int) -> (x1 : { ν : Int | ν > x }) -> (x2 : { ν : Int | ν > x1 }) -> Int
+
+           f : (x : { ν : Int | ν >= 0 }) -> (y : { ν : Int | ν >= x }) -> Int
+           f x y = g 0 x y
+          |]
 
 
 trimHeading :: String -> String

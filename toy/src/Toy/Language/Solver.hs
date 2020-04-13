@@ -1,6 +1,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE RecordWildCards, QuasiQuotes #-}
+{-# LANGUAGE RecordWildCards, QuasiQuotes, BlockArguments #-}
+{-# OPTIONS_GHC -Wno-orphans #-}
 
 module Toy.Language.Solver
 ( solve
@@ -23,11 +24,11 @@ import Toy.Language.Syntax.Types
 data SolveRes = Correct | Wrong deriving (Eq, Show)
 
 newtype SolveContext = SolveContext
-  { visibleSigs :: HM.HashMap String FunSig
+  { visibleSigs :: [FunSig]
   } deriving (Eq, Ord, Show, Semigroup, Monoid)
 
 buildCtx :: [FunSig] -> SolveContext
-buildCtx sigs = SolveContext $ HM.fromList [ (funName, sig) | sig@FunSig { .. } <- sigs ]
+buildCtx = SolveContext -- SolveContext $ HM.fromList [ (funName, sig) | sig@FunSig { .. } <- sigs ]
 
 solve :: SolveContext -> FunSig -> FunDef -> IO SolveRes
 solve ctx sig def = evalZ3 $ mkScript ctx arg2type resType (funBody def)
@@ -39,41 +40,65 @@ type ArgTypes = HM.HashMap VarName Ty
 
 newtype Z3VarName = Z3VarName { getZ3VarName :: AST }
 
-data SolveEnvironment = SolveEnvironment
-  { ctx :: SolveContext
-  , z3args :: ArgZ3Types
+newtype SolveEnvironment = SolveEnvironment
+  { z3args :: HM.HashMap VarName (Ty, Z3VarName)
   }
 
 -- This expects that the pi-binders names in the type are equal to the argument names in the definition.
 -- TODO explicitly check for this.
 mkScript :: SolveContext -> ArgTypes -> RefinedBaseTy -> Term -> Z3 SolveRes
 mkScript ctx args target term = do
-  z3vars <- HM.fromList <$> mapM sequence [ (var, Z3VarName <$> mkFreshIntVar (getName var))
-                                          | (var, TyBase RefinedBaseTy { baseType = TInt }) <- HM.toList args
-                                          ]
-  let z3args = HM.intersectionWith (,) args z3vars
-  let solveEnv = SolveEnvironment { .. }
+  argVars <- buildZ3Vars args
+  ctxVars <- buildCtxVars $ visibleSigs ctx
+  let solveEnv = SolveEnvironment $ argVars <> ctxVars
 
-  flip runReaderT solveEnv $ do
+  convertZ3Result <$> flip runReaderT solveEnv do
     argsPresup <- genArgsPresup
 
     res <- Z3VarName <$> mkFreshIntVar "_res$" -- TODO don't assume result : Int
     resConcl <- genRefinementCstrs target res >>= mkAnd
 
     typedTerm <- annotateTypes term
-    assert =<< genTermsCstrs res typedTerm
 
-    assert =<< mkNot =<< argsPresup `mkImplies` resConcl
+    termCstrs <- genTermsCstrs res typedTerm
 
-  --getModel >>= modelToString . fromJust . snd >>= liftIO . putStrLn
+    termCstrsConsistent <- solverCheckAssumptions [termCstrs]
+    case termCstrsConsistent of
+         Sat -> do
+            assert termCstrs
+            assert =<< mkNot =<< argsPresup `mkImplies` resConcl
+            invert <$> check
+         c -> pure c
 
-  convertZ3Result . invert <$> check
+  {-
+  res <- check
+  getModel >>= modelToString . fromJust . snd >>= liftIO . putStrLn
+  pure $ convertZ3Result $ invert res
+  -}
   where
     invert Sat = Unsat
     invert Unsat = Sat
     invert Undef = Undef
 
-annotateTypes :: MonadReader SolveEnvironment m => Term -> m TypedTerm
+buildZ3Vars :: ArgTypes -> Z3 (HM.HashMap VarName (Ty, Z3VarName))
+buildZ3Vars args = do
+  z3vars <- HM.fromList <$> mapM sequence [ (var, Z3VarName <$> mkFreshIntVar (getName var))
+                                          | (var, TyBase RefinedBaseTy { baseType = TInt }) <- HM.toList args
+                                          ]
+  pure $ HM.intersectionWith (,) args z3vars
+
+buildCtxVars :: [FunSig] -> Z3 (HM.HashMap VarName (Ty, Z3VarName))
+buildCtxVars sigs = do
+  z3vars <- HM.fromList <$> mapM sequence [ (VarName funName, fmap Z3VarName $ mkStringSymbol funName >>= mkUninterpretedSort >>= mkFreshConst funName) -- TODO fun decl?
+                                          | FunSig { .. } <- sigs
+                                          ]
+  pure $ HM.intersectionWith (,) tys z3vars
+  where
+    tys = HM.fromList [ (VarName funName, funTy) | FunSig { .. } <- sigs ]
+
+type TypedTerm = TermT Ty
+
+annotateTypes :: (MonadReader SolveEnvironment m) => Term -> m TypedTerm
 annotateTypes (TName _ varName) = (`TName` varName) <$> askVarTy varName
 annotateTypes (TInteger _ n) = pure $ TInteger (TyBase $ RefinedBaseTy TInt trueRefinement) n
 annotateTypes (TBinOp _ t1 op t2) = do
@@ -86,8 +111,7 @@ annotateTypes (TBinOp _ t1 op t2) = do
                    BinOpMinus -> TInt
                    BinOpGt -> TBool
                    BinOpLt -> TBool
-  let fullTy = TyBase $ RefinedBaseTy resTy trueRefinement
-  pure $ TBinOp fullTy t1' op t2'
+  pure $ TBinOp (TyBase $ RefinedBaseTy resTy trueRefinement) t1' op t2'
 annotateTypes TIfThenElse { .. } = do
   tcond' <- annotateTypes tcond
   expectBaseTy TBool $ annotation tcond'
@@ -102,8 +126,8 @@ annotateTypes (TApp _ t1 t2) = do
   t1' <- annotateTypes t1
   t2' <- annotateTypes t2
   resTy <- case annotation t1' of
-                TyArrow ArrowTy { .. } -> if domTy == annotation t2'
-                                          then pure codTy
+                TyArrow ArrowTy { .. } -> if True || stripRefinements domTy == stripRefinements (annotation t2') -- TODO
+                                          then pure codTy -- TODO substitute pi-bound occurrences
                                           else error [i|Type mismatch: expected #{domTy}, got #{annotation t2'}|]
                 _ -> error [i|Expected arrow type, got #{annotation t1'}|]
   pure $ TApp resTy t1' t2'
@@ -132,7 +156,6 @@ genTermsCstrs termVar TIfThenElse { .. } = do
   condVar <- mkFreshBoolVar "_condVar$"
   condCstrs <- genTermsCstrs (Z3VarName condVar) tcond
 
-  -- TODO this is not necessarily ints
   (thenVar, thenCstrs) <- mkVarCstrs "_linkVar_tthen$" tthen
   (elseVar, elseCstrs) <- mkVarCstrs "_linkVar_telse$" telse
 
@@ -146,11 +169,33 @@ genTermsCstrs termVar TIfThenElse { .. } = do
 
   xor <- mkXor thenClause elseClause
   mkAnd [condCstrs, xor]
-genTermsCstrs termVar (TApp _ fun arg) = do
-  undefined -- genTermsCstrs fun
+genTermsCstrs termVar (TApp resTy fun arg) = do
+  subTyCstr <- case (annotation arg, annotation fun) of
+                    (TyArrow _, _) -> error "TODO passing functions to functions is not supported yet" -- TODO
+                    (TyBase rbtActual, TyArrow ArrowTy { domTy = TyBase rbtExpected }) -> do
+                       ν <- Z3VarName <$> mkFreshIntVar "_∀_ν$"
+
+                       actualCstr <- genRefinementCstrs rbtActual ν >>= mkAnd'
+                       expectedCstr <- genRefinementCstrs rbtExpected ν >>= mkAnd'
+                       implication <- mkImplies actualCstr expectedCstr
+
+                       ν' <- toApp $ getZ3VarName ν
+                       mkForallConst [] [ν'] implication
+                    (_, _) -> error "Mismatched types (which should've been caught earlier though)"
+
+  resCstr <- case resTy of
+                  TyArrow _ -> mkTrue
+                  TyBase rbt -> genRefinementCstrs rbt termVar >>= mkAnd
+
+  mkAnd [resCstr, subTyCstr]
+
+mkAnd' :: MonadZ3 m => [AST] -> m AST
+mkAnd' [x] = pure x
+mkAnd' xs = mkAnd xs
 
 mkVarCstrs :: (MonadZ3 m, MonadReader SolveEnvironment m) => String -> TypedTerm -> m (AST, AST)
 mkVarCstrs name term = do
+  -- TODO not necessarily int
   var <- mkFreshIntVar name
   cstrs <- genTermsCstrs (Z3VarName var) term
   pure (var, cstrs)

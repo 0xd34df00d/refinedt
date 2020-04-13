@@ -39,3 +39,6 @@ data Ty
   = TyArrow ArrowTy
   | TyBase RefinedBaseTy
   deriving (Eq, Ord, Show)
+
+stripRefinements :: Ty -> Ty
+stripRefinements = undefined
