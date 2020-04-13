@@ -12,6 +12,7 @@ module Toy.Language.Solver
 ) where
 
 import qualified Data.HashMap.Strict as HM
+import Data.Generics.Uniplate.Data
 import Data.String.Interpolate
 import Control.Arrow
 import Control.Monad
@@ -126,11 +127,28 @@ annotateTypes (TApp _ t1 t2) = do
   t1' <- annotateTypes t1
   t2' <- annotateTypes t2
   resTy <- case annotation t1' of
-                TyArrow ArrowTy { .. } -> if stripRefinements domTy == stripRefinements (annotation t2')
-                                          then pure codTy -- TODO substitute pi-bound occurrences
-                                          else error [i|Type mismatch: expected #{domTy}, got #{annotation t2'}|]
+                TyArrow ArrowTy { .. } -> do
+                  when (stripRefinements domTy /= stripRefinements (annotation t2'))
+                      $ error [i|Type mismatch: expected #{domTy}, got #{annotation t2'}|]
+                  pure case piVarName of
+                            Nothing -> codTy
+                            Just varName -> substPi varName t2 codTy
                 _ -> error [i|Expected arrow type, got #{annotation t1'}|]
   pure $ TApp resTy t1' t2'
+
+-- TODO occurs check - rename whatever can be shadowed
+substPi :: VarName -> Term -> Ty -> Ty
+substPi srcName (TName _ dstName) = transformBi f
+  where
+    f (RArgVar var) | var == srcName = RArgVar dstName
+    f (RArgVarLen var) | var == srcName = RArgVarLen dstName
+    f arg = arg
+substPi srcName (TInteger _ 0) = transformBi f
+  where
+    f (RArgVar var) | var == srcName = RArgZero
+    f (RArgVarLen var) | var == srcName = RArgZero
+    f arg = arg
+substPi _ term = error [i|Unsupported substitution target: #{term}|]
 
 -- TODO shall we generate more precise refinements here?
 genTermsCstrs :: (MonadZ3 m, MonadReader SolveEnvironment m) => Z3VarName -> TypedTerm -> m AST
