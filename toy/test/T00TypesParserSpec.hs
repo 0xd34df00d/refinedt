@@ -17,7 +17,7 @@ spec = do
     it "parses refined type with var" $
       p "{ ν : Bool | ν < x }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLt (RArgVar "x")]
     it "parses refined type with zero" $
-      p "{ ν : Bool | ν <= 0 }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLeq RArgZero]
+      p "{ ν : Bool | ν <= 0 }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLeq $ RArgInt 0]
     it "parses refined type with len" $
       p "{ ν : Bool | ν >= len arr }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVarLen "arr")]
     it "parses refined type without spaces" $
@@ -26,7 +26,7 @@ spec = do
       p "{ ν : Bool | ν >= lenarr }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVar "lenarr")]
   describe "Parsing with conjunctions" $ let p = parse' baseRT in do
     it "parses types with conjunctions 1" $
-      p "{ ν : Bool | ν < x & ν > 0 }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLt (RArgVar "x"), AR ROpGt RArgZero]
+      p "{ ν : Bool | ν < x & ν > 0 }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLt (RArgVar "x"), AR ROpGt $ RArgInt 0]
     it "parses types with conjunctions 2" $
       p "{ ν : Bool | ν < x & ν < len arr }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLt (RArgVar "x"), AR ROpLt (RArgVarLen "arr")]
   describe "Parsing arrows" $ let p = parse' ty in do
@@ -96,8 +96,8 @@ int = TyBase $ RefinedBaseTy TInt trueRefinement
 
 intLeqLenArr, intGe0, intBetween0andX :: Ty
 intLeqLenArr = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpLeq (RArgVarLen "arr")]
-intGe0 = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpGt RArgZero]
-intBetween0andX = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpGeq RArgZero, AR ROpLt $ RArgVar "x"]
+intGe0 = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpGt $ RArgInt 0]
+intBetween0andX = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpGeq $ RArgInt 0, AR ROpLt $ RArgVar "x"]
 
 intLe :: VarName -> Ty
 intLe var = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpLt (RArgVar var)]

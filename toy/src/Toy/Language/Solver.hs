@@ -139,10 +139,10 @@ substPi srcName (TName _ dstName) = transformBi f
     f (RArgVar var) | var == srcName = RArgVar dstName
     f (RArgVarLen var) | var == srcName = RArgVarLen dstName
     f arg = arg
-substPi srcName (TInteger _ 0) = transformBi f
+substPi srcName (TInteger _ n) = transformBi f
   where
-    f (RArgVar var) | var == srcName = RArgZero
-    f (RArgVarLen var) | var == srcName = RArgZero
+    f (RArgVar var) | var == srcName = RArgInt n
+    f (RArgVarLen var) | var == srcName = RArgInt n
     f arg = arg
 substPi _ term = error [i|Unsupported substitution target: #{term}|]
 
@@ -237,7 +237,7 @@ genRefinementCstrs rbTy z3var
 
     genCstr v (AR op arg) = do
       z3arg <- case arg of
-                    RArgZero -> mkInteger 0
+                    RArgInt n -> mkIntNum n
                     RArgVar var -> askZ3VarName var
                     RArgVarLen _ -> error "TODO" -- TODO
       v `z3op` z3arg

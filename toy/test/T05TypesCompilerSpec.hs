@@ -95,7 +95,7 @@ genTy isRoot n
     genRefinementOp = elements enumerate
     genRefinementArg = do
       vars <- get
-      elements $ RArgZero
+      elements $ RArgInt 0
                : [ RArgVar var | (var, TInt) <- vars ]
               <> [ RArgVarLen var | (var, TIntList) <- vars ]
 

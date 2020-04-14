@@ -8,10 +8,10 @@ module Toy.Language.Parser.Ty
 ) where
 
 import Control.Monad
-import Data.Functor
 import Data.List.Extra
 import Data.String
 import Text.Megaparsec
+import Text.Megaparsec.Char.Lexer
 
 import Toy.Language.Syntax.Types
 import Toy.Language.Parser.Common
@@ -58,7 +58,7 @@ atomicRefinement :: ToyMonad e s m => m AtomicRefinement
 atomicRefinement = lstring "ν" >> AR <$> parseTable ops <*> args
   where
     ops = [ ("<=", ROpLeq), ("<", ROpLt), ("=", ROpEq), ("/=", ROpNEq), (">=", ROpGeq), (">", ROpGt) ]
-    args = choice [ lstring "0" $> RArgZero
+    args = choice [ RArgInt <$> lexeme' decimal
                   , lstringSpace "len" >> RArgVarLen <$> varName
                   , RArgVar <$> varName
                   ]

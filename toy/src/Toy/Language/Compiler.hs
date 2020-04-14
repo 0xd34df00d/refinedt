@@ -38,7 +38,7 @@ compileAR (AR op arg) = [i|ν #{opStr} #{argStr}|]
                  ROpGt -> ">"
                  ROpGeq -> ">="
     argStr = case arg of
-                  RArgZero -> "0"
+                  RArgInt n -> show n
                   RArgVar var -> getName var
                   RArgVarLen var -> "length " <> getName var
 
