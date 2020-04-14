@@ -126,6 +126,13 @@ spec = do
            f : (max : (x : Int) -> (y : Int) -> { ν : Int | ν >= x & ν >= y }) -> Int -> { ν : Int | ν >= 0 }
            f max x = max x 0
           |]
+    it "accepts add(x, 0)" $ expectSolverOn Correct
+        [i|
+           add : (x : { ν : Int | ν >= 0 }) -> (y : { ν : Int | ν >= 0 }) -> { ν : Int | ν >= x & ν >= y }
+
+           f : (x : { ν : Int | ν >= 0 }) -> { ν : Int | ν >= 0 & ν >= x }
+           f x = add x 0
+          |]
 
 
 trimHeading :: String -> String

@@ -97,7 +97,7 @@ type TypedTerm = TermT Ty
 
 annotateTypes :: (MonadReader SolveEnvironment m) => Term -> m TypedTerm
 annotateTypes (TName _ varName) = (`TName` varName) <$> askVarTy varName
-annotateTypes (TInteger _ n) = pure $ TInteger (TyBase $ RefinedBaseTy TInt trueRefinement) n
+annotateTypes (TInteger _ n) = pure $ TInteger (TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpEq $ RArgInt n]) n
 annotateTypes (TBinOp _ t1 op t2) = do
   t1' <- annotateTypes t1
   t2' <- annotateTypes t2
@@ -108,6 +108,7 @@ annotateTypes (TBinOp _ t1 op t2) = do
                    BinOpMinus -> TInt
                    BinOpGt -> TBool
                    BinOpLt -> TBool
+  -- this could have had a strong refinement if our refinements language supported arithmetic operations
   pure $ TBinOp (TyBase $ RefinedBaseTy resTy trueRefinement) t1' op t2'
 annotateTypes TIfThenElse { .. } = do
   tcond' <- annotateTypes tcond
@@ -146,7 +147,6 @@ substPi srcName (TInteger _ n) = transformBi f
     f arg = arg
 substPi _ term = error [i|Unsupported substitution target: #{term}|]
 
--- TODO shall we generate more precise refinements here?
 genTermsCstrs :: (MonadZ3 m, MonadReader SolveEnvironment m) => Z3VarName -> TypedTerm -> m AST
 genTermsCstrs termVar (TName _ varName) = do
   z3Var <- askZ3VarName varName
