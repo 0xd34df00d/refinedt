@@ -116,7 +116,7 @@ annotateTypes TIfThenElse { .. } = do
   tthen' <- annotateTypes tthen
   telse' <- annotateTypes telse
 
-  when (annotation tthen' /= annotation telse') $ error [i|Type mismatch between #{tthen} and #{telse}|]
+  when (stripRefinements (annotation tthen') /= stripRefinements (annotation telse')) $ error [i|Type mismatch between #{tthen} and #{telse}|]
 
   pure $ TIfThenElse (annotation tthen') tcond' tthen' telse'
 annotateTypes (TApp _ t1 t2) = do
