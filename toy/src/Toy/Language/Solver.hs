@@ -29,7 +29,7 @@ newtype SolveContext = SolveContext
   } deriving (Eq, Ord, Show, Semigroup, Monoid)
 
 buildCtx :: [FunSig] -> SolveContext
-buildCtx = SolveContext -- SolveContext $ HM.fromList [ (funName, sig) | sig@FunSig { .. } <- sigs ]
+buildCtx = SolveContext
 
 solve :: SolveContext -> FunSig -> FunDef -> IO SolveRes
 solve ctx sig def = evalZ3 $ mkScript ctx arg2type resType (funBody def)
@@ -143,7 +143,7 @@ substPi srcName (TName _ dstName) = transformBi f
 substPi srcName (TInteger _ n) = transformBi f
   where
     f (RArgVar var) | var == srcName = RArgInt n
-    f (RArgVarLen var) | var == srcName = RArgInt n
+    f (RArgVarLen var) | var == srcName = error [i|Can't substitute `len #{var}` with a number|]
     f arg = arg
 substPi _ term = error [i|Unsupported substitution target: #{term}|]
 
