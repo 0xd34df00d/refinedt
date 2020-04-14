@@ -121,6 +121,11 @@ spec = do
            f : Int -> { ν : Int | ν >= 0 }
            f x = max x 0
           |]
+    it "accepts max(x, 0) with max as arg" $ expectSolverOn Correct
+        [i|
+           f : (max : (x : Int) -> (y : Int) -> { ν : Int | ν >= x & ν >= y }) -> Int -> { ν : Int | ν >= 0 }
+           f max x = max x 0
+          |]
 
 
 trimHeading :: String -> String

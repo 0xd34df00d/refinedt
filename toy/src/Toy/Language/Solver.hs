@@ -35,9 +35,9 @@ solve :: SolveContext -> FunSig -> FunDef -> IO SolveRes
 solve ctx sig def = evalZ3 $ mkScript ctx arg2type resType (funBody def)
   where
     (argTypes, resType) = splitTypes sig
-    arg2type = HM.fromList $ zip (funArgs def) argTypes
+    arg2type = zip (funArgs def) argTypes
 
-type ArgTypes = HM.HashMap VarName Ty
+type ArgTypes = [(VarName, Ty)]
 
 newtype Z3VarName = Z3VarName { getZ3VarName :: AST }
 
@@ -82,20 +82,16 @@ mkScript ctx args target term = do
     invert Undef = Undef
 
 buildZ3Vars :: ArgTypes -> Z3 (HM.HashMap VarName (Ty, Z3VarName))
-buildZ3Vars args = do
-  z3vars <- HM.fromList <$> mapM sequence [ (var, Z3VarName <$> mkFreshIntVar (getName var))
-                                          | (var, TyBase RefinedBaseTy { baseType = TInt }) <- HM.toList args
-                                          ]
-  pure $ HM.intersectionWith (,) args z3vars
+buildZ3Vars args =
+  HM.fromList <$> mapM (mapM sequence) [ (var, (ty, Z3VarName <$> mkZ3Var (getName var) ty))
+                                       | (var, ty) <- args
+                                       ]
+  where
+    mkZ3Var varName (TyBase RefinedBaseTy { baseType = TInt }) = mkFreshIntVar varName
+    mkZ3Var varName _ = mkStringSymbol varName >>= mkUninterpretedSort >>= mkFreshConst varName -- TODO fun decl?
 
 buildCtxVars :: [FunSig] -> Z3 (HM.HashMap VarName (Ty, Z3VarName))
-buildCtxVars sigs = do
-  z3vars <- HM.fromList <$> mapM sequence [ (VarName funName, fmap Z3VarName $ mkStringSymbol funName >>= mkUninterpretedSort >>= mkFreshConst funName) -- TODO fun decl?
-                                          | FunSig { .. } <- sigs
-                                          ]
-  pure $ HM.intersectionWith (,) tys z3vars
-  where
-    tys = HM.fromList [ (VarName funName, funTy) | FunSig { .. } <- sigs ]
+buildCtxVars sigs = buildZ3Vars [ (VarName funName, funTy) | FunSig { .. } <- sigs ]
 
 type TypedTerm = TermT Ty
 
@@ -189,7 +185,7 @@ genTermsCstrs termVar TIfThenElse { .. } = do
   mkAnd [condCstrs, xor]
 genTermsCstrs termVar (TApp resTy fun arg) = do
   subTyCstr <- case (annotation arg, annotation fun) of
-                    (TyArrow _, _) -> error "TODO passing functions to functions is not supported yet" -- TODO
+                    (TyArrow _, _) -> error "TODO passing functions to functions is not supported yet" -- TODO positive/negative occurrences?
                     (TyBase rbtActual, TyArrow ArrowTy { domTy = TyBase rbtExpected }) -> do
                        ν <- Z3VarName <$> mkFreshIntVar "_∀_ν$"
 
