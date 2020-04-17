@@ -185,7 +185,7 @@ genTermsCstrs termVar TIfThenElse { .. } = do
   mkAnd [condCstrs, xor]
 genTermsCstrs termVar (TApp resTy fun arg) = do
   subTyCstr <- case (annotation fun, annotation arg) of
-                    (TyArrow ArrowTy { domTy = expectedTy }, actualTy) -> genFunSubtypingCstrs expectedTy actualTy
+                    (TyArrow ArrowTy { domTy = expectedTy }, actualTy) -> expectedTy <: actualTy
                     (_, _) -> error "Function should have arrow type (this should've been caught earlier though)"
 
   resCstr <- case resTy of
@@ -194,9 +194,10 @@ genTermsCstrs termVar (TApp resTy fun arg) = do
 
   mkAnd [resCstr, subTyCstr]
 
--- generate constraints for the combination of the function type and its argument type
-genFunSubtypingCstrs :: (MonadZ3 m, MonadReader SolveEnvironment m) => Ty -> Ty -> m AST
-genFunSubtypingCstrs (TyBase rbtExpected) (TyBase rbtActual) = do
+-- generate constraints for the combination of the function type and its argument type:
+-- the refinements of the first Ty should be a subtype (that is, imply) the refinements of the second Ty
+(<:) :: (MonadZ3 m, MonadReader SolveEnvironment m) => Ty -> Ty -> m AST
+TyBase rbtExpected <: TyBase rbtActual = do
    ν <- Z3VarName <$> mkFreshIntVar "_∀_ν$"
 
    actualCstr <- genRefinementCstrs rbtActual ν >>= mkAnd'
@@ -205,8 +206,11 @@ genFunSubtypingCstrs (TyBase rbtExpected) (TyBase rbtActual) = do
 
    ν' <- toApp $ getZ3VarName ν
    mkForallConst [] [ν'] implication
-genFunSubtypingCstrs (TyArrow _) (TyArrow _) = error "TODO passing functions to functions is not supported yet" -- TODO positive/negative occurrences?
-genFunSubtypingCstrs ty1 ty2 = error [i|Mismatched types #{ty1} #{ty2} (which should've been caught earlier though)|]
+TyArrow (ArrowTy _ funDomTy funCodTy) <: TyArrow (ArrowTy _ argDomTy argCodTy) = do
+  argCstrs <- argDomTy <: funDomTy
+  funCstrs <- funCodTy <: argCodTy
+  mkAnd [argCstrs, funCstrs]
+ty1 <: ty2 = error [i|Mismatched types #{ty1} #{ty2} (which should've been caught earlier though)|]
 
 mkAnd' :: MonadZ3 m => [AST] -> m AST
 mkAnd' [x] = pure x

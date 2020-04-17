@@ -140,6 +140,42 @@ spec = do
            f : (x : { ν : Int | ν >= 0 }) -> { ν : Int | ν >= 0 & ν >= x }
            f x = add x 0
           |]
+    it "accepts passing functions to functions" $ expectSolverOn Correct
+        [i|
+           f : (x : { ν : Int | ν >= 0 }) -> (y : { ν : Int | ν >= 0 }) -> { ν : Int | ν >= 0 }
+
+           g : ((x : { ν : Int | ν >= 0 }) -> (y : { ν : Int | ν >= 0 }) -> { ν : Int | ν >= 0 }) -> Int
+
+           h : Int
+           h = g f
+          |]
+    it "accepts correct functional argument refinements" $ expectSolverOn Correct
+        [i|
+           f : (x : { ν : Int | ν >= 0 }) -> (y : { ν : Int | ν >= 0 }) -> { ν : Int | ν > 0 }
+
+           g : ((x : { ν : Int | ν > 0 }) -> (y : { ν : Int | ν > 0 }) -> { ν : Int | ν >= 0 }) -> Int
+
+           h : Int
+           h = g f
+          |]
+    it "rejects incorrect functional argument refinements (on dom)" $ expectSolverOn Wrong
+        [i|
+           f : (x : { ν : Int | ν > 0 }) -> (y : { ν : Int | ν >= 0 }) -> { ν : Int | ν > 0 }
+
+           g : ((x : { ν : Int | ν >= 0 }) -> (y : { ν : Int | ν > 0 }) -> { ν : Int | ν >= 0 }) -> Int
+
+           h : Int
+           h = g f
+          |]
+    it "rejects incorrect functional argument refinements (on cod)" $ expectSolverOn Wrong
+        [i|
+           f : (x : { ν : Int | ν >= 0 }) -> (y : { ν : Int | ν >= 0 }) -> { ν : Int | ν >= 0 }
+
+           g : ((x : { ν : Int | ν >= 0 }) -> (y : { ν : Int | ν > 0 }) -> { ν : Int | ν > 0 }) -> Int
+
+           h : Int
+           h = g f
+          |]
 
 
 trimHeading :: String -> String
