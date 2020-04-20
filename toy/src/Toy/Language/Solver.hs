@@ -71,11 +71,11 @@ mkScript ctx args target term = do
             invert <$> check
          c -> pure c
 
-  {-
-  res <- check
-  getModel >>= modelToString . fromJust . snd >>= liftIO . putStrLn
-  pure $ convertZ3Result $ invert res
-  -}
+    {-
+    res <- check
+    getModel >>= modelToString . fromJust . snd >>= liftIO . putStrLn
+    pure $ invert res
+    -}
   where
     invert Sat = Unsat
     invert Unsat = Sat
