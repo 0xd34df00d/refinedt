@@ -200,8 +200,8 @@ genTermsCstrs termVar (TApp resTy fun arg) = do
 TyBase rbtExpected <: TyBase rbtActual = do
    ν <- Z3VarName <$> mkFreshIntVar "_∀_ν$"
 
-   actualCstr <- genRefinementCstrs rbtActual ν >>= mkAnd'
-   expectedCstr <- genRefinementCstrs rbtExpected ν >>= mkAnd'
+   actualCstr <- genRefinementCstrs rbtActual ν >>= mkAnd
+   expectedCstr <- genRefinementCstrs rbtExpected ν >>= mkAnd
    implication <- mkImplies actualCstr expectedCstr
 
    ν' <- toApp $ getZ3VarName ν
@@ -211,10 +211,6 @@ TyArrow (ArrowTy _ funDomTy funCodTy) <: TyArrow (ArrowTy _ argDomTy argCodTy) =
   funCstrs <- funCodTy <: argCodTy
   mkAnd [argCstrs, funCstrs]
 ty1 <: ty2 = error [i|Mismatched types #{ty1} #{ty2} (which should've been caught earlier though)|]
-
-mkAnd' :: MonadZ3 m => [AST] -> m AST
-mkAnd' [x] = pure x
-mkAnd' xs = mkAnd xs
 
 mkVarCstrs :: (MonadZ3 m, MonadReader SolveEnvironment m) => String -> TypedTerm -> m (AST, AST)
 mkVarCstrs name term = do
