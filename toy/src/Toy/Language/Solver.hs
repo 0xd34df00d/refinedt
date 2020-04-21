@@ -13,6 +13,7 @@ module Toy.Language.Solver
 
 import qualified Data.HashMap.Strict as HM
 import Data.Generics.Uniplate.Data
+import Data.Maybe
 import Data.String.Interpolate
 import Control.Arrow
 import Control.Monad
@@ -61,12 +62,15 @@ mkScript ctx args target term = do
 
     typedTerm <- annotateTypes term
 
-    termCstrs <- genTermsCstrs res typedTerm
-
-    termCstrsConsistent <- solverCheckAssumptions [termCstrs]
+    TermsCstrs { .. } <- genTermsCstrs res typedTerm
+    case mandatoryCstrs of
+         Just cstrs -> assert cstrs
+         Nothing -> pure ()
+    refutables <- maybe mkTrue pure refutableCstrs
+    termCstrsConsistent <- solverCheckAssumptions [refutables]
     case termCstrsConsistent of
          Sat -> do
-            assert termCstrs
+            assert refutables
             assert =<< mkNot =<< argsPresup `mkImplies` resConcl
             invert <$> check
          c -> pure c
@@ -147,19 +151,47 @@ substPi srcName (TInteger _ n) = transformBi f
     f arg = arg
 substPi _ term = error [i|Unsupported substitution target: #{term}|]
 
-genTermsCstrs :: (MonadZ3 m, MonadReader SolveEnvironment m) => Z3VarName -> TypedTerm -> m AST
+data TermsCstrs = TermsCstrs
+  { mandatoryCstrs :: Maybe AST
+  , refutableCstrs :: Maybe AST
+  }
+
+mandatory :: AST -> TermsCstrs
+mandatory cstr = TermsCstrs (Just cstr) Nothing
+
+refutable :: AST -> TermsCstrs
+refutable cstr = TermsCstrs Nothing (Just cstr)
+
+andTermsCstrs :: MonadZ3 m => [TermsCstrs] -> m TermsCstrs
+andTermsCstrs cstrs = TermsCstrs <$> (mkAnd' mandatories) <*> (mkAnd' refutables)
+  where
+    mandatories = mapMaybe mandatoryCstrs cstrs
+    refutables = mapMaybe refutableCstrs cstrs
+    mkAnd' [] = pure Nothing
+    mkAnd' [c] = pure $ Just c
+    mkAnd' cs = Just <$> mkAnd cs
+
+xorTermsCstrs :: MonadZ3 m => TermsCstrs -> TermsCstrs -> m TermsCstrs
+xorTermsCstrs (TermsCstrs (Just m1) (Just r1)) (TermsCstrs (Just m2) (Just r2)) =
+  TermsCstrs <$> (Just <$> mkXor m1 m2) <*> (Just <$> mkXor r1 r2)
+xorTermsCstrs t1 (TermsCstrs Nothing _) = pure t1
+xorTermsCstrs t1 (TermsCstrs _ Nothing) = pure t1
+xorTermsCstrs (TermsCstrs Nothing _) t2 = pure t2
+xorTermsCstrs (TermsCstrs _ Nothing) t2 = pure t2
+
+genTermsCstrs :: (MonadZ3 m, MonadReader SolveEnvironment m) => Z3VarName -> TypedTerm -> m TermsCstrs
 genTermsCstrs termVar (TName _ varName) = do
   z3Var <- askZ3VarName varName
-  getZ3VarName termVar `mkEq` z3Var
+  mandatory <$> getZ3VarName termVar `mkEq` z3Var
 genTermsCstrs termVar (TInteger _ n) = do
   num <- mkIntNum n
-  getZ3VarName termVar `mkEq` num
+  mandatory <$> getZ3VarName termVar `mkEq` num
 genTermsCstrs termVar (TBinOp _ t1 op t2) = do
   (t1var, t1cstrs) <- mkVarCstrs "_linkVar_t1$" t1
   (t2var, t2cstrs) <- mkVarCstrs "_linkVar_t2$" t2
   bodyRes <- z3op t1var t2var
-  bodyCstr <- getZ3VarName termVar `mkEq` bodyRes
-  mkAnd [t1cstrs, t2cstrs, bodyCstr]
+  bodyCstr <- mandatory <$> getZ3VarName termVar `mkEq` bodyRes
+  andTermsCstrs [t1cstrs, t2cstrs, bodyCstr]
   where
     z3op = case op of
                 BinOpPlus -> \a b -> mkAdd [a, b]
@@ -174,25 +206,25 @@ genTermsCstrs termVar TIfThenElse { .. } = do
   (elseVar, elseCstrs) <- mkVarCstrs "_linkVar_telse$" telse
 
   thenClause <- do
-    thenEq <- getZ3VarName termVar `mkEq` thenVar
-    mkAnd [thenCstrs, condVar, thenEq]
+    thenEq <- mandatory <$> getZ3VarName termVar `mkEq` thenVar
+    andTermsCstrs [thenCstrs, mandatory condVar, thenEq]
   elseClause <- do
-    elseEq <- getZ3VarName termVar `mkEq` elseVar
+    elseEq <- mandatory <$> getZ3VarName termVar `mkEq` elseVar
     notCondVar <- mkNot condVar
-    mkAnd [elseCstrs, notCondVar, elseEq]
+    andTermsCstrs [elseCstrs, mandatory notCondVar, elseEq]
 
-  xor <- mkXor thenClause elseClause
-  mkAnd [condCstrs, xor]
+  xor <- xorTermsCstrs thenClause elseClause
+  andTermsCstrs [condCstrs, xor]
 genTermsCstrs termVar (TApp resTy fun arg) = do
   subTyCstr <- case (annotation fun, annotation arg) of
                     (TyArrow ArrowTy { domTy = expectedTy }, actualTy) -> expectedTy <: actualTy
                     (_, _) -> error "Function should have arrow type (this should've been caught earlier though)"
 
   resCstr <- case resTy of
-                  TyArrow _ -> mkTrue
-                  TyBase rbt -> genRefinementCstrs rbt termVar >>= mkAnd
+                  TyArrow _ -> pure Nothing
+                  TyBase rbt -> fmap Just $ genRefinementCstrs rbt termVar >>= mkAnd
 
-  mkAnd [resCstr, subTyCstr]
+  pure $ TermsCstrs resCstr (Just subTyCstr)
 
 -- generate constraints for the combination of the function type and its argument type:
 -- the refinements of the first Ty should be a subtype (that is, imply) the refinements of the second Ty
@@ -212,7 +244,7 @@ TyArrow (ArrowTy _ funDomTy funCodTy) <: TyArrow (ArrowTy _ argDomTy argCodTy) =
   mkAnd [argCstrs, funCstrs]
 ty1 <: ty2 = error [i|Mismatched types #{ty1} #{ty2} (which should've been caught earlier though)|]
 
-mkVarCstrs :: (MonadZ3 m, MonadReader SolveEnvironment m) => String -> TypedTerm -> m (AST, AST)
+mkVarCstrs :: (MonadZ3 m, MonadReader SolveEnvironment m) => String -> TypedTerm -> m (AST, TermsCstrs)
 mkVarCstrs name term = do
   -- TODO not necessarily int
   var <- mkFreshIntVar name
