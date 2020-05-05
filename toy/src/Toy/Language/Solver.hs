@@ -171,13 +171,13 @@ andTermsCstrs cstrs = TermsCstrs <$> mkAnd' mandatories <*> mkAnd' refutables
     mkAnd' [c] = pure $ Just c
     mkAnd' cs = Just <$> mkAnd cs
 
-xorTermsCstrs :: MonadZ3 m => TermsCstrs -> TermsCstrs -> m TermsCstrs
-xorTermsCstrs (TermsCstrs (Just m1) (Just r1)) (TermsCstrs (Just m2) (Just r2)) =
-  TermsCstrs <$> (Just <$> mkXor m1 m2) <*> (Just <$> mkXor r1 r2)
-xorTermsCstrs t1 (TermsCstrs Nothing _) = pure t1
-xorTermsCstrs t1 (TermsCstrs _ Nothing) = pure t1
-xorTermsCstrs (TermsCstrs Nothing _) t2 = pure t2
-xorTermsCstrs (TermsCstrs _ Nothing) t2 = pure t2
+implyTermsCstrs :: MonadZ3 m => AST -> TermsCstrs -> m TermsCstrs
+implyTermsCstrs presupp TermsCstrs { .. } = do
+  mandatory' <- mkImplies' mandatoryCstrs
+  refutable' <- mkImplies' refutableCstrs
+  pure $ TermsCstrs mandatory' refutable'
+  where
+    mkImplies' = traverse $ mkImplies presupp
 
 genTermsCstrs :: (MonadZ3 m, MonadReader SolveEnvironment m) => Z3VarName -> TypedTerm -> m TermsCstrs
 genTermsCstrs termVar (TName _ varName) = do
@@ -207,14 +207,15 @@ genTermsCstrs termVar TIfThenElse { .. } = do
 
   thenClause <- do
     thenEq <- mandatory <$> getZ3VarName termVar `mkEq` thenVar
-    andTermsCstrs [thenCstrs, mandatory condVar, thenEq]
+    entails <- andTermsCstrs [thenCstrs, thenEq]
+    implyTermsCstrs condVar entails
   elseClause <- do
     elseEq <- mandatory <$> getZ3VarName termVar `mkEq` elseVar
     notCondVar <- mkNot condVar
-    andTermsCstrs [elseCstrs, mandatory notCondVar, elseEq]
+    entails <- andTermsCstrs [elseCstrs, elseEq]
+    implyTermsCstrs notCondVar entails
 
-  xor <- xorTermsCstrs thenClause elseClause
-  andTermsCstrs [condCstrs, xor]
+  andTermsCstrs [condCstrs, thenClause, elseClause]
 genTermsCstrs termVar (TApp resTy fun arg) = do
   subTyCstr <- case (annotation fun, annotation arg) of
                     (TyArrow ArrowTy { domTy = expectedTy }, actualTy) -> expectedTy <: actualTy
