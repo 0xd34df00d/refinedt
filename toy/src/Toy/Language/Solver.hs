@@ -163,7 +163,7 @@ refutable :: AST -> TermsCstrs
 refutable cstr = TermsCstrs Nothing (Just cstr)
 
 andTermsCstrs :: MonadZ3 m => [TermsCstrs] -> m TermsCstrs
-andTermsCstrs cstrs = TermsCstrs <$> (mkAnd' mandatories) <*> (mkAnd' refutables)
+andTermsCstrs cstrs = TermsCstrs <$> mkAnd' mandatories <*> mkAnd' refutables
   where
     mandatories = mapMaybe mandatoryCstrs cstrs
     refutables = mapMaybe refutableCstrs cstrs
