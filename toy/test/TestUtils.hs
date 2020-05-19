@@ -6,6 +6,8 @@ import Data.Void
 import Test.Hspec
 import Text.Megaparsec
 
+import Idris.IdeModeClient
+
 parse' :: Parsec Void String a -> String -> Either ErrorMsg a
 parse' p = first (ErrorMsg . errorBundlePretty) . runParser (p <* eof) ""
 
@@ -25,3 +27,6 @@ trimIndentation str = case flt $ lines str of
   where
     countLeading = length . takeWhile isSpace
     flt = filter $ not . null
+
+testWithIdris :: SpecWith IdrisHandle -> SpecWith ()
+testWithIdris = parallel . beforeAll startIdris . afterAll stopIdris

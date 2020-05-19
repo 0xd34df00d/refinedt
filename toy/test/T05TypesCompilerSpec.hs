@@ -49,7 +49,7 @@ checkIdrisFunDecl ih ty = runIdrisClient ih $ withFile $ \file -> do
   liftIO $ reply `shouldSatisfy` isOkReply
 
 spec :: Spec
-spec = parallel $ beforeAll startIdris $ afterAll stopIdris $ do
+spec = testWithIdris $ do
   describe "Basic smoke tests" $ do
     it "Compiles base types" $ checkIdris "someBool : Bool"
     describe "Compiles arrow types" $ do
