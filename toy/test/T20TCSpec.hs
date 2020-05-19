@@ -2,7 +2,6 @@
 
 module T20TCSpec(spec) where
 
-import Data.Char
 import Data.Either
 import Data.String.Interpolate
 import Test.Hspec
@@ -176,12 +175,3 @@ spec = do
            h : Int
            h = g f
           |]
-
-
-trimHeading :: String -> String
-trimHeading str = case flt $ lines str of
-                       (l:ls) -> unlines $ flt $ drop (countLeading l) <$> l:ls
-                       _ -> str
-  where
-    countLeading = length . takeWhile isSpace
-    flt = filter $ not . null
