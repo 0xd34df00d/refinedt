@@ -19,7 +19,7 @@ expectSolverOn expected str = do
   res <- solve (buildCtx ctx) sig def
   res `shouldBe` expected
   where
-    parseRes = parse' funWithCtx $ trimHeading str
+    parseRes = parse' funWithCtx $ trimIndentation str
 
 spec :: Spec
 spec = do

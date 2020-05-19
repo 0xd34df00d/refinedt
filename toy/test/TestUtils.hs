@@ -18,10 +18,10 @@ infixr 0 ~~>
 (~~>) :: (Show err, Eq err, Show r, Eq r) => Either err r -> r -> Expectation
 parseRes ~~> expected = parseRes `shouldBe` Right expected
 
-trimHeading :: String -> String
-trimHeading str = case flt $ lines str of
-                       (l:ls) -> unlines $ flt $ drop (countLeading l) <$> l:ls
-                       _ -> str
+trimIndentation :: String -> String
+trimIndentation str = case flt $ lines str of
+                           (l:ls) -> unlines $ flt $ drop (countLeading l) <$> l:ls
+                           _ -> str
   where
     countLeading = length . takeWhile isSpace
     flt = filter $ not . null
