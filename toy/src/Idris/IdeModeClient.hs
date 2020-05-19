@@ -137,7 +137,7 @@ runIdrisClientInst ih@(IdrisInstance (idrStdin, idrStdout, _, _)) = viewT >=> go
       line <- BS.hGet idrStdout $ read $ "0x" <> countStr
       case parseIdrisResponse $ BS.unpack line of
            Right val -> pure val
-           Left err -> error $ show err
+           Left err -> error $ unlines [BS.unpack line, show err]
     intAct (Write f s) = liftIO $ hPutStrLn (handle f) s >> hFlush (handle f)
     intAct (WithFile act) = withSystemTempFile "toyidris.idr" $ \path handle -> runIdrisClientInst ih $ act File { .. }
 
