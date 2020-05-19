@@ -2,24 +2,18 @@
 
 module T20TCSpec(spec) where
 
-import Data.Either
 import Data.String.Interpolate
 import Test.Hspec
 
-import Toy.Language.Parser
 import Toy.Language.Solver
 
 import TestUtils
 
 expectSolverOn :: SolveRes -> String -> Expectation
 expectSolverOn expected str = do
-  parseRes `shouldSatisfy` isRight
-
-  let Right (ctx, (sig, def)) = parseRes
+  (ctx, (sig, def)) <- testParseFunWithCtx str
   res <- solve (buildCtx ctx) sig def
   res `shouldBe` expected
-  where
-    parseRes = parse' funWithCtx $ trimIndentation str
 
 spec :: Spec
 spec = do

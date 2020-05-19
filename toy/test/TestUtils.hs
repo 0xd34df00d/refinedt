@@ -2,11 +2,14 @@ module TestUtils where
 
 import Data.Bifunctor
 import Data.Char
+import Data.Either
 import Data.Void
 import Test.Hspec
 import Text.Megaparsec
 
 import Idris.IdeModeClient
+import Toy.Language.Parser
+import Toy.Language.Syntax.Decls
 
 parse' :: Parsec Void String a -> String -> Either ErrorMsg a
 parse' p = first (ErrorMsg . errorBundlePretty) . runParser (p <* eof) ""
@@ -30,3 +33,13 @@ trimIndentation str = case flt $ lines str of
 
 testWithIdris :: SpecWith IdrisHandle -> SpecWith ()
 testWithIdris = parallel . beforeAll startIdris . afterAll stopIdris
+
+testParseFunWithCtx :: String -> IO ([FunSig], (FunSig, FunDef))
+testParseFunWithCtx str =
+  case parseRes of
+       Right r -> pure r
+       _ -> do
+          parseRes `shouldSatisfy` isRight
+          error "expected Right"
+  where
+    parseRes = parse' funWithCtx $ trimIndentation str
