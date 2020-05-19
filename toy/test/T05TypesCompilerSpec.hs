@@ -43,7 +43,7 @@ checkIdris declStr ih = parseFunDecl declStr >>= checkIdrisFunDecl ih
 
 checkIdrisFunDecl :: IdrisHandle -> FunSig -> Expectation
 checkIdrisFunDecl ih ty = runIdrisClient ih $ withFile $ \file -> do
-  write file $ compileFunDecl ty
+  write file $ compileFunSig ty
   sendCommand $ loadFile file
   reply <- iterateUntil isReturn readReply
   liftIO $ reply `shouldSatisfy` isOkReply
