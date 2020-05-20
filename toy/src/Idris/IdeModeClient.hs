@@ -7,6 +7,7 @@ module Idris.IdeModeClient
 , readReply
 , withFile
 , write
+, dumpFile
 
 , typeCheck
 , loadFile
@@ -33,7 +34,7 @@ import Data.String.Interpolate.IsString
 import Data.Void
 import GHC.Conc
 import Numeric
-import System.IO(Handle, hPutStrLn, hFlush)
+import System.IO(Handle, hPutStrLn, hFlush, hGetContents, hSeek, SeekMode(..))
 import System.IO.Temp
 import System.Process
 import Text.Megaparsec
@@ -51,6 +52,7 @@ data IdrisAction :: (Type -> Type) -> Type -> Type where
   ReadReply :: IdrisAction m SExpr
   Write :: File -> String -> IdrisAction m ()
   WithFile :: (File -> IdrisClientT m r) -> IdrisAction m r
+  DumpFile :: File -> IdrisAction m ()
 
 type IdrisClientT m = ProgramT (IdrisAction m) m
 
@@ -62,6 +64,9 @@ readReply = singleton ReadReply
 
 write :: File -> String -> IdrisClientT m ()
 write f s = singleton $ Write f s
+
+dumpFile :: File -> IdrisClientT m ()
+dumpFile f = singleton $ DumpFile f
 
 withFile :: (File -> IdrisClientT m r) -> IdrisClientT m r
 withFile = singleton . WithFile
@@ -140,6 +145,7 @@ runIdrisClientInst ih@(IdrisInstance (idrStdin, idrStdout, _, _)) = viewT >=> go
            Left err -> error $ unlines [BS.unpack line, show err]
     intAct (Write f s) = liftIO $ hPutStrLn (handle f) s >> hFlush (handle f)
     intAct (WithFile act) = withSystemTempFile "toyidris.idr" $ \path handle -> runIdrisClientInst ih $ act File { .. }
+    intAct (DumpFile f) = liftIO $ hSeek (handle f) AbsoluteSeek 0 >> hGetContents (handle f) >>= putStrLn
 
 fmtLength :: Command -> String
 fmtLength cmd = replicate (6 - length hex) '0' <> hex
