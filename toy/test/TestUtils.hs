@@ -59,6 +59,8 @@ isOkReply _ = False
 testIdrisFile :: MonadIO m => File -> IdrisClientT m ()
 testIdrisFile file = do
   sendCommand $ loadFile file
-  reply <- iterateUntil isReturn readReply
-  unless (isOkReply reply) $ dumpFile file
-  liftIO $ reply `shouldSatisfy` isOkReply
+  replies <- unfoldWhileM (not . isReturn) readReply
+  unless (isOkReply $ last replies) $ do
+    liftIO $ mapM_ print replies
+    dumpFile file
+  liftIO $ last replies `shouldSatisfy` isOkReply
