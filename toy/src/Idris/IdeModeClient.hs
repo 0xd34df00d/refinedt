@@ -11,12 +11,14 @@ module Idris.IdeModeClient
 
 , typeCheck
 , loadFile
+, File
 
 , IdrisHandle
 , withIdris
 , startIdris
 , stopIdris
 , runIdrisClient
+, IdrisClientT
 ) where
 
 import qualified Data.ByteString.Char8 as BS
