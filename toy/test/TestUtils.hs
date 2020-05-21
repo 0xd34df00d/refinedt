@@ -59,8 +59,18 @@ isOkReply _ = False
 testIdrisFile :: MonadIO m => File -> IdrisClientT m ()
 testIdrisFile file = do
   sendCommand $ loadFile file
-  replies <- unfoldWhileM (not . isReturn) readReply
+  replies <- unfoldWhileIncludingM (not . isReturn) readReply
   unless (isOkReply $ last replies) $ do
     liftIO $ mapM_ print replies
     dumpFile file
   liftIO $ last replies `shouldSatisfy` isOkReply
+
+-- TODO move that to monad-loops
+unfoldWhileIncludingM :: Monad m => (a -> Bool) -> m a -> m [a]
+unfoldWhileIncludingM p m = loop id
+    where
+        loop f = do
+            x <- m
+            if p x
+                then loop (f . (x:))
+                else return (f [x])
