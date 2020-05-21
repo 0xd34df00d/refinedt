@@ -28,7 +28,7 @@ compileRefinement refinement =
        conjs -> "(" <> intercalate ", " (compileAR <$> conjs) <> ")"
 
 compileAR :: AtomicRefinement -> String
-compileAR (AR op arg) = [i|v #{opStr} #{argStr}|]
+compileAR (AR op arg) = [i|v #{opStr} #{argStr} = True|]
   where
     opStr = case op of
                  ROpLt -> "<"
