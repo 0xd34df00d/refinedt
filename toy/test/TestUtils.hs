@@ -1,11 +1,15 @@
 module TestUtils where
 
+import Control.Monad
+import Control.Monad.IO.Class
+import Control.Monad.Loops
 import Data.Bifunctor
 import Data.Char
 import Data.Either
 import Data.Void
 import Test.Hspec
 import Text.Megaparsec
+import Text.SExpression
 
 import Idris.IdeModeClient
 import Toy.Language.Parser
@@ -43,3 +47,18 @@ testParseFunWithCtx str =
           error "expected Right"
   where
     parseRes = parse' funWithCtx $ trimIndentation str
+
+isReturn :: SExpr -> Bool
+isReturn (List (Atom ":return" : _)) = True
+isReturn _ = False
+
+isOkReply :: SExpr -> Bool
+isOkReply (List [Atom ":return", List (Atom ":ok" : _), _]) = True
+isOkReply _ = False
+
+testIdrisFile :: MonadIO m => File -> IdrisClientT m ()
+testIdrisFile file = do
+  sendCommand $ loadFile file
+  reply <- iterateUntil isReturn readReply
+  unless (isOkReply reply) $ dumpFile file
+  liftIO $ reply `shouldSatisfy` isOkReply

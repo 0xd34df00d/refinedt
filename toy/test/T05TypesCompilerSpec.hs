@@ -5,15 +5,12 @@
 
 module T05TypesCompilerSpec(spec) where
 
-import Control.Monad.IO.Class
-import Control.Monad.Loops
 import Control.Monad.State.Strict
 import Data.Either
 import Data.List.Extra
 import QuickCheck.GenT
 import Test.Hspec
 import Test.QuickCheck(property)
-import Text.SExpression
 
 import Idris.IdeModeClient
 import Toy.Language.Compiler
@@ -30,25 +27,13 @@ parseFunDecl str = do
   where
     parsed = parse' funDecl str
 
-isReturn :: SExpr -> Bool
-isReturn (List (Atom ":return" : _)) = True
-isReturn _ = False
-
-isOkReply :: SExpr -> Bool
-isOkReply (List [Atom ":return", List (Atom ":ok" : _), _]) = True
-isOkReply _ = False
-
 checkIdris :: String -> IdrisHandle -> Expectation
 checkIdris declStr ih = parseFunDecl declStr >>= checkIdrisFunDecl ih
 
 checkIdrisFunDecl :: IdrisHandle -> FunSig -> Expectation
 checkIdrisFunDecl ih ty = runIdrisClient ih $ withFile $ \file -> do
   write file $ compileFunSig ty
-  sendCommand $ loadFile file
-  --dumpFile file
-  reply <- iterateUntil isReturn readReply
-  when (not $ isOkReply reply) $ dumpFile file
-  liftIO $ reply `shouldSatisfy` isOkReply
+  testIdrisFile file
 
 spec :: Spec
 spec = testWithIdris $ do
