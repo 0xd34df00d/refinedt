@@ -14,7 +14,7 @@ compileFunSig FunSig { .. } = [i|#{funName} : #{compileTy funTy}|]
 compileTy :: Ty -> String
 compileTy (TyBase RefinedBaseTy { .. })
   | baseTyRefinement == trueRefinement = compileBaseTy baseType
-  | otherwise = [i|(ν : #{compileBaseTy baseType} ** #{compileRefinement baseTyRefinement})|]
+  | otherwise = [i|(v : #{compileBaseTy baseType} ** #{compileRefinement baseTyRefinement})|]
 compileTy (TyArrow ArrowTy { .. }) = [i|#{lhs} -> #{compileTy codTy}|]
   where
     lhs | Just name <- piVarName = [i|(#{getName name} : #{compileTy domTy})|]
@@ -28,7 +28,7 @@ compileRefinement refinement =
        conjs -> "(" <> intercalate ", " (compileAR <$> conjs) <> ")"
 
 compileAR :: AtomicRefinement -> String
-compileAR (AR op arg) = [i|ν #{opStr} #{argStr}|]
+compileAR (AR op arg) = [i|v #{opStr} #{argStr}|]
   where
     opStr = case op of
                  ROpLt -> "<"

@@ -45,7 +45,9 @@ checkIdrisFunDecl :: IdrisHandle -> FunSig -> Expectation
 checkIdrisFunDecl ih ty = runIdrisClient ih $ withFile $ \file -> do
   write file $ compileFunSig ty
   sendCommand $ loadFile file
+  --dumpFile file
   reply <- iterateUntil isReturn readReply
+  when (not $ isOkReply reply) $ dumpFile file
   liftIO $ reply `shouldSatisfy` isOkReply
 
 spec :: Spec
@@ -54,10 +56,10 @@ spec = testWithIdris $ do
     it "Compiles base types" $ checkIdris "someBool : Bool"
     describe "Compiles arrow types" $ do
       it "base types" $ checkIdris "someFun : Int -> Bool"
-      it "refinements" $ checkIdris "someFun : { ν : Int | ν > 0 } -> Bool"
+      it "refinements" $ checkIdris "someFun : { v : Int | v > 0 } -> Bool"
       it "pi-bound vars" $ checkIdris "someFun : (x : Int) -> Bool"
-      it "pi-bound vars and refinements" $ checkIdris "someFun : (x : { ν : Int | ν > 0 }) -> Bool"
-      it "pi-bound vars some more" $ checkIdris "someFun : (ls : IntList) -> { ν : Int | ν >= 0 & ν < len ls } -> Int"
+      it "pi-bound vars and refinements" $ checkIdris "someFun : (x : { v : Int | v > 0 }) -> Bool"
+      it "pi-bound vars some more" $ checkIdris "someFun : (ls : IntList) -> { v : Int | v >= 0 & v < len ls } -> Int"
   describe "QuickCheck fun" $
     xit "Compiles arbitrarily generated types" $ \ih -> property $ checkIdrisFunDecl ih . FunSig "testFun"
 

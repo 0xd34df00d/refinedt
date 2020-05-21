@@ -43,7 +43,7 @@ baseRT = try refinedTy <|> implicitTrue
     implicitTrue = RefinedBaseTy <$> baseTy <*> pure trueRefinement
     refinedTy = do
       void $ lstring "{"
-      void $ lstring "ν"
+      void $ lstring "v"
       void $ lstring ":"
       baseType <- baseTy
       void $ lstring "|"
@@ -55,7 +55,7 @@ refinement :: ToyMonad e s m => m Refinement
 refinement = Refinement <$> atomicRefinement `sepBy1` lstring "&"
 
 atomicRefinement :: ToyMonad e s m => m AtomicRefinement
-atomicRefinement = lstring "ν" >> AR <$> parseTable ops <*> args
+atomicRefinement = lstring "v" >> AR <$> parseTable ops <*> args
   where
     ops = [ ("<=", ROpLeq), ("<", ROpLt), ("=", ROpEq), ("/=", ROpNEq), (">=", ROpGeq), (">", ROpGt) ]
     args = choice [ RArgInt <$> lexeme' decimal

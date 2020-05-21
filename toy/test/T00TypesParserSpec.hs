@@ -15,23 +15,23 @@ spec = do
     it "parses unrefined type" $
       p "Bool" ~~> RefinedBaseTy TBool trueRefinement
     it "parses refined type with var" $
-      p "{ ν : Bool | ν < x }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLt (RArgVar "x")]
+      p "{ v : Bool | v < x }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLt (RArgVar "x")]
     it "parses refined type with zero" $
-      p "{ ν : Bool | ν <= 0 }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLeq $ RArgInt 0]
+      p "{ v : Bool | v <= 0 }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLeq $ RArgInt 0]
     it "parses refined type with len" $
-      p "{ ν : Bool | ν >= len arr }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVarLen "arr")]
+      p "{ v : Bool | v >= len arr }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVarLen "arr")]
     it "parses refined type without spaces" $
-      p "{ν:Bool|ν>=len arr}" ~~> RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVarLen "arr")]
+      p "{v:Bool|v>=len arr}" ~~> RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVarLen "arr")]
     it "parses refined type with var name starting with len" $
-      p "{ ν : Bool | ν >= lenarr }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVar "lenarr")]
+      p "{ v : Bool | v >= lenarr }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVar "lenarr")]
   describe "Parsing with conjunctions" $ let p = parse' baseRT in do
     it "parses types with conjunctions 1" $
-      p "{ ν : Bool | ν < x & ν > 0 }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLt (RArgVar "x"), AR ROpGt $ RArgInt 0]
+      p "{ v : Bool | v < x & v > 0 }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLt (RArgVar "x"), AR ROpGt $ RArgInt 0]
     it "parses types with conjunctions 2" $
-      p "{ ν : Bool | ν < x & ν < len arr }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLt (RArgVar "x"), AR ROpLt (RArgVarLen "arr")]
+      p "{ v : Bool | v < x & v < len arr }" ~~> RefinedBaseTy TBool $ Refinement [AR ROpLt (RArgVar "x"), AR ROpLt (RArgVarLen "arr")]
   describe "Parsing arrows" $ let p = parse' ty in do
     it "still parses base types" $
-      p "{ ν : Bool | ν >= len arr }" ~~> TyBase $ RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVarLen "arr")]
+      p "{ v : Bool | v >= len arr }" ~~> TyBase $ RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVarLen "arr")]
     it "parses unrefined base types with parens" $
       p "(Bool)" ~~> bool
     it "parses simple arrows" $
@@ -48,14 +48,14 @@ spec = do
       p "((Bool -> Int) -> Bool) -> (Bool -> Bool)" ~~> ((bool --> int) --> bool) --> (bool --> bool)
   describe "Parsing full refined types with arrows" $ let p = parse' ty in do
     it "parses simple arrows" $
-      p "{ ν : Int | ν <= len arr } -> { ν : Int | ν > 0 }" ~~> intLeqLenArr --> intGe0
+      p "{ v : Int | v <= len arr } -> { v : Int | v > 0 }" ~~> intLeqLenArr --> intGe0
     it "parses simple arrows in parens" $
-      p "({ ν : Int | ν <= len arr } -> { ν : Int | ν > 0 })" ~~> intLeqLenArr --> intGe0
+      p "({ v : Int | v <= len arr } -> { v : Int | v > 0 })" ~~> intLeqLenArr --> intGe0
     it "parses nested arrows" $
-      p "{ ν : Int | ν <= len arr } -> { ν : Int | ν < var1 } -> { ν : Int | ν < var2 }"
+      p "{ v : Int | v <= len arr } -> { v : Int | v < var1 } -> { v : Int | v < var2 }"
         ~~> intLeqLenArr --> intLe "var1" --> intLe "var2"
     it "parses nested arrows with parens" $
-      p "({ ν : Int | ν <= len arr } -> { ν : Int | ν < var1 }) -> { ν : Int | ν < var2 }"
+      p "({ v : Int | v <= len arr } -> { v : Int | v < var1 }) -> { v : Int | v < var2 }"
         ~~> (intLeqLenArr --> intLe "var1") --> intLe "var2"
   describe "Parsing arrows and pi-bound variables" $ let p = parse' ty in do
     it "parses pi-bound unrefined types" $
@@ -68,13 +68,13 @@ spec = do
       p "(f : (x : Bool) -> (y : Int) -> Bool) -> Bool" ~~> "f".:("x".:bool ->> ("y".:int ->> bool)) ->> bool
   describe "Parsing arrows, refinements and pi-bound variables" $ let p = parse' ty in do
     it "parses pi-bound refined types" $
-      p "(x : { ν : Int | ν <= len arr }) -> { ν : Int | ν >= 0 & ν < x }"
+      p "(x : { v : Int | v <= len arr }) -> { v : Int | v >= 0 & v < x }"
         ~~> "x".:intLeqLenArr ->> intBetween0andX
     it "parses pi-bound nested refined types" $
-      p "(x : { ν : Int | ν <= len arr }) -> (y : { ν : Int | ν > 0 }) -> { ν : Int | ν >= 0 & ν < x }"
+      p "(x : { v : Int | v <= len arr }) -> (y : { v : Int | v > 0 }) -> { v : Int | v >= 0 & v < x }"
         ~~> "x".:intLeqLenArr ->> ("y".:intGe0 ->> intBetween0andX)
     it "parses pi-bound nested refinement types in pi-bound parens" $
-      p "(f : (x : { ν : Int | ν <= len arr }) -> { ν : Int | ν > 0 }) -> { ν : Int | ν >= 0 & ν < x }"
+      p "(f : (x : { v : Int | v <= len arr }) -> { v : Int | v > 0 }) -> { v : Int | v >= 0 & v < x }"
         ~~> "f".:("x".:intLeqLenArr ->> intGe0) ->> intBetween0andX
 
 -- Some helpers to make tests a tad more pleasant
