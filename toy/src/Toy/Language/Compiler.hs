@@ -40,7 +40,7 @@ compileAR (AR op arg) = [i|v #{opStr} #{argStr} = True|]
     argStr = case arg of
                   RArgInt n -> show n
                   RArgVar var -> getName var
-                  RArgVarLen var -> "length " <> getName var
+                  RArgVarLen var -> "intLength " <> getName var
 
 compileBaseTy :: BaseTy -> String
 compileBaseTy TBool = "Bool"
