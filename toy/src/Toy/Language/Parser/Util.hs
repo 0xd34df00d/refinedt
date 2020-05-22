@@ -20,7 +20,7 @@ type ToyMonad e s m = (MonadParsec e s m,
 identifier :: ToyMonad e s m => m String
 identifier = do
   firstLetter <- letterChar
-  rest <- takeWhileP (Just "variable") isAlphaNum
+  rest <- takeWhileP (Just "variable") $ \t -> isAlphaNum t || t == '\''
   let res = firstLetter : toList rest
   when (res `elem` ["if", "then", "else"]) $ unexpected $ Label $ fromList $ "keyword \"" <> res <> "\""
   pure res
