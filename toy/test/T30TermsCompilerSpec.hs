@@ -30,3 +30,8 @@ spec = testWithIdris $ do
          someNum : Int
          someNum = 42
         |]
+    it "translates variables" $ checkIdris
+      [i|
+         id' : Int -> Int
+         id' x = x
+        |]

@@ -48,9 +48,10 @@ compileBaseTy TInt = "Int"
 compileBaseTy TIntList = "List Int"
 
 compileFunDef :: FunDef -> String
-compileFunDef FunDef { .. } = [i|#{funName}#{unwords funArgsNames} = #{compileTerm funBody}|]
+compileFunDef FunDef { .. } = [i|#{funName} #{unwords funArgsNames} = #{compileTerm funBody}|]
   where
     funArgsNames = getName <$> funArgs
 
 compileTerm :: Term -> String
+compileTerm (TName _ var) = getName var
 compileTerm (TInteger _ n) = show n
