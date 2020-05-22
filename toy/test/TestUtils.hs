@@ -2,7 +2,6 @@ module TestUtils where
 
 import Control.Monad
 import Control.Monad.IO.Class
-import Control.Monad.Loops
 import Data.Bifunctor
 import Data.Char
 import Data.Either
