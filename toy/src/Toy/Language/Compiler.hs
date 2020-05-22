@@ -46,3 +46,11 @@ compileBaseTy :: BaseTy -> String
 compileBaseTy TBool = "Bool"
 compileBaseTy TInt = "Int"
 compileBaseTy TIntList = "List Int"
+
+compileFunDef :: FunDef -> String
+compileFunDef FunDef { .. } = [i|#{funName}#{unwords funArgsNames} = #{compileTerm funBody}|]
+  where
+    funArgsNames = getName <$> funArgs
+
+compileTerm :: Term -> String
+compileTerm (TInteger _ n) = show n
