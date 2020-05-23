@@ -57,7 +57,7 @@ mkScript ctx args target term = do
   convertZ3Result <$> flip runReaderT solveEnv do
     argsPresup <- genArgsPresup
 
-    res <- Z3VarName <$> mkFreshIntVar "_res$" -- TODO don't assume result : Int
+    res <- Z3VarName <$> mkFreshTypedVar (baseType target) "_res$"
     resConcl <- genRefinementCstrs target res >>= mkAnd
 
     typedTerm <- annotateTypes term
@@ -91,8 +91,13 @@ buildZ3Vars args =
                                        | (var, ty) <- args
                                        ]
   where
-    mkZ3Var varName (TyBase RefinedBaseTy { baseType = TInt }) = mkFreshIntVar varName
+    mkZ3Var varName (TyBase rbty) = mkFreshTypedVar (baseType rbty) varName
     mkZ3Var varName _ = mkStringSymbol varName >>= mkUninterpretedSort >>= mkFreshConst varName -- TODO fun decl?
+
+mkFreshTypedVar :: MonadZ3 m => BaseTy -> String -> m AST
+mkFreshTypedVar TInt = mkFreshIntVar
+mkFreshTypedVar TBool = mkFreshBoolVar
+mkFreshTypedVar TIntList = error "TODO TIntList unsupported" -- TODO
 
 buildCtxVars :: [FunSig] -> Z3 (HM.HashMap VarName (Ty, Z3VarName))
 buildCtxVars sigs = buildZ3Vars [ (VarName funName, funTy) | FunSig { .. } <- sigs ]
@@ -231,6 +236,7 @@ genTermsCstrs termVar (TApp resTy fun arg) = do
 -- the refinements of the first Ty should be a subtype (that is, imply) the refinements of the second Ty
 (<:) :: (MonadZ3 m, MonadReader SolveEnvironment m) => Ty -> Ty -> m AST
 TyBase rbtExpected <: TyBase rbtActual = do
+  -- the refinements language only supports refinements over integers, so it's ok to assume the type is int here
   v <- Z3VarName <$> mkFreshIntVar "_∀_v$"
 
   actualCstr <- genRefinementCstrs rbtActual v >>= mkAnd
@@ -247,8 +253,7 @@ ty1 <: ty2 = error [i|Mismatched types #{ty1} #{ty2} (which should've been caugh
 
 mkVarCstrs :: (MonadZ3 m, MonadReader SolveEnvironment m) => String -> TypedTerm -> m (AST, TermsCstrs)
 mkVarCstrs name term = do
-  -- TODO not necessarily int
-  var <- mkFreshIntVar name
+  var <- mkFreshTypedVar ((\(TyBase rbty) -> baseType rbty) $ annotation term) name
   cstrs <- genTermsCstrs (Z3VarName var) term
   pure (var, cstrs)
 
