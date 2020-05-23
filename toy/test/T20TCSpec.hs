@@ -169,6 +169,24 @@ spec = do
            h : Int
            h = g f
           |]
+    it "accepts correct results of function application" $ expectSolverOn Correct
+        [i|
+           f : (x : { v : Int | v >= 0 }) -> (y : { v : Int | v >= 0 }) -> { v : Int | v > 0 }
+
+           g : ((x : { v : Int | v > 0 }) -> (y : { v : Int | v > 0 }) -> { v : Int | v >= 0 }) -> { v : Int | v >= 0 }
+
+           h : { v : Int | v >= 0 }
+           h = g f
+          |]
+    it "rejects incorrect results of function application" $ expectSolverOn Wrong
+        [i|
+           f : (x : { v : Int | v >= 0 }) -> (y : { v : Int | v >= 0 }) -> { v : Int | v > 0 }
+
+           g : ((x : { v : Int | v > 0 }) -> (y : { v : Int | v > 0 }) -> { v : Int | v >= 0 }) -> { v : Int | v >= 0 }
+
+           h : { v : Int | v > 0 }
+           h = g f
+          |]
   describe "Z3 fun" $ do
     it "accepts a function on bools" $ expectSolverOn Correct
       [i|
