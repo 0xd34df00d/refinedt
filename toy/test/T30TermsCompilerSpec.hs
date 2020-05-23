@@ -40,3 +40,8 @@ spec = testWithIdris $ do
          add : Int -> Int -> Int
          add a b = a + b
         |]
+    it "translates relational operations" $ checkIdris
+      [i|
+         gt : Int -> Int -> Bool
+         gt a b = a > b
+        |]
