@@ -35,3 +35,8 @@ spec = testWithIdris $ do
          id' : Int -> Int
          id' x = x
         |]
+    it "translates binary arithmetic operations" $ checkIdris
+      [i|
+         add : Int -> Int -> Int
+         add a b = a + b
+        |]
