@@ -230,7 +230,7 @@ genTermsCstrs termVar (TApp resTy fun arg) = do
                   TyArrow _ -> pure Nothing
                   TyBase rbt -> fmap Just $ genRefinementCstrs rbt termVar >>= mkAnd
 
-  pure $ TermsCstrs resCstr (Just subTyCstr)
+  andTermsCstrs [TermsCstrs Nothing resCstr, TermsCstrs Nothing $ Just subTyCstr]
 
 -- generate constraints for the combination of the function type and its argument type:
 -- the refinements of the first Ty should be a subtype (that is, imply) the refinements of the second Ty
