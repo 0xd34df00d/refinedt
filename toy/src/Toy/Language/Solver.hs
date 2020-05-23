@@ -231,14 +231,14 @@ genTermsCstrs termVar (TApp resTy fun arg) = do
 -- the refinements of the first Ty should be a subtype (that is, imply) the refinements of the second Ty
 (<:) :: (MonadZ3 m, MonadReader SolveEnvironment m) => Ty -> Ty -> m AST
 TyBase rbtExpected <: TyBase rbtActual = do
-   v <- Z3VarName <$> mkFreshIntVar "_∀_v$"
+  v <- Z3VarName <$> mkFreshIntVar "_∀_v$"
 
-   actualCstr <- genRefinementCstrs rbtActual v >>= mkAnd
-   expectedCstr <- genRefinementCstrs rbtExpected v >>= mkAnd
-   implication <- mkImplies actualCstr expectedCstr
+  actualCstr <- genRefinementCstrs rbtActual v >>= mkAnd
+  expectedCstr <- genRefinementCstrs rbtExpected v >>= mkAnd
+  implication <- mkImplies actualCstr expectedCstr
 
-   v' <- toApp $ getZ3VarName v
-   mkForallConst [] [v'] implication
+  v' <- toApp $ getZ3VarName v
+  mkForallConst [] [v'] implication
 TyArrow (ArrowTy _ funDomTy funCodTy) <: TyArrow (ArrowTy _ argDomTy argCodTy) = do
   argCstrs <- argDomTy <: funDomTy
   funCstrs <- funCodTy <: argCodTy
