@@ -169,3 +169,14 @@ spec = do
            h : Int
            h = g f
           |]
+  describe "Z3 fun" $ do
+    it "accepts a function on bools" $ expectSolverOn Correct
+      [i|
+         gt : Bool -> Bool
+         gt b = b
+        |]
+    it "accepts a function taking ints and returning a bool" $ expectSolverOn Correct
+      [i|
+         gt : Int -> Int -> Bool
+         gt a b = a > b
+        |]
