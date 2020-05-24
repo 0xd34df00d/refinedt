@@ -60,3 +60,8 @@ spec = testWithIdris $ do
          f : ((Int -> Int) -> Int -> Int) -> (Int -> Int) -> Int
          f g h = (g h) (g h 0)
         |]
+    it "translates if-then-else" $ checkIdris
+      [i|
+         max : Int -> Int -> Int
+         max a b = if a > b then a else b
+        |]
