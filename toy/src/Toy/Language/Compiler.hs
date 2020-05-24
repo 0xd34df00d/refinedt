@@ -59,7 +59,7 @@ compileTerm :: Term -> String
 compileTerm (TName _ var) = getName var
 compileTerm (TInteger _ n) = show n
 compileTerm (TBinOp _ t1 op t2) = [i|(#{compileTerm t1} #{compileOp op} #{compileTerm t2})|]
-compileTerm (TApp _ t1 t2) = [i|(#{compileTerm t1} #{compileTerm t2})|]
+compileTerm (TApp _ t1 t2) = [i|#{parens t1} #{parens t2}|]
 compileTerm TIfThenElse { .. } = [i|if #{compileTerm tcond} then #{compileTerm tthen} else #{compileTerm telse}|]
 
 compileOp :: BinOp -> String
@@ -67,3 +67,12 @@ compileOp = \case BinOpPlus -> "+"
                   BinOpMinus -> "-"
                   BinOpGt -> ">"
                   BinOpLt -> "<"
+
+parens :: Term -> String
+parens t | isSimple t = str
+         | otherwise = "(" <> str <> ")"
+  where
+    str = compileTerm t
+    isSimple = \case TName {} -> True
+                     TInteger {} -> True
+                     _ -> False
