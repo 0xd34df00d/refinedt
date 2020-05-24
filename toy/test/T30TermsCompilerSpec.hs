@@ -45,3 +45,18 @@ spec = testWithIdris $ do
          gt : Int -> Int -> Bool
          gt a b = a > b
         |]
+    it "translates applying function to a constant" $ checkIdris
+      [i|
+         f : (Int -> Int) -> Int
+         f g = g 0
+        |]
+    it "translates applying function to a function" $ checkIdris
+      [i|
+         f : ((Int -> Int) -> Int) -> (Int -> Int) -> Int
+         f g h = g h
+        |]
+    it "translates applying more functions to functions" $ checkIdris
+      [i|
+         f : ((Int -> Int) -> Int -> Int) -> (Int -> Int) -> Int
+         f g h = (g h) (g h 0)
+        |]
