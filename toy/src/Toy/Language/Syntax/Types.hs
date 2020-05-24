@@ -45,3 +45,11 @@ data Ty
 
 stripRefinements :: Ty -> Ty
 stripRefinements = transformBi $ const trueRefinement
+
+isArrowTy :: Ty -> Bool
+isArrowTy TyArrow {} = True
+isArrowTy _ = False
+
+isBaseTy :: Ty -> Bool
+isBaseTy TyBase {} = True
+isBaseTy _ = False

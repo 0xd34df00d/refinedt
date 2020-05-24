@@ -3,6 +3,7 @@
 module Toy.Language.Compiler where
 
 import Data.List
+import Data.Maybe
 import Data.String.Interpolate
 
 import Toy.Language.Syntax.Decls
@@ -15,7 +16,9 @@ compileTy :: Ty -> String
 compileTy (TyBase RefinedBaseTy { .. })
   | baseTyRefinement == trueRefinement = compileBaseTy baseType
   | otherwise = [i|(v : #{compileBaseTy baseType} ** #{compileRefinement baseTyRefinement})|]
-compileTy (TyArrow ArrowTy { .. }) = [i|#{lhs} -> #{compileTy codTy}|]
+compileTy (TyArrow ArrowTy { .. })
+  | isBaseTy domTy || isJust piVarName = [i|#{lhs} -> #{compileTy codTy}|]
+  | otherwise = [i|(#{lhs}) -> #{compileTy codTy}|]
   where
     lhs | Just name <- piVarName = [i|(#{getName name} : #{compileTy domTy})|]
         | otherwise = compileTy domTy
