@@ -58,7 +58,7 @@ compileFunDef FunDef { .. } = [i|#{funName} #{unwords funArgsNames} = #{compileT
 compileTerm :: Term -> String
 compileTerm (TName _ var) = getName var
 compileTerm (TInteger _ n) = show n
-compileTerm (TBinOp _ t1 op t2) = [i|#{compileTerm t1} #{compileOp op} #{compileTerm t2}|]
+compileTerm (TBinOp _ t1 op t2) = [i|(#{compileTerm t1} #{compileOp op} #{compileTerm t2})|]
 
 compileOp :: BinOp -> String
 compileOp = \case BinOpPlus -> "+"
