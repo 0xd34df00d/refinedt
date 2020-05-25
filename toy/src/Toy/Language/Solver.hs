@@ -1,6 +1,6 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE RecordWildCards, QuasiQuotes, BlockArguments #-}
+{-# LANGUAGE RecordWildCards, QuasiQuotes, BlockArguments, TupleSections #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 module Toy.Language.Solver
@@ -37,8 +37,6 @@ solve ctx sig def = evalZ3 $ mkScript ctx arg2type resType (funBody def)
   where
     (argTypes, resType) = splitTypes sig
     arg2type = zip (funArgs def) argTypes
-
-type ArgTypes = [(VarName, Ty)]
 
 newtype Z3VarName = Z3VarName { getZ3VarName :: AST }
 
