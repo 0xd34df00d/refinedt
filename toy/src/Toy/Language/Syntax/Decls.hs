@@ -26,6 +26,7 @@ data TermT ann
   deriving (Eq, Ord, Show)
 
 type Term = TermT ()
+type TypedTerm = TermT Ty
 
 annotation :: TermT ann -> ann
 annotation (TName ann _) = ann
