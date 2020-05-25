@@ -83,14 +83,6 @@ mkScript ctx args target term = do
     invert Unsat = Sat
     invert Undef = Undef
 
-buildVarsMap :: Monad m => (VarName -> Ty -> m a) -> ArgTypes -> m (HM.HashMap VarName a)
-buildVarsMap f args = HM.fromList <$> mapM sequence [ (var, f var ty) | (var, ty) <- args ]
-
-buildCombinedMapping :: Monad m => [FunSig] -> ArgTypes -> (VarName -> Ty -> m a) -> m (HM.HashMap VarName a)
-buildCombinedMapping sigs args f = liftA2 (<>) (buildVarsMap f args) (buildVarsMap f sigs')
-  where
-    sigs' = [ (VarName funName, funTy) | FunSig { .. } <- sigs ]
-
 buildSolveEnv :: MonadZ3 m => [FunSig] -> ArgTypes -> m SolveEnvironment
 buildSolveEnv sigs args = fmap SolveEnvironment $ buildCombinedMapping sigs args $ \name ty -> (ty,) . Z3VarName <$> mkZ3Var (getName name) ty
   where
