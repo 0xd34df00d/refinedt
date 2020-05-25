@@ -85,11 +85,11 @@ mkScript ctx args target term = do
     invert Unsat = Sat
     invert Undef = Undef
 
+buildVarsMap :: Monad m => ArgTypes -> (VarName -> Ty -> m a) -> m (HM.HashMap VarName a)
+buildVarsMap args f = HM.fromList <$> mapM sequence [ (var, f var ty) | (var, ty) <- args ]
+
 buildZ3Vars :: ArgTypes -> Z3 (HM.HashMap VarName (Ty, Z3VarName))
-buildZ3Vars args =
-  HM.fromList <$> mapM (mapM sequence) [ (var, (ty, Z3VarName <$> mkZ3Var (getName var) ty))
-                                       | (var, ty) <- args
-                                       ]
+buildZ3Vars args = buildVarsMap args $ \name ty -> (ty,) . Z3VarName <$> mkZ3Var (getName name) ty
   where
     mkZ3Var varName (TyBase rbty) = mkFreshTypedVar (baseType rbty) varName
     mkZ3Var varName _ = mkStringSymbol varName >>= mkUninterpretedSort >>= mkFreshConst varName -- TODO fun decl?
