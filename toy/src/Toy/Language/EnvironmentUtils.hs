@@ -17,3 +17,6 @@ buildCombinedMapping :: Monad m => [FunSig] -> ArgTypes -> (VarName -> Ty -> m a
 buildCombinedMapping sigs args f = liftA2 (<>) (buildVarsMap f args) (buildVarsMap f sigs')
   where
     sigs' = [ (VarName funName, funTy) | FunSig { .. } <- sigs ]
+
+buildTypesMapping :: Monad m => [FunSig] -> ArgTypes -> m (HM.HashMap VarName Ty)
+buildTypesMapping sigs args = buildCombinedMapping sigs args $ \_ ty -> pure ty
