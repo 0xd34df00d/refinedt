@@ -50,9 +50,7 @@ newtype SolveEnvironment = SolveEnvironment
 -- TODO explicitly check for this.
 mkScript :: SolveContext -> ArgTypes -> RefinedBaseTy -> Term -> Z3 SolveRes
 mkScript ctx args target term = do
-  argVars <- buildZ3Vars args
-  ctxVars <- buildCtxVars $ visibleSigs ctx
-  let solveEnv = SolveEnvironment $ argVars <> ctxVars
+  solveEnv <- buildSolveEnv (visibleSigs ctx) args
 
   convertZ3Result <$> flip runReaderT solveEnv do
     argsPresup <- genArgsPresup
@@ -85,11 +83,16 @@ mkScript ctx args target term = do
     invert Unsat = Sat
     invert Undef = Undef
 
-buildVarsMap :: Monad m => ArgTypes -> (VarName -> Ty -> m a) -> m (HM.HashMap VarName a)
-buildVarsMap args f = HM.fromList <$> mapM sequence [ (var, f var ty) | (var, ty) <- args ]
+buildVarsMap :: Monad m => (VarName -> Ty -> m a) -> ArgTypes -> m (HM.HashMap VarName a)
+buildVarsMap f args = HM.fromList <$> mapM sequence [ (var, f var ty) | (var, ty) <- args ]
 
-buildZ3Vars :: ArgTypes -> Z3 (HM.HashMap VarName (Ty, Z3VarName))
-buildZ3Vars args = buildVarsMap args $ \name ty -> (ty,) . Z3VarName <$> mkZ3Var (getName name) ty
+buildCombinedMapping :: Monad m => [FunSig] -> ArgTypes -> (VarName -> Ty -> m a) -> m (HM.HashMap VarName a)
+buildCombinedMapping sigs args f = liftA2 (<>) (buildVarsMap f args) (buildVarsMap f sigs')
+  where
+    sigs' = [ (VarName funName, funTy) | FunSig { .. } <- sigs ]
+
+buildSolveEnv :: MonadZ3 m => [FunSig] -> ArgTypes -> m SolveEnvironment
+buildSolveEnv sigs args = fmap SolveEnvironment $ buildCombinedMapping sigs args $ \name ty -> (ty,) . Z3VarName <$> mkZ3Var (getName name) ty
   where
     mkZ3Var varName (TyBase rbty) = mkFreshTypedVar (baseType rbty) varName
     mkZ3Var varName _ = mkStringSymbol varName >>= mkUninterpretedSort >>= mkFreshConst varName -- TODO fun decl?
