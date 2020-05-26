@@ -14,7 +14,7 @@ type ArgTypes = [(VarName, Ty)]
 
 type Var2Ty = HM.HashMap VarName Ty
 
-annotateFunTypes :: FunSig -> FunDef -> (ArgTypes, RefinedBaseTy)
+annotateFunTypes :: FunSig -> FunDefT a -> (ArgTypes, RefinedBaseTy)
 annotateFunTypes sig def = (arg2type, resType)
   where
     (argTypes, resType) = splitTypes sig
