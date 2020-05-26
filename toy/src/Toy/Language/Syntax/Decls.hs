@@ -9,10 +9,10 @@ data FunSig = FunSig
   , funTy :: Ty
   } deriving (Eq, Ord, Show)
 
-data FunDef = FunDef
+data FunDefT a = FunDef
   { funName :: String
   , funArgs :: [VarName]
-  , funBody :: Term
+  , funBody :: TermT a
   } deriving (Eq, Ord, Show)
 
 data BinOp = BinOpPlus | BinOpMinus | BinOpGt | BinOpLt deriving (Eq, Ord, Show)
@@ -27,6 +27,9 @@ data TermT ann
 
 type Term = TermT ()
 type TypedTerm = TermT Ty
+
+type FunDef = FunDefT ()
+type TypedFunDef = FunDefT Ty
 
 annotation :: TermT ann -> ann
 annotation (TName ann _) = ann
