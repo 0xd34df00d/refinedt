@@ -5,6 +5,7 @@ module T20TCSpec(spec) where
 import Data.String.Interpolate
 import Test.Hspec
 
+import Toy.Language.BasicTC
 import Toy.Language.Solver
 
 import TestUtils
@@ -12,7 +13,8 @@ import TestUtils
 expectSolverOn :: SolveRes -> String -> Expectation
 expectSolverOn expected str = do
   (ctx, (sig, def)) <- testParseFunWithCtx str
-  res <- solve (buildCtx ctx) sig def
+  let typedDef = annotateFunDef ctx sig def
+  res <- solve (buildCtx ctx) sig typedDef
   res `shouldBe` expected
 
 spec :: Spec

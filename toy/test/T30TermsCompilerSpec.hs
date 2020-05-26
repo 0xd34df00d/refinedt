@@ -6,6 +6,7 @@ import Data.String.Interpolate
 import Test.Hspec
 
 import Idris.IdeModeClient
+import Toy.Language.BasicTC
 import Toy.Language.Compiler
 import Toy.Language.Solver
 
@@ -14,7 +15,8 @@ import TestUtils
 checkIdris :: String -> IdrisHandle -> Expectation
 checkIdris program ih = do
   (ctx, (funSig, funDef)) <- testParseFunWithCtx program
-  res <- solve (buildCtx ctx) funSig funDef
+  let typedFunDef = annotateFunDef ctx funSig funDef
+  res <- solve (buildCtx ctx) funSig typedFunDef
   res `shouldBe` Correct
   runIdrisClient ih $ withFile $ \file -> do
     mapM_ (write file . compileFunSig) ctx
@@ -81,3 +83,9 @@ spec = testWithIdris $ do
            sel : Bool -> (Int -> Int) -> (Int -> Int) -> Int -> Int -> Int
            sel b f g x y = if b then f x else g y
           |]
+  xdescribe "Terms with refined types" $ do
+    it "translates constants" $ checkIdris
+      [i|
+         someNum : { v : Int | v = 42 }
+         someNum = 42
+        |]

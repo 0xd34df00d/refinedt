@@ -49,7 +49,13 @@ annotateTypes (TApp _ t1 t2) = do
                               Just varName -> substPi varName t2 codTy
                 _ -> error [i|Expected arrow type, got #{annotation t1'}|]
   pure $ TApp resTy t1' t2'
-  
+
+annotateFunDef :: [FunSig] -> FunSig -> FunDef -> TypedFunDef
+annotateFunDef ctx sig def@FunDef { .. } = FunDef { funBody = funBody', .. }
+  where
+    typesMapping = buildTypesMapping ctx $ fst $ annotateFunTypes sig def
+    funBody' = runReader (annotateTypes funBody) typesMapping
+
 -- TODO occurs check - rename whatever can be shadowed
 substPi :: VarName -> Term -> Ty -> Ty
 substPi srcName (TName _ dstName) = transformBi f

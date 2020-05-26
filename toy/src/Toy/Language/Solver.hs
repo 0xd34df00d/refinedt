@@ -18,7 +18,6 @@ import Control.Monad
 import Control.Monad.Reader
 import Z3.Monad
 
-import Toy.Language.BasicTC
 import Toy.Language.EnvironmentUtils
 import Toy.Language.Syntax.Decls
 import Toy.Language.Syntax.Types
@@ -32,7 +31,7 @@ newtype SolveContext = SolveContext
 buildCtx :: [FunSig] -> SolveContext
 buildCtx = SolveContext
 
-solve :: SolveContext -> FunSig -> FunDef -> IO SolveRes
+solve :: SolveContext -> FunSig -> TypedFunDef -> IO SolveRes
 solve ctx sig def = evalZ3 $ mkScript ctx arg2type resType (funBody def)
   where
     (arg2type, resType) = annotateFunTypes sig def
@@ -45,7 +44,7 @@ newtype SolveEnvironment = SolveEnvironment
 
 -- This expects that the pi-binders names in the type are equal to the argument names in the definition.
 -- TODO explicitly check for this.
-mkScript :: SolveContext -> ArgTypes -> RefinedBaseTy -> Term -> Z3 SolveRes
+mkScript :: SolveContext -> ArgTypes -> RefinedBaseTy -> TypedTerm -> Z3 SolveRes
 mkScript ctx args target term = do
   solveEnv <- buildSolveEnv (visibleSigs ctx) args
 
@@ -55,9 +54,7 @@ mkScript ctx args target term = do
     res <- Z3VarName <$> mkFreshTypedVar (baseType target) "_res$"
     resConcl <- genRefinementCstrs target res >>= mkAnd
 
-    typedTerm <- annotateTypes term
-
-    TermsCstrs { .. } <- genTermsCstrs res typedTerm
+    TermsCstrs { .. } <- genTermsCstrs res term
     case mandatoryCstrs of
          Just cstrs -> assert cstrs
          Nothing -> pure ()
