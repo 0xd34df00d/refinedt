@@ -229,12 +229,6 @@ convertZ3Result Sat = Correct
 convertZ3Result Unsat = Wrong
 convertZ3Result Undef = Wrong -- TODO
 
-splitTypes :: FunSig -> ([Ty], RefinedBaseTy)
-splitTypes = go . funTy
-  where
-    go (TyBase rbTy) = ([], rbTy)
-    go (TyArrow ArrowTy { .. }) = first (domTy :) $ go codTy
-
 instance MonadZ3 m => MonadZ3 (ReaderT r m) where
   getSolver = ReaderT $ const getSolver
   getContext = ReaderT $ const getContext
