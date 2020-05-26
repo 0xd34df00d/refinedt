@@ -14,7 +14,6 @@ module Toy.Language.Solver
 import qualified Data.HashMap.Strict as HM
 import Data.Maybe
 import Data.String.Interpolate
-import Control.Arrow
 import Control.Monad
 import Control.Monad.Reader
 import Z3.Monad
@@ -36,8 +35,7 @@ buildCtx = SolveContext
 solve :: SolveContext -> FunSig -> FunDef -> IO SolveRes
 solve ctx sig def = evalZ3 $ mkScript ctx arg2type resType (funBody def)
   where
-    (argTypes, resType) = splitTypes sig
-    arg2type = zip (funArgs def) argTypes
+    (arg2type, resType) = annotateFunTypes sig def
 
 newtype Z3VarName = Z3VarName { getZ3VarName :: AST }
 

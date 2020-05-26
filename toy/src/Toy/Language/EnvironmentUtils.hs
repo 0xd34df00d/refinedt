@@ -4,11 +4,23 @@ module Toy.Language.EnvironmentUtils where
 
 import qualified Data.HashMap.Strict as HM
 import Control.Applicative
+import Control.Arrow
 
 import Toy.Language.Syntax.Decls
 import Toy.Language.Syntax.Types
 
 type ArgTypes = [(VarName, Ty)]
+
+annotateFunTypes :: FunSig -> FunDef -> (ArgTypes, RefinedBaseTy)
+annotateFunTypes sig def = (arg2type, resType)
+  where
+    (argTypes, resType) = splitTypes sig
+    arg2type = zip (funArgs def) argTypes
+
+    splitTypes = go . funTy
+      where
+        go (TyBase rbTy) = ([], rbTy)
+        go (TyArrow ArrowTy { .. }) = first (domTy :) $ go codTy
 
 buildVarsMap :: Monad m => (VarName -> Ty -> m a) -> ArgTypes -> m (HM.HashMap VarName a)
 buildVarsMap f args = HM.fromList <$> mapM sequence [ (var, f var ty) | (var, ty) <- args ]
