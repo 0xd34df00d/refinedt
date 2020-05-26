@@ -11,6 +11,8 @@ import Toy.Language.Syntax.Types
 
 type ArgTypes = [(VarName, Ty)]
 
+type Var2Ty = HM.HashMap VarName Ty
+
 annotateFunTypes :: FunSig -> FunDef -> (ArgTypes, RefinedBaseTy)
 annotateFunTypes sig def = (arg2type, resType)
   where
@@ -30,5 +32,5 @@ buildCombinedMapping sigs args f = liftA2 (<>) (buildVarsMap f args) (buildVarsM
   where
     sigs' = [ (VarName funName, funTy) | FunSig { .. } <- sigs ]
 
-buildTypesMapping :: Monad m => [FunSig] -> ArgTypes -> m (HM.HashMap VarName Ty)
+buildTypesMapping :: Monad m => [FunSig] -> ArgTypes -> m Var2Ty
 buildTypesMapping sigs args = buildCombinedMapping sigs args $ \_ ty -> pure ty

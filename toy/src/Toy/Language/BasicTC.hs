@@ -8,10 +8,9 @@ import Data.Generics.Uniplate.Data
 import Data.String.Interpolate
 import Control.Monad.Reader
 
+import Toy.Language.EnvironmentUtils
 import Toy.Language.Syntax.Decls
 import Toy.Language.Syntax.Types
-
-type Var2Ty = HM.HashMap VarName Ty
 
 annotateTypes :: MonadReader Var2Ty m => Term -> m TypedTerm
 annotateTypes (TName _ varName) = (`TName` varName) <$> asks (HM.! varName)
