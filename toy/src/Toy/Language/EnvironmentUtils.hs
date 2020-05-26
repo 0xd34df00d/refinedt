@@ -5,6 +5,7 @@ module Toy.Language.EnvironmentUtils where
 import qualified Data.HashMap.Strict as HM
 import Control.Applicative
 import Control.Arrow
+import Control.Monad.Identity
 
 import Toy.Language.Syntax.Decls
 import Toy.Language.Syntax.Types
@@ -32,5 +33,5 @@ buildCombinedMapping sigs args f = liftA2 (<>) (buildVarsMap f args) (buildVarsM
   where
     sigs' = [ (VarName funName, funTy) | FunSig { .. } <- sigs ]
 
-buildTypesMapping :: Monad m => [FunSig] -> ArgTypes -> m Var2Ty
-buildTypesMapping sigs args = buildCombinedMapping sigs args $ \_ ty -> pure ty
+buildTypesMapping :: [FunSig] -> ArgTypes -> Var2Ty
+buildTypesMapping sigs args = runIdentity $ buildCombinedMapping sigs args $ \_ ty -> pure ty
