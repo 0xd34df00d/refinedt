@@ -99,6 +99,9 @@ mandatory cstr = TermsCstrs (Just cstr) Nothing
 refutable :: AST -> TermsCstrs
 refutable cstr = TermsCstrs Nothing (Just cstr)
 
+emptyTermsCstrs :: TermsCstrs
+emptyTermsCstrs = TermsCstrs Nothing Nothing
+
 andTermsCstrs :: MonadZ3 m => [TermsCstrs] -> m TermsCstrs
 andTermsCstrs cstrs = TermsCstrs <$> mkAnd' mandatories <*> mkAnd' refutables
   where
@@ -159,10 +162,10 @@ genTermsCstrs termVar (TApp resTy fun arg) = do
                     (_, _) -> error "Function should have arrow type (this should've been caught earlier though)"
 
   resCstr <- case resTy of
-                  TyArrow _ -> pure Nothing
-                  TyBase rbt -> fmap Just $ genRefinementCstrs rbt termVar >>= mkAnd
+                  TyArrow _ -> pure emptyTermsCstrs
+                  TyBase rbt -> fmap refutable $ genRefinementCstrs rbt termVar >>= mkAnd
 
-  andTermsCstrs [TermsCstrs Nothing resCstr, TermsCstrs Nothing $ Just subTyCstr]
+  andTermsCstrs [resCstr, refutable subTyCstr]
 
 -- generate constraints for the combination of the function type and its argument type:
 -- the refinements of the first Ty should be a subtype (that is, imply) the refinements of the second Ty
