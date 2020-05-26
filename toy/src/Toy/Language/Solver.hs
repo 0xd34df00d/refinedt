@@ -93,9 +93,6 @@ mkFreshTypedVar TInt = mkFreshIntVar
 mkFreshTypedVar TBool = mkFreshBoolVar
 mkFreshTypedVar TIntList = error "TODO TIntList unsupported" -- TODO
 
-buildCtxVars :: [FunSig] -> Z3 (HM.HashMap VarName (Ty, Z3VarName))
-buildCtxVars sigs = buildZ3Vars [ (VarName funName, funTy) | FunSig { .. } <- sigs ]
-
 data TermsCstrs = TermsCstrs
   { mandatoryCstrs :: Maybe AST
   , refutableCstrs :: Maybe AST
@@ -231,9 +228,6 @@ genRefinementCstrs rbTy z3var
 
 askZ3VarName :: MonadReader SolveEnvironment m => VarName -> m AST
 askZ3VarName var = getZ3VarName <$> asks (snd . (HM.! var) . z3args)
-
-askVarTy :: MonadReader SolveEnvironment m => VarName -> m Ty
-askVarTy var = asks (fst . (HM.! var) . z3args)
 
 convertZ3Result :: Result -> SolveRes
 convertZ3Result Sat = Correct
