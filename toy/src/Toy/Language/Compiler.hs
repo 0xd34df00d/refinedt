@@ -59,11 +59,17 @@ compileFunDef FunDef { .. } = [i|#{funName} #{unwords funArgsNames} = #{compileT
     funArgsNames = getName <$> funArgs
 
 compileTerm :: TypedTerm -> String
-compileTerm (TName _ var) = getName var
-compileTerm (TInteger _ n) = show n
+compileTerm (TName ty var) = wrapping ty $ getName var
+compileTerm (TInteger ty n) = wrapping ty $ show n
 compileTerm (TBinOp _ t1 op t2) = [i|(#{compileTerm t1} #{compileOp op} #{compileTerm t2})|]
 compileTerm (TApp _ t1 t2) = [i|#{parens t1} #{parens t2}|]
 compileTerm TIfThenElse { .. } = [i|if #{compileTerm tcond} then #{compileTerm tthen} else #{compileTerm telse}|]
+
+wrapping :: Ty -> String -> String
+wrapping TyArrow {} str = error [i|expected a base type during wrapping of #{str}|]
+wrapping (TyBase RefinedBaseTy { .. }) str
+  | baseTyRefinement == trueRefinement = str
+  | otherwise = [i|(#{str} ** believe_me ())|]
 
 compileOp :: BinOp -> String
 compileOp = \case BinOpPlus -> "+"

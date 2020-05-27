@@ -91,7 +91,7 @@ spec = testWithIdris $ do
          g : Int
          g = f 0
         |]
-  xdescribe "Terms with refined types" $ do
+  describe "Terms with refined types" $ do
     it "translates constants" $ checkIdris
       [i|
          someNum : { v : Int | v = 42 }
