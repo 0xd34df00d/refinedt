@@ -53,7 +53,7 @@ annotateTypes (TApp _ t1 t2) = do
 annotateFunDef :: [FunSig] -> FunSig -> FunDef -> TypedFunDef
 annotateFunDef ctx sig def@FunDef { .. } = FunDef { funBody = funBody', .. }
   where
-    typesMapping = buildTypesMapping ctx $ fst $ annotateFunTypes sig def
+    typesMapping = buildTypesMapping ctx $ fst $ funTypesMapping sig def
     funBody' = runReader (annotateTypes funBody) typesMapping
 
 -- TODO occurs check - rename whatever can be shadowed

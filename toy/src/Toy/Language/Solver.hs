@@ -34,7 +34,7 @@ buildCtx = SolveContext
 solve :: SolveContext -> FunSig -> TypedFunDef -> IO SolveRes
 solve ctx sig def = evalZ3 $ mkScript ctx arg2type resType (funBody def)
   where
-    (arg2type, resType) = annotateFunTypes sig def
+    (arg2type, resType) = funTypesMapping sig def
 
 newtype Z3VarName = Z3VarName { getZ3VarName :: AST }
 

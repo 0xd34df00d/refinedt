@@ -1,7 +1,7 @@
 {-# LANGUAGE RecordWildCards #-}
 
 module Toy.Language.EnvironmentUtils
-( annotateFunTypes
+( funTypesMapping
 , buildCombinedMapping
 , buildTypesMapping
 
@@ -21,8 +21,8 @@ type ArgTypes = [(VarName, Ty)]
 
 type Var2Ty = HM.HashMap VarName Ty
 
-annotateFunTypes :: FunSig -> FunDefT a -> (ArgTypes, RefinedBaseTy)
-annotateFunTypes sig def = (arg2type, resType)
+funTypesMapping :: FunSig -> FunDefT a -> (ArgTypes, RefinedBaseTy)
+funTypesMapping sig def = (arg2type, resType)
   where
     (argTypes, resType) = splitTypes sig
     arg2type = zip (funArgs def) argTypes
