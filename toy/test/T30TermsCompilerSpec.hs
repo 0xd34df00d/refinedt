@@ -21,7 +21,7 @@ checkIdris program ih = do
   runIdrisClient ih $ withFile $ \file -> do
     mapM_ (write file . compileFunSig) ctx
     write file $ compileFunSig funSig
-    write file $ compileFunDef funDef
+    write file $ compileFunDef typedFunDef
     testIdrisFile file
 
 spec :: Spec

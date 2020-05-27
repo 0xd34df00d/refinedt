@@ -53,12 +53,12 @@ compileBaseTy TBool = "Bool"
 compileBaseTy TInt = "Int"
 compileBaseTy TIntList = "List Int"
 
-compileFunDef :: FunDef -> String
+compileFunDef :: TypedFunDef -> String
 compileFunDef FunDef { .. } = [i|#{funName} #{unwords funArgsNames} = #{compileTerm funBody}|]
   where
     funArgsNames = getName <$> funArgs
 
-compileTerm :: Term -> String
+compileTerm :: TypedTerm -> String
 compileTerm (TName _ var) = getName var
 compileTerm (TInteger _ n) = show n
 compileTerm (TBinOp _ t1 op t2) = [i|(#{compileTerm t1} #{compileOp op} #{compileTerm t2})|]
@@ -71,7 +71,7 @@ compileOp = \case BinOpPlus -> "+"
                   BinOpGt -> ">"
                   BinOpLt -> "<"
 
-parens :: Term -> String
+parens :: TypedTerm -> String
 parens t | isSimple t = str
          | otherwise = "(" <> str <> ")"
   where
