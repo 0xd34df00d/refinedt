@@ -1,6 +1,9 @@
 {-# LANGUAGE RecordWildCards, QuasiQuotes, LambdaCase #-}
 
-module Toy.Language.Compiler where
+module Toy.Language.Compiler
+( compileFunSig
+, compileFunDef
+) where
 
 import Data.List
 import Data.Maybe

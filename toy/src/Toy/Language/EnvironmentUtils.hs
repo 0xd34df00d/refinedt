@@ -1,6 +1,13 @@
 {-# LANGUAGE RecordWildCards #-}
 
-module Toy.Language.EnvironmentUtils where
+module Toy.Language.EnvironmentUtils
+( annotateFunTypes
+, buildCombinedMapping
+, buildTypesMapping
+
+, ArgTypes
+, Var2Ty
+) where
 
 import qualified Data.HashMap.Strict as HM
 import Control.Applicative
