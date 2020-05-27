@@ -83,6 +83,14 @@ spec = testWithIdris $ do
            sel : Bool -> (Int -> Int) -> (Int -> Int) -> Int -> Int -> Int
            sel b f g x y = if b then f x else g y
           |]
+  describe "Basic context" $
+    it "uses definitions" $ checkIdris
+      [i|
+         f : Int -> Int
+
+         g : Int
+         g = f 0
+        |]
   xdescribe "Terms with refined types" $ do
     it "translates constants" $ checkIdris
       [i|
