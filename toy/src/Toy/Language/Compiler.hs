@@ -9,6 +9,7 @@ import Data.List
 import Data.Maybe
 import Data.String.Interpolate
 
+import Toy.Language.EnvironmentUtils
 import Toy.Language.Syntax.Decls
 import Toy.Language.Syntax.Types
 
@@ -53,21 +54,21 @@ compileBaseTy TBool = "Bool"
 compileBaseTy TInt = "Int"
 compileBaseTy TIntList = "List Int"
 
-compileFunDef :: TypedFunDef -> String
-compileFunDef FunDef { .. } = [i|#{funName} #{unwords funArgsNames} = #{compileTerm funBody}|]
+compileFunDef :: [FunSig] -> FunSig -> TypedFunDef -> String
+compileFunDef ctx sig def@FunDef { .. } = [i|#{funName} #{unwords funArgsNames} = #{wrapping resType $ compileTerm funBody}|]
   where
     funArgsNames = getName <$> funArgs
+    resType = snd $ funTypesMapping sig def
 
 compileTerm :: TypedTerm -> String
-compileTerm (TName ty var) = wrapping ty $ getName var
-compileTerm (TInteger ty n) = wrapping ty $ show n
+compileTerm (TName _ var) = getName var
+compileTerm (TInteger _ n) = show n
 compileTerm (TBinOp _ t1 op t2) = [i|(#{compileTerm t1} #{compileOp op} #{compileTerm t2})|]
 compileTerm (TApp _ t1 t2) = [i|#{parens t1} #{parens t2}|]
 compileTerm TIfThenElse { .. } = [i|if #{compileTerm tcond} then #{compileTerm tthen} else #{compileTerm telse}|]
 
-wrapping :: Ty -> String -> String
-wrapping TyArrow {} str = error [i|expected a base type during wrapping of #{str}|]
-wrapping (TyBase RefinedBaseTy { .. }) str
+wrapping :: RefinedBaseTy -> String -> String
+wrapping RefinedBaseTy { .. } str
   | baseTyRefinement == trueRefinement = str
   | otherwise = [i|(#{str} ** believe_me ())|]
 
