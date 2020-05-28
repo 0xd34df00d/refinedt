@@ -114,3 +114,17 @@ spec = testWithIdris $ do
          stupidId : { v : Int | v > 0 } -> { v : Int | v >= 0 }
          stupidId x = x
         |]
+    it "weakens the result of function application (with a constant)" $ checkIdris
+      [i|
+         f : { v : Int | v >= 0 } -> { v : Int | v > 0 }
+
+         g : { v : Int | v >= 0 }
+         g = f 42
+        |]
+    it "weakens the result of function application (with an arg)" $ checkIdris
+      [i|
+         f : { v : Int | v >= 0 } -> { v : Int | v > 0 }
+
+         g : { v : Int | v > 0 } -> { v : Int | v >= 0 }
+         g x = f x
+        |]
