@@ -54,8 +54,8 @@ compileBaseTy TBool = "Bool"
 compileBaseTy TInt = "Int"
 compileBaseTy TIntList = "List Int"
 
-compileFunDef :: [FunSig] -> FunSig -> TypedFunDef -> String
-compileFunDef ctx sig def@FunDef { .. } = [i|#{funName} #{unwords funArgsNames} = #{funBodyStr}|]
+compileFunDef :: FunSig -> TypedFunDef -> String
+compileFunDef sig def@FunDef { .. } = [i|#{funName} #{unwords funArgsNames} = #{funBodyStr}|]
   where
     funArgsNames = getName <$> funArgs
     resType = snd $ funTypesMapping sig def
