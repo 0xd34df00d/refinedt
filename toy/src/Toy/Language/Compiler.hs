@@ -64,7 +64,7 @@ compileFunDef sig def@FunDef { .. } = [i|#{funName} #{unwords funArgsNames} = #{
 compileTerm :: TypedTerm -> String
 compileTerm (TName _ var) = getName var
 compileTerm (TInteger ty n) = wrapping ty $ show n
-compileTerm (TBinOp _ t1 op t2) = [i|(#{compileTerm t1} #{compileOp op} #{compileTerm t2})|]
+compileTerm (TBinOp _ t1 op t2) = [i|(#{compileUnwrapping t1} #{compileOp op} #{compileUnwrapping t2})|]
 compileTerm (TApp _ t1 t2)
   | TyArrow ArrowTy { .. } <- annotation t1
   , let t2str = wrapping domTy $ compileUnwrapping t2 = [i|#{parens t1} #{t2str}|]
