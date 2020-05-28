@@ -81,7 +81,7 @@ unwrapping :: Ty -> String -> String
 unwrapping TyArrow {} str = str
 unwrapping (TyBase RefinedBaseTy { .. }) str
   | baseTyRefinement == trueRefinement = str
-  | otherwise = [i|(fst #{str})|]
+  | otherwise = [i|(fst (#{str}))|]
 
 compileOp :: BinOp -> String
 compileOp = \case BinOpPlus -> "+"
