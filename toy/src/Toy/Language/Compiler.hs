@@ -59,7 +59,7 @@ compileFunDef sig def@FunDef { .. } = [i|#{funName} #{unwords funArgsNames} = #{
   where
     funArgsNames = getName <$> funArgs
     resType = snd $ funTypesMapping sig def
-    funBodyStr = wrapping (TyBase resType) $ unwrapping (annotation funBody) $ compileTerm funBody
+    funBodyStr = wrapping (TyBase resType) $ compileUnwrapping funBody
 
 compileTerm :: TypedTerm -> String
 compileTerm (TName _ var) = getName var
@@ -67,9 +67,12 @@ compileTerm (TInteger ty n) = wrapping ty $ show n
 compileTerm (TBinOp _ t1 op t2) = [i|(#{compileTerm t1} #{compileOp op} #{compileTerm t2})|]
 compileTerm (TApp _ t1 t2)
   | TyArrow ArrowTy { .. } <- annotation t1
-  , let t2str = wrapping domTy $ unwrapping (annotation t2) $ parens t2 = [i|#{parens t1} #{t2str}|]
+  , let t2str = wrapping domTy $ compileUnwrapping t2 = [i|#{parens t1} #{t2str}|]
   | otherwise = error "Unexpected function type"
 compileTerm TIfThenElse { .. } = [i|if #{compileTerm tcond} then #{compileTerm tthen} else #{compileTerm telse}|]
+
+compileUnwrapping :: TypedTerm -> String
+compileUnwrapping t = unwrapping (annotation t) $ parens t
 
 wrapping :: Ty -> String -> String
 wrapping TyArrow {} str = str
