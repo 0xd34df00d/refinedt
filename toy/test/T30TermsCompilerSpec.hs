@@ -97,3 +97,20 @@ spec = testWithIdris $ do
          someNum : { v : Int | v = 42 }
          someNum = 42
         |]
+    it "translates function application" $ checkIdris
+      [i|
+         f : { v : Int | v >= 0 } -> Int
+
+         g : Int
+         g = f 42
+        |]
+    it "translates sort-of-identity" $ checkIdris
+      [i|
+         stupidId : { v : Int | v >= 0 } -> { v : Int | v >= 0 }
+         stupidId x = x
+        |]
+    it "translates weakening sort-of-identity" $ checkIdris
+      [i|
+         stupidId : { v : Int | v > 0 } -> { v : Int | v >= 0 }
+         stupidId x = x
+        |]

@@ -75,7 +75,7 @@ wrapping :: Ty -> String -> String
 wrapping TyArrow {} str = str
 wrapping (TyBase RefinedBaseTy { .. }) str
   | baseTyRefinement == trueRefinement = str
-  | otherwise = [i|(#{str} ** believe_me ())|]
+  | otherwise = [i|(MkDPair {P = \\v => #{compileRefinement baseTyRefinement}} (#{str}) (believe_me ()))|]
 
 unwrapping :: Ty -> String -> String
 unwrapping TyArrow {} str = str
