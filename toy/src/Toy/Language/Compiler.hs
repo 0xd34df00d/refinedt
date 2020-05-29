@@ -17,8 +17,6 @@ import Toy.Language.Syntax.Types
 compileFunSig :: FunSig -> String
 compileFunSig FunSig { .. } = [i|#{funName} : #{compileTy funTy}|]
 
-type TyCtx = HM.HashMap VarName Ty
-
 compileTy :: Ty -> String
 compileTy = go mempty
   where
@@ -34,14 +32,14 @@ compileTy = go mempty
         lhs | Just name <- piVarName = [i|(#{getName name} : #{go ctx domTy})|]
             | otherwise = compileTy domTy
 
-compileRefinement :: TyCtx -> Refinement -> String
+compileRefinement :: Var2Ty -> Refinement -> String
 compileRefinement ctx refinement =
   case conjuncts refinement of
        [] -> "()"
        [conj] -> compileAR ctx conj
        conjs -> "(" <> intercalate ", " (compileAR ctx <$> conjs) <> ")"
 
-compileAR :: TyCtx -> AtomicRefinement -> String
+compileAR :: Var2Ty -> AtomicRefinement -> String
 compileAR ctx (AR op arg) = [i|v #{opStr} #{argStr} = True|]
   where
     opStr = case op of
