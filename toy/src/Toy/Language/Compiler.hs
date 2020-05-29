@@ -5,6 +5,7 @@ module Toy.Language.Compiler
 , compileFunDef
 ) where
 
+import qualified Data.HashMap.Strict as HM
 import Data.List
 import Data.Maybe
 import Data.String.Interpolate
@@ -16,16 +17,22 @@ import Toy.Language.Syntax.Types
 compileFunSig :: FunSig -> String
 compileFunSig FunSig { .. } = [i|#{funName} : #{compileTy funTy}|]
 
+type TyCtx = HM.HashMap VarName Ty
+
 compileTy :: Ty -> String
-compileTy (TyBase RefinedBaseTy { .. })
-  | baseTyRefinement == trueRefinement = compileBaseTy baseType
-  | otherwise = [i|(v : #{compileBaseTy baseType} ** #{compileRefinement baseTyRefinement})|]
-compileTy (TyArrow ArrowTy { .. })
-  | isBaseTy domTy || isJust piVarName = [i|#{lhs} -> #{compileTy codTy}|]
-  | otherwise = [i|(#{lhs}) -> #{compileTy codTy}|]
+compileTy = go mempty
   where
-    lhs | Just name <- piVarName = [i|(#{getName name} : #{compileTy domTy})|]
-        | otherwise = compileTy domTy
+    go ctx (TyBase RefinedBaseTy { .. })
+      | baseTyRefinement == trueRefinement = compileBaseTy baseType
+      | otherwise = [i|(v : #{compileBaseTy baseType} ** #{compileRefinement baseTyRefinement})|]
+    go ctx (TyArrow ArrowTy { .. })
+      | isBaseTy domTy || isJust piVarName = [i|#{lhs} -> #{go ctx' codTy}|]
+      | otherwise = [i|(#{lhs}) -> #{go ctx' codTy}|]
+      where
+        ctx' | Just varName <- piVarName = HM.insert varName domTy ctx
+             | otherwise = ctx
+        lhs | Just name <- piVarName = [i|(#{getName name} : #{go ctx domTy})|]
+            | otherwise = compileTy domTy
 
 compileRefinement :: Refinement -> String
 compileRefinement refinement =
