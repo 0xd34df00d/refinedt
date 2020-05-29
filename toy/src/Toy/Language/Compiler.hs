@@ -24,7 +24,7 @@ compileTy = go mempty
   where
     go ctx (TyBase RefinedBaseTy { .. })
       | baseTyRefinement == trueRefinement = compileBaseTy baseType
-      | otherwise = [i|(v : #{compileBaseTy baseType} ** #{compileRefinement baseTyRefinement})|]
+      | otherwise = [i|(v : #{compileBaseTy baseType} ** #{compileRefinement ctx baseTyRefinement})|]
     go ctx (TyArrow ArrowTy { .. })
       | isBaseTy domTy || isJust piVarName = [i|#{lhs} -> #{go ctx' codTy}|]
       | otherwise = [i|(#{lhs}) -> #{go ctx' codTy}|]
@@ -34,15 +34,15 @@ compileTy = go mempty
         lhs | Just name <- piVarName = [i|(#{getName name} : #{go ctx domTy})|]
             | otherwise = compileTy domTy
 
-compileRefinement :: Refinement -> String
-compileRefinement refinement =
+compileRefinement :: TyCtx -> Refinement -> String
+compileRefinement ctx refinement =
   case conjuncts refinement of
        [] -> "()"
-       [conj] -> compileAR conj
-       conjs -> "(" <> intercalate ", " (compileAR <$> conjs) <> ")"
+       [conj] -> compileAR ctx conj
+       conjs -> "(" <> intercalate ", " (compileAR ctx <$> conjs) <> ")"
 
-compileAR :: AtomicRefinement -> String
-compileAR (AR op arg) = [i|v #{opStr} #{argStr} = True|]
+compileAR :: TyCtx -> AtomicRefinement -> String
+compileAR ctx (AR op arg) = [i|v #{opStr} #{argStr} = True|]
   where
     opStr = case op of
                  ROpLt -> "<"
@@ -53,8 +53,10 @@ compileAR (AR op arg) = [i|v #{opStr} #{argStr} = True|]
                  ROpGeq -> ">="
     argStr = case arg of
                   RArgInt n -> show n
-                  RArgVar var -> getName var
-                  RArgVarLen var -> "intLength " <> getName var
+                  RArgVar var -> unwrap var
+                  RArgVarLen var -> "intLength " <> unwrap var
+    unwrap var | var `HM.member` ctx = [i|fst #{getName var}|]
+               | otherwise = getName var
 
 compileBaseTy :: BaseTy -> String
 compileBaseTy TBool = "Bool"
