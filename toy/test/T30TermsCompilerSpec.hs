@@ -128,3 +128,8 @@ spec = testWithIdris $ do
          g : { v : Int | v > 0 } -> { v : Int | v >= 0 }
          g x = f x
         |]
+    it "compiles refined `add`" $ checkIdris
+      [i|
+         add : (x : { v : Int | v >= 0 }) -> (y : { v : Int | v >= 0 }) -> { v : Int | v >= x & v >= y }
+         add x y = x + y
+        |]
