@@ -14,6 +14,7 @@ import Toy.Language.EnvironmentUtils
 import Toy.Language.Syntax.Decls
 import Toy.Language.Syntax.Types
 
+-- TODO need the surrounding context
 compileFunSig :: FunSig -> String
 compileFunSig FunSig { .. } = [i|#{funName} : #{compileTy funTy}|]
 
@@ -61,31 +62,33 @@ compileBaseTy TBool = "Bool"
 compileBaseTy TInt = "Int"
 compileBaseTy TIntList = "List Int"
 
+-- TODO need the surrounding context
 compileFunDef :: FunSig -> TypedFunDef -> String
 compileFunDef sig def@FunDef { .. } = [i|#{funName} #{unwords funArgsNames} = #{funBodyStr}|]
   where
     funArgsNames = getName <$> funArgs
-    resType = snd $ funTypesMapping sig def
-    funBodyStr = wrapping (TyBase resType) $ compileUnwrapping funBody
+    (argTypes, resType) = funTypesMapping sig def
+    funBodyStr = wrapping ctx (TyBase resType) $ compileUnwrapping ctx funBody
+    ctx = buildTypesMapping [] argTypes
 
-compileTerm :: TypedTerm -> String
-compileTerm (TName _ var) = getName var
-compileTerm (TInteger ty n) = wrapping ty $ show n
-compileTerm (TBinOp _ t1 op t2) = [i|(#{compileUnwrapping t1} #{compileOp op} #{compileUnwrapping t2})|]
-compileTerm (TApp _ t1 t2)
+compileTerm :: Var2Ty -> TypedTerm -> String
+compileTerm _ (TName _ var) = getName var
+compileTerm ctx (TInteger ty n) = wrapping ctx ty $ show n
+compileTerm ctx (TBinOp _ t1 op t2) = [i|(#{compileUnwrapping ctx t1} #{compileOp op} #{compileUnwrapping ctx t2})|]
+compileTerm ctx (TApp _ t1 t2)
   | TyArrow ArrowTy { .. } <- annotation t1
-  , let t2str = wrapping domTy $ compileUnwrapping t2 = [i|#{parens t1} #{t2str}|]
+  , let t2str = wrapping ctx domTy $ compileUnwrapping ctx t2 = [i|#{parens ctx t1} #{t2str}|]
   | otherwise = error "Unexpected function type"
-compileTerm TIfThenElse { .. } = [i|if #{compileTerm tcond} then #{compileTerm tthen} else #{compileTerm telse}|]
+compileTerm ctx TIfThenElse { .. } = [i|if #{compileTerm ctx tcond} then #{compileTerm ctx tthen} else #{compileTerm ctx telse}|]
 
-compileUnwrapping :: TypedTerm -> String
-compileUnwrapping t = unwrapping (annotation t) $ parens t
+compileUnwrapping :: Var2Ty -> TypedTerm -> String
+compileUnwrapping ctx t = unwrapping (annotation t) $ parens ctx t
 
-wrapping :: Ty -> String -> String
-wrapping TyArrow {} str = str
-wrapping (TyBase RefinedBaseTy { .. }) str
+wrapping :: Var2Ty -> Ty -> String -> String
+wrapping _ TyArrow {} str = str
+wrapping ctx (TyBase RefinedBaseTy { .. }) str
   | baseTyRefinement == trueRefinement = str
-  | otherwise = [i|(MkDPair {P = \\v => #{compileRefinement baseTyRefinement}} (#{str}) (believe_me ()))|]
+  | otherwise = [i|(MkDPair {P = \\v => #{compileRefinement ctx baseTyRefinement}} (#{str}) (believe_me ()))|]
 
 unwrapping :: Ty -> String -> String
 unwrapping TyArrow {} str = str
@@ -99,11 +102,11 @@ compileOp = \case BinOpPlus -> "+"
                   BinOpGt -> ">"
                   BinOpLt -> "<"
 
-parens :: TypedTerm -> String
-parens t | isSimple t = str
-         | otherwise = "(" <> str <> ")"
+parens :: Var2Ty -> TypedTerm -> String
+parens ctx t | isSimple t = str
+             | otherwise = "(" <> str <> ")"
   where
-    str = compileTerm t
+    str = compileTerm ctx t
     isSimple = \case TName {} -> True
                      TInteger {} -> True
                      _ -> False
