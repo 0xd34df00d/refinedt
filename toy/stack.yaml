@@ -4,5 +4,6 @@ packages:
 extra-deps:
 - QuickCheck-GenT-0.2.2
 - sexpr-parser-0.2.0.0
-- z3-408.1
+- github: IagoAbal/haskell-z3
+  commit: 93c21e9fa0268430f622d6609b3e395ea26cce58
 allow-newer: true
