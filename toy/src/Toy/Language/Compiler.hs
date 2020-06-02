@@ -88,7 +88,7 @@ wrapping :: Var2Ty -> Ty -> String -> String
 wrapping _ TyArrow {} str = str
 wrapping ctx (TyBase RefinedBaseTy { .. }) str
   | baseTyRefinement == trueRefinement = str
-  | otherwise = [i|(MkDPair {P = \\v => #{compileRefinement ctx baseTyRefinement}} (#{str}) (believe_me ()))|]
+  | otherwise = [i|(MkDPair {P = \\v => #{compileRefinement ctx baseTyRefinement}} (#{str}) smt)|]
 
 unwrapping :: Ty -> String -> String
 unwrapping TyArrow {} str = str

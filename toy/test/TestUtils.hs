@@ -73,4 +73,7 @@ writePrelude :: File -> IdrisClientT m ()
 writePrelude file = write file [i|
 intLength : List a -> Int
 intLength = cast . length
+
+smt : a
+smt = believe_me ()
 |]
