@@ -79,10 +79,13 @@ compileTerm ctx (TApp _ t1 t2)
   | TyArrow ArrowTy { .. } <- annotation t1
   , let t2str = wrapping ctx domTy $ parensUnwrapping ctx t2 = [i|#{parens ctx t1} #{t2str}|]
   | otherwise = error "Unexpected function type"
-compileTerm ctx TIfThenElse { .. } = [i|if #{compileTerm ctx tcond} then #{compileTerm ctx tthen} else #{compileTerm ctx telse}|]
+compileTerm ctx TIfThenElse { .. } = [i|if #{compileTerm ctx tcond} then #{compileTermUnwrapping ctx tthen} else #{compileTermUnwrapping ctx telse}|]
 
 parensUnwrapping :: Var2Ty -> TypedTerm -> String
 parensUnwrapping ctx t = unwrapping (annotation t) $ parens ctx t
+
+compileTermUnwrapping :: Var2Ty -> TypedTerm -> String
+compileTermUnwrapping ctx t = unwrapping (annotation t) $ compileTerm ctx t
 
 wrapping :: Var2Ty -> Ty -> String -> String
 wrapping _ TyArrow {} str = str
