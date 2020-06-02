@@ -68,21 +68,21 @@ compileFunDef sig def@FunDef { .. } = [i|#{funName} #{unwords funArgsNames} = #{
   where
     funArgsNames = getName <$> funArgs
     (argTypes, resType) = funTypesMapping sig def
-    funBodyStr = wrapping ctx (TyBase resType) $ compileUnwrapping ctx funBody
+    funBodyStr = wrapping ctx (TyBase resType) $ parensUnwrapping ctx funBody
     ctx = buildTypesMapping [] argTypes
 
 compileTerm :: Var2Ty -> TypedTerm -> String
 compileTerm _ (TName _ var) = getName var
 compileTerm ctx (TInteger ty n) = wrapping ctx ty $ show n
-compileTerm ctx (TBinOp _ t1 op t2) = [i|(#{compileUnwrapping ctx t1} #{compileOp op} #{compileUnwrapping ctx t2})|]
+compileTerm ctx (TBinOp _ t1 op t2) = [i|(#{parensUnwrapping ctx t1} #{compileOp op} #{parensUnwrapping ctx t2})|]
 compileTerm ctx (TApp _ t1 t2)
   | TyArrow ArrowTy { .. } <- annotation t1
-  , let t2str = wrapping ctx domTy $ compileUnwrapping ctx t2 = [i|#{parens ctx t1} #{t2str}|]
+  , let t2str = wrapping ctx domTy $ parensUnwrapping ctx t2 = [i|#{parens ctx t1} #{t2str}|]
   | otherwise = error "Unexpected function type"
 compileTerm ctx TIfThenElse { .. } = [i|if #{compileTerm ctx tcond} then #{compileTerm ctx tthen} else #{compileTerm ctx telse}|]
 
-compileUnwrapping :: Var2Ty -> TypedTerm -> String
-compileUnwrapping ctx t = unwrapping (annotation t) $ parens ctx t
+parensUnwrapping :: Var2Ty -> TypedTerm -> String
+parensUnwrapping ctx t = unwrapping (annotation t) $ parens ctx t
 
 wrapping :: Var2Ty -> Ty -> String -> String
 wrapping _ TyArrow {} str = str
