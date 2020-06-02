@@ -134,7 +134,7 @@ spec = testWithIdris $ do
          add : (x : { v : Int | v >= 0 }) -> (y : { v : Int | v >= 0 }) -> { v : Int | v >= x & v >= y }
          add x y = x + y
         |]
-    fit "compiles ReLu" $ checkIdris
+    it "compiles ReLu" $ checkIdris
       [i|
          relu : Int -> { v : Int | v >= 0 }
          relu x = if x > 0 then x else 0
