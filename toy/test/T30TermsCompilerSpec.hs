@@ -19,6 +19,7 @@ checkIdris program ih = do
   res <- solve (buildCtx ctx) funSig typedFunDef
   res `shouldBe` Correct
   runIdrisClient ih $ withFile $ \file -> do
+    writePrelude file
     mapM_ (write file . compileFunSig) ctx
     write file $ compileFunSig funSig
     write file $ compileFunDef funSig typedFunDef

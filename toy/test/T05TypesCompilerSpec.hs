@@ -32,6 +32,7 @@ checkIdris declStr ih = parseFunDecl declStr >>= checkIdrisFunDecl ih
 
 checkIdrisFunDecl :: IdrisHandle -> FunSig -> Expectation
 checkIdrisFunDecl ih ty = runIdrisClient ih $ withFile $ \file -> do
+  writePrelude file
   write file $ compileFunSig ty
   testIdrisFile file
 

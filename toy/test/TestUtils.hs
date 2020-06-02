@@ -1,9 +1,12 @@
+{-# LANGUAGE QuasiQuotes #-}
+
 module TestUtils where
 
 import Control.Monad
 import Control.Monad.IO.Class
 import Data.Bifunctor
 import Data.Either
+import Data.String.Interpolate
 import Data.String.Interpolate.Util
 import Data.Void
 import Test.Hspec
@@ -65,3 +68,9 @@ unfoldWhileIncludingM p m = loop id
             if p x
                 then loop (f . (x:))
                 else return (f [x])
+
+writePrelude :: File -> IdrisClientT m ()
+writePrelude file = write file [i|
+intLength : List a -> Int
+intLength = cast . length
+|]
