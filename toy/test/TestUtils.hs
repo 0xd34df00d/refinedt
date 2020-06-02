@@ -3,8 +3,8 @@ module TestUtils where
 import Control.Monad
 import Control.Monad.IO.Class
 import Data.Bifunctor
-import Data.Char
 import Data.Either
+import Data.String.Interpolate.Util
 import Data.Void
 import Test.Hspec
 import Text.Megaparsec
@@ -26,14 +26,6 @@ infixr 0 ~~>
 (~~>) :: (Show err, Eq err, Show r, Eq r) => Either err r -> r -> Expectation
 parseRes ~~> expected = parseRes `shouldBe` Right expected
 
-trimIndentation :: String -> String
-trimIndentation str = case flt $ lines str of
-                           (l:ls) -> unlines $ flt $ drop (countLeading l) <$> l:ls
-                           _ -> str
-  where
-    countLeading = length . takeWhile isSpace
-    flt = filter $ not . null
-
 testWithIdris :: SpecWith IdrisHandle -> SpecWith ()
 testWithIdris = beforeAll startIdris . afterAll stopIdris
 
@@ -45,7 +37,7 @@ testParseFunWithCtx str =
           parseRes `shouldSatisfy` isRight
           error "expected Right"
   where
-    parseRes = parse' funWithCtx $ trimIndentation str
+    parseRes = parse' funWithCtx $ unindent str
 
 isReturn :: SExpr -> Bool
 isReturn (List (Atom ":return" : _)) = True
