@@ -231,7 +231,3 @@ convertZ3Result :: Result -> SolveRes
 convertZ3Result Sat = Correct
 convertZ3Result Unsat = Wrong
 convertZ3Result Undef = Wrong -- TODO
-
-instance MonadZ3 m => MonadZ3 (ReaderT r m) where
-  getSolver = ReaderT $ const getSolver
-  getContext = ReaderT $ const getContext
