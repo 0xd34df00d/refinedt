@@ -35,7 +35,7 @@ trimIndentation str = case flt $ lines str of
     flt = filter $ not . null
 
 testWithIdris :: SpecWith IdrisHandle -> SpecWith ()
-testWithIdris = parallel . beforeAll startIdris . afterAll stopIdris
+testWithIdris = beforeAll startIdris . afterAll stopIdris
 
 testParseFunWithCtx :: String -> IO ([FunSig], (FunSig, FunDef))
 testParseFunWithCtx str =
