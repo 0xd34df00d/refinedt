@@ -81,11 +81,14 @@ compileTerm ctx (TApp _ t1 t2)
   | otherwise = error "Unexpected function type"
 compileTerm ctx TIfThenElse { .. } = [i|if #{compileTerm ctx tcond} then #{compileTermUnwrapping ctx tthen} else #{compileTermUnwrapping ctx telse}|]
 
+withUnwrapping :: (Var2Ty -> TypedTerm -> String) -> Var2Ty -> TypedTerm -> String
+withUnwrapping fun ctx t = unwrapping (annotation t) $ fun ctx t
+
 parensUnwrapping :: Var2Ty -> TypedTerm -> String
-parensUnwrapping ctx t = unwrapping (annotation t) $ parens ctx t
+parensUnwrapping = withUnwrapping parens
 
 compileTermUnwrapping :: Var2Ty -> TypedTerm -> String
-compileTermUnwrapping ctx t = unwrapping (annotation t) $ compileTerm ctx t
+compileTermUnwrapping = withUnwrapping compileTerm
 
 wrapping :: Var2Ty -> Ty -> String -> String
 wrapping _ TyArrow {} str = str
