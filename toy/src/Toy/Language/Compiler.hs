@@ -54,7 +54,8 @@ compileAR ctx (AR op arg) = [i|v #{opStr} #{argStr} = True|]
                   RArgInt n -> show n
                   RArgVar var -> unwrap var
                   RArgVarLen var -> "intLength " <> unwrap var
-    unwrap var | var `HM.member` ctx = [i|fst #{getName var}|]
+    unwrap var | Just varTy <- HM.lookup var ctx
+               , isJust $ tyRefinement varTy = [i|fst #{getName var}|]
                | otherwise = getName var
 
 compileBaseTy :: BaseTy -> String
