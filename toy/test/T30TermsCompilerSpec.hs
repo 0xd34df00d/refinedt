@@ -156,3 +156,31 @@ spec = testWithIdris $ do
            add : (x : { v : Int | v >= 0 }) -> (y : { v : Int | v >= 0 }) -> { v : Int | v >= x & v >= y }
            add x y = x + y
           |]
+      it "compiles correct subtyping queries" $ checkIdris
+        [i|
+           g : { v : Int | v >= 0 } -> Int
+
+           f : { v : Int | v > 0 } -> Int
+           f x = g x
+          |]
+      it "compiles correct dependent subtyping queries" $ checkIdris
+        [i|
+           g : (x : Int) -> (x1 : { v : Int | v >= x }) -> (x2 : { v : Int | v >= x1 }) -> Int
+
+           f : (x : Int) -> (x1 : { v : Int | v > x }) -> (x2 : { v : Int | v > x1 }) -> Int
+           f x x1 x2 = g x x1 x2
+          |]
+      it "compiles correct dependent subtyping queries (substituting)" $ checkIdris
+        [i|
+           g : (z : Int) -> (z1 : { v : Int | v >= z }) -> (z2 : { v : Int | v >= z1 }) -> Int
+
+           f : (x : Int) -> (x1 : { v : Int | v > x }) -> (x2 : { v : Int | v > x1 }) -> Int
+           f x x1 x2 = g x x1 x2
+          |]
+      it "compiles correct dependent subtyping queries (substituting-2)" $ checkIdris
+        [i|
+           g : (z : Int) -> (z1 : { v : Int | v >= z }) -> (z2 : { v : Int | v >= z1 }) -> Int
+
+           f : (x1 : { v : Int | v > 0 }) -> (x2 : { v : Int | v > x1 }) -> Int
+           f x1 x2 = g 0 x1 x2
+          |]
