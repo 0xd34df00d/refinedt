@@ -134,13 +134,24 @@ spec = testWithIdris $ do
          add : (x : { v : Int | v >= 0 }) -> (y : { v : Int | v >= 0 }) -> { v : Int | v >= x & v >= y }
          add x y = x + y
         |]
-    it "compiles ReLu" $ checkIdris
-      [i|
-         relu : Int -> { v : Int | v >= 0 }
-         relu x = if x > 0 then x else 0
-        |]
-    it "compiles stricter ReLu" $ checkIdris
-      [i|
-         relu : (x : Int) -> { v : Int | v >= 0 & v >= x }
-         relu x = if x > 0 then x else 0
-        |]
+    describe "Path sensitivity" $ do
+      it "compiles ReLu" $ checkIdris
+        [i|
+           relu : Int -> { v : Int | v >= 0 }
+           relu x = if x > 0 then x else 0
+          |]
+      it "compiles stricter ReLu" $ checkIdris
+        [i|
+           relu : (x : Int) -> { v : Int | v >= 0 & v >= x }
+           relu x = if x > 0 then x else 0
+          |]
+      it "compiles max" $ checkIdris
+        [i|
+           max : (x : Int) -> (y : Int) -> { v : Int | v >= x & v >= y }
+           max x y = if x > y then x else y
+          |]
+      it "compiles 3-max" $ checkIdris
+        [i|
+           max : (x : Int) -> (y : Int) -> (z : Int) -> { v : Int | v >= x & v >= y & v >= z }
+           max x y z = if x > y then if x > z then x else z else if y > z then y else z
+          |]
