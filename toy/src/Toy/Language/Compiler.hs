@@ -91,16 +91,14 @@ compileTermUnwrapping :: Var2Ty -> TypedTerm -> String
 compileTermUnwrapping = withUnwrapping compileTerm
 
 wrapping :: Var2Ty -> Ty -> String -> String
-wrapping _ TyArrow {} str = str
-wrapping ctx (TyBase RefinedBaseTy { .. }) str
-  | baseTyRefinement == trueRefinement = str
-  | otherwise = [i|(MkDPair {P = \\v => #{compileRefinement ctx baseTyRefinement}} (#{str}) smt)|]
+wrapping ctx ty str
+  | Just refinement <- tyRefinement ty = [i|(MkDPair {P = \\v => #{compileRefinement ctx refinement}} (#{str}) smt)|]
+  | otherwise = str
 
 unwrapping :: Ty -> String -> String
-unwrapping TyArrow {} str = str
-unwrapping (TyBase RefinedBaseTy { .. }) str
-  | baseTyRefinement == trueRefinement = str
-  | otherwise = [i|(fst (#{str}))|]
+unwrapping ty str
+  | isJust $ tyRefinement ty = [i|(fst (#{str}))|]
+  | otherwise = str
 
 compileOp :: BinOp -> String
 compileOp = \case BinOpPlus -> "+"
