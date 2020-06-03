@@ -139,3 +139,8 @@ spec = testWithIdris $ do
          relu : Int -> { v : Int | v >= 0 }
          relu x = if x > 0 then x else 0
         |]
+    it "compiles stricter ReLu" $ checkIdris
+      [i|
+         relu : (x : Int) -> { v : Int | v >= 0 & v >= x }
+         relu x = if x > 0 then x else 0
+        |]
