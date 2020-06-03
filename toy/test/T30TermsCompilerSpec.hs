@@ -98,13 +98,6 @@ spec = testWithIdris $ do
          someNum : { v : Int | v = 42 }
          someNum = 42
         |]
-    it "translates function application" $ checkIdris
-      [i|
-         f : { v : Int | v >= 0 } -> Int
-
-         g : Int
-         g = f 42
-        |]
     it "translates sort-of-identity" $ checkIdris
       [i|
          stupidId : { v : Int | v >= 0 } -> { v : Int | v >= 0 }
@@ -114,25 +107,6 @@ spec = testWithIdris $ do
       [i|
          stupidId : { v : Int | v > 0 } -> { v : Int | v >= 0 }
          stupidId x = x
-        |]
-    it "weakens the result of function application (with a constant)" $ checkIdris
-      [i|
-         f : { v : Int | v >= 0 } -> { v : Int | v > 0 }
-
-         g : { v : Int | v >= 0 }
-         g = f 42
-        |]
-    it "weakens the result of function application (with an arg)" $ checkIdris
-      [i|
-         f : { v : Int | v >= 0 } -> { v : Int | v > 0 }
-
-         g : { v : Int | v > 0 } -> { v : Int | v >= 0 }
-         g x = f x
-        |]
-    it "compiles refined `add`" $ checkIdris
-      [i|
-         add : (x : { v : Int | v >= 0 }) -> (y : { v : Int | v >= 0 }) -> { v : Int | v >= x & v >= y }
-         add x y = x + y
         |]
     describe "Path sensitivity" $ do
       it "compiles ReLu" $ checkIdris
@@ -154,4 +128,31 @@ spec = testWithIdris $ do
         [i|
            max : (x : Int) -> (y : Int) -> (z : Int) -> { v : Int | v >= x & v >= y & v >= z }
            max x y z = if x > y then if x > z then x else z else if y > z then y else z
+          |]
+    describe "Basic function application" $ do
+      it "translates function application" $ checkIdris
+        [i|
+           f : { v : Int | v >= 0 } -> Int
+
+           g : Int
+           g = f 42
+          |]
+      it "weakens the result of function application (with a constant)" $ checkIdris
+        [i|
+           f : { v : Int | v >= 0 } -> { v : Int | v > 0 }
+
+           g : { v : Int | v >= 0 }
+           g = f 42
+          |]
+      it "weakens the result of function application (with an arg)" $ checkIdris
+        [i|
+           f : { v : Int | v >= 0 } -> { v : Int | v > 0 }
+
+           g : { v : Int | v > 0 } -> { v : Int | v >= 0 }
+           g x = f x
+          |]
+      it "compiles refined `add`" $ checkIdris
+        [i|
+           add : (x : { v : Int | v >= 0 }) -> (y : { v : Int | v >= 0 }) -> { v : Int | v >= x & v >= y }
+           add x y = x + y
           |]
