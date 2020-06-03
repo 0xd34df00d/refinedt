@@ -1,5 +1,6 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE RecordWildCards #-}
 
 module Toy.Language.Syntax.Types where
 
@@ -53,3 +54,9 @@ isArrowTy _ = False
 isBaseTy :: Ty -> Bool
 isBaseTy TyBase {} = True
 isBaseTy _ = False
+
+tyRefinement :: Ty -> Maybe Refinement
+tyRefinement TyArrow {} = Nothing
+tyRefinement (TyBase RefinedBaseTy { .. })
+  | baseTyRefinement == trueRefinement = Nothing
+  | otherwise = Just baseTyRefinement
