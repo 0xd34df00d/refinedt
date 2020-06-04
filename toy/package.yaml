@@ -71,5 +71,3 @@ tests:
     - hspec
     - QuickCheck
     - QuickCheck-GenT
-    - tasty
-    - tasty-quickcheck
