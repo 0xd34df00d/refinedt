@@ -30,7 +30,7 @@ infixr 0 ~~>
 parseRes ~~> expected = parseRes `shouldBe` Right expected
 
 testWithIdris :: SpecWith IdrisHandle -> SpecWith ()
-testWithIdris = beforeAll startIdris . afterAll stopIdris
+testWithIdris = parallel . beforeAll startIdris . afterAll stopIdris
 
 testParseFunWithCtx :: String -> IO ([FunSig], (FunSig, FunDef))
 testParseFunWithCtx str =
