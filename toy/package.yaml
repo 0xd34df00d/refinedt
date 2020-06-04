@@ -65,7 +65,6 @@ tests:
     ghc-options:
     - -threaded
     - -rtsopts
-    - -with-rtsopts=-N
     dependencies:
     - toy
     - hspec
