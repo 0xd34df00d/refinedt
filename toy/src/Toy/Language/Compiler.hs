@@ -69,36 +69,33 @@ compileFunDef sig def@FunDef { .. } = [i|#{funName} #{unwords funArgsNames} = #{
   where
     funArgsNames = getName <$> funArgs
     (argTypes, resType) = funTypesMapping sig def
-    funBodyStr = wrapping ctx (TyBase resType) $ parensUnwrapping ctx funBody
+    funBodyStr = wrapping ctx (TyBase resType) $ compileTermUnwrapping ctx funBody
     ctx = buildTypesMapping [] argTypes
 
 compileTerm :: Var2Ty -> TypedTerm -> String
 compileTerm _ (TName _ var) = getName var
 compileTerm ctx (TInteger ty n) = wrapping ctx ty $ show n
-compileTerm ctx (TBinOp _ t1 op t2) = [i|(#{parensUnwrapping ctx t1} #{compileOp op} #{parensUnwrapping ctx t2})|]
+compileTerm ctx (TBinOp _ t1 op t2) = [i|(#{compileTermUnwrapping ctx t1} #{compileOp op} #{compileTermUnwrapping ctx t2})|]
 compileTerm ctx (TApp _ t1 t2)
   | TyArrow ArrowTy { .. } <- annotation t1
-  , let t2str = wrapping ctx domTy $ parensUnwrapping ctx t2 = [i|#{parens ctx t1} #{t2str}|]
+  , let t2str = wrapping ctx domTy $ compileTermUnwrapping ctx t2 = [i|#{parens $ compileTerm ctx t1} #{parens t2str}|]
   | otherwise = error "Unexpected function type"
 compileTerm ctx TIfThenElse { .. } = [i|if #{compileTerm ctx tcond} then #{compileTermUnwrapping ctx tthen} else #{compileTermUnwrapping ctx telse}|]
 
 withUnwrapping :: (Var2Ty -> TypedTerm -> String) -> Var2Ty -> TypedTerm -> String
 withUnwrapping fun ctx t = unwrapping (annotation t) $ fun ctx t
 
-parensUnwrapping :: Var2Ty -> TypedTerm -> String
-parensUnwrapping = withUnwrapping parens
-
 compileTermUnwrapping :: Var2Ty -> TypedTerm -> String
 compileTermUnwrapping = withUnwrapping compileTerm
 
 wrapping :: Var2Ty -> Ty -> String -> String
 wrapping ctx ty str
-  | Just refinement <- tyRefinement ty = [i|(MkDPair {P = \\v => #{compileRefinement ctx refinement}} (#{str}) smt)|]
+  | Just refinement <- tyRefinement ty = [i|MkDPair {P = \\v => #{compileRefinement ctx refinement}} #{parens str} smt|]
   | otherwise = str
 
 unwrapping :: Ty -> String -> String
 unwrapping ty str
-  | isJust $ tyRefinement ty = [i|(fst (#{str}))|]
+  | isJust $ tyRefinement ty = [i|fst #{parens str}|]
   | otherwise = str
 
 compileOp :: BinOp -> String
@@ -107,11 +104,14 @@ compileOp = \case BinOpPlus -> "+"
                   BinOpGt -> ">"
                   BinOpLt -> "<"
 
-parens :: Var2Ty -> TypedTerm -> String
-parens ctx t | isSimple t = str
-             | otherwise = "(" <> str <> ")"
+parens :: String -> String
+parens str
+  | ' ' `notElem` str = str
+  | head str == '(' && last str == ')' && isBalanced (init $ tail str) = str
+  | otherwise = "(" <> str <> ")"
   where
-    str = compileTerm ctx t
-    isSimple = \case TName {} -> True
-                     TInteger {} -> True
-                     _ -> False
+    isBalanced = (\(n, b) -> b && n == 0) . foldl' f (0 :: Int, True)
+    f (0, _) ')' = (0, False)
+    f (n, b) '(' = (n + 1, b)
+    f (n, b) ')' = (n - 1, b)
+    f (n, b) _ = (n, b)
