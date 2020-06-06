@@ -93,6 +93,7 @@ checkVersion = do
   reply <- readReply
   case reply of
        List [Atom ":protocol-version", Number 1, Number 0] -> pure ()
+       List [Atom ":protocol-version", Number 2, Number 0] -> pure ()
        _ -> error [i|Unknown protocol: #{reply}|]
 
 newtype IdrisInstance = IdrisInstance (Handle, Handle, Handle, ProcessHandle)
