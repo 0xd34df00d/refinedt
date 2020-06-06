@@ -191,3 +191,24 @@ spec = testWithIdris $ do
            f : Int -> { v : Int | v >= 0 }
            f x = max x 0
           |]
+      it "compiles max(x, 0) with max as arg" $ checkIdris
+        [i|
+           f : (max : (x : Int) -> (y : Int) -> { v : Int | v >= x & v >= y }) -> Int -> { v : Int | v >= 0 }
+           f max x = max x 0
+          |]
+      it "compiles add(x, 0)" $ checkIdris
+        [i|
+           add : (x : { v : Int | v >= 0 }) -> (y : { v : Int | v >= 0 }) -> { v : Int | v >= x & v >= y }
+
+           f : (x : { v : Int | v >= 0 }) -> { v : Int | v >= 0 & v >= x }
+           f x = add x 0
+          |]
+      it "compiles passing functions to functions" $ checkIdris
+        [i|
+           f : (x : { v : Int | v >= 0 }) -> (y : { v : Int | v >= 0 }) -> { v : Int | v >= 0 }
+
+           g : ((x : { v : Int | v >= 0 }) -> (y : { v : Int | v >= 0 }) -> { v : Int | v >= 0 }) -> Int
+
+           h : Int
+           h = g f
+          |]
