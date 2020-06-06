@@ -184,3 +184,10 @@ spec = testWithIdris $ do
            f : (x1 : { v : Int | v > 0 }) -> (x2 : { v : Int | v > x1 }) -> Int
            f x1 x2 = g 0 x1 x2
           |]
+      it "compiles max(x, 0)" $ checkIdris
+        [i|
+           max : (x : Int) -> (y : Int) -> { v : Int | v >= x & v >= y }
+
+           f : Int -> { v : Int | v >= 0 }
+           f x = max x 0
+          |]
