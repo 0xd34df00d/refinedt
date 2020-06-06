@@ -71,6 +71,8 @@ unfoldWhileIncludingM p m = loop id
 
 writePrelude :: File -> IdrisClientT m ()
 writePrelude file = write file [i|
+import Data.List
+
 intLength : List a -> Int
 intLength = cast . length
 
