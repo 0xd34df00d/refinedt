@@ -147,7 +147,7 @@ runIdrisClientInst ih@(IdrisInstance (idrStdin, idrStdout, _, _)) = viewT >=> go
            Right val -> pure val
            Left err -> error $ unlines [BS.unpack line, show err]
     intAct (Write f s) = liftIO $ hPutStrLn (handle f) s >> hFlush (handle f)
-    intAct (WithFile act) = withSystemTempFile "toyidris.idr" $ \path handle -> runIdrisClientInst ih $ act File { .. }
+    intAct (WithFile act) = withTempFile "./" "toyidris.idr" $ \path handle -> runIdrisClientInst ih $ act File { .. }
     intAct (DumpFile f) = liftIO $ hSeek (handle f) AbsoluteSeek 0 >> hGetContents (handle f) >>= putStrLn
 
 fmtLength :: Command -> String
