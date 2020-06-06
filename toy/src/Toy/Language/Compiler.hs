@@ -90,7 +90,7 @@ compileTermUnwrapping = withUnwrapping compileTerm
 
 wrapping :: Var2Ty -> Ty -> String -> String
 wrapping ctx ty str
-  | Just refinement <- tyRefinement ty = [i|MkDPair {P = \\v => #{compileRefinement ctx refinement}} #{parens str} smt|]
+  | Just refinement <- tyRefinement ty = [i|MkDPair {p = \\v => #{compileRefinement ctx refinement}} #{parens str} smt|]
   | otherwise = str
 
 unwrapping :: Ty -> String -> String

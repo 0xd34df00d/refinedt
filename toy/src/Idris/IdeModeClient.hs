@@ -112,7 +112,7 @@ stopIdris IdrisHandle { .. } = do
 
 startIdrisInstance :: IO IdrisInstance
 startIdrisInstance = do
-  ih <- IdrisInstance <$> runInteractiveCommand "idris --ide-mode"
+  ih <- IdrisInstance <$> runInteractiveCommand "idris2 --ide-mode"
   runIdrisClientInst ih checkVersion
   pure ih
 
