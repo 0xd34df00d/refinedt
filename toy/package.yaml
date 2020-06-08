@@ -26,6 +26,7 @@ dependencies:
 - data-default
 - exceptions
 - extra
+- filepath
 - hashable
 - interpolate
 - megaparsec
