@@ -69,7 +69,7 @@ spec = testWithIdris $ do
          max a b = if a > b then a else b
         |]
     describe "if-then-else fun" $ do
-      xit "translates if-then-else applied to a variable" $ checkIdris -- TODO idris 2 bug?
+      xit "translates if-then-else applied to a variable" $ checkIdris -- TODO idris 2 dependent if
         [i|
            sel : Bool -> (Int -> Int) -> (Int -> Int) -> Int -> Int
            sel b f g x = (if b then f else g) x
