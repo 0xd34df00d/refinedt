@@ -26,7 +26,7 @@ import Control.Concurrent.Async
 import Control.Concurrent.STM
 import Control.Exception(bracket)
 import Control.Monad
-import Control.Monad.Catch(MonadMask)
+import Control.Monad.Catch(MonadMask, finally)
 import Control.Monad.IO.Class
 import Control.Monad.Operational
 import Data.Default
@@ -36,6 +36,8 @@ import Data.String.Interpolate.IsString
 import Data.Void
 import GHC.Conc
 import Numeric
+import System.Directory.Extra
+import System.FilePath
 import System.IO(Handle, hPutStrLn, hFlush, hGetContents, hSeek, SeekMode(..))
 import System.IO.Temp
 import System.Process
@@ -147,8 +149,15 @@ runIdrisClientInst ih@(IdrisInstance (idrStdin, idrStdout, _, _)) = viewT >=> go
            Right val -> pure val
            Left err -> error $ unlines [BS.unpack line, show err]
     intAct (Write f s) = liftIO $ hPutStrLn (handle f) s >> hFlush (handle f)
-    intAct (WithFile act) = withTempFile "" "toyidris.idr" $ \path handle -> runIdrisClientInst ih $ act File { .. }
+    intAct (WithFile act) = withTempFile "" "toyidris.idr" $ \path handle ->
+      runIdrisClientInst ih (act File { .. })
+        `finally` cleanupIdrisFiles path
     intAct (DumpFile f) = liftIO $ hSeek (handle f) AbsoluteSeek 0 >> hGetContents (handle f) >>= putStrLn
+
+cleanupIdrisFiles :: MonadIO m => FilePath -> m ()
+cleanupIdrisFiles path = liftIO $ do
+  removeFile $ "build/ttc/" <> path -<.> "ttc"
+  removeFile $ "build/ttc/" <> path -<.> "ttm"
 
 fmtLength :: Command -> String
 fmtLength cmd = replicate (6 - length hex) '0' <> hex
