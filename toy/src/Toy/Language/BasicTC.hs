@@ -68,7 +68,7 @@ substPi srcName (TInteger _ n) = transformBi f
     f (RArgVar var) | var == srcName = RArgInt n
     f (RArgVarLen var) | var == srcName = error [i|Can't substitute `len #{var}` with a number|]
     f arg = arg
-substPi _ term = error [i|Unsupported substitution target: #{term}|]
+substPi srcName term = error [i|Unsupported substitution target: #{srcName} -> #{term}|]
 
 expectBaseTy :: Monad m => BaseTy -> Ty -> m ()
 expectBaseTy expected (TyBase RefinedBaseTy { .. }) | baseType == expected = pure ()
