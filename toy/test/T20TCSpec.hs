@@ -189,6 +189,15 @@ spec = do
            h : { v : Int | v > 0 }
            h = g f
           |]
+    it "accepts more complicated function application" $ expectSolverOn Correct
+        [i|
+           f : { v : Int | v >= 0 } -> { v : Int | v > 0 }
+           h : { v : Int | v >= 0 } -> { v : Int | v > 0 }
+           g : { v : Int | v >= 0 } -> { v : Int | v >= 0 } -> { v : Int | v > 0 }
+
+           fun : { v : Int | v > 0 } -> { v : Int | v > 0 } -> { v : Int | v >= 0 }
+           fun x y = g (f x) (h y)
+          |]
   describe "Z3 fun" $ do
     it "accepts a function on bools" $ expectSolverOn Correct
       [i|
