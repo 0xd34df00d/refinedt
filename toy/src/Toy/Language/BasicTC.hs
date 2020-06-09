@@ -56,7 +56,7 @@ annotateFunDef ctx sig def@FunDef { .. } = FunDef { funBody = funBody', .. }
     typesMapping = buildTypesMapping ctx $ fst $ funTypesMapping sig def
     funBody' = runReader (annotateTypes funBody) typesMapping
 
--- TODO occurs check - rename whatever can be shadowed
+-- TODO rename whatever can be shadowed
 substPi :: VarName -> Term -> Ty -> Ty
 substPi srcName (TName _ dstName) = transformBi f
   where
