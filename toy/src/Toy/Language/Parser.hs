@@ -22,7 +22,9 @@ fun = do
 funWithCtx :: ToyMonad e s m => m ([FunSig], (FunSig, FunDef))
 funWithCtx = do
   sigs <- some $ try $ funSig <* some eol
-  let sig@FunSig { .. } = last sigs
-  let nameParser = string (fromString funName) $> funName
-  def <- funDefNamed nameParser <* optional eol
+  let sig = last sigs
+  def <- defForSig sig
   pure (init sigs, (sig, def))
+
+defForSig :: ToyMonad e s m => FunSig -> m FunDef
+defForSig FunSig { .. } = funDefNamed (string (fromString funName) $> funName) <* many eol
