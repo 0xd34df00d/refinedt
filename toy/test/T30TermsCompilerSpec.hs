@@ -212,6 +212,15 @@ spec = testWithIdris $ do
            h : Int
            h = g f
           |]
+      it "compiles more complicated function application" $ checkIdris
+        [i|
+           f : { v : Int | v >= 0 } -> { v : Int | v > 0 }
+           h : { v : Int | v >= 0 } -> { v : Int | v > 0 }
+           g : { v : Int | v >= 0 } -> { v : Int | v >= 0 } -> { v : Int | v > 0 }
+
+           fun : { v : Int | v > 0 } -> { v : Int | v > 0 } -> { v : Int | v >= 0 }
+           fun x y = g (f x) (h y)
+          |]
       xit "accepts correct functional argument refinements" $ checkIdris
         [i|
            f : (x : { v : Int | v >= 0 }) -> (y : { v : Int | v >= 0 }) -> { v : Int | v > 0 }
