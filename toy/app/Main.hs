@@ -11,7 +11,7 @@ import Toy.Language.Syntax.Decls
 parseFunDecl :: String -> FunSig
 parseFunDecl str = either (error . errorBundlePretty) id parsed
   where
-   parsed = runParser (funDecl <* eof) "" str :: Either (ParseErrorBundle String Void) FunSig
+   parsed = runParser (funSig <* eof) "" str :: Either (ParseErrorBundle String Void) FunSig
 
 main :: IO ()
 main = do

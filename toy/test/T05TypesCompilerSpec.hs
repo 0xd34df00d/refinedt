@@ -25,7 +25,7 @@ parseFunDecl str = do
   parsed `shouldSatisfy` isRight
   pure $ either (error . show) id parsed
   where
-    parsed = parse' funDecl str
+    parsed = parse' funSig str
 
 checkIdris :: String -> IdrisHandle -> Expectation
 checkIdris declStr ih = parseFunDecl declStr >>= checkIdrisFunDecl ih

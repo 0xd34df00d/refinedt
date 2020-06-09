@@ -2,7 +2,7 @@
 {-# LANGUAGE RecordWildCards, OverloadedStrings #-}
 
 module Toy.Language.Parser.Decl
-( funDecl
+( funSig
 , funDef
 , funDefNamed
 ) where
@@ -18,8 +18,8 @@ import Toy.Language.Parser.Ty
 import Toy.Language.Parser.Util
 import Toy.Language.Syntax.Decls
 
-funDecl :: ToyMonad e s m => m FunSig
-funDecl = do
+funSig :: ToyMonad e s m => m FunSig
+funSig = do
   funName <- lexeme' identifier
   void $ lsymbol ":"
   funTy <- ty
