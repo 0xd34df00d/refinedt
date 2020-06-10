@@ -60,11 +60,14 @@ funSig := funName ":" type EOL+
 funDef := funName binder* "=" term EOL+
 
 -- Types
-type := arrow | arrowLHS
+type := arrow
+      | arrowLHS
 arrow := (boundLHS | arrowLHS) "->" type
 boundLHS := "(" binder ":" type ")"
-arrowLHS := "(" arrow ")" | baseRT
-baseRT := baseTy | "{ v :" baseTy "|" refinement "}"
+arrowLHS := "(" arrow ")"
+          | baseRT
+baseRT := baseTy
+        | "{ v :" baseTy "|" refinement "}"
 baseTy := "Int" | "Bool" | "IntList"
 
 refinement := atomicRefinement ("&" atomicRefinement)*
