@@ -55,11 +55,9 @@ prog := decl* EOF
 
 decl := funSig funDef?
 
+-- Fun signatures and types
 funSig := funName ":" type EOL+
 
-funDef := funName binder* "=" term EOL+
-
--- Types
 type := arrow
       | arrowLHS
 arrow := (boundLHS | arrowLHS) "->" type
@@ -75,8 +73,17 @@ atomicRefinement := "v" op arg
 op := "<=" | "<" | "=" | "/=" | ">=" | ">"
 arg := decimal | "len" identifier | identifier
 
--- Terms
-term := 
+-- Fun definitions and terms
+funDef := funName binder* "=" term EOL+
+
+term := tapps
+      | term binOp term
+tapps := atom+
+atom := identifier
+      | decimal
+      | "if" term "then" term "else" term
+      | "(" term ")"
+binOp := "+" | "-" | ">" | "<"
 
 funName := identifier
 binder := identifier
