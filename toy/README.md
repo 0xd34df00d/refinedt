@@ -44,3 +44,50 @@ g : ((x : { v : Int | v > 0 }) -> (y : { v : Int | v > 0 }) -> { v : Int | v >= 
 h : { v : Int | v >= 0 }
 h = g f
 ```
+
+### (Semi-)formal syntax
+
+The syntax can be reasonably approximated by the following grammar,
+`prog` being the start nonterminal:
+
+```ebnf
+prog := decl* EOF
+
+decl := funSig funDef?
+
+funSig := funName ":" type EOL+
+
+funDef := funName binder* "=" term EOL+
+
+-- Types
+type := arrow | arrowLHS
+arrow := (boundLHS | arrowLHS) "->" type
+boundLHS := "(" binder ":" type ")"
+arrowLHS := "(" arrow ")" | baseRT
+baseRT := baseTy | "{ v :" baseTy "|" refinement "}"
+baseTy := "Int" | "Bool" | "IntList"
+
+refinement := atomicRefinement ("&" atomicRefinement)*
+atomicRefinement := "v" op arg
+op := "<=" | "<" | "=" | "/=" | ">=" | ">"
+arg := decimal | "len" identifier | identifier
+
+-- Terms
+term := 
+
+funName := identifier
+binder := identifier
+
+identifier := letter (alphaNum | "'")*
+```
+
+Here,
+* `EOF`, `EOL` have the obvious meaning.
+* `letter` is a Unicode letter as in `Data.Char.isLetter`.
+* Similarly, `alphaNum` is whatever `Data.Char.isAlphaNum` accepts.
+* `decimal` is a decimal integer.
+
+#### Caveats
+
+* The `funDef` following a `funSig` is expected (and checked) to have the same `funName` as the `funSig`.
+* The `binder`s in `funDef` are expected
