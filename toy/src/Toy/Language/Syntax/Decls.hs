@@ -31,6 +31,13 @@ type TypedTerm = TermT Ty
 type FunDef = FunDefT ()
 type TypedFunDef = FunDefT Ty
 
+data DeclT a = Decl
+  { declSig :: FunSig
+  , declDef :: Maybe (FunDefT a)
+  }
+
+type Decl = DeclT ()
+
 annotation :: TermT ann -> ann
 annotation (TName ann _) = ann
 annotation (TInteger ann _) = ann

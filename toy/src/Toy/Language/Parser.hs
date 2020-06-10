@@ -28,3 +28,12 @@ funWithCtx = do
 
 defForSig :: ToyMonad e s m => FunSig -> m FunDef
 defForSig FunSig { .. } = funDefNamed (string (fromString funName) $> funName) <* many eol
+
+decl :: ToyMonad e s m => m Decl
+decl = do
+  sig <- funSig <* some eol
+  def <- optional $ try $ defForSig sig
+  pure $ Decl sig def
+
+decls :: ToyMonad e s m => m [Decl]
+decls = some decl
