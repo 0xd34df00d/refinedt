@@ -3,6 +3,7 @@
 module Toy.Language.Compiler
 ( compileFunSig
 , compileFunDef
+, compileDecls
 ) where
 
 import qualified Data.HashMap.Strict as HM
@@ -10,9 +11,21 @@ import Data.List
 import Data.Maybe
 import Data.String.Interpolate
 
+import Toy.Language.BasicTC
 import Toy.Language.EnvironmentUtils
 import Toy.Language.Syntax.Decls
 import Toy.Language.Syntax.Types
+
+compileDecl :: [FunSig] -> Decl -> String
+compileDecl ctx Decl { .. } = sig' <> fromMaybe "" def'
+  where
+    sig' = compileFunSig declSig <> "\n"
+    def' = (<> "\n") . compileFunDef declSig . annotateFunDef ctx declSig <$> declDef
+
+compileDecls :: [Decl] -> String
+compileDecls decls = unlines $ zipWith compileDecl (inits sigs) decls
+  where
+    sigs = declSig <$> decls
 
 -- TODO need the surrounding context
 compileFunSig :: FunSig -> String
