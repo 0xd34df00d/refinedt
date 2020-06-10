@@ -82,29 +82,29 @@ compileFunDef sig def@FunDef { .. } = [i|#{funName} #{unwords funArgsNames} = #{
   where
     funArgsNames = getName <$> funArgs
     (argTypes, resType) = funTypesMapping sig def
-    funBodyStr = wrapping ctx (TyBase resType) $ compileTermUnwrapping ctx funBody
+    funBodyStr = wrapping ctx (TyBase resType) $ unwrapping ctx funBody
     ctx = buildTypesMapping [] argTypes
 
 compileTerm :: Var2Ty -> TypedTerm -> String
 compileTerm _ (TName _ var) = getName var
 compileTerm ctx (TInteger ty n) = wrapping ctx ty $ show n
-compileTerm ctx (TBinOp _ t1 op t2) = [i|(#{compileTermUnwrapping ctx t1} #{compileOp op} #{compileTermUnwrapping ctx t2})|]
+compileTerm ctx (TBinOp _ t1 op t2) = [i|(#{unwrapping ctx t1} #{compileOp op} #{unwrapping ctx t2})|]
 compileTerm ctx (TApp _ t1 t2)
   | TyArrow ArrowTy { .. } <- annotation t1
-  , let t2str = wrapping ctx domTy $ compileTermUnwrapping ctx t2 = [i|#{parens $ compileTerm ctx t1} #{parens t2str}|]
+  , let t2str = wrapping ctx domTy $ unwrapping ctx t2 = [i|#{parens $ compileTerm ctx t1} #{parens t2str}|]
   | otherwise = error "Unexpected function type"
-compileTerm ctx TIfThenElse { .. } = [i|if #{compileTerm ctx tcond} then #{compileTermUnwrapping ctx tthen} else #{compileTermUnwrapping ctx telse}|]
+compileTerm ctx TIfThenElse { .. } = [i|if #{compileTerm ctx tcond} then #{unwrapping ctx tthen} else #{unwrapping ctx telse}|]
 
-compileTermUnwrapping :: Var2Ty -> TypedTerm -> String
-compileTermUnwrapping ctx t = unwrapping (annotation t) $ compileTerm ctx t
+unwrapping :: Var2Ty -> TypedTerm -> String
+unwrapping ctx t = unwrapStr (annotation t) $ compileTerm ctx t
 
 wrapping :: Var2Ty -> Ty -> String -> String
 wrapping ctx ty str
   | Just refinement <- tyRefinement ty = [i|MkDPair {p = \\v => #{compileRefinement ctx refinement}} #{parens str} smt|]
   | otherwise = str
 
-unwrapping :: Ty -> String -> String
-unwrapping ty str
+unwrapStr :: Ty -> String -> String
+unwrapStr ty str
   | isJust $ tyRefinement ty = [i|fst #{parens str}|]
   | otherwise = str
 
