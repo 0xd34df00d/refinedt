@@ -97,6 +97,10 @@ Here,
 * Similarly, `alphaNum` is whatever `Data.Char.isAlphaNum` accepts.
 * `decimal` is a decimal integer.
 
+The most interesting parsers are defined in the following files:
+* [Types parser](src/Toy/Language/Parser/Ty.hs)
+* [Terms parser](src/Toy/Language/Parser/Decl.hs)
+
 #### Caveats
 
 * The `funDef` following a `funSig` is expected (and checked) to have the same `funName` as the `funSig`.
