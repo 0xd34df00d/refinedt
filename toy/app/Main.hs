@@ -16,11 +16,13 @@ parseFunDecls str = first errorBundlePretty parsed
 
 main :: IO ()
 main = do
+  progName <- getProgName
   args <- getArgs
   case args of
+       ["help"] -> putStrLn $ progName <> " transpile <input.txt>"
        ["transpile", filename] -> do
           contents <- readFile filename
           case parseFunDecls contents of
                Left err -> putStrLn $ "Parse error:\n" <> err
                Right ds -> putStr $ compileDecls ds
-       _ -> putStrLn "Unrecognized arguments"
+       _ -> putStrLn $ "Unrecognized arguments, try running `" <> progName <> " help`"
