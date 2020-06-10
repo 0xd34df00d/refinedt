@@ -100,4 +100,12 @@ Here,
 #### Caveats
 
 * The `funDef` following a `funSig` is expected (and checked) to have the same `funName` as the `funSig`.
-* The `binder`s in `funDef` are expected
+* The `binder`s in `funSig` (in `boundLHS`) are expected to have the same name
+  as the matching binders in `funDef`: that is, the following is bad:
+  ```idris
+  foo : (x : Int) -> Int
+  foo y = y
+  ```
+  Here `x` should be changed to `y` or vice versa.
+
+  This is _unchecked_ right now.
