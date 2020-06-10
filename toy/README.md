@@ -104,7 +104,7 @@ The most interesting parsers are defined in the following files:
 #### Caveats
 
 * The `funDef` following a `funSig` is expected (and checked) to have the same `funName` as the `funSig`.
-* The `binder`s in `funSig` (in `boundLHS`) are expected to have the same name
+* The `binder`s in `funSig` (in `boundLHS`) are expected (and _not checked_) to have the same name
   as the matching binders in `funDef`: that is, the following is bad:
   ```idris
   foo : (x : Int) -> Int
@@ -112,4 +112,10 @@ The most interesting parsers are defined in the following files:
   ```
   Here `x` should be changed to `y` or vice versa.
 
-  This is _unchecked_ right now.
+  Of course, this doesn't matter for those arguments that aren't bound in the type:
+  ```idris
+  foo : (x : Int) -> Int -> Int
+  foo x arg2 = x + arg2
+  ```
+  Here `arg2` can be renamed arbitrarily.
+* Shadowing variable names isn't checked, let alone dealt with.
