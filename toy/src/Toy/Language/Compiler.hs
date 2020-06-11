@@ -112,7 +112,7 @@ unwrapStr ty str
   | otherwise = str
 
 etaExpand :: Var2Ty -> Ty -> ArrowTy -> TypedTerm -> String
-etaExpand outerCtx expectedTy funTy fun = [i|\\#{lamArgs} => #{rhsTermStr}|]
+etaExpand outerCtx calleeFunTy funTy fun = [i|\\#{lamArgs} => #{rhsTermStr}|]
   where
     lamArgs = intercalate ", " $ getName <$> reverse lamBinders
     rhsTermStr = wrapping outerCtx expectedTy $ unwrapping subCtx rhsTerm
@@ -127,6 +127,10 @@ etaExpand outerCtx expectedTy funTy fun = [i|\\#{lamArgs} => #{rhsTermStr}|]
         binders' = name : binders
         term' = TApp codTy term (TName domTy name)
         name = VarName $ "narg" <> show (length ctx)
+
+    expectedTy = retTy calleeFunTy
+    retTy (TyArrow ArrowTy { .. }) = retTy codTy
+    retTy baseTy = baseTy
 
 compileOp :: BinOp -> String
 compileOp = \case BinOpPlus -> "+"
