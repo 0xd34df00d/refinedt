@@ -121,7 +121,7 @@ etaExpand ctx ty term = [i|\\#{intercalate ", " $ getName <$> reverse lamBinders
       where
         next = (HM.insert name domTy ctx', name : binders, term'')
         term'' = TApp codTy term' (TName domTy name)
-        name = VarName $ "ηarg" <> show (length ctx')
+        name = VarName $ "narg" <> show (length ctx')
 
 compileOp :: BinOp -> String
 compileOp = \case BinOpPlus -> "+"
