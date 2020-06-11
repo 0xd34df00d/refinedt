@@ -92,9 +92,9 @@ compileTerm ctx (TBinOp _ t1 op t2) = [i|(#{unwrapping ctx t1} #{compileOp op} #
 compileTerm ctx (TApp _ t1 t2)
   | TyArrow ArrowTy { .. } <- annotation t1 =
       let t2str = case annotation t2 of
-                       TyBase {} -> wrapping ctx domTy $ unwrapping ctx t2
+                       TyBase {} -> unwrapping ctx t2
                        TyArrow arr -> etaExpand ctx arr t2
-       in [i|#{parens $ compileTerm ctx t1} #{parens t2str}|]
+       in [i|#{parens $ compileTerm ctx t1} #{parens $ wrapping ctx domTy t2str}|]
   | otherwise = error "Unexpected function type"
 compileTerm ctx TIfThenElse { .. } = [i|if #{compileTerm ctx tcond} then #{unwrapping ctx tthen} else #{unwrapping ctx telse}|]
 
