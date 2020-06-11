@@ -117,9 +117,9 @@ etaExpand outerCtx expectedTy funTy fun = [i|\\#{lamArgs} => #{rhsTermStr}|]
     lamArgs = intercalate ", " $ getName <$> reverse lamBinders
     rhsTermStr = wrapping outerCtx expectedTy $ unwrapping subCtx rhsTerm
 
-    (subCtx, lamBinders, rhsTerm) = go (outerCtx, [], fun) funTy
-    go (ctx, binders, term) ArrowTy { .. }
-      | TyArrow arr <- codTy = go next arr
+    (subCtx, lamBinders, rhsTerm) = buildApp (outerCtx, [], fun) funTy
+    buildApp (ctx, binders, term) ArrowTy { .. }
+      | TyArrow arr <- codTy = buildApp next arr
       | otherwise = next
       where
         next = (ctx', binders', term')
