@@ -93,7 +93,7 @@ compileTerm ctx (TApp _ t1 t2)
   | TyArrow ArrowTy { .. } <- annotation t1 =
       let t2str = case annotation t2 of
                        TyBase {} -> wrapping ctx domTy $ unwrapping ctx t2
-                       TyArrow arr -> etaExpand ctx arr t2
+                       TyArrow arr -> etaExpand ctx domTy arr t2
        in [i|#{parens $ compileTerm ctx t1} #{parens t2str}|]
   | otherwise = error "Unexpected function type"
 compileTerm ctx TIfThenElse { .. } = [i|if #{compileTerm ctx tcond} then #{unwrapping ctx tthen} else #{unwrapping ctx telse}|]
@@ -111,11 +111,11 @@ unwrapStr ty str
   | isJust $ tyRefinement ty = [i|fst #{parens str}|]
   | otherwise = str
 
-etaExpand :: Var2Ty -> ArrowTy -> TypedTerm -> String
-etaExpand outerCtx funTy fun = [i|\\#{lamArgs} => #{rhsTermStr}|]
+etaExpand :: Var2Ty -> Ty -> ArrowTy -> TypedTerm -> String
+etaExpand outerCtx expectedTy funTy fun = [i|\\#{lamArgs} => #{rhsTermStr}|]
   where
     lamArgs = intercalate ", " $ getName <$> reverse lamBinders
-    rhsTermStr = compileTerm subCtx rhsTerm
+    rhsTermStr = wrapping outerCtx expectedTy $ unwrapping subCtx rhsTerm
 
     (subCtx, lamBinders, rhsTerm) = go (outerCtx, [], fun) funTy
     go (ctx, binders, term) ArrowTy { .. }
