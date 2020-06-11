@@ -112,15 +112,16 @@ unwrapStr ty str
   | otherwise = str
 
 etaExpand :: Var2Ty -> ArrowTy -> TypedTerm -> String
-etaExpand ctx ty term = [i|\\#{intercalate ", " lamBinders} => #{compileTerm subCtx term} #{unwords lamBinders}|]
+etaExpand ctx ty term = [i|\\#{intercalate ", " $ getName <$> reverse lamBinders} => #{compileTerm subCtx rhsTerm}|]
   where
-    (subCtx, lamBinders) = go (ctx, []) ty
-    go (ctx', binders) ArrowTy { .. }
+    (subCtx, lamBinders, rhsTerm) = go (ctx, [], term) ty
+    go (ctx', binders, term') ArrowTy { .. }
       | TyArrow arr <- codTy = go next arr
       | otherwise = next
       where
-        next = (HM.insert (VarName name) domTy ctx', name : binders)
-        name = "ηarg" <> show (length ctx')
+        next = (HM.insert name domTy ctx', name : binders, term'')
+        term'' = TApp codTy term' (TName domTy name)
+        name = VarName $ "ηarg" <> show (length ctx')
 
 compileOp :: BinOp -> String
 compileOp = \case BinOpPlus -> "+"
