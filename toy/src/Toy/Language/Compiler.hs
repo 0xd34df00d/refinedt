@@ -90,8 +90,11 @@ compileTerm _ (TName _ var) = getName var
 compileTerm ctx (TInteger ty n) = wrapping ctx ty $ show n
 compileTerm ctx (TBinOp _ t1 op t2) = [i|(#{unwrapping ctx t1} #{compileOp op} #{unwrapping ctx t2})|]
 compileTerm ctx (TApp _ t1 t2)
-  | TyArrow ArrowTy { .. } <- annotation t1
-  , let t2str = wrapping ctx domTy $ unwrapping ctx t2 = [i|#{parens $ compileTerm ctx t1} #{parens t2str}|]
+  | TyArrow ArrowTy { .. } <- annotation t1 =
+      let t2str = case annotation t2 of
+                       TyBase {} -> wrapping ctx domTy $ unwrapping ctx t2
+                       TyArrow arr -> etaExpand ctx arr t2
+       in [i|#{parens $ compileTerm ctx t1} #{parens t2str}|]
   | otherwise = error "Unexpected function type"
 compileTerm ctx TIfThenElse { .. } = [i|if #{compileTerm ctx tcond} then #{unwrapping ctx tthen} else #{unwrapping ctx telse}|]
 
@@ -107,6 +110,17 @@ unwrapStr :: Ty -> String -> String
 unwrapStr ty str
   | isJust $ tyRefinement ty = [i|fst #{parens str}|]
   | otherwise = str
+
+etaExpand :: Var2Ty -> ArrowTy -> TypedTerm -> String
+etaExpand ctx ty term = [i|\\#{intercalate ", " lamBinders} => #{compileTerm subCtx term} #{unwords lamBinders}|]
+  where
+    (subCtx, lamBinders) = go (ctx, []) ty
+    go (ctx', binders) ArrowTy { .. }
+      | TyArrow arr <- codTy = go next arr
+      | otherwise = next
+      where
+        next = (HM.insert (VarName name) domTy ctx', name : binders)
+        name = "ηarg" <> show (length ctx')
 
 compileOp :: BinOp -> String
 compileOp = \case BinOpPlus -> "+"
