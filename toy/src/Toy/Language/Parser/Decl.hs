@@ -17,6 +17,7 @@ import Toy.Language.Parser.Common
 import Toy.Language.Parser.Ty
 import Toy.Language.Parser.Util
 import Toy.Language.Syntax.Decls
+import Toy.Language.Syntax.Terms
 
 funSig :: ToyMonad e s m => m FunSig
 funSig = do

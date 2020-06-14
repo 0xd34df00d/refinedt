@@ -20,6 +20,7 @@ import Z3.Monad
 
 import Toy.Language.EnvironmentUtils
 import Toy.Language.Syntax.Decls
+import Toy.Language.Syntax.Terms
 import Toy.Language.Syntax.Types
 
 data SolveRes = Correct | Wrong deriving (Eq, Show)

@@ -1,6 +1,7 @@
 module Toy.Language.QueryGen where
 
 import Toy.Language.Syntax.Decls
+import Toy.Language.Syntax.Terms
 import Toy.Language.Syntax.Types
 
 -- The intrinsic refinement characterizes the structure of the term and doesn't need to be checked but can be assumed.

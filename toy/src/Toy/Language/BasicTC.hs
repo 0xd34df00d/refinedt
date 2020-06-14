@@ -10,6 +10,7 @@ import Control.Monad.Reader
 
 import Toy.Language.EnvironmentUtils
 import Toy.Language.Syntax.Decls
+import Toy.Language.Syntax.Terms
 import Toy.Language.Syntax.Types
 
 annotateTypes :: MonadReader Var2Ty m => Term -> m TypedTerm
