@@ -3,6 +3,7 @@
 
 module Toy.Language.Syntax.Decls where
 
+import Toy.Language.Syntax.Common
 import Toy.Language.Syntax.Terms
 import Toy.Language.Syntax.Types
 

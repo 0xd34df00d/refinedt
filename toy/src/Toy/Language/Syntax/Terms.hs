@@ -3,7 +3,7 @@
 
 module Toy.Language.Syntax.Terms where
 
-import Toy.Language.Syntax.Types
+import Toy.Language.Syntax.Common
 
 data BinOp
   = BinOpPlus | BinOpMinus

@@ -15,6 +15,7 @@ import Test.QuickCheck(property)
 import Idris.IdeModeClient
 import Toy.Language.Compiler
 import Toy.Language.Parser.Decl
+import Toy.Language.Syntax.Common
 import Toy.Language.Syntax.Decls
 import Toy.Language.Syntax.Types
 

@@ -6,11 +6,9 @@ module Toy.Language.Syntax.Types where
 
 import Data.Data
 import Data.Generics.Uniplate.Data
-import Data.Hashable
 import Data.Maybe
-import Data.String
 
-newtype VarName = VarName { getName :: String } deriving (Eq, Ord, Show, IsString, Hashable, Data)
+import Toy.Language.Syntax.Common
 
 data BaseTy = TBool | TInt | TIntList
   deriving (Eq, Ord, Show, Enum, Bounded, Data)
