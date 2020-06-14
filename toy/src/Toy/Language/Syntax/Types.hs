@@ -24,7 +24,7 @@ data RefinementArg = RArgInt Int | RArgVar VarName | RArgVarLen VarName deriving
 data AtomicRefinement = AR RefinementOp RefinementArg
   deriving (Eq, Ord, Show, Data)
 
-newtype Refinement = Refinement { conjuncts :: [AtomicRefinement] } deriving (Eq, Ord, Show, Data)
+newtype Refinement = Refinement { conjuncts :: [AtomicRefinement] } deriving (Eq, Ord, Show, Data, Semigroup, Monoid)
 
 trueRefinement :: Refinement
 trueRefinement = Refinement []
