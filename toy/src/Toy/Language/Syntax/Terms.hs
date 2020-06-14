@@ -5,7 +5,10 @@ module Toy.Language.Syntax.Terms where
 
 import Toy.Language.Syntax.Types
 
-data BinOp = BinOpPlus | BinOpMinus | BinOpGt | BinOpLt deriving (Eq, Ord, Show)
+data BinOp
+  = BinOpPlus | BinOpMinus
+  | BinOpLt | BinOpLeq | BinOpEq | BinOpNEq | BinOpGt | BinOpGeq
+  deriving (Eq, Ord, Show)
 
 data TermT ann
   = TName ann VarName
