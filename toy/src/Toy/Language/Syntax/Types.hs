@@ -7,6 +7,7 @@ module Toy.Language.Syntax.Types where
 import Data.Data
 import Data.Generics.Uniplate.Data
 import Data.Hashable
+import Data.Maybe
 import Data.String
 
 newtype VarName = VarName { getName :: String } deriving (Eq, Ord, Show, IsString, Hashable, Data)
@@ -60,3 +61,6 @@ tyRefinement TyArrow {} = Nothing
 tyRefinement (TyBase RefinedBaseTy { .. })
   | baseTyRefinement == trueRefinement = Nothing
   | otherwise = Just baseTyRefinement
+
+tyRefinement' :: Ty -> Refinement
+tyRefinement' = fromMaybe trueRefinement . tyRefinement
