@@ -1,5 +1,5 @@
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE DeriveFunctor, DeriveDataTypeable #-}
 
 module Toy.Language.Syntax.Terms where
 
@@ -19,7 +19,6 @@ data TermT ann
   deriving (Eq, Ord, Show, Functor)
 
 type Term = TermT ()
-type TypedTerm = TermT Ty
 
 annotation :: TermT ann -> ann
 annotation (TName ann _) = ann

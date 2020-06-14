@@ -1,5 +1,4 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving, DeriveDataTypeable #-}
 {-# LANGUAGE RecordWildCards #-}
 
 module Toy.Language.Syntax.Types where
@@ -9,6 +8,7 @@ import Data.Generics.Uniplate.Data
 import Data.Maybe
 
 import Toy.Language.Syntax.Common
+import Toy.Language.Syntax.Terms
 
 data BaseTy = TBool | TInt | TIntList
   deriving (Eq, Ord, Show, Enum, Bounded, Data)
@@ -62,3 +62,5 @@ tyRefinement (TyBase RefinedBaseTy { .. })
 
 tyRefinement' :: Ty -> Refinement
 tyRefinement' = fromMaybe trueRefinement . tyRefinement
+
+type TypedTerm = TermT Ty
