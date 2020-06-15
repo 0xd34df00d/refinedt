@@ -4,6 +4,7 @@ module Toy.Language.Syntax.Terms.Sugar where
 
 import Data.String
 
+import Toy.Language.Syntax.Common
 import Toy.Language.Syntax.Terms
 
 v :: IsString s => s
@@ -11,6 +12,9 @@ v = "v"
 
 ti :: Int -> Term
 ti = TInteger ()
+
+tv :: VarName -> Term
+tv = TName ()
 
 (|=|), (|+|), (|-|), (|>|), (|<|), (|>=|), (|<=|) :: Term -> Term -> Term
 t1 |=| t2 = TBinOp () t1 BinOpEq t2
