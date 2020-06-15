@@ -1,9 +1,11 @@
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE DeriveFunctor, DeriveDataTypeable #-}
+{-# LANGUAGE TypeSynonymInstances, FlexibleInstances #-}
 
 module Toy.Language.Syntax.Terms where
 
 import Data.Data
+import Data.String
 
 import Toy.Language.Syntax.Common
 
@@ -19,6 +21,9 @@ data TermT ann
   | TApp ann (TermT ann) (TermT ann)
   | TIfThenElse { tifeAnn :: ann, tcond :: TermT ann, tthen :: TermT ann, telse :: TermT ann }
   deriving (Eq, Ord, Show, Data, Functor)
+
+instance IsString Term where
+  fromString = TName () . fromString
 
 type Term = TermT ()
 
