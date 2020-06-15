@@ -1,7 +1,6 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE RecordWildCards, QuasiQuotes, BlockArguments, TupleSections #-}
-{-# OPTIONS_GHC -Wno-orphans #-}
 
 module Toy.Language.Solver
 ( solve
