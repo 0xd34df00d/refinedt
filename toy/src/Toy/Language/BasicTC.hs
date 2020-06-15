@@ -22,11 +22,8 @@ annotateTypes (TBinOp _ t1 op t2) = do
   t2' <- annotateTypes t2
   expectBaseTy TInt $ annotation t1'
   expectBaseTy TInt $ annotation t2'
-  let resTy = case op of
-                   BinOpPlus -> TInt
-                   BinOpMinus -> TInt
-                   BinOpGt -> TBool
-                   BinOpLt -> TBool
+  let resTy | op `elem` [BinOpPlus, BinOpMinus] = TInt
+            | otherwise = TBool
   -- this could have had a strong refinement if our refinements language supported arithmetic operations
   pure $ TBinOp (TyBase $ RefinedBaseTy resTy trueRefinement) t1' op t2'
 annotateTypes TIfThenElse { .. } = do
