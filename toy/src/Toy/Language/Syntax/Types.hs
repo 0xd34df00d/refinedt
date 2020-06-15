@@ -13,11 +13,7 @@ import Toy.Language.Syntax.Terms
 data BaseTy = TBool | TInt | TIntList
   deriving (Eq, Ord, Show, Enum, Bounded, Data)
 
-data RefinementOp = ROpLt | ROpLeq | ROpEq | ROpNEq | ROpGt | ROpGeq deriving (Eq, Ord, Show, Enum, Bounded, Data)
-
-data RefinementArg = RArgInt Int | RArgVar VarName | RArgVarLen VarName deriving (Eq, Ord, Show, Data)
-
-data AtomicRefinement = AR RefinementOp RefinementArg
+data AtomicRefinement = AR VarName Term
   deriving (Eq, Ord, Show, Data)
 
 newtype Refinement = Refinement { conjuncts :: [AtomicRefinement] } deriving (Eq, Ord, Show, Data, Semigroup, Monoid)

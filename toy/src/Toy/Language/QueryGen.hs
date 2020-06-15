@@ -2,6 +2,7 @@ module Toy.Language.QueryGen where
 
 import Toy.Language.Syntax.Decls
 import Toy.Language.Syntax.Terms
+import Toy.Language.Syntax.Terms.Sugar
 import Toy.Language.Syntax.Types
 
 -- The intrinsic refinement characterizes the structure of the term and doesn't need to be checked but can be assumed.
@@ -21,4 +22,4 @@ genQueries :: TypedTerm -> QTerm
 genQueries t@(TName ty _) = emptyQAnn (tyRefinement' ty) t
 genQueries (TInteger ty n) = TInteger (QAnnotation refinement ty) n
   where
-    refinement = Refinement [AR ROpEq $ RArgInt n]
+    refinement = Refinement [AR v $ v |=| ti n]

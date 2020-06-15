@@ -1,6 +1,6 @@
 {-# LANGUAGE FlexibleContexts, GADTs #-}
 {-# LANGUAGE FlexibleInstances, MultiParamTypeClasses, UndecidableInstances #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE RecordWildCards, OverloadedStrings #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 module T05TypesCompilerSpec(spec) where
@@ -17,6 +17,8 @@ import Toy.Language.Compiler
 import Toy.Language.Parser.Decl
 import Toy.Language.Syntax.Common
 import Toy.Language.Syntax.Decls
+import Toy.Language.Syntax.Terms
+import Toy.Language.Syntax.Terms.Sugar
 import Toy.Language.Syntax.Types
 
 import TestUtils
@@ -84,13 +86,13 @@ genTy isRoot n
                                _ -> pure trueRefinement
       pure $ RefinedBaseTy { .. }
     genRefinement = Refinement . nub <$> listOf genAtomicRefinement
-    genAtomicRefinement = AR <$> genRefinementOp <*> genRefinementArg
+    genAtomicRefinement = (\op arg -> AR v $ TBinOp () v op arg) <$> genRefinementOp <*> genRefinementArg
     genRefinementOp = elements enumerate
     genRefinementArg = do
       vars <- get
-      elements $ RArgInt 0
-               : [ RArgVar var | (var, TInt) <- vars ]
-              <> [ RArgVarLen var | (var, TIntList) <- vars ]
+      elements $ TInteger () 0
+               : [ TName () var | (var, TInt) <- vars ]
+              <> [ TApp () "len" $ TName () var | (var, TIntList) <- vars ]
 
 instance MonadState s m => MonadState s (GenT m) where
   state = lift . state

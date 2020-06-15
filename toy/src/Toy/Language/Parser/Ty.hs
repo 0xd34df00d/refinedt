@@ -13,6 +13,8 @@ import Data.String
 import Text.Megaparsec
 import Text.Megaparsec.Char.Lexer
 
+import Toy.Language.Syntax.Terms
+import Toy.Language.Syntax.Terms.Sugar
 import Toy.Language.Syntax.Types
 import Toy.Language.Parser.Common
 import Toy.Language.Parser.Util
@@ -55,12 +57,14 @@ refinement :: ToyMonad e s m => m Refinement
 refinement = Refinement <$> atomicRefinement `sepBy1` lstring "&"
 
 atomicRefinement :: ToyMonad e s m => m AtomicRefinement
-atomicRefinement = lstring "v" >> AR <$> parseTable ops <*> args
+atomicRefinement = do
+  void $ lstring "v"
+  (\op arg -> AR v $ TBinOp () v op arg) <$> parseTable ops <*> args
   where
-    ops = [ ("<=", ROpLeq), ("<", ROpLt), ("=", ROpEq), ("/=", ROpNEq), (">=", ROpGeq), (">", ROpGt) ]
-    args = choice [ RArgInt <$> lexeme' decimal
-                  , lstringSpace "len" >> RArgVarLen <$> varName
-                  , RArgVar <$> varName
+    ops = [ ("<=", BinOpLeq), ("<", BinOpLt), ("=", BinOpEq), ("/=", BinOpNEq), (">=", BinOpGeq), (">", BinOpGt) ]
+    args = choice [ TInteger () <$> lexeme' decimal
+                  , lstringSpace "len" >> TApp () "len" . TName ()  <$> varName
+                  , TName () <$> varName
                   ]
 
 baseTy :: ToyMonad e s m => m BaseTy

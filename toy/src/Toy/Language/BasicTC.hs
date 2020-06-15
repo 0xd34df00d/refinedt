@@ -56,17 +56,10 @@ annotateFunDef ctx sig def@FunDef { .. } = FunDef { funBody = funBody', .. }
 
 -- TODO rename whatever can be shadowed
 substPi :: VarName -> Term -> Ty -> Ty
-substPi srcName (TName _ dstName) = transformBi f
+substPi srcName with = transformBi f
   where
-    f (RArgVar var) | var == srcName = RArgVar dstName
-    f (RArgVarLen var) | var == srcName = RArgVarLen dstName
+    f (TName _ name) | name == srcName = with
     f arg = arg
-substPi srcName (TInteger _ n) = transformBi f
-  where
-    f (RArgVar var) | var == srcName = RArgInt n
-    f (RArgVarLen var) | var == srcName = error [i|Can't substitute `len #{var}` with a number|]
-    f arg = arg
-substPi srcName term = error [i|Unsupported substitution target: #{srcName} -> #{term}|]
 
 expectBaseTy :: Monad m => BaseTy -> Ty -> m ()
 expectBaseTy expected (TyBase RefinedBaseTy { .. }) | baseType == expected = pure ()
