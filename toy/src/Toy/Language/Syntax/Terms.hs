@@ -12,7 +12,7 @@ import Toy.Language.Syntax.Common
 data BinOp
   = BinOpPlus | BinOpMinus
   | BinOpLt | BinOpLeq | BinOpEq | BinOpNEq | BinOpGt | BinOpGeq
-  deriving (Eq, Ord, Show, Data)
+  deriving (Eq, Ord, Show, Enum, Bounded, Data)
 
 data TermT ann
   = TName ann VarName
