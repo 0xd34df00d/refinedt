@@ -56,7 +56,7 @@ compileRefinement ctx refinement =
        conjs -> "(" <> intercalate ", " (compileAR ctx <$> conjs) <> ")"
 
 compileAR :: Var2Ty -> AtomicRefinement -> String
-compileAR ctx (AR op arg) = [i|v #{opStr} #{argStr} = True|]
+compileAR ctx (AR op arg) = undefined {- [i|v #{opStr} #{argStr} = True|] TODO
   where
     opStr = case op of
                  ROpLt -> "<"
@@ -71,7 +71,7 @@ compileAR ctx (AR op arg) = [i|v #{opStr} #{argStr} = True|]
                   RArgVarLen var -> "intLength " <> unwrap var
     unwrap var | Just varTy <- HM.lookup var ctx
                , isJust $ tyRefinement varTy = [i|fst #{getName var}|]
-               | otherwise = getName var
+               | otherwise = getName var -}
 
 compileBaseTy :: BaseTy -> String
 compileBaseTy TBool = "Bool"
@@ -138,7 +138,11 @@ compileOp :: BinOp -> String
 compileOp = \case BinOpPlus -> "+"
                   BinOpMinus -> "-"
                   BinOpGt -> ">"
+                  BinOpGeq -> ">="
+                  BinOpEq -> "=="
+                  BinOpNEq -> "/="
                   BinOpLt -> "<"
+                  BinOpLeq -> "<="
 
 parens :: String -> String
 parens str
