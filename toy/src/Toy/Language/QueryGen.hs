@@ -1,5 +1,12 @@
+{-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE ConstraintKinds, FlexibleContexts #-}
+
 module Toy.Language.QueryGen where
 
+import Control.Monad.State.Strict
+import Data.String.Interpolate.IsString
+
+import Toy.Language.Syntax.Common
 import Toy.Language.Syntax.Decls
 import Toy.Language.Syntax.Terms
 import Toy.Language.Syntax.Terms.Sugar
@@ -18,8 +25,21 @@ type QFunDef = FunDefT QAnnotation
 emptyQAnn :: Refinement -> TypedTerm -> QTerm
 emptyQAnn = fmap . QAnnotation
 
-genQueries :: TypedTerm -> QTerm
-genQueries t@(TName ty _) = emptyQAnn (tyRefinement' ty) t
-genQueries (TInteger ty n) = TInteger (QAnnotation refinement ty) n
-  where
-    refinement = Refinement [AR v $ v |=| ti n]
+data QState = QState
+  { freeRefinementVarsCount :: Int
+  }
+
+type MonadQ m = MonadState QState m
+
+freshRefVar :: MonadQ m => m VarName
+freshRefVar = do
+  idx <- gets freeRefinementVarsCount
+  modify' $ \st -> st { freeRefinementVarsCount = idx + 1 }
+  pure [i|v#{idx}|]
+
+genQueries :: MonadQ m => TypedTerm -> m QTerm
+genQueries t@(TName ty _) = pure $ emptyQAnn (tyRefinement' ty) t
+genQueries (TInteger ty n) = do
+  v' <- freshRefVar
+  let refinement = Refinement [AR v' $ tv v' |=| ti n]
+  pure $ TInteger (QAnnotation refinement ty) n
