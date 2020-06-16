@@ -35,10 +35,9 @@ spec = do
       p "{ v : Bool | v < x & v > 0 }" ~~> RefinedBaseTy TBool $ vRefinement [AR $ v |<| "x", AR $ v |>| ti 0]
     it "parses types with conjunctions 2" $
       p "{ v : Bool | v < x & v < len arr }" ~~> RefinedBaseTy TBool $ vRefinement [AR $ v |<| "x", AR $ v |<| len "arr"]
-      {-
   describe "Parsing arrows" $ let p = parse' ty in do
     it "still parses base types" $
-      p "{ v : Bool | v >= len arr }" ~~> TyBase $ RefinedBaseTy TBool $ Refinement [AR ROpGeq (RArgVarLen "arr")]
+      p "{ v : Bool | v >= len arr }" ~~> TyBase $ RefinedBaseTy TBool $ vRefinement [AR $ v |>=| len "arr"]
     it "parses unrefined base types with parens" $
       p "(Bool)" ~~> bool
     it "parses simple arrows" $
@@ -83,7 +82,6 @@ spec = do
     it "parses pi-bound nested refinement types in pi-bound parens" $
       p "(f : (x : { v : Int | v <= len arr }) -> { v : Int | v > 0 }) -> { v : Int | v >= 0 & v < x }"
         ~~> "f".:("x".:intLeqLenArr ->> intGe0) ->> intBetween0andX
-        -}
 
 -- Some helpers to make tests a tad more pleasant
 infixr 0 -->
@@ -102,12 +100,10 @@ bool, int :: Ty
 bool = TyBase $ RefinedBaseTy TBool trueRefinement
 int = TyBase $ RefinedBaseTy TInt trueRefinement
 
-{-
 intLeqLenArr, intGe0, intBetween0andX :: Ty
-intLeqLenArr = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpLeq (RArgVarLen "arr")]
-intGe0 = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpGt $ RArgInt 0]
-intBetween0andX = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpGeq $ RArgInt 0, AR ROpLt $ RArgVar "x"]
+intLeqLenArr = TyBase $ RefinedBaseTy TInt $ vRefinement [AR $ v |<=| len "arr"]
+intGe0 = TyBase $ RefinedBaseTy TInt $ vRefinement [AR $ v |>| ti 0]
+intBetween0andX = TyBase $ RefinedBaseTy TInt $ vRefinement [AR $ v |>=| ti 0, AR $ v |<| "x"]
 
-intLe :: VarName -> Ty
-intLe var = TyBase $ RefinedBaseTy TInt $ Refinement [AR ROpLt (RArgVar var)]
--}
+intLe :: Term -> Ty
+intLe var = TyBase $ RefinedBaseTy TInt $ vRefinement [AR $ v |<| var]
