@@ -15,14 +15,14 @@ import Toy.Language.Syntax.Types
 -- The intrinsic refinement characterizes the structure of the term and doesn't need to be checked but can be assumed.
 -- The VC proposition is whatever needs to hold for that specific term to type check (not including its subterms).
 data QAnnotation = QAnnotation
-  { intrinsicProp :: Refinement
+  { intrinsic :: Maybe Refinement
   , tyAnn :: Ty
   } deriving (Eq, Ord, Show)
 
 type QTerm = TermT QAnnotation
 type QFunDef = FunDefT QAnnotation
 
-emptyQAnn :: Refinement -> TypedTerm -> QTerm
+emptyQAnn :: Maybe Refinement -> TypedTerm -> QTerm
 emptyQAnn = fmap . QAnnotation
 
 data QState = QState
@@ -38,8 +38,8 @@ freshRefVar = do
   pure [i|v#{idx}|]
 
 genQueries :: MonadQ m => TypedTerm -> m QTerm
-genQueries t@(TName ty _) = pure $ emptyQAnn (tyRefinement' ty) t
+genQueries t@(TName ty _) = pure $ emptyQAnn (tyRefinement ty) t
 genQueries (TInteger ty n) = do
   v' <- freshRefVar
-  let refinement = Refinement v' [AR $ tv v' |=| ti n]
+  let refinement = Just $ Refinement v' [AR $ tv v' |=| ti n]
   pure $ TInteger (QAnnotation refinement ty) n

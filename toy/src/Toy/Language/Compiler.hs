@@ -37,8 +37,8 @@ compileTy :: Ty -> String
 compileTy = go mempty
   where
     go ctx (TyBase RefinedBaseTy { .. })
-      | baseTyRefinement == trueRefinement = compileBaseTy baseType
-      | otherwise = [i|(v : #{compileBaseTy baseType} ** #{compileRefinement ctx baseTyRefinement})|]
+      | Just refinement <- baseTyRefinement = [i|(v : #{compileBaseTy baseType} ** #{compileRefinement ctx refinement})|]
+      | otherwise = compileBaseTy baseType
     go ctx (TyArrow ArrowTy { .. })
       | isBaseTy domTy || isJust piVarName = [i|#{lhs} -> #{go ctx' codTy}|]
       | otherwise = [i|(#{lhs}) -> #{go ctx' codTy}|]

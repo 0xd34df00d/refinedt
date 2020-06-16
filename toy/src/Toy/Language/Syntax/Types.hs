@@ -1,5 +1,5 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving, DeriveDataTypeable #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE RecordWildCards, OverloadedStrings #-}
 
 module Toy.Language.Syntax.Types where
 
@@ -16,19 +16,17 @@ data BaseTy = TBool | TInt | TIntList
 newtype AtomicRefinement = AR Term
   deriving (Eq, Ord, Show, Data)
 
-data Refinement
-  = TrueRefinement
-  | Refinement
-    { subjectVar :: VarName
-    , conjuncts :: [AtomicRefinement]
-    } deriving (Eq, Ord, Show, Data)
+data Refinement = Refinement
+  { subjectVar :: VarName
+  , conjuncts :: [AtomicRefinement]
+  } deriving (Eq, Ord, Show, Data)
 
-trueRefinement :: Refinement
-trueRefinement = TrueRefinement
+trueRefinement :: Maybe Refinement
+trueRefinement = Nothing
 
 data RefinedBaseTy = RefinedBaseTy
  { baseType :: BaseTy
- , baseTyRefinement :: Refinement
+ , baseTyRefinement :: Maybe Refinement
  } deriving (Eq, Ord, Show, Data)
 
 data ArrowTy = ArrowTy
@@ -55,11 +53,6 @@ isBaseTy _ = False
 
 tyRefinement :: Ty -> Maybe Refinement
 tyRefinement TyArrow {} = Nothing
-tyRefinement (TyBase RefinedBaseTy { .. })
-  | baseTyRefinement == trueRefinement = Nothing
-  | otherwise = Just baseTyRefinement
-
-tyRefinement' :: Ty -> Refinement
-tyRefinement' = fromMaybe trueRefinement . tyRefinement
+tyRefinement (TyBase RefinedBaseTy { .. }) = baseTyRefinement
 
 type TypedTerm = TermT Ty

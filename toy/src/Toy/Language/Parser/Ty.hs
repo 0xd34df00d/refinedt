@@ -49,7 +49,7 @@ baseRT = try refinedTy <|> implicitTrue
       void $ lstring ":"
       baseType <- baseTy
       void $ lstring "|"
-      baseTyRefinement <- refinement
+      baseTyRefinement <- Just <$> refinement
       void $ lstring "}"
       pure $ RefinedBaseTy { .. }
 

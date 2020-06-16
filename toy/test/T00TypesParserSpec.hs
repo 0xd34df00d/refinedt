@@ -18,20 +18,20 @@ spec = do
     it "parses unrefined type" $
       p "Bool" ~~> RefinedBaseTy TBool trueRefinement
     it "parses refined type with var" $
-      p "{ v : Bool | v < x }" ~~> RefinedBaseTy TBool $ Refinement v [AR $ v |<| "x"]
+      p "{ v : Bool | v < x }" ~~> RefinedBaseTy TBool $ Just $ Refinement v [AR $ v |<| "x"]
     it "parses refined type with zero" $
-      p "{ v : Bool | v <= 0 }" ~~> RefinedBaseTy TBool $ Refinement v [AR $ v |<=| ti 0]
+      p "{ v : Bool | v <= 0 }" ~~> RefinedBaseTy TBool $ Just $ Refinement v [AR $ v |<=| ti 0]
     it "parses refined type with len" $
-      p "{ v : Bool | v >= len arr }" ~~> RefinedBaseTy TBool $ Refinement v [AR $ v |>=| len "arr"]
+      p "{ v : Bool | v >= len arr }" ~~> RefinedBaseTy TBool $ Just $ Refinement v [AR $ v |>=| len "arr"]
     it "parses refined type without spaces" $
-      p "{v:Bool|v>=len arr}" ~~> RefinedBaseTy TBool $ Refinement v [AR $ v |>=| len "arr"]
+      p "{v:Bool|v>=len arr}" ~~> RefinedBaseTy TBool $ Just $ Refinement v [AR $ v |>=| len "arr"]
     it "parses refined type with var name starting with len" $
-      p "{ v : Bool | v >= lenarr }" ~~> RefinedBaseTy TBool $ Refinement v [AR $ v |>=| "lenarr"]
+      p "{ v : Bool | v >= lenarr }" ~~> RefinedBaseTy TBool $ Just $ Refinement v [AR $ v |>=| "lenarr"]
   describe "Parsing with conjunctions" $ let p = parse' baseRT in do
     it "parses types with conjunctions 1" $
-      p "{ v : Bool | v < x & v > 0 }" ~~> RefinedBaseTy TBool $ Refinement v [AR $ v |<| "x", AR $ v |>| ti 0]
+      p "{ v : Bool | v < x & v > 0 }" ~~> RefinedBaseTy TBool $ Just $ Refinement v [AR $ v |<| "x", AR $ v |>| ti 0]
     it "parses types with conjunctions 2" $
-      p "{ v : Bool | v < x & v < len arr }" ~~> RefinedBaseTy TBool $ Refinement v [AR $ v |<| "x", AR $ v |<| len "arr"]
+      p "{ v : Bool | v < x & v < len arr }" ~~> RefinedBaseTy TBool $ Just $ Refinement v [AR $ v |<| "x", AR $ v |<| len "arr"]
       {-
   describe "Parsing arrows" $ let p = parse' ty in do
     it "still parses base types" $
