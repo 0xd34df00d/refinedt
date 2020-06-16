@@ -49,3 +49,15 @@ genQueries (TInteger ty n) = do
   v' <- freshRefVar
   let refinement = Refinement v' [AR $ tv v' |=| ti n]
   pure $ TInteger (QAnnotation refinement ty) n
+genQueries (TBinOp ty t1 op t2) = do
+  t1' <- genQueries t1
+  t2' <- genQueries t2
+  v' <- freshRefVar
+  let refinement = Refinement v' [AR $ tv v' |=| TBinOp () (termSubjVarTerm t1') op (termSubjVarTerm t2')]
+  pure $ TBinOp (QAnnotation refinement ty) t1' op t2'
+
+termSubjVar :: QTerm -> VarName
+termSubjVar = subjectVar . intrinsic . annotation
+
+termSubjVarTerm :: QTerm -> Term
+termSubjVarTerm = TName () . termSubjVar
