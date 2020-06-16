@@ -3,7 +3,9 @@
 
 module Toy.Language.QueryGen where
 
+import Control.Monad
 import Control.Monad.State.Strict
+import Data.Proxy
 import Data.String.Interpolate.IsString
 
 import Toy.Language.Syntax.Common
@@ -38,7 +40,11 @@ freshRefVar = do
   pure [i|v#{idx}|]
 
 genQueries :: MonadQ m => TypedTerm -> m QTerm
-genQueries t@(TName ty _) = pure $ emptyQAnn (tyRefinement ty) t
+genQueries t@(TName ty _) = do
+  refinement' <- forM (tyRefinement ty) $ \ref -> do
+    v' <- freshRefVar
+    pure $ renameVar' (Proxy :: Proxy ()) (subjectVar ref) v' ref
+  pure $ emptyQAnn refinement' t
 genQueries (TInteger ty n) = do
   v' <- freshRefVar
   let refinement = Just $ Refinement v' [AR $ tv v' |=| ti n]
