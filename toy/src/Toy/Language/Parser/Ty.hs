@@ -53,13 +53,14 @@ baseRT = try refinedTy <|> implicitTrue
       void $ lstring "}"
       pure $ RefinedBaseTy { .. }
 
+-- TODO support custom refinement vars
 refinement :: ToyMonad e s m => m Refinement
-refinement = Refinement <$> atomicRefinement `sepBy1` lstring "&"
+refinement = Refinement "v" <$> atomicRefinement `sepBy1` lstring "&"
 
 atomicRefinement :: ToyMonad e s m => m AtomicRefinement
 atomicRefinement = do
   void $ lstring "v"
-  (\op arg -> AR v $ TBinOp () v op arg) <$> parseTable ops <*> args
+  (\op arg -> AR $ TBinOp () v op arg) <$> parseTable ops <*> args
   where
     ops = [ ("<=", BinOpLeq), ("<", BinOpLt), ("=", BinOpEq), ("/=", BinOpNEq), (">=", BinOpGeq), (">", BinOpGt) ]
     args = choice [ TInteger () <$> lexeme' decimal

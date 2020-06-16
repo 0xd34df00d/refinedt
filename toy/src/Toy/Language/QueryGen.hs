@@ -41,5 +41,5 @@ genQueries :: MonadQ m => TypedTerm -> m QTerm
 genQueries t@(TName ty _) = pure $ emptyQAnn (tyRefinement' ty) t
 genQueries (TInteger ty n) = do
   v' <- freshRefVar
-  let refinement = Refinement [AR v' $ tv v' |=| ti n]
+  let refinement = Refinement v' [AR $ tv v' |=| ti n]
   pure $ TInteger (QAnnotation refinement ty) n

@@ -13,13 +13,18 @@ import Toy.Language.Syntax.Terms
 data BaseTy = TBool | TInt | TIntList
   deriving (Eq, Ord, Show, Enum, Bounded, Data)
 
-data AtomicRefinement = AR VarName Term
+newtype AtomicRefinement = AR Term
   deriving (Eq, Ord, Show, Data)
 
-newtype Refinement = Refinement { conjuncts :: [AtomicRefinement] } deriving (Eq, Ord, Show, Data, Semigroup, Monoid)
+data Refinement
+  = TrueRefinement
+  | Refinement
+    { subjectVar :: VarName
+    , conjuncts :: [AtomicRefinement]
+    } deriving (Eq, Ord, Show, Data)
 
 trueRefinement :: Refinement
-trueRefinement = Refinement []
+trueRefinement = TrueRefinement
 
 data RefinedBaseTy = RefinedBaseTy
  { baseType :: BaseTy

@@ -56,7 +56,7 @@ compileRefinement ctx refinement =
        conjs -> "(" <> intercalate ", " (compileAR ctx <$> conjs) <> ")"
 
 compileAR :: Var2Ty -> AtomicRefinement -> String
-compileAR ctx (AR op arg) = undefined {- [i|v #{opStr} #{argStr} = True|] TODO
+compileAR ctx (AR term) = undefined {- [i|v #{opStr} #{argStr} = True|] TODO
   where
     opStr = case op of
                  ROpLt -> "<"
