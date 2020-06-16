@@ -3,7 +3,6 @@
 
 module Toy.Language.QueryGen where
 
-import Control.Monad
 import Control.Monad.State.Strict
 import Data.Proxy
 import Data.String.Interpolate.IsString
@@ -17,14 +16,14 @@ import Toy.Language.Syntax.Types
 -- The intrinsic refinement characterizes the structure of the term and doesn't need to be checked but can be assumed.
 -- The VC proposition is whatever needs to hold for that specific term to type check (not including its subterms).
 data QAnnotation = QAnnotation
-  { intrinsic :: Maybe Refinement
+  { intrinsic :: Refinement
   , tyAnn :: Ty
   } deriving (Eq, Ord, Show)
 
 type QTerm = TermT QAnnotation
 type QFunDef = FunDefT QAnnotation
 
-emptyQAnn :: Maybe Refinement -> TypedTerm -> QTerm
+emptyQAnn :: Refinement -> TypedTerm -> QTerm
 emptyQAnn = fmap . QAnnotation
 
 data QState = QState
@@ -41,11 +40,12 @@ freshRefVar = do
 
 genQueries :: MonadQ m => TypedTerm -> m QTerm
 genQueries t@(TName ty _) = do
-  refinement' <- forM (tyRefinement ty) $ \ref -> do
-    v' <- freshRefVar
-    pure $ renameVar' (Proxy :: Proxy ()) (subjectVar ref) v' ref
-  pure $ emptyQAnn refinement' t
+  v' <- freshRefVar
+  let ars = case tyRefinement ty of
+                 Nothing -> []
+                 Just ref -> renameVar' (Proxy :: Proxy ()) (subjectVar ref) v' (conjuncts ref)
+  pure $ emptyQAnn (Refinement v' ars) t
 genQueries (TInteger ty n) = do
   v' <- freshRefVar
-  let refinement = Just $ Refinement v' [AR $ tv v' |=| ti n]
+  let refinement = Refinement v' [AR $ tv v' |=| ti n]
   pure $ TInteger (QAnnotation refinement ty) n
