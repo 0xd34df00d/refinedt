@@ -1,10 +1,12 @@
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE DeriveFunctor, DeriveDataTypeable #-}
 {-# LANGUAGE TypeSynonymInstances, FlexibleInstances #-}
+{-# LANGUAGE ScopedTypeVariables, TypeApplications #-}
 
 module Toy.Language.Syntax.Terms where
 
 import Data.Data
+import Data.Generics.Uniplate.Data
 import Data.String
 
 import Toy.Language.Syntax.Common
@@ -33,3 +35,14 @@ annotation (TInteger ann _) = ann
 annotation (TBinOp ann _ _ _) = ann
 annotation (TApp ann _ _) = ann
 annotation TIfThenElse { .. } = tifeAnn
+
+-- this is gonna explode beautifully when we'll have lambda abstractions on term level
+renameVar :: forall a. Data a => VarName -> VarName -> TermT a -> TermT a
+renameVar what with = transformBi f
+  where
+    f :: TermT a -> TermT a
+    f (TName ann name) | name == what = TName ann with
+    f term = term
+
+renameVar' :: forall a from. (Data a, Data from) => Proxy a -> VarName -> VarName -> from -> from
+renameVar' _ what with = transformBi (renameVar @a what with)
