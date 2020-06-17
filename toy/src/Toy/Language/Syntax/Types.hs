@@ -1,11 +1,10 @@
 {-# LANGUAGE DeriveDataTypeable #-}
-{-# LANGUAGE RecordWildCards, OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards #-}
 
 module Toy.Language.Syntax.Types where
 
 import Data.Data
 import Data.Generics.Uniplate.Data
-import Data.Maybe
 
 import Toy.Language.Syntax.Common
 import Toy.Language.Syntax.Terms

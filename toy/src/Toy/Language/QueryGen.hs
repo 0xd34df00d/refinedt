@@ -23,9 +23,6 @@ data QAnnotation = QAnnotation
 type QTerm = TermT QAnnotation
 type QFunDef = FunDefT QAnnotation
 
-emptyQAnn :: Refinement -> TypedTerm -> QTerm
-emptyQAnn = fmap . QAnnotation
-
 data QState = QState
   { freeRefinementVarsCount :: Int
   }
