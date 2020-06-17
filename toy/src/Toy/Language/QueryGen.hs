@@ -52,6 +52,7 @@ genQueries (TApp ty fun arg) = do
   fun' <- genQueries fun
   arg' <- genQueries arg
   v' <- freshRefVar
+  -- TODO add the symbolic `v' = fun arg` AR?
   let refinement = specRefinement v' $ tyRefinement ty
   pure $ TApp (QAnnotation refinement ty) fun' arg'
 genQueries TIfThenElse { .. } = do
