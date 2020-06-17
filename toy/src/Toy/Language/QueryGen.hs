@@ -23,9 +23,7 @@ data QAnnotation = QAnnotation
 type QTerm = TermT QAnnotation
 type QFunDef = FunDefT QAnnotation
 
-data QState = QState
-  { freeRefinementVarsCount :: Int
-  }
+newtype QState = QState { freeRefinementVarsCount :: Int }
 
 type MonadQ m = MonadState QState m
 
