@@ -1,4 +1,4 @@
-{-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE QuasiQuotes, RecordWildCards #-}
 {-# LANGUAGE ConstraintKinds, FlexibleContexts #-}
 
 module Toy.Language.QueryGen where
@@ -56,6 +56,15 @@ genQueries (TApp ty fun arg) = do
   v' <- freshRefVar
   let refinement = specRefinement v' $ tyRefinement ty
   pure $ TApp (QAnnotation refinement ty) fun' arg'
+genQueries TIfThenElse { .. } = do
+  tcond' <- genQueries tcond
+  tthen' <- genQueries tthen
+  telse' <- genQueries telse
+  v' <- freshRefVar
+  let refinement = Refinement v' [AR $ tv v' |=| TIfThenElse () (termSubjVarTerm tcond')
+                                                                (termSubjVarTerm tthen')
+                                                                (termSubjVarTerm telse')]
+  pure $ TIfThenElse (QAnnotation refinement tifeAnn) tcond' tthen' telse'
 
 termSubjVar :: QTerm -> VarName
 termSubjVar = subjectVar . intrinsic . annotation
