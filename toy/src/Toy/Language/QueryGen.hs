@@ -15,17 +15,17 @@ import Toy.Language.Syntax.Types
 
 -- The intrinsic refinement characterizes the structure of the term and doesn't need to be checked but can be assumed.
 -- The VC proposition is whatever needs to hold for that specific term to type check (not including its subterms).
-data QAnnotation = QAnnotation
+data RefAnn = RefAnn
   { intrinsic :: Refinement
   , tyAnn :: Ty
   } deriving (Eq, Ord, Show)
 
-type QTerm = TermT QAnnotation
-type QFunDef = FunDefT QAnnotation
+type RefAnnTerm = TermT RefAnn
+type RefAnnFunDef = FunDefT RefAnn
 
-newtype QState = QState { freeRefinementVarsCount :: Int }
+newtype RefAnnState = RefAnnState { freeRefinementVarsCount :: Int }
 
-type MonadQ m = MonadState QState m
+type MonadQ m = MonadState RefAnnState m
 
 freshRefVar :: MonadQ m => m VarName
 freshRefVar = do
@@ -33,42 +33,42 @@ freshRefVar = do
   modify' $ \st -> st { freeRefinementVarsCount = idx + 1 }
   pure [i|v#{idx}|]
 
-genQueries :: MonadQ m => TypedTerm -> m QTerm
-genQueries (TName ty name) = do
+propagateRefinements :: MonadQ m => TypedTerm -> m RefAnnTerm
+propagateRefinements (TName ty name) = do
   v' <- freshRefVar
   let refinement = specRefinement v' $ tyRefinement ty
-  pure $ TName (QAnnotation refinement ty) name
-genQueries (TInteger ty n) = do
+  pure $ TName (RefAnn refinement ty) name
+propagateRefinements (TInteger ty n) = do
   v' <- freshRefVar
   let refinement = Refinement v' [AR $ tv v' |=| ti n]
-  pure $ TInteger (QAnnotation refinement ty) n
-genQueries (TBinOp ty t1 op t2) = do
-  t1' <- genQueries t1
-  t2' <- genQueries t2
+  pure $ TInteger (RefAnn refinement ty) n
+propagateRefinements (TBinOp ty t1 op t2) = do
+  t1' <- propagateRefinements t1
+  t2' <- propagateRefinements t2
   v' <- freshRefVar
   let refinement = Refinement v' [AR $ tv v' |=| TBinOp () (termSubjVarTerm t1') op (termSubjVarTerm t2')]
-  pure $ TBinOp (QAnnotation refinement ty) t1' op t2'
-genQueries (TApp ty fun arg) = do
-  fun' <- genQueries fun
-  arg' <- genQueries arg
+  pure $ TBinOp (RefAnn refinement ty) t1' op t2'
+propagateRefinements (TApp ty fun arg) = do
+  fun' <- propagateRefinements fun
+  arg' <- propagateRefinements arg
   v' <- freshRefVar
   -- TODO add the symbolic `v' = fun arg` AR?
   let refinement = specRefinement v' $ tyRefinement ty
-  pure $ TApp (QAnnotation refinement ty) fun' arg'
-genQueries TIfThenElse { .. } = do
-  tcond' <- genQueries tcond
-  tthen' <- genQueries tthen
-  telse' <- genQueries telse
+  pure $ TApp (RefAnn refinement ty) fun' arg'
+propagateRefinements TIfThenElse { .. } = do
+  tcond' <- propagateRefinements tcond
+  tthen' <- propagateRefinements tthen
+  telse' <- propagateRefinements telse
   v' <- freshRefVar
   let refinement = Refinement v' [AR $ tv v' |=| TIfThenElse () (termSubjVarTerm tcond')
                                                                 (termSubjVarTerm tthen')
                                                                 (termSubjVarTerm telse')]
-  pure $ TIfThenElse (QAnnotation refinement tifeAnn) tcond' tthen' telse'
+  pure $ TIfThenElse (RefAnn refinement tifeAnn) tcond' tthen' telse'
 
-termSubjVar :: QTerm -> VarName
+termSubjVar :: RefAnnTerm -> VarName
 termSubjVar = subjectVar . intrinsic . annotation
 
-termSubjVarTerm :: QTerm -> Term
+termSubjVarTerm :: RefAnnTerm -> Term
 termSubjVarTerm = TName () . termSubjVar
 
 specRefinement :: VarName -> Maybe Refinement -> Refinement
