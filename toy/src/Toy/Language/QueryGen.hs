@@ -39,12 +39,10 @@ freshRefVar = do
   pure [i|v#{idx}|]
 
 genQueries :: MonadQ m => TypedTerm -> m QTerm
-genQueries t@(TName ty _) = do
+genQueries (TName ty name) = do
   v' <- freshRefVar
-  let ars = case tyRefinement ty of
-                 Nothing -> []
-                 Just ref -> renameVar' (Proxy :: Proxy ()) (subjectVar ref) v' (conjuncts ref)
-  pure $ emptyQAnn (Refinement v' ars) t
+  let refinement = specRefinement v' $ tyRefinement ty
+  pure $ TName (QAnnotation refinement ty) name
 genQueries (TInteger ty n) = do
   v' <- freshRefVar
   let refinement = Refinement v' [AR $ tv v' |=| ti n]
@@ -61,3 +59,9 @@ termSubjVar = subjectVar . intrinsic . annotation
 
 termSubjVarTerm :: QTerm -> Term
 termSubjVarTerm = TName () . termSubjVar
+
+specRefinement :: VarName -> Maybe Refinement -> Refinement
+specRefinement var maybeRef = Refinement var ars
+  where
+    ars | Just ref <- maybeRef = renameVar' (Proxy :: Proxy ()) (subjectVar ref) var (conjuncts ref)
+        | otherwise = []
