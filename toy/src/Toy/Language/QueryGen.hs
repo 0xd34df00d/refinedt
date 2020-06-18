@@ -65,6 +65,42 @@ propagateRefinements TIfThenElse { .. } = do
                                                                 (termSubjVarTerm telse')]
   pure $ TIfThenElse (RefAnn refinement tifeAnn) tcond' tthen' telse'
 
+data Query
+  = Refinement :=> Refinement
+  | Query :& Query
+  deriving (Eq, Ord, Show)
+
+-- The VC proposition `query` is whatever needs to hold for that specific term to type check (not including its subterms).
+-- It assumes that `refAnn` holds.
+data QAnn = QAnn
+  { query :: Maybe Query
+  , refAnn :: RefAnn
+  } deriving (Eq, Ord, Show)
+
+type QTerm = TermT QAnn
+
+genQueries :: MonadQ m => RefAnnTerm -> m QTerm
+genQueries (TApp refAnn fun arg) = do
+  fun' <- genQueries fun
+  arg' <- genQueries arg
+  query <- case (tyAnn $ annotation fun, tyAnn $ annotation arg) of
+                (TyArrow ArrowTy { domTy = expectedTy }, actualTy) -> Just <$> expectedTy <: actualTy
+                (_, _) -> error "Function should have arrow type (this should've been caught earlier though)"
+  pure $ TApp QAnn { .. } fun' arg'
+genQueries t = pure $ fmap (QAnn Nothing) t
+
+(<:) :: MonadQ m => Ty -> Ty -> m Query
+TyBase rbtExpected <: TyBase rbtActual = do
+  v' <- freshRefVar
+  let actual = specRefinement v' $ baseTyRefinement rbtActual
+  let expected = specRefinement v' $ baseTyRefinement rbtExpected
+  pure $ actual :=> expected
+TyArrow (ArrowTy _ funDomTy funCodTy) <: TyArrow (ArrowTy _ argDomTy argCodTy) = do
+  argQuery <- argDomTy <: funDomTy
+  codQuery <- funCodTy <: argCodTy
+  pure $ argQuery :& codQuery
+ty1 <: ty2 = error [i|Mismatched types #{ty1} #{ty2} (which should've been caught earlier though)|]
+
 termSubjVar :: RefAnnTerm -> VarName
 termSubjVar = subjectVar . intrinsic . annotation
 
