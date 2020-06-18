@@ -80,6 +80,12 @@ data QAnn = QAnn
 type QTerm = TermT QAnn
 
 genQueries :: MonadQ m => RefAnnTerm -> m QTerm
+genQueries (TName ann name) = pure $ TName (QAnn Nothing ann) name
+genQueries (TInteger ann n) = pure $ TInteger (QAnn Nothing ann) n
+genQueries (TBinOp ann t1 op t2) = TBinOp (QAnn Nothing ann) <$> genQueries t1 <*> pure op <*> genQueries t2
+genQueries  TIfThenElse { .. } = TIfThenElse (QAnn Nothing tifeAnn) <$> genQueries tcond
+                                                                    <*> genQueries tthen
+                                                                    <*> genQueries telse
 genQueries (TApp refAnn fun arg) = do
   fun' <- genQueries fun
   arg' <- genQueries arg
@@ -87,7 +93,6 @@ genQueries (TApp refAnn fun arg) = do
                 (TyArrow ArrowTy { domTy = expectedTy }, actualTy) -> Just <$> expectedTy <: actualTy
                 (_, _) -> error "Function should have arrow type (this should've been caught earlier though)"
   pure $ TApp QAnn { .. } fun' arg'
-genQueries t = pure $ fmap (QAnn Nothing) t
 
 (<:) :: MonadQ m => Ty -> Ty -> m Query
 TyBase rbtExpected <: TyBase rbtActual = do
