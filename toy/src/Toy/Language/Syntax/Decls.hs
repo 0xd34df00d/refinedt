@@ -1,4 +1,4 @@
-{-# LANGUAGE DuplicateRecordFields #-}
+{-# LANGUAGE DuplicateRecordFields, RecordWildCards #-}
 {-# LANGUAGE DeriveFunctor #-}
 
 module Toy.Language.Syntax.Decls where
@@ -27,3 +27,6 @@ data DeclT a = Decl
   } deriving (Eq, Ord, Show, Functor)
 
 type Decl = DeclT ()
+
+onFunBody :: (TermT a -> TermT b) -> FunDefT a -> FunDefT b
+onFunBody f FunDef { .. } = FunDef { funBody = f funBody, .. }
