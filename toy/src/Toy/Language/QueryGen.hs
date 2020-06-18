@@ -78,13 +78,16 @@ data QAnn = QAnn
 
 type QTerm = TermT QAnn
 
+emptyQuery :: RefAnn -> QAnn
+emptyQuery = QAnn Nothing
+
 genQueries :: MonadQ m => RefAnnTerm -> m QTerm
-genQueries (TName ann name) = pure $ TName (QAnn Nothing ann) name
-genQueries (TInteger ann n) = pure $ TInteger (QAnn Nothing ann) n
-genQueries (TBinOp ann t1 op t2) = TBinOp (QAnn Nothing ann) <$> genQueries t1 <*> pure op <*> genQueries t2
-genQueries  TIfThenElse { .. } = TIfThenElse (QAnn Nothing tifeAnn) <$> genQueries tcond
-                                                                    <*> genQueries tthen
-                                                                    <*> genQueries telse
+genQueries (TName ann name) = pure $ TName (emptyQuery ann) name
+genQueries (TInteger ann n) = pure $ TInteger (emptyQuery ann) n
+genQueries (TBinOp ann t1 op t2) = TBinOp (emptyQuery ann) <$> genQueries t1 <*> pure op <*> genQueries t2
+genQueries  TIfThenElse { .. } = TIfThenElse (emptyQuery tifeAnn) <$> genQueries tcond
+                                                                  <*> genQueries tthen
+                                                                  <*> genQueries telse
 genQueries (TApp refAnn fun arg) = do
   fun' <- genQueries fun
   arg' <- genQueries arg
