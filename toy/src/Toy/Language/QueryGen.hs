@@ -14,7 +14,6 @@ import Toy.Language.Syntax.Terms.Sugar
 import Toy.Language.Syntax.Types
 
 -- The intrinsic refinement characterizes the structure of the term and doesn't need to be checked but can be assumed.
--- The VC proposition is whatever needs to hold for that specific term to type check (not including its subterms).
 data RefAnn = RefAnn
   { intrinsic :: Refinement
   , tyAnn :: Ty
