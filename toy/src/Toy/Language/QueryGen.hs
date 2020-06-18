@@ -101,6 +101,7 @@ TyBase rbtExpected <: TyBase rbtActual = do
   v' <- freshRefVar
   let actual = specRefinement v' $ baseTyRefinement rbtActual
   let expected = specRefinement v' $ baseTyRefinement rbtExpected
+  -- TODO this doesn't take the derived refinement into account — check when it breaks
   pure $ actual :=> expected
 TyArrow (ArrowTy _ funDomTy funCodTy) <: TyArrow (ArrowTy _ argDomTy argCodTy) = do
   argQuery <- argDomTy <: funDomTy
