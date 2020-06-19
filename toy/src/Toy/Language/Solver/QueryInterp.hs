@@ -1,9 +1,7 @@
 {-# LANGUAGE ConstraintKinds, FlexibleContexts #-}
 {-# LANGUAGE RecordWildCards, QuasiQuotes, LambdaCase #-}
 
-module Toy.Language.Solver.QueryInterp
-( convertIntrinsics
-) where
+module Toy.Language.Solver.QueryInterp where
 
 import qualified Data.HashMap.Strict as HM
 import Control.Conditional
@@ -21,12 +19,11 @@ newtype ConvertState = ConvertState { variables :: HM.HashMap VarName Z3Var }
 
 type MonadConvert m = (MonadZ3 m, MonadState ConvertState m)
 
+initVars :: MonadConvert m => RefAnnTerm -> m ()
+initVars term = mapM_ (\RefAnn { .. } -> createVar tyAnn $ subjectVar intrinsic) $ toList term
+
 convertIntrinsics :: MonadConvert m => RefAnnTerm -> m AST
-convertIntrinsics term = do
-  mapM_ (\RefAnn { .. } -> createVar tyAnn $ subjectVar intrinsic) refinements
-  mapM (convertRefinement . intrinsic) refinements >>= mkAnd
-  where
-    refinements = toList term
+convertIntrinsics term = mapM (convertRefinement . intrinsic) (toList term) >>= mkAnd
 
 convertRefinement :: MonadConvert m => Refinement -> m AST
 convertRefinement Refinement { .. } = mapM (convertTerm . getARTerm) conjuncts >>= mkAnd
