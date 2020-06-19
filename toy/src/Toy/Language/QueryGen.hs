@@ -1,7 +1,14 @@
 {-# LANGUAGE QuasiQuotes, RecordWildCards #-}
 {-# LANGUAGE ConstraintKinds, FlexibleContexts #-}
 
-module Toy.Language.QueryGen where
+module Toy.Language.QueryGen
+( Query(..)
+, QAnn(..)
+, RefAnn(..)
+
+, genQueriesTerm
+, genQueriesFunDef
+) where
 
 import Control.Monad.State.Strict
 import Data.Proxy
@@ -13,6 +20,16 @@ import Toy.Language.Syntax.Terms
 import Toy.Language.Syntax.Terms.Sugar
 import Toy.Language.Syntax.Types
 
+genQueriesTerm :: TypedTerm -> QTerm
+genQueriesTerm t = evalState (propagateRefinements t >>= genQueries) (RefAnnState 0)
+
+genQueriesFunDef :: TypedFunDef -> QFunDef
+genQueriesFunDef = onFunBody genQueriesTerm
+
+newtype RefAnnState = RefAnnState { freeRefinementVarsCount :: Int }
+
+type MonadQ m = MonadState RefAnnState m
+
 -- The intrinsic refinement characterizes the structure of the term and doesn't need to be checked but can be assumed.
 data RefAnn = RefAnn
   { intrinsic :: Refinement
@@ -20,17 +37,6 @@ data RefAnn = RefAnn
   } deriving (Eq, Ord, Show)
 
 type RefAnnTerm = TermT RefAnn
-type RefAnnFunDef = FunDefT RefAnn
-
-newtype RefAnnState = RefAnnState { freeRefinementVarsCount :: Int }
-
-type MonadQ m = MonadState RefAnnState m
-
-freshRefVar :: MonadQ m => m VarName
-freshRefVar = do
-  idx <- gets freeRefinementVarsCount
-  modify' $ \st -> st { freeRefinementVarsCount = idx + 1 }
-  pure [i|v#{idx}|]
 
 propagateRefinements :: MonadQ m => TypedTerm -> m RefAnnTerm
 propagateRefinements (TName ty name) = do
@@ -77,6 +83,7 @@ data QAnn = QAnn
   } deriving (Eq, Ord, Show)
 
 type QTerm = TermT QAnn
+type QFunDef = FunDefT QAnn
 
 emptyQuery :: RefAnn -> QAnn
 emptyQuery = QAnn Nothing
@@ -108,6 +115,13 @@ TyArrow (ArrowTy _ funDomTy funCodTy) <: TyArrow (ArrowTy _ argDomTy argCodTy) =
   codQuery <- funCodTy <: argCodTy
   pure $ argQuery :& codQuery
 ty1 <: ty2 = error [i|Mismatched types #{ty1} #{ty2} (which should've been caught earlier though)|]
+
+-- Helpers
+freshRefVar :: MonadQ m => m VarName
+freshRefVar = do
+  idx <- gets freeRefinementVarsCount
+  modify' $ \st -> st { freeRefinementVarsCount = idx + 1 }
+  pure [i|v#{idx}|]
 
 termSubjVar :: RefAnnTerm -> VarName
 termSubjVar = subjectVar . intrinsic . annotation
