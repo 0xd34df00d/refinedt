@@ -14,11 +14,8 @@ import Control.Monad.State.Strict
 import Data.Proxy
 import Data.String.Interpolate.IsString
 
-import Toy.Language.Syntax.Common
-import Toy.Language.Syntax.Decls
-import Toy.Language.Syntax.Terms
+import Toy.Language.Syntax
 import Toy.Language.Syntax.Terms.Sugar
-import Toy.Language.Syntax.Types
 
 genQueriesTerm :: TypedTerm -> QTerm
 genQueriesTerm t = evalState (propagateRefinements t >>= genQueries) (RefAnnState 0)

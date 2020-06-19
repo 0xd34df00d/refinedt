@@ -5,10 +5,8 @@ module T00TypesParserSpec(spec) where
 import Test.Hspec
 
 import Toy.Language.Parser.Ty
-import Toy.Language.Syntax.Common
-import Toy.Language.Syntax.Terms
+import Toy.Language.Syntax
 import Toy.Language.Syntax.Terms.Sugar
-import Toy.Language.Syntax.Types
 
 import TestUtils
 

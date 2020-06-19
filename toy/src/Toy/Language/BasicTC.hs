@@ -9,10 +9,7 @@ import Data.String.Interpolate
 import Control.Monad.Reader
 
 import Toy.Language.EnvironmentUtils
-import Toy.Language.Syntax.Common
-import Toy.Language.Syntax.Decls
-import Toy.Language.Syntax.Terms
-import Toy.Language.Syntax.Types
+import Toy.Language.Syntax
 
 annotateTypes :: MonadReader Var2Ty m => Term -> m TypedTerm
 annotateTypes (TName _ varName) = (`TName` varName) <$> asks (HM.! varName)

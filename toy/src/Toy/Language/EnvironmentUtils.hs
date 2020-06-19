@@ -14,9 +14,7 @@ import Control.Applicative
 import Control.Arrow
 import Control.Monad.Identity
 
-import Toy.Language.Syntax.Common
-import Toy.Language.Syntax.Decls
-import Toy.Language.Syntax.Types
+import Toy.Language.Syntax
 
 type ArgTypes = [(VarName, Ty)]
 

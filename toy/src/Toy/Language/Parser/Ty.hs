@@ -13,9 +13,8 @@ import Data.String
 import Text.Megaparsec
 import Text.Megaparsec.Char.Lexer
 
-import Toy.Language.Syntax.Terms
+import Toy.Language.Syntax
 import Toy.Language.Syntax.Terms.Sugar
-import Toy.Language.Syntax.Types
 import Toy.Language.Parser.Common
 import Toy.Language.Parser.Util
 

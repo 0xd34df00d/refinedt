@@ -13,10 +13,7 @@ import Data.String.Interpolate
 
 import Toy.Language.BasicTC
 import Toy.Language.EnvironmentUtils
-import Toy.Language.Syntax.Common
-import Toy.Language.Syntax.Decls
-import Toy.Language.Syntax.Terms
-import Toy.Language.Syntax.Types
+import Toy.Language.Syntax
 
 compileDecl :: [FunSig] -> Decl -> String
 compileDecl ctx Decl { .. } = sig' <> fromMaybe "" def'
