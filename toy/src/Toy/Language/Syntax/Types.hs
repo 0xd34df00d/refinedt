@@ -12,7 +12,7 @@ import Toy.Language.Syntax.Terms
 data BaseTy = TBool | TInt | TIntList
   deriving (Eq, Ord, Show, Enum, Bounded, Data)
 
-newtype AtomicRefinement = AR Term
+newtype AtomicRefinement = AR { getARTerm :: Term }
   deriving (Eq, Ord, Show, Data)
 
 data Refinement = Refinement
