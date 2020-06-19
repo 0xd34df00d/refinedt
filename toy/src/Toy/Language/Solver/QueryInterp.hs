@@ -25,6 +25,9 @@ initVars term = mapM_ (\RefAnn { .. } -> createVar tyAnn $ subjectVar intrinsic)
 convertIntrinsics :: MonadConvert m => RefAnnTerm -> m AST
 convertIntrinsics term = mapM (convertRefinement . intrinsic) (toList term) >>= mkAnd
 
+convertQTerm :: MonadConvert m => QTerm -> m (TermT (VCAnnT AST))
+convertQTerm term = traverse sequence $ fmap convertQuery <$> term
+
 convertQuery :: MonadConvert m => Query -> m AST
 convertQuery (q1 :& q2) = join $ (\a b -> mkAnd [a, b]) <$> convertQuery q1 <*> convertQuery q2
 convertQuery (antecedent :=> consequent) = do
