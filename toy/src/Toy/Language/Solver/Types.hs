@@ -35,3 +35,8 @@ termSubjVar = subjectVar . intrinsic . annotation
 termSubjVarTerm :: RefAnnTerm -> Term
 termSubjVarTerm = TName () . termSubjVar
 
+-- A term annotated with a VC-related info
+type VCTerm a = TermT (VCAnnT a)
+
+onVCTerm :: Monad m => (a -> m b) -> VCTerm a -> m (VCTerm b)
+onVCTerm f term = traverse sequence $ fmap f <$> term
