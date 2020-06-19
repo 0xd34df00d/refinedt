@@ -1,5 +1,5 @@
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE DeriveFunctor, DeriveDataTypeable, DeriveFoldable #-}
+{-# LANGUAGE DeriveFunctor, DeriveDataTypeable, DeriveFoldable, DeriveTraversable #-}
 {-# LANGUAGE TypeSynonymInstances, FlexibleInstances #-}
 {-# LANGUAGE ScopedTypeVariables, TypeApplications #-}
 
@@ -22,7 +22,7 @@ data TermT ann
   | TBinOp ann (TermT ann) BinOp (TermT ann)
   | TApp ann (TermT ann) (TermT ann)
   | TIfThenElse { tifeAnn :: ann, tcond :: TermT ann, tthen :: TermT ann, telse :: TermT ann }
-  deriving (Eq, Ord, Show, Data, Functor, Foldable)
+  deriving (Eq, Ord, Show, Data, Functor, Foldable, Traversable)
 
 instance IsString Term where
   fromString = TName () . fromString
