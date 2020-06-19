@@ -25,6 +25,16 @@ initVars term = mapM_ (\RefAnn { .. } -> createVar tyAnn $ subjectVar intrinsic)
 convertIntrinsics :: MonadConvert m => RefAnnTerm -> m AST
 convertIntrinsics term = mapM (convertRefinement . intrinsic) (toList term) >>= mkAnd
 
+convertQuery :: MonadConvert m => Query -> m AST
+convertQuery (q1 :& q2) = join $ (\a b -> mkAnd [a, b]) <$> convertQuery q1 <*> convertQuery q2
+convertQuery (antecedent :=> consequent) = do
+  v' <- getVar $ subjectVar antecedent
+  antecedent' <- convertRefinement antecedent
+  consequent' <- convertRefinement consequent
+  implication <- mkImplies antecedent' consequent'
+  vApp <- toApp $ getZ3Var v'
+  mkForallConst [] [vApp] implication
+
 convertRefinement :: MonadConvert m => Refinement -> m AST
 convertRefinement Refinement { .. } = mapM (convertTerm . getARTerm) conjuncts >>= mkAnd
   where
