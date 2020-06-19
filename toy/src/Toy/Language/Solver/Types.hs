@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveTraversable #-}
+
 module Toy.Language.Solver.Types where
 
 import Toy.Language.Syntax
@@ -20,7 +22,7 @@ data Query
 data VCAnnT a = VCAnn
   { query :: Maybe a
   , refAnn :: RefAnn
-  } deriving (Eq, Ord, Show)
+  } deriving (Eq, Ord, Show, Functor, Foldable, Traversable)
 
 type QAnn = VCAnnT Query
 
