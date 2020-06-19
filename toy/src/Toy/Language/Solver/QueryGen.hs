@@ -57,7 +57,7 @@ propagateRefinements TIfThenElse { .. } = do
   pure $ TIfThenElse (RefAnn refinement tifeAnn) tcond' tthen' telse'
 
 emptyQuery :: RefAnn -> QAnn
-emptyQuery = QAnn Nothing
+emptyQuery = VCAnn Nothing
 
 genQueries :: MonadQ m => RefAnnTerm -> m QTerm
 genQueries (TName ann name) = pure $ TName (emptyQuery ann) name
@@ -72,7 +72,7 @@ genQueries (TApp refAnn fun arg) = do
   query <- case (tyAnn $ annotation fun, tyAnn $ annotation arg) of
                 (TyArrow ArrowTy { domTy = expectedTy }, actualTy) -> Just <$> expectedTy <: actualTy
                 (_, _) -> error "Function should have arrow type (this should've been caught earlier though)"
-  pure $ TApp QAnn { .. } fun' arg'
+  pure $ TApp VCAnn { .. } fun' arg'
 
 (<:) :: MonadQ m => Ty -> Ty -> m Query
 TyBase rbtExpected <: TyBase rbtActual = do

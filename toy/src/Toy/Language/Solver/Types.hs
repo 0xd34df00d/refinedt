@@ -17,10 +17,12 @@ data Query
 
 -- The VC proposition `query` is whatever needs to hold for that specific term to type check (not including its subterms).
 -- It assumes that `refAnn` holds.
-data QAnn = QAnn
-  { query :: Maybe Query
+data VCAnnT a = VCAnn
+  { query :: Maybe a
   , refAnn :: RefAnn
   } deriving (Eq, Ord, Show)
+
+type QAnn = VCAnnT Query
 
 type QTerm = TermT QAnn
 type QFunDef = FunDefT QAnn
