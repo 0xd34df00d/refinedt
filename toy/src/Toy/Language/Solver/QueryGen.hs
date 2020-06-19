@@ -2,11 +2,7 @@
 {-# LANGUAGE ConstraintKinds, FlexibleContexts #-}
 
 module Toy.Language.Solver.QueryGen
-( Query(..)
-, QAnn(..)
-, RefAnn(..)
-
-, genQueriesTerm
+( genQueriesTerm
 , genQueriesFunDef
 ) where
 
