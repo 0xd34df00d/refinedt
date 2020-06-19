@@ -1,7 +1,7 @@
 {-# LANGUAGE QuasiQuotes, RecordWildCards #-}
 {-# LANGUAGE ConstraintKinds, FlexibleContexts #-}
 
-module Toy.Language.QueryGen
+module Toy.Language.Solver.QueryGen
 ( Query(..)
 , QAnn(..)
 , RefAnn(..)
