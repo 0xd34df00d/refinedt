@@ -14,6 +14,7 @@ import Control.Monad.State.Strict
 import Data.Proxy
 import Data.String.Interpolate.IsString
 
+import Toy.Language.Solver.Types
 import Toy.Language.Syntax
 import Toy.Language.Syntax.Terms.Sugar
 
@@ -26,14 +27,6 @@ genQueriesFunDef = onFunBody genQueriesTerm
 newtype RefAnnState = RefAnnState { freeRefinementVarsCount :: Int }
 
 type MonadQ m = MonadState RefAnnState m
-
--- The intrinsic refinement characterizes the structure of the term and doesn't need to be checked but can be assumed.
-data RefAnn = RefAnn
-  { intrinsic :: Refinement
-  , tyAnn :: Ty
-  } deriving (Eq, Ord, Show)
-
-type RefAnnTerm = TermT RefAnn
 
 propagateRefinements :: MonadQ m => TypedTerm -> m RefAnnTerm
 propagateRefinements (TName ty name) = do
@@ -66,21 +59,6 @@ propagateRefinements TIfThenElse { .. } = do
                                                                 (termSubjVarTerm tthen')
                                                                 (termSubjVarTerm telse')]
   pure $ TIfThenElse (RefAnn refinement tifeAnn) tcond' tthen' telse'
-
-data Query
-  = Refinement :=> Refinement
-  | Query :& Query
-  deriving (Eq, Ord, Show)
-
--- The VC proposition `query` is whatever needs to hold for that specific term to type check (not including its subterms).
--- It assumes that `refAnn` holds.
-data QAnn = QAnn
-  { query :: Maybe Query
-  , refAnn :: RefAnn
-  } deriving (Eq, Ord, Show)
-
-type QTerm = TermT QAnn
-type QFunDef = FunDefT QAnn
 
 emptyQuery :: RefAnn -> QAnn
 emptyQuery = QAnn Nothing
@@ -119,12 +97,6 @@ freshRefVar = do
   idx <- gets freeRefinementVarsCount
   modify' $ \st -> st { freeRefinementVarsCount = idx + 1 }
   pure [i|v#{idx}|]
-
-termSubjVar :: RefAnnTerm -> VarName
-termSubjVar = subjectVar . intrinsic . annotation
-
-termSubjVarTerm :: RefAnnTerm -> Term
-termSubjVarTerm = TName () . termSubjVar
 
 specRefinement :: VarName -> Maybe Refinement -> Refinement
 specRefinement var maybeRef = Refinement var ars
