@@ -54,7 +54,7 @@ propagateRefinements TIfThenElse { .. } = do
   let refinement = Refinement v' [AR $ tv v' |=| TIfThenElse () (termSubjVarTerm tcond')
                                                                 (termSubjVarTerm tthen')
                                                                 (termSubjVarTerm telse')]
-  pure $ TIfThenElse (RefAnn refinement tifeAnn) tcond' tthen' telse'
+  pure $ TIfThenElse (RefAnn refinement annotation) tcond' tthen' telse'
 
 emptyQuery :: RefAnn -> QAnn
 emptyQuery = VCAnn Nothing
@@ -63,9 +63,9 @@ genQueries :: MonadQ m => RefAnnTerm -> m QTerm
 genQueries (TName ann name) = pure $ TName (emptyQuery ann) name
 genQueries (TInteger ann n) = pure $ TInteger (emptyQuery ann) n
 genQueries (TBinOp ann t1 op t2) = TBinOp (emptyQuery ann) <$> genQueries t1 <*> pure op <*> genQueries t2
-genQueries  TIfThenElse { .. } = TIfThenElse (emptyQuery tifeAnn) <$> genQueries tcond
-                                                                  <*> genQueries tthen
-                                                                  <*> genQueries telse
+genQueries  TIfThenElse { .. } = TIfThenElse (emptyQuery annotation) <$> genQueries tcond
+                                                                     <*> genQueries tthen
+                                                                     <*> genQueries telse
 genQueries (TApp refAnn fun arg) = do
   fun' <- genQueries fun
   arg' <- genQueries arg

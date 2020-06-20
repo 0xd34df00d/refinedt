@@ -17,24 +17,17 @@ data BinOp
   deriving (Eq, Ord, Show, Enum, Bounded, Data)
 
 data TermT ann
-  = TName ann VarName
-  | TInteger ann Int
-  | TBinOp ann (TermT ann) BinOp (TermT ann)
-  | TApp ann (TermT ann) (TermT ann)
-  | TIfThenElse { tifeAnn :: ann, tcond :: TermT ann, tthen :: TermT ann, telse :: TermT ann }
+  = TName { annotation :: ann, _tname :: VarName }
+  | TInteger { annotation :: ann, _tint :: Int }
+  | TBinOp { annotation :: ann, _tbo1 :: TermT ann, op :: BinOp, _tbo2 :: TermT ann }
+  | TApp { annotation :: ann, _fun :: TermT ann, _app :: TermT ann }
+  | TIfThenElse { annotation :: ann, tcond :: TermT ann, tthen :: TermT ann, telse :: TermT ann }
   deriving (Eq, Ord, Show, Data, Functor, Foldable, Traversable)
 
 instance IsString Term where
   fromString = TName () . fromString
 
 type Term = TermT ()
-
-annotation :: TermT ann -> ann
-annotation (TName ann _) = ann
-annotation (TInteger ann _) = ann
-annotation (TBinOp ann _ _ _) = ann
-annotation (TApp ann _ _) = ann
-annotation TIfThenElse { .. } = tifeAnn
 
 -- this is gonna explode beautifully when we'll have lambda abstractions on term level
 renameVar :: forall a. Data a => VarName -> VarName -> TermT a -> TermT a

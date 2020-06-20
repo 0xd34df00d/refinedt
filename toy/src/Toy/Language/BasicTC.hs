@@ -22,7 +22,7 @@ annotateTypes (TBinOp _ t1 op t2) = do
   let resTy | op `elem` [BinOpPlus, BinOpMinus] = TInt
             | otherwise = TBool
   pure $ TBinOp (TyBase $ RefinedBaseTy resTy trueRefinement) t1' op t2'
-annotateTypes TIfThenElse { .. } = do
+annotateTypes TIfThenElse { annotation = _, .. } = do
   tcond' <- annotateTypes tcond
   expectBaseTy TBool $ annotation tcond'
 
