@@ -20,12 +20,12 @@ newtype ConvertState = ConvertState { variables :: HM.HashMap VarName Z3Var }
 type MonadConvert m = (MonadZ3 m, MonadState ConvertState m)
 
 initVars :: MonadConvert m => RefAnnTerm -> m ()
-initVars term = mapM_ (\RefAnn { .. } -> createVar tyAnn $ subjectVar intrinsic) $ toList term
+initVars term = mapM_ (\RefAnn { .. } -> createVar tyAnn $ subjectVar intrinsic) term
 
 newtype IntrinsicAST = IntrinsicAST { getIntrinsicAST :: AST }
 
 convertIntrinsics :: MonadConvert m => RefAnnTerm -> m IntrinsicAST
-convertIntrinsics term = fmap IntrinsicAST $ mapM (convertRefinement . intrinsic) (toList term) >>= mkAnd
+convertIntrinsics term = fmap IntrinsicAST $ mapM (convertRefinement . intrinsic) term >>= mkAnd . toList
 
 convertQTerm :: MonadConvert m => QTerm -> m (VCTerm AST)
 convertQTerm = onVCTerm convertQuery
