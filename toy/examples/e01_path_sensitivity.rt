@@ -1,0 +1,5 @@
+relu : (x : Int) -> { v : Int | v >= 0 & v >= x }
+relu x = if x > 0 then x else 0
+
+max3 : (x : Int) -> (y : Int) -> (z : Int) -> { v : Int | v >= x & v >= y & v >= z }
+max3 x y z = if x > y then if x > z then x else z else if y > z then y else z

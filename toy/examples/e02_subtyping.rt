@@ -1,0 +1,10 @@
+g : { v : Int | v >= 0 } -> Int
+
+f : { v : Int | v > 0 } -> Int
+f x = g x
+
+gWrong : { v : Int | v > 0 } -> Int
+
+fWrong : { v : Int | v >= 0 } -> Int
+-- fWrong x = gWrong x
+-- The above gets rejected
