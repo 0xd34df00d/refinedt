@@ -2,6 +2,7 @@
 
 module Toy.Language.Solver.Types where
 
+import Data.Maybe
 import Z3.Monad(Result(..))
 
 import Toy.Language.Syntax
@@ -49,3 +50,7 @@ convertZ3Result :: Result -> SolveRes
 convertZ3Result Sat = Correct
 convertZ3Result Unsat = Wrong
 convertZ3Result Undef = Wrong -- TODO
+
+isAllCorrect :: Foldable t => t (Maybe SolveRes) -> SolveRes
+isAllCorrect cont | all ((== Correct) . fromMaybe Correct) cont = Correct
+                  | otherwise = Wrong
