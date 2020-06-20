@@ -86,3 +86,7 @@ createVar ty varName = do
 
 getVar :: MonadConvert m => VarName -> m Z3Var
 getVar varName = gets $ (HM.! varName) . variables
+
+instance MonadZ3 m => MonadZ3 (StateT s m) where
+  getSolver = StateT $ \st -> fmap (\solv -> (solv, st)) getSolver
+  getContext = StateT $ \st -> fmap (\ctx -> (ctx, st)) getContext
