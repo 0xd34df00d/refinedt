@@ -44,6 +44,9 @@ type VCTerm a = TermT (VCAnnT a)
 onVCTerm :: Monad m => (a -> m b) -> VCTerm a -> m (VCTerm b)
 onVCTerm f term = traverse sequence $ fmap f <$> term
 
+setQuery :: a -> VCTerm a -> VCTerm a
+setQuery query term = term { annotation = (annotation term) { query = Just query }}
+
 data SolveRes = Correct | Wrong deriving (Eq, Show)
 
 convertZ3Result :: Result -> SolveRes
