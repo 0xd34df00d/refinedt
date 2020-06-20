@@ -18,9 +18,8 @@ import Control.Monad.Reader
 import Z3.Monad
 
 import Toy.Language.EnvironmentUtils
+import Toy.Language.Solver.Types
 import Toy.Language.Syntax
-
-data SolveRes = Correct | Wrong deriving (Eq, Show)
 
 newtype SolveContext = SolveContext
   { visibleSigs :: [FunSig]
@@ -224,9 +223,4 @@ genRefinementCstrs rbTy z3var
 
 askZ3VarName :: MonadReader SolveEnvironment m => VarName -> m AST
 askZ3VarName var = getZ3VarName <$> asks (snd . (HM.! var) . z3args)
-
-convertZ3Result :: Result -> SolveRes
-convertZ3Result Sat = Correct
-convertZ3Result Unsat = Wrong
-convertZ3Result Undef = Wrong -- TODO
 -}

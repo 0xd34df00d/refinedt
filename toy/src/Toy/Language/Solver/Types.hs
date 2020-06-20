@@ -2,6 +2,8 @@
 
 module Toy.Language.Solver.Types where
 
+import Z3.Monad(Result(..))
+
 import Toy.Language.Syntax
 
 -- The intrinsic refinement characterizes the structure of the term and doesn't need to be checked but can be assumed.
@@ -40,3 +42,10 @@ type VCTerm a = TermT (VCAnnT a)
 
 onVCTerm :: Monad m => (a -> m b) -> VCTerm a -> m (VCTerm b)
 onVCTerm f term = traverse sequence $ fmap f <$> term
+
+data SolveRes = Correct | Wrong deriving (Eq, Show)
+
+convertZ3Result :: Result -> SolveRes
+convertZ3Result Sat = Correct
+convertZ3Result Unsat = Wrong
+convertZ3Result Undef = Wrong -- TODO
