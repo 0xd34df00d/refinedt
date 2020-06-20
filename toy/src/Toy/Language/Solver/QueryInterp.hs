@@ -40,6 +40,17 @@ convertQuery (antecedent :=> consequent) = do
   vApp <- toApp $ getZ3Var v'
   mkForallConst [] [vApp] implication
 
+solveQTerm :: MonadZ3 m => IntrinsicAST -> VCTerm AST -> m (VCTerm SolveRes)
+solveQTerm intrAST = onVCTerm $ \queryAST -> do
+  solverReset
+  assert $ getIntrinsicAST intrAST
+  assert =<< mkNot queryAST
+  convertZ3Result . invert <$> check
+  where
+    invert Sat = Unsat
+    invert Unsat = Sat
+    invert Undef = Undef
+
 convertRefinement :: MonadConvert m => Refinement -> m AST
 convertRefinement Refinement { .. } = mapM (convertTerm . getARTerm) conjuncts >>= mkAnd
   where
