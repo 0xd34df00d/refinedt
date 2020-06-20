@@ -19,6 +19,19 @@ newtype ConvertState = ConvertState { variables :: HM.HashMap VarName Z3Var }
 
 type MonadConvert m = (MonadZ3 m, MonadState ConvertState m)
 
+solveTerm :: QTerm -> IO (SolveRes, VCTerm SolveRes)
+solveTerm term = evalZ3 $ do
+  (intrAST, qTerm) <- evalStateT buildAsts $ ConvertState mempty
+  sTerm <- solveQTerm intrAST qTerm
+  pure (isAllCorrect $ query <$> sTerm, sTerm)
+  where
+    refTerm = refAnn <$> term
+    buildAsts = do
+      initVars refTerm
+      intrAST <- convertIntrinsics refTerm
+      qTerm <- convertQTerm term
+      pure (intrAST, qTerm)
+
 initVars :: MonadConvert m => RefAnnTerm -> m ()
 initVars term = mapM_ (\RefAnn { .. } -> createVar tyAnn $ subjectVar intrinsic) term
 
