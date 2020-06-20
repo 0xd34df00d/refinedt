@@ -4,6 +4,7 @@ module Toy.Language.EnvironmentUtils
 ( funTypesMapping
 , buildCombinedMapping
 , buildTypesMapping
+, retType
 
 , ArgTypes
 , Var2Ty
@@ -26,10 +27,14 @@ funTypesMapping sig def = (arg2type, resType)
     (argTypes, resType) = splitTypes sig
     arg2type = zip (funArgs def) argTypes
 
-    splitTypes = go . funTy
-      where
-        go (TyBase rbTy) = ([], rbTy)
-        go (TyArrow ArrowTy { .. }) = first (domTy :) $ go codTy
+retType :: FunSig -> RefinedBaseTy
+retType = snd . splitTypes
+
+splitTypes :: FunSig -> ([Ty], RefinedBaseTy)
+splitTypes = go . funTy
+  where
+    go (TyBase rbTy) = ([], rbTy)
+    go (TyArrow ArrowTy { .. }) = first (domTy :) $ go codTy
 
 buildVarsMap :: Monad m => (VarName -> Ty -> m a) -> ArgTypes -> m (HM.HashMap VarName a)
 buildVarsMap f args = HM.fromList <$> mapM sequence [ (var, f var ty) | (var, ty) <- args ]
