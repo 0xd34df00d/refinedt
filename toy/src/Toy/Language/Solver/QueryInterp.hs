@@ -22,8 +22,10 @@ type MonadConvert m = (MonadZ3 m, MonadState ConvertState m)
 initVars :: MonadConvert m => RefAnnTerm -> m ()
 initVars term = mapM_ (\RefAnn { .. } -> createVar tyAnn $ subjectVar intrinsic) $ toList term
 
-convertIntrinsics :: MonadConvert m => RefAnnTerm -> m AST
-convertIntrinsics term = mapM (convertRefinement . intrinsic) (toList term) >>= mkAnd
+newtype IntrinsicAST = IntrinsicAST { getIntrinsicAST :: AST }
+
+convertIntrinsics :: MonadConvert m => RefAnnTerm -> m IntrinsicAST
+convertIntrinsics term = fmap IntrinsicAST $ mapM (convertRefinement . intrinsic) (toList term) >>= mkAnd
 
 convertQTerm :: MonadConvert m => QTerm -> m (VCTerm AST)
 convertQTerm = onVCTerm convertQuery
