@@ -24,6 +24,16 @@ expectSolverOn expected str = do
 spec :: Spec
 spec = do
   describe "Basic arithmetic" $ do
+    it "rejects `a + b ≥ 0, a + b ≥ 0` on (int, int)" $ expectSolverOn Wrong
+        [i|
+           add : (x : Int) -> (y : Int) -> { v : Int | v >= 0 & v >= 0 }
+           add x y = x + y
+          |]
+    it "accepts `a + b ≥ 0, a + b ≥ 0` on (nat, nat)" $ expectSolverOn Correct
+        [i|
+           add : (x : { v : Int | v >= 0 }) -> (y : { v : Int | v >= 0 }) -> { v : Int | v >= 0 & v >= 0 }
+           add x y = x + y
+          |]
     it "rejects `a + b ≥ a, a + b ≥ b` on (int, int)" $ expectSolverOn Wrong
         [i|
            add : (x : Int) -> (y : Int) -> { v : Int | v >= x & v >= y }
