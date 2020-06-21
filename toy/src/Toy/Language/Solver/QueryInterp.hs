@@ -13,9 +13,9 @@ import Z3.Monad
 import Toy.Language.Solver.Types
 import Toy.Language.Syntax
 
-newtype Z3Var = Z3Var { getZ3Var :: AST }
+newtype Z3Var = Z3Var { getZ3Var :: AST } deriving (Show)
 
-newtype ConvertState = ConvertState { variables :: HM.HashMap VarName Z3Var }
+newtype ConvertState = ConvertState { variables :: HM.HashMap VarName Z3Var } deriving (Show)
 
 type MonadConvert m = (MonadZ3 m, MonadState ConvertState m)
 
