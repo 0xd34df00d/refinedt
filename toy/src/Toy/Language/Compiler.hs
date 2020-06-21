@@ -11,6 +11,7 @@ import Data.List
 import Data.Maybe
 import Data.String.Interpolate
 
+import Misc.Util
 import Toy.Language.BasicTC
 import Toy.Language.EnvironmentUtils
 import Toy.Language.Syntax
@@ -140,15 +141,3 @@ compileOp = \case BinOpPlus -> "+"
                   BinOpNEq -> "/="
                   BinOpLt -> "<"
                   BinOpLeq -> "<="
-
-parens :: String -> String
-parens str
-  | ' ' `notElem` str = str
-  | head str == '(' && last str == ')' && isBalanced (init $ tail str) = str
-  | otherwise = "(" <> str <> ")"
-  where
-    isBalanced = (\(n, b) -> b && n == 0) . foldl' f (0 :: Int, True)
-    f (0, _) ')' = (0, False)
-    f (n, b) '(' = (n + 1, b)
-    f (n, b) ')' = (n - 1, b)
-    f (n, b) _ = (n, b)
