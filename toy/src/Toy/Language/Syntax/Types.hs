@@ -54,4 +54,8 @@ tyRefinement :: Ty -> Maybe Refinement
 tyRefinement TyArrow {} = Nothing
 tyRefinement (TyBase RefinedBaseTy { .. }) = baseTyRefinement
 
+setTyRefinement :: Ty -> Refinement -> Ty
+setTyRefinement t@TyArrow {} _ = t
+setTyRefinement (TyBase rbt) ref = TyBase rbt { baseTyRefinement = Just ref }
+
 type TypedTerm = TermT Ty

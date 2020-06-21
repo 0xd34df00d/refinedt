@@ -28,24 +28,24 @@ propagateRefinements :: MonadQ m => TypedTerm -> m RefAnnTerm
 propagateRefinements (TName ty name) = do
   v' <- freshRefVar
   let refinement = specRefinement v' $ tyRefinement ty
-  pure $ TName (RefAnn refinement ty) name
+  pure $ TName (mkRefAnn refinement ty) name
 propagateRefinements (TInteger ty n) = do
   v' <- freshRefVar
   let refinement = Refinement v' [AR $ tv v' |=| ti n]
-  pure $ TInteger (RefAnn refinement ty) n
+  pure $ TInteger (mkRefAnn refinement ty) n
 propagateRefinements (TBinOp ty t1 op t2) = do
   t1' <- propagateRefinements t1
   t2' <- propagateRefinements t2
   v' <- freshRefVar
   let refinement = Refinement v' [AR $ tv v' |=| TBinOp () (termSubjVarTerm t1') op (termSubjVarTerm t2')]
-  pure $ TBinOp (RefAnn refinement ty) t1' op t2'
+  pure $ TBinOp (mkRefAnn refinement ty) t1' op t2'
 propagateRefinements (TApp ty fun arg) = do
   fun' <- propagateRefinements fun
   arg' <- propagateRefinements arg
   v' <- freshRefVar
   -- TODO add the symbolic `v' = fun arg` AR?
   let refinement = specRefinement v' $ tyRefinement ty
-  pure $ TApp (RefAnn refinement ty) fun' arg'
+  pure $ TApp (mkRefAnn refinement ty) fun' arg'
 propagateRefinements TIfThenElse { .. } = do
   tcond' <- propagateRefinements tcond
   tthen' <- propagateRefinements tthen
@@ -54,7 +54,10 @@ propagateRefinements TIfThenElse { .. } = do
   let refinement = Refinement v' [AR $ tv v' |=| TIfThenElse () (termSubjVarTerm tcond')
                                                                 (termSubjVarTerm tthen')
                                                                 (termSubjVarTerm telse')]
-  pure $ TIfThenElse (RefAnn refinement annotation) tcond' tthen' telse'
+  pure $ TIfThenElse (mkRefAnn refinement annotation) tcond' tthen' telse'
+
+mkRefAnn :: Refinement -> Ty -> RefAnn
+mkRefAnn ref ty = RefAnn ref $ setTyRefinement ty ref
 
 emptyQuery :: RefAnn -> QAnn
 emptyQuery = VCAnn Nothing
