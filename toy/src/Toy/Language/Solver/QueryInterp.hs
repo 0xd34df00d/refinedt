@@ -1,7 +1,7 @@
 {-# LANGUAGE ConstraintKinds, FlexibleContexts #-}
 {-# LANGUAGE RecordWildCards, QuasiQuotes, LambdaCase #-}
 
-module Toy.Language.Solver.QueryInterp where
+module Toy.Language.Solver.QueryInterp(solveTerm) where
 
 import qualified Data.HashMap.Strict as HM
 import Control.Conditional
