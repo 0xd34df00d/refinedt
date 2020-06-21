@@ -6,7 +6,10 @@ import Data.String.Interpolate
 import Test.Hspec
 
 import Toy.Language.BasicTC
-import Toy.Language.Solver
+import Toy.Language.Syntax
+import Toy.Language.Solver.QueryGen
+import Toy.Language.Solver.QueryInterp
+import Toy.Language.Solver.Types
 
 import TestUtils
 
@@ -14,7 +17,8 @@ expectSolverOn :: SolveRes -> String -> Expectation
 expectSolverOn expected str = do
   (ctx, (sig, def)) <- testParseFunWithCtx str
   let typedDef = annotateFunDef ctx sig def
-  res <- solve (buildCtx ctx) sig typedDef
+  let qterm = genQueriesTerm sig $ funBody typedDef
+  (res, _) <- solveTerm qterm
   res `shouldBe` expected
 
 spec :: Spec
