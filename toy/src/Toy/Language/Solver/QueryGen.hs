@@ -10,15 +10,24 @@ import Control.Monad.State.Strict
 import Data.Proxy
 import Data.String.Interpolate.IsString
 
+import Toy.Language.EnvironmentUtils
 import Toy.Language.Solver.Types
 import Toy.Language.Syntax
 import Toy.Language.Syntax.Terms.Sugar
 
-genQueriesTerm :: TypedTerm -> QTerm
-genQueriesTerm t = evalState (propagateRefinements t >>= genQueries) (RefAnnState 0)
+genQueriesTerm :: FunSig -> TypedTerm -> QTerm
+genQueriesTerm sig t = evalState (propagateRefinements t >>= genQueries >>= addRetTypeQuery sig) (RefAnnState 0)
 
-genQueriesFunDef :: TypedFunDef -> QFunDef
-genQueriesFunDef = onFunBody genQueriesTerm
+addRetTypeQuery :: MonadQ m => FunSig -> QTerm -> m QTerm
+addRetTypeQuery funSig term = do
+  query <- actual <: expected
+  pure $ setQuery query term
+  where
+    expected = TyBase $ retType funSig
+    actual = tyAnn $ refAnn $ annotation term
+
+genQueriesFunDef :: FunSig -> TypedFunDef -> QFunDef
+genQueriesFunDef = onFunBody . genQueriesTerm
 
 newtype RefAnnState = RefAnnState { freeRefinementVarsCount :: Int }
 
