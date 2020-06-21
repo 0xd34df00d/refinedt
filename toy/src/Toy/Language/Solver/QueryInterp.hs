@@ -46,10 +46,12 @@ convertQTerm = onVCTerm convertQuery
 convertQuery :: MonadConvert m => Query -> m AST
 convertQuery (q1 :& q2) = join $ (\a b -> mkAnd [a, b]) <$> convertQuery q1 <*> convertQuery q2
 convertQuery (antecedent :=> consequent) = do
+  -- TODO find a better way
+  v' <- createVar (TyBase $ RefinedBaseTy TInt trueRefinement) $ subjectVar antecedent
   antecedent' <- convertRefinement antecedent
   consequent' <- convertRefinement consequent
   implication <- mkImplies antecedent' consequent'
-  vApp <- getVar (subjectVar antecedent) >>= toApp . getZ3Var
+  vApp <- toApp $ getZ3Var v'
   mkForallConst [] [vApp] implication
 
 solveQTerm :: MonadZ3 m => IntrinsicAST -> VCTerm AST -> m (VCTerm SolveRes)
