@@ -1,4 +1,4 @@
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE RecordWildCards, QuasiQuotes #-}
 {-# LANGUAGE DeriveFunctor, DeriveDataTypeable, DeriveFoldable, DeriveTraversable #-}
 {-# LANGUAGE TypeSynonymInstances, FlexibleInstances #-}
 {-# LANGUAGE ScopedTypeVariables, TypeApplications #-}
@@ -7,8 +7,12 @@ module Toy.Language.Syntax.Terms where
 
 import Data.Data
 import Data.Generics.Uniplate.Data
+import Data.Maybe
 import Data.String
+import Data.String.Interpolate
 
+import Misc.Pretty
+import Misc.Util
 import Toy.Language.Syntax.Common
 
 data BinOp
@@ -39,3 +43,14 @@ renameVar what with = transformBi f
 
 renameVar' :: forall a from. (Data a, Data from) => Proxy a -> VarName -> VarName -> from -> from
 renameVar' _ what with = transformBi (renameVar @a what with)
+
+instance Pretty Term where
+  pretty (TName _ x) = getName x
+  pretty (TInteger _ n) = show n
+  pretty (TBinOp _ t1 op t2) = [i|#{parens $ pretty t1} #{fromJust $ lookup op ps} #{parens $ pretty t2}|]
+    where
+      ps = [ (BinOpPlus, "+"), (BinOpMinus, "-")
+           , (BinOpLt, "<"), (BinOpLeq, "<="), (BinOpEq, "="), (BinOpNEq, "/="), (BinOpGt, ">"), (BinOpGeq, ">=")
+           ]
+  pretty (TApp _ t1 t2) = [i|#{parens $ pretty t1} #{parens $ pretty t2}|]
+  pretty  TIfThenElse { .. } = [i|if #[pretty tcond} then #{pretty tthen} else #{pretty telse}|]

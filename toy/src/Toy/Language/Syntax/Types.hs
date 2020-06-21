@@ -1,11 +1,15 @@
 {-# LANGUAGE DeriveDataTypeable #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE RecordWildCards, QuasiQuotes #-}
+{-# LANGUAGE FlexibleInstances #-}
 
 module Toy.Language.Syntax.Types where
 
 import Data.Data
 import Data.Generics.Uniplate.Data
+import Data.List
+import Data.String.Interpolate
 
+import Misc.Pretty
 import Toy.Language.Syntax.Common
 import Toy.Language.Syntax.Terms
 
@@ -59,3 +63,24 @@ setTyRefinement t@TyArrow {} _ = t
 setTyRefinement (TyBase rbt) ref = TyBase rbt { baseTyRefinement = Just ref }
 
 type TypedTerm = TermT Ty
+
+instance Pretty AtomicRefinement where
+  pretty = pretty . getARTerm
+
+instance Pretty [AtomicRefinement] where
+  pretty [] = "True"
+  pretty ars = intercalate " & " $ pretty <$> ars
+
+instance Pretty Refinement where
+  pretty Refinement { .. } = [i|#{getName subjectVar} | #{pretty conjuncts}|]
+
+instance Pretty Ty where
+  pretty (TyBase RefinedBaseTy { .. })
+    | Just Refinement { .. } <- baseTyRefinement = [i|{ #{getName subjectVar} : #{baseType} | #{pretty conjuncts} } |]
+    | otherwise = show baseType
+  pretty (TyArrow ArrowTy { .. })
+    | Just pi <- piVarName = [i|( #{getName pi} : #{parenPretty domTy}) -> #[pretty codTy}|]
+    | otherwise = [i|#{parenPretty domTy} -> #[pretty codTy}|]
+    where
+      parenPretty ty | isArrowTy ty = "(" <> pretty ty <> ")"
+                     | otherwise = pretty ty

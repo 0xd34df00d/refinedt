@@ -1,10 +1,13 @@
 {-# LANGUAGE DeriveTraversable #-}
+{-# LANGUAGE QuasiQuotes #-}
 
 module Toy.Language.Solver.Types where
 
 import Data.Maybe
+import Data.String.Interpolate
 import Z3.Monad(Result(..))
 
+import Misc.Pretty
 import Toy.Language.Syntax
 
 -- The intrinsic refinement characterizes the structure of the term and doesn't need to be checked but can be assumed.
@@ -19,6 +22,10 @@ data Query
   = Refinement :=> Refinement
   | Query :& Query
   deriving (Eq, Ord, Show)
+
+instance Pretty Query where
+  pretty (r1 :=> r2) = [i|(#{pretty r1}) :=> (#{pretty r2})|]
+  pretty (q1 :& q2) = pretty q1 <> " & " <> pretty q2
 
 -- The VC proposition `query` is whatever needs to hold for that specific term to type check (not including its subterms).
 -- It assumes that `refAnn` holds.
