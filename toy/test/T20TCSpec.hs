@@ -23,6 +23,22 @@ expectSolverOn expected str = do
 
 spec :: Spec
 spec = do
+  describe "Basic logic" $ do
+    it "propagates the same refinement" $ expectSolverOn Correct
+        [i|
+           id' : (x : { v : Int | v >= 0 }) -> { v : Int | v >= 0 }
+           id' x = x
+          |]
+    it "accepts correct implication" $ expectSolverOn Correct
+        [i|
+           id' : (x : { v : Int | v > 0 }) -> { v : Int | v >= 0 }
+           id' x = x
+          |]
+    it "rejects incorrect implication" $ expectSolverOn Wrong
+        [i|
+           id' : (x : { v : Int | v >= 0 }) -> { v : Int | v > 0 }
+           id' x = x
+          |]
   describe "Basic arithmetic" $ do
     it "rejects `a + b ≥ 0, a + b ≥ 0` on (int, int)" $ expectSolverOn Wrong
         [i|
