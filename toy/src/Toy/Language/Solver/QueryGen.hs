@@ -87,7 +87,7 @@ genQueries (TApp refAnn fun arg) = do
   pure $ TApp (emptyQuery refAnn) (setQuery query fun') arg'
 
 (<:) :: MonadQ m => Ty -> Ty -> m Query
-TyBase rbtExpected <: TyBase rbtActual = do
+TyBase rbtActual <: TyBase rbtExpected = do
   v' <- freshRefVar
   let actual = specRefinement v' $ baseTyRefinement rbtActual
   let expected = specRefinement v' $ baseTyRefinement rbtExpected
