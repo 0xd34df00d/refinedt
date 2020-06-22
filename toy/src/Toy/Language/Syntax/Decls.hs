@@ -3,6 +3,8 @@
 
 module Toy.Language.Syntax.Decls where
 
+import Control.Monad.Identity
+
 import Toy.Language.Syntax.Common
 import Toy.Language.Syntax.Terms
 import Toy.Language.Syntax.Types
@@ -29,4 +31,7 @@ data DeclT a = Decl
 type Decl = DeclT ()
 
 onFunBody :: (TermT a -> TermT b) -> FunDefT a -> FunDefT b
-onFunBody f FunDef { .. } = FunDef { funBody = f funBody, .. }
+onFunBody f = runIdentity . onFunBodyM (pure . f)
+
+onFunBodyM :: Functor m => (TermT a -> m (TermT b)) -> FunDefT a -> m (FunDefT b)
+onFunBodyM f FunDef { .. } = (\funBody' -> FunDef { funBody = funBody', .. }) <$> f funBody
