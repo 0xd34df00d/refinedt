@@ -39,7 +39,7 @@ initRefVars term = mapM_ (\RefAnn { .. } -> createVar tyAnn $ subjectVar intrins
 newtype IntrinsicAssertions = IntrinsicAssertions { getIntrinsicAssertions :: AST }
 
 mkIntrinsicAssertions :: MonadConvert m => RefAnnTerm -> m IntrinsicAssertions
-mkIntrinsicAssertions term = fmap IntrinsicAssertions $ mapM (convertRefinement . intrinsic) term >>= mkAnd . toList
+mkIntrinsicAssertions term = fmap IntrinsicAssertions $ mapM (convertRefinement . intrinsic) term >>= mkAnd'
 
 convertQTerm :: MonadConvert m => QTerm -> m (VCTerm AST)
 convertQTerm = onVCTerm convertQuery
@@ -65,7 +65,7 @@ solveQTerm = onVCTerm $ \queryAST -> local $ do
     invert Undef = Undef
 
 convertRefinement :: MonadConvert m => Refinement -> m AST
-convertRefinement Refinement { .. } = mapM (convertTerm . getARTerm) conjuncts >>= mkAnd
+convertRefinement Refinement { .. } = mapM (convertTerm . getARTerm) conjuncts >>= mkAnd'
   where
     convertTerm = \case
       TName _ varName -> getZ3Var <$> getVar varName
@@ -114,3 +114,10 @@ getVar varName = gets $ (HM.! varName) . variables
 instance MonadZ3 m => MonadZ3 (StateT s m) where
   getSolver = StateT $ \st -> fmap (\solv -> (solv, st)) getSolver
   getContext = StateT $ \st -> fmap (\ctx -> (ctx, st)) getContext
+
+mkAnd' :: (Foldable t, MonadZ3 m) => t AST -> m AST
+mkAnd' = mk . toList
+  where
+    mk [] = mkTrue
+    mk [x] = pure x
+    mk xs = mkAnd xs
