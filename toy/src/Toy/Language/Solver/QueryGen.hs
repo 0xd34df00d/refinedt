@@ -62,9 +62,9 @@ propagateRefinements TIfThenElse { .. } = do
   tthen' <- propagateRefinements tthen
   telse' <- propagateRefinements telse
   v' <- freshRefVar
-  let refinement = Refinement v' [AR $ tv v' |=| TIfThenElse () (termSubjVarTerm tcond')
-                                                                (termSubjVarTerm tthen')
-                                                                (termSubjVarTerm telse')]
+  let refinement = Refinement v' [AR $ TIfThenElse () (termSubjVarTerm tcond')
+                                                      (tv v' |=| termSubjVarTerm tthen')
+                                                      (tv v' |=| termSubjVarTerm telse')]
   pure $ TIfThenElse (mkRefAnn refinement annotation) tcond' tthen' telse'
 
 mkRefAnn :: Refinement -> Ty -> RefAnn
