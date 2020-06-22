@@ -79,7 +79,7 @@ instance Pretty Ty where
     | Just Refinement { .. } <- baseTyRefinement = [i|{ #{getName subjectVar} : #{baseType} | #{pretty conjuncts} } |]
     | otherwise = show baseType
   pretty (TyArrow ArrowTy { .. })
-    | Just pi <- piVarName = [i|( #{getName pi} : #{parenPretty domTy}) -> #[pretty codTy}|]
+    | Just piVar <- piVarName = [i|(#{getName piVar} : #{parenPretty domTy}) -> #[pretty codTy}|]
     | otherwise = [i|#{parenPretty domTy} -> #[pretty codTy}|]
     where
       parenPretty ty | isArrowTy ty = "(" <> pretty ty <> ")"
