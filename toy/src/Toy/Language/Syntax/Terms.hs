@@ -53,4 +53,4 @@ instance Pretty Term where
            , (BinOpLt, "<"), (BinOpLeq, "<="), (BinOpEq, "="), (BinOpNEq, "/="), (BinOpGt, ">"), (BinOpGeq, ">=")
            ]
   pretty (TApp _ t1 t2) = [i|#{parens $ pretty t1} #{parens $ pretty t2}|]
-  pretty  TIfThenElse { .. } = [i|if #[pretty tcond} then #{pretty tthen} else #{pretty telse}|]
+  pretty  TIfThenElse { .. } = [i|if #{pretty tcond} then #{pretty tthen} else #{pretty telse}|]
