@@ -21,25 +21,25 @@ type MonadConvert m = (MonadZ3 m, MonadState ConvertState m)
 
 solveTerm :: QTerm -> IO (SolveRes, VCTerm SolveRes)
 solveTerm term = evalZ3 $ do
-  (intrAST, qTerm) <- evalStateT buildAsts $ ConvertState mempty
-  assert $ getIntrinsicAST intrAST
+  (intrAssertions, qTerm) <- evalStateT buildAsts $ ConvertState mempty
+  assert $ getIntrinsicAssertions intrAssertions
   sTerm <- solveQTerm qTerm
   pure (isAllCorrect $ query <$> sTerm, sTerm)
   where
     refTerm = refAnn <$> term
     buildAsts = do
-      initVars refTerm
-      intrAST <- convertIntrinsics refTerm
+      initRefVars refTerm
+      intrAssertions <- mkIntrinsicAssertions refTerm
       qTerm <- convertQTerm term
-      pure (intrAST, qTerm)
+      pure (intrAssertions, qTerm)
 
-initVars :: MonadConvert m => RefAnnTerm -> m ()
-initVars term = mapM_ (\RefAnn { .. } -> createVar tyAnn $ subjectVar intrinsic) term
+initRefVars :: MonadConvert m => RefAnnTerm -> m ()
+initRefVars term = mapM_ (\RefAnn { .. } -> createVar tyAnn $ subjectVar intrinsic) term
 
-newtype IntrinsicAST = IntrinsicAST { getIntrinsicAST :: AST }
+newtype IntrinsicAssertions = IntrinsicAssertions { getIntrinsicAssertions :: AST }
 
-convertIntrinsics :: MonadConvert m => RefAnnTerm -> m IntrinsicAST
-convertIntrinsics term = fmap IntrinsicAST $ mapM (convertRefinement . intrinsic) term >>= mkAnd . toList
+mkIntrinsicAssertions :: MonadConvert m => RefAnnTerm -> m IntrinsicAssertions
+mkIntrinsicAssertions term = fmap IntrinsicAssertions $ mapM (convertRefinement . intrinsic) term >>= mkAnd . toList
 
 convertQTerm :: MonadConvert m => QTerm -> m (VCTerm AST)
 convertQTerm = onVCTerm convertQuery
