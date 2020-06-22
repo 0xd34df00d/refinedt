@@ -52,7 +52,7 @@ onVCTerm :: Monad m => (a -> m b) -> VCTerm a -> m (VCTerm b)
 onVCTerm f term = traverse sequence $ fmap f <$> term
 
 setQuery :: a -> VCTerm a -> VCTerm a
-setQuery query term = term { annotation = (annotation term) { query = Just query }}
+setQuery q term = term { annotation = (annotation term) { query = Just q }}
 
 data SolveRes = Correct | Wrong deriving (Eq, Show)
 
