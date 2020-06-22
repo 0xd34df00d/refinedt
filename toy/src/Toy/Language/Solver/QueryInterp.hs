@@ -22,7 +22,8 @@ type MonadConvert m = (MonadZ3 m, MonadState ConvertState m)
 solveTerm :: QTerm -> IO (SolveRes, VCTerm SolveRes)
 solveTerm term = evalZ3 $ do
   (intrAST, qTerm) <- evalStateT buildAsts $ ConvertState mempty
-  sTerm <- solveQTerm intrAST qTerm
+  assert $ getIntrinsicAST intrAST
+  sTerm <- solveQTerm qTerm
   pure (isAllCorrect $ query <$> sTerm, sTerm)
   where
     refTerm = refAnn <$> term
@@ -54,10 +55,8 @@ convertQuery (antecedent :=> consequent) = do
   vApp <- toApp $ getZ3Var v'
   mkForallConst [] [vApp] implication
 
-solveQTerm :: MonadZ3 m => IntrinsicAST -> VCTerm AST -> m (VCTerm SolveRes)
-solveQTerm intrAST = onVCTerm $ \queryAST -> do
-  solverReset
-  assert $ getIntrinsicAST intrAST
+solveQTerm :: MonadZ3 m => VCTerm AST -> m (VCTerm SolveRes)
+solveQTerm = onVCTerm $ \queryAST -> local $ do
   assert =<< mkNot queryAST
   convertZ3Result . invert <$> check
   where
