@@ -17,8 +17,8 @@ expectSolverOn :: SolveRes -> String -> Expectation
 expectSolverOn expected str = do
   (ctx, (sig, def)) <- testParseFunWithCtx str
   let typedDef = annotateFunDef ctx sig def
-  let qterm = genQueriesTerm sig $ funBody typedDef
-  (res, _) <- solveTerm sig qterm
+  let qdef = genQueriesFunDef sig typedDef
+  (res, _) <- solveDef sig qdef
   res `shouldBe` expected
 
 spec :: Spec

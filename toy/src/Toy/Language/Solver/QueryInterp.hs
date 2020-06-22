@@ -1,7 +1,7 @@
 {-# LANGUAGE ConstraintKinds, FlexibleContexts #-}
 {-# LANGUAGE RecordWildCards, QuasiQuotes, LambdaCase #-}
 
-module Toy.Language.Solver.QueryInterp(solveTerm) where
+module Toy.Language.Solver.QueryInterp(solveDef) where
 
 import qualified Data.HashMap.Strict as HM
 import Control.Conditional
@@ -10,6 +10,7 @@ import Data.Foldable
 import Data.String.Interpolate
 import Z3.Monad
 
+import Toy.Language.EnvironmentUtils
 import Toy.Language.Solver.Types
 import Toy.Language.Syntax
 
@@ -19,39 +20,29 @@ newtype ConvertState = ConvertState { variables :: HM.HashMap VarName Z3Var } de
 
 type MonadConvert m = (MonadZ3 m, MonadState ConvertState m)
 
-solveTerm :: FunSig -> QTerm -> IO (SolveRes, VCTerm SolveRes)
-solveTerm sig term = evalZ3 $ do
-  (intrAssertions, sigAssertions, qTerm) <- evalStateT buildAsts $ ConvertState mempty
-  assert $ getSigAssertions sigAssertions
+solveDef :: FunSig -> QFunDef -> IO (SolveRes, VCFunDef SolveRes)
+solveDef funSig funDef = evalZ3 $ do
+  (intrAssertions, qTerm) <- evalStateT buildAsts $ ConvertState mempty
   assert $ getIntrinsicAssertions intrAssertions
   sTerm <- solveQTerm qTerm
-  pure (isAllCorrect $ query <$> sTerm, sTerm)
+  pure (isAllCorrect $ query <$> sTerm, funDef { funBody = sTerm })
   where
+    term = funBody funDef
     refTerm = refAnn <$> term
     buildAsts = do
-      sigAssertions <- initSigVars sig
+      initSigVars funSig funDef
       initRefVars refTerm
       intrAssertions <- mkIntrinsicAssertions refTerm
       qTerm <- convertQTerm term
-      pure (intrAssertions, sigAssertions, qTerm)
+      pure (intrAssertions, qTerm)
 
-initSigVars :: MonadConvert m => FunSig -> m SigAssertions
-initSigVars sig = do
-  createVars $ funTy sig
-  -- TODO
-  --buildCstrs $ funTy sig
-  SigAssertions <$> mkTrue
-  where
-    createVars TyBase {} = pure ()
-    createVars (TyArrow ArrowTy { .. })
-      | Just piVar <- piVarName = createVar domTy piVar >> createVars codTy
-      | otherwise = createVars codTy
+initSigVars :: MonadConvert m => FunSig -> FunDefT a -> m ()
+initSigVars funSig funDef = mapM_ (\(varName, ty) -> createVar ty varName) $ fst $ funTypesMapping funSig funDef
 
 initRefVars :: MonadConvert m => RefAnnTerm -> m ()
 initRefVars term = mapM_ (\RefAnn { .. } -> createVar tyAnn $ subjectVar intrinsic) term
 
 newtype IntrinsicAssertions = IntrinsicAssertions { getIntrinsicAssertions :: AST }
-newtype SigAssertions = SigAssertions { getSigAssertions :: AST }
 
 mkIntrinsicAssertions :: MonadConvert m => RefAnnTerm -> m IntrinsicAssertions
 mkIntrinsicAssertions term = fmap IntrinsicAssertions $ mapM (convertRefinement . intrinsic) term >>= mkAnd'
