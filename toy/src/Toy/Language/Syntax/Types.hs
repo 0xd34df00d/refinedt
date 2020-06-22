@@ -62,6 +62,9 @@ setTyRefinement :: Ty -> Refinement -> Ty
 setTyRefinement t@TyArrow {} _ = t
 setTyRefinement (TyBase rbt) ref = TyBase rbt { baseTyRefinement = Just ref }
 
+addConjunct :: AtomicRefinement -> Refinement -> Refinement
+addConjunct ar Refinement { .. } = Refinement { conjuncts = ar : conjuncts, .. }
+
 type TypedTerm = TermT Ty
 
 instance Pretty AtomicRefinement where
