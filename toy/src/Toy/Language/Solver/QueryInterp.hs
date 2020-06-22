@@ -19,24 +19,39 @@ newtype ConvertState = ConvertState { variables :: HM.HashMap VarName Z3Var } de
 
 type MonadConvert m = (MonadZ3 m, MonadState ConvertState m)
 
-solveTerm :: QTerm -> IO (SolveRes, VCTerm SolveRes)
-solveTerm term = evalZ3 $ do
-  (intrAssertions, qTerm) <- evalStateT buildAsts $ ConvertState mempty
+solveTerm :: FunSig -> QTerm -> IO (SolveRes, VCTerm SolveRes)
+solveTerm sig term = evalZ3 $ do
+  (intrAssertions, sigAssertions, qTerm) <- evalStateT buildAsts $ ConvertState mempty
+  assert $ getSigAssertions sigAssertions
   assert $ getIntrinsicAssertions intrAssertions
   sTerm <- solveQTerm qTerm
   pure (isAllCorrect $ query <$> sTerm, sTerm)
   where
     refTerm = refAnn <$> term
     buildAsts = do
+      sigAssertions <- initSigVars sig
       initRefVars refTerm
       intrAssertions <- mkIntrinsicAssertions refTerm
       qTerm <- convertQTerm term
-      pure (intrAssertions, qTerm)
+      pure (intrAssertions, sigAssertions, qTerm)
+
+initSigVars :: MonadConvert m => FunSig -> m SigAssertions
+initSigVars sig = do
+  createVars $ funTy sig
+  -- TODO
+  --buildCstrs $ funTy sig
+  SigAssertions <$> mkTrue
+  where
+    createVars TyBase {} = pure ()
+    createVars (TyArrow ArrowTy { .. })
+      | Just piVar <- piVarName = createVar domTy piVar >> createVars codTy
+      | otherwise = createVars codTy
 
 initRefVars :: MonadConvert m => RefAnnTerm -> m ()
 initRefVars term = mapM_ (\RefAnn { .. } -> createVar tyAnn $ subjectVar intrinsic) term
 
 newtype IntrinsicAssertions = IntrinsicAssertions { getIntrinsicAssertions :: AST }
+newtype SigAssertions = SigAssertions { getSigAssertions :: AST }
 
 mkIntrinsicAssertions :: MonadConvert m => RefAnnTerm -> m IntrinsicAssertions
 mkIntrinsicAssertions term = fmap IntrinsicAssertions $ mapM (convertRefinement . intrinsic) term >>= mkAnd'
