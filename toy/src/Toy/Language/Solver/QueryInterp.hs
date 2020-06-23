@@ -77,7 +77,7 @@ convertRefinement Refinement { .. } = mapM (convertTerm . getARTerm) conjuncts >
       TName _ varName -> getZ3Var <$> getVar varName
       TInteger _ n -> mkIntNum n
       TBinOp _ t1 op t2 -> join $ convertBinOp op <$> convertTerm t1 <*> convertTerm t2
-      TApp _ fun arg -> error "fun app at refinement level unsupported yet" -- TODO
+      TApp _ _ _ -> error "fun app at refinement level unsupported yet" -- TODO
       TIfThenElse { .. } -> do
         tthenCond' <- convertTerm tcond
         tthen' <- convertTerm tthen
