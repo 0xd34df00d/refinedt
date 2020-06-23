@@ -83,9 +83,10 @@ genQueries  TIfThenElse { .. } = TIfThenElse (emptyQuery annotation) <$> genQuer
 genQueries (TApp refAnn fun arg) = do
   fun' <- genQueries fun
   arg' <- genQueries arg
-  query <- case (tyAnn $ annotation fun, tyAnn $ annotation arg) of
-                (TyArrow ArrowTy { domTy = expectedTy }, actualTy) -> expectedTy <: actualTy
-                (_, _) -> error "Function should have arrow type (this should've been caught earlier though)"
+  let actualTy = tyAnn $ annotation arg
+  query <- case tyAnn $ annotation fun of
+                TyArrow ArrowTy { domTy = expectedTy } -> expectedTy <: actualTy
+                _ -> error "Function should have arrow type (this should've been caught earlier though)"
   pure $ TApp (emptyQuery refAnn) (setQuery query fun') arg'
 
 (<:) :: MonadQ m => Ty -> Ty -> m Query
