@@ -24,7 +24,7 @@ addRetTypeQuery funSig term = do
   pure $ setQuery query term
   where
     expected = TyBase $ retType funSig
-    actual = tyAnn $ refAnn $ annotation term
+    actual = substRefinements $ refAnn $ annotation term
 
 genQueriesFunDef :: FunSig -> TypedFunDef -> QFunDef
 genQueriesFunDef = onFunBody . genQueriesTerm
@@ -39,24 +39,24 @@ propagateRefinements (TName ty name) = do
   -- We could've avoided generating a fresh var and having to insert the extra conjunct,
   -- but it's perhaps safer to do so since it simplifies a later check that all refinement variables are unique.
   let refinement = addConjunct (AR $ tv v' |=| tv name) $ specRefinement v' $ tyRefinement ty
-  pure $ TName (mkRefAnn refinement ty) name
+  pure $ TName (RefAnn refinement ty) name
 propagateRefinements (TInteger ty n) = do
   v' <- freshRefVar
   let refinement = Refinement v' [AR $ tv v' |=| ti n]
-  pure $ TInteger (mkRefAnn refinement ty) n
+  pure $ TInteger (RefAnn refinement ty) n
 propagateRefinements (TBinOp ty t1 op t2) = do
   t1' <- propagateRefinements t1
   t2' <- propagateRefinements t2
   v' <- freshRefVar
   let refinement = Refinement v' [AR $ tv v' |=| TBinOp () (termSubjVarTerm t1') op (termSubjVarTerm t2')]
-  pure $ TBinOp (mkRefAnn refinement ty) t1' op t2'
+  pure $ TBinOp (RefAnn refinement ty) t1' op t2'
 propagateRefinements (TApp ty fun arg) = do
   fun' <- propagateRefinements fun
   arg' <- propagateRefinements arg
   v' <- freshRefVar
   -- TODO add the symbolic `v' = fun arg` AR?
   let refinement = specRefinement v' $ tyRefinement ty
-  pure $ TApp (mkRefAnn refinement ty) fun' arg'
+  pure $ TApp (RefAnn refinement ty) fun' arg'
 propagateRefinements TIfThenElse { .. } = do
   tcond' <- propagateRefinements tcond
   tthen' <- propagateRefinements tthen
@@ -65,10 +65,7 @@ propagateRefinements TIfThenElse { .. } = do
   let refinement = Refinement v' [AR $ TIfThenElse () (termSubjVarTerm tcond')
                                                       (tv v' |=| termSubjVarTerm tthen')
                                                       (tv v' |=| termSubjVarTerm telse')]
-  pure $ TIfThenElse (mkRefAnn refinement annotation) tcond' tthen' telse'
-
-mkRefAnn :: Refinement -> Ty -> RefAnn
-mkRefAnn ref ty = RefAnn ref $ setTyRefinement ty ref
+  pure $ TIfThenElse (RefAnn refinement annotation) tcond' tthen' telse'
 
 emptyQuery :: RefAnn -> QAnn
 emptyQuery = VCAnn Nothing
@@ -83,11 +80,14 @@ genQueries  TIfThenElse { .. } = TIfThenElse (emptyQuery annotation) <$> genQuer
 genQueries (TApp refAnn fun arg) = do
   fun' <- genQueries fun
   arg' <- genQueries arg
-  let actualTy = tyAnn $ annotation arg
+  let actualTy = substRefinements $ annotation arg
   query <- case tyAnn $ annotation fun of
                 TyArrow ArrowTy { domTy = expectedTy } -> expectedTy <: actualTy
                 _ -> error "Function should have arrow type (this should've been caught earlier though)"
   pure $ TApp (emptyQuery refAnn) (setQuery query fun') arg'
+
+substRefinements :: RefAnn -> Ty
+substRefinements RefAnn { .. } = setTyRefinement tyAnn intrinsic
 
 (<:) :: MonadQ m => Ty -> Ty -> m Query
 TyBase rbtActual <: TyBase rbtExpected = do
