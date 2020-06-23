@@ -86,9 +86,6 @@ genQueries (TApp refAnn fun arg) = do
                 _ -> error "Function should have arrow type (this should've been caught earlier though)"
   pure $ TApp (emptyQuery refAnn) (setQuery query fun') arg'
 
-substRefinements :: RefAnn -> Ty
-substRefinements RefAnn { .. } = setTyRefinement tyAnn intrinsic
-
 (<:) :: MonadQ m => Ty -> Ty -> m Query
 TyBase rbtActual <: TyBase rbtExpected = do
   v' <- freshRefVar
@@ -114,3 +111,6 @@ specRefinement var maybeRef = Refinement var ars
   where
     ars | Just ref <- maybeRef = renameVar' (Proxy :: Proxy ()) (subjectVar ref) var (conjuncts ref)
         | otherwise = []
+
+substRefinements :: RefAnn -> Ty
+substRefinements RefAnn { .. } = setTyRefinement tyAnn intrinsic
