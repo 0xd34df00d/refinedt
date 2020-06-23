@@ -40,7 +40,7 @@ initSigVars :: MonadConvert m => FunSig -> FunDefT a -> m ()
 initSigVars funSig funDef = mapM_ (\(varName, ty) -> createVar ty varName) $ fst $ funTypesMapping funSig funDef
 
 initRefVars :: MonadConvert m => RefAnnTerm -> m ()
-initRefVars term = mapM_ (\RefAnn { .. } -> createVar tyAnn $ subjectVar intrinsic) term
+initRefVars = mapM_ $ \RefAnn { .. } -> createVar tyAnn $ subjectVar intrinsic
 
 newtype IntrinsicAssertions = IntrinsicAssertions { getIntrinsicAssertions :: AST }
 
