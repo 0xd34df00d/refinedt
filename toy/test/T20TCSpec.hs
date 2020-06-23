@@ -6,7 +6,6 @@ import Data.String.Interpolate
 import Test.Hspec
 
 import Toy.Language.BasicTC
-import Toy.Language.Syntax
 import Toy.Language.Solver.QueryGen
 import Toy.Language.Solver.QueryInterp
 import Toy.Language.Solver.Types
@@ -96,7 +95,7 @@ spec = do
            max : (x : Int) -> (y : Int) -> (z : Int) -> { v : Int | v >= x & v >= y & v >= z }
            max x y z = if x > y then if x > z then x else z else if y > z then y else z
           |]
-  describe "Basic function application" $ do
+  xdescribe "Basic function application" $ do
     it "accepts correct subtyping queries" $ expectSolverOn Correct
         [i|
            g : { v : Int | v >= 0 } -> Int
@@ -228,7 +227,7 @@ spec = do
            fun : { v : Int | v > 0 } -> { v : Int | v > 0 } -> { v : Int | v >= 0 }
            fun x y = g (f x) (h y)
           |]
-    fit "accepts yet more complicated function application" $ expectSolverOn Correct
+    xit "accepts yet more complicated function application" $ expectSolverOn Correct
         [i|
            f : (x : { v : Int | v >= 0 }) -> { v : Int | v > x }
            g : (x : Int) -> { v : Int | v > 0 }
@@ -245,7 +244,7 @@ spec = do
            fun : (x : { v : Int | v > 0 }) -> (y : { v : Int | v > 0 }) -> { v : Int | v >= x & v >= y}
            fun x y = g x y (f x) (h y)
           |]
-  describe "Z3 fun" $ do
+  xdescribe "Z3 fun" $ do
     it "accepts a function on bools" $ expectSolverOn Correct
       [i|
          gt : Bool -> Bool
