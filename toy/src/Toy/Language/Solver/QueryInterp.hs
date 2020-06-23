@@ -27,17 +27,18 @@ solveDef funSig funDef = evalZ3 $ do
   sTerm <- solveQTerm qTerm
   pure (isAllCorrect $ query <$> sTerm, funDef { funBody = sTerm })
   where
+    args = fst $ funTypesMapping funSig funDef
     term = funBody funDef
     refTerm = refAnn <$> term
     buildAsts = do
-      initSigVars funSig funDef
+      initArgVars args
       initRefVars refTerm
       intrAssertions <- mkIntrinsicAssertions refTerm
       qTerm <- convertQTerm term
       pure (intrAssertions, qTerm)
 
-initSigVars :: MonadConvert m => FunSig -> FunDefT a -> m ()
-initSigVars funSig funDef = mapM_ (\(varName, ty) -> createVar ty varName) $ fst $ funTypesMapping funSig funDef
+initArgVars :: MonadConvert m => ArgTypes -> m ()
+initArgVars = mapM_ $ \(varName, ty) -> createVar ty varName
 
 initRefVars :: MonadConvert m => RefAnnTerm -> m ()
 initRefVars = mapM_ $ \RefAnn { .. } -> createVar tyAnn $ subjectVar intrinsic
