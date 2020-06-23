@@ -1,8 +1,9 @@
-{-# LANGUAGE DeriveTraversable #-}
+{-# LANGUAGE DeriveTraversable, DeriveDataTypeable #-}
 {-# LANGUAGE QuasiQuotes #-}
 
 module Toy.Language.Solver.Types where
 
+import Data.Data
 import Data.Maybe
 import Data.String.Interpolate
 import Z3.Monad(Result(..))
@@ -14,7 +15,7 @@ import Toy.Language.Syntax
 data RefAnn = RefAnn
   { intrinsic :: Refinement
   , tyAnn :: Ty
-  } deriving (Eq, Ord, Show)
+  } deriving (Eq, Ord, Show, Data)
 
 type RefAnnTerm = TermT RefAnn
 
