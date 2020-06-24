@@ -244,7 +244,7 @@ spec = do
            fun : (x : { v : Int | v > 0 }) -> (y : { v : Int | v > 0 }) -> { v : Int | v >= x & v >= y}
            fun x y = g x y (f x) (h y)
           |]
-  xdescribe "Z3 fun" $ do
+  describe "Z3 fun" $ do
     it "accepts a function on bools" $ expectSolverOn Correct
       [i|
          gt : Bool -> Bool
