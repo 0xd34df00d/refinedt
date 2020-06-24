@@ -12,7 +12,7 @@ import Toy.Language.EnvironmentUtils
 import Toy.Language.Syntax
 
 annotateTypes :: MonadReader Var2Ty m => Term -> m TypedTerm
-annotateTypes (TName _ varName) = (`TName` varName) <$> asks (HM.! varName)
+annotateTypes (TName _ varName) = asks $ (`TName` varName) . (HM.! varName)
 annotateTypes (TInteger _ n) = pure $ TInteger (TyBase $ RefinedBaseTy TInt trueRefinement) n
 annotateTypes (TBinOp _ t1 op t2) = do
   t1' <- annotateTypes t1

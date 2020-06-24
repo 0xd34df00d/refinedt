@@ -1,6 +1,6 @@
 {-# LANGUAGE RecordWildCards, QuasiQuotes #-}
-{-# LANGUAGE DeriveFunctor, DeriveDataTypeable, DeriveFoldable, DeriveTraversable #-}
-{-# LANGUAGE TypeSynonymInstances, FlexibleInstances #-}
+{-# LANGUAGE DeriveDataTypeable, DeriveTraversable #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE ScopedTypeVariables, TypeApplications #-}
 
 module Toy.Language.Syntax.Terms where
