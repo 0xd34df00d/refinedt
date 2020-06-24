@@ -92,7 +92,9 @@ TyBase rbtActual <: TyBase rbtExpected = do
   let actual = specRefinement v' $ baseTyRefinement rbtActual
   let expected = specRefinement v' $ baseTyRefinement rbtExpected
   -- TODO this doesn't take the derived refinement into account — check when it breaks
-  pure $ Just $ actual :=> expected
+  pure $ if null $ conjuncts expected
+          then Nothing
+          else Just $ actual :=> expected
 TyArrow (ArrowTy _ funDomTy funCodTy) <: TyArrow (ArrowTy _ argDomTy argCodTy) = do
   argQuery <- argDomTy <: funDomTy
   codQuery <- funCodTy <: argCodTy
