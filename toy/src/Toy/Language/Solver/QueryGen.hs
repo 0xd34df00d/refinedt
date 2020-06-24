@@ -86,17 +86,17 @@ genQueries (TApp refAnn fun arg) = do
                 _ -> error "Function should have arrow type (this should've been caught earlier though)"
   pure $ TApp (emptyQuery refAnn) (setQuery query fun') arg'
 
-(<:) :: MonadQ m => Ty -> Ty -> m Query
+(<:) :: MonadQ m => Ty -> Ty -> m (Maybe Query)
 TyBase rbtActual <: TyBase rbtExpected = do
   v' <- freshRefVar
   let actual = specRefinement v' $ baseTyRefinement rbtActual
   let expected = specRefinement v' $ baseTyRefinement rbtExpected
   -- TODO this doesn't take the derived refinement into account — check when it breaks
-  pure $ actual :=> expected
+  pure $ Just $ actual :=> expected
 TyArrow (ArrowTy _ funDomTy funCodTy) <: TyArrow (ArrowTy _ argDomTy argCodTy) = do
   argQuery <- argDomTy <: funDomTy
   codQuery <- funCodTy <: argCodTy
-  pure $ argQuery :& codQuery
+  pure $ argQuery <> codQuery
 ty1 <: ty2 = error [i|Mismatched types #{ty1} #{ty2} (which should've been caught earlier though)|]
 
 -- Helpers

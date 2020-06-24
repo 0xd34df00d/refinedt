@@ -56,8 +56,8 @@ type VCFunDef a = FunDefT (VCAnnT a)
 onVCTerm :: Monad m => (a -> m b) -> VCTerm a -> m (VCTerm b)
 onVCTerm f term = traverse sequence $ fmap f <$> term
 
-setQuery :: a -> VCTerm a -> VCTerm a
-setQuery q term = term { annotation = (annotation term) { query = Just q }}
+setQuery :: Maybe a -> VCTerm a -> VCTerm a
+setQuery q term = term { annotation = (annotation term) { query = q }}
 
 data SolveRes = Correct | Wrong deriving (Eq, Show)
 
