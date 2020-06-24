@@ -24,6 +24,9 @@ data Query
   | Query :& Query
   deriving (Eq, Ord, Show)
 
+instance Semigroup Query where
+  (<>) = (:&)
+
 instance Pretty Query where
   pretty (r1 :=> r2) = [i|(#{pretty r1}) :=> (#{pretty r2})|]
   pretty (q1 :& q2) = pretty q1 <> " & " <> pretty q2
