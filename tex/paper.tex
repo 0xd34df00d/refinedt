@@ -1,20 +1,25 @@
-\documentclass[12pt,a4paper]{article}
+\documentclass[a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T2A]{fontenc}
-\usepackage{amsmath}
+\usepackage{amsmath,amsfonts}
 \usepackage{ottalt}
 
+\begin{document}
+
 \newNTclass{nonterm}
-\newnonterm e e
-\newnonterm x x
-\newnonterm n n
+\newnonterm e \epsilon
+\newnonterm r \rho
+\newnonterm t \tau
+\newnonterm B {\mathbb{B}}
 \newnonterm{binop}{\odot}
+
+\newNTclass{gterm}
+\newgterm x x
+\newgterm n n
 
 \inputott{surface.ott}
 
 \title{Compiling refinement types to dependent types}
-
-\begin{document}
 
 \maketitle
 
@@ -26,7 +31,11 @@
 
 \subsection{Surface language}
 
-\nonterms{e,binop}
+\begin{figure}
+  \nonterms{e,binop,r,B,t}
+  \caption{Surface language syntax}
+  \label{fig:surface_syntax}
+\end{figure}
 
 \subsection{Core language}
 
