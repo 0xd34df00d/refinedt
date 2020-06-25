@@ -84,7 +84,7 @@ genQueries (TApp refAnn fun arg) = do
   arg' <- genQueries arg
   let actualTy = substRefinements $ annotation arg
   query <- case tyAnn $ annotation fun of
-                TyArrow ArrowTy { domTy = expectedTy } -> expectedTy <: actualTy
+                TyArrow ArrowTy { domTy = expectedTy } -> actualTy <: expectedTy
                 _ -> error "Function should have arrow type (this should've been caught earlier though)"
   pure $ TApp (emptyQuery refAnn) (setQuery query fun') arg'
 
