@@ -25,12 +25,30 @@ t {{ tex \nonterm t }} :: tp_ ::= {{ com types }}
   | { v : B | r }	::   :: tybase {{ com refined base type }}
   | x : t_1 -> t_2	::   :: tyarr  {{ com arrow type }}
 
+G {{ tex \nonterm G }} :: env_ ::=
+  | empty        ::   :: nil
+  | G , x : t    ::   :: var
+defns Jtype :: '' ::=
+defn G |- e : t :: :: typing :: T_ {{ com term typing }} by
+
+x : t in G
+---------- :: Var
+G |- x : t
+
+grammar
 metavar x {{ tex \gterm x }} ::= {{ com variables }}
 metavar n {{ tex \gterm n }} ::= {{ com integers }}
 
 grammar
+formula :: formula_ ::=
+  | judgement    :: :: judgement
+  | formula \\\\ :: :: lbh
+  | x : t in G   :: :: xinenv
+  | G |- t ok    :: :: tokay
+
 terminals :: terminals_ ::=
   | top		:: :: top {{ tex \top }}
   | /\      :: :: and {{ tex \land }}
-  | v		:: :: v	  {{ tex \nu }}
   | ->      :: :: arr {{ tex \rightarrow }}
+  | in		:: :: in  {{ tex \in }}
+  | |-		:: :: proves {{ tex \vdash }}

@@ -3,6 +3,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T2A]{fontenc}
 \usepackage{amsmath,amsfonts}
+\usepackage{xcolor}
 \usepackage{ottalt}
 \usepackage{subcaption}
 
@@ -13,6 +14,7 @@
 \newnonterm r \rho
 \newnonterm t \tau
 \newnonterm B {\mathbb{B}}
+\newnonterm G \Gamma
 \newnonterm{binop}{\odot}
 
 \newNTclass{gterm}
@@ -45,6 +47,13 @@
   \end{subfigure}
   \caption{Surface language syntax}
   \label{fig:surface_syntax}
+\end{figure}
+
+\begin{figure}[ht]
+  \footnotesize
+  \drules[T]{$\nonterm G \vdash \nonterm e : \nonterm t$}{term typing}{Var}
+  \caption{Surface language typing rules}
+  \label{fig:surface_typing}
 \end{figure}
 
 \subsection{Core language}
