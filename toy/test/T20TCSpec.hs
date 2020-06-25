@@ -95,7 +95,7 @@ spec = do
            max : (x : Int) -> (y : Int) -> (z : Int) -> { v : Int | v >= x & v >= y & v >= z }
            max x y z = if x > y then if x > z then x else z else if y > z then y else z
           |]
-  xdescribe "Basic function application" $ do
+  describe "Basic function application" $ do
     it "accepts correct subtyping queries" $ expectSolverOn Correct
         [i|
            g : { v : Int | v >= 0 } -> Int
