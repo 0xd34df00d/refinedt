@@ -1,6 +1,16 @@
 \documentclass[12pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T2A]{fontenc}
+\usepackage{amsmath}
+\usepackage{ottalt}
+
+\newNTclass{nonterm}
+\newnonterm e e
+\newnonterm x x
+\newnonterm n n
+\newnonterm{binop}{\odot}
+
+\inputott{surface.ott}
 
 \title{Compiling refinement types to dependent types}
 
@@ -15,6 +25,8 @@
 \section{Calculus definition}
 
 \subsection{Surface language}
+
+\nonterms{e,binop}
 
 \subsection{Core language}
 

@@ -1,0 +1,17 @@
+grammar
+e {{ tex \nonterm e }} :: tm_ ::= {{ com terms }}
+  | x			::   :: var {{ com variable }}
+  | n			::   :: int {{ com integer }}
+  | if e1 then e2 else e3
+				::   :: ite {{ com if-then-else }}
+  | e1 e2		::   :: app {{ com application }}
+  | e1 binop e2	::   :: binop {{ com binary operation }}
+
+binop {{ tex \nonterm{binop} }} :: tm_ ::= {{ com binary operations }}
+  | +			::   :: opplus
+  | <			::   :: oplt
+  | ==			::   :: opeq
+%% TODO rest?
+
+metavar x {{ tex \nonterm x }} ::= {{ com variables }}
+metavar n {{ tex \nonterm n }} ::= {{ com integers }}
