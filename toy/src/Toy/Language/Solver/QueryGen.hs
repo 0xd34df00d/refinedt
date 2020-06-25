@@ -38,7 +38,9 @@ propagateRefinements (TName ty name) = do
   v' <- freshRefVar
   -- We could've avoided generating a fresh var and having to insert the extra conjunct,
   -- but it's perhaps safer to do so since it simplifies a later check that all refinement variables are unique.
-  let refinement = addConjunct (AR $ tv v' |=| tv name) $ specRefinement v' $ tyRefinement ty
+  let specedRef = specRefinement v' $ tyRefinement ty
+  let refinement | isBaseTy ty = addConjunct (AR $ tv v' |=| tv name) specedRef
+                 | otherwise = specedRef
   pure $ TName (RefAnn refinement ty) name
 propagateRefinements (TInteger ty n) = do
   v' <- freshRefVar
