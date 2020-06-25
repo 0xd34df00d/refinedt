@@ -1,13 +1,15 @@
 \documentclass[a4paper]{article}
+\usepackage{a4wide}
 \usepackage[utf8]{inputenc}
 \usepackage[T2A]{fontenc}
 \usepackage{amsmath,amsfonts}
 \usepackage{ottalt}
+\usepackage{subcaption}
 
 \begin{document}
 
 \newNTclass{nonterm}
-\newnonterm e \epsilon
+\newnonterm e \varepsilon
 \newnonterm r \rho
 \newnonterm t \tau
 \newnonterm B {\mathbb{B}}
@@ -27,12 +29,20 @@
 
 \section{Overview}
 
-\section{Calculus definition}
+\section{Calculi definitions}
 
 \subsection{Surface language}
 
-\begin{figure}
-  \nonterms{e,binop,r,B,t}
+\begin{figure}[ht]
+  \footnotesize
+  \begin{subfigure}{.6\textwidth}
+	\nonterms{e,binop}
+	\caption{Term level}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+	\nonterms{r,B,t}
+	\caption{Type level}
+  \end{subfigure}
   \caption{Surface language syntax}
   \label{fig:surface_syntax}
 \end{figure}
