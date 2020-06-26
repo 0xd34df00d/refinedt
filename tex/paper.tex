@@ -19,6 +19,7 @@
 
 \newNTclass{gterm}
 \newgterm x x
+\newgterm v v
 \newgterm n n
 
 \inputott{surface.ott}
@@ -51,6 +52,7 @@
 
 \begin{figure}[ht]
   \footnotesize
+  \drules[WFT]{$\nonterm G \vdash \nonterm t \text{ ok}$}{type well-formedness}{Base}
   \drules[T]{$\nonterm G \vdash \nonterm e : \nonterm t$}{term typing}{Var,App}
   \caption{Surface language typing rules}
   \label{fig:surface_typing}
