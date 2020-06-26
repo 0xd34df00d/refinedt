@@ -5,7 +5,6 @@ module Toy.Language.EnvironmentUtils
 , buildCombinedMapping
 , buildTypesMapping
 , retType
-, argTypes
 
 , ArgTypes
 , Var2Ty
@@ -27,9 +26,6 @@ funTypesMapping sig def = (arg2type, resType)
   where
     (argTypes, resType) = splitTypes sig
     arg2type = zip (funArgs def) argTypes
-
-argTypes :: FunSig -> [Ty]
-argTypes = fst . splitTypes
 
 retType :: FunSig -> RefinedBaseTy
 retType = snd . splitTypes
