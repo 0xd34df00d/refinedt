@@ -36,8 +36,6 @@ type MonadQ m = MonadState RefAnnState m
 propagateRefinements :: MonadQ m => TypedTerm -> m RefAnnTerm
 propagateRefinements (TName ty name) = do
   v' <- freshRefVar
-  -- We could've avoided generating a fresh var and having to insert the extra conjunct,
-  -- but it's perhaps safer to do so since it simplifies a later check that all refinement variables are unique.
   let specedRef = specRefinement v' $ tyRefinement ty
   let refinement | isBaseTy ty = addConjunct (AR $ tv v' |=| tv name) specedRef
                  | otherwise = specedRef
