@@ -30,7 +30,16 @@ t {{ tex \nonterm t }} :: tp_ ::= {{ com types }}
 G {{ tex \nonterm G }} :: env_ ::=
   | empty        ::   :: nil
   | G , x : t    ::   :: var
+  | G , v : t    ::   :: refvar
+
 defns Jtype :: '' ::=
+
+defn G |- t :: :: type_wf :: WFT_ {{ com type well-formedness }} by
+
+G , v : { v : B | top } |- e : { v : Bool | r }
+----------------------------------------------- :: Base
+G |- { v : B | e }
+
 defn G |- e : t :: :: typing :: T_ {{ com term typing }} by
 
 x : t in G
