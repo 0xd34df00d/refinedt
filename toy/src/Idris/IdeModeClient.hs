@@ -27,6 +27,7 @@ import Control.Concurrent.STM
 import Control.Exception(bracket)
 import Control.Monad
 import Control.Monad.Catch(MonadMask, finally)
+import Control.Monad.Extra
 import Control.Monad.IO.Class
 import Control.Monad.Operational
 import Data.Default
@@ -156,8 +157,10 @@ runIdrisClientInst ih@(IdrisInstance (idrStdin, idrStdout, _, _)) = viewT >=> go
 
 cleanupIdrisFiles :: MonadIO m => FilePath -> m ()
 cleanupIdrisFiles path = liftIO $ do
-  removeFile $ "build/ttc/" <> path -<.> "ttc"
-  removeFile $ "build/ttc/" <> path -<.> "ttm"
+  removeFile' $ "build/ttc/" <> path -<.> "ttc"
+  removeFile' $ "build/ttc/" <> path -<.> "ttm"
+  where
+    removeFile' p = whenM (doesFileExist p) $ removeFile p
 
 fmtLength :: Command -> String
 fmtLength cmd = replicate (6 - length hex) '0' <> hex
