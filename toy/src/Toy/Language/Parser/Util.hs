@@ -49,6 +49,7 @@ parens :: ToyMonad e s m => m a -> m a
 parens = between (lsymbol "(") (lsymbol ")")
 
 lexSpace :: ToyMonad e s m => m ()
-lexSpace = ML.space myspace empty empty
+lexSpace = ML.space myspace lineComments empty
   where
     myspace = void $ takeWhile1P (Just "white space") $ \c -> c /= '\n' && isSpace c
+    lineComments = skipLineComment "--"
