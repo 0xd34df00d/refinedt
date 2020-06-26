@@ -34,7 +34,7 @@ G {{ tex \nonterm G }} :: env_ ::=
 
 defns Jtype :: '' ::=
 
-defn G |- t :: :: type_wf :: WFT_ {{ com type well-formedness }} by
+defn G |- t :: :: type_wf :: TWF_ {{ com type well-formedness }} by
 
 G , v : { v : B | top } |- e : { v : Bool | r }
 ----------------------------------------------- :: Base
