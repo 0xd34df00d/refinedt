@@ -80,6 +80,11 @@ spec = do
     it "parses pi-bound nested refinement types in pi-bound parens" $
       p "(f : (x : { v : Int | v <= len arr }) -> { v : Int | v > 0 }) -> { v : Int | v >= 0 & v < x }"
         ~~> "f".:("x".:intLeqLenArr ->> intGe0) ->> intBetween0andX
+  describe "Parsing comments" $ let p = parse' ty in do
+    it "ignores line comments" $
+      p "Bool -> Int -- this is a type yay" ~~> bool --> int
+    it "ignores block comments" $
+      p "Bool {- this is something -} -> Int {- smth else -}" ~~> bool --> int
 
 -- Some helpers to make tests a tad more pleasant
 infixr 0 -->
