@@ -40,6 +40,11 @@ G , v : { v : B | top } |- e : { v : Bool | r }
 ----------------------------------------------- :: Base
 G |- { v : B | e }
 
+G |- t_1
+G, x : t_1 |- t_2
+------------------- :: Arr
+G |- x : t_1 -> t_2
+
 defn G |- e : t :: :: typing :: T_ {{ com term typing }} by
 
 x : t in G
