@@ -25,7 +25,7 @@ B {{ tex \nonterm B }} :: tp_ ::= {{ com base types }}
 
 t {{ tex \nonterm t }} :: tp_ ::= {{ com types }}
   | { v : B | r }	::   :: tybase {{ com refined base type }}
-  | x : t_1 -> t_2	::   :: tyarr  {{ com arrow type }}
+  | ( x : t_1 ) -> t_2	::   :: tyarr  {{ com arrow type }}
   | { e / x } t     :: M :: tsubst
 
 G {{ tex \nonterm G }} :: env_ ::=
@@ -43,8 +43,8 @@ G |- { v : B | e }
 
 G |- t_1
 G, x : t_1 |- t_2
-------------------- :: Arr
-G |- x : t_1 -> t_2
+--------------------- :: Arr
+G |- (x : t_1) -> t_2
 
 
 defn G |- e : t :: :: typing :: T_ {{ com term typing }} by
@@ -53,15 +53,15 @@ x : t in G
 ---------- :: Var
 G |- x : t
 
-G |- x : t1 -> t2
-G |- e1 : x : t1 -> t2
+G |- ( x : t1 ) -> t2
+G |- e1 : ( x : t1 ) -> t2
 G |- e2 : t1
---------------------- :: App
+-------------------------- :: App
 G |- e1 e2 : {e2/x}t2
 
 G , x : t_1 |- e : t_2
---------------------------------- :: Abs
-G |- \x : t_1. e : x : t_1 -> t_2
+------------------------------------- :: Abs
+G |- \x : t_1. e : ( x : t_1 ) -> t_2
 
 
 grammar
