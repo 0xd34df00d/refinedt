@@ -63,6 +63,12 @@ G , x : t_1 |- e : t_2
 ------------------------------------- :: Abs
 G |- \x : t_1. e : ( x : t_1 ) -> t_2
 
+G |- e1 : { v : Bool | r }
+G |- e2 : t
+G |- e3 : t
+------------------------------------- :: If
+G |- if e1 then e2 else e3 : t
+
 
 grammar
 metavar x {{ tex \gterm x }} ::= {{ com variables }}
