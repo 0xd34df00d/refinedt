@@ -69,6 +69,18 @@ G |- e3 : t
 ------------------------------------- :: If
 G |- if e1 then e2 else e3 : t
 
+defn G |- t1 <: t2 :: :: subtyping :: ST_ {{ com subtyping }} by
+
+%[|G|] => (∀ v. r1 => r2)
+%------------------------------------- :: Base
+%G |- { v : B | r1 } <: { v : B | r2 }
+
+
+G |- t1' <: t1
+G , x : t1 |- t2 <: t2'
+--------------------------------------- :: Arr
+G |- (x : t1) -> t2 <: (x : t1') -> t2'
+
 
 grammar
 metavar x {{ tex \gterm x }} ::= {{ com variables }}

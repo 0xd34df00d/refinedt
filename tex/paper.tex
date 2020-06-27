@@ -7,6 +7,9 @@
 \usepackage{ottalt}
 \usepackage{subcaption}
 
+\addtolength{\topmargin}{-1.75in}
+\addtolength{\textheight}{2.75in}
+
 \begin{document}
 
 \newNTclass{nonterm}
@@ -54,6 +57,7 @@
   \footnotesize
   \drules[TWF]{$\nonterm G \vdash \nonterm t \text{ ok}$}{type well-formedness}{Base,Arr}
   \drules[T]{$\nonterm G \vdash \nonterm e : \nonterm t$}{term typing}{Var,Abs,App,If}
+  \drules[ST]{$\nonterm G \vdash \nonterm t_1 <: \nonterm t_2$}{subtyping}{Base,Arr}
   \caption{Surface language typing rules}
   \label{fig:surface_typing}
 \end{figure}
