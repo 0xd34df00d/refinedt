@@ -46,6 +46,7 @@ G, x : t_1 |- t_2
 ------------------- :: Arr
 G |- x : t_1 -> t_2
 
+
 defn G |- e : t :: :: typing :: T_ {{ com term typing }} by
 
 x : t in G
@@ -54,8 +55,13 @@ G |- x : t
 
 G |- e1 : x:t1 -> t2
 G |- e2 : t1
------------------- :: App
+--------------------- :: App
 G |- e1 e2 : {e2/x}t2
+
+G , x : t_1 |- e : t_2
+--------------------------------- :: Abs
+G |- \x : t_1. e : x : t_1 -> t_2
+
 
 grammar
 metavar x {{ tex \gterm x }} ::= {{ com variables }}
