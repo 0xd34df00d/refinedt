@@ -6,9 +6,7 @@ import Data.String.Interpolate
 import Test.Hspec
 
 import Toy.Language.BasicTC
-import Toy.Language.Solver.QueryGen
-import Toy.Language.Solver.QueryInterp
-import Toy.Language.Solver.Types
+import Toy.Language.Solver
 
 import TestUtils
 

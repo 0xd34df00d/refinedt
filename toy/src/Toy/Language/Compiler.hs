@@ -15,9 +15,7 @@ import Data.String.Interpolate
 import Misc.Util
 import Toy.Language.BasicTC
 import Toy.Language.EnvironmentUtils
-import Toy.Language.Solver.QueryGen
-import Toy.Language.Solver.QueryInterp
-import Toy.Language.Solver.Types
+import Toy.Language.Solver
 import Toy.Language.Syntax
 
 compileDecl :: [FunSig] -> Decl -> IO String
