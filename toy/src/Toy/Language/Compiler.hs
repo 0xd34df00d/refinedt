@@ -7,6 +7,7 @@ module Toy.Language.Compiler
 ) where
 
 import qualified Data.HashMap.Strict as HM
+import Control.Monad
 import Data.List
 import Data.Maybe
 import Data.String.Interpolate
@@ -14,16 +15,26 @@ import Data.String.Interpolate
 import Misc.Util
 import Toy.Language.BasicTC
 import Toy.Language.EnvironmentUtils
+import Toy.Language.Solver.QueryGen
+import Toy.Language.Solver.QueryInterp
+import Toy.Language.Solver.Types
 import Toy.Language.Syntax
 
-compileDecl :: [FunSig] -> Decl -> String
-compileDecl ctx Decl { .. } = sig' <> fromMaybe "" def'
+compileDecl :: [FunSig] -> Decl -> IO String
+compileDecl ctx Decl { .. }
+  | Just def <- declDef = do
+      let typedDef = annotateFunDef ctx declSig def
+      let qdef = genQueriesFunDef declSig typedDef
+      (res, solvedFunDef) <- solveDef declSig qdef
+      case res of
+           Correct -> pure $ sig' <> compileFunDef declSig solvedFunDef
+           _ -> error "solve failed"
+  | otherwise = pure sig'
   where
     sig' = compileFunSig declSig <> "\n"
-    def' = (<> "\n") . compileFunDef declSig . annotateFunDef ctx declSig <$> declDef
 
-compileDecls :: [Decl] -> String
-compileDecls decls = unlines $ zipWith compileDecl (inits sigs) decls
+compileDecls :: [Decl] -> IO String
+compileDecls decls = unlines <$> zipWithM compileDecl (inits sigs) decls
   where
     sigs = declSig <$> decls
 
@@ -77,12 +88,12 @@ compileBaseTy TInt = "Int"
 compileBaseTy TIntList = "List Int"
 
 -- TODO need the surrounding context
-compileFunDef :: FunSig -> TypedFunDef -> String
+compileFunDef :: FunSig -> VCFunDef SolveRes -> String
 compileFunDef sig def@FunDef { .. } = [i|#{funName} #{unwords funArgsNames} = #{funBodyStr}|]
   where
     funArgsNames = getName <$> funArgs
     (argTypes, resType) = funTypesMapping sig def
-    funBodyStr = wrapping ctx (TyBase resType) $ unwrapping ctx funBody
+    funBodyStr = wrapping ctx (TyBase resType) $ unwrapping ctx $ tyAnn . refAnn <$> funBody
     ctx = buildTypesMapping [] argTypes
 
 compileTerm :: Var2Ty -> TypedTerm -> String

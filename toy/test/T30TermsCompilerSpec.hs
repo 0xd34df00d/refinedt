@@ -8,21 +8,24 @@ import Test.Hspec
 import Idris.IdeModeClient
 import Toy.Language.BasicTC
 import Toy.Language.Compiler
-import Toy.Language.Solver
+import Toy.Language.Solver.QueryGen
+import Toy.Language.Solver.QueryInterp
+import Toy.Language.Solver.Types
 
 import TestUtils
 
 checkIdris :: String -> IdrisHandle -> Expectation
 checkIdris program ih = do
-  (ctx, (funSig, funDef)) <- testParseFunWithCtx program
-  let typedFunDef = annotateFunDef ctx funSig funDef
-  res <- solve (buildCtx ctx) funSig typedFunDef
+  (ctx, (sig, def)) <- testParseFunWithCtx program
+  let typedDef = annotateFunDef ctx sig def
+  let qdef = genQueriesFunDef sig typedDef
+  (res, solvedFunDef) <- solveDef sig qdef
   res `shouldBe` Correct
   runIdrisClient ih $ withFile $ \file -> do
     writePrelude file
     mapM_ (write file . compileFunSig) ctx
-    write file $ compileFunSig funSig
-    write file $ compileFunDef funSig typedFunDef
+    write file $ compileFunSig sig
+    write file $ compileFunDef sig solvedFunDef
     testIdrisFile file
 
 spec :: Spec

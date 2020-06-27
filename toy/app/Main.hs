@@ -24,5 +24,5 @@ main = do
           contents <- readFile filename
           case parseFunDecls contents of
                Left err -> putStrLn $ "Parse error:\n" <> err
-               Right ds -> putStr $ compileDecls ds
+               Right ds -> compileDecls ds >>= putStr
        _ -> putStrLn $ "Unrecognized arguments, try running `" <> progName <> " help`"
