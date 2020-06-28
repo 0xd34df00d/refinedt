@@ -101,3 +101,4 @@ terminals :: terminals_ ::=
   | in		:: :: in  {{ tex \in }}
   | |-		:: :: proves {{ tex \vdash }}
   | \       :: :: lambda {{ tex \lambda }}
+  | <:		:: :: subtype {{ tex \mathrel{<:} }}
