@@ -63,22 +63,9 @@ compileRefinement ctx refinement =
        conjs -> "(" <> intercalate ", " (compileAR ctx <$> conjs) <> ")"
 
 compileAR :: Var2Ty -> AtomicRefinement -> String
-compileAR ctx (AR term) = undefined {- [i|v #{opStr} #{argStr} = True|] TODO
+compileAR ctx (AR term) = [i|#{compileTerm ctx typedTerm} = True|]
   where
-    opStr = case op of
-                 ROpLt -> "<"
-                 ROpLeq -> "<="
-                 ROpEq -> "=="
-                 ROpNEq -> "/="
-                 ROpGt -> ">"
-                 ROpGeq -> ">="
-    argStr = case arg of
-                  RArgInt n -> show n
-                  RArgVar var -> unwrap var
-                  RArgVarLen var -> "intLength " <> unwrap var
-    unwrap var | Just varTy <- HM.lookup var ctx
-               , isJust $ tyRefinement varTy = [i|fst #{getName var}|]
-               | otherwise = getName var -}
+    typedTerm = runReader (annotateTypes term) ctx
 
 compileBaseTy :: BaseTy -> String
 compileBaseTy TBool = "Bool"
