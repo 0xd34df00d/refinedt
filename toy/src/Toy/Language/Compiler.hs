@@ -8,6 +8,7 @@ module Toy.Language.Compiler
 
 import qualified Data.HashMap.Strict as HM
 import Control.Monad
+import Control.Monad.Reader
 import Data.List
 import Data.Maybe
 import Data.String.Interpolate
