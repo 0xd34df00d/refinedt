@@ -16,13 +16,17 @@ import Toy.Language.Syntax.Terms
 data BaseTy = TBool | TInt | TIntList
   deriving (Eq, Ord, Show, Enum, Bounded, Data)
 
-newtype AtomicRefinement = AR { getARTerm :: Term }
+newtype AtomicRefinementT a = AR { getARTerm :: TermT a }
   deriving (Eq, Ord, Show, Data)
 
-data Refinement = Refinement
+type AtomicRefinement = AtomicRefinementT ()
+
+data RefinementT a = Refinement
   { subjectVar :: VarName
-  , conjuncts :: [AtomicRefinement]
+  , conjuncts :: [AtomicRefinementT a]
   } deriving (Eq, Ord, Show, Data)
+
+type Refinement = RefinementT ()
 
 trueRefinement :: Maybe Refinement
 trueRefinement = Nothing
