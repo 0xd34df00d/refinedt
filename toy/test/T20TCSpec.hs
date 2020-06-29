@@ -225,12 +225,12 @@ spec = do
            fun : { v : Int | v > 0 } -> { v : Int | v > 0 } -> { v : Int | v >= 0 }
            fun x y = g (f x) (h y)
           |]
-    xit "accepts yet more complicated function application" $ expectSolverOn Correct
+    it "accepts yet more complicated function application" $ expectSolverOn Correct
         [i|
            f : (x : { v : Int | v >= 0 }) -> { v : Int | v > x }
            g : (x : Int) -> { v : Int | v > 0 }
 
-           fun : (x : { v : Int | v > 0 }) -> { v : Int | v >= x }
+           fun : (x : { v : Int | v > 0 }) -> { v : Int | v >= 0 }
            fun x = g (f x)
           |]
     xit "accepts yet more complicated function application" $ expectSolverOn Correct
