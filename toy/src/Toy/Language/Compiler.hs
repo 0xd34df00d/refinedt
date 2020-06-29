@@ -54,7 +54,7 @@ compileTy = go mempty
         ctx' | Just varName <- piVarName = HM.insert varName domTy ctx
              | otherwise = ctx
         lhs | Just name <- piVarName = [i|(#{getName name} : #{go ctx domTy})|]
-            | otherwise = compileTy domTy
+            | otherwise = go ctx domTy
 
 compileRefinement :: Var2Ty -> BaseTy -> Refinement -> String
 compileRefinement ctx baseTy refinement =
