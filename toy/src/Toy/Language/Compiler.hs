@@ -45,7 +45,7 @@ compileTy :: Ty -> String
 compileTy = go mempty
   where
     go ctx (TyBase RefinedBaseTy { .. })
-      | Just refinement <- baseTyRefinement = [i|(v : #{compileBaseTy baseType} ** #{compileRefinement ctx refinement})|]
+      | Just refinement <- baseTyRefinement = [i|(v : #{compileBaseTy baseType} ** #{compileRefinement ctx baseType refinement})|]
       | otherwise = compileBaseTy baseType
     go ctx (TyArrow ArrowTy { .. })
       | isBaseTy domTy || isJust piVarName = [i|#{lhs} -> #{go ctx' codTy}|]
@@ -56,12 +56,14 @@ compileTy = go mempty
         lhs | Just name <- piVarName = [i|(#{getName name} : #{go ctx domTy})|]
             | otherwise = compileTy domTy
 
-compileRefinement :: Var2Ty -> Refinement -> String
-compileRefinement ctx refinement =
+compileRefinement :: Var2Ty -> BaseTy -> Refinement -> String
+compileRefinement ctx baseTy refinement =
   case conjuncts refinement of
        [] -> "()"
-       [conj] -> compileAR ctx conj
-       conjs -> "(" <> intercalate ", " (compileAR ctx <$> conjs) <> ")"
+       [conj] -> compileAR ctx' conj
+       conjs -> "(" <> intercalate ", " (compileAR ctx' <$> conjs) <> ")"
+  where
+    ctx' = HM.insert (subjectVar refinement) (TyBase $ RefinedBaseTy baseTy Nothing) ctx
 
 compileAR :: Var2Ty -> AtomicRefinement -> String
 compileAR ctx (AR term) = [i|#{compileTerm ctx typedTerm} = True|]
@@ -100,7 +102,8 @@ unwrapping ctx t = unwrapStr (annotation t) $ compileTerm ctx t
 
 wrapping :: Var2Ty -> Ty -> String -> String
 wrapping ctx ty str
-  | Just refinement <- tyRefinement ty = [i|MkDPair {p = \\v => #{compileRefinement ctx refinement}} #{parens str} smt|]
+  | TyBase RefinedBaseTy { .. } <- ty
+  , Just refinement <- baseTyRefinement = [i|MkDPair {p = \\v => #{compileRefinement ctx baseType refinement}} #{parens str} smt|]
   | otherwise = str
 
 unwrapStr :: Ty -> String -> String
