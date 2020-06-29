@@ -47,7 +47,8 @@ spec = testWithIdris $ do
       it "pi-bound vars and refinements" $ checkIdris "someFun : (x : { v : Int | v > 0 }) -> Bool"
       it "pi-bound vars referred in result" $ checkIdris "someFun : (x : Int) -> { v : Int | v >= 0 & v < x }"
       it "pi-bound vars referred in another refinement " $ checkIdris "someFun : (x : Int) -> { v : Int | v >= 0 & v < x } -> Int"
-      it "pi-bound vars some more" $ checkIdris "someFun : (ls : IntList) -> { v : Int | v >= 0 & v < len ls } -> Int"
+      it "pi-bound vars some more" $
+        checkIdris "someFun : (len : IntList -> Int) -> (ls : IntList) -> { v : Int | v >= 0 & v < len ls } -> Int"
       it "pi-bound unrefined vars mentioned in subsequent refinements" $
         checkIdris "add : (x : Int) -> (y : Int) -> { v : Int | v >= x & v >= y }"
       it "pi-bound vars with refinements referring refinements" $
