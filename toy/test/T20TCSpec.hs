@@ -236,6 +236,14 @@ spec = do
     xit "accepts yet more complicated function application" $ expectSolverOn Correct
         [i|
            f : (x : { v : Int | v >= 0 }) -> { v : Int | v > x }
+           g : (x : Int) -> { v : Int | v > x }
+
+           fun : (x : { v : Int | v > 0 }) -> { v : Int | v >= x }
+           fun x = g (f x)
+          |]
+    xit "accepts yet more complicated function application" $ expectSolverOn Correct
+        [i|
+           f : (x : { v : Int | v >= 0 }) -> { v : Int | v > x }
            h : (x : { v : Int | v >= 0 }) -> { v : Int | v > x }
            g : (x : Int) -> (y : Int) -> (x' : { v : Int | v >= x }) -> (y' : { v : Int | v >= y }) -> { v : Int | v > x & v > y }
 
