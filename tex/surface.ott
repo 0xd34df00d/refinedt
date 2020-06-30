@@ -5,14 +5,8 @@ e {{ tex \nonterm e }} :: tm_ ::= {{ com terms }}
   | n				::   :: int {{ com integer }}
   | if e1 then e2 else e3
 					::   :: ite {{ com conditional }}
-  | e1 binop e2		::   :: binop {{ com binary op }}
   | \ x : t . e		::   :: abs {{ com abstraction }}
   | e1 e2			::   :: app {{ com application }}
-
-binop {{ tex \nonterm{binop} }} :: tm_ ::= {{ com binary ops }}
-  | +				::   :: opplus
-  | <				::   :: oplt
-  | ==				::   :: opeq
 
 r {{ tex \nonterm r }} :: tp_ ::= {{ com refinements }}
   | top				::   :: rtrue {{ com true refinement }}
