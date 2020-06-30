@@ -28,6 +28,8 @@ G {{ tex \nonterm G }} :: env_ ::=
   | empty        ::   :: nil
   | G , x : t    ::   :: var
   | G , v : t    ::   :: refvar
+  | G , e = top  ::   :: eTrue
+  | G , e = bot  ::   :: eFalse
 
 defns Jtype :: '' ::=
 
@@ -74,8 +76,8 @@ G , x : t_1 |- e : t_2
 G |- \x : t_1. e : ( x : t_1 ) -> t_2
 
 G |- e1 : { v : Bool | r }
-G |- e2 : t
-G |- e3 : t
+G , e1 = top |- e2 : t
+G , e1 = bot |- e3 : t
 ------------------------------------- :: If
 G |- if e1 then e2 else e3 : t
 
@@ -105,10 +107,10 @@ metavar n {{ tex \gterm n }} ::= {{ com integers }}
 
 grammar
 formula :: formula_ ::=
-  | judgement    :: :: judgement
-  | formula \\\\ :: :: lbh
-  | x : t in G   :: :: xinenv
-  | G |- t ok    :: :: tokay
+  | judgement	:: :: judgement
+  | x : t in G  :: :: xinenv
+  | e = T		:: :: eTrue
+  | e = F		:: :: eFalse
 
 terminals :: terminals_ ::=
   | top		:: :: top {{ tex \top }}
