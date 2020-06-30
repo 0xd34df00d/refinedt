@@ -66,6 +66,12 @@ G |- e3 : t
 ------------------------------------- :: If
 G |- if e1 then e2 else e3 : t
 
+G |- e : t
+G |- t' <: t
+------------ :: Sub
+G |- e : t'
+
+
 defn G |- t1 <: t2 :: :: subtyping :: ST_ {{ com subtyping }} by
 
 %[|G|] => (∀ v. r1 => r2)
