@@ -31,6 +31,9 @@ defns Jtype :: '' ::=
 
 defn G |- t :: :: type_wf :: TWF_ {{ com type well-formedness }} by
 
+-------------------- :: BaseRef
+G |- { v : t | top }
+
 G , v : { v : B | top } |- e : { v : Bool | r }
 ----------------------------------------------- :: Base
 G |- { v : B | e }
