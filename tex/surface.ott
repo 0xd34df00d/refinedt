@@ -7,9 +7,10 @@ e {{ tex \nonterm e }} :: tm_ ::= {{ com terms }}
 					::   :: ite {{ com conditional }}
   | \ x : t . e		::   :: abs {{ com abstraction }}
   | e1 e2			::   :: app {{ com application }}
+  | top				::   :: true {{ com true }}
+  | bot				::   :: false {{ com false }}
 
 r {{ tex \nonterm r }} :: tp_ ::= {{ com refinements }}
-  | top				::   :: rtrue {{ com true refinement }}
   | e				::   :: rexpr {{ com atomic refinement }}
   | r1 /\ r2		::   :: rconj {{ com conjunction }}
 
@@ -55,6 +56,12 @@ defn G |- e : t :: :: typing :: T_ {{ com term typing }} by
 x : t in G
 ---------- :: Var
 G |- x : t
+
+--------------------------- :: BoolTop
+G |- top : { v : Bool | top }
+
+--------------------------- :: BoolBot
+G |- bot : { v : Bool | top }
 
 G |- ( x : t1 ) -> t2
 G |- e1 : ( x : t1 ) -> t2
@@ -105,6 +112,7 @@ formula :: formula_ ::=
 
 terminals :: terminals_ ::=
   | top		:: :: top {{ tex \top }}
+  | bot		:: :: bot {{ tex \bot }}
   | /\      :: :: and {{ tex \land }}
   | ->      :: :: arr {{ tex \rightarrow }}
   | in		:: :: in  {{ tex \in }}
