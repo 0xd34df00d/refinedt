@@ -25,12 +25,13 @@ t {{ tex \nonterm t }} :: tp_ ::= {{ com types }}
   | { e / x } t			:: M :: tsubst
 
 G {{ tex \nonterm G }} :: env_ ::=
-  | empty        ::   :: nil
-  | G , x : t    ::   :: var
-  | G , v : t    ::   :: refvar
-  | G , e = top  ::   :: eTrue
-  | G , e = bot  ::   :: eFalse
+  | empty			::   :: nil
+  | G , x : t		::   :: var
+  | G , v : t		::   :: refvar
+  | G , L			::   :: logical
 
+L {{ tex \nonterm L }} :: logic_pred_ ::= {{ com logical predicate }}
+  | e1 = e2			::   :: termEq {{ com term equality }}
 defns Jtype :: '' ::=
 
 defn G |- t :: :: type_wf :: TWF_ {{ com type well-formedness }} by
