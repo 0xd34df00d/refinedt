@@ -14,8 +14,9 @@
 
 \newNTclass{nonterm}
 \newnonterm e \varepsilon
+\newnonterm{eS}{\varepsilon^S}
 \newnonterm r \rho
-\newnonterm t \tau
+\newnonterm{tS}{\tau^S}
 \newnonterm B B
 \newnonterm G \Gamma
 \newnonterm{binop}{\odot}
@@ -42,11 +43,11 @@
 \begin{figure}[ht]
   \footnotesize
   \begin{subfigure}{.6\textwidth}
-	\nonterms{e}
+	\nonterms{eS}
 	\caption{Term level}
   \end{subfigure}
   \begin{subfigure}{.5\textwidth}
-	\nonterms{r,B,t}
+	\nonterms{r,B,tS}
 	\caption{Type level}
   \end{subfigure}
   \caption{Surface language syntax}
