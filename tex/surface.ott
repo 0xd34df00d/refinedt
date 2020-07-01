@@ -38,7 +38,7 @@ defn G |- t :: :: type_wf :: TWF_ {{ com type well-formedness }} by
 -------------------- :: TrueRef
 G |- { v : t | top }
 
-G , v : { v : t | top } |- e : { v : Bool | r }
+G , v : { v' : t | top } |- e : { v : Bool | r }
 ----------------------------------------------- :: Base
 G |- { v : t | e }
 
