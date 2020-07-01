@@ -32,6 +32,15 @@ G {{ tex \nonterm G }} :: env_ ::=
 
 L {{ tex \nonterm L }} :: logic_pred_ ::= {{ com logical predicate }}
   | e1 = e2			::   :: termEq {{ com term equality }}
+  | A v . L			::   :: forall {{ com $\forall$ }}
+  | ( L )			:: M :: parens {{ com parenthesizing }}
+  | r1 => r2		::   :: impl   {{ com implication }}
+
+C {{ tex \nonterm C }} :: logic_ctx_ ::= {{ com logical context }}
+  | empty			::   :: nil
+  | C, L			::   :: pred
+  | '[|' G '|]'		:: M :: ctx
+
 defns Jtype :: '' ::=
 
 defn G |- t :: :: type_wf :: TWF_ {{ com type well-formedness }} by
@@ -90,9 +99,9 @@ G |- e : t'
 
 defn G |- t1 <: t2 :: :: subtyping :: ST_ {{ com subtyping }} by
 
-%[|G|] => (∀ v. r1 => r2)
-%------------------------------------- :: Base
-%G |- { v : B | r1 } <: { v : B | r2 }
+[| G |] => A v. (r1 => r2)
+------------------------------------- :: Base
+G |- { v : B | r1 } <: { v : B | r2 }
 
 
 G |- t1' <: t1
@@ -112,6 +121,7 @@ formula :: formula_ ::=
   | x : t in G  :: :: xinenv
   | e = T		:: :: eTrue
   | e = F		:: :: eFalse
+  | C => L		:: :: implication
 
 terminals :: terminals_ ::=
   | top		:: :: top {{ tex \top }}
@@ -122,3 +132,5 @@ terminals :: terminals_ ::=
   | |-		:: :: proves {{ tex \vdash }}
   | \       :: :: lambda {{ tex \lambda }}
   | <:		:: :: subtype {{ tex \mathrel{<:} }}
+  | A		:: :: forall {{ tex \forall }}
+  | =>		:: :: implies {{ tex \implies }}
