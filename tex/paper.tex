@@ -56,9 +56,9 @@
 
 \begin{figure}[ht]
   \footnotesize
-  \drules[TWF]{$\nonterm G \vdash \nonterm t \text{ ok}$}{type well-formedness}{TrueRef,Base,Conj,Arr}
-  \drules[T]{$\nonterm G \vdash \nonterm e : \nonterm t$}{term typing}{BoolTop,BoolBot,Var,Abs,App,If,Sub}
-  \drules[ST]{$\nonterm G \vdash \nonterm t_1 <: \nonterm t_2$}{subtyping}{Base,Arr}
+  \drules[TWF]{$\nonterm G \vdash \nonterm{tS} \text{ ok}$}{type well-formedness}{TrueRef,Base,Conj,Arr}
+  \drules[T]{$\nonterm G \vdash \nonterm{eS} : \nonterm{tS}$}{term typing}{BoolTop,BoolBot,Var,Abs,App,If,Sub}
+  \drules[ST]{$\nonterm G \vdash \nonterm{tS}_1 <: \nonterm{tS}_2$}{subtyping}{Base,Arr}
   \caption{Surface language typing rules}
   \label{fig:surface_typing}
 \end{figure}
