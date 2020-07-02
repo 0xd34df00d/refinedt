@@ -19,8 +19,10 @@
 \newnonterm r \rho
 \newnonterm{tS}{\tau}
 \newnonterm{tC}{\overline\tau}
+\newnonterm s s
 \newnonterm B B
-\newnonterm G \Gamma
+\newnonterm{G}{\Gamma}
+\newnonterm{GC}{\overline\Gamma}
 \newnonterm{binop}{\odot}
 
 \newNTclass{gterm}
@@ -66,6 +68,20 @@
 \end{figure}
 
 \subsection{Core language}
+
+\begin{figure}[ht]
+  \footnotesize
+  \nonterms{ec,s}
+  \caption{Core language syntax}
+  \label{fig:core_syntax}
+\end{figure}
+
+\begin{figure}[ht]
+  \footnotesize
+  \drules[CT]{$\nonterm G \vdash \nonterm{ec}_1 : \nonterm{ec}_2$}{core typing}{Sort,Var,Weaken,Form,App,Abs,Conv}
+  \caption{Core language typing rules}
+  \label{fig:surface_typing}
+\end{figure}
 
 \section{Translation}
 

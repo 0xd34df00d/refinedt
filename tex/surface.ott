@@ -1,3 +1,5 @@
+%%% Surface language
+
 grammar
 eS {{ tex \nonterm{eS} }} :: tmS_ ::= {{ com terms }}
   | x				::   :: var {{ com variable }}
@@ -122,6 +124,7 @@ formula :: formula_ ::=
   | eS = T		:: :: eTrue
   | eS = F		:: :: eFalse
   | C => L		:: :: implication
+  | ec =b ec2	:: :: betaconversion
 
 terminals :: terminals_ ::=
   | top		:: :: top {{ tex \top }}
@@ -131,6 +134,70 @@ terminals :: terminals_ ::=
   | in		:: :: in  {{ tex \in }}
   | |-		:: :: proves {{ tex \vdash }}
   | \       :: :: lambda {{ tex \lambda }}
+  | Pi		:: :: product {{ tex \Pi }}
   | <:		:: :: subtype {{ tex \mathrel{<:} }}
   | A		:: :: forall {{ tex \forall }}
   | =>		:: :: implies {{ tex \implies }}
+  | sst		:: :: starkind {{ tex \star }}
+  | ssq		:: :: squarekind {{ tex \square }}
+  | empty   :: :: empty {{ tex \emptyset }}
+  | =b		:: :: beq {{ tex =_\beta }}
+
+
+%%% Core language
+
+grammar
+ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
+  | x					::   :: var {{ com variable }}
+  | s					::   :: sort {{ com sort }}
+  | Pi x : ec1 . ec2	::   :: piabs {{ com $\Pi$-type }}
+  | \ x : ec1 . ec2		::   :: lamabs {{ com abstraction }}
+  | ec1 ec2				::   :: app {{ com application }}
+  | Bool				::   :: bool {{ com base bool type }}
+  | Int					::   :: int {{ com base int type }}
+  | { ec1 / x } ec2		:: M :: subst
+
+s {{ tex \nonterm{s} }} :: s_ ::= {{ com sorts }}
+  | sst				::   :: type {{ com types }}
+  | ssq				::   :: kind {{ com kinds }}
+
+GC {{ tex \nonterm{GC} }} :: coreenv_ ::=
+  | empty			:: :: nil
+  | GC , x : ec		:: :: var
+
+defns Jderiv :: '' ::=
+
+defn GC |- ec1 : ec2 :: :: coretyping :: CT_ {{ com typing }} by
+
+------------------ :: Sort
+empty |- sst : ssq
+
+GC |- ec : s
+--------------------- :: Var
+GC , x : ec |- x : ec
+
+GC |- ec1 : ec2
+GC |- ec3 : s
+------------------------- :: Weaken
+GC , x : ec3 |- ec1 : ec2
+
+GC |- ec1 : s1
+GC , x : ec1 |- ec2 : s2
+--------------------------- :: Form
+GC |- Pi x : ec1 . ec2 : s2
+
+GC |- ec1' : Pi x : ec1 . ec2
+GC |- ec2' : ec1
+----------------------------- :: App
+GC |- ec1' ec2' : {ec1/x}ec2
+
+GC , x : ec1 |- ec : ec2
+GC |- Pi x : ec1 . ec2 : s
+----------------------------- :: Abs
+GC |- \ x : ec1 . ec : Pi x : ec1 . ec2
+
+GC |- ec : ec1
+GC |- ec2 : s
+ec1 =b ec2
+-------------- :: Conv
+GC |- ec : ec2
