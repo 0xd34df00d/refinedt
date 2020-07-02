@@ -22,7 +22,6 @@ B {{ tex \nonterm B }} :: tbasep_ ::= {{ com base types }}
 
 tS {{ tex \nonterm{tS} }} :: tS_ ::= {{ com types }}
   | { v : B | r }		::   :: tybase {{ com refined base type }}
-  | { v : tS | r }		:: M :: tyref {{ com refined base type }}
   | ( x : tS1 ) -> tS2	::   :: tyarr  {{ com arrow type }}
   | { eS / x } tS		:: M :: tsubst
 
@@ -48,16 +47,16 @@ defns Jtype :: '' ::=
 defn G |- tS :: :: type_wf :: TWF_ {{ com type well-formedness }} by
 
 -------------------- :: TrueRef
-G |- { v : tS | top }
+G |- { v : B | top }
 
-G , v : { v' : tS | top } |- eS : { v : Bool | r }
+G , v : { v' : B | top } |- eS : { v : Bool | r }
 ----------------------------------------------- :: Base
-G |- { v : tS | eS }
+G |- { v : B | eS }
 
-G |- { v : tS | r1 }
-G |- { v : tS | r2 }
+G |- { v : B | r1 }
+G |- { v : B | r2 }
 ------------------------- :: Conj
-G |- { v : tS | r1 /\ r2 }
+G |- { v : B | r1 /\ r2 }
 
 G |- tS1
 G, x : tS1 |- tS2
