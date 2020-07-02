@@ -83,6 +83,31 @@
   \label{fig:surface_typing}
 \end{figure}
 
+We also establish some derived entities in the target language to simplify the subsequent exposition:
+
+\begin{itemize}
+  \item Non-dependent function type:
+	\[
+	  \tau_1 \rightarrow \tau_2 := \Pi x : \tau_1. \tau_2,
+	\]
+	where $\tau_2$ does not have $x$ free.
+  \item Dependent pair type, with the first component being a value $x$ of type $\tau$ and the second component being of type $P x$:
+	\[
+	  \{ x : \tau\ **\ P x \} := \Pi \alpha : \star. (\Pi x : \tau. P x \rightarrow \alpha) \rightarrow \alpha.
+	\]
+  \item Accessing the first and second component of the dependent pair:
+	\[
+	  \text{fst} := TODO,
+	\]
+	\[
+	  \text{snd} := TODO.
+	\]
+  \item Non-dependent pair type:
+	\[
+	  (\tau_1, \tau_2) := \{ x : \tau_1\ **\ (\lambda \_ : \tau_1. \tau_2) x \}.
+	\]
+\end{itemize}
+
 \section{Translation}
 
 \end{document}
