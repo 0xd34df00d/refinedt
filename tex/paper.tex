@@ -110,7 +110,7 @@ We also establish some derived entities in the target language to simplify the s
     \tau_1 \rightarrow \tau_2 \coloneqq \Pi x : \tau_1. \tau_2,
   \]
   where $\tau_2$ does not have $x$ free.
-  \item Dependent pair type, with the first component being a value $x$ of type $\tau$ and the second component being of type $P x$:
+  \item Dependent pair type, or $\Sigma$-type, with the first component being a value $x$ of type $\tau$ and the second component being of type $P x$:
   \[
     \{ x : \tau\ **\ P x \} \coloneqq \Pi \alpha : \star. (\Pi x : \tau. P x \rightarrow \alpha) \rightarrow \alpha.
   \]
@@ -128,5 +128,25 @@ We also establish some derived entities in the target language to simplify the s
 \end{itemize}
 
 \section{Translation}
+
+We translate the surface language types and terms using the $\mu_\tau$ and $\mu_\varepsilon$ functions respectively.
+$\mu_\tau$ is defined as follows:
+\begin{equation}
+\begin{aligned}
+  & \mu_\tau( (x : \nonterm{tS}_1) \rightarrow \nonterm{tS}_2)  && \coloneqq \Pi x : \mu_\tau(\nonterm{tS}_1). \mu_\tau(\nonterm{tS}_2)  \\
+  & \mu_\tau( \{ v : \nonterm{tS} | \nonterm{r} \})             && \coloneqq \{ v : \mu_\tau(\nonterm{tS})\ **\ \mu_\tau(\nonterm r) \}  \\
+  & \mu_\tau( \nonterm r_1 \land \nonterm r_2 )                 && \coloneqq ( \mu_\tau(\nonterm r_1) , \mu_\tau(\nonterm r_2))          \\
+  & \mu_\tau( \nonterm{eS} )                                    && \coloneqq \mu_\varepsilon(\nonterm{eS}) = \text{True}                 \\
+  & \mu_\tau(B)                                                 && \coloneqq B                                                           \\
+\end{aligned}
+\end{equation}
+Or, in words:
+\begin{itemize}
+  \item (dependent) arrow types are translated to the corresponding $\Pi$-types,
+  \item refined types are translated to the corresponding $\Sigma$-types,
+  \item atomic refinements (which are $\text{Bool}$-typed terms) are translated to propositions stating that the corresponding term is equal to $\text{True}$,
+  \item conjunctions of several (atomic) refinements are represented as tuples of the corresponding atomic translations.
+\end{itemize}
+
 
 \end{document}
