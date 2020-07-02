@@ -67,6 +67,20 @@
   \label{fig:surface_typing}
 \end{figure}
 
+The translation function $[|\ |]$ maps the typing context $\nonterm G$ to some logic.
+In the subsequent text we assume the oracle can decide the resulting proposition
+(otherwise it might be left as a separate lemma to be filled out by the user in the core language, or rejected altogether).
+
+For the example oracle being an SMT solver and the syntax of terms also including mathematics, $[|\ |]$ might be defined as
+\begin{equation}
+\begin{aligned}
+  & [| \emptyset |] = \top																						\\
+  & [| \nonterm G, x : \{ v : \nonterm B | \nonterm r \} |] = [| \nonterm G |] \land [| \{x/v\} \nonterm r |]   \\
+  & [| \nonterm r_1 \land \nonterm r_2 |] = [| \nonterm r_1 |] \land [| \nonterm r_2 |]							\\
+  & \cdots TODO
+\end{aligned}
+\end{equation}
+
 \subsection{Core language}
 
 \begin{figure}[ht]
