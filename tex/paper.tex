@@ -2,7 +2,7 @@
 \usepackage{a4wide}
 \usepackage[utf8]{inputenc}
 \usepackage[T2A]{fontenc}
-\usepackage{amsmath,amsfonts}
+\usepackage{amsmath,amsfonts,amssymb}
 \usepackage{mathtools}
 \usepackage{xcolor}
 \usepackage{ottalt}
@@ -75,9 +75,9 @@ In the subsequent text we assume the oracle can decide the resulting proposition
 For the example oracle being an SMT solver and the syntax of terms also including mathematics, $[|\ |]$ might be defined as
 \begin{equation}
 \begin{aligned}
-  & [| \emptyset |]                                         && \coloneqq \top																						 \\
-  & [| \nonterm G, x : \{ v : \nonterm B | \nonterm r \} |] && \coloneqq [| \nonterm G |] \land [| \{x/v\} \nonterm r |] \\
-  & [| \nonterm r_1 \land \nonterm r_2 |]                   && \coloneqq [| \nonterm r_1 |] \land [| \nonterm r_2 |]		 \\
+  & [| \emptyset |]                                         && \triangleq \top																						 \\
+  & [| \nonterm G, x : \{ v : \nonterm B | \nonterm r \} |] && \triangleq [| \nonterm G |] \land [| \{x/v\} \nonterm r |] \\
+  & [| \nonterm r_1 \land \nonterm r_2 |]                   && \triangleq [| \nonterm r_1 |] \land [| \nonterm r_2 |]		 \\
   & \cdots TODO
 \end{aligned}
 \end{equation}
@@ -107,23 +107,23 @@ We also establish some derived entities in the target language to simplify the s
 \begin{itemize}
   \item Non-dependent function type:
   \[
-    \tau_1 \rightarrow \tau_2 \coloneqq \Pi x : \tau_1. \tau_2,
+    \tau_1 \rightarrow \tau_2 \triangleq \Pi x : \tau_1. \tau_2,
   \]
   where $\tau_2$ does not have $x$ free.
   \item Dependent pair type, or $\Sigma$-type, with the first component being a value $x$ of type $\tau$ and the second component being of type $P x$:
   \[
-    \{ x : \tau\ **\ P x \} \coloneqq \Pi \alpha : \star. (\Pi x : \tau. P x \rightarrow \alpha) \rightarrow \alpha.
+    \{ x : \tau\ **\ P x \} \triangleq \Pi \alpha : \star. (\Pi x : \tau. P x \rightarrow \alpha) \rightarrow \alpha.
   \]
   \item Accessing the first and second component of the dependent pair:
   \[
-    \text{fst} \coloneqq TODO,
+    \text{fst} \triangleq TODO,
   \]
   \[
-    \text{snd} \coloneqq TODO.
+    \text{snd} \triangleq TODO.
   \]
   \item Non-dependent pair type:
   \[
-    (\tau_1, \tau_2) \coloneqq \{ x : \tau_1\ **\ (\lambda \_ : \tau_1. \tau_2) x \}.
+    (\tau_1, \tau_2) \triangleq \{ x : \tau_1\ **\ (\lambda \_ : \tau_1. \tau_2) x \}.
   \]
 \end{itemize}
 
@@ -133,11 +133,11 @@ We translate the surface language types and terms using the $\mu_\tau$ and $\mu_
 $\mu_\tau$ is defined as follows:
 \begin{equation}
 \begin{aligned}
-  & \mu_\tau( (x : \nonterm{tS}_1) \rightarrow \nonterm{tS}_2)  && \coloneqq \Pi x : \mu_\tau(\nonterm{tS}_1). \mu_\tau(\nonterm{tS}_2)  \\
-  & \mu_\tau( \{ v : \nonterm{tS} | \nonterm{r} \})             && \coloneqq \{ v : \mu_\tau(\nonterm{tS})\ **\ \mu_\tau(\nonterm r) \}  \\
-  & \mu_\tau( \nonterm r_1 \land \nonterm r_2 )                 && \coloneqq ( \mu_\tau(\nonterm r_1) , \mu_\tau(\nonterm r_2))          \\
-  & \mu_\tau( \nonterm{eS} )                                    && \coloneqq \mu_\varepsilon(\nonterm{eS}) = \text{True}                 \\
-  & \mu_\tau(B)                                                 && \coloneqq B                                                           \\
+  & \mu_\tau( (x : \nonterm{tS}_1) \rightarrow \nonterm{tS}_2)  && \triangleq \Pi x : \mu_\tau(\nonterm{tS}_1). \mu_\tau(\nonterm{tS}_2)  \\
+  & \mu_\tau( \{ v : \nonterm{tS} | \nonterm{r} \})             && \triangleq \{ v : \mu_\tau(\nonterm{tS})\ **\ \mu_\tau(\nonterm r) \}  \\
+  & \mu_\tau( \nonterm r_1 \land \nonterm r_2 )                 && \triangleq ( \mu_\tau(\nonterm r_1) , \mu_\tau(\nonterm r_2))          \\
+  & \mu_\tau( \nonterm{eS} )                                    && \triangleq \mu_\varepsilon(\nonterm{eS}) = \text{True}                 \\
+  & \mu_\tau(B)                                                 && \triangleq B                                                           \\
 \end{aligned}
 \end{equation}
 Or, in words:
