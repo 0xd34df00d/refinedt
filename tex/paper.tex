@@ -43,6 +43,8 @@
 
 \section{Overview}
 
+%TODO describe the notion of the oracle (like an SMT solver) and what we expect of the oracle.
+
 \section{Calculi definitions}
 
 \subsection{Surface language}
@@ -142,6 +144,7 @@ $\mu_\tau$ is defined as follows:
   & \mu_\tau( \{ v : \nonterm{ts} | \nonterm{r} \})             && \triangleq \{ v : \mu_\tau(\nonterm{ts})\ **\ \mu_\tau(\nonterm r) \}  \\
   & \mu_\tau( \nonterm r_1 \land \nonterm r_2 )                 && \triangleq ( \mu_\tau(\nonterm r_1) , \mu_\tau(\nonterm r_2))          \\
   & \mu_\tau( \nonterm{es} )                                    && \triangleq \mu_\varepsilon(\nonterm{es}) = \text{True}                 \\
+%TODO add syntax/typing rules for True
   & \mu_\tau(B)                                                 && \triangleq B                                                           \\
 \end{aligned}
 \end{equation}
