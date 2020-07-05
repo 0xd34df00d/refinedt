@@ -16,10 +16,10 @@
 
 \newNTclass{nonterm}
 \newnonterm e \varepsilon
-\newnonterm{eS}{\varepsilon}
+\newnonterm{es}{\varepsilon}
 \newnonterm{ec}{\overline\varepsilon}
 \newnonterm r \rho
-\newnonterm{tS}{\tau}
+\newnonterm{ts}{\tau}
 \newnonterm s s
 \newnonterm B B
 \newnonterm G \Gamma
@@ -48,11 +48,11 @@
 \begin{figure}[ht]
   \footnotesize
   \begin{subfigure}{.6\textwidth}
-	\nonterms{eS}
+	\nonterms{es}
 	\caption{Term level}
   \end{subfigure}
   \begin{subfigure}{.5\textwidth}
-	\nonterms{r,B,tS}
+	\nonterms{r,B,ts}
 	\caption{Type level}
   \end{subfigure}
   \caption{Surface language syntax}
@@ -61,9 +61,9 @@
 
 \begin{figure}[ht]
   \footnotesize
-  \drules[TWF]{$\nonterm G \vdash \nonterm{tS} \text{ ok}$}{type well-formedness}{TrueRef,Base,Conj,Arr}
-  \drules[T]{$\nonterm G \vdash \nonterm{eS} : \nonterm{tS}$}{term typing}{BoolTop,BoolBot,Var,Abs,App,If,Sub}
-  \drules[ST]{$\nonterm G \vdash \nonterm{tS}_1 <: \nonterm{tS}_2$}{subtyping}{Base,Arr}
+  \drules[TWF]{$\nonterm G \vdash \nonterm{ts} \text{ ok}$}{type well-formedness}{TrueRef,Base,Conj,Arr}
+  \drules[T]{$\nonterm G \vdash \nonterm{es} : \nonterm{ts}$}{term typing}{BoolTop,BoolBot,Var,Abs,App,If,Sub}
+  \drules[ST]{$\nonterm G \vdash \nonterm{ts}_1 <: \nonterm{ts}_2$}{subtyping}{Base,Arr}
   \caption{Surface language typing rules}
   \label{fig:surface_typing}
 \end{figure}
@@ -132,10 +132,10 @@ We translate the surface language types and terms using the $\mu_\tau$ and $\mu_
 $\mu_\tau$ is defined as follows:
 \begin{equation}
 \begin{aligned}
-  & \mu_\tau( (x : \nonterm{tS}_1) \rightarrow \nonterm{tS}_2)  && \triangleq \Pi x : \mu_\tau(\nonterm{tS}_1). \mu_\tau(\nonterm{tS}_2)  \\
-  & \mu_\tau( \{ v : \nonterm{tS} | \nonterm{r} \})             && \triangleq \{ v : \mu_\tau(\nonterm{tS})\ **\ \mu_\tau(\nonterm r) \}  \\
+  & \mu_\tau( (x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2)  && \triangleq \Pi x : \mu_\tau(\nonterm{ts}_1). \mu_\tau(\nonterm{ts}_2)  \\
+  & \mu_\tau( \{ v : \nonterm{ts} | \nonterm{r} \})             && \triangleq \{ v : \mu_\tau(\nonterm{ts})\ **\ \mu_\tau(\nonterm r) \}  \\
   & \mu_\tau( \nonterm r_1 \land \nonterm r_2 )                 && \triangleq ( \mu_\tau(\nonterm r_1) , \mu_\tau(\nonterm r_2))          \\
-  & \mu_\tau( \nonterm{eS} )                                    && \triangleq \mu_\varepsilon(\nonterm{eS}) = \text{True}                 \\
+  & \mu_\tau( \nonterm{es} )                                    && \triangleq \mu_\varepsilon(\nonterm{es}) = \text{True}                 \\
   & \mu_\tau(B)                                                 && \triangleq B                                                           \\
 \end{aligned}
 \end{equation}

@@ -1,38 +1,38 @@
 %%% Surface language
 
 grammar
-eS {{ tex \nonterm{eS} }} :: tmS_ ::= {{ com terms }}
+es {{ tex \nonterm{es} }} :: tmS_ ::= {{ com terms }}
   | x				::   :: var {{ com variable }}
   | v				::   :: refvar {{ com refinement var }}
   | n				::   :: int {{ com integer }}
-  | if eS1 then eS2 else eS3
+  | if es1 then es2 else es3
 					::   :: ite {{ com conditional }}
-  | \ x : tS . eS	::   :: abs {{ com abstraction }}
-  | eS1 eS2			::   :: app {{ com application }}
+  | \ x : ts . es	::   :: abs {{ com abstraction }}
+  | es1 es2			::   :: app {{ com application }}
   | top				::   :: true {{ com true }}
   | bot				::   :: false {{ com false }}
 
 r {{ tex \nonterm r }} :: ref_ ::= {{ com refinements }}
-  | eS				::   :: rexpr {{ com atomic refinement }}
+  | es				::   :: rexpr {{ com atomic refinement }}
   | r1 /\ r2		::   :: rconj {{ com conjunction }}
 
 B {{ tex \nonterm B }} :: tbasep_ ::= {{ com base types }}
   | Int				::   :: bInt
   | Bool			::	 :: bBool
 
-tS {{ tex \nonterm{tS} }} :: tS_ ::= {{ com types }}
+ts {{ tex \nonterm{ts} }} :: ts_ ::= {{ com types }}
   | { v : B | r }		::   :: tybase {{ com refined base type }}
-  | ( x : tS1 ) -> tS2	::   :: tyarr  {{ com arrow type }}
-  | { eS / x } tS		:: M :: tsubst
+  | ( x : ts1 ) -> ts2	::   :: tyarr  {{ com arrow type }}
+  | { es / x } ts		:: M :: tsubst
 
 G {{ tex \nonterm G }} :: env_ ::= {{ com typing contexts }}
   | empty			::   :: nil {{ com empty }}
-  | G , x : tS		::   :: var {{ com variable }}
-  | G , v : tS		::   :: refvar {{ com refinement variable }}
+  | G , x : ts		::   :: var {{ com variable }}
+  | G , v : ts		::   :: refvar {{ com refinement variable }}
   | G , L			::   :: logical {{ com logical predicate }}
 
 L {{ tex \nonterm L }} :: logic_pred_ ::= {{ com logical predicate }}
-  | eS1 = eS2		::   :: termEq {{ com term equality }}
+  | es1 = es2		::   :: termEq {{ com term equality }}
   | A v . L			::   :: forall {{ com $\forall$ }}
   | ( L )			:: M :: parens {{ com parenthesizing }}
   | r1 => r2		::   :: impl   {{ com implication }}
@@ -44,31 +44,31 @@ C {{ tex \nonterm C }} :: logic_ctx_ ::= {{ com logical context }}
 
 defns Jtype :: '' ::=
 
-defn G |- tS :: :: type_wf :: TWF_ {{ com type well-formedness }} by
+defn G |- ts :: :: type_wf :: TWF_ {{ com type well-formedness }} by
 
 -------------------- :: TrueRef
 G |- { v : B | top }
 
-G , v : { v' : B | top } |- eS : { v : Bool | r }
+G , v : { v' : B | top } |- es : { v : Bool | r }
 ----------------------------------------------- :: Base
-G |- { v : B | eS }
+G |- { v : B | es }
 
 G |- { v : B | r1 }
 G |- { v : B | r2 }
 ------------------------- :: Conj
 G |- { v : B | r1 /\ r2 }
 
-G |- tS1
-G, x : tS1 |- tS2
+G |- ts1
+G, x : ts1 |- ts2
 --------------------- :: Arr
-G |- (x : tS1) -> tS2
+G |- (x : ts1) -> ts2
 
 
-defn G |- eS : tS :: :: typing :: T_ {{ com term typing }} by
+defn G |- es : ts :: :: typing :: T_ {{ com term typing }} by
 
-x : tS in G
+x : ts in G
 ---------- :: Var
-G |- x : tS
+G |- x : ts
 
 --------------------------- :: BoolTop
 G |- top : { v : Bool | top }
@@ -76,39 +76,39 @@ G |- top : { v : Bool | top }
 --------------------------- :: BoolBot
 G |- bot : { v : Bool | top }
 
-G |- ( x : tS1 ) -> tS2
-G |- eS1 : ( x : tS1 ) -> tS2
-G |- eS2 : tS1
+G |- ( x : ts1 ) -> ts2
+G |- es1 : ( x : ts1 ) -> ts2
+G |- es2 : ts1
 -------------------------- :: App
-G |- eS1 eS2 : {eS2/x}tS2
+G |- es1 es2 : {es2/x}ts2
 
-G , x : tS1 |- eS : tS2
+G , x : ts1 |- es : ts2
 ------------------------------------- :: Abs
-G |- \x : tS1. eS : ( x : tS1 ) -> tS2
+G |- \x : ts1. es : ( x : ts1 ) -> ts2
 
-G |- eS1 : { v : Bool | r }
-G , eS1 = top |- eS2 : tS
-G , eS1 = bot |- eS3 : tS
+G |- es1 : { v : Bool | r }
+G , es1 = top |- es2 : ts
+G , es1 = bot |- es3 : ts
 ------------------------------------- :: If
-G |- if eS1 then eS2 else eS3 : tS
+G |- if es1 then es2 else es3 : ts
 
-G |- eS : tS
-G |- tS' <: tS
+G |- es : ts
+G |- ts' <: ts
 ------------ :: Sub
-G |- eS : tS'
+G |- es : ts'
 
 
-defn G |- tS1 <: tS2 :: :: subtyping :: ST_ {{ com subtyping }} by
+defn G |- ts1 <: ts2 :: :: subtyping :: ST_ {{ com subtyping }} by
 
 [| G |] => A v. (r1 => r2)
 ------------------------------------- :: Base
 G |- { v : B | r1 } <: { v : B | r2 }
 
 
-G |- tS1' <: tS1
-G , x : tS1 |- tS2 <: tS2'
+G |- ts1' <: ts1
+G , x : ts1 |- ts2 <: ts2'
 --------------------------------------- :: Arr
-G |- (x : tS1) -> tS2 <: (x : tS1') -> tS2'
+G |- (x : ts1) -> ts2 <: (x : ts1') -> ts2'
 
 
 grammar
@@ -119,9 +119,9 @@ metavar n {{ tex \gterm n }} ::= {{ com integers }}
 grammar
 formula :: formula_ ::=
   | judgement	:: :: judgement
-  | x : tS in G :: :: xinenv
-  | eS = T		:: :: eTrue
-  | eS = F		:: :: eFalse
+  | x : ts in G :: :: xinenv
+  | es = T		:: :: eTrue
+  | es = F		:: :: eFalse
   | C => L		:: :: implication
   | ec =b ec2	:: :: betaconversion
 
