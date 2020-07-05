@@ -70,21 +70,25 @@
   \label{fig:surface_typing}
 \end{figure}
 
-The translation function $[|\ |]$ maps the typing context $\nonterm G$ to some logic.
-In the subsequent text we assume the oracle can decide the resulting proposition
-(otherwise it might be left as a separate lemma to be filled out by the user in the core language, or rejected altogether).
-
-For the example oracle being an SMT solver and the syntax of terms also including mathematics, $[|\ |]$ might be defined as
+The translation function $[|\ |]$ maps the typing context $\nonterm G$ to some logic:
 \begin{equation}
 \begin{aligned}
-  & [| \emptyset |]                                         && \triangleq \top																						 \\
+  & [| \emptyset |]                                         && \triangleq \top																						\\
   & [| \nonterm G, x : \{ v : \nonterm B | \nonterm r \} |] && \triangleq [| \nonterm G |] \land [| \{x/v\} \nonterm r |] \\
-  & [| \nonterm r_1 \land \nonterm r_2 |]                   && \triangleq [| \nonterm r_1 |] \land [| \nonterm r_2 |]		 \\
-  & \cdots TODO
+  & [| \nonterm r_1 \land \nonterm r_2 |]                   && \triangleq [| \nonterm r_1 |] \land [| \nonterm r_2 |]		  \\
+  & [| \nonterm{es} |]                                      && \triangleq \text{oracle}(\nonterm{es})                     \\
+  & [| \nonterm{es}_1 = \nonterm{es}_2 |]                   && \triangleq \text{oracle}(\nonterm{es}_1 = \nonterm{es}_2)  \\
 \end{aligned}
 \end{equation}
 
+The last two equations represent the assumption
+that the oracle knows how to translate the elementary refinements being the terms $\nonterm{es}$
+or equality propositions $\nonterm{es}_1 = \nonterm{es}_2$.
+
 %TODO define substitutions on the \nonterm r
+
+In the subsequent text we also assume the oracle can decide the resulting proposition
+(otherwise it might be left as a separate lemma to be filled out by the user in the core language, or rejected altogether).
 
 \subsection{Core language}
 
