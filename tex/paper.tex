@@ -132,6 +132,11 @@ We also establish some derived entities in the core language to simplify the sub
     \[
       (\tau_1, \tau_2) \triangleq \{ x : \tau_1\ **\ (\lambda \_ : \tau_1. \tau_2) x \}.
     \]
+  \item Equality of expressions $\nonterm{ec}_1, \nonterm{ec}_2$ of type $S$:
+    \[
+      \nonterm{ec}_1 \equiv \nonterm{ec}_2 \triangleq \Pi P : S \rightarrow \star. (P x \rightarrow P y, P y \rightarrow P x).
+    \]
+    Careful reader will recognize this as the Leibniz equality \cite{FindSomethingForThis}.
 \end{itemize}
 
 \section{Translation}
