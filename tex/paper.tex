@@ -170,14 +170,25 @@ Or, in words:
 
 \subsection{Correctness}
 
-We next formulate our key theorem:
+The correctness of the translation hinges on two key theorems.
+The first one claims that a well-typed program in surface language remains well-typed after the translation to the core language.
+The second one claims that a well-typed surface language program evaluates to ``the same'' value as the translated one.
 
-\begin{theorem}
+\begin{theorem}[Well-typedness preservation]
   For any well-typed surface language term $\nonterm{es}$,
-  the result of the translation $\mu_\epsilon(\nonterm{es})$ is well-typed in the core language:
+  the result of the translation $\mu_\epsilon(\nonterm{es})$ is ``equivalently'' typeable in the core language:
   \[
     \nonterm G \vdash \nonterm{es} : \nonterm{ts} \implies \mu_\Gamma(\nonterm G) \vdash \mu_\epsilon(\nonterm{es}) : \mu_\tau(\nonterm{ts})
   \]
 \end{theorem}
+\begin{proof}
+\end{proof}
+
+\begin{theorem}[Evaluation equivalence]
+  For any well-typed surface language term $\nonterm{es}$, if $\nonterm{es}$ evaluates to v, then $\mu_\varepsilon(\nonterm{es})$ evaluates to $\mu_\varepsilon(v)$:
+  %TODO symbols and all that for v
+\end{theorem}
+\begin{proof}
+\end{proof}
 
 \end{document}
