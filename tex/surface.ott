@@ -28,8 +28,8 @@ ts {{ tex \nonterm{ts} }} :: ts_ ::= {{ com types }}
 G {{ tex \nonterm G }} :: env_ ::= {{ com typing contexts }}
   | empty			::   :: nil {{ com empty }}
   | G , x : ts		::   :: var {{ com variable }}
-  | G , v : ts		::   :: refvar {{ com refinement variable }}
-  | G , es1 = es2	::   :: logical {{ com logical predicate }}
+  | G , v : ts		:: M :: refvar {{ com refinement variable }}
+  | G , es1 = es2	::   :: logical {{ com term equality }}
 
 L {{ tex \nonterm L }} :: logic_pred_ ::= {{ com logical predicate }}
   | es1 = es2		::   :: termEq {{ com term equality }}
