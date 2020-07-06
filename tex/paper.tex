@@ -162,9 +162,12 @@ Or, in words:
 
 We next formulate our key theorem:
 
-\theorem For any well-typed surface language term $\nonterm{es}$, the result of the translation $\mu_\epsilon(\nonterm{es})$ is well-typed in the core language:
-\[
-  \nonterm G \vdash \nonterm{es} : \nonterm{ts} \implies \mu_\Gamma(\nonterm G) \vdash \mu_\epsilon(\nonterm{es}) : \mu_\tau(\nonterm{ts})
-\]
+\begin{theorem}
+  For any well-typed surface language term $\nonterm{es}$,
+  the result of the translation $\mu_\epsilon(\nonterm{es})$ is well-typed in the core language:
+  \[
+    \nonterm G \vdash \nonterm{es} : \nonterm{ts} \implies \mu_\Gamma(\nonterm G) \vdash \mu_\epsilon(\nonterm{es}) : \mu_\tau(\nonterm{ts})
+  \]
+\end{theorem}
 
 \end{document}
