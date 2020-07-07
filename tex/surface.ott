@@ -31,7 +31,6 @@ ts {{ tex \nonterm{ts} }} :: ts_ ::= {{ com types }}
 G {{ tex \nonterm G }} :: env_ ::= {{ com typing contexts }}
   | empty			::   :: nil {{ com empty }}
   | G , x : ts		::   :: var {{ com variable }}
-  | G , v : ts		:: M :: refvar {{ com refinement variable }}
 
 L {{ tex \nonterm L }} :: logic_pred_ ::= {{ com logical predicate }}
   | es1 = es2		::   :: termEq {{ com term equality }}
@@ -51,8 +50,9 @@ defn G |- ts :: :: type_wf :: TWF_ {{ com type well-formedness }} by
 -------------------- :: TrueRef
 G |- { v : B | top }
 
-G , v : { v' : B | top } |- es1 : { v : Bool | r1 }
-G , v : { v' : B | top } |- es2 : { v : Bool | r2 }
+G , x : { v : B | top } |- [v |-> x] es1 : { v : Bool | r1 }
+G , x : { v : B | top } |- [v |-> x] es2 : { v : Bool | r2 }
+x fresh
 -------------------------------------------------- :: Base
 G |- { v : B | es1 = es2 }
 
