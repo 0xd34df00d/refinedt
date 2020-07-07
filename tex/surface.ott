@@ -25,7 +25,7 @@ ts {{ tex \nonterm{ts} }} :: ts_ ::= {{ com types }}
   | { v : B | r }		::   :: tybase {{ com refined base type }}
   | { _ : B | r }		:: M :: irrelevant {{ com var-irrelevant refined base type }}
   | ( x : ts1 ) -> ts2	::   :: tyarr  {{ com arrow type }}
-  | { es / x } ts		:: M :: tsubst
+  | [ x |-> es ] ts		:: M :: tsubst
 
 G {{ tex \nonterm G }} :: env_ ::= {{ com typing contexts }}
   | empty			::   :: nil {{ com empty }}
@@ -82,7 +82,7 @@ G |- ( x : ts1 ) -> ts2
 G |- es1 : ( x : ts1 ) -> ts2
 G |- es2 : ts1
 -------------------------- :: App
-G |- es1 es2 : {es2/x}ts2
+G |- es1 es2 : [ x |-> es2] ts2
 
 G , x : ts1 |- es : ts2
 ------------------------------------- :: Abs
@@ -134,6 +134,7 @@ terminals :: terminals_ ::=
   | bot		:: :: bot {{ tex \bot }}
   | /\      :: :: and {{ tex \land }}
   | ->      :: :: arr {{ tex \rightarrow }}
+  | |->     :: :: subst {{ tex \mapsto }}
   | in		:: :: in  {{ tex \in }}
   | |-		:: :: proves {{ tex \vdash }}
   | \       :: :: lambda {{ tex \lambda }}
@@ -159,7 +160,7 @@ ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
   | ec1 ec2				::   :: app {{ com application }}
   | Bool				::   :: bool {{ com base bool type }}
   | Int					::   :: int {{ com base int type }}
-  | { ec1 / x } ec2		:: M :: subst
+  | [ x |-> ec1 ] ec2		:: M :: subst
 
 s {{ tex \nonterm{s} }} :: s_ ::= {{ com sorts }}
   | sst				::   :: type {{ com types }}
@@ -193,7 +194,7 @@ GC |- Pi x : ec1 . ec2 : s2
 GC |- ec1' : Pi x : ec1 . ec2
 GC |- ec2' : ec1
 ----------------------------- :: App
-GC |- ec1' ec2' : {ec1/x}ec2
+GC |- ec1' ec2' : [ x |-> ec1 ] ec2
 
 GC , x : ec1 |- ec : ec2
 GC |- Pi x : ec1 . ec2 : s
