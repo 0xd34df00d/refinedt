@@ -124,6 +124,7 @@ formula :: formula_ ::=
   | es = F		:: :: eFalse
   | C => L		:: :: implication
   | ec =b ec2	:: :: betaconversion
+  | x fresh		:: :: freshness
 
 terminals :: terminals_ ::=
   | top		:: :: top {{ tex \top }}
@@ -141,6 +142,7 @@ terminals :: terminals_ ::=
   | ssq		:: :: squarekind {{ tex \square }}
   | empty   :: :: empty {{ tex \emptyset }}
   | =b		:: :: beq {{ tex =_\beta }}
+  | fresh	:: :: fresh {{ tex \text{fresh name} }}
 
 
 %%% Core language
