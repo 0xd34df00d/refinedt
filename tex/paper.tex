@@ -159,7 +159,9 @@ which merely translates the types of the bindings in the context from the surfac
 \end{aligned}
 \end{equation}
 
-$\mu_\tau$ is defined as follows:
+$\mu_\tau$ is defined as follows,
+with the slight abuse of notation to allow ``recursive'' calls
+on refinement part of the surface language syntax:
 \begin{equation}
 \begin{aligned}
   & \mu_\tau( (x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2)  && \triangleq \Pi x : \mu_\tau(\nonterm{ts}_1). \mu_\tau(\nonterm{ts}_2)              \\
