@@ -78,6 +78,7 @@
   \caption{Surface language subtyping}
   \label{fig:surface_subtyping}
 \end{figure}
+
 The translation function $[|\ |]$ maps the typing context $\nonterm G$ to some logic:
 \begin{equation}
 \begin{aligned}
@@ -147,7 +148,21 @@ We also establish some derived entities in the core language to simplify the sub
 
 \section{Translation}
 
-We translate the surface language types and terms using the $\mu_\tau$ and $\mu_\varepsilon$ functions respectively.
+We translate the surface language contexts, types and terms into the corresponding core language entities
+using the $\mu_\Gamma$, $\mu_\tau$ and $\mu_\varepsilon$ functions respectively,
+which are defined mutually recursively.
+
+We start with defining $\mu_\Gamma$:
+\begin{equation}
+\begin{aligned}
+  & \mu_\Gamma(\emptyset)                                       && \triangleq \emptyset                                                     \\
+  & \mu_\Gamma(\nonterm G, \gterm x : \nonterm{ts})             && \triangleq \nonterm{GC},
+                                                                    \gterm x : \mu_\tau(\nonterm{ts})                                       \\
+  & \mu_\Gamma(\nonterm G, \nonterm{es}_1 = \nonterm{es}_2)     && \triangleq \nonterm{GC},
+                                                                    \mu_\varepsilon(\nonterm{es}_1) \equiv \mu_\varepsilon(\nonterm{es}_2)  \\
+\end{aligned}
+\end{equation}
+
 $\mu_\tau$ is defined as follows:
 \begin{equation}
 \begin{aligned}
@@ -166,8 +181,6 @@ Or, in words:
   \item atomic refinements (which are $\text{Bool}$-typed terms) are translated to propositions stating that the corresponding term is equal to $\text{True}$,
   \item conjunctions of several (atomic) refinements are represented as tuples of the corresponding atomic translations.
 \end{itemize}
-
-%TODO define translation for gammas
 
 \subsection{Correctness}
 
