@@ -50,8 +50,8 @@ defn G |- ts :: :: type_wf :: TWF_ {{ com type well-formedness }} by
 -------------------- :: TrueRef
 G |- { v : B | top }
 
-G , x : { v : B | top } |- [v |-> x] es1 : { v : Bool | r1 }
-G , x : { v : B | top } |- [v |-> x] es2 : { v : Bool | r2 }
+G , x : { v : B | top } |- [v |-> x] es1 : { v : B' | r1 }
+G , x : { v : B | top } |- [v |-> x] es2 : { v : B' | r2 }
 x fresh
 -------------------------------------------------- :: Base
 G |- { v : B | es1 = es2 }
