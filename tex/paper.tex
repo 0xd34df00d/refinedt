@@ -151,12 +151,11 @@ using the $\mu_\Gamma$, $\mu_\tau$ and $\mu_\varepsilon$ functions respectively,
 which are defined mutually recursively.
 
 We start with defining $\mu_\Gamma$,
-which merely translates the types of the bindings from the surface language into the core language:
+which merely translates the types of the bindings in the context from the surface language into the core language:
 \begin{equation}
 \begin{aligned}
   & \mu_\Gamma(\emptyset)                                       && \triangleq \emptyset                                                     \\
-  & \mu_\Gamma(\nonterm G, \gterm x : \nonterm{ts})             && \triangleq \nonterm{GC},
-                                                                    \gterm x : \mu_\tau(\nonterm{ts})                                       \\
+  & \mu_\Gamma(\nonterm G, \gterm x : \nonterm{ts})             && \triangleq \mu_\Gamma(\nonterm G), \gterm x : \mu_\tau(\nonterm{ts})     \\
 \end{aligned}
 \end{equation}
 
