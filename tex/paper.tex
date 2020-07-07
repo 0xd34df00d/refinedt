@@ -162,19 +162,20 @@ which merely translates the types of the bindings in the context from the surfac
 $\mu_\tau$ is defined as follows:
 \begin{equation}
 \begin{aligned}
-  & \mu_\tau( (x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2)  && \triangleq \Pi x : \mu_\tau(\nonterm{ts}_1). \mu_\tau(\nonterm{ts}_2)  \\
-  & \mu_\tau( \{ v : \nonterm{ts} | \nonterm{r} \})             && \triangleq \{ v : \mu_\tau(\nonterm{ts})\ **\ \mu_\tau(\nonterm r) \}  \\
-  & \mu_\tau( \nonterm r_1 \land \nonterm r_2 )                 && \triangleq ( \mu_\tau(\nonterm r_1) , \mu_\tau(\nonterm r_2))          \\
-  & \mu_\tau( \nonterm{es} )                                    && \triangleq \mu_\varepsilon(\nonterm{es}) = \text{True}                 \\
+  & \mu_\tau( (x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2)  && \triangleq \Pi x : \mu_\tau(\nonterm{ts}_1). \mu_\tau(\nonterm{ts}_2)        \\
+  & \mu_\tau( \{ v : \nonterm{ts} | \nonterm{r} \})             && \triangleq \{ v : \mu_\tau(\nonterm{ts})\ **\ \mu_\tau(\nonterm r) \}        \\
+  & \mu_\tau( \nonterm r_1 \land \nonterm r_2 )                 && \triangleq ( \mu_\tau(\nonterm r_1) , \mu_\tau(\nonterm r_2))                \\
+  & \mu_\tau( \nonterm{es}_1 = \nonterm{es}_2 )                 && \triangleq \mu_\varepsilon(\nonterm{es}_1) = \mu_\varepsilon(\nonterm{es}_2) \\
 %TODO add syntax/typing rules for True
-  & \mu_\tau(B)                                                 && \triangleq B                                                           \\
+  & \mu_\tau(B)                                                 && \triangleq B                                                                 \\
 \end{aligned}
 \end{equation}
 Or, in words:
 \begin{itemize}
   \item (dependent) arrow types are translated to the corresponding $\Pi$-types,
   \item refined types are translated to the corresponding $\Sigma$-types,
-  \item atomic refinements (which are $\text{Bool}$-typed terms) are translated to propositions stating that the corresponding term is equal to $\text{True}$,
+  \item atomic refinements, being propositions about surface language terms equality,
+    are translated to propositions stating the equality of translated core language terms,
   \item conjunctions of several (atomic) refinements are represented as tuples of the corresponding atomic translations.
 \end{itemize}
 
