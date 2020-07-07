@@ -83,7 +83,7 @@ The translation function $[|\ |]$ maps the typing context $\nonterm G$ to some l
 \begin{equation}
 \begin{aligned}
   & [| \emptyset |]                                         && \triangleq && \top																						  \\
-  & [| \nonterm G, x : \{ v : \nonterm B | \nonterm r \} |] && \triangleq && [| \nonterm G |] \land [| \{x/v\} \nonterm r |]  \\
+  & [| \nonterm G, x : \{ v : \nonterm B | \nonterm r \} |] && \triangleq && [| \nonterm G |] \land [| [ v \mapsto x ] \nonterm r |]  \\
   & [| \nonterm r_1 \land \nonterm r_2 |]                   && \triangleq && [| \nonterm r_1 |] \land [| \nonterm r_2 |]      \\
   & [| \nonterm{es}_1 = \nonterm{es}_2 |]                   && \triangleq && \text{oracle}(\nonterm{es}_1 = \nonterm{es}_2)   \\
 \end{aligned}
