@@ -13,7 +13,8 @@ es {{ tex \nonterm{es} }} :: tmS_ ::= {{ com terms }}
   | bot				::   :: false {{ com false }}
 
 r {{ tex \nonterm r }} :: ref_ ::= {{ com refinements }}
-  | es				::   :: rexpr {{ com atomic refinement }}
+  | top				:: M :: top {{ com top }}
+  | es1 = es2		::   :: rexpr {{ com atomic refinement }}
   | r1 /\ r2		::   :: rconj {{ com conjunction }}
 
 B {{ tex \nonterm B }} :: tbasep_ ::= {{ com base types }}
@@ -22,6 +23,7 @@ B {{ tex \nonterm B }} :: tbasep_ ::= {{ com base types }}
 
 ts {{ tex \nonterm{ts} }} :: ts_ ::= {{ com types }}
   | { v : B | r }		::   :: tybase {{ com refined base type }}
+  | { _ : B | r }		:: M :: irrelevant {{ com var-irrelevant refined base type }}
   | ( x : ts1 ) -> ts2	::   :: tyarr  {{ com arrow type }}
   | { es / x } ts		:: M :: tsubst
 
@@ -29,7 +31,6 @@ G {{ tex \nonterm G }} :: env_ ::= {{ com typing contexts }}
   | empty			::   :: nil {{ com empty }}
   | G , x : ts		::   :: var {{ com variable }}
   | G , v : ts		:: M :: refvar {{ com refinement variable }}
-  | G , es1 = es2	::   :: logical {{ com term equality }}
 
 L {{ tex \nonterm L }} :: logic_pred_ ::= {{ com logical predicate }}
   | es1 = es2		::   :: termEq {{ com term equality }}
@@ -49,9 +50,10 @@ defn G |- ts :: :: type_wf :: TWF_ {{ com type well-formedness }} by
 -------------------- :: TrueRef
 G |- { v : B | top }
 
-G , v : { v' : B | top } |- es : { v : Bool | r }
------------------------------------------------ :: Base
-G |- { v : B | es }
+G , v : { v' : B | top } |- es1 : { v : Bool | r1 }
+G , v : { v' : B | top } |- es2 : { v : Bool | r2 }
+-------------------------------------------------- :: Base
+G |- { v : B | es1 = es2 }
 
 G |- { v : B | r1 }
 G |- { v : B | r2 }
@@ -87,8 +89,9 @@ G , x : ts1 |- es : ts2
 G |- \x : ts1. es : ( x : ts1 ) -> ts2
 
 G |- es1 : { v : Bool | r }
-G , es1 = top |- es2 : ts
-G , es1 = bot |- es3 : ts
+G , x : { _ : Bool | es1 = top } |- es2 : ts
+G , x : { _ : Bool | es1 = bot } |- es3 : ts
+x fresh
 ------------------------------------- :: If
 G |- if es1 then es2 else es3 : ts
 
