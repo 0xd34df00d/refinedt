@@ -11,6 +11,7 @@ es {{ tex \nonterm{es} }} :: tmS_ ::= {{ com terms }}
   | es1 es2			::   :: app {{ com application }}
   | top				::   :: true {{ com true }}
   | bot				::   :: false {{ com false }}
+  | [ v |-> es' ] es	:: M :: evsubst
 
 r {{ tex \nonterm r }} :: ref_ ::= {{ com refinements }}
   | top				:: M :: top {{ com top }}
@@ -25,7 +26,7 @@ ts {{ tex \nonterm{ts} }} :: ts_ ::= {{ com types }}
   | { v : B | r }		::   :: tybase {{ com refined base type }}
   | { _ : B | r }		:: M :: irrelevant {{ com var-irrelevant refined base type }}
   | ( x : ts1 ) -> ts2	::   :: tyarr  {{ com arrow type }}
-  | [ x |-> es ] ts		:: M :: tsubst
+  | [ x |-> es ] ts		:: M :: txsubst
 
 G {{ tex \nonterm G }} :: env_ ::= {{ com typing contexts }}
   | empty			::   :: nil {{ com empty }}
