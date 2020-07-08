@@ -18,7 +18,8 @@ r {{ tex \nonterm r }} :: ref_ ::= {{ com refinements }}
   | r1 /\ r2		::   :: rconj {{ com conjunction }}
 
 B {{ tex \nonterm B }} :: tbasep_ ::= {{ com base types }}
-  | Bool			::	 :: bBool
+  | Bool			::	 :: bool
+  | Unit			::   :: unit
 
 ts {{ tex \nonterm{ts} }} :: ts_ ::= {{ com types }}
   | { v : B | r }		::   :: tybase {{ com refined base type }}
@@ -88,8 +89,8 @@ G , x : ts1 |- es : ts2
 G |- \x : ts1. es : ( x : ts1 ) -> ts2
 
 G |- es1 : { v : Bool | r }
-G , x : { _ : Bool | es1 = top } |- es2 : ts
-G , x : { _ : Bool | es1 = bot } |- es3 : ts
+G , x : { _ : Unit | es1 = top } |- es2 : ts
+G , x : { _ : Unit | es1 = bot } |- es3 : ts
 x fresh
 ------------------------------------- :: If
 G |- if es1 then es2 else es3 : ts
