@@ -80,6 +80,22 @@
   \label{fig:surface_subtyping}
 \end{figure}
 
+The surface language might also have other base types (for example, $\mathbf{Int}$),
+elements of syntax (like numbers and operations on them)
+as well as typing rules relating those,
+but we omit them for the sake of brevity.
+
+Note that although the syntax does not allow refining function types or ADTs,
+it does not restrict the expressive power of the language.
+For instance, a refinement on a function that we might otherwise wish to write as
+\[
+  (x : \mathbf{Int}) \rightarrow \{ v : \mathbf{Int} \rightarrow \mathbf{Int} | v x = 0 \} \rightarrow \mathbf{Int}
+\]
+might instead be expressed via a dummy parameter:
+\[
+  (x : \mathbf{Int}) \rightarrow (f : \mathbf{Int} \rightarrow \mathbf{Int}) \rightarrow \{ \_ : \mathbf{Unit} | f x = 0 \} \rightarrow \mathbf{Int}
+\]
+
 The translation function $[|\ |]$ maps the typing context $\nonterm G$ to some logic
 that the oracle can handle.
 It might be defined as follows:
