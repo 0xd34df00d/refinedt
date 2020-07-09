@@ -126,9 +126,9 @@ We also establish some derived entities in the core language to simplify the sub
     \]
   \item Dependent pair type, or $\Sigma$-type, with the first component being a value $x$ of type $\tau$ and the second component being of type $P x$:
     \[
-      \{ x : \tau\ **\ P x \} \triangleq \Pi \alpha : \star. (\Pi x : \tau. P x \rightarrow \alpha) \rightarrow \alpha.
+      \{ x : \tau\ **\ P x \} \triangleq \Pi \alpha : \star. (\Pi x : \tau. P x \rightarrow \alpha) \rightarrow \alpha,
     \]
-  \item Accessing the first and second component of the dependent pair:
+    with the corresponding accessors:
     \[
       \text{fst} \triangleq TODO,
     \]
