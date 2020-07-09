@@ -7,8 +7,7 @@ es {{ tex \nonterm{es} }} :: tmS_ ::= {{ com terms }}
 					::   :: case {{ com case }}
   | \ x : ts . es	::   :: abs {{ com abstraction }}
   | es1 es2			::   :: app {{ com application }}
-  | top				::   :: true {{ com true }}
-  | bot				::   :: false {{ com false }}
+  | unit			::   :: top {{ com unit value }}
   | v				:: M :: refvar {{ com refinement var }}
   | [ v |-> es' ] es	:: M :: evsubst
 
@@ -21,7 +20,6 @@ r {{ tex \nonterm r }} :: ref_ ::= {{ com refinements }}
   | r1 /\ r2		::   :: rconj {{ com conjunction }}
 
 B {{ tex \nonterm B }} :: tbasep_ ::= {{ com base types }}
-  | Bool			::	 :: bool
   | Unit			::   :: unit
 
 ts {{ tex \nonterm{ts} }} :: ts_ ::= {{ com types }}
@@ -76,11 +74,8 @@ x : ts in G
 ---------- :: Var
 G |- x : ts
 
---------------------------- :: BoolTop
-G |- top : { v : Bool | top }
-
---------------------------- :: BoolBot
-G |- bot : { v : Bool | top }
+------------------------------ :: Unit
+G |- unit : { v : Unit | top }
 
 G |- ( x : ts1 ) -> ts2
 G |- es1 : ( x : ts1 ) -> ts2
@@ -154,6 +149,7 @@ terminals :: terminals_ ::=
   | fresh	:: :: fresh {{ tex \text{fresh name} }}
   | <		:: :: langle {{ tex \langle }}
   | >		:: :: rangle {{ tex \rangle }}
+  | unit	:: :: unit {{ tex \unit }}
   | Unit	:: :: Unit {{ tex \Unit }}
 
 
@@ -166,7 +162,6 @@ ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
   | Pi x : ec1 . ec2	::   :: piabs {{ com $\Pi$-type }}
   | \ x : ec1 . ec2		::   :: lamabs {{ com abstraction }}
   | ec1 ec2				::   :: app {{ com application }}
-  | Bool				::   :: bool {{ com base bool type }}
   | [ x |-> ec1 ] ec2	:: M :: subst
 
 s {{ tex \nonterm{s} }} :: s_ ::= {{ com sorts }}
