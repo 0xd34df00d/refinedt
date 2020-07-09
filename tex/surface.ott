@@ -3,13 +3,13 @@
 grammar
 es {{ tex \nonterm{es} }} :: tmS_ ::= {{ com terms }}
   | x				::   :: var {{ com variable }}
-  | v				::   :: refvar {{ com refinement var }}
   | if es1 then es2 else es3
 					::   :: ite {{ com conditional }}
   | \ x : ts . es	::   :: abs {{ com abstraction }}
   | es1 es2			::   :: app {{ com application }}
   | top				::   :: true {{ com true }}
   | bot				::   :: false {{ com false }}
+  | v				:: M :: refvar {{ com refinement var }}
   | [ v |-> es' ] es	:: M :: evsubst
 
 r {{ tex \nonterm r }} :: ref_ ::= {{ com refinements }}
