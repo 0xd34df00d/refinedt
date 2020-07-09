@@ -3,14 +3,17 @@
 grammar
 es {{ tex \nonterm{es} }} :: tmS_ ::= {{ com terms }}
   | x				::   :: var {{ com variable }}
-  | if es1 then es2 else es3
-					::   :: ite {{ com conditional }}
+  | case es of </ li = xi -> esi // i />
+					::   :: case {{ com case }}
   | \ x : ts . es	::   :: abs {{ com abstraction }}
   | es1 es2			::   :: app {{ com application }}
   | top				::   :: true {{ com true }}
   | bot				::   :: false {{ com false }}
   | v				:: M :: refvar {{ com refinement var }}
   | [ v |-> es' ] es	:: M :: evsubst
+
+l {{ tex \nonterm l }} :: labels_ ::= {{ com ADT labels }}
+  | <token>			::   :: str {{ com token }}
 
 r {{ tex \nonterm r }} :: ref_ ::= {{ com refinements }}
   | top				:: M :: top {{ com top }}
@@ -88,12 +91,12 @@ G , x : ts1 |- es : ts2
 ------------------------------------- :: Abs
 G |- \x : ts1. es : ( x : ts1 ) -> ts2
 
-G |- es1 : { v : Bool | r }
-G , x : { _ : Unit | es1 = top } |- es2 : ts
-G , x : { _ : Unit | es1 = bot } |- es3 : ts
-x fresh
-------------------------------------- :: If
-G |- if es1 then es2 else es3 : ts
+%G |- es1 : { v : Bool | r }
+%G , x : { _ : Unit | es1 = top } |- es2 : ts
+%G , x : { _ : Unit | es1 = bot } |- es3 : ts
+%x fresh
+%------------------------------------- :: If
+%G |- if es1 then es2 else es3 : ts
 
 G |- es : ts
 G |- ts' <: ts
@@ -118,6 +121,7 @@ grammar
 metavar x {{ tex \gterm x }} ::= {{ com variables }}
 metavar v {{ tex \gterm v }} ::= {{ com refinement variables }}
 metavar n {{ tex \gterm n }} ::= {{ com integers }}
+indexvar i ::= {{ com indexes }}
 
 grammar
 formula :: formula_ ::=
