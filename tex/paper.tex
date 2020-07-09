@@ -15,6 +15,9 @@
 
 \newtheorem{theorem}{Theorem}
 
+\newcommand{\Unit}{\textbf{Unit}}
+\newcommand{\Int}{\textbf{Int}}
+
 \begin{document}
 
 \newNTclass{nonterm}
@@ -80,7 +83,7 @@
   \label{fig:surface_subtyping}
 \end{figure}
 
-The surface language might also have other base types (for example, $\mathbf{Int}$),
+The surface language might also have other base types (for example, $\Int$),
 elements of syntax (like numbers and operations on them)
 as well as typing rules relating those,
 but we omit them for the sake of brevity.
@@ -91,11 +94,11 @@ We also have the following concessions:
     Note that this does not restrict the expressive power of the language.
     For instance, a refinement on a function that we might otherwise wish to write as
     \[
-      (x : \mathbf{Int}) \rightarrow \{ v : \mathbf{Int} \rightarrow \mathbf{Int} | v x = 0 \} \rightarrow \mathbf{Int}
+      (x : \Int) \rightarrow \{ v : \Int \rightarrow \Int | v x = 0 \} \rightarrow \Int
     \]
     might instead be expressed via a dummy parameter:
     \[
-      (x : \mathbf{Int}) \rightarrow (f : \mathbf{Int} \rightarrow \mathbf{Int}) \rightarrow \{ \_ : \mathbf{Unit} | f x = 0 \} \rightarrow \mathbf{Int}.
+      (x : \Int) \rightarrow (f : \Int \rightarrow \Int) \rightarrow \{ \_ : \Unit | f x = 0 \} \rightarrow \Int.
     \]
 \end{itemize}
 
