@@ -100,6 +100,10 @@ We also have the following concessions:
     \[
       (x : \Int) \rightarrow (f : \Int \rightarrow \Int) \rightarrow \{ \_ : \Unit | f x = 0 \} \rightarrow \Int.
     \]
+  \item Our algebraic data types only allow a single ``field'' in each constructor.
+    One way to alleviate this is to introduce tuples,
+    but doing so would complicate the exposition
+    without any benefit for illustrating the main idea of this work.
 \end{itemize}
 
 The translation function $[|\ |]$ maps the typing context $\nonterm G$ to some logic
