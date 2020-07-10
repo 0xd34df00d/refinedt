@@ -119,7 +119,7 @@ grammar
 metavar x {{ tex \gterm x }} ::= {{ com variables }}
 metavar v {{ tex \gterm v }} ::= {{ com refinement variables }}
 metavar n {{ tex \gterm n }} ::= {{ com integers }}
-indexvar i ::= {{ com indexes }}
+indexvar i, j ::= {{ com indexes }}
 
 grammar
 formula :: formula_ ::=
