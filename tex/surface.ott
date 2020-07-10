@@ -2,13 +2,14 @@
 
 grammar
 es {{ tex \nonterm{es} }} :: tmS_ ::= {{ com terms }}
-  | x				::   :: var {{ com variable }}
+  | x					::   :: var {{ com variable }}
+  | \ x : ts . es		::   :: abs {{ com abstraction }}
+  | es1 es2				::   :: app {{ com application }}
+  | unit				::   :: top {{ com unit value }}
   | case es of </ li = xi -> esi // i />
-					::   :: case {{ com case }}
-  | \ x : ts . es	::   :: abs {{ com abstraction }}
-  | es1 es2			::   :: app {{ com application }}
-  | unit			::   :: top {{ com unit value }}
-  | v				:: M :: refvar {{ com refinement var }}
+						::   :: case {{ com ADT case }}
+  | < l = es >			::   :: adt {{ com ADT construction }}
+  | v					:: M :: refvar {{ com refinement var }}
   | [ v |-> es' ] es	:: M :: evsubst
 
 l {{ tex \nonterm l }} :: labels_ ::= {{ com ADT labels }}
