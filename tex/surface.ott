@@ -8,7 +8,8 @@ es {{ tex \nonterm{es} }} :: tmS_ ::= {{ com terms }}
   | unit				::   :: top {{ com unit value }}
   | case es of </ li = xi -> esi // i />
 						::   :: case {{ com ADT case }}
-  | < l = es >			::   :: adt {{ com ADT construction }}
+  | < l = es > as < </ li : tsi // i /> >
+						::   :: adt {{ com ADT construction }}
   | v					:: M :: refvar {{ com refinement var }}
   | [ v |-> es' ] es	:: M :: evsubst
 
@@ -91,10 +92,10 @@ G |- \x : ts1. es : ( x : ts1 ) -> ts2
 G |- es : < </ li : tsi // i /> >
 %TODO
 %</ G , xi : tsi , x : { _ : Unit | es = < li = xi > } |- esi : ts // i />
-G , xi : tsi , x : { _ : Unit | es = < li = xi > } |- esi : ts
+G , xj : tsj , x : { _ : Unit | es = < lj = xj > as < </ li : tsi // i /> > } |- esj : ts
 x fresh
 -------------------------------------------------------------------------- :: Case
-G |- case es of </ li = xi -> esi // i />  : ts
+G |- case es of </ lj = xj -> esj // i />  : ts
 
 G |- es : ts
 G |- ts' <: ts
