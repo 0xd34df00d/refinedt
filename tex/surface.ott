@@ -97,6 +97,11 @@ x fresh
 -------------------------------------------------------------------------- :: Case
 G |- case es of </ lj = xj -> esj // i />  : ts
 
+G |- es : tsj
+lj in </ li // i />
+------------------------------------------ :: Con
+G |- < lj = es > as < </ li : tsi // i /> > : < </ li : tsi // i /> >
+
 G |- es : ts
 G |- ts' <: ts
 ------------ :: Sub
@@ -131,6 +136,8 @@ formula :: formula_ ::=
   | C => L		:: :: implication
   | ec =b ec2	:: :: betaconversion
   | x fresh		:: :: freshness
+  | l in </ li // i />
+				:: :: label_membership
 
 terminals :: terminals_ ::=
   | top		:: :: top {{ tex \top }}
