@@ -189,6 +189,7 @@ We translate the surface language contexts, types and terms into the correspondi
 using the $\mu_\Gamma$, $\mu_\tau$ and $\mu_\varepsilon$ functions respectively,
 which are defined mutually recursively.
 
+\paragraph{Contexts.}
 We start with defining $\tranctx$,
 which merely translates the types of the bindings in the context from the surface language into the core language:
 \begin{equation}
@@ -198,9 +199,10 @@ which merely translates the types of the bindings in the context from the surfac
 \end{aligned}
 \end{equation}
 
+\paragraph{Types.}
 $\tranty$ is defined as follows,
 with the slight abuse of notation to allow ``recursive'' calls
-on refinement part of the surface language syntax:
+on the refinement part of the surface language syntax:
 \begin{equation}
 \begin{aligned}
   & \tranty( (x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2)  && \triangleq \Pi x : \tranty(\nonterm{ts}_1). \tranty(\nonterm{ts}_2)     \\
