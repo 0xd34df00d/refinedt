@@ -227,6 +227,19 @@ Or, in words:
   \item conjunctions of several (atomic) refinements are represented as tuples of the corresponding atomic translations.
 \end{itemize}
 
+\paragraph{Terms.}
+Finally we define $\tranterm$:
+\begin{equation}
+\begin{aligned}
+  & \tranterm(x) &&
+    \triangleq x                                                              \\
+  & \tranterm(\lambda x : \nonterm{ts}. \nonterm{es})  &&
+    \triangleq \lambda x : \tranty(\nonterm{ts}). \tranterm(\nonterm{es})     \\
+  & \tranterm(\nonterm{es}_1 \nonterm{es}_2)  &&
+    \triangleq \tranterm(\nonterm{es}_1) \tranterm(\nonterm{es}_2)            \\
+\end{aligned}
+\end{equation}
+
 \subsection{Correctness}
 
 The correctness of the translation hinges on two key theorems.
