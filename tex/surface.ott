@@ -161,6 +161,8 @@ terminals :: terminals_ ::=
   | >		:: :: rangle {{ tex \rangle }}
   | unit	:: :: unit {{ tex \unit }}
   | Unit	:: :: Unit {{ tex \Unit }}
+  | unitc	:: :: unitc {{ tex \unitc }}
+  | Unitc	:: :: Unitc {{ tex \Unitc }}
 
 
 %%% Core language
@@ -173,6 +175,8 @@ ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
   | \ x : ec1 . ec2		::   :: lamabs {{ com abstraction }}
   | ec1 ec2				::   :: app {{ com application }}
   | [ x |-> ec1 ] ec2	:: M :: subst
+  | unitc				::   :: unit {{ com unit value }}
+  | Unitc				::   :: Unit {{ com unit type }}
 
 s {{ tex \nonterm{s} }} :: s_ ::= {{ com sorts }}
   | sst				::   :: type {{ com types }}
@@ -188,6 +192,12 @@ defn GC |- ec1 : ec2 :: :: coretyping :: CT_ {{ com typing }} by
 
 ------------------ :: Sort
 empty |- sst : ssq
+
+------------------ :: UnitTerm
+GC |- unitc : Unitc
+
+------------------ :: UnitType
+GC |- Unitc : sst
 
 GC |- ec : s
 --------------------- :: Var

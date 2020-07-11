@@ -134,7 +134,9 @@ In the subsequent text we also assume the oracle can decide the resulting propos
 
 \subsection{Core language}
 
-We take $\lambda C$ \cite{Nederpelt14} enriched with case-splitting inspired by \cite{TAPLVariants,EisenbergThesis} as our core dependently typed language.
+We take $\lambda C$ \cite{Nederpelt14}
+enriched with case-splitting inspired by \cite{TAPLVariants,EisenbergThesis}
+and a unit type as our core dependently typed language.
 
 \begin{figure}[ht]
   \footnotesize
@@ -145,7 +147,7 @@ We take $\lambda C$ \cite{Nederpelt14} enriched with case-splitting inspired by 
 
 \begin{figure}[ht]
   \footnotesize
-  \drules[CT]{$\nonterm G \vdash \nonterm{ec}_1 : \nonterm{ec}_2$}{core typing}{Sort,Var,Weaken,Form,App,Abs,Conv}
+  \drules[CT]{$\nonterm G \vdash \nonterm{ec}_1 : \nonterm{ec}_2$}{core typing}{Sort,UnitType,UnitTerm,Var,Weaken,Form,App,Abs,Conv}
   \caption{Core language typing rules}
   \label{fig:core_typing}
 \end{figure}
