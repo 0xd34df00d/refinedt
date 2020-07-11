@@ -105,15 +105,15 @@ convertRefinement Refinement { .. } = mapM (convertTerm . getARTerm) conjuncts >
       BinOpGeq -> mkGe
 
 createName :: MonadConvert m => Ty -> VarName -> m ()
-createName (TyBase rbty) varName = void $ createVar (baseType rbty) varName
+createName (TyBase rbTy) varName = void $ createVar (baseType rbTy) varName
 createName (TyArrow arrTy) varName = createFun arrTy varName
 
 createVar :: MonadConvert m => BaseTy -> VarName -> m Z3Var
-createVar rbty varName = do
+createVar rbTy varName = do
   ifM (gets $ HM.member varName . variables)
     (error [i|#{getName varName} has already been instantiated|])
     (pure ())
-  z3var <- Z3Var <$> mkFreshTypedVar rbty (getName varName)
+  z3var <- Z3Var <$> mkFreshTypedVar rbTy (getName varName)
   modify' $ \cs -> cs { variables = HM.insert varName z3var $ variables cs }
   pure z3var
   where
