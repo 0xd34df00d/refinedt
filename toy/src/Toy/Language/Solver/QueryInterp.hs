@@ -106,9 +106,7 @@ convertRefinement Refinement { .. } = mapM (convertTerm . getARTerm) conjuncts >
 
 createName :: MonadConvert m => Ty -> VarName -> m ()
 createName (TyBase rbty) varName = void $ createVar (baseType rbty) varName
-createName TyArrow {} varName = mkStringSymbol name >>= mkUninterpretedSort >>= void . mkFreshConst name
-  where
-    name = getName varName
+createName (TyArrow arrTy) varName = createFun arrTy varName
 
 createVar :: MonadConvert m => BaseTy -> VarName -> m Z3Var
 createVar rbty varName = do
@@ -122,6 +120,20 @@ createVar rbty varName = do
     mkFreshTypedVar = \case TInt -> mkFreshIntVar
                             TBool -> mkFreshBoolVar
                             TIntList -> error "TODO TIntList unsupported" -- TODO
+
+createFun :: MonadConvert m => ArrowTy -> VarName -> m ()
+createFun arrTy varName = do
+  args' <- mapM mkSort args
+  ret' <- mkSort (TyBase ret)
+  z3fun <- Z3Fun <$> mkFreshFuncDecl (getName varName) args' ret'
+  modify' $ \cs -> cs { functions = HM.insert varName z3fun $ functions cs }
+  where
+    (args, ret) = splitTypes $ TyArrow arrTy
+    mkSort (TyBase RefinedBaseTy { .. }) = case baseType of
+                                                TInt -> mkIntSort
+                                                TBool -> mkBoolSort
+                                                TIntList -> error "TODO TIntList unsupported"
+    mkSort _ = undefined -- TODO mkUninterpretedSort
 
 getVar :: MonadConvert m => VarName -> m Z3Var
 getVar varName = gets $ (HM.! varName) . variables
