@@ -42,10 +42,10 @@ solveDef funSig funDef = evalZ3 $ do
       pure (intrAssertions, qTerm)
 
 initArgVars :: MonadConvert m => ArgTypes -> m ()
-initArgVars = mapM_ $ \(varName, ty) -> createVar ty varName
+initArgVars = mapM_ $ \(varName, ty) -> createName ty varName
 
 initRefVars :: MonadConvert m => RefAnnTerm -> m ()
-initRefVars = mapM_ $ \RefAnn { .. } -> createVar tyAnn $ subjectVar intrinsic
+initRefVars = mapM_ $ \RefAnn { .. } -> createName tyAnn $ subjectVar intrinsic
 
 newtype IntrinsicAssertions = IntrinsicAssertions { getIntrinsicAssertions :: AST }
 
@@ -59,7 +59,7 @@ convertQuery :: MonadConvert m => Query -> m AST
 convertQuery (q1 :& q2) = join $ (\a b -> mkAnd [a, b]) <$> convertQuery q1 <*> convertQuery q2
 convertQuery (antecedent :=> consequent) = do
   -- TODO find a better way
-  v' <- createVar (TyBase $ RefinedBaseTy TInt trueRefinement) $ subjectVar antecedent
+  v' <- createVar TInt $ subjectVar antecedent
   antecedent' <- convertRefinement antecedent
   consequent' <- convertRefinement consequent
   implication <- mkImplies antecedent' consequent'
@@ -104,20 +104,24 @@ convertRefinement Refinement { .. } = mapM (convertTerm . getARTerm) conjuncts >
       BinOpGt -> mkGt
       BinOpGeq -> mkGe
 
-createVar :: MonadConvert m => Ty -> VarName -> m Z3Var
-createVar ty varName = do
+createName :: MonadConvert m => Ty -> VarName -> m ()
+createName (TyBase rbty) varName = void $ createVar (baseType rbty) varName
+createName TyArrow {} varName = mkStringSymbol name >>= mkUninterpretedSort >>= void . mkFreshConst name
+  where
+    name = getName varName
+
+createVar :: MonadConvert m => BaseTy -> VarName -> m Z3Var
+createVar rbty varName = do
   ifM (gets $ HM.member varName . variables)
     (error [i|#{getName varName} has already been instantiated|])
     (pure ())
-  z3var <- Z3Var <$> mkFreshTypedVar ty (getName varName)
+  z3var <- Z3Var <$> mkFreshTypedVar rbty (getName varName)
   modify' $ \cs -> cs { variables = HM.insert varName z3var $ variables cs }
   pure z3var
   where
-    mkFreshTypedVar (TyBase rbty) = case baseType rbty of
-                                         TInt -> mkFreshIntVar
-                                         TBool -> mkFreshBoolVar
-                                         TIntList -> error "TODO TIntList unsupported" -- TODO
-    mkFreshTypedVar TyArrow {} = \name -> mkStringSymbol name >>= mkUninterpretedSort >>= mkFreshConst name
+    mkFreshTypedVar = \case TInt -> mkFreshIntVar
+                            TBool -> mkFreshBoolVar
+                            TIntList -> error "TODO TIntList unsupported" -- TODO
 
 getVar :: MonadConvert m => VarName -> m Z3Var
 getVar varName = gets $ (HM.! varName) . variables
