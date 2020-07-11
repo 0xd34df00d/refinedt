@@ -15,14 +15,18 @@ import Toy.Language.Solver.Types
 import Toy.Language.Syntax
 
 newtype Z3Var = Z3Var { getZ3Var :: AST } deriving (Show)
+newtype Z3Fun = Z3Fun { getZ3Fun :: FuncDecl } deriving (Show)
 
-newtype ConvertState = ConvertState { variables :: HM.HashMap VarName Z3Var } deriving (Show)
+data ConvertState = ConvertState
+  { variables :: HM.HashMap VarName Z3Var
+  , functions :: HM.HashMap VarName Z3Fun
+  } deriving (Show)
 
 type MonadConvert m = (MonadZ3 m, MonadState ConvertState m)
 
 solveDef :: FunSig -> QFunDef -> IO (SolveRes, VCFunDef SolveRes)
 solveDef funSig funDef = evalZ3 $ do
-  (intrAssertions, qTerm) <- evalStateT buildAsts $ ConvertState mempty
+  (intrAssertions, qTerm) <- evalStateT buildAsts $ ConvertState mempty mempty
   assert $ getIntrinsicAssertions intrAssertions
   sTerm <- solveQTerm qTerm
   pure (isAllCorrect $ query <$> sTerm, funDef { funBody = sTerm })
