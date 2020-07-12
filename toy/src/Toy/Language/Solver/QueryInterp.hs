@@ -108,11 +108,14 @@ createName :: MonadConvert m => Ty -> VarName -> m ()
 createName (TyBase rbTy) = void . createVar (baseType rbTy)
 createName (TyArrow arrTy) = createFun arrTy
 
+checkExists :: MonadState s m => VarName -> (s -> HM.HashMap VarName v) -> m ()
+checkExists varName getter = ifM (gets $ HM.member varName . getter)
+                                 (error [i|#{getName varName} has already been instantiated|])
+                                 (pure ())
+
 createVar :: MonadConvert m => BaseTy -> VarName -> m Z3Var
 createVar rbTy varName = do
-  ifM (gets $ HM.member varName . variables)
-    (error [i|#{getName varName} has already been instantiated|])
-    (pure ())
+  checkExists varName variables
   z3var <- Z3Var <$> mkFreshTypedVar rbTy (getName varName)
   modify' $ \cs -> cs { variables = HM.insert varName z3var $ variables cs }
   pure z3var
@@ -123,6 +126,7 @@ createVar rbTy varName = do
 
 createFun :: MonadConvert m => ArrowTy -> VarName -> m ()
 createFun arrTy varName = do
+  checkExists varName functions
   args' <- mapM mkSort args
   ret' <- mkSort (TyBase ret)
   z3fun <- Z3Fun <$> mkFreshFuncDecl (getName varName) args' ret'
