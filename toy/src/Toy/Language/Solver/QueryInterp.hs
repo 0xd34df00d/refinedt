@@ -152,10 +152,13 @@ createFun arrTy varName = do
     mkSort _ = undefined -- TODO mkUninterpretedSort
 
 getVar :: MonadConvert m => VarName -> m Z3Var
-getVar varName = gets $ (HM.! varName) . variables
+getVar = getNamed variables
 
 getFun :: MonadConvert m => VarName -> m Z3Fun
-getFun varName = gets $ (HM.! varName) . functions
+getFun = getNamed functions
+
+getNamed :: MonadState s m => (s -> HM.HashMap VarName v) -> VarName -> m v
+getNamed getter varName = gets $ (HM.! varName) . getter
 
 mkAnd' :: (Foldable t, MonadZ3 m) => t AST -> m AST
 mkAnd' = mk . toList
