@@ -105,8 +105,8 @@ convertRefinement Refinement { .. } = mapM (convertTerm . getARTerm) conjuncts >
       BinOpGeq -> mkGe
 
 createName :: MonadConvert m => Ty -> VarName -> m ()
-createName (TyBase rbTy) varName = void $ createVar (baseType rbTy) varName
-createName (TyArrow arrTy) varName = createFun arrTy varName
+createName (TyBase rbTy) = void . createVar (baseType rbTy)
+createName (TyArrow arrTy) = createFun arrTy
 
 createVar :: MonadConvert m => BaseTy -> VarName -> m Z3Var
 createVar rbTy varName = do
