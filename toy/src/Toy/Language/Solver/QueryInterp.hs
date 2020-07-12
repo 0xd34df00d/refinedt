@@ -77,23 +77,25 @@ solveQTerm = onVCTerm $ \queryAST -> local $ do
 
 convertRefinement :: MonadConvert m => Refinement -> m AST
 convertRefinement Refinement { .. } = mapM (convertTerm . getARTerm) conjuncts >>= mkAnd'
+
+convertTerm :: MonadConvert m => Term -> m AST
+convertTerm = \case
+  TName _ varName -> getZ3Var <$> getVar varName
+  TInteger _ n -> mkIntNum n
+  TBinOp _ t1 op t2 -> join $ convertBinOp op <$> convertTerm t1 <*> convertTerm t2
+  TApp _ fun arg -> convertFunApp fun arg
+  TIfThenElse { .. } -> do
+    tthenCond' <- convertTerm tcond
+    tthen' <- convertTerm tthen
+
+    telseCond' <- mkNot tthenCond'
+    telse' <- convertTerm telse
+
+    thenBranch <- mkImplies tthenCond' tthen'
+    elseBranch <- mkImplies telseCond' telse'
+
+    mkAnd [thenBranch, elseBranch]
   where
-    convertTerm = \case
-      TName _ varName -> getZ3Var <$> getVar varName
-      TInteger _ n -> mkIntNum n
-      TBinOp _ t1 op t2 -> join $ convertBinOp op <$> convertTerm t1 <*> convertTerm t2
-      TApp {} -> error "fun app at refinement level unsupported yet" -- TODO
-      TIfThenElse { .. } -> do
-        tthenCond' <- convertTerm tcond
-        tthen' <- convertTerm tthen
-
-        telseCond' <- mkNot tthenCond'
-        telse' <- convertTerm telse
-
-        thenBranch <- mkImplies tthenCond' tthen'
-        elseBranch <- mkImplies telseCond' telse'
-
-        mkAnd [thenBranch, elseBranch]
     convertBinOp = \case
       BinOpPlus -> \a b -> mkAdd [a, b]
       BinOpMinus -> \a b -> mkAdd [a, b]
@@ -103,6 +105,9 @@ convertRefinement Refinement { .. } = mapM (convertTerm . getARTerm) conjuncts >
       BinOpNEq -> \a b -> mkEq a b >>= mkNot
       BinOpGt -> mkGt
       BinOpGeq -> mkGe
+
+convertFunApp :: MonadConvert m => Term -> Term -> m AST
+convertFunApp fun arg = undefined
 
 createName :: MonadConvert m => Ty -> VarName -> m ()
 createName (TyBase rbTy) = void . createVar (baseType rbTy)
