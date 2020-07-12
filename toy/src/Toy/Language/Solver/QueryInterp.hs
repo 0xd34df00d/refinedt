@@ -107,7 +107,14 @@ convertTerm = \case
       BinOpGeq -> mkGe
 
 convertFunApp :: MonadConvert m => Term -> Term -> m AST
-convertFunApp fun arg = undefined
+convertFunApp fun arg = go fun [arg]
+  where
+    go (TName _ varName) args = do
+      z3fun <- getFun varName
+      argASTs <- mapM convertTerm args
+      mkApp (getZ3Fun z3fun) argASTs
+    go (TApp _ fun' arg') args = go fun' (arg' : args)
+    go _ _ = error [i|Unsupported fun term type|]
 
 createName :: MonadConvert m => Ty -> VarName -> m ()
 createName (TyBase rbTy) = void . createVar (baseType rbTy)
