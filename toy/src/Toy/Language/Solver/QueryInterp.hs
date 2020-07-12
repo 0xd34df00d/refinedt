@@ -142,6 +142,9 @@ createFun arrTy varName = do
 getVar :: MonadConvert m => VarName -> m Z3Var
 getVar varName = gets $ (HM.! varName) . variables
 
+getFun :: MonadConvert m => VarName -> m Z3Fun
+getFun varName = gets $ (HM.! varName) . functions
+
 mkAnd' :: (Foldable t, MonadZ3 m) => t AST -> m AST
 mkAnd' = mk . toList
   where
