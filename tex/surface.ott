@@ -95,7 +95,7 @@ G |- es : < </ li : tsi // i /> >
 G , xj : tsj , x : { _ : Unit | es = < lj = xj > as < </ li : tsi // i /> > } |- esj : ts
 x fresh
 -------------------------------------------------------------------------- :: Case
-G |- case es of </ lj = xj -> esj // i />  : ts
+G |- case es of </ li = xi -> esi // i />  : ts
 
 G |- es : tsj
 lj in </ li // i />
