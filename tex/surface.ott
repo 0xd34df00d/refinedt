@@ -10,7 +10,8 @@ es {{ tex \nonterm{es} }} :: tmS_ ::= {{ com terms }}
 						::   :: case {{ com ADT case }}
   | < l = es > as < </ li : tsi // i /> >
 						::   :: adt {{ com ADT construction }}
-  | v					:: M :: refvar {{ com refinement var }}
+  | < l = es > as ts	:: M :: adt_ts
+  | v					:: M :: refvar
   | [ v |-> es' ] es	:: M :: evsubst
 
 l {{ tex \nonterm l }} :: labels_ ::= {{ com ADT labels }}
