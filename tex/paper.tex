@@ -57,6 +57,15 @@
 
 \subsection{Surface language}
 
+Our surface language is based on simply typed lambda calculus.
+Refinements over the types are, of course, the most important extension.
+The other ones are:
+\begin{itemize}
+  \item dependent arrow types, to allow subsequent refinements refer preceding arguments,
+  \item limited form of algebraic data types and dependent pattern matching,
+    to illustrate reasoning about those widely used constructs.
+\end{itemize}
+
 \begin{figure}[ht]
   \footnotesize
   \begin{subfigure}{.6\textwidth}
