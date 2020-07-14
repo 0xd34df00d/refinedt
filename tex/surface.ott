@@ -139,6 +139,7 @@ formula :: formula_ ::=
   | l in </ li // i />
 				:: :: label_membership
   | formula1 .... formulai   ::  :: dots
+  | ts0 def ts	:: :: definition
 
 terminals :: terminals_ ::=
   | top		:: :: top {{ tex \top }}
@@ -164,6 +165,7 @@ terminals :: terminals_ ::=
   | Unit	:: :: Unit {{ tex \Unit }}
   | unitc	:: :: unitc {{ tex \unitc }}
   | Unitc	:: :: Unitc {{ tex \Unitc }}
+  | def		:: :: def {{ tex \triangleq }}
 
 
 %%% Core language
