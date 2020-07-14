@@ -90,11 +90,10 @@ G , x : ts1 |- es : ts2
 ------------------------------------- :: Abs
 G |- \x : ts1. es : ( x : ts1 ) -> ts2
 
-G |- es : < </ li : tsi // i /> >
-%TODO
-%</ G , xi : tsi , x : { _ : Unit | es = < li = xi > } |- esi : ts // i />
-G , xj : tsj , x : { _ : Unit | es = < lj = xj > as < </ li : tsi // i /> > } |- esj : ts
+ts0 def < </ li : tsi // i /> >
+G |- es : ts
 x fresh
+</ G , xi : tsi , x : { _ : Unit | es = < li = xi > as ts0 } |- esi : ts // i />
 -------------------------------------------------------------------------- :: Case
 G |- case es of </ li = xi -> esi // i />  : ts
 
