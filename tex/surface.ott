@@ -138,6 +138,7 @@ formula :: formula_ ::=
   | x fresh		:: :: freshness
   | l in </ li // i />
 				:: :: label_membership
+  | formula1 .... formulai   ::  :: dots
 
 terminals :: terminals_ ::=
   | top		:: :: top {{ tex \top }}
