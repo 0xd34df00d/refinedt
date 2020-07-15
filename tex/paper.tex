@@ -194,6 +194,11 @@ We also establish some derived entities in the core language to simplify the sub
       \nonterm{ec}_1 \equiv \nonterm{ec}_2 \triangleq \Pi P : S \rightarrow \star. (P x \rightarrow P y, P y \rightarrow P x).
     \]
     The reader might recognize this as the Leibniz equality \cite{FindSomethingForThis}.
+  \item ADTs, expressed using the Boehm-Berarducci encoding \cite{Bohm85}:
+    \[
+      \langle \overline{l_i : \nonterm{ts}_i}^i \rangle
+        \triangleq \Pi \alpha : \star. \overline{(\nonterm{ts}_i \rightarrow \alpha)}^i \rightarrow \alpha.
+    \]
 \end{itemize}
 
 \section{Translation}
