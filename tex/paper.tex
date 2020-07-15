@@ -186,10 +186,10 @@ We also establish some derived entities in the core language to simplify the sub
     \]
     and projections
     \[
-      \text{fst} \triangleq TODO,
+      \text{fst} \triangleq \lambda \sigma : (x : \tau \dast P x). \sigma \tau (\lambda x' : \tau. \lambda \_ : P x'. x'),
     \]
     \[
-      \text{snd} \triangleq TODO.
+      \text{snd} \triangleq \lambda \sigma : (x : \tau \dast P x). \sigma \tau (\lambda x' : \tau. \lambda p : P x'. p),
     \]
   \item Non-dependent pair type:
     \[
