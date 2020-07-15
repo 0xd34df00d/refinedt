@@ -167,6 +167,8 @@ with a unit type as our core dependently typed language.
 Although the syntax doesn't mention $\tau$, we will use it as a metavariable
 where a type (an inhabitant of $\star$) is expected.
 
+\newcommand{\dast}{\ **\ }
+
 We also establish some derived entities in the core language to simplify the subsequent exposition:
 
 \begin{itemize}
@@ -176,9 +178,13 @@ We also establish some derived entities in the core language to simplify the sub
     \]
   \item Dependent pair type, or $\Sigma$-type, with the first component being a value $x$ of type $\tau$ and the second component being of type $P x$:
     \[
-      (x : \tau\ **\ P x) \triangleq \Pi \alpha : \star. (\Pi x : \tau. P x \rightarrow \alpha) \rightarrow \alpha,
+      (x : \tau \dast P x) \triangleq \Pi \alpha : \star. (\Pi x : \tau. P x \rightarrow \alpha) \rightarrow \alpha,
     \]
-    with the corresponding projections:
+    with the corresponding constructor (we overload the syntax here to resemble Idris):
+    \[
+      (x \dast p) \triangleq \lambda \alpha : \star. \lambda f : (\Pi x' : \tau. P x' \rightarrow \alpha). f x p
+    \]
+    and projections
     \[
       \text{fst} \triangleq TODO,
     \]
