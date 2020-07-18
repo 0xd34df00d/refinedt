@@ -242,7 +242,7 @@ Before we dive into defining these functions, $\tranderiv$ deserves a few introd
 Although the aim is to translate terms,
 what this function really does is translating the surface typing derivation for a given (well-typed) term
 into a typing derivation in the core language.
-The reason for the extra complexity stems from the \ottdrulename{T-Sub} typing rule.
+The reason for the extra complexity stems from the \ranchor{T-Sub} typing rule.
 In particular, this rule invokes the subtyping check, which, in turn, invokes the oracle.
 The oracle then might produce a core language term proving that the subtyping relation in question holds,
 and the presence of this rule is in some sense a carrier of this proof term.
