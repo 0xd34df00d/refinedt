@@ -231,11 +231,21 @@ We also establish some derived forms in the core language to simplify the subseq
 
 \newcommand{\tranctx}{\mu_\Gamma}
 \newcommand{\tranty}{\mu_\tau}
+\newcommand{\tranderiv}{\mu_\vdash}
 \newcommand{\tranterm}{\mu_\varepsilon}
 
 We translate the surface language contexts, types and terms into the corresponding core language entities
-using the $\tranctx$, $\tranty$ and $\tranterm$ functions respectively,
+using the $\tranctx$, $\tranty$ and $\tranderiv$ functions respectively,
 which are defined mutually recursively.
+
+Before we dive into defining these functions, $\tranderiv$ deserves a few introductory words.
+Although the aim is to translate terms,
+what this function really does is translating the surface typing derivation for a given (well-typed) term
+into a typing derivation in the core language.
+The reason for the extra complexity stems from the \ottdrulename{T-Sub} typing rule.
+In particular, this rule invokes the subtyping check, which, in turn, invokes the oracle.
+The oracle then might produce a core language term proving that the subtyping relation in question holds,
+and the presence of this rule is in some sense a carrier of this proof term.
 
 \paragraph{Contexts.}
 We start with defining $\tranctx$,
