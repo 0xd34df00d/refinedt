@@ -169,7 +169,7 @@ where a type (an inhabitant of $\star$) is expected.
 
 \newcommand{\dast}{\ **\ }
 
-We also establish some derived entities in the core language to simplify the subsequent exposition:
+We also establish some derived forms in the core language to simplify the subsequent exposition:
 
 \begin{itemize}
   \item Non-dependent function type:
@@ -189,7 +189,7 @@ We also establish some derived entities in the core language to simplify the sub
       \text{fst} \triangleq \lambda \sigma : (x : \tau \dast P x). \sigma \tau (\lambda x' : \tau. \lambda \_ : P x'. x'),
     \]
     \[
-      \text{snd} \triangleq \lambda \sigma : (x : \tau \dast P x). \sigma \tau (\lambda x' : \tau. \lambda p : P x'. p),
+      \text{snd} \triangleq \lambda \sigma : (x : \tau \dast P x). \sigma \tau (\lambda x' : \tau. \lambda p : P x'. p).
     \]
   \item Non-dependent pair type:
     \[
