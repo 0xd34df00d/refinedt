@@ -38,3 +38,32 @@ namespace BB
 
   test : ADT -> Int
   test x = encode x Int (\(MkT0 n) => n) (\(MkT1 n) => -n)
+
+
+
+namespace BBExt
+  postulate ADTExt : Type
+  postulate l0 : T0 -> ADTExt
+  postulate l1 : T1 -> ADTExt
+  postulate dElim : (P : ADTExt -> Type)
+                 -> ((x0 : T0) -> P (l0 x0))
+                 -> ((x1 : T1) -> P (l1 x1))
+                 -> (s : ADTExt)
+                 -> P s
+
+  dMatch : (α : Type)
+        -> (s : ADTExt)
+        -> ((x0 : T0) -> s = l0 x0 -> α)
+        -> ((x1 : T1) -> s = l1 x1 -> α)
+        -> α
+  dMatch α s f0 f1 = dElim P f0 f1 s Refl
+    where
+      P : ADTExt -> Type
+      P x = s = x -> α
+
+  encode : ADT -> ADTExt
+  encode (L0 x0) = l0 x0
+  encode (L1 x1) = l1 x1
+
+  test : ADT -> Int
+  test x = dMatch Int (encode x) (\(MkT0 n), prf => n) (\(MkT1 n), prf => -n)
