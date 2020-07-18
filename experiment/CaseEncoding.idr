@@ -2,11 +2,17 @@ module CaseEncoding
 
 %default total
 
-data T0 = MkT0
-data T1 = MkT1
+data T0 = MkT0 Int
+data T1 = MkT1 Int
 
 data ADT = L0 T0
          | L1 T1
+
+ex1 : ADT
+ex1 = L0 $ MkT0 10
+
+ex2 : ADT
+ex2 = L1 $ MkT1 42
 
 namespace BB
   ADTEnc : Type
@@ -29,3 +35,6 @@ namespace BB
   correct : (adt : ADT) -> decode (encode adt) = adt
   correct (L0 _) = Refl
   correct (L1 _) = Refl
+
+  test : ADT -> Int
+  test x = encode x Int (\(MkT0 n) => n) (\(MkT1 n) => -n)
