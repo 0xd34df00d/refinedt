@@ -86,16 +86,11 @@ The other ones are:
   \drules[TCTX]{$\nonterm G \text{ ok}$}{context well-formedness}{Empty,Bind}
   \drules[TWF]{$\nonterm G \vdash \nonterm{ts}$}{type well-formedness}{TrueRef,Base,Conj,Arr}
   \drules[T]{$\nonterm G \vdash \nonterm{es} : \nonterm{ts}$}{term typing}{Unit,Var,Abs,App,Case,Con,Sub}
+  \drules[ST]{$\nonterm G \vdash \nonterm{ts}_1 <: \nonterm{ts}_2$}{subtyping}{Base,Arr}
   \caption{Surface language typing}
   \label{fig:surface_typing}
 \end{figure}
 
-\begin{figure}[ht]
-  \footnotesize
-  \drules[ST]{$\nonterm G \vdash \nonterm{ts}_1 <: \nonterm{ts}_2$}{subtyping}{Base,Arr}
-  \caption{Surface language subtyping}
-  \label{fig:surface_subtyping}
-\end{figure}
 
 We introduce a shorthand notation $\top$ denoting some tautology
 which we use for trivial refinements that do not carry any extra information.
