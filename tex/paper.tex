@@ -41,6 +41,8 @@
 \newgterm v v
 \newgterm n n
 
+\newcommand{\figref}[1]{Figure \ref{fig:#1}}
+
 \inputott{surface.ott}
 
 \title{Compiling refinement types to dependent types}
@@ -66,6 +68,13 @@ The other ones are:
     insired by \cite{TAPLVariants,Eisenberg16},
     to illustrate reasoning about those widely used constructs.
 \end{itemize}
+
+The syntax of the surface language is presented in \figref{surface_syntax}.
+
+The typing rules for the surface language are laid out in \figref{surface_typing}.
+For the type well-formedness and term typing rules
+we also assume each of them has a premise $\nonterm G \text{ ok}$
+stating that the context is well-formed.
 
 \begin{figure}[ht]
   \footnotesize
@@ -147,6 +156,9 @@ We take $\lambda C$ \cite{TTFPLambdaC}
 with a unit type as our core dependently typed language.
 We conjecture that the introduction of units
 does not break the usual metatheoretical properties of the system.
+
+The syntax of the core language is presented in \figref{core_syntax},
+and the typing rules are defined in \figref{core_typing}.
 
 \begin{figure}[ht]
   \footnotesize
