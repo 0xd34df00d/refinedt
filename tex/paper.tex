@@ -281,7 +281,18 @@ Or, in words:
 \end{itemize}
 
 \paragraph{Terms.}
-Finally we define $\tranterm$:
+Finally we define $\tranderiv$.
+As it is defined on typing derivation trees,
+we consider the term typing rule that is used last to prove $\nonterm G \vdash \nonterm{es} : \nonterm{ts}$.
+
+\begin{itemize}
+  \item \ranchor{T-Unit}.
+    This rule has no premises, so we just translate it into \ranchor{CT-UnitTerm}:
+    \[
+      \inferrule{ }{\nonterm G \vdash \unit : \{ \gterm v : \Unit | \top \}} \longmapsto \inferrule{ }{\nonterm{GC} \vdash \unitc : \Unitc}
+    \]
+\end{itemize}
+
 \begin{equation}
 \begin{aligned}
   & \tranterm(x) &&
