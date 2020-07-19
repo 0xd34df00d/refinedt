@@ -241,14 +241,17 @@ We also establish some derived forms in the core language to simplify the subseq
 
 \newcommand{\tranctx}{\mu_\Gamma}
 \newcommand{\tranty}{\mu_\tau}
-\newcommand{\tranderiv}{\mu_\vdash}
 \newcommand{\tranterm}{\mu_\varepsilon}
 
+\newcommand{\Tranctx}{\mu_{\vdash\Gamma}}
+\newcommand{\Tranty}{\mu_{\vdash\tau}}
+\newcommand{\Tranterm}{\mu_{\vdash\varepsilon}}
+
 We translate the surface language contexts, types and terms into the corresponding core language entities
-using the $\tranctx$, $\tranty$ and $\tranderiv$ functions respectively,
+using the $\tranctx$, $\tranty$ and $\tranterm$ functions respectively,
 which are defined mutually recursively.
 
-Before we dive into defining these functions, $\tranderiv$ deserves a few introductory words.
+Before we dive into defining these functions, $\Tranterm$ deserves a few introductory words.
 Although the aim is to translate terms,
 what this function really does is translating the surface typing derivation for a given (well-typed) term
 into a typing derivation in the core language.
