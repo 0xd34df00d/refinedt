@@ -83,6 +83,7 @@ The other ones are:
 
 \begin{figure}[ht]
   \footnotesize
+  \drules[TCTX]{$\nonterm G \text{ ok}$}{context well-formedness}{Empty,Bind}
   \drules[TWF]{$\nonterm G \vdash \nonterm{ts}$}{type well-formedness}{TrueRef,Base,Conj,Arr}
   \drules[T]{$\nonterm G \vdash \nonterm{es} : \nonterm{ts}$}{term typing}{Unit,Var,Abs,App,Case,Con,Sub}
   \caption{Surface language typing}

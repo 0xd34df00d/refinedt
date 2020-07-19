@@ -49,6 +49,17 @@ C {{ tex \nonterm C }} :: logic_ctx_ ::= {{ com logical context }}
 
 defns Jtype :: '' ::=
 
+defn G ok :: :: ctx_wf :: TCTX_ {{ com context well-formedness }} by
+
+-------- :: Empty
+empty ok
+
+G ok
+G |- ts
+------------- :: Bind
+G , x : ts ok
+
+
 defn G |- ts :: :: type_wf :: TWF_ {{ com type well-formedness }} by
 
 -------------------- :: TrueRef
@@ -166,6 +177,7 @@ terminals :: terminals_ ::=
   | unitc	:: :: unitc {{ tex \unitc }}
   | Unitc	:: :: Unitc {{ tex \Unitc }}
   | def		:: :: def {{ tex \triangleq }}
+  | ok		:: :: ok {{ tex \text{ok} }}
 
 
 %%% Core language
