@@ -305,10 +305,12 @@ is due to our core language not having a separate notion of a context well-forme
 \paragraph{Contexts.}
 As a warm-up,
 we start with defining $\Tranctx$,
-which is the simplest translation of the three.
+which is the simplest of the three.
 It merely maps the types of the bindings in a (well-formed) context
 from the surface language into the core language.
 
+Since $\Tranctx$ is defined on the derivations of $\nonterm G \ctxok$,
+we consider the last rule used in a derivation:
 \begin{itemize}
   \item \ranchor{TCTX-Empty}.
     \begin{align*}
@@ -327,9 +329,9 @@ from the surface language into the core language.
     \end{align*}
 
     We recurse on the prefix $\nonterm G$,
-    which we are allowed to do due to the $\nonterm G \ctxok$ premise,
+    which is admissible due to the $\nonterm G \ctxok$ premise,
     and we use $\tranty$ to get the translated type of $\gterm x$,
-    which we are also allowed to do due to the corresponding premise.
+    which is also admissible due to the other premise.
 \end{itemize}
 
 \paragraph{Types.}
