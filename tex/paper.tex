@@ -14,6 +14,7 @@
 \addtolength{\textheight}{1.55in}
 
 \newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
 
 \newcommand{\unit}{u}
 \newcommand{\Unit}{\textbf{Unit}}
@@ -311,6 +312,17 @@ We consider the term typing rule that is at the root of the derivation tree for 
     and extract the resulting context $\nonterm{GC}$.
     We then use that context for \ranchor{CT-UnitTerm}.
 \end{itemize}
+
+Having defined these functions, we formulate a simple but useful lemma:
+\begin{lemma}[Translation totality]
+  $\Tranctx$, $\Tranty$ and $\Tranterm$ are total.
+\end{lemma}
+\begin{proof}
+  Firstly, each function is defined for all possible inputs.
+  Then, each function recurses on structurally smaller inputs,
+  and, since derivation trees are finite,
+  this implies each function terminates for any input.
+\end{proof}
 
 \subsection{Correctness}
 
