@@ -320,14 +320,11 @@ The second one claims that a well-typed surface language program evaluates to ``
 
 \begin{theorem}[Well-typedness preservation]
   For any well-typed surface language term $\nonterm{es}$,
-  the result of the translation $\tranterm(\nonterm{es})$ is ``equivalently'' typeable in the core language:
-  \[
-    \nonterm G \vdash \nonterm{es} : \nonterm{ts} \implies \tranctx(\nonterm G) \vdash \tranterm(\nonterm{es}) : \tranty(\nonterm{ts})
-  \]
+  the result of the translation $\tranterm(\nonterm{es})$ is ``equivalently'' typeable in the core language.
 \end{theorem}
 \begin{proof}
-  We prove this by induction on the derivation of the typeability of $\nonterm{es}$.
-  In particular, we consider the last typing rule used:
+  This follows directly from the definition of $\tranterm$ via $\Tranterm$,
+  the latter being total and mapping onto typing derivations in the core language.
 \end{proof}
 
 \begin{theorem}[Evaluation equivalence]
