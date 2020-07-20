@@ -269,21 +269,34 @@ The oracle then might produce a core language term proving that the subtyping re
 and the presence of this rule is in some sense a carrier of this proof term.
 
 \paragraph{Contexts.}
-We start with defining $\tranctx$,
+As a warm-up,
+we start with defining $\Tranctx$,
 which is the simplest translation of the three.
 It merely maps the types of the bindings in a (well-formed) context
 from the surface language into the core language.
 
-\begin{equation}
-\begin{aligned}
-  & \tranctx(\emptyset)
-      && \triangleq
-    \emptyset                                               \\
-  & \tranctx(\nonterm G, \gterm x : \nonterm{ts})
-      && \triangleq
-    \tranctx(\nonterm G), \gterm x : \tranty(\nonterm {G} \vdash \nonterm{ts})  \\
-\end{aligned}
-\end{equation}
+\begin{itemize}
+  \item \ranchor{TCTX-Empty}.
+    \begin{align*}
+      & \inferrule{~}
+                  {\emptyset \text{~ok}}
+          \longmapsto
+        \emptyset.
+    \end{align*}
+    The base case is trivial: we map the empty context to the empty context.
+  \item \ranchor{TCTX-Bind}.
+    \begin{align*}
+      & \inferrule{\nonterm G \text{~ok} \\ \nonterm G \vdash \nonterm{ts}}
+                  {\nonterm G , \gterm x : \nonterm{ts} \text{~ok}}
+          \longmapsto
+        \Tranctx(\nonterm G \text{~ok}), x : \tranty(\nonterm G \vdash \nonterm{ts}).
+    \end{align*}
+
+    We recurse on the prefix $\nonterm G$,
+    which we are allowed to do due to the $\nonterm G \text{~ok}$ premise,
+    and we use $\tranty$ to get the translated type of $\gterm x$,
+    which we are also allowed to do due to the corresponding premise.
+\end{itemize}
 
 \paragraph{Types.}
 $\tranty$ is defined as follows,
