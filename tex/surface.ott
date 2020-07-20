@@ -81,6 +81,10 @@ G, x : ts1 |- ts2
 --------------------- :: Arr
 G |- (x : ts1) -> ts2
 
+</ G |- tsi // i />
+---------------------------- :: Rec
+G |- < </ li : tsi // i /> >
+
 
 defn G |- es : ts :: :: typing :: T_ {{ com term typing }} by
 
