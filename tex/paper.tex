@@ -102,7 +102,6 @@ stating that the context is well-formed.
   \label{fig:surface_typing}
 \end{figure}
 
-
 We introduce a shorthand notation $\top$ denoting some tautology
 which we use for trivial refinements that do not carry any extra information.
 In particular, one good way to define $\top$ is
@@ -253,7 +252,6 @@ We also establish some derived forms in the core language to simplify the subseq
 \newcommand{\tranty}{\mu_\tau}
 \newcommand{\tranterm}{\mu_\varepsilon}
 
-\newcommand{\Tranctx}{\mu_{\vdash\Gamma}}
 \newcommand{\Tranty}{\mu_{\vdash\tau}}
 \newcommand{\Tranterm}{\mu_{\vdash\varepsilon}}
 
@@ -323,14 +321,14 @@ We consider the term typing rule that is at the root of the derivation tree for 
       \text{where}~&\nonterm{GC} = \tranctx(\nonterm G \text{ ok}).
     \end{align*}
     This rule has a single premise $\nonterm G \text{ ok}$ that the surface context is well-formed.
-    We use $\Tranctx$ to translate the surface derivation of that premise into the core one,
+    We use $\tranctx$ to translate the surface derivation of that premise into the core one,
     and extract the resulting context $\nonterm{GC}$.
     We then use that context for \ranchor{CT-UnitTerm}.
 \end{itemize}
 
 Having defined these functions, we formulate a simple but useful lemma:
 \begin{lemma}[Translation totality]
-  $\Tranctx$, $\Tranty$ and $\Tranterm$ are total.
+  $\tranctx$, $\Tranty$ and $\Tranterm$ are total.
 \end{lemma}
 \begin{proof}
   Firstly, each function is defined for all possible inputs.
