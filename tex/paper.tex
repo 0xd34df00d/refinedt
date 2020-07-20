@@ -256,18 +256,51 @@ We also establish some derived forms in the core language to simplify the subseq
 \newcommand{\Tranty}{\mu_{\vdash\tau}}
 \newcommand{\Tranterm}{\mu_{\vdash\varepsilon}}
 
-We translate the surface language contexts, types and terms into the corresponding core language entities
-using the $\tranctx$, $\tranty$ and $\tranterm$ functions respectively,
-which are defined mutually recursively.
+The surface language ultimately gets translated into the core language.
+What really matters for practical purposes is the translation of the terms since
+terms, not types or contexts, will eventually be compiled down to some executable code.
+On the other hand, it seems desirable to ensure that the terms
+that are well-typed in the surface language
+are accepted by the core type checker after the translation,
+since this provides some level of guarantee that the translation ``makes sense''.
 
-Before we dive into defining these functions, $\Tranterm$ deserves a few introductory words.
-Although the aim is to translate terms,
-what this function really does is translating the surface typing derivation for a given (well-typed) term
-into a typing derivation in the core language.
-The reason for the extra complexity stems from the \ranchor{T-Sub} typing rule.
-In particular, this rule invokes the subtyping check, which, in turn, invokes the oracle.
-The oracle then might produce a core language term proving that the subtyping relation in question holds,
-and the presence of this rule is in some sense a carrier of this proof term.
+In particular, note that the oracle plays a crucial role in typechecking of the surface language,
+so it is natural to expect that its output will also be used during any such translation,
+for instance, to produce core language proofs that VCs hold.
+The only trace of the oracle's work is in the typing derivation
+(namely, in the subtyping relation check and the \ranchor{T-Sub} typing rule),
+so we choose to do the translation not on \emph{terms},
+but rather on \emph{well-typedness derivations} for the terms.
+This way the oracle has a chance to enrich the original surface language term
+with proofs and witnesses of whatever it decided.
+
+Thus the ultimate goal of this section is to define a function $\Tranterm$
+taking a typing derivation in the surface language
+and producing a typing derivation in the core language.
+As part of its duty
+this function also needs to translate the types and contexts
+encountered in the source derivation,
+so we also define two helper functions.
+$\Tranty$ takes a surface derivation of a \emph{type} well-formedness
+and produces the corresponding core derivation.
+$\Tranctx$ takes a surface derivation of a \emph{context} well-formedness
+and produces a core language context.
+
+We also define two helper functions, $\tranty$ and $\tranterm$,
+invoking $\Tranty$ and $\Tranterm$ and extracting just the type and term component respectively.
+
+All in all, our goal is to define $\Tranctx$, $\Tranty$ and $\Tranterm$
+with ``metatypes''
+\begin{align*}
+  \Tranctx  & : \nonterm G \ctxok                             \longmapsto \nonterm{GC},                                     \\
+  \Tranty   & : \nonterm G \vdash \nonterm{ts}                \longmapsto \nonterm{GC} \vdash \nonterm{tc} : \star,         \\
+  \Tranterm & : \nonterm G \vdash \nonterm{es} : \nonterm{ts} \longmapsto \nonterm{GC} \vdash \nonterm{ec} : \nonterm{tc},
+\end{align*}
+Our helper functions $\tranty$ and $\tranterm$ are then defined to return the $\nonterm{tc}$ and $\nonterm{ec}$
+from the right-hand sides above respectively.
+
+The apparent asymmetry of $\Tranctx$, which does not produce a derivation as others do,
+is due to our core language not having a separate notion of a context well-formedness.
 
 \paragraph{Contexts.}
 As a warm-up,
