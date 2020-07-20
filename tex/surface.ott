@@ -181,7 +181,7 @@ terminals :: terminals_ ::=
   | unitc	:: :: unitc {{ tex \unitc }}
   | Unitc	:: :: Unitc {{ tex \Unitc }}
   | def		:: :: def {{ tex \triangleq }}
-  | ok		:: :: ok {{ tex \text{ok} }}
+  | ok		:: :: ok {{ tex \ctxok }}
 
 
 %%% Core language

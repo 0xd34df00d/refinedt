@@ -21,6 +21,7 @@
 \newcommand{\unitc}{\hat{u}}
 \newcommand{\Unitc}{\widehat{\textbf{Unit}}}
 \newcommand{\Int}{\textbf{Int}}
+\newcommand{\ctxok}{\text{~ok}}
 
 \begin{document}
 
@@ -75,7 +76,7 @@ The syntax of the surface language is presented in \figref{surface_syntax}.
 
 The typing rules for the surface language are laid out in \figref{surface_typing}.
 For the type well-formedness and term typing rules
-we also assume each of them has a premise $\nonterm G \text{ ok}$
+we also assume each of them has a premise $\nonterm G \ctxok$
 stating that the context is well-formed.
 
 \begin{figure}[ht]
@@ -94,7 +95,7 @@ stating that the context is well-formed.
 
 \begin{figure}[ht]
   \footnotesize
-  \drules[TCTX]{$\nonterm G \text{ ok}$}{context well-formedness}{Empty,Bind}
+  \drules[TCTX]{$\nonterm G \ctxok$}{context well-formedness}{Empty,Bind}
   \drules[TWF]{$\nonterm G \vdash \nonterm{ts}$}{type well-formedness}{TrueRef,Base,Conj,Arr,Rec}
   \drules[T]{$\nonterm G \vdash \nonterm{es} : \nonterm{ts}$}{term typing}{Unit,Var,Abs,App,Case,Con,Sub}
   \drules[ST]{$\nonterm G \vdash \nonterm{ts}_1 <: \nonterm{ts}_2$}{subtyping}{Base,Arr}
@@ -279,21 +280,21 @@ from the surface language into the core language.
   \item \ranchor{TCTX-Empty}.
     \begin{align*}
       & \inferrule{~}
-                  {\emptyset \text{~ok}}
+                  {\emptyset \ctxok}
           \longmapsto
         \emptyset.
     \end{align*}
     The base case is trivial: we map the empty context to the empty context.
   \item \ranchor{TCTX-Bind}.
     \begin{align*}
-      & \inferrule{\nonterm G \text{~ok} \\ \nonterm G \vdash \nonterm{ts}}
-                  {\nonterm G , \gterm x : \nonterm{ts} \text{~ok}}
+      & \inferrule{\nonterm G \ctxok \\ \nonterm G \vdash \nonterm{ts}}
+                  {\nonterm G , \gterm x : \nonterm{ts} \ctxok}
           \longmapsto
-        \Tranctx(\nonterm G \text{~ok}), x : \tranty(\nonterm G \vdash \nonterm{ts}).
+        \Tranctx(\nonterm G \ctxok), x : \tranty(\nonterm G \vdash \nonterm{ts}).
     \end{align*}
 
     We recurse on the prefix $\nonterm G$,
-    which we are allowed to do due to the $\nonterm G \text{~ok}$ premise,
+    which we are allowed to do due to the $\nonterm G \ctxok$ premise,
     and we use $\tranty$ to get the translated type of $\gterm x$,
     which we are also allowed to do due to the corresponding premise.
 \end{itemize}
@@ -328,13 +329,15 @@ We consider the term typing rule that is at the root of the derivation tree for 
 \begin{itemize}
   \item \ranchor{T-Unit}.
     \begin{align*}
-      & \inferrule{\nonterm G \text{ ok}}{\nonterm G \vdash \unit : \{ \gterm v : \Unit | \top \}}
+      & \inferrule{\nonterm G \ctxok}
+                  {\nonterm G \vdash \unit : \{ \gterm v : \Unit | \top \}}
           \longmapsto
-        \inferrule{ }{\nonterm{GC} \vdash \unitc : \Unitc}, \\
-      \text{where}~&\nonterm{GC} = \tranctx(\nonterm G \text{ ok}).
+        \inferrule{~}
+                  {\nonterm{GC} \vdash \unitc : \Unitc}, \\
+      \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok).
     \end{align*}
-    This rule has a single premise $\nonterm G \text{ ok}$ that the surface context is well-formed.
-    We use $\tranctx$ to translate the surface derivation of that premise into the core one,
+    This rule has a single premise $\nonterm G \ctxok$ that the surface context is well-formed.
+    We use $\Tranctx$ to translate the surface derivation of that premise into the core one,
     and extract the resulting context $\nonterm{GC}$.
     We then use that context for \ranchor{CT-UnitTerm}.
 \end{itemize}
