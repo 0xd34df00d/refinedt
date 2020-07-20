@@ -176,7 +176,7 @@ and the typing rules are defined in \figref{core_typing}.
   \label{fig:core_typing}
 \end{figure}
 
-Although the syntax doesn't mention $\tau$, we will use it as a metavariable
+Although the syntax doesn't mention $\nonterm{tc}$, we will use it as a metavariable
 where a type (an inhabitant of $\star$) is expected.
 
 \newcommand{\dast}{\ **\ }
@@ -194,22 +194,22 @@ and state some straightforward facts that will be useful later:
     to ``move'' the $x$ into the right position in the final $\nonterm{GC}$.
   \item Non-dependent function type:
     \[
-      \tau_1 \rightarrow \tau_2 \triangleq \Pi \_ : \tau_1. \tau_2.
+      \nonterm{tc}_1 \rightarrow \nonterm{tc}_2 \triangleq \Pi \_ : \nonterm{tc}_1. \nonterm{tc}_2.
     \]
   \item Dependent pair type, or $\Sigma$-type, with the first component being a value $x$ of type $\tau$ and the second component being of type $P x$:
     \[
-      (x : \tau \dast P x) \triangleq \Pi \alpha : \star. (\Pi x : \tau. P x \rightarrow \alpha) \rightarrow \alpha,
+      (x : \nonterm{tc} \dast P x) \triangleq \Pi \alpha : \star. (\Pi x : \nonterm{tc}. P x \rightarrow \alpha) \rightarrow \alpha,
     \]
     with the corresponding constructor (we overload the syntax here to resemble Idris):
     \[
-      (x \dast p) \triangleq \lambda \alpha : \star. \lambda f : (\Pi x' : \tau. P x' \rightarrow \alpha). f x p
+      (x \dast p) \triangleq \lambda \alpha : \star. \lambda f : (\Pi x' : \nonterm{tc}. P x' \rightarrow \alpha). f x p
     \]
     and projections
     \[
-      \text{fst} \triangleq \lambda \sigma : (x : \tau \dast P x). \sigma \tau (\lambda x' : \tau. \lambda \_ : P x'. x'),
+      \text{fst} \triangleq \lambda \sigma : (x : \nonterm{tc} \dast P x). \sigma \nonterm{tc} (\lambda x' : \nonterm{tc}. \lambda \_ : P x'. x'),
     \]
     \[
-      \text{snd} \triangleq \lambda \sigma : (x : \tau \dast P x). \sigma \tau (\lambda x' : \tau. \lambda p : P x'. p).
+      \text{snd} \triangleq \lambda \sigma : (x : \nonterm{tc} \dast P x). \sigma \nonterm{tc} (\lambda x' : \nonterm{tc}. \lambda p : P x'. p).
     \]
     It's easy to see from the formation rule that
     \begin{lemma}
@@ -218,7 +218,7 @@ and state some straightforward facts that will be useful later:
     \end{lemma}
   \item Non-dependent pair type:
     \[
-      (\tau_1, \tau_2) \triangleq \{ x : \tau_1\ **\ (\lambda \_ : \tau_1. \tau_2) x \}.
+      (\nonterm{tc}_1, \nonterm{tc}_2) \triangleq \{ x : \nonterm{tc}_1\ **\ (\lambda \_ : \nonterm{tc}_1. \nonterm{tc}_2) x \}.
     \]
     As a direct consequence of the previous lemma we obtain
     \begin{lemma}
