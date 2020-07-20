@@ -181,8 +181,8 @@ where a type (an inhabitant of $\star$) is expected.
 
 \newcommand{\dast}{\ **\ }
 
-We also establish some derived forms in the core language to simplify the subsequent exposition:
-
+We also establish some derived forms in the core language to simplify the subsequent exposition,
+and state some straightforward facts that will be useful later:
 \begin{itemize}
   \item Simplified variable typing rule which we call \ranchor{CT-VarW}:
     \[
@@ -211,10 +211,20 @@ We also establish some derived forms in the core language to simplify the subseq
     \[
       \text{snd} \triangleq \lambda \sigma : (x : \tau \dast P x). \sigma \tau (\lambda x' : \tau. \lambda p : P x'. p).
     \]
+    It's easy to see from the formation rule that
+    \begin{lemma}
+      If $\nonterm{tc}$ and $P x$ are well-formed in $\nonterm{GC}$,
+      then $(x : \nonterm{tc} \dast P x)$ is well-formed in $\nonterm{GC}$ and has type $\star$.
+    \end{lemma}
   \item Non-dependent pair type:
     \[
       (\tau_1, \tau_2) \triangleq \{ x : \tau_1\ **\ (\lambda \_ : \tau_1. \tau_2) x \}.
     \]
+    As a direct consequence of the previous lemma we obtain
+    \begin{lemma}
+      If $\nonterm{tc}_1, \nonterm{tc}_2$ are well-formed in $\nonterm{GC}$,
+      then $(\nonterm{tc}_1, \nonterm{tc}_2)$ is well-formed in $\nonterm{GC}$ and has type $\star$.
+    \end{lemma}
   \item Equality of expressions $\nonterm{ec}_1, \nonterm{ec}_2$ of type $S$:
     \[
       \nonterm{ec}_1 \equiv \nonterm{ec}_2 \triangleq \Pi P : S \rightarrow \star. (P x \rightarrow P y, P y \rightarrow P x).
