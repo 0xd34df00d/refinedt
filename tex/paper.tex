@@ -272,11 +272,18 @@ and the presence of this rule is in some sense a carrier of this proof term.
 
 \paragraph{Contexts.}
 We start with defining $\tranctx$,
-which merely translates the types of the bindings in the context from the surface language into the core language:
+which is the simplest translation of the three.
+It merely maps the types of the bindings in a (well-formed) context
+from the surface language into the core language.
+
 \begin{equation}
 \begin{aligned}
-  & \tranctx(\emptyset)                                       && \triangleq \emptyset                                               \\
-  & \tranctx(\nonterm G, \gterm x : \nonterm{ts})             && \triangleq \tranctx(\nonterm G), \gterm x : \tranty(\nonterm{ts})  \\
+  & \tranctx(\emptyset)
+      && \triangleq
+    \emptyset                                               \\
+  & \tranctx(\nonterm G, \gterm x : \nonterm{ts})
+      && \triangleq
+    \tranctx(\nonterm G), \gterm x : \tranty(\nonterm {G} \vdash \nonterm{ts})  \\
 \end{aligned}
 \end{equation}
 
