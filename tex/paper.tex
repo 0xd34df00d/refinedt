@@ -294,28 +294,22 @@ Or, in words:
 \end{itemize}
 
 \paragraph{Terms.}
-Finally we define $\tranderiv$.
-As it is defined on typing derivation trees,
-we consider the term typing rule that is used last to prove $\nonterm G \vdash \nonterm{es} : \nonterm{ts}$.
+Finally we define $\Tranterm$.
+We consider the term typing rule that is at the root of the derivation tree for $\nonterm G \vdash \nonterm{es} : \nonterm{ts}$.
 
 \begin{itemize}
   \item \ranchor{T-Unit}.
-    This rule has no premises, so we just translate it into \ranchor{CT-UnitTerm}:
-    \[
-      \inferrule{ }{\nonterm G \vdash \unit : \{ \gterm v : \Unit | \top \}} \longmapsto \inferrule{ }{\nonterm{GC} \vdash \unitc : \Unitc}
-    \]
+    \begin{align*}
+      & \inferrule{\nonterm G \text{ ok}}{\nonterm G \vdash \unit : \{ \gterm v : \Unit | \top \}}
+          \longmapsto
+        \inferrule{ }{\nonterm{GC} \vdash \unitc : \Unitc}, \\
+      \text{where}~&\nonterm{GC} = \tranctx(\nonterm G \text{ ok}).
+    \end{align*}
+    This rule has a single premise $\nonterm G \text{ ok}$ that the surface context is well-formed.
+    We use $\Tranctx$ to translate the surface derivation of that premise into the core one,
+    and extract the resulting context $\nonterm{GC}$.
+    We then use that context for \ranchor{CT-UnitTerm}.
 \end{itemize}
-
-\begin{equation}
-\begin{aligned}
-  & \tranterm(x) &&
-    \triangleq x                                                              \\
-  & \tranterm(\lambda x : \nonterm{ts}. \nonterm{es})  &&
-    \triangleq \lambda x : \tranty(\nonterm{ts}). \tranterm(\nonterm{es})     \\
-  & \tranterm(\nonterm{es}_1 \nonterm{es}_2)  &&
-    \triangleq \tranterm(\nonterm{es}_1) \tranterm(\nonterm{es}_2)            \\
-\end{aligned}
-\end{equation}
 
 \subsection{Correctness}
 
