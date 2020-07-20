@@ -184,6 +184,14 @@ where a type (an inhabitant of $\star$) is expected.
 We also establish some derived forms in the core language to simplify the subsequent exposition:
 
 \begin{itemize}
+  \item Simplified variable typing rule which we call \ranchor{CT-VarW}:
+    \[
+      \inferrule{\nonterm{GC} \vdash \nonterm{ec} : s \\ \gterm x : \nonterm{ec} \in \nonterm{GC}}
+                {\nonterm{GC} \vdash \gterm x : \nonterm{ec}}.
+    \]
+    This rule unfolds into a single \ranchor{CT-Var} defining $x$,
+    followed by a sequence of \ranchor{CT-Weaken}
+    to ``move'' the $x$ into the right position in the final $\nonterm{GC}$.
   \item Non-dependent function type:
     \[
       \tau_1 \rightarrow \tau_2 \triangleq \Pi \_ : \tau_1. \tau_2.
