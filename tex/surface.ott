@@ -106,7 +106,8 @@ G , x : ts1 |- es : ts2
 G |- \x : ts1. es : ( x : ts1 ) -> ts2
 
 ts0 def < </ li : tsi // i /> >
-G |- es : ts
+G |- ts
+G |- es : ts0
 x fresh
 </ G , xi : tsi , x : { _ : Unit | es = < li = xi > as ts0 } |- esi : ts // i />
 -------------------------------------------------------------------------- :: Case
