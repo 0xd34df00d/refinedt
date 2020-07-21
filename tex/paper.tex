@@ -223,7 +223,7 @@ and state some straightforward facts that will be useful later:
       (\nonterm{tc}_1, \nonterm{tc}_2) \triangleq \{ x : \nonterm{tc}_1\ **\ (\lambda \_ : \nonterm{tc}_1. \nonterm{tc}_2) x \}.
     \]
     As a direct consequence of the previous lemma we obtain
-    \begin{lemma}
+    \begin{lemma}\label{lma:non_dep_pair_typing}
       If $\nonterm{tc}_1, \nonterm{tc}_2$ are well-formed in $\nonterm{GC}$,
       then $(\nonterm{tc}_1, \nonterm{tc}_2)$ is well-formed in $\nonterm{GC}$ and has type $\star$.
     \end{lemma}
