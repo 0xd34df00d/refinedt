@@ -373,6 +373,26 @@ We now consider the last rule used in the derivation of $\nonterm G \vdash \nont
     which, in turn, is easily checked.
     Thus, there exists a derivation of $\nonterm{GC} \vdash (\hat B, \unitc \equiv \unitc) : *$,
     and it is effectively constructible~--- we just omit it for brevity.
+  \item \ranchor{TWF-Arr}.
+    \begin{align*}
+      & \inferrule{\nonterm G \ctxok \\\\
+                   \nonterm G \vdash \nonterm{ts}_1 \\
+                   \nonterm G , \gterm x : \nonterm{ts}_1 \vdash \nonterm{ts}_2}
+                  {\nonterm G \vdash (\gterm x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2}
+          \longmapsto
+        \inferrule{\Tranty(\nonterm G \vdash \nonterm{ts}_1) \\
+                   \Tranty(\nonterm G , \gterm x : \nonterm{ts}_1 \vdash \nonterm{ts}_2)}
+                  {\nonterm{GC} \vdash \Pi x : \nonterm{tc}_1. \nonterm{tc}_2 : \star}, \\
+      \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok),                                         \\
+                   &\nonterm{tc}_1 = \tranty(\nonterm G \vdash \nonterm{ts}_1),                         \\
+                   &\nonterm{tc}_2 = \tranty(\nonterm G , \gterm x : \nonterm{ts}_1 \vdash \nonterm{ts}_2).
+    \end{align*}
+
+    We resort to \ranchor{CT-Form} on the right.
+    This is well-formed,
+    since $\Tranty(\nonterm G \vdash \nonterm{ts}_1)$ produces a derivation of $\nonterm{GC} \vdash \nonterm{tc}_1 : \star$,
+    and similarly we get a derivation of $\nonterm{GC}, \gterm x : \nonterm{tc}_1 \vdash \nonterm{tc}_2 : \star$ from
+    the other invocation of $\Tranty$.
 \end{itemize}
 
 $\Tranty$ is defined as follows,
