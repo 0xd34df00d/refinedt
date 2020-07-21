@@ -347,7 +347,35 @@ we consider the last rule used in a derivation:
 \end{itemize}
 
 \paragraph{Types.}
-$\tranty$ is defined as follows,
+Next, we define $\Tranty$.
+We now consider the last rule used in the derivation of $\nonterm G \vdash \nonterm{ts}$.
+
+\begin{itemize}
+  \item \ranchor{TWF-TrueRef}.
+    \begin{align*}
+      & \inferrule{\nonterm G \ctxok}
+                  {\nonterm G \vdash \{ v : B | \top \}}
+          \longmapsto
+        \inferrule{\cdots}
+                  {\nonterm{GC} \vdash (\hat B, \unitc \equiv \unitc) : *}, \\
+      \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok).
+    \end{align*}
+
+    Here we somewhat frivolously use $\hat B$ to denote
+    the core language analogue of the surface language base type $B$.
+    For example, if this rule is instantiated for $B$ equal to $\Unit$,
+    then $\hat B$ would be $\Unitc$.
+
+    We also do not mention the premises of the translated rule.
+    By \cref{lma:non_dep_pair_typing}
+    $(\hat B, \unitc \equiv \unitc)$ has type $\star$ in $\nonterm{GC}$
+    if $\hat B$ and $\unitc \equiv \unitc$ are well-typed in $\nonterm{GC}$,
+    which, in turn, is easily checked.
+    Thus, there exists a derivation of $\nonterm{GC} \vdash (\hat B, \unitc \equiv \unitc) : *$,
+    and it is effectively constructible~--- we just omit it for brevity.
+\end{itemize}
+
+$\Tranty$ is defined as follows,
 with the slight abuse of notation to allow ``recursive'' calls
 on the refinement part of the surface language syntax:
 \begin{equation}
