@@ -16,7 +16,9 @@
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
+\newtheorem{remark}{Remark}
 \crefname{lemma}{Lemma}{Lemmas}
+\crefname{remark}{Remark}{Remarks}
 
 \newcommand{\unit}{u}
 \newcommand{\Unit}{\textbf{Unit}}
@@ -112,10 +114,12 @@ In particular, one good way to define $\top$ is
 to state the equality of the sole inhabitant of $\Unit$ to itself:
 $\top \triangleq \unit = \unit$.
 
-The surface language might also have other base types (for example, $\Int$),
-elements of syntax (like numbers and operations on them)
-as well as typing rules relating those,
-but we omit them for the sake of brevity.
+\begin{remark}\label{remark:surface_base_types}
+  The surface language might also have other base types (for example, $\Int$),
+  elements of syntax (like numbers and operations on them)
+  as well as typing rules relating those,
+  but we omit them for the sake of brevity.
+\end{remark}
 
 We also have the following concessions:
 \begin{itemize}
