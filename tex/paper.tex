@@ -396,19 +396,6 @@ We now consider the last rule used in the derivation of $\nonterm G \vdash \nont
     the other invocation of $\Tranty$.
 \end{itemize}
 
-$\Tranty$ is defined as follows,
-with the slight abuse of notation to allow ``recursive'' calls
-on the refinement part of the surface language syntax:
-\begin{equation}
-\begin{aligned}
-  & \tranty( (x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2)  && \triangleq \Pi x : \tranty(\nonterm{ts}_1). \tranty(\nonterm{ts}_2)     \\
-  & \tranty( \{ v : \nonterm{ts} | \nonterm{r} \})             && \triangleq \{ v : \tranty(\nonterm{ts})\ **\ \tranty(\nonterm r) \}     \\
-  & \tranty( \nonterm r_1 \land \nonterm r_2 )                 && \triangleq ( \tranty(\nonterm r_1) , \tranty(\nonterm r_2))             \\
-  & \tranty( \nonterm{es}_1 = \nonterm{es}_2 )                 && \triangleq \tranterm(\nonterm{es}_1) \equiv \tranterm(\nonterm{es}_2)   \\
-  & \tranty(B)                                                 && \triangleq B                                                            \\
-%TODO this last one is not well-defined
-\end{aligned}
-\end{equation}
 Or, in words:
 \begin{itemize}
   \item (dependent) arrow types are translated to the corresponding $\Pi$-types,
