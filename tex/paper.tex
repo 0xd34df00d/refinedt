@@ -225,7 +225,7 @@ and state some straightforward facts that will be useful later:
       \text{snd} \triangleq \lambda \sigma : (x : \nonterm{tc} \dast P x). \sigma \nonterm{tc} (\lambda x' : \nonterm{tc}. \lambda p : P x'. p).
     \]
     It is easy to see from the formation rule that
-    \begin{lemma}
+    \begin{lemma}\label{lma:dep_pair_typing}
       If $\nonterm{tc}$ is typeable in $\nonterm{GC}$
       and $P x$ is typeable in $\nonterm{GC} , x : \nonterm{tc}$,
       then $(x : \nonterm{tc} \dast P x)$ is also typeable in $\nonterm{GC}$ and,
@@ -237,14 +237,20 @@ and state some straightforward facts that will be useful later:
     \]
     As a direct consequence of the previous lemma we obtain
     \begin{lemma}\label{lma:non_dep_pair_typing}
-      If $\nonterm{tc}_1, \nonterm{tc}_2$ are well-formed in $\nonterm{GC}$,
-      then $(\nonterm{tc}_1, \nonterm{tc}_2)$ is well-formed in $\nonterm{GC}$ and has type $\star$.
+      If $\nonterm{tc}_1, \nonterm{tc}_2$ are typeable in $\nonterm{GC}$,
+      then $(\nonterm{tc}_1, \nonterm{tc}_2)$ is typeable in $\nonterm{GC}$ and has type $\star$.
     \end{lemma}
-  \item Equality of expressions $\nonterm{ec}_1, \nonterm{ec}_2$ of type $S$:
+  \item Equality of expressions $\nonterm{ec}_1, \nonterm{ec}_2$ of type $\nonterm{tc}$:
     \[
-      \nonterm{ec}_1 \equiv \nonterm{ec}_2 \triangleq \Pi P : S \rightarrow \star. (P x \rightarrow P y, P y \rightarrow P x).
+      \nonterm{ec}_1 \equiv \nonterm{ec}_2 \triangleq \Pi P : \nonterm{tc} \rightarrow \star. (P x \rightarrow P y, P y \rightarrow P x).
     \]
     The reader might recognize this as the Leibniz equality \cite{FindSomethingForThis}.
+
+    Again, it can be seen that
+    \begin{lemma}\label{lma:equality_typing}
+      If $\nonterm{ec}_1, \nonterm{ec}_2$ are well-typed in a context $\nonterm{GC}$,
+      then $\nonterm{GC} \vdash \nonterm{ec}_1 \equiv \nonterm{ec}_2 : \star$.
+    \end{lemma}
 \end{itemize}
 
 \section{Translation}
