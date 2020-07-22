@@ -174,7 +174,7 @@ terminals :: terminals_ ::=
   | ssq		:: :: squarekind {{ tex \square }}
   | empty   :: :: empty {{ tex \emptyset }}
   | =b		:: :: beq {{ tex =_\beta }}
-  | fresh	:: :: fresh {{ tex \text{fresh name} }}
+  | fresh	:: :: fresh {{ tex \fresh }}
   | <		:: :: langle {{ tex \langle }}
   | >		:: :: rangle {{ tex \rangle }}
   | unit	:: :: unit {{ tex \unit }}
