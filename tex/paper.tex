@@ -224,10 +224,12 @@ and state some straightforward facts that will be useful later:
     \[
       \text{snd} \triangleq \lambda \sigma : (x : \nonterm{tc} \dast P x). \sigma \nonterm{tc} (\lambda x' : \nonterm{tc}. \lambda p : P x'. p).
     \]
-    It's easy to see from the formation rule that
+    It is easy to see from the formation rule that
     \begin{lemma}
-      If $\nonterm{tc}$ and $P x$ are well-formed in $\nonterm{GC}$,
-      then $(x : \nonterm{tc} \dast P x)$ is well-formed in $\nonterm{GC}$ and has type $\star$.
+      If $\nonterm{tc}$ is typeable in $\nonterm{GC}$
+      and $P x$ is typeable in $\nonterm{GC} , x : \nonterm{tc}$,
+      then $(x : \nonterm{tc} \dast P x)$ is also typeable in $\nonterm{GC}$ and,
+      in particular, it has type $\star$.
     \end{lemma}
   \item Non-dependent pair type:
     \[
