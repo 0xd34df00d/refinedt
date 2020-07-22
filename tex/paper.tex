@@ -187,13 +187,13 @@ where a type (an inhabitant of $\star$) is expected.
 We also establish some derived forms in the core language to simplify the subsequent exposition,
 and state some straightforward facts that will be useful later:
 \begin{itemize}
-  \item Simplified variable typing rule which we call \ranchor{CT-VarW}:
+  \item Simplified variable typing rule which we call \textsc{CT-VarW}:
     \[
       \inferrule{\nonterm{GC} \vdash \nonterm{ec} : s \\ \gterm x : \nonterm{ec} \in \nonterm{GC}}
                 {\nonterm{GC} \vdash \gterm x : \nonterm{ec}}.
     \]
-    This rule unfolds into a single \ranchor{CT-Var} defining $x$,
-    followed by a sequence of \ranchor{CT-Weaken}
+    This rule unfolds into a single \textsc{CT-Var} defining $x$,
+    followed by a sequence of \textsc{CT-Weaken}
     to ``move'' the $x$ into the right position in the final $\nonterm{GC}$.
   \item Non-dependent function type:
     \[
@@ -281,7 +281,7 @@ In particular, note that the oracle plays a crucial role in typechecking of the 
 so it is natural to expect that its output will also be used during any such translation,
 for instance, to produce core language proofs that VCs hold.
 The only trace of the oracle's work is in the typing derivation
-(namely, in the subtyping relation check and the \ranchor{T-Sub} typing rule),
+(namely, in the subtyping relation check and the \textsc{T-Sub} typing rule),
 so we choose to do the translation not on \emph{terms},
 but rather on \emph{well-typedness derivations} for the terms.
 This way the oracle has a chance to enrich the original surface language term
@@ -325,7 +325,7 @@ from the surface language into the core language.
 Since $\Tranctx$ is defined on the derivations of $\nonterm G \ctxok$,
 we consider the last rule used in a derivation:
 \begin{itemize}
-  \item \ranchor{TCTX-Empty}.
+  \item \textsc{TCTX-Empty}.
     \begin{align*}
       & \inferrule{~}
                   {\emptyset \ctxok}
@@ -333,7 +333,7 @@ we consider the last rule used in a derivation:
         \emptyset.
     \end{align*}
     The base case is trivial: we map the empty context to the empty context.
-  \item \ranchor{TCTX-Bind}.
+  \item \textsc{TCTX-Bind}.
     \begin{align*}
       & \inferrule{\nonterm G \ctxok \\ \nonterm G \vdash \nonterm{ts}}
                   {\nonterm G , \gterm x : \nonterm{ts} \ctxok}
@@ -352,7 +352,7 @@ Next, we define $\Tranty$.
 We now consider the last rule used in the derivation of $\nonterm G \vdash \nonterm{ts}$.
 
 \begin{itemize}
-  \item \ranchor{TWF-TrueRef}.
+  \item \textsc{TWF-TrueRef}.
     \begin{align*}
       & \inferrule{\nonterm G \ctxok}
                   {\nonterm G \vdash \{ v : B | \top \}}
@@ -374,7 +374,7 @@ We now consider the last rule used in the derivation of $\nonterm G \vdash \nont
     which, in turn, is easily checked.
     Thus, there exists a derivation of $\nonterm{GC} \vdash (\hat B, \unitc \equiv \unitc) : *$,
     and it is effectively constructible~--- we just omit it for brevity.
-  \item \ranchor{TWF-Arr}.
+  \item \textsc{TWF-Arr}.
     \begin{align*}
       & \inferrule{\nonterm G \ctxok \\\\
                    \nonterm G \vdash \nonterm{ts}_1 \\
@@ -389,7 +389,7 @@ We now consider the last rule used in the derivation of $\nonterm G \vdash \nont
                    &\nonterm{tc}_2 = \tranty(\nonterm G , \gterm x : \nonterm{ts}_1 \vdash \nonterm{ts}_2).
     \end{align*}
 
-    We resort to \ranchor{CT-Form} on the right.
+    We resort to \textsc{CT-Form} on the right.
     This is well-formed,
     since $\Tranty(\nonterm G \vdash \nonterm{ts}_1)$ produces a derivation of $\nonterm{GC} \vdash \nonterm{tc}_1 : \star$,
     and similarly we get a derivation of $\nonterm{GC}, \gterm x : \nonterm{tc}_1 \vdash \nonterm{tc}_2 : \star$ from
@@ -423,7 +423,7 @@ Finally we define $\Tranterm$.
 We consider the term typing rule at the root of the derivation tree for $\nonterm G \vdash \nonterm{es} : \nonterm{ts}$.
 
 \begin{itemize}
-  \item \ranchor{T-Unit}.
+  \item \textsc{T-Unit}.
     \begin{align*}
       & \inferrule{\nonterm G \ctxok}
                   {\nonterm G \vdash \unit : \{ \gterm v : \Unit | \top \}}
@@ -435,9 +435,9 @@ We consider the term typing rule at the root of the derivation tree for $\nonter
     This rule has a single premise $\nonterm G \ctxok$ that the surface context is well-formed.
     We use $\Tranctx$ to translate the surface derivation of that premise into the core one,
     and extract the resulting context $\nonterm{GC}$.
-    We then use that context for \ranchor{CT-UnitTerm}.
+    We then use that context for \textsc{CT-UnitTerm}.
 
-  \item \ranchor{T-Var}.
+  \item \textsc{T-Var}.
     \begin{align*}
       & \inferrule{\nonterm G \ctxok \\
                    \gterm x : \nonterm{ts} \in \nonterm G}
@@ -456,7 +456,7 @@ We consider the term typing rule at the root of the derivation tree for $\nonter
     if $\nonterm G$ contains a binding for the name $x$,
     then $\nonterm{GC}$ also contains a binding for that name,
     and its type is precisely $\tranty(\Gamma \vdash \nonterm{ts})$.
-    Thus, we are allowed to use the (derived) core typing rule \ranchor{CT-VarW}.
+    Thus, we are allowed to use the (derived) core typing rule \textsc{CT-VarW}.
 \end{itemize}
 
 Having defined these functions, we formulate a simple but useful lemma:
