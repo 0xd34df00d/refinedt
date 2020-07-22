@@ -186,6 +186,12 @@ and the typing rules are defined in \figref{core_typing}.
 Although the syntax doesn't mention $\nonterm{tc}$, we will use it as a metavariable
 where a type (an inhabitant of $\star$) is expected.
 
+In addition to that, we will somewhat frivolously use $\hat B$
+to denote the core language analogue of a surface language base type $B$,
+which exists for $\Unit$ ($\hat B$ then being $\Unitc$)
+and which we assume to exist for any other surface language base type
+mentioned in \cref{remark:surface_base_types}.
+
 \newcommand{\dast}{\ **\ }
 
 We also establish some derived forms in the core language to simplify the subsequent exposition,
@@ -349,12 +355,7 @@ More formally, we consider the last rule used in the derivation of $\nonterm G \
       \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok).
     \end{align*}
 
-    Here we somewhat frivolously use $\hat B$ to denote
-    the core language analogue of the surface language base type $B$.
-    For example, if this rule is instantiated for $B$ equal to $\Unit$,
-    then $\hat B$ would be $\Unitc$.
-
-    We also do not mention the premises of the translated rule.
+    We do not mention the premises of the translated rule.
     By \cref{lma:non_dep_pair_typing}
     $(\hat B, \unitc \equiv \unitc)$ has type $\star$ in $\nonterm{GC}$
     if $\hat B$ and $\unitc \equiv \unitc$ are well-typed in $\nonterm{GC}$,
