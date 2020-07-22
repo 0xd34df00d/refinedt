@@ -233,31 +233,6 @@ and state some straightforward facts that will be useful later:
       \nonterm{ec}_1 \equiv \nonterm{ec}_2 \triangleq \Pi P : S \rightarrow \star. (P x \rightarrow P y, P y \rightarrow P x).
     \]
     The reader might recognize this as the Leibniz equality \cite{FindSomethingForThis}.
-  \item ADTs, expressed using an encoding similar to Boehm-Berarducci's \cite{Bohm85}.
-    We borrow the syntax for the ADTs from the surface language and put a hat on it,
-    so let's take some ADT $\widehat{\langle \overline{l_i : \nonterm{ts}_i}^i \rangle}$.
-    The usual Boehm-Berarducci encoding associates the type
-    $\Pi \alpha : \star. \overline{(\nonterm{ts}_i \rightarrow \alpha)}^i \rightarrow \alpha$ with it.
-
-    We go a step further to account for the subset of the dependent pattern matching
-    that we are interested in.
-
-    First, each label $l_i$ gives rise to a term $\hat{l_i}$ of type $\nonterm{ts}_i \rightarrow \xi$.
-    %TODO operational semantics?
-    We then define the derived form
-    \[
-      \widehat{\langle \overline{l_i : \nonterm{ts}_i}^i \rangle}
-        \triangleq
-          \Pi s : \xi.
-          \Pi \alpha : \star.
-          \overline{(\Pi x_i : \nonterm{ts}_i. s \equiv \hat{l_i} x_i \rightarrow \alpha)}^i \rightarrow \alpha.
-    \]
-    The outer extra argument named $s$ denotes the scrutinee of the case expression to be defined next.
-    The inner extra argument with the type $s \equiv \hat{l_i} x_i$
-    expresses the subset of dependent pattern matching
-    that we rely on for the translation from the surface language:
-    in particular, it provides the ``case branch'' with a proof
-    that the scrutinee $s$ is indeed equal to the ``case pattern'' $\hat{l_i} x_i$.
 \end{itemize}
 
 \section{Translation}
