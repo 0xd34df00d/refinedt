@@ -348,8 +348,16 @@ we consider the last rule used in a derivation:
 \end{itemize}
 
 \paragraph{Types.}
-Next, we define $\Tranty$.
-We now consider the last rule used in the derivation of $\nonterm G \vdash \nonterm{ts}$.
+Next, we define $\Tranty$. In short:
+\begin{itemize}
+  \item (dependent) arrow types are translated to the corresponding $\Pi$-types,
+  \item refined types are translated to the corresponding $\Sigma$-types,
+  \item atomic refinements, being propositions about surface language terms equality,
+    are translated to propositions stating the equality of translated core language terms,
+  \item conjunctions of several (atomic) refinements are represented as tuples of the corresponding atomic translations.
+\end{itemize}
+
+More formally, we consider the last rule used in the derivation of $\nonterm G \vdash \nonterm{ts}$.
 
 \begin{itemize}
   \item \textsc{TWF-TrueRef}.
@@ -394,15 +402,6 @@ We now consider the last rule used in the derivation of $\nonterm G \vdash \nont
     since $\Tranty(\nonterm G \vdash \nonterm{ts}_1)$ produces a derivation of $\nonterm{GC} \vdash \nonterm{tc}_1 : \star$,
     and similarly we get a derivation of $\nonterm{GC}, \gterm x : \nonterm{tc}_1 \vdash \nonterm{tc}_2 : \star$ from
     the other invocation of $\Tranty$.
-\end{itemize}
-
-Or, in words:
-\begin{itemize}
-  \item (dependent) arrow types are translated to the corresponding $\Pi$-types,
-  \item refined types are translated to the corresponding $\Sigma$-types,
-  \item atomic refinements, being propositions about surface language terms equality,
-    are translated to propositions stating the equality of translated core language terms,
-  \item conjunctions of several (atomic) refinements are represented as tuples of the corresponding atomic translations.
 \end{itemize}
 
 \paragraph{Terms.}
