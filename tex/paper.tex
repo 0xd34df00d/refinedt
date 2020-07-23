@@ -400,6 +400,29 @@ More formally, we consider the last rule used in the derivation of $\nonterm G \
 
     Just as in the previous case, the extra derivations and premises corresponding to the considerations above
     are omitted and denoted by $\cdots$.
+  \item \textsc{TWF-Conj}.
+    \begin{align*}
+      & \inferrule{\nonterm G \ctxok \\\\
+                   \nonterm G \vdash \{ v : B | \nonterm{r}_1 \} \\
+                   \nonterm G \vdash \{ v : B | \nonterm{r}_2 \}}
+                  {\nonterm G \vdash \{ v : B | \nonterm{r}_1 \land \nonterm{r}_2 \}}
+          \longmapsto
+        \inferrule{\cdots \\\\
+                   \Tranty(\nonterm G \vdash \{ v : B | \nonterm{r}_1 \}) \\
+                   \Tranty(\nonterm G \vdash \{ v : B | \nonterm{r}_2 \})}
+                  {\nonterm{GC} \vdash (v : \hat B \dast \lambda v : \hat B. (P_1 v, P_2 v)) : \star}, \\
+      \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok),                                         \\
+                   &P_1 \text{~s.t.~} (v : \hat B \dast \lambda v : \hat B. P_1 v) = \tranty(\nonterm G \vdash \{ v : B | \nonterm{r}_1 \}),  \\
+                   &P_2 \text{~s.t.~} (v : \hat B \dast \lambda v : \hat B. P_2 v) = \tranty(\nonterm G \vdash \{ v : B | \nonterm{r}_2 \}).
+    \end{align*}
+
+    The proof of the right-hand side being well-defined goes similarly to the cases considered previously
+    with an extra step.
+    Namely, note that the last two ``patterns'' on the left-hand side are irrefutable:
+    it can be seen by direct inspection and inductive reasoning that $\tranty$ always yields a pair
+    for a derivation of the form $\nonterm G \vdash \{ v : B | \nonterm{r} \}$.
+    Thus we can take the predicate components $P_1, P_2$ out from the corresponding dependent pairs
+    and repack them obtaining $\lambda v : \hat B. (P_1 v, P_2 v)$.
   \item \textsc{TWF-Arr}.
     \begin{align*}
       & \inferrule{\nonterm G \ctxok \\\\
