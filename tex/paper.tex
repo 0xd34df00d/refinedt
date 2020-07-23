@@ -351,8 +351,7 @@ Next, we define $\Tranty$. In short:
   \item conjunctions of several (atomic) refinements are represented as tuples of the corresponding atomic translations.
 \end{itemize}
 
-More formally, we consider the last rule used in the derivation of $\nonterm G \vdash \nonterm{ts}$.
-
+More formally, we consider the last rule used in the derivation of $\nonterm G \vdash \nonterm{ts}$:
 \begin{itemize}
   \item \textsc{TWF-TrueRef}.
     \begin{align*}
@@ -417,8 +416,8 @@ More formally, we consider the last rule used in the derivation of $\nonterm G \
                    &P_2 \text{~s.t.~} (v : \hat B \dast \lambda v : \hat B. P_2 v) = \tranty(\nonterm G \vdash \{ v : B | \nonterm{r}_2 \}).
     \end{align*}
 
-    The proof of the right-hand side being well-defined goes similarly to the cases considered previously
-    with an extra step.
+    The proof of the right-hand side being well-defined goes similarly to the cases considered previously,
+    but with an extra step.
     Namely, note that the last two ``patterns'' on the left-hand side are irrefutable:
     it can be seen by direct inspection and inductive reasoning that $\tranty$ always yields a pair
     for a derivation of the form $\nonterm G \vdash \{ v : B | \nonterm{r} \}$.
