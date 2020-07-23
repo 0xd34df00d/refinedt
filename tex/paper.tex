@@ -370,6 +370,33 @@ More formally, we consider the last rule used in the derivation of $\nonterm G \
     which, in turn, is easily checked.
     Thus, there exists a derivation of $\nonterm{GC} \vdash (\hat B, \unitc \equiv \unitc) : *$,
     and it is effectively constructible~--- we just omit it for brevity.
+  \item \textsc{TWF-Base}.
+    \begin{align*}
+      & \inferrule{\nonterm G \ctxok \\\\
+                   \nonterm G ' \vdash \nonterm{es}_1 : \{ v_2 : B' | \nonterm{r}_1 \} \\\\
+                   \nonterm G ' \vdash \nonterm{es}_2 : \{ v_2 : B' | \nonterm{r}_2 \} \\\\
+                   \gterm x \fresh}
+                  {\nonterm G \vdash \{ v : B | \nonterm{es}_1 = \nonterm{es}_2 \}}
+          \longmapsto
+        \inferrule{\Tranterm(\nonterm G ' \vdash \nonterm{es}_1 : \{ v_2 : B' | \nonterm{r}_1 \}) \\\\
+                   \Tranterm(\nonterm G ' \vdash \nonterm{es}_2 : \{ v_2 : B' | \nonterm{r}_2 \}) \\\\
+                   \gterm x \fresh \\\\
+                   \cdots}
+                  {\nonterm{GC} \vdash (v : \hat B \dast \lambda v : \hat B. \nonterm{ec}_1 \equiv \nonterm{ec}_2) : \star}, \\
+      \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok), \\
+                   &\nonterm G ' = \nonterm G , v : \{ v_1 : B | \top \}, \\
+                   &\nonterm{ec}_i =
+                     \tranterm(\nonterm G , x : \{ v_1 : B | \top \} \vdash \nonterm{es}_i : \{ v_2 : B' | \nonterm{r}_i \}).
+    \end{align*}
+
+    To see that this is well-defined, first note that
+    that $\hat B$ has type $\star$ by assumption on $\hat B$.
+    Then, $\nonterm{ec}_1$ and $\nonterm{ec}_2$ are well-typed in the translated context $\nonterm G'$ according to the premises,
+    and this context coincides with the one used to type check $\lambda v : \hat B. \nonterm{ec}_1 \equiv \nonterm{ec}_2$.
+    Hence both components of the dependent pair are well-typed, so by \cref{lma:dep_pair_typing} the dependent pair itself has type $\star$.
+
+    Just as in the previous case, the extra derivations and premises corresponding to the considerations above
+    are omitted and denoted by $\cdots$.
   \item \textsc{TWF-Arr}.
     \begin{align*}
       & \inferrule{\nonterm G \ctxok \\\\
