@@ -395,6 +395,9 @@ More formally, we consider the last rule used in the derivation of $\nonterm G \
     and this context coincides with the one used to type check $\lambda v : \hat B. \nonterm{ec}_1 \equiv \nonterm{ec}_2$.
     Hence both components of the dependent pair are well-typed, so by \cref{lma:dep_pair_typing} the dependent pair itself has type $\star$.
 
+    %TODO the { v : B | T } in the Γ' desugars to a dependent pair, yet we use λv : \hat B — note the naked base type.
+    %Figure out how to best fix this.
+
     Just as in the previous case, the extra derivations and premises corresponding to the considerations above
     are omitted and denoted by $\cdots$.
   \item \textsc{TWF-Arr}.
