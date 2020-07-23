@@ -9,6 +9,7 @@
 \usepackage{ottalt}
 \usepackage{subcaption}
 \usepackage{cite,url,babelbib}
+\usepackage{todonotes}
 \usepackage[english]{babel}
 
 \addtolength{\topmargin}{-1.05in}
@@ -395,8 +396,10 @@ More formally, we consider the last rule used in the derivation of $\nonterm G \
     and this context coincides with the one used to type check $\lambda v : \hat B. \nonterm{ec}_1 \equiv \nonterm{ec}_2$.
     Hence both components of the dependent pair are well-typed, so by \cref{lma:dep_pair_typing} the dependent pair itself has type $\star$.
 
-    %TODO the { v : B | T } in the Γ' desugars to a dependent pair, yet we use λv : \hat B — note the naked base type.
-    %Figure out how to best fix this.
+    \todo[inline]{
+      The ${ v : B | \top }$ in the $\nonterm G '$ desugars to a dependent pair, yet we use $\lambda v : \hat B$ — note the naked base type.
+      Figure out how to best fix this.
+    }
 
     Just as in the previous case, the extra derivations and premises corresponding to the considerations above
     are omitted and denoted by $\cdots$.
@@ -443,6 +446,8 @@ More formally, we consider the last rule used in the derivation of $\nonterm G \
     since $\Tranty(\nonterm G \vdash \nonterm{ts}_1)$ produces a derivation of $\nonterm{GC} \vdash \nonterm{tc}_1 : \star$,
     and similarly we get a derivation of $\nonterm{GC}, \gterm x : \nonterm{tc}_1 \vdash \nonterm{tc}_2 : \star$ from
     the other invocation of $\Tranty$.
+  \item \textsc{TWF-Rec}.
+    \todo[inline]{Don't forget to define this.}
 \end{itemize}
 
 \paragraph{Terms.}
