@@ -16,7 +16,10 @@ ex2 = L1 $ MkT1 42
 
 namespace BB
   ADTEnc : Type
-  ADTEnc = (α : Type) -> (f0 : T0 -> α) -> (f1 : T1 -> α) -> α
+  ADTEnc = (α : Type)
+        -> (f0 : T0 -> α)
+        -> (f1 : T1 -> α)
+        -> α
 
   l0 : T0 -> ADTEnc
   l0 n = \α, f0, f1 => f0 n
