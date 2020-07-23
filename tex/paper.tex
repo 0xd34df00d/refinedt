@@ -386,7 +386,7 @@ More formally, we consider the last rule used in the derivation of $\nonterm G \
       \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok), \\
                    &\nonterm G ' = \nonterm G , v : \{ v_1 : B | \top \}, \\
                    &\nonterm{ec}_i =
-                     \tranterm(\nonterm G , x : \{ v_1 : B | \top \} \vdash \nonterm{es}_i : \{ v_2 : B' | \nonterm{r}_i \}).
+                     \tranterm(\nonterm G ' \vdash \nonterm{es}_i : \{ v_2 : B' | \nonterm{r}_i \}).
     \end{align*}
 
     To see that this is well-defined, first note that
