@@ -48,6 +48,7 @@
 \newgterm x x
 \newgterm v v
 \newgterm n n
+\newgterm p \pi
 
 \newcommand{\figref}[1]{Figure \ref{fig:#1}}
 
@@ -201,8 +202,8 @@ and the rules for our extensions are defined in \figref{core_typing_exts}.
 \end{figure}
 \begin{figure}[ht]
   \footnotesize
-  \drules[CT]{$\nonterm G \vdash \nonterm{ec}_1 : \nonterm{ec}_2$}{core typing, extensions}{UnitType,UnitTerm}
-  \caption{Our extensions typing rules}
+  \drules[CT]{$\nonterm G \vdash \nonterm{ec}_1 : \nonterm{ec}_2$}{core typing, extensions}{UnitType,UnitTerm,ADTForm,ADTCon,ADTCase}
+  \caption{Typing rules for our extensions to $\lambda C$}
   \label{fig:core_typing_exts}
 \end{figure}
 

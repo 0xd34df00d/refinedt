@@ -142,6 +142,7 @@ grammar
 metavar x {{ tex \gterm x }} ::= {{ com variables }}
 metavar v {{ tex \gterm v }} ::= {{ com refinement variables }}
 metavar n {{ tex \gterm n }} ::= {{ com integers }}
+metavar p {{ tex \gterm p }} ::= {{ com proof terms }}
 indexvar i, j ::= {{ com indexes }}
 
 grammar
@@ -156,7 +157,8 @@ formula :: formula_ ::=
   | l in </ li // i />
 				:: :: label_membership
   | formula1 .... formulai   ::  :: dots
-  | ts0 def ts	:: :: definition
+  | ts0 def ts	:: :: sdefinition
+  | ec0 def ec	:: :: cdefinition
 
 terminals :: terminals_ ::=
   | top		:: :: top {{ tex \top }}
@@ -184,6 +186,7 @@ terminals :: terminals_ ::=
   | Unitc	:: :: Unitc {{ tex \Unitc }}
   | def		:: :: def {{ tex \triangleq }}
   | ok		:: :: ok {{ tex \ctxok }}
+  | equal	:: :: p {{ tex \equiv }}
 
 
 %%% Core language
@@ -195,17 +198,27 @@ ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
   | Pi x : ec1 . ec2	::   :: piabs {{ com $\Pi$-type }}
   | \ x : ec1 . ec2		::   :: lamabs {{ com abstraction }}
   | ec1 ec2				::   :: app {{ com application }}
-  | [ x |-> ec1 ] ec2	:: M :: subst
   | unitc				::   :: unit {{ com unit value }}
   | Unitc				::   :: Unit {{ com unit type }}
+  | < </ li : eci // i /> > ::   :: variant {{ com ADT }}
+  | < l = ec > as < </ li : eci // i /> >
+						::   :: adt {{ com ADT construction }}
+  | case ec of </ li = xi proof pi -> eci // i />
+						::   :: case {{ com ADT case }}
+
+  | [ x |-> ec1 ] ec2	:: M :: subst
+  | p					:: M :: proofterm
+  | ec1 equal ec2		:: M :: equality
+  | < l = ec > as ec'   :: M :: adtcon_arb
 
 s {{ tex \nonterm{s} }} :: s_ ::= {{ com sorts }}
   | sst				::   :: type {{ com types }}
   | ssq				::   :: kind {{ com kinds }}
 
 GC {{ tex \nonterm{GC} }} :: coreenv_ ::=
-  | empty			:: :: nil
-  | GC , x : ec		:: :: var
+  | empty			::   :: nil
+  | GC , x : ec		::   :: var
+  | GC , p : ec		:: M :: proofvar
 
 defns Jderiv :: '' ::=
 
@@ -213,12 +226,6 @@ defn GC |- ec1 : ec2 :: :: coretyping :: CT_ {{ com typing }} by
 
 ------------------ :: Sort
 empty |- sst : ssq
-
------------------- :: UnitTerm
-GC |- unitc : Unitc
-
------------------- :: UnitType
-GC |- Unitc : sst
 
 GC |- ec : s
 --------------------- :: Var
@@ -249,3 +256,27 @@ GC |- ec2 : s
 ec1 =b ec2
 -------------- :: Conv
 GC |- ec : ec2
+
+
+------------------ :: UnitTerm
+GC |- unitc : Unitc
+
+------------------ :: UnitType
+GC |- Unitc : sst
+
+</ GC |- eci : sst // i />
+---------------------------------- :: ADTForm
+GC |- < </ li : eci // i /> > : sst
+
+GC |- ec : ecj
+lj in </ li // i />
+GC |- < </ li : eci // i /> > : sst
+--------------------------------------------------------------------- :: ADTCon
+GC |- < lj = ec> as < </ li : eci // i /> > : < </ li : eci // i /> >
+
+ec0 def < </ li : eci // i /> >
+GC |- ec1 : sst
+GC |- ec : ec0
+</ GC , xi : eci , pi : ec equal < li = xi > as ec0 |- eci : ec1 // i />
+------------------------------------------------------------------------- :: ADTCase
+GC |- case ec of </ li = xi proof pi -> eci // i />  : ec1
