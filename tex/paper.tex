@@ -160,6 +160,22 @@ that the oracle knows how to translate the atomic refinements.
 In the subsequent text we also assume the oracle can decide the resulting proposition
 (otherwise it might be left as a separate lemma to be filled out by the user in the core language, or rejected altogether).
 
+\subsubsection{Properties}
+
+\begin{lemma}
+  If $\nonterm G \vdash \nonterm{es} : \nonterm{ts}$, then $\nonterm G \ctxok$.
+\end{lemma}
+\begin{proof}
+  \todo[inline]{Do the proof and remove the assumption $\nonterm G \ctxok$ from all the rules unless needed.}
+\end{proof}
+
+\begin{lemma}
+  If $\nonterm G \vdash \nonterm{es} : \nonterm{ts}$, then $\nonterm G \vdash \nonterm{ts}$.
+\end{lemma}
+\begin{proof}
+  \todo[inline]{Do the proof.}
+\end{proof}
+
 \subsection{Core language}
 
 We take $\lambda C$ \cite{TTFPLambdaC}
