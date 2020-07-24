@@ -102,7 +102,7 @@ stating that the context is well-formed.
 \begin{figure}[ht]
   \footnotesize
   \drules[TCTX]{$\nonterm G \ctxok$}{context well-formedness}{Empty,Bind}
-  \drules[TWF]{$\nonterm G \vdash \nonterm{ts}$}{type well-formedness}{TrueRef,Base,Conj,Arr,Rec}
+  \drules[TWF]{$\nonterm G \vdash \nonterm{ts}$}{type well-formedness}{TrueRef,Base,Conj,Arr,ADT}
   \drules[T]{$\nonterm G \vdash \nonterm{es} : \nonterm{ts}$}{term typing}{Unit,Var,Abs,App,Case,Con,Sub}
   \drules[ST]{$\nonterm G \vdash \nonterm{ts}_1 <: \nonterm{ts}_2$}{subtyping}{Base,Arr}
   \caption{Surface language typing}
@@ -473,7 +473,7 @@ More formally, we consider the last rule used in the derivation of $\nonterm G \
     since $\Tranty(\nonterm G \vdash \nonterm{ts}_1)$ produces a derivation of $\nonterm{GC} \vdash \nonterm{tc}_1 : \star$,
     and similarly we get a derivation of $\nonterm{GC}, \gterm x : \nonterm{tc}_1 \vdash \nonterm{tc}_2 : \star$ from
     the other invocation of $\Tranty$.
-  \item \textsc{TWF-Rec}.
+  \item \textsc{TWF-ADT}.
     \todo[inline]{Don't forget to define this.}
 \end{itemize}
 
