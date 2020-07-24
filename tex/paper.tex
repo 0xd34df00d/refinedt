@@ -179,13 +179,17 @@ In the subsequent text we also assume the oracle can decide the resulting propos
 \subsection{Core language}
 
 We take $\lambda C$ \cite{TTFPLambdaC}
-with a unit type as our core dependently typed language.
-We conjecture that the introduction of units
-does not break the usual metatheoretical properties of the system.
+extended with a unit type
+and a restricted form of ADTs as our core dependently typed language.
+We conjecture that these extensions
+do not break the usual metatheoretical properties of the system,
+and we explicitly prove progress and preservation theorems as a sanity check.
 
 The syntax of the core language is presented in \figref{core_syntax},
 the core $\lambda C$ typing rules are defined in \figref{core_typing}
 and the rules for our extensions are defined in \figref{core_typing_exts}.
+Note that the \textsc{CT-ADTCase} rule uses the equality $\equiv$,
+which is a derived form defined later.
 
 \begin{figure}[ht]
   \footnotesize
