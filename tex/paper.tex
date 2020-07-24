@@ -183,7 +183,8 @@ We conjecture that the introduction of units
 does not break the usual metatheoretical properties of the system.
 
 The syntax of the core language is presented in \figref{core_syntax},
-and the typing rules are defined in \figref{core_typing}.
+the core $\lambda C$ typing rules are defined in \figref{core_typing}
+and the rules for our extensions are defined in \figref{core_typing_exts}.
 
 \begin{figure}[ht]
   \footnotesize
@@ -194,9 +195,15 @@ and the typing rules are defined in \figref{core_typing}.
 
 \begin{figure}[ht]
   \footnotesize
-  \drules[CT]{$\nonterm G \vdash \nonterm{ec}_1 : \nonterm{ec}_2$}{core typing}{Sort,UnitType,UnitTerm,Var,Weaken,Form,App,Abs,Conv}
-  \caption{Core language typing rules}
+  \drules[CT]{$\nonterm G \vdash \nonterm{ec}_1 : \nonterm{ec}_2$}{core typing}{Sort,Var,Weaken,Form,App,Abs,Conv}
+  \caption{$\lambda C$ typing rules}
   \label{fig:core_typing}
+\end{figure}
+\begin{figure}[ht]
+  \footnotesize
+  \drules[CT]{$\nonterm G \vdash \nonterm{ec}_1 : \nonterm{ec}_2$}{core typing, extensions}{UnitType,UnitTerm}
+  \caption{Our extensions typing rules}
+  \label{fig:core_typing_exts}
 \end{figure}
 
 Although the syntax doesn't mention $\nonterm{tc}$, we will use it as a metavariable
