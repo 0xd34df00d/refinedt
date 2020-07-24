@@ -51,44 +51,44 @@ The syntax can be reasonably approximated by the following grammar,
 `prog` being the start nonterminal:
 
 ```ebnf
-prog := decl* EOF
+prog := {decl} EOF;
 
-decl := funSig funDef?
+decl := funSig [funDef];
 
--- Fun signatures and types
-funSig := funName ":" type EOL+
+(* Fun signatures and types *)
+funSig := funName ":" type EOL {EOL};
 
 type := arrow
-      | arrowLHS
-arrow := (boundLHS | arrowLHS) "->" type
-boundLHS := "(" binder ":" type ")"
+      | arrowLHS;
+arrow := (boundLHS | arrowLHS) "->" type;
+boundLHS := "(" binder ":" type ")";
 arrowLHS := "(" arrow ")"
-          | baseRT
+          | baseRT;
 baseRT := baseTy
-        | "{ v :" baseTy "|" refinement "}"
-baseTy := "Int" | "Bool" | "IntList"
+        | "{ v :" baseTy "|" refinement "}";
+baseTy := "Int" | "Bool" | "IntList";
 
-refinement := atomicRefinement ("&" atomicRefinement)*
-atomicRefinement := "v" op arg
-op := "<=" | "<" | "=" | "/=" | ">=" | ">"
-arg := decimal | "len" identifier | identifier
+refinement := atomicRefinement {"&" atomicRefinement};
+atomicRefinement := "v" op arg;
+op := "<=" | "<" | "=" | "/=" | ">=" | ">";
+arg := decimal | "len" identifier | identifier;
 
--- Fun definitions and terms
-funDef := funName binder* "=" term EOL+
+(* Fun definitions and terms *)
+funDef := funName binder* "=" term EOL {EOL};
 
 term := tapps
-      | term binOp term
-tapps := atom+
+      | term binOp term;
+tapps := atom {atom};
 atom := identifier
       | decimal
       | "if" term "then" term "else" term
-      | "(" term ")"
-binOp := "+" | "-" | ">" | "<"
+      | "(" term ")";
+binOp := "+" | "-" | ">" | "<";
 
-funName := identifier
-binder := identifier
+funName := identifier;
+binder := identifier;
 
-identifier := letter (alphaNum | "'")*
+identifier := letter {alphaNum | "'"};
 ```
 
 Here,
