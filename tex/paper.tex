@@ -537,11 +537,11 @@ We consider the term typing rule at the root of the derivation tree for $\nonter
         \inferrule{\Tranty(\nonterm G \vdash (\gterm x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2) \\\\
                    \Tranterm(\nonterm G , \gterm x : \nonterm{ts}_1 \vdash \nonterm{es} : \nonterm{ts}_2)
                    }
-                  {\nonterm G \vdash \lambda x : \nonterm{tc}_1. \nonterm{es} : \Pi \gterm x : \nonterm{tc}_1. \nonterm{tc}_2},    \\
+                  {\nonterm{GC} \vdash \lambda x : \nonterm{tc}_1. \nonterm{ec} : \Pi \gterm x : \nonterm{tc}_1. \nonterm{tc}_2},    \\
       \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok),       \\
-                   &\nonterm{tc}_1 = \tranty(\Gamma \vdash \nonterm{tc}_1), \\
-                   &\nonterm{tc}_2 = \tranty(\Gamma , x : \nonterm{tc}_1 \vdash \nonterm{tc}_2), \\
-                   &\nonterm{ec} = \tranterm().
+                   &\nonterm{tc}_1 = \tranty(\Gamma \vdash \nonterm{ts}_1), \\
+                   &\nonterm{tc}_2 = \tranty(\Gamma , x : \nonterm{ts}_1 \vdash \nonterm{ts}_2), \\
+                   &\nonterm{ec} = \tranterm(\nonterm G , \gterm x : \nonterm{ts}_1 \vdash \nonterm{es} : \nonterm{ts}_2).
     \end{align*}
 
     The right-hand side here is well-formed.
