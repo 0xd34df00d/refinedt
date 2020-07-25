@@ -81,11 +81,13 @@ The other ones are:
 \end{itemize}
 
 The syntax of the surface language is presented in \figref{surface_syntax}.
-
 The typing rules for the surface language are laid out in \figref{surface_typing}.
 For the type well-formedness and term typing rules
 we also assume each of them has a premise $\nonterm G \ctxok$
 stating that the context is well-formed.
+The (small-step) operational semantics for the surface language are presented in \figref{surface_opsem}.
+That is largely the usual call-by-value evaluation model
+with some extra rules for the ADTs and pattern matching.
 
 \begin{figure}[ht]
   \footnotesize
