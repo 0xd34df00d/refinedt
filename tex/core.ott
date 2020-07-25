@@ -22,6 +22,12 @@ s {{ tex \nonterm{s} }} :: s_ ::= {{ com sorts }}
   | sst				::   :: type {{ com types }}
   | ssq				::   :: kind {{ com kinds }}
 
+vc {{ tex \nonterm{vc} }} :: vc_ ::= {{ com values }}
+  | \ x : ec1 . ec2		::   :: abs {{ com abstraction value }}
+  | unitc				::   :: top {{ com unit value }}
+  | < l = vc > as < </ li : eci // i /> >
+						::   :: adt {{ com ADT value }}
+
 GC {{ tex \nonterm{GC} }} :: coreenv_ ::=
   | empty			::   :: nil
   | GC , x : ec		::   :: var
