@@ -1,0 +1,89 @@
+grammar
+ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
+  | x					::   :: var {{ com variable }}
+  | s					::   :: sort {{ com sort }}
+  | Pi x : ec1 . ec2	::   :: piabs {{ com $\Pi$-type }}
+  | \ x : ec1 . ec2		::   :: lamabs {{ com abstraction }}
+  | ec1 ec2				::   :: app {{ com application }}
+  | unitc				::   :: unit {{ com unit value }}
+  | Unitc				::   :: Unit {{ com unit type }}
+  | < </ li : eci // i /> > ::   :: variant {{ com ADT }}
+  | < l = ec > as < </ li : eci // i /> >
+						::   :: adt {{ com ADT construction }}
+  | case ec of </ li = xi proof pi -> eci // i />
+						::   :: case {{ com ADT case }}
+
+  | [ x |-> ec1 ] ec2	:: M :: subst
+  | p					:: M :: proofterm
+  | ec1 equal ec2		:: M :: equality
+  | < l = ec > as ec'   :: M :: adtcon_arb
+
+s {{ tex \nonterm{s} }} :: s_ ::= {{ com sorts }}
+  | sst				::   :: type {{ com types }}
+  | ssq				::   :: kind {{ com kinds }}
+
+GC {{ tex \nonterm{GC} }} :: coreenv_ ::=
+  | empty			::   :: nil
+  | GC , x : ec		::   :: var
+  | GC , p : ec		:: M :: proofvar
+
+defns Jderiv :: '' ::=
+
+defn GC |- ec1 : ec2 :: :: coretyping :: CT_ {{ com typing }} by
+
+------------------ :: Sort
+empty |- sst : ssq
+
+GC |- ec : s
+--------------------- :: Var
+GC , x : ec |- x : ec
+
+GC |- ec1 : ec2
+GC |- ec3 : s
+------------------------- :: Weaken
+GC , x : ec3 |- ec1 : ec2
+
+GC |- ec1 : s1
+GC , x : ec1 |- ec2 : s2
+--------------------------- :: Form
+GC |- Pi x : ec1 . ec2 : s2
+
+GC |- ec1' : Pi x : ec1 . ec2
+GC |- ec2' : ec1
+----------------------------- :: App
+GC |- ec1' ec2' : [ x |-> ec1 ] ec2
+
+GC , x : ec1 |- ec : ec2
+GC |- Pi x : ec1 . ec2 : s
+----------------------------- :: Abs
+GC |- \ x : ec1 . ec : Pi x : ec1 . ec2
+
+GC |- ec : ec1
+GC |- ec2 : s
+ec1 =b ec2
+-------------- :: Conv
+GC |- ec : ec2
+
+
+------------------ :: UnitTerm
+GC |- unitc : Unitc
+
+------------------ :: UnitType
+GC |- Unitc : sst
+
+</ GC |- eci : sst // i />
+---------------------------------- :: ADTForm
+GC |- < </ li : eci // i /> > : sst
+
+GC |- ec : ecj
+lj in </ li // i />
+GC |- < </ li : eci // i /> > : sst
+--------------------------------------------------------------------- :: ADTCon
+GC |- < lj = ec> as < </ li : eci // i /> > : < </ li : eci // i /> >
+
+ec0 def < </ li : eci // i /> >
+GC |- ec1 : sst
+GC |- ec : ec0
+</ GC , xi : eci , pi : ec equal < li = xi > as ec0 |- eci : ec1 // i />
+------------------------------------------------------------------------- :: ADTCase
+GC |- case ec of </ li = xi proof pi -> eci // i />  : ec1
