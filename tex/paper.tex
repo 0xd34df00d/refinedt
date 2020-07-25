@@ -111,6 +111,13 @@ stating that the context is well-formed.
   \label{fig:surface_typing}
 \end{figure}
 
+\begin{figure}[ht]
+  \footnotesize
+  \drules[E]{$\nonterm{es}_1 \evalsto \nonterm{es}_2$}{term evaluation}{AppL,AppR,AppAbs,ADT,CaseScrut,CaseMatch}
+  \caption{Surface language small-step operational semantics}
+  \label{fig:surface_opsem}
+\end{figure}
+
 We introduce a shorthand notation $\top$ denoting some tautology
 which we use for trivial refinements that do not carry any extra information.
 In particular, one good way to define $\top$ is
