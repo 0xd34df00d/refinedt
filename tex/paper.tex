@@ -188,7 +188,7 @@ and we explicitly prove progress and preservation theorems as a sanity check.
 The syntax of the core language is presented in \figref{core_syntax},
 the core $\lambda C$ typing rules are defined in \figref{core_typing}
 and the rules for our extensions are defined in \figref{core_typing_exts}.
-Note that the \textsc{CT-ADTCase} rule uses the equality $\equiv$,
+Note that the \textsc{CT-ADTCase} rule uses $\equiv$ denoting the equality
 which is a derived form defined later.
 
 \begin{figure}[ht]
@@ -345,7 +345,7 @@ It merely maps the types of the bindings in a (well-formed) context
 from the surface language into the core language.
 
 Since $\Tranctx$ is defined on the derivations of $\nonterm G \ctxok$,
-we consider the last rule used in a derivation:
+consider the last rule used in a derivation:
 \begin{itemize}
   \item \textsc{TCTX-Empty}.
     \begin{align*}
@@ -354,7 +354,7 @@ we consider the last rule used in a derivation:
           \longmapsto
         \emptyset.
     \end{align*}
-    The base case is trivial: we map the empty context to the empty context.
+    The base case is trivial: the empty context is mapped to the empty context.
   \item \textsc{TCTX-Bind}.
     \begin{align*}
       & \inferrule{\nonterm G \ctxok \\ \nonterm G \vdash \nonterm{ts}}
@@ -379,7 +379,7 @@ Next, we define $\Tranty$. In short:
   \item conjunctions of several (atomic) refinements are represented as tuples of the corresponding atomic translations.
 \end{itemize}
 
-More formally, we consider the last rule used in the derivation of $\nonterm G \vdash \nonterm{ts}$:
+More formally, consider the last rule used in the derivation of $\nonterm G \vdash \nonterm{ts}$:
 \begin{itemize}
   \item \textsc{TWF-TrueRef}.
     \begin{align*}
@@ -391,13 +391,12 @@ More formally, we consider the last rule used in the derivation of $\nonterm G \
       \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok).
     \end{align*}
 
-    We do not mention the premises of the translated rule.
     By \cref{lma:non_dep_pair_typing}
     $(\hat B, \unitc \equiv \unitc)$ has type $\star$ in $\nonterm{GC}$
     if $\hat B$ and $\unitc \equiv \unitc$ are well-typed in $\nonterm{GC}$,
     which, in turn, is easily checked.
     Thus, there exists a derivation of $\nonterm{GC} \vdash (\hat B, \unitc \equiv \unitc) : \star$,
-    and it is effectively constructible~--- we just omit it for brevity.
+    and it is effectively constructible, although omitted for brevity.
   \item \textsc{TWF-Base}.
     \begin{align*}
       & \inferrule{\nonterm G \ctxok \\\\
@@ -468,11 +467,11 @@ More formally, we consider the last rule used in the derivation of $\nonterm G \
                    &\nonterm{tc}_2 = \tranty(\nonterm G , \gterm x : \nonterm{ts}_1 \vdash \nonterm{ts}_2).
     \end{align*}
 
-    We resort to \textsc{CT-Form} on the right.
-    This is well-formed,
+    The rule \textsc{CT-Form} is used on the right.
+    This is admissible,
     since $\Tranty(\nonterm G \vdash \nonterm{ts}_1)$ produces a derivation of $\nonterm{GC} \vdash \nonterm{tc}_1 : \star$,
-    and similarly we get a derivation of $\nonterm{GC}, \gterm x : \nonterm{tc}_1 \vdash \nonterm{tc}_2 : \star$ from
-    the other invocation of $\Tranty$.
+    and similarly there is a derivation of $\nonterm{GC}, \gterm x : \nonterm{tc}_1 \vdash \nonterm{tc}_2 : \star$
+    resulting from the other invocation of $\Tranty$.
   \item \textsc{TWF-ADT}.
     \begin{align*}
       & \inferrule{\nonterm G \ctxok \\\\
@@ -521,7 +520,7 @@ We consider the term typing rule at the root of the derivation tree for $\nonter
     \end{align*}
 
     To show that the right-hand side is well-defined,
-    we need to show that $x : \nonterm{tc} \in \nonterm{GC}$ holds.
+    it suffices to show that $x : \nonterm{tc} \in \nonterm{GC}$ holds.
 
     By definition of $\Tranctx$,
     if $\nonterm G$ contains a binding for the name $x$,
