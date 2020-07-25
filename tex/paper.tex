@@ -387,7 +387,7 @@ More formally, we consider the last rule used in the derivation of $\nonterm G \
                   {\nonterm G \vdash \{ v : B | \top \}}
           \longmapsto
         \inferrule{\cdots}
-                  {\nonterm{GC} \vdash (\hat B, \unitc \equiv \unitc) : *}, \\
+                  {\nonterm{GC} \vdash (\hat B, \unitc \equiv \unitc) : \star}, \\
       \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok).
     \end{align*}
 
@@ -396,7 +396,7 @@ More formally, we consider the last rule used in the derivation of $\nonterm G \
     $(\hat B, \unitc \equiv \unitc)$ has type $\star$ in $\nonterm{GC}$
     if $\hat B$ and $\unitc \equiv \unitc$ are well-typed in $\nonterm{GC}$,
     which, in turn, is easily checked.
-    Thus, there exists a derivation of $\nonterm{GC} \vdash (\hat B, \unitc \equiv \unitc) : *$,
+    Thus, there exists a derivation of $\nonterm{GC} \vdash (\hat B, \unitc \equiv \unitc) : \star$,
     and it is effectively constructible~--- we just omit it for brevity.
   \item \textsc{TWF-Base}.
     \begin{align*}
