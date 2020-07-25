@@ -474,7 +474,20 @@ More formally, we consider the last rule used in the derivation of $\nonterm G \
     and similarly we get a derivation of $\nonterm{GC}, \gterm x : \nonterm{tc}_1 \vdash \nonterm{tc}_2 : \star$ from
     the other invocation of $\Tranty$.
   \item \textsc{TWF-ADT}.
-    \todo[inline]{Don't forget to define this.}
+    \begin{align*}
+      & \inferrule{\nonterm G \ctxok \\\\
+                   \overline{\nonterm G \vdash \nonterm{ts}_i}^i
+                  }
+                  {\nonterm G \vdash \langle \overline{l_i : \nonterm{ts}_i}^i \rangle}
+          \longmapsto
+        \inferrule{\overline{\Tranty(\nonterm G \vdash \nonterm{ts}_i)}^i}
+                  {\nonterm{GC} \vdash \langle \overline{l_i : \nonterm{tc}_i}^i \rangle : \star}, \\
+      \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok),                                         \\
+                   &\nonterm{tc}_i = \tranty(\nonterm G \vdash \nonterm{ts}_i).
+    \end{align*}
+
+    It can be seen that the right-hand side is well-defined
+    by an argument similar to ones for the previous clauses.
 \end{itemize}
 
 \paragraph{Terms.}
