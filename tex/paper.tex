@@ -529,6 +529,35 @@ We consider the term typing rule at the root of the derivation tree for $\nonter
     then $\nonterm{GC}$ also contains a binding for that name,
     and its type is precisely $\tranty(\nonterm G \vdash \nonterm{ts})$.
     Thus, we are allowed to use the (derived) core typing rule \textsc{CT-VarW}.
+
+  \item \textsc{T-Abs}.
+    \begin{align*}
+      & \inferrule{\nonterm G \vdash (\gterm x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2 \\\\
+                   \nonterm G , \gterm x : \nonterm{ts}_1 \vdash \nonterm{es} : \nonterm{ts}_2}
+                  {\nonterm G \vdash \lambda x : \nonterm{ts}_1. \nonterm{es} : (\gterm x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2}
+          \longmapsto
+        \inferrule{\Tranty(\nonterm G \vdash (\gterm x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2) \\\\
+                   \Tranterm(\nonterm G , \gterm x : \nonterm{ts}_1 \vdash \nonterm{es} : \nonterm{ts}_2)
+                   }
+                  {\nonterm G \vdash \lambda x : \nonterm{tc}_1. \nonterm{es} : \Pi \gterm x : \nonterm{tc}_1. \nonterm{tc}_2},    \\
+      \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok),       \\
+                   &\nonterm{tc}_1 = \tranty(\Gamma \vdash \nonterm{tc}_1), \\
+                   &\nonterm{tc}_2 = \tranty(\Gamma , x : \nonterm{tc}_1 \vdash \nonterm{tc}_2), \\
+                   &\nonterm{ec} = \tranterm().
+    \end{align*}
+
+    The right-hand side here is well-formed.
+    Firstly, $\Tranty(\nonterm G \vdash (\gterm x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2)$
+    produces a derivation tree of the form
+    $\nonterm{GC} \vdash \Pi \gterm x : \nonterm{tc}_1. \nonterm{tc}_2 : \star$,
+    since the only rule allowing deriving
+    $\nonterm G \vdash (\gterm x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2$
+    is \textsc{TWF-Arr},
+    so it is sufficient to inspect the definition of $\Tranty$ for this rule.
+    Then, $\Tranterm(\nonterm G , \gterm x : \nonterm{ts}_1 \vdash \nonterm{es} : \nonterm{ts}_2)$
+    produces a derivation of $\nonterm{GC} , \gterm x : \nonterm{tc}_1 \vdash \nonterm{ec} : \nonterm{tc}_2$.
+    These two derivations can then be used as premises for \textsc{CT-Abs},
+    which is invoked on the right-hand side.
 \end{itemize}
 
 Having defined these functions, we formulate a simple but useful lemma:
