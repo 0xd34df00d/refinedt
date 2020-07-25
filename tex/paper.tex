@@ -556,6 +556,24 @@ We consider the term typing rule at the root of the derivation tree for $\nonter
     produces a derivation of $\nonterm{GC} , \gterm x : \nonterm{tc}_1 \vdash \nonterm{ec} : \nonterm{tc}_2$.
     These two derivations can then be used as premises for \textsc{CT-Abs},
     which is invoked on the right-hand side.
+
+  \item \textsc{T-App}.
+    \begin{align*}
+      & \inferrule{\nonterm G \vdash \nonterm{es}_1 : (\gterm x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2 \\\\
+                   \nonterm G \vdash \nonterm{es}_2 : \nonterm{ts}_1}
+                  {\nonterm G \vdash \nonterm{es}_1 \nonterm{es}_2 : [ x \mapsto \nonterm{es}_2 ] \nonterm{ts}_2}
+          \longmapsto
+        \inferrule{\Tranterm(\nonterm G \vdash \nonterm{es}_1 : (\gterm x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2) \\\\
+                   \Tranterm(\nonterm G \vdash \nonterm{es}_2 : \nonterm{ts}_1)
+                   }
+                  {\nonterm{GC} \vdash \nonterm{ec}_1 \nonterm{ec}_2 : [ x \mapsto \nonterm{ec}_2 ] \nonterm{tc}_2},    \\
+      \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok),       \\
+                   &\nonterm{tc}_2 = \tranty(\Gamma \vdash \nonterm{ts}_2), \\
+                   &\nonterm{ec}_1 = \tranterm(\nonterm G \vdash \nonterm{es}_1 : (\gterm x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2), \\
+                   &\nonterm{ec}_2 = \tranterm(\nonterm G \vdash \nonterm{es}_2 : \nonterm{ts}_1).
+    \end{align*}
+
+    Admissibility of the right-hand side follows from a similar argument.
 \end{itemize}
 
 Having defined these functions, we formulate a simple but useful lemma:
