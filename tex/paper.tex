@@ -505,9 +505,8 @@ We consider the term typing rule at the root of the derivation tree for $\nonter
       \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok).
     \end{align*}
     This rule has a single premise $\nonterm G \ctxok$ that the surface context is well-formed.
-    We use $\Tranctx$ to translate the surface derivation of that premise into the core one,
-    and extract the resulting context $\nonterm{GC}$.
-    We then use that context for \textsc{CT-UnitTerm}.
+    $\Tranctx$ is used to translate the surface derivation of that premise into the core context $\nonterm{GC}$,
+    which is then used in \textsc{CT-UnitTerm}.
 
   \item \textsc{T-Var}.
     \begin{align*}
