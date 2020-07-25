@@ -518,7 +518,7 @@ We consider the term typing rule at the root of the derivation tree for $\nonter
         \inferrule{x : \nonterm{tc} \in \nonterm{GC}}
                   {\nonterm{GC} \vdash \gterm x : \nonterm{tc}},    \\
       \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok),       \\
-                   &\nonterm{tc} = \tranty(\Gamma \vdash \nonterm{ts}).
+                   &\nonterm{tc} = \tranty(\nonterm G \vdash \nonterm{ts}).
     \end{align*}
 
     To show that the right-hand side is well-defined,
@@ -527,7 +527,7 @@ We consider the term typing rule at the root of the derivation tree for $\nonter
     By definition of $\Tranctx$,
     if $\nonterm G$ contains a binding for the name $x$,
     then $\nonterm{GC}$ also contains a binding for that name,
-    and its type is precisely $\tranty(\Gamma \vdash \nonterm{ts})$.
+    and its type is precisely $\tranty(\nonterm G \vdash \nonterm{ts})$.
     Thus, we are allowed to use the (derived) core typing rule \textsc{CT-VarW}.
 \end{itemize}
 
