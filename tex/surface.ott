@@ -13,7 +13,9 @@ es {{ tex \nonterm{es} }} :: tmS_ ::= {{ com terms }}
   | < l = es > as ts	:: M :: adt_ts
   | v					:: M :: refvar
   | [ v |-> es' ] es	:: M :: evsubst
+  | [ x |-> es' ] es	:: M :: varsubst
   | vs					:: M :: value
+  | ( es )				:: M :: parens
 
 l {{ tex \nonterm l }} :: labels_ ::= {{ com ADT labels }}
   | <token>			::   :: str {{ com token }}
