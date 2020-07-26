@@ -19,6 +19,7 @@ ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
   | < l = ec > as ec'   :: M :: adtcon_arb
   | vc					:: M :: value
   | ( ec )				:: M :: parens
+  | eqrefl				:: M :: eq_introduction
 
 s {{ tex \nonterm{s} }} :: s_ ::= {{ com sorts }}
   | sst				::   :: type {{ com types }}

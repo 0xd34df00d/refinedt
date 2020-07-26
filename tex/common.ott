@@ -26,7 +26,8 @@ terminals :: terminals_ ::=
   | Unitc	:: :: Unitc {{ tex \Unitc }}
   | def		:: :: def {{ tex \triangleq }}
   | ok		:: :: ok {{ tex \ctxok }}
-  | equal	:: :: p {{ tex \equiv }}
+  | equal	:: :: equal {{ tex \equiv }}
+  | eqrefl	:: :: eqrefl {{ tex \eqrefl }}
 
 metavar x {{ tex \gterm x }} ::= {{ com variables }}
 metavar v {{ tex \gterm v }} ::= {{ com refinement variables }}
