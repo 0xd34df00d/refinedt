@@ -306,6 +306,13 @@ and state some straightforward facts that will be useful later:
     \]
     The reader might recognize this as the Leibniz equality \cite{FindSomethingForThis}.
 
+    The corresponding introduction rule $\eqrefl x$ of type $x \equiv x$
+    stating that $x$ of type $\nonterm{tc}$ is equal to itself
+    is then
+    \[
+      \eqrefl x \triangleq \lambda P : \nonterm{tc} \rightarrow \star. (\lambda p : P x. p, \lambda p : P x. p).
+    \]
+
     Again, it can be seen that
     \begin{lemma}\label{lma:equality_typing}
       If $\nonterm{ec}_1, \nonterm{ec}_2$ are well-typed in a context $\nonterm{GC}$,
