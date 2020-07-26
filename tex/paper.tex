@@ -203,6 +203,15 @@ and the rules for our extensions are defined in \figref{core_typing_exts}.
 Note that the \textsc{CT-ADTCase} rule uses $\equiv$ denoting the equality
 which is a derived form defined later.
 
+Even though we believe that our core language still enjoys the strong normalization property,
+we still explicitly define the evaluation rules (\figref{core_opsem}).
+Firstly, this allows fixing a specific evaluation strategy mirroring the one for the surface language,
+simplifying the subsequent proofs of some key theorems.
+Secondly, the rule for \textsc{CE-CaseMatch},
+as well as our flavour of pattern matching in general,
+deserves some special attention.
+\todo[inline]{Pay said attention.}
+
 \begin{figure}[ht]
   \footnotesize
   \nonterms{ec,s,vc}
