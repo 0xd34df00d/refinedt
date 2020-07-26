@@ -17,6 +17,8 @@ ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
   | p					:: M :: proofterm
   | ec1 equal ec2		:: M :: equality
   | < l = ec > as ec'   :: M :: adtcon_arb
+  | vc					:: M :: value
+  | ( ec )				:: M :: parens
 
 s {{ tex \nonterm{s} }} :: s_ ::= {{ com sorts }}
   | sst				::   :: type {{ com types }}
@@ -33,7 +35,7 @@ GC {{ tex \nonterm{GC} }} :: coreenv_ ::=
   | GC , x : ec		::   :: var
   | GC , p : ec		:: M :: proofvar
 
-defns Jderiv :: '' ::=
+defns Jctype :: '' ::=
 
 defn GC |- ec1 : ec2 :: :: coretyping :: CT_ {{ com typing }} by
 
@@ -93,3 +95,33 @@ GC |- ec : ec0
 </ GC , xi : eci , pi : ec equal < li = xi > as ec0 |- eci : ec1 // i />
 ------------------------------------------------------------------------- :: ADTCase
 GC |- case ec of </ li = xi proof pi -> eci // i />  : ec1
+
+
+
+defns Jcop :: '' ::=
+
+defn ec1 ~~> ec2 :: :: evalcore :: CE_ {{ com evaluation }} by
+
+ec1 ~~> ec1'
+-------------------- :: AppL
+ec1 ec2 ~~> ec1' ec2
+
+ec2 ~~> ec2'
+-------------------- :: AppR
+vc1 ec2 ~~> vc1 ec2'
+
+
+---------------------------------------- :: AppAbs
+( \x : ec0. ec1 ) vc2 ~~> [x |-> vc2] ec1
+
+ec ~~> ec'
+-------------------------------------------------------------------------------- :: ADT
+< lj = ec > as < </ li : eci // i /> > ~~> < lj = ec' > as < </ li : eci // i /> >
+
+ec ~~> ec'
+------------------------------------------------------------------------------------------------ :: CaseScrut
+case ec of </ li = xi proof pi -> eci // i /> ~~> case ec' of </ li = xi proof pi -> eci // i />
+
+%
+%-------------------------------------------------------------------------------------------- :: CaseMatch
+%case < lj = vc > as < </ li : eci // i /> > of </ li = xi proof pi -> eci // i /> ~~> [xj |-> vc] ecj
