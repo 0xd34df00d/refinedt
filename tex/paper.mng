@@ -258,10 +258,7 @@ We also establish some derived forms in the core language to simplify the subseq
 and state some straightforward facts that will be useful later:
 \begin{itemize}
   \item Simplified variable typing rule which we call \textsc{CT-VarW}:
-    \[
-      \inferrule{\nonterm{GC} \vdash \nonterm{ec} : s \\ \gterm x : \nonterm{ec} \in \nonterm{GC}}
-                {\nonterm{GC} \vdash \gterm x : \nonterm{ec}}.
-    \]
+    \[ \ottdruleCTXXVarW{} \]
     This rule unfolds into a single \textsc{CT-Var} defining $x$,
     followed by a sequence of \textsc{CT-Weaken}
     to ``move'' the $x$ into the right position in the final $[[ GC ]]$.

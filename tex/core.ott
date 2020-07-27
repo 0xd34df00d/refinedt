@@ -100,6 +100,14 @@ GC |- ec : ec0
 GC |- case ec of </ li = xi proof pi -> eci // i />  : ec1
 
 
+% Helper rules
+
+GC |- ec : s
+x : ec in GC
+------------ :: VarW
+GC |- x : ec
+
+
 
 defns Jcop :: '' ::=
 
