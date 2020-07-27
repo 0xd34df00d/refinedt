@@ -109,17 +109,17 @@ with some extra rules for the ADTs and pattern matching.
 
 \begin{figure}[ht]
   \footnotesize
-  \drules[TCTX]{$\nonterm G \ctxok$}{context well-formedness}{Empty,Bind}
-  \drules[TWF]{$\nonterm G \vdash \nonterm{ts}$}{type well-formedness}{TrueRef,Base,Conj,Arr,ADT}
-  \drules[T]{$\nonterm G \vdash \nonterm{es} : \nonterm{ts}$}{term typing}{Unit,Var,Abs,App,Case,Con,Sub}
-  \drules[ST]{$\nonterm G \vdash \nonterm{ts}_1 <: \nonterm{ts}_2$}{subtyping}{Base,Arr}
+  \drules[TCTX]{$[[ G ok ]]$}{context well-formedness}{Empty,Bind}
+  \drules[TWF]{$[[ G |- ts ]]$}{type well-formedness}{TrueRef,Base,Conj,Arr,ADT}
+  \drules[T]{$[[ G |- es : ts ]]$}{term typing}{Unit,Var,Abs,App,Case,Con,Sub}
+  \drules[ST]{$[[ G |- ts1 <: ts2 ]]$}{subtyping}{Base,Arr}
   \caption{Surface language typing}
   \label{fig:surface_typing}
 \end{figure}
 
 \begin{figure}[ht]
   \footnotesize
-  \drules[E]{$\nonterm{es}_1 \evalsto \nonterm{es}_2$}{term evaluation}{AppL,AppR,AppAbs,ADT,CaseScrut,CaseMatch}
+  \drules[E]{$[[ es1 ~~> es2 ]]$}{term evaluation}{AppL,AppR,AppAbs,ADT,CaseScrut,CaseMatch}
   \caption{Surface language small-step operational semantics}
   \label{fig:surface_opsem}
 \end{figure}
@@ -160,10 +160,10 @@ that the oracle can handle.
 It might be defined as follows:
 \begin{equation}
 \begin{aligned}
-  & [|\ \emptyset\ |]                                         && \triangleq && \top																						            \\
-  & [|\ \nonterm G, x : \{ v : \nonterm B | \nonterm r \}\ |] && \triangleq && [|\ \nonterm G\ |] \land [|\ [ v \mapsto x ] \nonterm r\ |]  \\
-  & [|\ \nonterm r_1 \land \nonterm r_2\ |]                   && \triangleq && [|\ \nonterm r_1\ |] \land [|\ \nonterm r_2\ |]              \\
-  & [|\ \nonterm{es}_1 = \nonterm{es}_2\ |]                   && \triangleq && \text{oracle}(\nonterm{es}_1 = \nonterm{es}_2)             \\
+  & [|\ \emptyset\ |]                    && \triangleq && \top																			           \\
+  & [|\ [[ G , x : { v : B | r } ]] \ |] && \triangleq && [|\ [[ G ]] \ |] \land [|\ [[ [ v |-> x ] r ]] \ |]  \\
+  & [|\ [[ r1 /\ r2 ]] \ |]              && \triangleq && [|\ [[ r1 ]] \ |] \land [|\ [[ r2 ]] \ |]            \\
+  & [|\ [[ es_1 = es_2 ]] \ |]           && \triangleq && \text{oracle}([[ es_1 = es_2 ]])                     \\
 \end{aligned}
 \end{equation}
 
@@ -178,14 +178,14 @@ In the subsequent text we also assume the oracle can decide the resulting propos
 \subsubsection{Properties}
 
 \begin{lemma}
-  If $\nonterm G \vdash \nonterm{es} : \nonterm{ts}$, then $\nonterm G \ctxok$.
+  If $[[ G |- es : ts ]]$, then $[[ G ok ]]$.
 \end{lemma}
 \begin{proof}
-  \todo[inline]{Do the proof and remove the assumption $\nonterm G \ctxok$ from all the rules unless needed.}
+  \todo[inline]{Do the proof and remove the assumption $[[ G ok ]]$ from all the rules unless needed.}
 \end{proof}
 
 \begin{lemma}
-  If $\nonterm G \vdash \nonterm{es} : \nonterm{ts}$, then $\nonterm G \vdash \nonterm{ts}$.
+  If $[[ G |- es : ts ]]$, then $[[ G |- ts ]]$.
 \end{lemma}
 \begin{proof}
   \todo[inline]{Do the proof.}
@@ -224,20 +224,20 @@ deserves some special attention.
 
 \begin{figure}[ht]
   \footnotesize
-  \drules[CT]{$\nonterm G \vdash \nonterm{ec}_1 : \nonterm{ec}_2$}{core typing}{Sort,Var,Weaken,Form,App,Abs,Conv}
+  \drules[CT]{$[[ GC |- ec1 : ec2 ]]$}{core typing}{Sort,Var,Weaken,Form,App,Abs,Conv}
   \caption{$\lambda C$ typing rules}
   \label{fig:core_typing}
 \end{figure}
 \begin{figure}[ht]
   \footnotesize
-  \drules[CT]{$\nonterm G \vdash \nonterm{ec}_1 : \nonterm{ec}_2$}{core typing, extensions}{UnitType,UnitTerm,ADTForm,ADTCon,ADTCase}
+  \drules[CT]{$[[ GC |- ec1 : ec2 ]]$}{core typing, extensions}{UnitType,UnitTerm,ADTForm,ADTCon,ADTCase}
   \caption{Typing rules for our extensions to $\lambda C$}
   \label{fig:core_typing_exts}
 \end{figure}
 
 \begin{figure}[ht]
   \footnotesize
-  \drules[CE]{$\nonterm{ec}_1 \evalsto \nonterm{ec}_2$}{term evaluation}{AppL,AppR,AppAbs,ADT,CaseScrut,CaseMatch}
+  \drules[CE]{$[[ ec1 ~~> ec2 ]]$}{term evaluation}{AppL,AppR,AppAbs,ADT,CaseScrut,CaseMatch}
   \caption{Core language small-step operational semantics}
   \label{fig:core_opsem}
 \end{figure}
@@ -264,7 +264,7 @@ and state some straightforward facts that will be useful later:
     \]
     This rule unfolds into a single \textsc{CT-Var} defining $x$,
     followed by a sequence of \textsc{CT-Weaken}
-    to ``move'' the $x$ into the right position in the final $\nonterm{GC}$.
+    to ``move'' the $x$ into the right position in the final $[[ GC ]]$.
   \item Non-dependent function type:
     \[
       \nonterm{tc}_1 \rightarrow \nonterm{tc}_2 \triangleq \Pi \_ : \nonterm{tc}_1. \nonterm{tc}_2.
@@ -367,9 +367,9 @@ invoking $\Tranty$ and $\Tranterm$ and extracting just the type and term compone
 All in all, our goal is to define $\Tranctx$, $\Tranty$ and $\Tranterm$
 with ``metatypes''
 \begin{align*}
-  \Tranctx  & : \nonterm G \ctxok                             \longmapsto \nonterm{GC},                                     \\
-  \Tranty   & : \nonterm G \vdash \nonterm{ts}                \longmapsto \nonterm{GC} \vdash \nonterm{tc} : \star,         \\
-  \Tranterm & : \nonterm G \vdash \nonterm{es} : \nonterm{ts} \longmapsto \nonterm{GC} \vdash \nonterm{ec} : \nonterm{tc},
+  \Tranctx  & : [[ G ok ]]         \longmapsto [[ GC ]],             \\
+  \Tranty   & : [[ G |- ts ]]      \longmapsto [[ GC |- tc : sst ]], \\
+  \Tranterm & : [[ G |- es : ts ]] \longmapsto [[ GC |- ec : tc ]].
 \end{align*}
 Our helper functions $\tranty$ and $\tranterm$ are then defined to return the $\nonterm{tc}$ and $\nonterm{ec}$
 from the respective right-hand sides.
@@ -384,7 +384,7 @@ which is the simplest of the three.
 It merely maps the types of the bindings in a (well-formed) context
 from the surface language into the core language.
 
-Since $\Tranctx$ is defined on the derivations of $\nonterm G \ctxok$,
+Since $\Tranctx$ is defined on the derivations of $[[ G ok ]]$,
 consider the last rule used in a derivation:
 \begin{itemize}
   \item \textsc{TCTX-Empty}.
@@ -403,8 +403,8 @@ consider the last rule used in a derivation:
         \Tranctx(\nonterm G \ctxok), x : \tranty(\nonterm G \vdash \nonterm{ts}).
     \end{align*}
 
-    We recurse on the prefix $\nonterm G$,
-    which is admissible due to the $\nonterm G \ctxok$ premise,
+    We recurse on the prefix $[[ G ]]$,
+    which is admissible due to the $[[ G ok ]]$ premise,
     and we use $\tranty$ to get the translated type of $\gterm x$,
     which is also admissible due to the other premise.
 \end{itemize}
@@ -419,7 +419,7 @@ Next, we define $\Tranty$. In short:
   \item conjunctions of several (atomic) refinements are represented as tuples of the corresponding atomic translations.
 \end{itemize}
 
-More formally, consider the last rule used in the derivation of $\nonterm G \vdash \nonterm{ts}$:
+More formally, consider the last rule used in the derivation of $[[ G |- ts ]]$:
 \begin{itemize}
   \item \textsc{TWF-TrueRef}.
     \begin{align*}
