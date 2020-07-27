@@ -27,6 +27,7 @@
 \newcommand{\Unit}{\textbf{Unit}}
 \newcommand{\unitc}{\hat{\textbf{u}}}
 \newcommand{\Unitc}{\widehat{\textbf{Unit}}}
+\newcommand{\Basec}{\hat B}
 \newcommand{\Int}{\textbf{Int}}
 \newcommand{\ctxok}{\text{~ok}}
 \newcommand{\fresh}{\text{~fresh name}}
@@ -328,6 +329,9 @@ and state some straightforward facts that will be useful later:
 \newcommand{\Tranty}{\mu_{\vdash\tau}}
 \newcommand{\Tranterm}{\mu_{\vdash\varepsilon}}
 
+%FIXME ugly, but whatever
+\renewcommand{\ottdrulename}[1]{}
+
 The surface language ultimately gets translated into the core language.
 What really matters for practical purposes is the translation of the terms since
 terms, not types or contexts, will eventually be compiled down to some executable code.
@@ -386,18 +390,16 @@ consider the last rule used in a derivation:
 \begin{itemize}
   \item \textsc{TCTX-Empty}.
     \begin{align*}
-      & \inferrule{~}
-                  {\emptyset \ctxok}
+      & \ottdruleTCTXXXEmpty{}
           \longmapsto
         \emptyset.
     \end{align*}
     The base case is trivial: the empty context is mapped to the empty context.
   \item \textsc{TCTX-Bind}.
     \begin{align*}
-      & \inferrule{\nonterm G \ctxok \\ \nonterm G \vdash \nonterm{ts}}
-                  {\nonterm G , \gterm x : \nonterm{ts} \ctxok}
+      & \ottdruleTCTXXXBind{}
           \longmapsto
-        \Tranctx(\nonterm G \ctxok), x : \tranty(\nonterm G \vdash \nonterm{ts}).
+        [[ mudG ( G ok ) , x : muT ( G |- ts ) ]].
     \end{align*}
 
     We recurse on the prefix $[[ G ]]$,
@@ -420,43 +422,31 @@ More formally, consider the last rule used in the derivation of $[[ G |- ts ]]$:
 \begin{itemize}
   \item \textsc{TWF-TrueRef}.
     \begin{align*}
-      & \inferrule{\nonterm G \ctxok}
-                  {\nonterm G \vdash \{ v : B | \top \}}
+      & \ottdruleTWFXXTrueRef{}
           \longmapsto
-        \inferrule{\cdots}
-                  {\nonterm{GC} \vdash (\hat B, \unitc \equiv \unitc) : \star}, \\
-      \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok).
+        \ottdruleTWFTargetXXTrueRef{}, \\
+      \text{where}~&[[ GC = mudG(G ok) ]].
     \end{align*}
 
     By \cref{lma:non_dep_pair_typing}
-    $(\hat B, \unitc \equiv \unitc)$ has type $\star$ in $\nonterm{GC}$
-    if $\hat B$ and $\unitc \equiv \unitc$ are well-typed in $\nonterm{GC}$,
+    $[[ (BC, unitc equal unitc) ]]$ has type $\star$ in $[[ GC ]]$
+    if $[[ BC ]]$ and $[[ unitc equal unitc ]]$ are well-typed in $[[ GC ]]$,
     which, in turn, is easily checked.
-    Thus, there exists a derivation of $\nonterm{GC} \vdash (\hat B, \unitc \equiv \unitc) : \star$,
+    Thus, there exists a derivation of $[[ GC |- (BC, unitc equal unitc) : sst ]]$,
     and it is effectively constructible, although omitted for brevity.
   \item \textsc{TWF-Base}.
     \begin{align*}
-      & \inferrule{\nonterm G \ctxok \\\\
-                   \nonterm G ' \vdash \nonterm{es}_1 : \{ v_2 : B' | \nonterm{r}_1 \} \\\\
-                   \nonterm G ' \vdash \nonterm{es}_2 : \{ v_2 : B' | \nonterm{r}_2 \} \\\\
-                   \gterm x \fresh}
-                  {\nonterm G \vdash \{ v : B | \nonterm{es}_1 = \nonterm{es}_2 \}}
+      & \ottdruleTWFXXBase{}
           \longmapsto
-        \inferrule{\Tranterm(\nonterm G ' \vdash \nonterm{es}_1 : \{ v_2 : B' | \nonterm{r}_1 \}) \\\\
-                   \Tranterm(\nonterm G ' \vdash \nonterm{es}_2 : \{ v_2 : B' | \nonterm{r}_2 \}) \\\\
-                   \gterm x \fresh \\\\
-                   \cdots}
-                  {\nonterm{GC} \vdash (v : \hat B \dast \lambda v : \hat B. \nonterm{ec}_1 \equiv \nonterm{ec}_2) : \star}, \\
-      \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok), \\
-                   &\nonterm G ' = \nonterm G , v : \{ v_1 : B | \top \}, \\
-                   &\nonterm{ec}_i =
-                     \tranterm(\nonterm G ' \vdash \nonterm{es}_i : \{ v_2 : B' | \nonterm{r}_i \}).
+        \ottdruleTWFTargetXXBase{}, \\
+      \text{where}~&[[ GC = mudG(G ok) ]], \\
+                   &[[ ec_i = muE(G, v : { v_1 : B | top } |- es_i : { v2 : B' | r_i }) ]]. \\
     \end{align*}
 
     To see that this is well-defined, first note that
-    that $\hat B$ has type $\star$ by assumption on $\hat B$.
-    Then, $\nonterm{ec}_1$ and $\nonterm{ec}_2$ are well-typed in the translated context $\nonterm G'$ according to the premises,
-    and this context coincides with the one used to type check $\lambda v : \hat B. \nonterm{ec}_1 \equiv \nonterm{ec}_2$.
+    that $[[ BC ]]$ has type $\star$ by assumption on $[[ BC ]]$.
+    Then, $[[ ec_1 ]]$ and $[[ ec_2 ]]$ are well-typed in the context $[[ mudG (G, v : { v_1 : B | top } ok) ]]$ according to the premises,
+    and this context coincides with the one used to type check $[[ \v : BC. ec_1 equal ec_2 ]]$.
     Hence both components of the dependent pair are well-typed, so by \cref{lma:dep_pair_typing} the dependent pair itself has type $\star$.
 
     \todo[inline]{
@@ -468,8 +458,7 @@ More formally, consider the last rule used in the derivation of $[[ G |- ts ]]$:
     are omitted and denoted by $\cdots$.
   \item \textsc{TWF-Conj}.
     \begin{align*}
-      & \inferrule{\nonterm G \ctxok \\\\
-                   \nonterm G \vdash \{ v : B | \nonterm{r}_1 \} \\
+      & \inferrule{\nonterm G \vdash \{ v : B | \nonterm{r}_1 \} \\
                    \nonterm G \vdash \{ v : B | \nonterm{r}_2 \}}
                   {\nonterm G \vdash \{ v : B | \nonterm{r}_1 \land \nonterm{r}_2 \}}
           \longmapsto
@@ -491,8 +480,7 @@ More formally, consider the last rule used in the derivation of $[[ G |- ts ]]$:
     and repack them obtaining $\lambda v : \hat B. (P_1 v, P_2 v)$.
   \item \textsc{TWF-Arr}.
     \begin{align*}
-      & \inferrule{\nonterm G \ctxok \\\\
-                   \nonterm G \vdash \nonterm{ts}_1 \\
+      & \inferrule{\nonterm G \vdash \nonterm{ts}_1 \\
                    \nonterm G , \gterm x : \nonterm{ts}_1 \vdash \nonterm{ts}_2}
                   {\nonterm G \vdash (\gterm x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2}
           \longmapsto
@@ -511,8 +499,7 @@ More formally, consider the last rule used in the derivation of $[[ G |- ts ]]$:
     resulting from the other invocation of $\Tranty$.
   \item \textsc{TWF-ADT}.
     \begin{align*}
-      & \inferrule{\nonterm G \ctxok \\\\
-                   \overline{\nonterm G \vdash \nonterm{ts}_i}^i
+      & \inferrule{\overline{\nonterm G \vdash \nonterm{ts}_i}^i
                   }
                   {\nonterm G \vdash \langle \overline{l_i : \nonterm{ts}_i}^i \rangle}
           \longmapsto

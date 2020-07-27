@@ -15,3 +15,9 @@ defn GC |- ec1 : ec2 :: :: coretarget :: TWFTarget_ by
 omitted
 ------------------------------------- :: TrueRef
 GC |- ( BC , unitc equal unitc ) : sst
+
+mudE ( G , v : { v_1 : B | top } |- es1 : { v_2 : B' | r1 } )
+mudE ( G , v : { v_1 : B | top } |- es2 : { v_2 : B' | r2 } )
+omitted
+---------------------------------------------------- :: Base
+GC |- (v : BC ** \ v : BC . ec1 equal ec2 ) : sst
