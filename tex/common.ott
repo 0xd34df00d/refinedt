@@ -58,4 +58,10 @@ formula :: formula_ ::=
   | formula1 .... formulai   ::  :: dots
   | ts0 def ts		:: :: sdefinition
   | ec0 def ec		:: :: cdefinition
+
   | omitted			:: :: omitted
+  | mudG ( G ok )		:: :: ctx
+  | muT ( G |- ts )		:: :: ty
+  | mudT ( G |- ts )	:: :: tyDeriv
+  | muE ( G |- es : ts )	:: :: term
+  | mudE ( G |- es : ts )	:: :: termDeriv

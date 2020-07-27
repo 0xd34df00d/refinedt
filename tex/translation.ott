@@ -1,10 +1,11 @@
 grammar
 tran :: translation_ ::=
-  | mudG ( G ok )		:: :: ctx
   | tran1 , x : tran2	:: :: ctx_app
+  | mudG ( G ok )		:: :: ctx
+  | GC = mudG ( G ok )  :: :: gcDef
+  | ec = muE ( G |- es : ts )
+						:: :: ecDef
   | muT ( G |- ts )		:: :: ty
-  | mudT ( G |- ts )	:: :: tyDeriv
-  | GC = mudG ( G ok )  :: :: gcEq
 
 
 defns Jctarget :: '' ::=
