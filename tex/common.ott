@@ -35,6 +35,7 @@ terminals :: terminals_ ::=
   | muT 	:: :: tranty {{ tex \tranty }}
   | mudE	:: :: trantermderiv {{ tex \Tranterm }}
   | muE 	:: :: tranterm {{ tex \tranterm }}
+  | omitted :: :: omitted {{ tex \cdots }}
 
 metavar x {{ tex \gterm x }} ::= {{ com variables }}
 metavar v {{ tex \gterm v }} ::= {{ com refinement variables }}
@@ -57,3 +58,4 @@ formula :: formula_ ::=
   | formula1 .... formulai   ::  :: dots
   | ts0 def ts		:: :: sdefinition
   | ec0 def ec		:: :: cdefinition
+  | omitted			:: :: omitted
