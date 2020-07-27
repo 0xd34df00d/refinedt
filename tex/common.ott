@@ -15,6 +15,7 @@ terminals :: terminals_ ::=
   | =>		:: :: implies {{ tex \implies }}
   | sst		:: :: starkind {{ tex \star }}
   | ssq		:: :: squarekind {{ tex \square }}
+  | tc		:: :: coretype {{ tex \nonterm{tc} }}
   | empty   :: :: empty {{ tex \emptyset }}
   | =b		:: :: beq {{ tex =_\beta }}
   | fresh	:: :: fresh {{ tex \fresh }}
@@ -37,15 +38,16 @@ indexvar i, j ::= {{ com indexes }}
 
 grammar
 formula :: formula_ ::=
-  | judgement	:: :: judgement
-  | x : ts in G :: :: xinenv
-  | es = T		:: :: eTrue
-  | es = F		:: :: eFalse
-  | C => L		:: :: implication
-  | ec =b ec2	:: :: betaconversion
-  | x fresh		:: :: freshness
+  | judgement		:: :: judgement
+  | x : ts in G		:: :: xinenvS
+  | x : ec in GC	:: :: xinenvC
+  | es = T			:: :: eTrue
+  | es = F			:: :: eFalse
+  | C => L			:: :: implication
+  | ec =b ec2		:: :: betaconversion
+  | x fresh			:: :: freshness
   | l in </ li // i />
-				:: :: label_membership
+					:: :: label_membership
   | formula1 .... formulai   ::  :: dots
-  | ts0 def ts	:: :: sdefinition
-  | ec0 def ec	:: :: cdefinition
+  | ts0 def ts		:: :: sdefinition
+  | ec0 def ec		:: :: cdefinition

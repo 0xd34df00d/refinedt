@@ -21,6 +21,7 @@ ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
   | vc					:: M :: value
   | ( ec )				:: M :: parens
   | eqrefl				:: M :: eq_introduction
+  | tc					:: M :: type
 
 s {{ tex \nonterm{s} }} :: s_ ::= {{ com sorts }}
   | sst				::   :: type {{ com types }}
