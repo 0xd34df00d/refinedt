@@ -30,6 +30,12 @@ terminals :: terminals_ ::=
   | equal	:: :: equal {{ tex \equiv }}
   | eqrefl	:: :: eqrefl {{ tex \eqrefl }}
 
+  | mudG	:: :: tranctx {{ tex \Tranctx }}
+  | mudT	:: :: trantyderiv {{ tex \Tranty }}
+  | muT 	:: :: tranty {{ tex \tranty }}
+  | mudE	:: :: trantermderiv {{ tex \Tranterm }}
+  | muE 	:: :: tranterm {{ tex \tranterm }}
+
 metavar x {{ tex \gterm x }} ::= {{ com variables }}
 metavar v {{ tex \gterm v }} ::= {{ com refinement variables }}
 metavar n {{ tex \gterm n }} ::= {{ com integers }}
