@@ -473,16 +473,10 @@ More formally, consider the last rule used in the derivation of $[[ G |- ts ]]$:
     and repack them obtaining $\lambda v : \hat B. (P_1 v, P_2 v)$.
   \item \textsc{TWF-Arr}.
     \begin{align*}
-      & \inferrule{\nonterm G \vdash \nonterm{ts}_1 \\
-                   \nonterm G , \gterm x : \nonterm{ts}_1 \vdash \nonterm{ts}_2}
-                  {\nonterm G \vdash (\gterm x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2}
-          \longmapsto
-        \inferrule{\Tranty(\nonterm G \vdash \nonterm{ts}_1) \\
-                   \Tranty(\nonterm G , \gterm x : \nonterm{ts}_1 \vdash \nonterm{ts}_2)}
-                  {\nonterm{GC} \vdash \Pi x : \nonterm{tc}_1. \nonterm{tc}_2 : \star}, \\
-      \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok),                                         \\
-                   &\nonterm{tc}_1 = \tranty(\nonterm G \vdash \nonterm{ts}_1),                         \\
-                   &\nonterm{tc}_2 = \tranty(\nonterm G , \gterm x : \nonterm{ts}_1 \vdash \nonterm{ts}_2).
+      & \ottdruleTWFXXArr{} \longmapsto \ottdruleTWFTargetXXArr{}, \\
+      \text{where}~&[[ GC = mudG(G ok) ]],                \\
+                   &[[ tc1 = muT(G |- ts1) ]],            \\
+                   &[[ tc2 = muT(G , x : ts1 |- ts2) ]].
     \end{align*}
 
     The rule \textsc{CT-Form} is used on the right.

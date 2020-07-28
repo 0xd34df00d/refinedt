@@ -4,7 +4,6 @@ ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
   | s					::   :: sort {{ com sort }}
   | Pi x : ec1 . ec2	::   :: piabs {{ com $\Pi$-type }}
   | \ x : ec1 . ec2		::   :: lamabs {{ com abstraction }}
-  | \ v : ec1 . ec2		:: M :: lamvabs {{ com abstraction }}
   | ec1 ec2				::   :: app {{ com application }}
   | unitc				::   :: unit {{ com unit value }}
   | Unitc				::   :: Unit {{ com unit type }}
@@ -28,6 +27,8 @@ ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
   | ( v : ec1 ** ec2 )  :: M :: dvpair
   | Pred				:: M :: predicate
   | v					:: M :: vvar
+  | \ x : tc1 . tc2		:: M :: lamxtabs {{ com abstraction on types }}
+  | \ v : ec1 . ec2		:: M :: lamvabs {{ com abstraction on v-vars }}
 
 s {{ tex \nonterm{s} }} :: s_ ::= {{ com sorts }}
   | sst				::   :: type {{ com types }}
