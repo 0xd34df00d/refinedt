@@ -513,12 +513,13 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
     Indeed, by definition of $\Tranctx$,
     if $\nonterm G$ contains a binding for the name $x$,
     then $\nonterm{GC}$ also contains a binding for that name,
-    and its type is precisely $\tranty(\nonterm G \vdash \nonterm{ts})$.
+    and its type is precisely $[[ muT ( G |- ts ) ]]$.
     Secondly, $[[ G |- x : ts ]]$ implies $[[ G |- ts ]]$ by \cref{lma:term_wf_implies_type_wf},
     and $[[ mudT(G |- ts) ]]$ provides a judgement of the form $[[ GC |- tc : s ]]$.
 
-    All in all, this shows that all the necessary premises
-    for the (derived) core typing rule \textsc{CT-VarW} hold.
+    All in all, this shows that all the premises
+    necessary for the (derived) core typing rule \textsc{CT-VarW}
+    hold.
 
   \item \textsc{T-Abs}.
     \begin{align*}
@@ -569,8 +570,8 @@ The first one claims that a well-typed program in surface language remains well-
 The second one claims that a well-typed surface language program evaluates to ``the same'' value as the translated one.
 
 \begin{theorem}[Well-typedness preservation]
-  For any well-typed surface language term $\nonterm{es}$,
-  the result of the translation $\tranterm(\nonterm{es})$ is ``equivalently'' typeable in the core language.
+  For any well-typed surface language term $[[ es ]]$,
+  the result of the translation via $[[ muE ]]$ is ``equivalently'' typeable in the core language.
 \end{theorem}
 \begin{proof}
   This follows directly from the definition of $\tranterm$ via $\Tranterm$,
