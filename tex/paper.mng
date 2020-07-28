@@ -390,9 +390,7 @@ consider the last rule used in a derivation:
 \begin{itemize}
   \item \textsc{TCTX-Empty}.
     \begin{align*}
-      & \ottdruleTCTXXXEmpty{}
-          \longmapsto
-        \emptyset.
+      & \ottdruleTCTXXXEmpty{} \longmapsto \emptyset.
     \end{align*}
     The base case is trivial: the empty context is mapped to the empty context.
   \item \textsc{TCTX-Bind}.
@@ -422,9 +420,7 @@ More formally, consider the last rule used in the derivation of $[[ G |- ts ]]$:
 \begin{itemize}
   \item \textsc{TWF-TrueRef}.
     \begin{align*}
-      & \ottdruleTWFXXTrueRef{}
-          \longmapsto
-        \ottdruleTWFTargetXXTrueRef{}, \\
+      & \ottdruleTWFXXTrueRef{} \longmapsto \ottdruleTWFTargetXXTrueRef{}, \\
       \text{where}~&[[ GC = mudG(G ok) ]].
     \end{align*}
 
@@ -436,9 +432,7 @@ More formally, consider the last rule used in the derivation of $[[ G |- ts ]]$:
     and it is effectively constructible, although omitted for brevity.
   \item \textsc{TWF-Base}.
     \begin{align*}
-      & \ottdruleTWFXXBase{}
-          \longmapsto
-        \ottdruleTWFTargetXXBase{}, \\
+      & \ottdruleTWFXXBase{} \longmapsto \ottdruleTWFTargetXXBase{}, \\
       \text{where}~&[[ GC = mudG(G ok) ]], \\
                    &[[ ec_i = muE(G, v : { v_1 : B | top } |- es_i : { v2 : B' | r_i }) ]]. \\
     \end{align*}
@@ -468,9 +462,9 @@ More formally, consider the last rule used in the derivation of $[[ G |- ts ]]$:
     but with an extra step.
     Namely, note that the last two ``patterns'' on the left-hand side are irrefutable:
     it can be seen by direct inspection and inductive reasoning that $\tranty$ always yields a pair
-    for a derivation of the form $\nonterm G \vdash \{ v : B | \nonterm{r} \}$.
+    for a derivation of the form $[[ G |- { v : B | r }]]$.
     Thus we can take the predicate components $P_1, P_2$ out from the corresponding dependent pairs
-    and repack them obtaining $\lambda v : \hat B. (P_1 v, P_2 v)$.
+    and repack them obtaining $[[ \ v : BC . (Pred1 v, Pred2 v) ]]$.
   \item \textsc{TWF-Arr}.
     \begin{align*}
       & \ottdruleTWFXXArr{} \longmapsto \ottdruleTWFTargetXXArr{}, \\
@@ -481,9 +475,9 @@ More formally, consider the last rule used in the derivation of $[[ G |- ts ]]$:
 
     The rule \textsc{CT-Form} is used on the right.
     This is admissible,
-    since $\Tranty(\nonterm G \vdash \nonterm{ts}_1)$ produces a derivation of $\nonterm{GC} \vdash \nonterm{tc}_1 : \star$,
-    and similarly there is a derivation of $\nonterm{GC}, \gterm x : \nonterm{tc}_1 \vdash \nonterm{tc}_2 : \star$
-    resulting from the other invocation of $\Tranty$.
+    since $[[ mudT(G |- ts1) ]]$ produces a derivation of $[[ GC |- tc1 : sst ]]$,
+    and similarly there is a derivation of $[[ GC , x : tc1 |- tc2 : sst ]]$
+    resulting from the other invocation of $[[ mudT ]]$.
   \item \textsc{TWF-ADT}.
     \begin{align*}
       & \ottdruleTWFXXADT{} \longmapsto \ottdruleTWFTargetXXADT{}, \\
