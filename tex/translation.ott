@@ -33,3 +33,7 @@ mudT ( G |- ts1 )
 mudT ( G , x : ts1 |- ts2 )
 ---------------------------- :: Arr
 GC |- Pi x : tc1 . tc2 : sst
+
+</ mudT ( G |- tsi ) // i />
+------------------------------ :: ADT
+GC |- < </ li : tci // i />  > : sst

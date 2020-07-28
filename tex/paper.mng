@@ -486,14 +486,9 @@ More formally, consider the last rule used in the derivation of $[[ G |- ts ]]$:
     resulting from the other invocation of $\Tranty$.
   \item \textsc{TWF-ADT}.
     \begin{align*}
-      & \inferrule{\overline{\nonterm G \vdash \nonterm{ts}_i}^i
-                  }
-                  {\nonterm G \vdash \langle \overline{l_i : \nonterm{ts}_i}^i \rangle}
-          \longmapsto
-        \inferrule{\overline{\Tranty(\nonterm G \vdash \nonterm{ts}_i)}^i}
-                  {\nonterm{GC} \vdash \langle \overline{l_i : \nonterm{tc}_i}^i \rangle : \star}, \\
-      \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok),                                         \\
-                   &\nonterm{tc}_i = \tranty(\nonterm G \vdash \nonterm{ts}_i).
+      & \ottdruleTWFXXADT{} \longmapsto \ottdruleTWFTargetXXADT{}, \\
+      \text{where}~&[[ GC = mudG(G ok) ]],                \\
+                   &[[ tci = muT(G |- tsi) ]].
     \end{align*}
 
     It can be seen that the right-hand side is well-defined
