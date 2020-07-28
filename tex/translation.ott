@@ -50,3 +50,8 @@ mudT ( G |- (x : ts1) -> ts2 )
 mudE ( G , x : ts1 |- es : ts2 )
 --------------------------------------- :: Abs
 GC |- \ x : tc1 . ec : Pi x : tc1 . tc2
+
+mudE (G |- es1 : (x : ts1) -> ts2)
+mudE (G |- es2 : ts1)
+---------------------------------- :: App
+GC |- ec1 ec2 : [ x |-> ec2 ] tc2

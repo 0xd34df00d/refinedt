@@ -541,18 +541,11 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
 
   \item \textsc{T-App}.
     \begin{align*}
-      & \inferrule{\nonterm G \vdash \nonterm{es}_1 : (\gterm x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2 \\\\
-                   \nonterm G \vdash \nonterm{es}_2 : \nonterm{ts}_1}
-                  {\nonterm G \vdash \nonterm{es}_1 \nonterm{es}_2 : [ x \mapsto \nonterm{es}_2 ] \nonterm{ts}_2}
-          \longmapsto
-        \inferrule{\Tranterm(\nonterm G \vdash \nonterm{es}_1 : (\gterm x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2) \\\\
-                   \Tranterm(\nonterm G \vdash \nonterm{es}_2 : \nonterm{ts}_1)
-                   }
-                  {\nonterm{GC} \vdash \nonterm{ec}_1 \nonterm{ec}_2 : [ x \mapsto \nonterm{ec}_2 ] \nonterm{tc}_2},    \\
-      \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok),       \\
-                   &\nonterm{tc}_2 = \tranty(\Gamma \vdash \nonterm{ts}_2), \\
-                   &\nonterm{ec}_1 = \tranterm(\nonterm G \vdash \nonterm{es}_1 : (\gterm x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2), \\
-                   &\nonterm{ec}_2 = \tranterm(\nonterm G \vdash \nonterm{es}_2 : \nonterm{ts}_1).
+      & \ottdruleTXXApp{} \longmapsto \ottdruleTTargetXXApp{}, \\
+      \text{where}~&[[ GC = mudG(G ok) ]],       \\
+                   &[[ tc2 = muT(G |- ts2) ]],       \\
+                   &[[ ec1 = muE(G |- es1 : (x : ts1) -> ts2) ]], \\
+                   &[[ ec2 = muE(G |- es2 : ts1) ]].
     \end{align*}
 
     Admissibility of the right-hand side follows from a similar argument.
