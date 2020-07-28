@@ -45,3 +45,8 @@ mudT ( G |- ts )
 x : tc in GC
 ----------------- :: VarW
 GC |- x : tc
+
+mudT ( G |- (x : ts1) -> ts2 )
+mudE ( G , x : ts1 |- es : ts2 )
+--------------------------------------- :: Abs
+GC |- \ x : tc1 . ec : Pi x : tc1 . tc2

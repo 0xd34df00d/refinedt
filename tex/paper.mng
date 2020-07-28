@@ -522,30 +522,20 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
 
   \item \textsc{T-Abs}.
     \begin{align*}
-      & \inferrule{\nonterm G \vdash (\gterm x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2 \\\\
-                   \nonterm G , \gterm x : \nonterm{ts}_1 \vdash \nonterm{es} : \nonterm{ts}_2}
-                  {\nonterm G \vdash \lambda x : \nonterm{ts}_1. \nonterm{es} : (\gterm x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2}
-          \longmapsto
-        \inferrule{\Tranty(\nonterm G \vdash (\gterm x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2) \\\\
-                   \Tranterm(\nonterm G , \gterm x : \nonterm{ts}_1 \vdash \nonterm{es} : \nonterm{ts}_2)
-                   }
-                  {\nonterm{GC} \vdash \lambda x : \nonterm{tc}_1. \nonterm{ec} : \Pi \gterm x : \nonterm{tc}_1. \nonterm{tc}_2},    \\
-      \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok),       \\
-                   &\nonterm{tc}_1 = \tranty(\Gamma \vdash \nonterm{ts}_1), \\
-                   &\nonterm{tc}_2 = \tranty(\Gamma , x : \nonterm{ts}_1 \vdash \nonterm{ts}_2), \\
-                   &\nonterm{ec} = \tranterm(\nonterm G , \gterm x : \nonterm{ts}_1 \vdash \nonterm{es} : \nonterm{ts}_2).
+      & \ottdruleTXXAbs{} \longmapsto \ottdruleTTargetXXAbs{}, \\
+      \text{where}~&[[ GC = mudG(G ok) ]],       \\
+                   &[[ tc1 = muT(G |- ts1) ]], \\
+                   &[[ tc2 = muT(G , x : ts1 |- ts2) ]], \\
+                   &[[ ec = muE(G , x : ts1 |- es : ts2) ]].
     \end{align*}
 
     The right-hand side here is well-formed.
-    Firstly, $\Tranty(\nonterm G \vdash (\gterm x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2)$
-    produces a derivation tree of the form
-    $\nonterm{GC} \vdash \Pi \gterm x : \nonterm{tc}_1. \nonterm{tc}_2 : \star$,
-    since the only rule allowing deriving
-    $\nonterm G \vdash (\gterm x : \nonterm{ts}_1) \rightarrow \nonterm{ts}_2$
-    is \textsc{TWF-Arr},
-    so it is sufficient to inspect the definition of $\Tranty$ for this rule.
-    Then, $\Tranterm(\nonterm G , \gterm x : \nonterm{ts}_1 \vdash \nonterm{es} : \nonterm{ts}_2)$
-    produces a derivation of $\nonterm{GC} , \gterm x : \nonterm{tc}_1 \vdash \nonterm{ec} : \nonterm{tc}_2$.
+    Firstly, $[[ mudT ( G |- (x : ts1) -> ts2 ) ]]$
+    produces a derivation tree of the form $[[ GC |- Pi x : tc1. tc2 : sst ]]$,
+    as can be seen by inspecting the definition of $[[ mudT ]]$ for \textsc{TWF-Arr},
+    which is the only rule having $[[ G |- (x : ts1) -> ts2 ]]$ in the conclusion.
+    Then, $[[ mudE ( G , x : ts1 |- es : ts2 ) ]]$
+    produces a derivation of $[[ GC , x : tc1 |- ec : tc2 ]]$.
     These two derivations can then be used as premises for \textsc{CT-Abs},
     which is invoked on the right-hand side.
 
