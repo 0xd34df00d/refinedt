@@ -41,6 +41,7 @@ metavar x {{ tex \gterm x }} ::= {{ com variables }}
 metavar v {{ tex \gterm v }} ::= {{ com refinement variables }}
 metavar n {{ tex \gterm n }} ::= {{ com integers }}
 metavar p {{ tex \gterm p }} ::= {{ com proof terms }}
+metavar Pred {{ tex P }} ::= {{ com predicates }}
 indexvar i, j ::= {{ com indexes }}
 
 grammar

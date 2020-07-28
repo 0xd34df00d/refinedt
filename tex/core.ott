@@ -26,6 +26,8 @@ ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
   | BC					:: M :: base {{ tex \Basec }}
   | ( ec1 , ec2 )		:: M :: pair
   | ( v : ec1 ** ec2 )  :: M :: dvpair
+  | Pred				:: M :: predicate
+  | v					:: M :: vvar
 
 s {{ tex \nonterm{s} }} :: s_ ::= {{ com sorts }}
   | sst				::   :: type {{ com types }}
