@@ -82,10 +82,11 @@ ec1 =b ec2
 -------------- :: Conv
 GC |- ec : ec2
 
-
------------------- :: UnitTerm
+GC |- sst : ssq
+------------------- :: UnitTerm
 GC |- unitc : Unitc
 
+GC |- sst : ssq
 ------------------ :: UnitType
 GC |- Unitc : sst
 
