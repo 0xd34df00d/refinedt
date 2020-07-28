@@ -178,14 +178,14 @@ In the subsequent text we also assume the oracle can decide the resulting propos
 
 \subsubsection{Properties}
 
-\begin{lemma}
+\begin{lemma}\label{lma:term_wf_implies_ctx_wf}
   If $[[ G |- es : ts ]]$, then $[[ G ok ]]$.
 \end{lemma}
 \begin{proof}
   \todo[inline]{Do the proof and remove the assumption $[[ G ok ]]$ from all the rules unless needed.}
 \end{proof}
 
-\begin{lemma}
+\begin{lemma}\label{lma:term_wf_implies_type_wf}
   If $[[ G |- es : ts ]]$, then $[[ G |- ts ]]$.
 \end{lemma}
 \begin{proof}
