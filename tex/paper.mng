@@ -458,17 +458,10 @@ More formally, consider the last rule used in the derivation of $[[ G |- ts ]]$:
     are omitted and denoted by $\cdots$.
   \item \textsc{TWF-Conj}.
     \begin{align*}
-      & \inferrule{\nonterm G \vdash \{ v : B | \nonterm{r}_1 \} \\
-                   \nonterm G \vdash \{ v : B | \nonterm{r}_2 \}}
-                  {\nonterm G \vdash \{ v : B | \nonterm{r}_1 \land \nonterm{r}_2 \}}
-          \longmapsto
-        \inferrule{\cdots \\\\
-                   \Tranty(\nonterm G \vdash \{ v : B | \nonterm{r}_1 \}) \\
-                   \Tranty(\nonterm G \vdash \{ v : B | \nonterm{r}_2 \})}
-                  {\nonterm{GC} \vdash (v : \hat B \dast \lambda v : \hat B. (P_1 v, P_2 v)) : \star}, \\
-      \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok),                                         \\
-                   &P_1 \text{~s.t.~} (v : \hat B \dast \lambda v : \hat B. P_1 v) = \tranty(\nonterm G \vdash \{ v : B | \nonterm{r}_1 \}),  \\
-                   &P_2 \text{~s.t.~} (v : \hat B \dast \lambda v : \hat B. P_2 v) = \tranty(\nonterm G \vdash \{ v : B | \nonterm{r}_2 \}).
+      & \ottdruleTWFXXConj{} \longmapsto \ottdruleTWFTargetXXConj{}, \\
+      \text{where}~&[[ GC = mudG(G ok)]],                                         \\
+                   &P_1 \text{~s.t.~} [[ ( v : BC ** \ v : BC . P1 v) = muT ( G |- { v : B | r1 }) ]],  \\
+                   &P_2 \text{~s.t.~} [[ ( v : BC ** \ v : BC . P2 v) = muT ( G |- { v : B | r2 }) ]].  \\
     \end{align*}
 
     The proof of the right-hand side being well-defined goes similarly to the cases considered previously,

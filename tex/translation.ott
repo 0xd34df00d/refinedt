@@ -4,7 +4,9 @@ tran :: translation_ ::=
   | mudG ( G ok )		:: :: ctx
   | GC = mudG ( G ok )  :: :: gcDef
   | ec = muE ( G |- es : ts )
-						:: :: ecDef
+						:: :: ecTermDef
+  | ec = muT ( G |- ts )
+						:: :: ecTypeDef
   | muT ( G |- ts )		:: :: ty
 
 
@@ -20,4 +22,9 @@ mudE ( G , v : { v1 : B | top } |- es1 : { v2 : B' | top } )
 mudE ( G , v : { v1 : B | top } |- es2 : { v2 : B' | top } )
 omitted
 ---------------------------------------------------- :: Base
-GC |- (v : BC ** \ v : BC . ec1 equal ec2 ) : sst
+GC |- (v : BC ** \ v : BC . ec1 equal ec2) : sst
+
+mudT ( G |- { v : B | r1 })
+mudT ( G |- { v : B | r2 })
+-------------------------------------------------- :: Conj
+GC |- (v : BC ** \ v : BC . (P1 v , P2 v)) : sst
