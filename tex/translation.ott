@@ -24,7 +24,7 @@ omitted
 ---------------------------------------------------- :: Base
 GC |- (v : BC ** \ v : BC . ec1 equal ec2) : sst
 
-mudT ( G |- { v : B | r1 })
-mudT ( G |- { v : B | r2 })
+mudT ( G |- { v : B | r1 } )
+mudT ( G |- { v : B | r2 } )
 -------------------------------------------------- :: Conj
-GC |- (v : BC ** \ v : BC . (P1 v , P2 v)) : sst
+GC |- (v : BC ** \ v : BC . (Pred1 v , Pred2 v)) : sst

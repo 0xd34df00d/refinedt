@@ -460,8 +460,8 @@ More formally, consider the last rule used in the derivation of $[[ G |- ts ]]$:
     \begin{align*}
       & \ottdruleTWFXXConj{} \longmapsto \ottdruleTWFTargetXXConj{}, \\
       \text{where}~&[[ GC = mudG(G ok)]],                                         \\
-                   &P_1 \text{~s.t.~} [[ ( v : BC ** \ v : BC . P1 v) = muT ( G |- { v : B | r1 }) ]],  \\
-                   &P_2 \text{~s.t.~} [[ ( v : BC ** \ v : BC . P2 v) = muT ( G |- { v : B | r2 }) ]].  \\
+                   &P_1 \text{~s.t.~} [[ ( v : BC ** \ v : BC . Pred1 v) = muT ( G |- { v : B | r1 }) ]],  \\
+                   &P_2 \text{~s.t.~} [[ ( v : BC ** \ v : BC . Pred2 v) = muT ( G |- { v : B | r2 }) ]].  \\
     \end{align*}
 
     The proof of the right-hand side being well-defined goes similarly to the cases considered previously,
