@@ -16,8 +16,8 @@ omitted
 ------------------------------------- :: TrueRef
 GC |- ( BC , unitc equal unitc ) : sst
 
-mudE ( G , v : { v_1 : B | top } |- es1 : { v_2 : B' | top } )
-mudE ( G , v : { v_1 : B | top } |- es2 : { v_2 : B' | top } )
+mudE ( G , v : { v1 : B | top } |- es1 : { v2 : B' | top } )
+mudE ( G , v : { v1 : B | top } |- es2 : { v2 : B' | top } )
 omitted
 ---------------------------------------------------- :: Base
 GC |- (v : BC ** \ v : BC . ec1 equal ec2 ) : sst

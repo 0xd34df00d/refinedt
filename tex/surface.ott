@@ -74,8 +74,8 @@ defn G |- ts :: :: type_wf :: TWF_ {{ com type well-formedness }} by
 -------------------- :: TrueRef
 G |- { v : B | top }
 
-G , v : { v_1 : B | top } |- es1 : { v_2 : B' | top }
-G , v : { v_1 : B | top } |- es2 : { v_2 : B' | top }
+G , v : { v1 : B | top } |- es1 : { v2 : B' | top }
+G , v : { v1 : B | top } |- es2 : { v2 : B' | top }
 -------------------------------------------------- :: Base
 G |- { v : B | es1 = es2 }
 
