@@ -12,7 +12,7 @@ tran :: translation_ ::=
 
 defns Jctarget :: '' ::=
 
-defn GC |- ec1 : ec2 :: :: coretarget :: TWFTarget_ by
+defn GC |- ec1 : ec2 :: :: twftarget :: TWFTarget_ by
 
 omitted
 ------------------------------------- :: TrueRef
@@ -37,3 +37,11 @@ GC |- Pi x : tc1 . tc2 : sst
 </ mudT ( G |- tsi ) // i />
 ------------------------------ :: ADT
 GC |- < </ li : tci // i />  > : sst
+
+
+defn GC |- ec1 : ec2 :: :: tytarget :: TTarget_ by
+
+GC |- tc : s
+x : tc in GC
+------------ :: VarW
+GC |- x : tc

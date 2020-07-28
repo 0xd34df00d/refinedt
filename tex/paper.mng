@@ -491,32 +491,21 @@ More formally, consider the last rule used in the derivation of $[[ G |- ts ]]$:
 
 \paragraph{Terms.}
 Finally we define $\Tranterm$.
-We consider the term typing rule at the root of the derivation tree for $\nonterm G \vdash \nonterm{es} : \nonterm{ts}$.
+We consider the term typing rule at the root of the derivation tree for $[[ G |- es : ts ]]$.
 
 \begin{itemize}
   \item \textsc{T-Unit}.
     \begin{align*}
-      & \inferrule{\nonterm G \ctxok}
-                  {\nonterm G \vdash \unit : \{ \gterm v : \Unit | \top \}}
-          \longmapsto
-        \inferrule{~}
-                  {\nonterm{GC} \vdash \unitc : \Unitc}, \\
+      & \ottdruleTXXUnit{} \longmapsto \ottdruleCTXXUnitTerm{}, \\
       \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok).
     \end{align*}
-    This rule has a single premise $\nonterm G \ctxok$ that the surface context is well-formed.
-    $\Tranctx$ is used to translate the surface derivation of that premise into the core context $\nonterm{GC}$,
-    which is then used in \textsc{CT-UnitTerm}.
+    Any other base type $B$ is treated similarly.
 
   \item \textsc{T-Var}.
     \begin{align*}
-      & \inferrule{\nonterm G \ctxok \\
-                   \gterm x : \nonterm{ts} \in \nonterm G}
-                  {\nonterm G \vdash \gterm x : \nonterm{ts}}
-          \longmapsto
-        \inferrule{x : \nonterm{tc} \in \nonterm{GC}}
-                  {\nonterm{GC} \vdash \gterm x : \nonterm{tc}},    \\
-      \text{where}~&\nonterm{GC} = \Tranctx(\nonterm G \ctxok),       \\
-                   &\nonterm{tc} = \tranty(\nonterm G \vdash \nonterm{ts}).
+      & \ottdruleTXXVar{} \longmapsto \ottdruleTTargetXXVarW{}, \\
+      \text{where}~&[[ GC = mudG(G ok) ]],       \\
+                   &[[ tc = muT(G |- ts) ]].
     \end{align*}
 
     To show that the right-hand side is well-defined,
