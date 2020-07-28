@@ -41,7 +41,7 @@ GC |- < </ li : tci // i />  > : sst
 
 defn GC |- ec1 : ec2 :: :: tytarget :: TTarget_ by
 
-GC |- tc : s
+mudT ( G |- ts )
 x : tc in GC
------------- :: VarW
+----------------- :: VarW
 GC |- x : tc

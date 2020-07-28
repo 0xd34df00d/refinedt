@@ -509,13 +509,16 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
     \end{align*}
 
     To show that the right-hand side is well-defined,
-    it suffices to show that $x : \nonterm{tc} \in \nonterm{GC}$ holds.
-
-    By definition of $\Tranctx$,
+    first note that $x : \nonterm{tc} \in \nonterm{GC}$ holds.
+    Indeed, by definition of $\Tranctx$,
     if $\nonterm G$ contains a binding for the name $x$,
     then $\nonterm{GC}$ also contains a binding for that name,
     and its type is precisely $\tranty(\nonterm G \vdash \nonterm{ts})$.
-    Thus, we are allowed to use the (derived) core typing rule \textsc{CT-VarW}.
+    Secondly, $[[ G |- x : ts ]]$ implies $[[ G |- ts ]]$ by \cref{lma:term_wf_implies_type_wf},
+    and $[[ mudT(G |- ts) ]]$ provides a judgement of the form $[[ GC |- tc : s ]]$.
+
+    All in all, this shows that all the necessary premises
+    for the (derived) core typing rule \textsc{CT-VarW} hold.
 
   \item \textsc{T-Abs}.
     \begin{align*}
