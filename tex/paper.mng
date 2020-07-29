@@ -243,8 +243,9 @@ deserves some special attention.
   \label{fig:core_opsem}
 \end{figure}
 
-Although the syntax doesn't mention $\nonterm{tc}$, we will use it as a metavariable
-where a type (an inhabitant of $\star$) is expected.
+Although the syntax doesn't mention $\nonterm{tc}$,
+we will use it as a metavariable
+where a type (an inhabitant of $\star$) is typically used.
 
 In addition to that, we will somewhat frivolously use $\hat B$
 to denote the core language analogue of a surface language base type $B$,
