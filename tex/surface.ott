@@ -113,13 +113,13 @@ G , x : ts1 |- es : ts2
 ------------------------------------- :: Abs
 G |- \x : ts1. es : ( x : ts1 ) -> ts2
 
-ts0 def < </ li : tsi // i /> >
-G |- ts
-G |- es : ts0
-</ G , xi : tsi , x : { _ : Unit | es = < li = xi > as ts0 } |- esi : ts // i />
+ts def < </ li : tsi // i /> >
+G |- ts'
+G |- es : ts
+</ G , xi : tsi , x : { _ : Unit | es = < li = xi > as ts } |- esi : ts' // i />
 x fresh
 -------------------------------------------------------------------------- :: Case
-G |- case es of </ li = xi -> esi // i />  : ts
+G |- case es of </ li = xi -> esi // i />  : ts'
 
 G |- es : tsj
 lj in </ li // i />
