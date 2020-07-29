@@ -36,6 +36,7 @@ terminals :: terminals_ ::=
   | mudE	:: :: trantermderiv {{ tex \Tranterm }}
   | muE 	:: :: tranterm {{ tex \tranterm }}
   | omitted :: :: omitted {{ tex \cdots }}
+  | **		:: :: dast {{ tex \dast }}
 
 metavar x {{ tex \gterm x }} ::= {{ com variables }}
 metavar v {{ tex \gterm v }} ::= {{ com refinement variables }}
