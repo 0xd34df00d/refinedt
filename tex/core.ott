@@ -107,6 +107,8 @@ GC |- ec : ec0
 ------------------------------------------------------------------------- :: ADTCase
 GC |- case ec of </ li = xi proof pi -> eci // i />  : ec1
 
+%TODO something funny with indices above, figure out what to do with ec0/ec1
+
 
 % Helper rules
 
