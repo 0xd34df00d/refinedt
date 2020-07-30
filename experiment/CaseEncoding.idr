@@ -44,6 +44,21 @@ namespace BB
 
 
 
+namespace BBExt2
+  mutual
+    ADTExt : Type
+    ADTExt = (S : Type)
+          -> (P : S -> Type)
+          -> (f0 : (x0 : T0) -> P (l0 S x0))
+          -> (f1 : (x1 : T1) -> P (l1 S x1))
+          -> (s : S)
+          -> P s
+
+    l0 : (S : Type) -> T0 -> S
+    l1 : (S : Type) -> T1 -> S
+
+
+
 namespace BBExt
   postulate ADTExt : Type
   postulate l0 : T0 -> ADTExt
