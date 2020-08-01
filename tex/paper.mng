@@ -268,7 +268,9 @@ and state some straightforward facts that will be useful later:
     \[
       \nonterm{tc}_1 \rightarrow \nonterm{tc}_2 \triangleq \Pi \_ : \nonterm{tc}_1. \nonterm{tc}_2.
     \]
-  \item Dependent pair type, or $\Sigma$-type, with the first component being a value $x$ of type $\tau$ and the second component being of type $P x$:
+  \item Dependent pair type, or $\Sigma$-type,
+    with the first component being a value $x$ of type $[[tc]]$
+    and the second component being of type $P x$:
     \[
       (x : \nonterm{tc} \dast P x) \triangleq \Pi \alpha : \star. (\Pi x : \nonterm{tc}. P x \rightarrow \alpha) \rightarrow \alpha,
     \]
