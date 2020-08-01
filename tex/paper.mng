@@ -551,6 +551,15 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
     \end{align*}
 
     Admissibility of the right-hand side follows from a similar argument.
+
+  \item \textsc{T-Case}.
+    \begin{align*}
+      & \ottdruleTXXCase{} \longmapsto \ottdruleTTargetXXCase{}, \\
+      \text{where}~&[[ GC = mudG(G ok) ]],       \\
+                   &[[ tc' = muT(G |- ts') ]],       \\
+                   &[[ ec = muE(G |- es : ts) ]],    \\
+                   &[[ eci = muE(G |- esi : ts) ]].
+    \end{align*}
 \end{itemize}
 
 Having defined these functions, we formulate a simple but useful lemma:
