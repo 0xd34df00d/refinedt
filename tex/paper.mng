@@ -270,7 +270,7 @@ and state some straightforward facts that will be useful later:
     \]
   \item Dependent pair type, or $\Sigma$-type,
     with the first component being a value $x$ of type $[[tc]]$
-    and the second component being of type $P x$:
+    and the second component being of type $P x$, where $P$ is usually of type $[[tc]] \rightarrow \star$:
     \[
       (x : \nonterm{tc} \dast P x) \triangleq \Pi \alpha : \star. (\Pi x : \nonterm{tc}. P x \rightarrow \alpha) \rightarrow \alpha,
     \]

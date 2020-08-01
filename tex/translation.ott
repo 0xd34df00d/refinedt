@@ -60,5 +60,7 @@ mudT (G |- ts')
 mudE (G |- es : ts)
 </ mudE (G , xi : tsi , x : { _ : Unit | es = < li = xi > as ts } |- esi : ts') // i />
 x fresh
---------------------------------------------------------- :: Case
-GC |- case ec of </ li = xi proof p -> eci // i /> : tc'
+----------------------------------------------------------------------------------------- :: Case
+GC |- case ec of </ li = xi proof pi -> ( \x : tci' . eci ) ( _ : Unitc ** pi ) // i /> : tc'
+
+% TODO either add a lambda in the dpair or change the definition of dpair, replacing Px with *
