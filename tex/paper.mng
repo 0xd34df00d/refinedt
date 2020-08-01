@@ -554,7 +554,8 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
 
   \item \textsc{T-Case}.
     \begin{align*}
-      & \ottdruleTXXCase{} \longmapsto \ottdruleTTargetXXCase{}, \\
+      & \ottdruleTXXCase{} \\
+      \longmapsto \quad & \ottdruleTTargetXXCase{}, \\
       \text{where}~&[[ GC = mudG(G ok) ]],       \\
                    &[[ tc' = muT(G |- ts') ]],       \\
                    &[[ ec = muE(G |- es : ts) ]],    \\
