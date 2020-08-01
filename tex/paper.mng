@@ -564,6 +564,23 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
                    &[[ eci = muE(G |- esi : ts) ]],  \\
                    &[[ tci' ]] = [[ (_ : Unitc ** ec equal < li = xi > as tc) ]].
     \end{align*}
+
+    This part of the translation is perhaps the most involved one,
+    and the main complication stems from the following.
+    In \textsc{T-Case}, each (surface) $[[esi]]$ is being type checked in the context
+    where $x$ (the witness of the $\mathbf{case}$ branch taken)
+    has type $[[ { _ : Unit | es = < li = xi > as ts } ]]$.
+    After $[[esi]]$ gets translated into the (core) term $[[eci]]$,
+    the latter is type checked in the context where $\hat x$
+    has the dependent pair type $[[ (_ : Unitc ** ec equal < li = xi > as tc) ]]$.
+    On the other hand, the $\mathbf{proof} \pi_i$ part of the $\mathbf{case}$ branch
+    provides the proof $\pi_i$ typed as $[[ ec equal < li = xi > as tc ]]$,
+    so it needs to be packed into the dependent pair type that $[[eci]]$ ``expects''.
+
+    The lambda abstraction/application pair on the right-hand side of the translation
+    is responsible for this extra packing.
+    All the typing derivations showing that this is well-formed follow trivially
+    from the typing rules, but are again omitted and replaced by $\dots$ for the sake of brevity.
 \end{itemize}
 
 Having defined these functions, we formulate a simple but useful lemma:
