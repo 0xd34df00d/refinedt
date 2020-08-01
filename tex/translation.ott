@@ -59,6 +59,7 @@ GC |- ec1 ec2 : [ x |-> ec2 ] tc2
 mudT (G |- ts')
 mudE (G |- es : ts)
 </ mudE (G , xi : tsi , x : { _ : Unit | es = < li = xi > as ts } |- esi : ts') // i />
+omitted
 x fresh
 ----------------------------------------------------------------------------------------- :: Case
 GC |- case ec of </ li = xi proof pi -> ( \x : tci' . eci ) ( _ : Unitc ** pi ) // i /> : tc'
