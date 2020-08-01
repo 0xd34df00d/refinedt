@@ -561,7 +561,8 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
       \text{where}~&[[ GC = mudG(G ok) ]],       \\
                    &[[ tc' = muT(G |- ts') ]],       \\
                    &[[ ec = muE(G |- es : ts) ]],    \\
-                   &[[ eci = muE(G |- esi : ts) ]].
+                   &[[ eci = muE(G |- esi : ts) ]],  \\
+                   &[[ tci' ]] = [[ (_ : Unitc ** ec equal < li = xi > as tc) ]].
     \end{align*}
 \end{itemize}
 
