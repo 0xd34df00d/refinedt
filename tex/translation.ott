@@ -55,3 +55,9 @@ mudE (G |- es1 : (x : ts1) -> ts2)
 mudE (G |- es2 : ts1)
 ---------------------------------- :: App
 GC |- ec1 ec2 : [ x |-> ec2 ] tc2
+
+mudT (G |- ts')
+mudE (G |- es : ts)
+</ mudE (G , xi : tsi , x : { _ : Unit | es = < li = xi > as ts } |- esi : ts') // i />
+--------------------------------------------------------- :: Case
+GC |- case ec of </ li = xi proof p -> eci // i /> : tc'
