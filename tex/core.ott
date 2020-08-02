@@ -25,10 +25,12 @@ ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
   | BC					:: M :: base {{ tex \Basec }}
   | ( ec1 , ec2 )		:: M :: pair
   | ( v : ec1 ** ec2 )  :: M :: dvpair
+  | ( _ : ec1 ** ec2 )  :: M :: dvpairIrrelevant
   | Pred				:: M :: predicate
   | v					:: M :: vvar
   | \ x : tc1 . tc2		:: M :: lamxtabs {{ com abstraction on types }}
   | \ v : ec1 . ec2		:: M :: lamvabs {{ com abstraction on v-vars }}
+  | \ _ : ec1 . ec2		:: M :: lamirrabs {{ com abstraction irrelevant }}
 
 s {{ tex \nonterm{s} }} :: s_ ::= {{ com sorts }}
   | sst				::   :: type {{ com types }}
