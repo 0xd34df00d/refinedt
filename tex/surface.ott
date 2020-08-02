@@ -123,6 +123,7 @@ G |- case es of </ li = xi -> esi // i />  : ts'
 
 G |- es : tsj
 lj in </ li // i />
+G |- < </ li : tsi // i /> >
 ------------------------------------------ :: Con
 G |- < lj = es > as < </ li : tsi // i /> > : < </ li : tsi // i /> >
 
