@@ -612,7 +612,7 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
 
         To build a reasonable translation,
         we have no choice but require the oracle to produce a core language term $\sigma$ such that
-        $\nonterm{GC} , v : \Basec \vdash \sigma : \nonterm{tc}_1 \rightarrow \nonterm{tc}_2$,
+        $\nonterm{GC} , v : \Basec \vdash \sigma : \Pi v : \Basec. \nonterm{tc}_1 \rightarrow \nonterm{tc}_2$,
         where $[[ GC = mudG(G ok) ]]$, and $[[tc1]]$, $[[tc2]]$ correspond to the translations
         of the refinement terms $[[r1]]$, $[[r2]]$ respectively.
     \end{itemize}
