@@ -65,3 +65,9 @@ x fresh
 GC |- case ec of </ li = xi proof pi -> ( \x : tci' . eci ) ( _ : Unitc ** pi ) // i /> : tc'
 
 % TODO either add a lambda in the dpair or change the definition of dpair, replacing Px with *
+
+mudE (G |- es : tsj)
+lj in </ li // i />
+mudT (G |- < </ li : tsi // i /> >)
+--------------------------------------------------------------------- :: Con
+GC |- < lj = ec> as < </ li : tci // i /> > : < </ li : tci // i /> >
