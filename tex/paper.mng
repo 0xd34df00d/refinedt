@@ -581,6 +581,19 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
     is responsible for this extra packing.
     All the typing derivations showing that this is well-formed follow trivially
     from the typing rules, but are again omitted and replaced by $\dots$ for the sake of brevity.
+
+  \item \textsc{T-Con}.
+    \begin{align*}
+      & \ottdruleTXXCon{} \longmapsto \ottdruleTTargetXXCon{}, \\
+      \text{where}~&[[ GC = mudG(G ok) ]],       \\
+                   &[[ tci = muT(G |- tsi) ]], \\
+                   &[[ ec = muE(G |- es : tsj) ]].
+    \end{align*}
+
+    Well-formedness of the right-hand side can be shown analogously to the previous clauses.
+    One extra thing to note is that,
+    although $[[ G |- tsi ]]$ are not present directly in the premises of \textsc{T-Con},
+    they are implied by the $[[ G |- < </ li : tsi // i /> > ]]$ premise and thus can be used.
 \end{itemize}
 
 Having defined these functions, we formulate a simple but useful lemma:
