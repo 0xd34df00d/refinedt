@@ -578,7 +578,7 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
                    &[[ tci' ]] = [[ (_ : Unitc ** ec equal < li = xi > as tc) ]].
     \end{align*}
 
-    This part of the translation is perhaps the most involved one,
+    This part of the translation is perhaps one of the most involved,
     and the main complication stems from the following.
     In \textsc{T-Case}, each (surface) $[[esi]]$ is being type checked in the context
     where $x$ (the witness of the $\mathbf{case}$ branch taken)
@@ -594,6 +594,28 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
     is responsible for this extra packing.
     All the typing derivations showing that this is well-formed follow trivially
     from the typing rules, but are again omitted and replaced by $\dots$ for the sake of brevity.
+
+  \item \textsc{T-Sub}.
+    This is the only part of the translation that uses the oracle,
+    and hence cannot be done as straightforwardly as the other ones.
+
+    Let's say the rule being considered for translation by $\Tranterm$ is \textsc{T-Sub}:
+    \[
+      \ottdruleTXXSub{}.
+    \]
+    Consider now the last (subtyping) rule in the derivation of $[[ G |- ts <: ts' ]]$:
+    \begin{itemize}
+      \item \textsc{ST-Base}:
+        \[
+          \ottdruleSTXXBase{}.
+        \]
+
+        To build a reasonable translation,
+        we have no choice but require the oracle to produce a core language term $\sigma$ such that
+        $\nonterm{GC} , v : \Basec \vdash \sigma : \nonterm{tc}_1 \rightarrow \nonterm{tc}_2$,
+        where $[[ GC = mudG(G ok) ]]$, and $[[tc1]]$, $[[tc2]]$ correspond to the translations
+        of the refinement terms $[[r1]]$, $[[r2]]$ respectively.
+    \end{itemize}
 \end{itemize}
 
 Having defined these functions, we formulate a simple but useful lemma:
