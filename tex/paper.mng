@@ -33,6 +33,7 @@
 \newcommand{\fresh}{\text{~fresh name}}
 \newcommand{\evalsto}{\rightsquigarrow}
 \newcommand{\eqrefl}{\text{eq-refl~}}
+\newcommand{\secondDP}{\text{second-dp~}}
 
 \begin{document}
 
@@ -612,9 +613,25 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
 
         To build a reasonable translation,
         we have no choice but require the oracle to produce a core language term $\sigma$ such that
-        $\nonterm{GC} , v : \Basec \vdash \sigma : \Pi v : \Basec. \nonterm{tc}_1 \rightarrow \nonterm{tc}_2$,
+        $\nonterm{GC} \vdash \sigma : \Pi v : \Basec. \nonterm{tc}_1 \rightarrow \nonterm{tc}_2$,
         where $[[ GC = mudG(G ok) ]]$, and $[[tc1]]$, $[[tc2]]$ correspond to the translations
         of the refinement terms $[[r1]]$, $[[r2]]$ respectively.
+
+        We can then use this term to convert the second component of the dependent pair
+        that $[[es]]$ compiles to.
+        Indeed, if \textsc{ST-Base} applies,
+        then the $[[es]]$ mentioned in \textsc{T-Sub} has the type $[[ { v : B | r1 } ]]$,
+        thus $[[ec = muE(G |- es : ts)]]$ has the type $[[(v : BC ** Pred1 v)]]$ for some $[[Pred1]]$.
+        The above requirement on the oracle implies that $[[Pred1 v]]$ is in fact $[[tc1]]$,
+        so $\sigma v [[(Pred1 v)]]$ is well-formed and has type $[[tc2]]$.
+
+        Given all of the above, it can be seen that the term $\secondDP \sigma [[ ec ]]$
+        has the type $[[ muT(G |- { v : B | r2 }) ]]$, so, all in all, we translate the above rule
+        into a derivation with the conclusion
+        \[
+          \nonterm{GC} \vdash \secondDP \sigma [[ ec ]] : (v : \Basec \dast \sigma v ([[Pred1]] v))
+        \]
+        and premises corresponding to the informal argument above.
     \end{itemize}
 \end{itemize}
 
