@@ -611,7 +611,7 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
     into core language typing derivations
     (also having the \textsc{T-Sub} above ``in scope'').
 
-    Consider now the last (subtyping) rule in the derivation of $[[ G |- ts <: ts' ]]$:
+    Consider the last (subtyping) rule in the derivation of $[[ G |- ts <: ts' ]]$:
     \begin{itemize}
       \item \textsc{ST-Base}.
         In this case $[[ts]]$ and $[[ts']]$ are
@@ -628,7 +628,7 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
         To build a reasonable translation,
         we have no choice but require the oracle to produce a core language term $\sigma$ such that
         $[[ GC |- sigma : Pi v : BC . tc1 -> tc2 ]]$,
-        where $[[ GC = mudG(G ok) ]]$, and $[[tc1]]$, $[[tc2]]$ correspond to the translations
+        where $[[ GC = mudG(G ok) ]]$ and $[[tc1]]$, $[[tc2]]$ correspond to the translations
         of the refinement terms $[[r1]]$, $[[r2]]$ respectively.
 
         We can then use this term to convert the second component of the dependent pair
