@@ -16,6 +16,7 @@ ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
   | [ x |-> ec1 ] ec2	:: M :: xsubst
   | [ p |-> ec1 ] ec2	:: M :: psubst
   | p					:: M :: proofterm
+  | ec1 -> ec2			:: M :: nondep_arrow
   | ec1 equal ec2		:: M :: equality
   | < l = ec > as ec'   :: M :: adtcon_arb
   | vc					:: M :: value
