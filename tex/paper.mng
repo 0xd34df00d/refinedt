@@ -332,6 +332,7 @@ and state some straightforward facts that will be useful later:
 \newcommand{\Tranctx}{\mu_{\vdash\Gamma}}
 \newcommand{\Tranty}{\mu_{\vdash\tau}}
 \newcommand{\Tranterm}{\mu_{\vdash\varepsilon}}
+\newcommand{\Transub}{\mu_{\vdash <:}}
 
 %FIXME ugly, but whatever
 \renewcommand{\ottdrulename}[1]{}
@@ -600,10 +601,16 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
     This is the only part of the translation that uses the oracle,
     and hence cannot be done as straightforwardly as the other ones.
 
-    Let's say the rule being considered for translation by $\Tranterm$ is \textsc{T-Sub}:
+    Our goal is to translate a typing derivation ending with \textsc{T-Sub}:
     \[
       \ottdruleTXXSub{}.
     \]
+
+    We now define yet another translation function, $\Transub$,
+    mapping the subtyping derivations $[[ G |- ts1 <: ts2 ]]$
+    into core language typing derivations
+    (also having the \textsc{T-Sub} above ``in scope'').
+
     Consider now the last (subtyping) rule in the derivation of $[[ G |- ts <: ts' ]]$:
     \begin{itemize}
       \item \textsc{ST-Base}:
