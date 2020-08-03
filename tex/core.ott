@@ -32,6 +32,9 @@ ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
   | \ x : tc1 . tc2		:: M :: lamxtabs {{ com abstraction on types }}
   | \ v : ec1 . ec2		:: M :: lamvabs {{ com abstraction on v-vars }}
   | \ _ : ec1 . ec2		:: M :: lamirrabs {{ com abstraction irrelevant }}
+  | seconddp			:: M :: map_second_dp {{ tex \secondDP }}
+  | sigma				:: M :: oracle_sigma {{ tex \sigma }}
+  | Pi v : ec1 . ec2	:: M :: pivabs
 
 s {{ tex \nonterm{s} }} :: s_ ::= {{ com sorts }}
   | sst				::   :: type {{ com types }}
