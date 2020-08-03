@@ -613,10 +613,17 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
 
     Consider now the last (subtyping) rule in the derivation of $[[ G |- ts <: ts' ]]$:
     \begin{itemize}
-      \item \textsc{ST-Base}:
-        \[
-          \ottdruleSTXXBase{}.
-        \]
+      \item \textsc{ST-Base}.
+        In this case $[[ts]]$ and $[[ts']]$ are
+        $[[ { v : B | r1 } ]]$ and $[[ { v : B | r2 } ]]$
+        respectively for some $[[B]]$, $[[r1]]$ and $[[r2]]$.
+        \begin{align*}
+          & \ottdruleSTXXBase{} \longmapsto \ottdruleSTTargetXXBase{}, \\
+          \text{where}~&[[ GC = mudG(G ok) ]],       \\
+                       &[[ tc1 ]] \text{~s.t.~} [[ ( v : BC ** tc1) = muT ( G |- { v : B | r1 }) ]],  \\
+                       &[[ tc2 ]] \text{~s.t.~} [[ ( v : BC ** tc2) = muT ( G |- { v : B | r2 }) ]],  \\
+                       &[[ ec = muE(G |- es : ts) ]].
+        \end{align*}
 
         To build a reasonable translation,
         we have no choice but require the oracle to produce a core language term $\sigma$ such that
@@ -633,12 +640,9 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
         so $[[sigma v (Pred1 v)]]$ is well-formed and has type $[[tc2]]$.
 
         Given all of the above, it can be seen that the term $[[ seconddp sigma ec ]]$
-        has the type $[[ muT(G |- { v : B | r2 }) ]]$, so, all in all, we translate the above rule
-        into a derivation with the conclusion
-        \[
-          [[ GC |- seconddp sigma ec : (v : BC ** sigma v (Pred1 v)) ]].
-        \]
-        and premises corresponding to the informal argument above.
+        has the type $[[ muT(G |- { v : B | r2 }) ]]$, so, all in all,
+        the translation above makes sense.
+        Again, the formal premises corresponding to the informal argument above are omitted.
     \end{itemize}
 \end{itemize}
 
