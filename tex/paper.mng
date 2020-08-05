@@ -643,6 +643,23 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
         has the type $[[ muT(G |- { v : B | r2 }) ]]$, so, all in all,
         the translation above makes sense.
         Again, the formal premises corresponding to the informal argument above are omitted.
+
+      \item \textsc{ST-Arr}.
+        \begin{align*}
+          & \ottdruleSTXXArr{} \longmapsto \ottdruleSTTargetXXArr{}, \\
+          \text{where}~&[[ GC = mudG(G ok) ]],       \\
+                       &[[ tc1 ]] \text{~s.t.~} [[ ( v : BC ** tc1) = muT ( G |- { v : B | r1 }) ]],  \\
+                       &[[ tc2 ]] \text{~s.t.~} [[ ( v : BC ** tc2) = muT ( G |- { v : B | r2 }) ]],  \\
+                       &[[ ec = muE(G |- es : ts) ]].
+        \end{align*}
+
+        Intuitively, there is a function having type $[[ (x : ts1) -> ts2 ]]$,
+        and we need to produce a function of type $[[ (x : ts1') -> ts2' ]]$
+        given $[[ G |- ts1' <: ts1 ]]$ and $[[ G , x : ts1 |- ts2 <: ts2' ]]$.
+        Then, the first premise is used to turn $[[x]]$ of type $[[ts1']]$
+        into a value of type $[[ts1]]$ that the existing function can consume,
+        producing a result of type $[[ ts2 ]]$,
+        which is then similarly turned into a value of type $[[ ts2' ]]$.
     \end{itemize}
 \end{itemize}
 
