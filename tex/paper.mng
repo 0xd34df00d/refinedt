@@ -14,6 +14,8 @@
 \usepackage{todonotes}
 \usepackage[english]{babel}
 
+\nonstopmode
+
 \addtolength{\topmargin}{-1.05in}
 \addtolength{\textheight}{1.55in}
 
