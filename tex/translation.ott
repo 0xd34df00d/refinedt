@@ -8,6 +8,8 @@ tran :: translation_ ::=
   | ec = muT ( G |- ts )
 						:: :: ecTypeDef
   | muT ( G |- ts )		:: :: ty
+  | muT ( G1 |- ts1 ) -> muT ( G2 |- ts2 )
+						:: :: tyarr
 
 
 defns Jctarget :: '' ::=
