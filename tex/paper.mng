@@ -609,6 +609,18 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
       \ottdruleTXXSub{}.
     \]
 
+    Note that, for languages with non-trivial subtyping, uniqueness of typing does not hold,
+    but it holds for the CoC modulo $\beta$-conversion
+    (which is an equivalence relation unlike any non-trivial subtyping relation).
+    Thus, intuitively,
+    there is no general way to prescribe both the translation of $[[ ts ]]$ and $[[ ts' ]]$
+    to the translation of $[[ es ]]$ simultaneously.
+    Instead, we produce another term that carries along the witness of the subtyping relation.
+
+    \todo[inline]{Should we give the intuition for producing a new term
+      based on the uniqueness of typing-like considerations or
+      based on VC proof witness stuff?}
+
     We now define yet another translation function, $\Transub$,
     mapping the subtyping derivations $[[ G |- ts1 <: ts2 ]]$
     into core language typing derivations
