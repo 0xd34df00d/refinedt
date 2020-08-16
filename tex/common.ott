@@ -35,6 +35,8 @@ terminals :: terminals_ ::=
   | muT 	:: :: tranty {{ tex \tranty }}
   | mudE	:: :: trantermderiv {{ tex \Tranterm }}
   | muE 	:: :: tranterm {{ tex \tranterm }}
+  | mudS	:: :: transubderiv {{ tex \Transub }}
+  | muS 	:: :: transub {{ tex \transub }}
   | omitted :: :: omitted {{ tex \cdots }}
   | **		:: :: dast {{ tex \dast }}
 
@@ -70,3 +72,5 @@ formula :: formula_ ::=
   | mudT ( G |- ts )	:: :: tyDeriv
   | muE ( G |- es : ts )	:: :: term
   | mudE ( G |- es : ts )	:: :: termDeriv
+  | muS ( G |- ts1 <: ts2 )	:: :: tysub
+  | mudS ( G |- ts1 <: ts2 )	:: :: tysubDeriv

@@ -53,6 +53,8 @@
 \newnonterm{GC}{\hat\Gamma}
 \newnonterm{vs} \varpi
 \newnonterm{vc}{\hat\varpi}
+\newnonterm f f
+\newnonterm{gamma} \gamma
 
 \newNTclass{gterm}
 \newgterm x x
@@ -331,6 +333,7 @@ and state some straightforward facts that will be useful later:
 
 \newcommand{\tranty}{\mu_\tau}
 \newcommand{\tranterm}{\mu_\varepsilon}
+\newcommand{\transub}{\mu_{<:}}
 
 \newcommand{\Tranctx}{\mu_{\vdash\Gamma}}
 \newcommand{\Tranty}{\mu_{\vdash\tau}}
@@ -623,9 +626,14 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
 
     We now define yet another translation function, $\Transub$,
     mapping the derivations of $[[ G |- ts <: ts' ]]$
-    into core language terms of type $[[ muT(G |- ts) -> muT(G |- ts') ]]$.
+    into core language terms $[[gamma]]$ of type $[[ muT(G |- ts) -> muT(G |- ts') ]]$
+    along with derivations of their well-typedness.
     Informally, forgetting about the distinction between surface and core types,
-    a subtyping derivation is turned into a function transforming any term of the subtype into a term of the supertype.
+    a subtyping derivation is turned into a function $[[gamma]]$
+    transforming any term of the subtype into a term of the supertype.
+
+    The helper function $\transub$ is defined similarly to other helpers,
+    forgetting about the derivation and yielding just the final term.
 
     So, consider the last (subtyping) rule in the derivation of $[[ G |- ts <: ts' ]]$:
     \begin{itemize}
@@ -663,18 +671,20 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
         \begin{align*}
           & \ottdruleSTXXArr{} \longmapsto \ottdruleSTTargetXXArr{}, \\
           \text{where}~&[[ GC = mudG(G ok) ]],       \\
-                       &[[ tc1 ]] \text{~s.t.~} [[ ( v : BC ** tc1) = muT ( G |- { v : B | r1 }) ]],  \\
-                       &[[ tc2 ]] \text{~s.t.~} [[ ( v : BC ** tc2) = muT ( G |- { v : B | r2 }) ]],  \\
+                       &[[ gamma1 = muS(G |- ts1' <: ts1) ]],  \\
+                       &[[ gamma2 = muS(G , x : ts1 |- ts2 <: ts2') ]],  \\
                        &[[ ec = muE(G |- es : ts) ]].
         \end{align*}
 
-        Intuitively, there is a function having type $[[ (x : ts1) -> ts2 ]]$,
+        Intuitively, there is a function of type $[[ (x : ts1) -> ts2 ]]$,
         and we need to produce a function of type $[[ (x : ts1') -> ts2' ]]$
         given $[[ G |- ts1' <: ts1 ]]$ and $[[ G , x : ts1 |- ts2 <: ts2' ]]$.
-        Then, the first premise is used to turn $[[x]]$ of type $[[ts1']]$
+        Then, the first premise is used (via $[[gamma1]]$) to turn $[[x]]$ of type $[[ts1']]$
         into a value of type $[[ts1]]$ that the existing function can consume,
         producing a result of type $[[ ts2 ]]$,
-        which is then similarly turned into a value of type $[[ ts2' ]]$.
+        which is then similarly turned (by $[[gamma2]]$) into a value of type $[[ ts2' ]]$.
+
+        This intuition is then formalized analogously to the previous clause.
     \end{itemize}
 \end{itemize}
 

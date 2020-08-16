@@ -7,6 +7,8 @@ tran :: translation_ ::=
 						:: :: ecTermDef
   | ec = muT ( G |- ts )
 						:: :: ecTypeDef
+  | gamma = muS ( G |- ts1 <: ts2 )
+						:: :: cvtDef
   | muT ( G |- ts )		:: :: ty
   | muT ( G1 |- ts1 ) -> muT ( G2 |- ts2 )
 						:: :: tyarr
@@ -81,3 +83,9 @@ GC |- sigma : Pi v : BC . tc1 -> tc2
 omitted
 ------------------------------------------------------- :: Base
 GC |- seconddp sigma : (v : BC ** tc1) -> (v : BC ** tc2)
+
+mudS (G |- ts1' <: ts1)
+mudS (G , x : ts1 |- ts2 <: ts2')
+omitted
+------------------------------------------------------- :: Arr
+GC |- \f : (Pi x : tc1. tc2). \x : tc1'. gamma2 (f (gamma1 x)) : (Pi x : tc1. tc2) -> (Pi x : tc1'. tc2')
