@@ -8,7 +8,7 @@
 \usepackage{hyperref,cleveref}
 \usepackage{mathtools}
 \usepackage{xcolor}
-\usepackage{ottalt}
+\usepackage[implicitLineBreakHack]{ottalt}
 \usepackage{subcaption}
 \usepackage{cite,url,babelbib}
 \usepackage{todonotes}

@@ -65,6 +65,7 @@ formula :: formula_ ::=
   | formula1 .... formulai   ::  :: dots
   | ts0 def ts		:: :: sdefinition
   | ec0 def ec		:: :: cdefinition
+  | formula \\\\	:: :: lbh {{ tex [[formula]] \ottlinebreakhack }}
 
   | omitted			:: :: omitted
   | mudG ( G ok )		:: :: ctx
