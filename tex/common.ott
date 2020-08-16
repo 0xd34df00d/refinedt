@@ -44,6 +44,7 @@ metavar n {{ tex \gterm n }} ::= {{ com integers }}
 metavar p {{ tex \gterm p }} ::= {{ com proof terms }}
 metavar Pred {{ tex P }} ::= {{ com predicates }}
 metavar tc {{ tex \nonterm{tc} }} ::= {{ com predicates }}
+metavar gamma {{ tex \nonterm{gamma} }} ::= {{ com conversions }}
 metavar f {{ tex \nonterm{f} }} ::= {{ com functions }}
 indexvar i, j ::= {{ com indexes }}
 
