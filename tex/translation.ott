@@ -91,7 +91,7 @@ omitted
 GC |- seconddp sigma : (v : BC ** tc1) -> (v : BC ** tc2)
 
 mudS (G |- ts1' <: ts1)
-mudS (G , x : ts1 |- ts2 <: ts2')
+mudS (G , x : ts1' |- ts2 <: ts2')
 omitted
 ------------------------------------------------------- :: Arr
 GC |- \f : (Pi x : tc1. tc2). \x : tc1'. gamma2 (f (gamma1 x)) : (Pi x : tc1. tc2) -> (Pi x : tc1'. tc2')

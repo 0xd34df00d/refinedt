@@ -119,7 +119,6 @@ with some extra rules for the ADTs and pattern matching.
   \drules[TWF]{$[[ G |- ts ]]$}{type well-formedness}{TrueRef,Base,Conj,Arr,ADT}
   \drules[T]{$[[ G |- es : ts ]]$}{term typing}{Unit,Var,Abs,App,Case,Con,Sub}
   \drules[ST]{$[[ G |- ts1 <: ts2 ]]$}{subtyping}{Base,Arr}
-  \todo[inline]{Verify whether the premise for \textsc{ST-Arr} should have $x : \tau_1$ or $x : \tau'_1$.}
   \caption{Surface language typing}
   \label{fig:surface_typing}
 \end{figure}
@@ -673,13 +672,13 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
           \longmapsto \quad & \ottdruleSTTargetXXArr{}, \\
           \text{where}~&[[ GC = mudG(G ok) ]],       \\
                        &[[ gamma1 = muS(G |- ts1' <: ts1) ]],  \\
-                       &[[ gamma2 = muS(G , x : ts1 |- ts2 <: ts2') ]],  \\
+                       &[[ gamma2 = muS(G , x : ts1' |- ts2 <: ts2') ]],  \\
                        &[[ ec = muE(G |- es : ts) ]].
         \end{align*}
 
         Intuitively, there is a function of type $[[ (x : ts1) -> ts2 ]]$,
         and we need to produce a function of type $[[ (x : ts1') -> ts2' ]]$
-        given $[[ G |- ts1' <: ts1 ]]$ and $[[ G , x : ts1 |- ts2 <: ts2' ]]$.
+        given $[[ G |- ts1' <: ts1 ]]$ and $[[ G , x : ts1' |- ts2 <: ts2' ]]$.
         Then, the first premise is used (via $[[gamma1]]$) to turn $[[x]]$ of type $[[ts1']]$
         into a value of type $[[ts1]]$ that the existing function can consume,
         producing a result of type $[[ ts2 ]]$,
