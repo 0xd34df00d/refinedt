@@ -686,6 +686,14 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
 
         This intuition is then formalized analogously to the previous clause.
     \end{itemize}
+
+    With $\Transub$ defined, translation of the \textsc{T-Sub} rule is straightforward:
+    \begin{align*}
+      & \ottdruleTXXSub{} \longmapsto \ottdruleTTargetXXSub{}, \\
+      \text{where}~&[[ GC = mudG(G ok) ]],       \\
+                   &[[ ec = muE(G |- es : ts) ]], \\
+                   &[[ gamma = muS(G |- ts <: ts') ]].
+    \end{align*}
 \end{itemize}
 
 Having defined these functions, we formulate a simple but useful lemma:

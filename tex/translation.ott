@@ -76,6 +76,12 @@ mudT (G |- < </ li : tsi // i /> >)
 --------------------------------------------------------------------- :: Con
 GC |- < lj = ec> as < </ li : tci // i /> > : < </ li : tci // i /> >
 
+mudE (G |- es : ts)
+mudS (G |- ts <: ts') \\\\
+omitted
+---------------------------------- :: Sub
+GC |- gamma ec : tc'
+
 
 defn GC |- ec1 : ec2 :: :: sttarget :: STTarget_ by
 
