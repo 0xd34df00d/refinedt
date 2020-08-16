@@ -80,4 +80,4 @@ defn GC |- ec1 : ec2 :: :: sttarget :: STTarget_ by
 GC |- sigma : Pi v : BC . tc1 -> tc2
 omitted
 ------------------------------------------------------- :: Base
-GC |- seconddp sigma ec : (v : BC ** sigma v (Pred1 v))
+GC |- seconddp sigma : (v : BC ** tc1) -> (v : BC ** tc2)

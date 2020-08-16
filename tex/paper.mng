@@ -622,16 +622,20 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
       based on VC proof witness stuff?}
 
     We now define yet another translation function, $\Transub$,
-    mapping the subtyping derivations $[[ G |- ts1 <: ts2 ]]$
-    into core language typing derivations
-    (also having the \textsc{T-Sub} above ``in scope'').
+    mapping the derivations of $[[ G |- ts <: ts' ]]$
+    into core language terms of type $[[ muT(G |- ts) -> muT(G |- ts') ]]$.
+    Informally, forgetting about the distinction between surface and core types,
+    a subtyping derivation is turned into a function transforming any term of the subtype into a term of the supertype.
 
-    Consider the last (subtyping) rule in the derivation of $[[ G |- ts <: ts' ]]$:
+    So, consider the last (subtyping) rule in the derivation of $[[ G |- ts <: ts' ]]$:
     \begin{itemize}
       \item \textsc{ST-Base}.
         In this case $[[ts]]$ and $[[ts']]$ are
         $[[ { v : B | r1 } ]]$ and $[[ { v : B | r2 } ]]$
         respectively for some $[[B]]$, $[[r1]]$ and $[[r2]]$.
+        What is needed is a function of type
+        $[[ muT(G |- { v : B | r1 }) -> muT(G |- { v : B | r1 }) ]]$.
+
         \begin{align*}
           & \ottdruleSTXXBase{} \longmapsto \ottdruleSTTargetXXBase{}, \\
           \text{where}~&[[ GC = mudG(G ok) ]],       \\
@@ -640,24 +644,20 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
                        &[[ ec = muE(G |- es : ts) ]].
         \end{align*}
 
-        To build a reasonable translation,
-        we have no choice but require the oracle to produce a core language term $\sigma$ such that
+        This is the base case for the subtyping relation,
+        and this is the only case where the oracle is involved,
+        so we have no choice but require the oracle to produce a core language term $\sigma$ such that
         $[[ GC |- sigma : Pi v : BC . tc1 -> tc2 ]]$,
         where $[[ GC = mudG(G ok) ]]$ and $[[tc1]]$, $[[tc2]]$ correspond to the translations
         of the refinement terms $[[r1]]$, $[[r2]]$ respectively.
 
-        We can then use this term to convert the second component of the dependent pair
-        that $[[es]]$ compiles to.
-        Indeed, if \textsc{ST-Base} applies,
-        then the $[[es]]$ mentioned in \textsc{T-Sub} has the type $[[ { v : B | r1 } ]]$,
-        thus $[[ec = muE(G |- es : ts)]]$ has the type $[[(v : BC ** Pred1 v)]]$ for some $[[Pred1]]$.
-        The above requirement on the oracle implies that $[[Pred1 v]]$ is in fact $[[tc1]]$,
-        so $[[sigma v (Pred1 v)]]$ is well-formed and has type $[[tc2]]$.
+        Intuitively (or, perhaps, Curry-Howard-ly),
+        this $[[ sigma ]]$ witnesses the implication of the refinements $[[ A v. r1 => r2 ]]$,
+        which is isomorphic to the function type $[[ Pi v : BC. tc1 -> tc2 ]]$.
 
-        Given all of the above, it can be seen that the term $[[ seconddp sigma ec ]]$
-        has the type $[[ muT(G |- { v : B | r2 }) ]]$, so, all in all,
-        the translation above makes sense.
-        Again, the formal premises corresponding to the informal argument above are omitted.
+        Then, this $[[ sigma ]]$ can be combined with $[[ seconddp ]]$,
+        producing a function mapping $[[ (v : BC ** tc1) ]]$ onto $[[ (v : BC ** tc2 ) ]]$~---
+        precisely what is needed in case of \textsc{ST-Base}.
 
       \item \textsc{ST-Arr}.
         \begin{align*}
