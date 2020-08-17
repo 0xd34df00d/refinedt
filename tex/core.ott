@@ -37,7 +37,7 @@ ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
   | seconddp			:: M :: map_second_dp {{ tex \secondDP }}
   | sigma				:: M :: oracle_sigma {{ tex \sigma }}
   | gamma				:: M :: subtyping_conversion
-  | Pi v : ec1 . ec2	:: M :: pivabs
+  | Pi ec : ec1 . ec2	:: M :: pivabs
 
 s {{ tex \nonterm{s} }} :: s_ ::= {{ com sorts }}
   | sst				::   :: type {{ com types }}
