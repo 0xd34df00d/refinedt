@@ -3,3 +3,5 @@
 *.ott.tex
 *.bbl
 *.blg
+paper.tex
+*.out
