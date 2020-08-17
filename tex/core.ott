@@ -26,6 +26,7 @@ ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
   | BC					:: M :: base {{ tex \Basec }}
   | ( ec1 , ec2 )		:: M :: pair
   | ( v : ec1 ** ec2 )  :: M :: dvpair
+  | ( x : ec1 ** ec2 )  :: M :: dxpair
   | ( _ : ec1 ** ec2 )  :: M :: dvpairIrrelevant
   | Pred				:: M :: predicate
   | v					:: M :: vvar
