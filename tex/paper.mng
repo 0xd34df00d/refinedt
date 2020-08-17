@@ -99,6 +99,9 @@ The (small-step) operational semantics for the surface language are presented in
 That is largely the usual call-by-value evaluation model
 with some extra rules for the ADTs and pattern matching.
 
+To simplify the exposition and avoid dealing with shadowing,
+all bindings in contexts are assumed to have different names.
+
 \begin{figure}[ht]
   \footnotesize
   \begin{subfigure}{.6\textwidth}
