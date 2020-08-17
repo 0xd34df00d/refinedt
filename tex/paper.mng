@@ -212,6 +212,12 @@ and the rules for our extensions are defined in \figref{core_typing_exts}.
 Note that the \textsc{CT-ADTCase} rule uses $\equiv$ denoting the equality
 which is a derived form defined later.
 
+As a general convention,
+core entities corresponding to the surface language will be denoted by the same symbol, but with a $\widehat{\text{hat}}$.
+For instance, core typing contexts are denoted as $[[ GC ]]$ and core expressions are denoted as $[[ ec ]]$.
+Although there is no separate syntactic notion of a type,
+$[[ tc ]]$ is used a a metavariable where a type (an inhabitant of $\star$) is expected.
+
 Even though we believe that our core language still enjoys the strong normalization property,
 we still explicitly define the evaluation rules (\figref{core_opsem}).
 Firstly, this allows fixing a specific evaluation strategy mirroring the one for the surface language,
@@ -247,10 +253,6 @@ deserves some special attention.
   \caption{Core language small-step operational semantics}
   \label{fig:core_opsem}
 \end{figure}
-
-Although the syntax doesn't mention $\nonterm{tc}$,
-we will use it as a metavariable
-where a type (an inhabitant of $\star$) is typically used.
 
 In addition to that, we will somewhat frivolously use $\hat B$
 to denote the core language analogue of a surface language base type $B$,
