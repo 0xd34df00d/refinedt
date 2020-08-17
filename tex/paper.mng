@@ -343,17 +343,17 @@ and state some straightforward facts that will be useful later:
 \renewcommand{\ottdrulename}[1]{}
 
 The surface language ultimately gets translated into the core language.
-What really matters for practical purposes is the translation of the terms since
+What really matters for practical purposes is the translation of the terms, since
 terms, not types or contexts, will eventually be compiled down to some executable code.
 On the other hand, it seems desirable to ensure that the terms
 that are well-typed in the surface language
 are accepted by the core type checker after the translation,
-since this provides some level of guarantee that the translation ``makes sense''.
+providing some level of guarantee that the translation ``makes sense''.
 
-In particular, note that the oracle plays a crucial role in typechecking of the surface language,
-so it is natural to expect that its output will also be used during any such translation,
+As the oracle plays a crucial role in type checking the surface language,
+it is natural to expect that it will also be used during any such translation,
 for instance, to produce core language proofs that VCs hold.
-The only trace of the oracle's work is in the typing derivation
+The only trace of the oracle's work is in the typing derivations
 (namely, in the subtyping relation check and the \textsc{T-Sub} typing rule),
 so we choose to do the translation not on \emph{terms},
 but rather on \emph{well-typedness derivations} for the terms.
@@ -375,7 +375,7 @@ and produces a core language context.
 We also define two helper functions, $\tranty$ and $\tranterm$,
 invoking $\Tranty$ and $\Tranterm$ and extracting just the type and term component respectively.
 
-All in all, our goal is to define $\Tranctx$, $\Tranty$ and $\Tranterm$
+All in all, we define $\Tranctx$, $\Tranty$ and $\Tranterm$
 with ``metatypes''
 \begin{align*}
   \Tranctx  & : [[ G ok ]]         \longmapsto [[ GC ]],             \\
