@@ -31,12 +31,16 @@ ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
   | Pred				:: M :: predicate
   | v					:: M :: vvar
   | f					:: M :: fvar
-  | \ ec : ec1 . ec2	:: M :: lamvabs {{ com abstraction on v-vars }}
+  | \ bnds : ec1 . ec2	:: M :: lambndsabs
   | \ _ : ec1 . ec2		:: M :: lamirrabs {{ com abstraction irrelevant }}
   | seconddp			:: M :: map_second_dp {{ tex \secondDP }}
   | sigma				:: M :: oracle_sigma {{ tex \sigma }}
   | gamma				:: M :: subtyping_conversion
-  | Pi ec : ec1 . ec2	:: M :: pivabs
+  | Pi bnds : ec . ec'	:: M :: pibndsabs
+
+bnds :: bnds_ ::=
+  | ec1 , bnds			:: :: pair
+  | ec					:: :: ec
 
 s {{ tex \nonterm{s} }} :: s_ ::= {{ com sorts }}
   | sst				::   :: type {{ com types }}
