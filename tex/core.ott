@@ -39,7 +39,7 @@ ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
   | Pi bnds : ec . ec'	:: M :: pibndsabs
 
 bnds :: bnds_ ::=
-  | ec1 , bnds			:: :: pair
+  | ec , bnds			:: :: pair
   | ec					:: :: ec
 
 s {{ tex \nonterm{s} }} :: s_ ::= {{ com sorts }}
