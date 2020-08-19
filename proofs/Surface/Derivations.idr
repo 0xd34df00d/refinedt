@@ -12,11 +12,11 @@ syntax [γ] "|-" [τ] = TWF γ τ
 syntax [y] "|-" [ε] ":" [τ] = T γ ε τ
 
 mutual
-  data TCTX : (γ : Context) -> Type where
+  data TCTX : (γ : Ctx) -> Type where
     TCTX_Empty  : TCTX Empty
     TCTX_Bind   : TCTX γ -> (γ |- τ) -> TCTX ((var, τ) :: γ)
 
-  data TWF : (γ : Context) -> (τ : SType) -> Type where
+  data TWF : (γ : Ctx) -> (τ : SType) -> Type where
     TWF_TrueRef : γ |- { v : b | Τ }
     TWF_Base    : (((v, { v : b1 | Τ }) :: γ) |- ε1 : { v2 : b' | Τ })
                -> (((v, { v : b1 | Τ }) :: γ) |- ε2 : { v2 : b' | Τ })
@@ -30,4 +30,4 @@ mutual
     TWF_ADT     : All (\(_, conTy) => γ |- conTy) adtCons
                -> (γ |- SADT adtCons)
 
-  data T : (γ : Context) -> (ε : STerm) -> (τ : SType) -> Type where
+  data T : (γ : Ctx) -> (ε : STerm) -> (τ : SType) -> Type where

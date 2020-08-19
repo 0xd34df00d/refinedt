@@ -47,15 +47,15 @@ isValue SUnit = True
 isValue (SCon _ body _) = isValue body
 isValue _ = False
 
-data Context = MkContext (List (Var, SType))
+data Ctx = MkCtx (List (Var, SType))
 
 -- Helpers
 
-Empty : Context
-Empty = MkContext []
+Empty : Ctx
+Empty = MkCtx []
 
-(::) : (Var, SType) -> Context -> Context
-(::) p (MkContext lst) = MkContext $ p :: lst
+(::) : (Var, SType) -> Ctx -> Ctx
+(::) p (MkCtx lst) = MkCtx $ p :: lst
 
 Τ : Refinement
 Τ = SUnit |=| SUnit
