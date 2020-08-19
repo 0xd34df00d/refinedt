@@ -34,7 +34,7 @@ mutual
   ADTDef = List (ADTLabel, SType)
 
   data SType : Type where
-    SRBT : BaseType -> Refinement -> SType
+    SRBT : Var -> BaseType -> Refinement -> SType
     SArr : (var : Var) -> (t1 : SType) -> (t2 : SType) -> SType
     SADT : ADTDef -> SType
 
