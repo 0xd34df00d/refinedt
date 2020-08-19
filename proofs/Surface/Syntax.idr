@@ -59,3 +59,5 @@ Empty = MkContext []
 
 Τ : Refinement
 Τ = SUnit |=| SUnit
+
+syntax "{" [v] ":" [b] "|" [r] "}" = SRBT v b r
