@@ -14,7 +14,7 @@ record Var where
 mutual
   data STerm : Type where
     SVar  : (var : Var) -> STerm
-    SLam  : (var : Var) -> (varTy : SType) -> (body : STerm) -> STerm
+    SLam  : (var : Var) -> (t : SType) -> (e : STerm) -> STerm
     SApp  : (e1 : STerm) -> (e2 : STerm) -> STerm
     SUnit : STerm
     SCase : (scrut : STerm) -> (branches : List CaseBranch) -> STerm
@@ -32,14 +32,15 @@ mutual
   infixl 7 |=|
   data Refinement = (|=|) STerm STerm
                   | (&) Refinement Refinement
+  %name Refinement r, r1, r2
 
   ADTCons : Type
   ADTCons = List (ADTLabel, SType)
 
   data SType : Type where
-    SRBT : Var -> BaseType -> Refinement -> SType
+    SRBT : (var : Var) -> (b : BaseType) -> (ref : Refinement) -> SType
     SArr : (var : Var) -> (t1 : SType) -> (t2 : SType) -> SType
-    SADT : ADTCons -> SType
+    SADT : (cons : ADTCons) -> SType
 
 isValue : STerm -> Bool
 isValue (SVar _) = True

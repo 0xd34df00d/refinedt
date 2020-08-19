@@ -8,26 +8,26 @@ import Surface.Syntax
 %access public export
 
 syntax [γ] "ok" = TCTX γ
-syntax [γ] "|-" [τ] = TWF γ τ 
-syntax [y] "|-" [ε] ":" [τ] = T γ ε τ
+syntax [γ] "|-" [t] = TWF γ t
+syntax [y] "|-" [e] ":" [t] = T γ e t
 
 mutual
   data TCTX : (γ : Ctx) -> Type where
     TCTX_Empty  : TCTX Empty
-    TCTX_Bind   : TCTX γ -> (γ |- τ) -> TCTX ((var, τ) :: γ)
+    TCTX_Bind   : TCTX γ -> (γ |- t) -> TCTX ((var, t) :: γ)
 
-  data TWF : (γ : Ctx) -> (τ : SType) -> Type where
+  data TWF : (γ : Ctx) -> (t : SType) -> Type where
     TWF_TrueRef : γ |- { v : b | Τ }
-    TWF_Base    : (((v, { v : b1 | Τ }) :: γ) |- ε1 : { v2 : b' | Τ })
-               -> (((v, { v : b1 | Τ }) :: γ) |- ε2 : { v2 : b' | Τ })
-               -> (γ |- { v : b | ε1 |=| ε2 })
+    TWF_Base    : (((v, { v : b1 | Τ }) :: γ) |- e1 : { v2 : b' | Τ })
+               -> (((v, { v : b1 | Τ }) :: γ) |- e2 : { v2 : b' | Τ })
+               -> (γ |- { v : b | e1 |=| e2 })
     TWF_Conj    : (γ |- { v : b | r1 })
                -> (γ |- { v : b | r2 })
                -> (γ |- { v : b | r1 & r2 })
-    TWF_Arr     : (γ |- τ1)
-               -> (((x, τ1) :: γ) |- τ2)
-               -> (γ |- SArr x τ1 τ2)
+    TWF_Arr     : (γ |- t1)
+               -> (((x, t1) :: γ) |- t2)
+               -> (γ |- SArr x t1 t2)
     TWF_ADT     : All (\(_, conTy) => γ |- conTy) adtCons
                -> (γ |- SADT adtCons)
 
-  data T : (γ : Ctx) -> (ε : STerm) -> (τ : SType) -> Type where
+  data T : (γ : Ctx) -> (e : STerm) -> (t : SType) -> Type where
