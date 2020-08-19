@@ -62,3 +62,22 @@ Empty = MkCtx []
 Τ = SUnit |=| SUnit
 
 syntax "{" [v] ":" [b] "|" [r] "}" = SRBT v b r
+
+mutual
+  partial
+  SubstInType : Var -> STerm -> SType -> SType
+  SubstInType x e (SRBT var b ref) = SRBT var b $ SubstInRef x e ref
+  SubstInType x e (SArr var t1 t2) = SArr var (SubstInType x e t1) (SubstInType x e t2)
+  SubstInType x e (SADT cons) = SADT $ (\(lbl, ty) => (lbl, SubstInType x e ty)) <$> cons
+
+  SubstInRef : Var -> STerm -> Refinement -> Refinement
+  SubstInRef x e (e1 |=| e2) = SubstInTerm x e e1 |=| SubstInTerm x e e2
+  SubstInRef x e (r1 & r2) = SubstInRef x e r1 & SubstInRef x e r2
+
+  SubstInTerm : Var -> STerm -> STerm -> STerm
+  SubstInTerm x e (SVar var) = ?SubstInTerm_rhs_1
+  SubstInTerm x e (SLam var t y) = ?SubstInTerm_rhs_2
+  SubstInTerm x e (SApp e1 e2) = SApp (SubstInTerm x e e1) (SubstInTerm x e e2)
+  SubstInTerm x e SUnit = SUnit
+  SubstInTerm x e (SCase scrut branches) = ?SubstInTerm_rhs_5
+  SubstInTerm x e (SCon label body adtCons) = ?SubstInTerm_rhs_6
