@@ -28,7 +28,10 @@ mutual
 
   data BaseType = BUnit
 
-  data Refinement = MkRefinement (List (STerm, STerm))
+  infixl 6 &
+  infixl 7 |=|
+  data Refinement = (|=|) STerm STerm
+                  | (&) Refinement Refinement
 
   ADTDef : Type
   ADTDef = List (ADTLabel, SType)
@@ -53,3 +56,6 @@ Empty = MkContext []
 
 (::) : (Var, SType) -> Context -> Context
 (::) p (MkContext lst) = MkContext $ p :: lst
+
+Τ : Refinement
+Τ = SUnit |=| SUnit
