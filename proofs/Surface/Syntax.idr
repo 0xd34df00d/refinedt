@@ -18,7 +18,7 @@ mutual
     SApp  : (e1 : STerm) -> (e2 : STerm) -> STerm
     SUnit : STerm
     SCase : (scrut : STerm) -> (branches : List CaseBranch) -> STerm
-    SCon  : (label : ADTLabel) -> (body : STerm) -> (adtTy : ADTDef) -> STerm
+    SCon  : (label : ADTLabel) -> (body : STerm) -> (adtCons : ADTCons) -> STerm
 
   record CaseBranch where
     constructor MkCaseBranch
@@ -33,13 +33,13 @@ mutual
   data Refinement = (|=|) STerm STerm
                   | (&) Refinement Refinement
 
-  ADTDef : Type
-  ADTDef = List (ADTLabel, SType)
+  ADTCons : Type
+  ADTCons = List (ADTLabel, SType)
 
   data SType : Type where
     SRBT : Var -> BaseType -> Refinement -> SType
     SArr : (var : Var) -> (t1 : SType) -> (t2 : SType) -> SType
-    SADT : ADTDef -> SType
+    SADT : ADTCons -> SType
 
 isValue : STerm -> Bool
 isValue (SVar _) = True
