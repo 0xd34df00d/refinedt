@@ -1,8 +1,7 @@
-module Surface
+module Surface.Syntax
 
 %default total
-
--- Syntax
+%access public export
 
 record ADTLabel where
   constructor MkADTLabel
@@ -46,3 +45,11 @@ isValue (SCon _ body _) = isValue body
 isValue _ = False
 
 data Context = MkContext (List (Var, SType))
+
+-- Helpers
+
+Empty : Context
+Empty = MkContext []
+
+(::) : (Var, SType) -> Context -> Context
+(::) p (MkContext lst) = MkContext $ p :: lst
