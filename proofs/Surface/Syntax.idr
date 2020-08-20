@@ -11,6 +11,15 @@ record Var where
   constructor MkVar
   var : String
 
+Eq Var where
+  (==) v1 v2 = var v1 == var v2
+  (/=) v1 v2 = var v1 /= var v2
+
+DecEq Var where
+  decEq (MkVar var1) (MkVar var2) = case decEq var1 var2 of
+                                         Yes Refl => Yes Refl
+                                         No contra => No $ \Refl => contra Refl
+
 mutual
   data STerm : Type where
     SVar  : (var : Var) -> STerm
