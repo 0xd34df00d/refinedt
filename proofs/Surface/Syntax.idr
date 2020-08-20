@@ -57,7 +57,9 @@ isValue SUnit = True
 isValue (SCon _ body _) = isValue body
 isValue _ = False
 
-data Ctx = MkCtx (List (Var, SType))
+record Ctx where
+  constructor MkCtx
+  bindings : List (Var, SType)
 
 -- Helpers
 
