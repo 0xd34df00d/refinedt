@@ -5,7 +5,7 @@ module Surface.Syntax
 
 record ADTLabel where
   constructor MkADTLabel
-  label : String
+  lbl : String
 
 record Var where
   constructor MkVar
@@ -27,11 +27,11 @@ mutual
     SApp  : (e1 : STerm) -> (e2 : STerm) -> STerm
     SUnit : STerm
     SCase : (scrut : STerm) -> (branches : List CaseBranch) -> STerm
-    SCon  : (label : ADTLabel) -> (body : STerm) -> (adtCons : ADTCons) -> STerm
+    SCon  : (lbl : ADTLabel) -> (body : STerm) -> (adtCons : ADTCons) -> STerm
 
   record CaseBranch where
     constructor MkCaseBranch
-    label : ADTLabel
+    lbl : ADTLabel
     var : Var
     body : STerm
 
