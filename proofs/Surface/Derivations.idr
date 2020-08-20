@@ -31,3 +31,5 @@ mutual
                -> (γ |- SADT adtCons)
 
   data T : (γ : Ctx) -> (e : STerm) -> (t : SType) -> Type where
+
+  data ST : (γ : Ctx) -> (t1 : SType) -> (t2 : SType) -> Type where
