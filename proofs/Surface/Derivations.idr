@@ -11,7 +11,7 @@ import Surface.Syntax
 %access public export
 
 syntax [g] "ok" = TCTX g
-syntax [g] "|-" [t] = TWF g t
+syntax [h] "|-" [t] = TWF h t
 syntax [g] "|-" [e] ":" [t] = T g e t
 syntax [g] "|-" [t] "<:" [t'] = ST g t t'
 
