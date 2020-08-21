@@ -31,6 +31,13 @@ mutual
     TWF_ADT     : All (\conTy => γ |- conTy) adtCons
                -> (γ |- SADT adtCons)
 
+  data BranchesHaveType : (cons : ADTCons n) -> (branches : CaseBranches n) -> (t' : SType) -> Type where
+    NoBranches    : BranchesHaveType [] [] t'
+    OneMoreBranch : {conTy : SType} -> {var : Var} -> {body : STerm}
+                 -> (((var, conTy) :: γ ) |- body : t')         -- TODO x fresh name in context?
+                 -> (rest : BranchesHaveType cons branches t')
+                 -> BranchesHaveType (conTy :: cons) (MkCaseBranch var body :: branches) t'
+
   data T : (γ : Ctx) -> (e : STerm) -> (t : SType) -> Type where
     T_Unit      : γ |- SUnit : { v : BUnit | Τ }
     T_Var       : Elem (x, t) γ'
@@ -40,5 +47,9 @@ mutual
     T_App       : (γ |- e1 : SArr x t1 t2)
                -> (γ |- e2 : t1)
                -> (γ |- (SApp e1 e2) : substInType x e2 t2)
+    T_Case      : (γ |- t')
+               -> (γ |- e : SADT cons)
+               -> BranchesHaveType cons branches t'
+               -> (γ |- (SCase e branches) : t')
 
   data ST : (γ : Ctx) -> (t1 : SType) -> (t2 : SType) -> Type where
