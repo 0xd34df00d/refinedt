@@ -1,6 +1,7 @@
 module Surface.Derivations
 
 import Data.List
+import Data.So
 import Data.Vect
 import Data.Vect.Quantifiers
 
@@ -12,6 +13,7 @@ import Surface.Syntax
 syntax [g] "ok" = TCTX g
 syntax [g] "|-" [t] = TWF g t
 syntax [g] "|-" [e] ":" [t] = T g e t
+syntax [g] "|-" [t] "<:" [t'] = ST g t t'
 
 interface Oracle rcl where
   decide : rcl -> (var : Var) -> (b : BaseType) -> (r1 : Refinement) -> (r2 : Refinement) -> Maybe () -- TODO refine the return type
@@ -58,5 +60,15 @@ mutual
     T_Con       : (g |- e : tj)
                -> (g |- SADT cons)
                -> (g |- (SCon idx e cons) : SADT cons)
+    T_Sub       : (g |- e : t)
+               -> (g |- t <: t')
+               -> (g |- e : t')
 
   data ST : (g : Ctx) -> (t1 : SType) -> (t2 : SType) -> Type where
+    ST_Base     : Oracle rcl
+               => (oracle : rcl)
+               -> So (isJust (decide oracle v b r1 r2))
+               -> (g |- { v : b | r1 } <: { v : b | r2 })
+    ST_Arr      : (g |- t1' <: t1)
+               -> (((x, t1') :: g) |- t2 <: t2')
+               -> (g |- (SArr x t1 t2) <: (SArr x t1' t2'))
