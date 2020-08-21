@@ -13,6 +13,9 @@ syntax [g] "ok" = TCTX g
 syntax [g] "|-" [t] = TWF g t
 syntax [g] "|-" [e] ":" [t] = T g e t
 
+interface Oracle rcl where
+  decide : rcl -> (var : Var) -> (b : BaseType) -> (r1 : Refinement) -> (r2 : Refinement) -> Maybe () -- TODO refine the return type
+
 mutual
   data TCTX : (g : Ctx) -> Type where
     TCTX_Empty  : TCTX Empty
