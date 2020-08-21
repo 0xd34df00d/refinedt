@@ -1,5 +1,6 @@
 module Surface.Derivations
 
+import Data.List
 import Data.Vect
 import Data.Vect.Quantifiers
 
