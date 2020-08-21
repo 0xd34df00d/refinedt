@@ -19,8 +19,8 @@ mutual
 
   data TWF : (γ : Ctx) -> (t : SType) -> Type where
     TWF_TrueRef : γ |- { v : b | Τ }
-    TWF_Base    : (((v, { v : b1 | Τ }) :: γ) |- e1 : { v2 : b' | Τ })
-               -> (((v, { v : b1 | Τ }) :: γ) |- e2 : { v2 : b' | Τ })
+    TWF_Base    : (((v, { v1 : b | Τ }) :: γ) |- e1 : { v2 : b' | Τ })
+               -> (((v, { v1 : b | Τ }) :: γ) |- e2 : { v2 : b' | Τ })
                -> (γ |- { v : b | e1 |=| e2 })
     TWF_Conj    : (γ |- { v : b | r1 })
                -> (γ |- { v : b | r2 })
