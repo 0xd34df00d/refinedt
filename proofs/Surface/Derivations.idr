@@ -1,7 +1,7 @@
 module Surface.Derivations
 
-import Data.List
-import Data.List.Quantifiers
+import Data.Vect
+import Data.Vect.Quantifiers
 
 import Surface.Syntax
 
@@ -28,7 +28,7 @@ mutual
     TWF_Arr     : (γ |- t1)
                -> (((x, t1) :: γ) |- t2)
                -> (γ |- SArr x t1 t2)
-    TWF_ADT     : All (\(_, conTy) => γ |- conTy) adtCons
+    TWF_ADT     : All (\conTy => γ |- conTy) adtCons
                -> (γ |- SADT adtCons)
 
   data T : (γ : Ctx) -> (e : STerm) -> (t : SType) -> Type where

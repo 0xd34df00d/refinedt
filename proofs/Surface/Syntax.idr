@@ -1,11 +1,9 @@
 module Surface.Syntax
 
+import Data.Vect
+
 %default total
 %access public export
-
-record ADTLabel where
-  constructor MkADTLabel
-  lbl : String
 
 record Var where
   constructor MkVar
@@ -26,12 +24,11 @@ mutual
     SLam  : (var : Var) -> (t : SType) -> (e : STerm) -> STerm
     SApp  : (e1 : STerm) -> (e2 : STerm) -> STerm
     SUnit : STerm
-    SCase : (scrut : STerm) -> (branches : List CaseBranch) -> STerm
-    SCon  : (lbl : ADTLabel) -> (body : STerm) -> (adtCons : ADTCons) -> STerm
+    SCase : (scrut : STerm) -> (branches : Vect n CaseBranch) -> STerm
+    SCon  : (idx : Fin n) -> (body : STerm) -> (adtCons : ADTCons n) -> STerm
 
   record CaseBranch where
     constructor MkCaseBranch
-    lbl : ADTLabel
     var : Var
     body : STerm
 
@@ -43,13 +40,13 @@ mutual
                   | (&) Refinement Refinement
   %name Refinement r, r1, r2
 
-  ADTCons : Type
-  ADTCons = List (ADTLabel, SType)
+  ADTCons : Nat -> Type
+  ADTCons n = Vect n SType
 
   data SType : Type where
     SRBT : (var : Var) -> (b : BaseType) -> (ref : Refinement) -> SType
     SArr : (var : Var) -> (t1 : SType) -> (t2 : SType) -> SType
-    SADT : (cons : ADTCons) -> SType
+    SADT : (cons : ADTCons n) -> SType
 
 isValue : STerm -> Bool
 isValue (SVar _) = True
@@ -94,18 +91,18 @@ mutual
   substInTerm x e (SApp e1 e2) = SApp (substInTerm x e e1) (substInTerm x e e2)
   substInTerm x e SUnit = SUnit
   substInTerm x e (SCase scrut branches) = SCase (substInTerm x e scrut) (substInBranches x e branches)
-  substInTerm x e (SCon lbl body adtCons) = SCon lbl (substInTerm x e body) (substInADT x e adtCons)
+  substInTerm x e (SCon idx body adtCons) = SCon idx (substInTerm x e body) (substInADT x e adtCons)
 
-  substInADT : Var -> STerm -> ADTCons -> ADTCons
+  substInADT : Var -> STerm -> ADTCons n -> ADTCons n
   substInADT x e [] = []
-  substInADT x e ((lbl, ty) :: xs) = (lbl, substInType x e ty) :: substInADT x e xs
+  substInADT x e (ty :: xs) = substInType x e ty :: substInADT x e xs
   -- TODO can we have `map` here while keeping the totality checker happy?
 
-  substInBranches : Var -> STerm -> List CaseBranch -> List CaseBranch
+  substInBranches : Var -> STerm -> Vect n CaseBranch -> Vect n CaseBranch
   substInBranches x e [] = []
-  substInBranches x e (b@(MkCaseBranch lbl var body) :: bs) =
+  substInBranches x e (b@(MkCaseBranch var body) :: bs) =
     let this = case decEq x var of
                     Yes _ => b
-                    No _ => MkCaseBranch lbl var $ substInTerm x e body
+                    No _ => MkCaseBranch var $ substInTerm x e body
         rest = substInBranches x e bs
     in this :: rest
