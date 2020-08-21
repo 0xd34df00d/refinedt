@@ -40,8 +40,8 @@ mutual
 
   data T : (γ : Ctx) -> (e : STerm) -> (t : SType) -> Type where
     T_Unit      : γ |- SUnit : { v : BUnit | Τ }
-    T_Var       : Elem (x, t) γ'
-               -> (MkCtx γ') |- x : t
+    T_Var       : Elem (x, t) (bindings γ)
+               -> (γ |- (SVar x) : t)
     T_Abs       : (((x, t1) :: γ) |- e : t2)   -- TODO do we really need the arrow TWF premise?
                -> (γ |- (SLam x t1 e) : SArr x t1 t2)
     T_App       : (γ |- e1 : SArr x t1 t2)
@@ -51,5 +51,8 @@ mutual
                -> (γ |- e : SADT cons)
                -> BranchesHaveType cons branches t'
                -> (γ |- (SCase e branches) : t')
+    T_Con       : (γ |- e : tj)
+               -> (γ |- SADT cons)
+               -> (γ |- (SCon idx e cons) : SADT cons)
 
   data ST : (γ : Ctx) -> (t1 : SType) -> (t2 : SType) -> Type where
