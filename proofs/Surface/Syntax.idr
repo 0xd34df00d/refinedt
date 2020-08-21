@@ -24,7 +24,7 @@ mutual
     SLam  : (var : Var) -> (t : SType) -> (e : STerm) -> STerm
     SApp  : (e1 : STerm) -> (e2 : STerm) -> STerm
     SUnit : STerm
-    SCase : (scrut : STerm) -> (branches : Vect n CaseBranch) -> STerm
+    SCase : (scrut : STerm) -> (branches : CaseBranches n) -> STerm
     SCon  : (idx : Fin n) -> (body : STerm) -> (adtCons : ADTCons n) -> STerm
 
   record CaseBranch where
@@ -42,6 +42,9 @@ mutual
 
   ADTCons : Nat -> Type
   ADTCons n = Vect n SType
+
+  CaseBranches : Nat -> Type
+  CaseBranches n = Vect n CaseBranch
 
   data SType : Type where
     SRBT : (var : Var) -> (b : BaseType) -> (ref : Refinement) -> SType
@@ -98,7 +101,7 @@ mutual
   substInADT x e (ty :: xs) = substInType x e ty :: substInADT x e xs
   -- TODO can we have `map` here while keeping the totality checker happy?
 
-  substInBranches : Var -> STerm -> Vect n CaseBranch -> Vect n CaseBranch
+  substInBranches : Var -> STerm -> CaseBranches n -> CaseBranches n
   substInBranches x e [] = []
   substInBranches x e (b@(MkCaseBranch var body) :: bs) =
     let this = case decEq x var of
