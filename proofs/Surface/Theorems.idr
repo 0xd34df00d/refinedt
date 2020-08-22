@@ -10,6 +10,15 @@ import Surface.Derivations
 
 %default total
 
+data Sublist : (sub : List a) -> (ls : List a) -> Type where
+  EmptyIsSublist  : Sublist [] ls
+  IgnoreHead      : Sublist sub ls -> Sublist sub (_ :: ls)
+  AppendBoth      : Sublist sub ls -> Sublist (x :: sub) (x :: ls)
+
+sublistSelf : (ls : List a) -> Sublist ls ls
+sublistSelf [] = EmptyIsSublist
+sublistSelf (_ :: xs) = AppendBoth $ sublistSelf xs
+
 -- Well-typedness of a term in a context implies well-formedness of said context
 T_implies_TCTX : (g |- e : t) -> g ok
 T_implies_TCTX (T_Unit gok) = gok
@@ -21,17 +30,9 @@ T_implies_TCTX (T_Case _ subDer _) = T_implies_TCTX subDer
 T_implies_TCTX (T_Con subDer _) = T_implies_TCTX subDer
 T_implies_TCTX (T_Sub subDer _) = T_implies_TCTX subDer
 
-
 -- Well-typedness of a term in a context implies well-formedness of its type in said context
 
-data Sublist : (sub : List a) -> (ls : List a) -> Type where
-  EmptyIsSublist  : Sublist [] ls
-  IgnoreHead      : Sublist sub ls -> Sublist sub (_ :: ls)
-  AppendBoth      : Sublist sub ls -> Sublist (x :: sub) (x :: ls)
 
-sublistSelf : (ls : List a) -> Sublist ls ls
-sublistSelf [] = EmptyIsSublist
-sublistSelf (_ :: xs) = AppendBoth $ sublistSelf xs
 
 mutual
   twfThinning : Sublist g g' -> (g |- t) -> (g' |- t)

@@ -18,6 +18,8 @@ DecEq Var where
                                          Yes Refl => Yes Refl
                                          No contra => No $ \Refl => contra Refl
 
+data BaseType = BUnit
+
 mutual
   data STerm : Type where
     SVar  : (var : Var) -> STerm
@@ -27,12 +29,15 @@ mutual
     SCase : (scrut : STerm) -> (branches : CaseBranches n) -> STerm
     SCon  : (idx : Fin n) -> (body : STerm) -> (adtCons : ADTCons n) -> STerm
 
+  data SType : Type where
+    SRBT : (var : Var) -> (b : BaseType) -> (ref : Refinement) -> SType
+    SArr : (var : Var) -> (t1 : SType) -> (t2 : SType) -> SType
+    SADT : (cons : ADTCons n) -> SType
+
   record CaseBranch where
     constructor MkCaseBranch
     var : Var
     body : STerm
-
-  data BaseType = BUnit
 
   infixl 6 &
   infixl 7 |=|
@@ -45,11 +50,6 @@ mutual
 
   CaseBranches : Nat -> Type
   CaseBranches n = Vect n CaseBranch
-
-  data SType : Type where
-    SRBT : (var : Var) -> (b : BaseType) -> (ref : Refinement) -> SType
-    SArr : (var : Var) -> (t1 : SType) -> (t2 : SType) -> SType
-    SADT : (cons : ADTCons n) -> SType
 
 isValue : STerm -> Bool
 isValue (SVar _) = True
