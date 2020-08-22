@@ -57,17 +57,10 @@ isValue SUnit = True
 isValue (SCon _ body _) = isValue body
 isValue _ = False
 
-record Ctx where
-  constructor MkCtx
-  bindings : List (Var, SType)
+Ctx : Type
+Ctx = List (Var, SType)
 
 -- Helpers
-
-Empty : Ctx
-Empty = MkCtx []
-
-(::) : (Var, SType) -> Ctx -> Ctx
-(::) p (MkCtx lst) = MkCtx $ p :: lst
 
 Τ : Refinement
 Τ = SUnit |=| SUnit

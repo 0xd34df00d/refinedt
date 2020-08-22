@@ -20,7 +20,7 @@ interface Oracle rcl where
 
 mutual
   data TCTX : (g : Ctx) -> Type where
-    TCTX_Empty  : TCTX Empty
+    TCTX_Empty  : TCTX []
     TCTX_Bind   : TCTX g -> (g |- t) -> TCTX ((var, t) :: g)
 
   data TWF : (g : Ctx) -> (t : SType) -> Type where
@@ -47,7 +47,7 @@ mutual
   data T : (g : Ctx) -> (e : STerm) -> (t : SType) -> Type where
     T_Unit      : g ok
                -> g |- SUnit : { v : BUnit | Τ }
-    T_Var       : Elem (x, t) (bindings g)
+    T_Var       : Elem (x, t) g
                -> (g |- (SVar x) : t)
     T_Abs       : (((x, t1) :: g) |- e : t2)   -- TODO do we really need the arrow TWF premise?
                -> (g |- (SLam x t1 e) : SArr x t1 t2)
