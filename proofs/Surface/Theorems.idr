@@ -53,3 +53,12 @@ mutual
   anyTypeInCtxIsWellformed (TCTX_Bind init _) (There later) = twfWeaken $ anyTypeInCtxIsWellformed init later
 
   tThinning : Sublist g g' -> (g |- e : t) -> (g' |- e : t)
+
+  T_implies_TWF : (g |- e : t) -> (g |- t)
+  T_implies_TWF (T_Unit _) = TWF_TrueRef
+  T_implies_TWF (T_Var gok elemPrf) = anyTypeInCtxIsWellformed gok elemPrf
+  T_implies_TWF (T_Abs y) = ?T_implies_TWF_rhs_3
+  T_implies_TWF (T_App y z) = ?T_implies_TWF_rhs_4
+  T_implies_TWF (T_Case x y z) = ?T_implies_TWF_rhs_5
+  T_implies_TWF (T_Con x y) = ?T_implies_TWF_rhs_6
+  T_implies_TWF (T_Sub x y) = ?T_implies_TWF_rhs_7
