@@ -20,3 +20,36 @@ T_implies_TCTX (T_App subDer _) = T_implies_TCTX subDer
 T_implies_TCTX (T_Case _ subDer _) = T_implies_TCTX subDer
 T_implies_TCTX (T_Con subDer _) = T_implies_TCTX subDer
 T_implies_TCTX (T_Sub subDer _) = T_implies_TCTX subDer
+
+
+-- Well-typedness of a term in a context implies well-formedness of its type in said context
+
+data Sublist : (sub : List a) -> (ls : List a) -> Type where
+  EmptyIsSublist  : Sublist [] ls
+  IgnoreHead      : Sublist sub ls -> Sublist sub (_ :: ls)
+  AppendBoth      : Sublist sub ls -> Sublist (x :: sub) (x :: ls)
+
+sublistSelf : (ls : List a) -> Sublist ls ls
+sublistSelf [] = EmptyIsSublist
+sublistSelf (_ :: xs) = AppendBoth $ sublistSelf xs
+
+mutual
+  twfThinning : Sublist g g' -> (g |- t) -> (g' |- t)
+  twfThinning _ TWF_TrueRef = TWF_TrueRef
+  twfThinning subPrf (TWF_Base t1 t2) = TWF_Base (tThinning (AppendBoth subPrf) t1) (tThinning (AppendBoth subPrf) t2)
+  twfThinning subPrf (TWF_Conj twfr1 twfr2) = TWF_Conj (twfThinning subPrf twfr1) (twfThinning subPrf twfr2)
+  twfThinning subPrf (TWF_Arr twf1 twf2) = TWF_Arr (twfThinning subPrf twf1) (twfThinning (AppendBoth subPrf) twf2)
+  twfThinning subPrf (TWF_ADT preds) = TWF_ADT (thinAll subPrf preds)
+    where
+      thinAll : Sublist g g' -> All (\t => g |- t) ls -> All (\t => g' |- t) ls
+      thinAll _ [] = []
+      thinAll subPrf (a :: as) = twfThinning subPrf a :: thinAll subPrf as
+
+  twfWeaken : (g |- t) -> ((_ :: g) |- t)
+  twfWeaken {g} = twfThinning (IgnoreHead $ sublistSelf g)
+
+  anyTypeInCtxIsWellformed : (g ok) -> Elem (x, t) g -> (g |- t)
+  anyTypeInCtxIsWellformed (TCTX_Bind _ twfPrf) Here = twfWeaken twfPrf
+  anyTypeInCtxIsWellformed (TCTX_Bind init _) (There later) = twfWeaken $ anyTypeInCtxIsWellformed init later
+
+  tThinning : Sublist g g' -> (g |- e : t) -> (g' |- e : t)
