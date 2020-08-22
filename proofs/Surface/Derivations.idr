@@ -45,7 +45,8 @@ mutual
                  -> BranchesHaveType (conTy :: cons) (MkCaseBranch var body :: branches) t'
 
   data T : (g : Ctx) -> (e : STerm) -> (t : SType) -> Type where
-    T_Unit      : g |- SUnit : { v : BUnit | Τ }
+    T_Unit      : g ok
+               -> g |- SUnit : { v : BUnit | Τ }
     T_Var       : Elem (x, t) (bindings g)
                -> (g |- (SVar x) : t)
     T_Abs       : (((x, t1) :: g) |- e : t2)   -- TODO do we really need the arrow TWF premise?
