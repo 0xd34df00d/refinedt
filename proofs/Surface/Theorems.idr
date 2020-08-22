@@ -2,6 +2,8 @@ module Surface.Theorems
 
 import Data.Fin
 import Data.List
+import Data.Vect
+import Data.Vect.Quantifiers
 
 import Surface.Syntax
 import Surface.Derivations
