@@ -12,6 +12,7 @@
 \usepackage{subcaption}
 \usepackage{cite,url,babelbib}
 \usepackage{todonotes}
+\usepackage{verbatim}
 \usepackage[english]{babel}
 
 \nonstopmode
@@ -190,7 +191,11 @@ In the subsequent text we also assume the oracle can decide the resulting propos
   If $[[ G |- es : ts ]]$, then $[[ G ok ]]$.
 \end{lemma}
 \begin{proof}
-  \todo[inline]{Do the proof and remove the assumption $[[ G ok ]]$ from all the rules unless needed.}
+  Straightforward induction on the derivation of $[[ G |- es : ts ]]$.
+  \textsc{T-Unit} carries the witness explicitly,
+  and the other rules fall back to one of their premises.
+
+  A formal proof is done as the \verb+T_implies_TCTX+ theorem in the supplemental code.
 \end{proof}
 
 \begin{lemma}\label{lma:term_wf_implies_type_wf}
