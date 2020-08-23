@@ -45,14 +45,13 @@ mutual
       thinAll _ _ [] = []
       thinAll subPrf g'ok (a :: as) = twfThinning subPrf g'ok a :: thinAll subPrf g'ok as
 
-  {-
-  twfWeaken : (g |- t) -> ((p :: g) |- t)
-  twfWeaken {g} = twfThinning (IgnoreHead $ sublistSelf g)
+  twfWeaken : (g |- ht) -> (g |- t) -> (((_, ht) :: g) |- t)
+  twfWeaken {g} hPrf ctxPrf = let g'ok = TCTX_Bind (TWF_implies_TCTX ctxPrf) hPrf
+                               in twfThinning (IgnoreHead $ sublistSelf g) g'ok ctxPrf
 
   anyTypeInCtxIsWellformed : (g ok) -> Elem (x, t) g -> (g |- t)
-  anyTypeInCtxIsWellformed (TCTX_Bind _ twfPrf) Here = twfWeaken twfPrf
-  anyTypeInCtxIsWellformed (TCTX_Bind init _) (There later) = twfWeaken $ anyTypeInCtxIsWellformed init later
-  -}
+  anyTypeInCtxIsWellformed (TCTX_Bind _ twfPrf) Here = twfWeaken twfPrf twfPrf
+  anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) (There later) = twfWeaken twfPrf $ anyTypeInCtxIsWellformed init later
 
   tThinning : Sublist g g' -> (g |- e : t) -> (g' |- e : t)
 
