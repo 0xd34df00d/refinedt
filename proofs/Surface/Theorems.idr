@@ -48,6 +48,14 @@ mutual
   anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) (There later) = twfWeaken twfPrf $ anyTypeInCtxIsWellformed init later
 
   tThinning : Sublist g g' -> g' ok -> (g |- e : t) -> (g' |- e : t)
+  tThinning subPrf g'ok (T_Unit gokPrf) = T_Unit g'ok
+  tThinning subPrf g'ok (T_Var _ elemPrf) = T_Var g'ok (superListHasElems subPrf elemPrf)
+  tThinning subPrf g'ok (T_Abs body) = case TWF_implies_TCTX (T_implies_TWF body) of
+                                            TCTX_Bind _ twf1 => T_Abs (tThinning (AppendBoth subPrf) (TCTX_Bind g'ok $ twfThinning subPrf g'ok twf1) body)
+  tThinning subPrf g'ok (T_App y z) = ?tThinning_rhs_4
+  tThinning subPrf g'ok (T_Case x y z) = ?tThinning_rhs_5
+  tThinning subPrf g'ok (T_Con x y) = ?tThinning_rhs_6
+  tThinning subPrf g'ok (T_Sub x y) = ?tThinning_rhs_7
 
   T_implies_TWF : (g |- e : t) -> (g |- t)
   T_implies_TWF (T_Unit _) = TWF_TrueRef
