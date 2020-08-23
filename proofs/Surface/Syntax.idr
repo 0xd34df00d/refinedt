@@ -32,7 +32,7 @@ mutual
   data SType : Type where
     SRBT : (var : Var) -> (b : BaseType) -> (ref : Refinement) -> SType
     SArr : (var : Var) -> (t1 : SType) -> (t2 : SType) -> SType
-    SADT : (cons : ADTCons n) -> SType
+    SADT : (cons : ADTCons (S n)) -> SType
 
   record CaseBranch where
     constructor MkCaseBranch
