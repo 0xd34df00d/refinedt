@@ -12,6 +12,9 @@ import Helpers
 
 %default total
 
+arrWfImpliesDomWf : (g |- SArr x t1 t2) -> (g |- t1)
+arrWfImpliesDomWf (TWF_Arr dom _) = dom
+
 mutual
   export
   twfThinning : Sublist g g' -> g' ok -> (g |- t) -> (g' |- t)
@@ -32,7 +35,10 @@ mutual
   tThinning : Sublist g g' -> g' ok -> (g |- e : t) -> (g' |- e : t)
   tThinning subPrf g'ok (T_Unit gokPrf) = T_Unit g'ok
   tThinning subPrf g'ok (T_Var _ elemPrf) = T_Var g'ok (superListHasElems subPrf elemPrf)
-  tThinning subPrf g'ok (T_Abs body) = T_Abs ?rhs
+  tThinning subPrf g'ok (T_Abs arrWfPrf body) = let arrWfPrf' = twfThinning subPrf g'ok arrWfPrf
+                                                    body'ctx = TCTX_Bind g'ok (arrWfImpliesDomWf arrWfPrf')
+                                                    body' = tThinning (AppendBoth subPrf) body'ctx body
+                                                 in T_Abs arrWfPrf' body'
   tThinning subPrf g'ok (T_App t1 t2) = T_App (tThinning subPrf g'ok t1) (tThinning subPrf g'ok t2)
   tThinning subPrf g'ok (T_Case twf scrut branches) = T_Case (twfThinning subPrf g'ok twf) (tThinning subPrf g'ok scrut) branches
   tThinning subPrf g'ok (T_Con arg adtTy) = T_Con (tThinning subPrf g'ok arg) (twfThinning subPrf g'ok adtTy)
