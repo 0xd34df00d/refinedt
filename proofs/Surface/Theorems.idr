@@ -52,10 +52,10 @@ mutual
   tThinning subPrf g'ok (T_Var _ elemPrf) = T_Var g'ok (superListHasElems subPrf elemPrf)
   tThinning subPrf g'ok (T_Abs body) = case TWF_implies_TCTX (T_implies_TWF body) of
                                             TCTX_Bind _ twf1 => T_Abs (tThinning (AppendBoth subPrf) (TCTX_Bind g'ok $ twfThinning subPrf g'ok twf1) body)
-  tThinning subPrf g'ok (T_App y z) = ?tThinning_rhs_4
-  tThinning subPrf g'ok (T_Case x y z) = ?tThinning_rhs_5
-  tThinning subPrf g'ok (T_Con x y) = ?tThinning_rhs_6
-  tThinning subPrf g'ok (T_Sub x y) = ?tThinning_rhs_7
+  tThinning subPrf g'ok (T_App t1 t2) = T_App (tThinning subPrf g'ok t1) (tThinning subPrf g'ok t2)
+  tThinning subPrf g'ok (T_Case twf scrut branches) = T_Case (twfThinning subPrf g'ok twf) (tThinning subPrf g'ok scrut) branches
+  tThinning subPrf g'ok (T_Con arg adtTy) = T_Con (tThinning subPrf g'ok arg) (twfThinning subPrf g'ok adtTy)
+  tThinning subPrf g'ok (T_Sub x y) = ?thinning_sub_hole
 
   T_implies_TWF : (g |- e : t) -> (g |- t)
   T_implies_TWF (T_Unit _) = TWF_TrueRef
