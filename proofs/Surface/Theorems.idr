@@ -34,7 +34,8 @@ mutual
 
   twfThinning : Sublist g g' -> g' ok -> (g |- t) -> (g' |- t)
   twfThinning _      g'ok (TWF_TrueRef g') = TWF_TrueRef g'ok
-  twfThinning subPrf g'ok (TWF_Base t1 t2) = TWF_Base (tThinning (AppendBoth subPrf) t1) (tThinning (AppendBoth subPrf) t2)
+  twfThinning subPrf g'ok (TWF_Base t1 t2) = let expCtxOk = TCTX_Bind g'ok (TWF_TrueRef g'ok)
+                                              in TWF_Base (tThinning (AppendBoth subPrf) expCtxOk t1) (tThinning (AppendBoth subPrf) expCtxOk t2)
   twfThinning subPrf g'ok (TWF_Conj twfr1 twfr2) = TWF_Conj (twfThinning subPrf g'ok twfr1) (twfThinning subPrf g'ok twfr2)
   twfThinning subPrf g'ok (TWF_Arr twf1 twf2) = TWF_Arr
                                                   (twfThinning subPrf g'ok twf1)
@@ -53,7 +54,7 @@ mutual
   anyTypeInCtxIsWellformed (TCTX_Bind _ twfPrf) Here = twfWeaken twfPrf twfPrf
   anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) (There later) = twfWeaken twfPrf $ anyTypeInCtxIsWellformed init later
 
-  tThinning : Sublist g g' -> (g |- e : t) -> (g' |- e : t)
+  tThinning : Sublist g g' -> g' ok -> (g |- e : t) -> (g' |- e : t)
 
   T_implies_TWF : (g |- e : t) -> (g |- t)
   T_implies_TWF (T_Unit _) = TWF_TrueRef
