@@ -35,10 +35,10 @@ mutual
   anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) (There later) = twfWeaken init twfPrf $ anyTypeInCtxIsWellformed init later
 
   T_implies_TWF : (g |- e : t) -> (g |- t)
-  T_implies_TWF (T_Unit _) = TWF_TrueRef
+  T_implies_TWF (T_Unit gok) = TWF_TrueRef gok
   T_implies_TWF (T_Var gok elemPrf) = anyTypeInCtxIsWellformed gok elemPrf
-  T_implies_TWF (T_Abs y) = ?T_implies_TWF_rhs_3
-  T_implies_TWF (T_App y z) = ?T_implies_TWF_rhs_4
+  T_implies_TWF (T_Abs arrWfPrf _) = arrWfPrf
+  T_implies_TWF (T_App e1 e2) = ?T_implies_TWF_rhs_4
   T_implies_TWF (T_Case x y z) = ?T_implies_TWF_rhs_5
   T_implies_TWF (T_Con x y) = ?T_implies_TWF_rhs_6
   T_implies_TWF (T_Sub x y) = ?T_implies_TWF_rhs_7
