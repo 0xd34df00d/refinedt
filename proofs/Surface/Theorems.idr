@@ -19,22 +19,13 @@ sublistSelf : (ls : List a) -> Sublist ls ls
 sublistSelf [] = EmptyIsSublist
 sublistSelf (_ :: xs) = AppendBoth $ sublistSelf xs
 
--- Well-typedness of a term in a context implies well-formedness of said context
-T_implies_TCTX : (g |- e : t) -> g ok
-T_implies_TCTX (T_Unit gok) = gok
-T_implies_TCTX (T_Var gok _) = gok
-T_implies_TCTX (T_Abs subDer) = case T_implies_TCTX subDer of
-                                     TCTX_Bind init _ => init
-T_implies_TCTX (T_App subDer _) = T_implies_TCTX subDer
-T_implies_TCTX (T_Case _ subDer _) = T_implies_TCTX subDer
-T_implies_TCTX (T_Con subDer _) = T_implies_TCTX subDer
-T_implies_TCTX (T_Sub subDer _) = T_implies_TCTX subDer
-
--- Well-typedness of a term in a context implies well-formedness of its type in said context
-
-
-
 mutual
+  -- Well-formedness of a type in a context implies well-formedness of said context
+  -- TODO get rid of `assert_smaller` by carrying the depth of the tree explicitly
+  TWF_implies_TCTX : (g |- t) -> g ok
+
+  -- Well-typedness of a term in a context implies well-formedness of its type in said context
+
   twfThinning : Sublist g g' -> (g |- t) -> (g' |- t)
   twfThinning _ TWF_TrueRef = TWF_TrueRef
   twfThinning subPrf (TWF_Base t1 t2) = TWF_Base (tThinning (AppendBoth subPrf) t1) (tThinning (AppendBoth subPrf) t2)
