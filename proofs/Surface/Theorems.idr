@@ -8,16 +8,9 @@ import Data.Vect.Quantifiers
 import Surface.Syntax
 import Surface.Derivations
 
+import Helpers
+
 %default total
-
-data Sublist : (sub : List a) -> (ls : List a) -> Type where
-  EmptyIsSublist  : Sublist [] ls
-  IgnoreHead      : Sublist sub ls -> Sublist sub (_ :: ls)
-  AppendBoth      : Sublist sub ls -> Sublist (x :: sub) (x :: ls)
-
-sublistSelf : (ls : List a) -> Sublist ls ls
-sublistSelf [] = EmptyIsSublist
-sublistSelf (_ :: xs) = AppendBoth $ sublistSelf xs
 
 mutual
   -- Well-formedness of a type in a context implies well-formedness of said context
