@@ -23,26 +23,36 @@ mutual
   -- Well-formedness of a type in a context implies well-formedness of said context
   -- TODO get rid of `assert_smaller` by carrying the depth of the tree explicitly
   TWF_implies_TCTX : (g |- t) -> g ok
+  TWF_implies_TCTX (TWF_TrueRef gok) = gok
+  TWF_implies_TCTX (TWF_Base t1 t2) = case TWF_implies_TCTX (assert_smaller (TWF_Base t1 t2) (T_implies_TWF t1)) of
+                                           TCTX_Bind gok _ => gok
+  TWF_implies_TCTX (TWF_Conj twfr1 _) = TWF_implies_TCTX twfr1
+  TWF_implies_TCTX (TWF_Arr twft1 _) = TWF_implies_TCTX twft1
+  TWF_implies_TCTX (TWF_ADT (con1Ty :: _)) = TWF_implies_TCTX con1Ty
 
   -- Well-typedness of a term in a context implies well-formedness of its type in said context
 
-  twfThinning : Sublist g g' -> (g |- t) -> (g' |- t)
-  twfThinning _ TWF_TrueRef = TWF_TrueRef
-  twfThinning subPrf (TWF_Base t1 t2) = TWF_Base (tThinning (AppendBoth subPrf) t1) (tThinning (AppendBoth subPrf) t2)
-  twfThinning subPrf (TWF_Conj twfr1 twfr2) = TWF_Conj (twfThinning subPrf twfr1) (twfThinning subPrf twfr2)
-  twfThinning subPrf (TWF_Arr twf1 twf2) = TWF_Arr (twfThinning subPrf twf1) (twfThinning (AppendBoth subPrf) twf2)
-  twfThinning subPrf (TWF_ADT preds) = TWF_ADT (thinAll subPrf preds)
+  twfThinning : Sublist g g' -> g' ok -> (g |- t) -> (g' |- t)
+  twfThinning _      g'ok (TWF_TrueRef g') = TWF_TrueRef g'ok
+  twfThinning subPrf g'ok (TWF_Base t1 t2) = TWF_Base (tThinning (AppendBoth subPrf) t1) (tThinning (AppendBoth subPrf) t2)
+  twfThinning subPrf g'ok (TWF_Conj twfr1 twfr2) = TWF_Conj (twfThinning subPrf g'ok twfr1) (twfThinning subPrf g'ok twfr2)
+  twfThinning subPrf g'ok (TWF_Arr twf1 twf2) = TWF_Arr
+                                                  (twfThinning subPrf g'ok twf1)
+                                                  (twfThinning (AppendBoth subPrf) (TCTX_Bind g'ok (twfThinning subPrf g'ok twf1)) twf2)
+  twfThinning subPrf g'ok (TWF_ADT preds) = TWF_ADT (thinAll subPrf g'ok preds)
     where
-      thinAll : Sublist g g' -> All (\t => g |- t) ls -> All (\t => g' |- t) ls
-      thinAll _ [] = []
-      thinAll subPrf (a :: as) = twfThinning subPrf a :: thinAll subPrf as
+      thinAll : Sublist g g' -> g' ok -> All (\t => g |- t) ls -> All (\t => g' |- t) ls
+      thinAll _ _ [] = []
+      thinAll subPrf g'ok (a :: as) = twfThinning subPrf g'ok a :: thinAll subPrf g'ok as
 
-  twfWeaken : (g |- t) -> ((_ :: g) |- t)
+  {-
+  twfWeaken : (g |- t) -> ((p :: g) |- t)
   twfWeaken {g} = twfThinning (IgnoreHead $ sublistSelf g)
 
   anyTypeInCtxIsWellformed : (g ok) -> Elem (x, t) g -> (g |- t)
   anyTypeInCtxIsWellformed (TCTX_Bind _ twfPrf) Here = twfWeaken twfPrf
   anyTypeInCtxIsWellformed (TCTX_Bind init _) (There later) = twfWeaken $ anyTypeInCtxIsWellformed init later
+  -}
 
   tThinning : Sublist g g' -> (g |- e : t) -> (g' |- e : t)
 

@@ -24,7 +24,8 @@ mutual
     TCTX_Bind   : TCTX g -> (g |- t) -> TCTX ((var, t) :: g)
 
   data TWF : (g : Ctx) -> (t : SType) -> Type where
-    TWF_TrueRef : g |- { v : b | Τ }
+    TWF_TrueRef : g ok
+               -> g |- { v : b | Τ }
     TWF_Base    : (((v, { v1 : b | Τ }) :: g) |- e1 : { v2 : b' | Τ })
                -> (((v, { v1 : b | Τ }) :: g) |- e2 : { v2 : b' | Τ })
                -> (g |- { v : b | e1 |=| e2 })
