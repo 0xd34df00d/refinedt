@@ -8,22 +8,24 @@ import Data.Vect.Quantifiers
 import Surface.Syntax
 
 %default total
-%access public export
 
 syntax [g] "ok" = TCTX g
 syntax [h] "|-" [t] = TWF h t
 syntax [g] "|-" [e] ":" [t] = T g e t
 syntax [g] "|-" [t] "<:" [t'] = ST g t t'
 
+public export
 record Oracle where
   constructor MkOracle
   decide : (var : Var) -> (b : BaseType) -> (r1 : Refinement) -> (r2 : Refinement) -> Maybe () -- TODO refine the return type
 
 mutual
+  public export
   data TCTX : (g : Ctx) -> Type where
     TCTX_Empty  : TCTX []
     TCTX_Bind   : TCTX g -> (g |- t) -> TCTX ((var, t) :: g)
 
+  public export
   data TWF : (g : Ctx) -> (t : SType) -> Type where
     TWF_TrueRef : g ok
                -> g |- { v : b | Τ }
@@ -39,6 +41,7 @@ mutual
     TWF_ADT     : All (\conTy => g |- conTy) adtCons
                -> (g |- SADT adtCons)
 
+  public export
   data BranchesHaveType : (cons : ADTCons n) -> (branches : CaseBranches n) -> (t' : SType) -> Type where
     NoBranches    : BranchesHaveType [] [] t'
     OneMoreBranch : {conTy : SType} -> {var : Var} -> {body : STerm}
@@ -46,6 +49,7 @@ mutual
                  -> (rest : BranchesHaveType cons branches t')
                  -> BranchesHaveType (conTy :: cons) (MkCaseBranch var body :: branches) t'
 
+  public export
   data T : (g : Ctx) -> (e : STerm) -> (t : SType) -> Type where
     T_Unit      : g ok
                -> g |- SUnit : { v : BUnit | Τ }
@@ -69,6 +73,7 @@ mutual
                -> (g |- t <: t')
                -> (g |- e : t')
 
+  public export
   data ST : (g : Ctx) -> (t1 : SType) -> (t2 : SType) -> Type where
     ST_Base     : (oracle : Oracle)
                -> So (isJust (decide oracle v b r1 r2))
