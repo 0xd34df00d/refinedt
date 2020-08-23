@@ -27,13 +27,12 @@ mutual
 
   -- Well-typedness of a term in a context implies well-formedness of its type in said context
 
-  twfWeaken : (g |- ht) -> (g |- t) -> (((_, ht) :: g) |- t)
-  twfWeaken {g} hPrf ctxPrf = let g'ok = TCTX_Bind (TWF_implies_TCTX ctxPrf) hPrf
-                               in twfThinning (IgnoreHead $ sublistSelf g) g'ok ctxPrf
+  twfWeaken : (g ok) -> (g |- ht) -> (g |- t) -> (((_, ht) :: g) |- t)
+  twfWeaken {g} gok htPrf tPrf = twfThinning (IgnoreHead $ sublistSelf g) (TCTX_Bind gok htPrf) tPrf
 
   anyTypeInCtxIsWellformed : (g ok) -> Elem (x, t) g -> (g |- t)
-  anyTypeInCtxIsWellformed (TCTX_Bind _ twfPrf) Here = twfWeaken twfPrf twfPrf
-  anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) (There later) = twfWeaken twfPrf $ anyTypeInCtxIsWellformed init later
+  anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) Here = twfWeaken init twfPrf twfPrf
+  anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) (There later) = twfWeaken init twfPrf $ anyTypeInCtxIsWellformed init later
 
   T_implies_TWF : (g |- e : t) -> (g |- t)
   T_implies_TWF (T_Unit _) = TWF_TrueRef
