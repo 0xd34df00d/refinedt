@@ -15,8 +15,9 @@ syntax [h] "|-" [t] = TWF h t
 syntax [g] "|-" [e] ":" [t] = T g e t
 syntax [g] "|-" [t] "<:" [t'] = ST g t t'
 
-interface Oracle rcl where
-  decide : rcl -> (var : Var) -> (b : BaseType) -> (r1 : Refinement) -> (r2 : Refinement) -> Maybe () -- TODO refine the return type
+record Oracle where
+  constructor MkOracle
+  decide : (var : Var) -> (b : BaseType) -> (r1 : Refinement) -> (r2 : Refinement) -> Maybe () -- TODO refine the return type
 
 mutual
   data TCTX : (g : Ctx) -> Type where
@@ -68,8 +69,7 @@ mutual
                -> (g |- e : t')
 
   data ST : (g : Ctx) -> (t1 : SType) -> (t2 : SType) -> Type where
-    ST_Base     : Oracle rcl
-               => (oracle : rcl)
+    ST_Base     : (oracle : Oracle)
                -> So (isJust (decide oracle v b r1 r2))
                -> (g |- { v : b | r1 } <: { v : b | r2 })
     ST_Arr      : (g |- t1' <: t1)
