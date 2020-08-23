@@ -52,7 +52,8 @@ mutual
     T_Var       : g ok
                -> Elem (x, t) g
                -> (g |- (SVar x) : t)
-    T_Abs       : (((x, t1) :: g) |- e : t2)   -- TODO do we really need the arrow TWF premise?
+    T_Abs       : (g |- SArr x t1 t2)
+               -> (((x, t1) :: g) |- e : t2)
                -> (g |- (SLam x t1 e) : SArr x t1 t2)
     T_App       : (g |- e1 : SArr x t1 t2)
                -> (g |- e2 : t1)
