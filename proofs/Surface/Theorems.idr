@@ -22,6 +22,13 @@ anyTypeInCtxIsWellformed : (g ok) -> Elem (x, t) g -> (g |- t)
 anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) Here = twfWeaken init twfPrf twfPrf
 anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) (There later) = twfWeaken init twfPrf $ anyTypeInCtxIsWellformed init later
 
+substPreservesTWF : (t2 : SType) -> (((x, t1) :: g) |- t2) -> (g |- e : t1) -> (g |- substInType x e t2)
+substPreservesTWF (SRBT var b _) (TWF_TrueRef (TCTX_Bind pref _)) eprf = TWF_TrueRef pref
+substPreservesTWF (SRBT var b (e1 |=| e2)) (TWF_Base prfr1 prfr2) eprf = TWF_Base ?later ?later
+substPreservesTWF (SRBT var b (r1 & r2)) (TWF_Conj prfr1 prfr2) eprf = TWF_Conj ?wut ?wut
+substPreservesTWF (SArr var t1 t2) (TWF_Arr t1prf t2prf) eprf = TWF_Arr (substPreservesTWF t1 t1prf eprf) ?later -- (substPreservesTWF t2 ?wut ?wut)
+substPreservesTWF (SADT cons) (TWF_ADT alls) eprf = TWF_ADT ?later
+
 mutual
   -- Well-formedness of a type in a context implies well-formedness of said context
   -- TODO get rid of `assert_smaller` by carrying the depth of the tree explicitly
