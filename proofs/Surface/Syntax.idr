@@ -68,8 +68,12 @@ isValue (SCon _ body _) = isValue body
 isValue _ = False
 
 public export
+CtxElem : Type
+CtxElem = (Var, SType)
+
+public export
 Ctx : Type
-Ctx = List (Var, SType)
+Ctx = List CtxElem
 
 -- Helpers
 
