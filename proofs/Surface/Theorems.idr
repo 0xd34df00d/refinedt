@@ -22,12 +22,30 @@ anyTypeInCtxIsWellformed : (g ok) -> Elem (x, t) g -> (g |- t)
 anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) Here = twfWeaken init twfPrf twfPrf
 anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) (There later) = twfWeaken init twfPrf $ anyTypeInCtxIsWellformed init later
 
-substPreservesTWF : (t2 : SType) -> (((x, t1) :: g) |- t2) -> (g |- e : t1) -> (g |- substInType x e t2)
-substPreservesTWF (SRBT var b _) (TWF_TrueRef (TCTX_Bind pref _)) eprf = TWF_TrueRef pref
-substPreservesTWF (SRBT var b (e1 |=| e2)) (TWF_Base prfr1 prfr2) eprf = TWF_Base ?later ?later
-substPreservesTWF (SRBT var b (r1 & r2)) (TWF_Conj prfr1 prfr2) eprf = TWF_Conj ?wut ?wut
-substPreservesTWF (SArr var t1 t2) (TWF_Arr t1prf t2prf) eprf = TWF_Arr (substPreservesTWF t1 t1prf eprf) ?later -- (substPreservesTWF t2 ?wut ?wut)
-substPreservesTWF (SADT cons) (TWF_ADT alls) eprf = TWF_ADT ?later
+mutual
+  substTermRBTCase : (res : SType)
+                  -> (res = SRBT v2 b' Τ)
+                  -> (((v, SRBT v1 b Τ) :: (x, t1) :: g) |- e' : res)
+                  -> (g |- e : t1)
+                  -> (((v, SRBT v1 b Τ) :: g) |- (substInTerm x e e') : SRBT v2 b' Τ)
+
+  substPreservesRef : (((x, t1) :: g) |- { v : b | r }) -> (g |- e : t1) -> (g |- { v : b | substInRef x e r })
+  substPreservesRef (TWF_TrueRef (TCTX_Bind gok _)) _ = TWF_TrueRef gok
+  substPreservesRef (TWF_Base e1deriv e2deriv) eprf = TWF_Base
+                                                        (substTermRBTCase ({ _ : _ | Τ }) Refl e1deriv eprf)
+                                                        (substTermRBTCase ({ _ : _ | Τ }) Refl e2deriv eprf)
+  substPreservesRef (TWF_Conj r1deriv r2deriv) eprf = TWF_Conj (substPreservesRef r1deriv eprf) (substPreservesRef r2deriv eprf)
+
+  substPreservesCons : (g |- e : t1) -> All (\conTy => ((x, t1) :: g) |- conTy) cons -> All (\conTy => g |- conTy) (substInADT x e cons)
+  substPreservesCons _ [] = []
+  substPreservesCons eprf (con :: cons) = (substPreservesTWF _ con eprf) :: substPreservesCons eprf cons
+
+  substPreservesTWF : (t2 : SType) -> (((x, t1) :: g) |- t2) -> (g |- e : t1) -> (g |- substInType x e t2)
+  substPreservesTWF (SRBT var b _) (TWF_TrueRef (TCTX_Bind pref _)) eprf = TWF_TrueRef pref
+  substPreservesTWF (SRBT var b (e1 |=| e2)) (TWF_Base e1deriv e2deriv) eprf = TWF_Base ?later ?later
+  substPreservesTWF (SRBT var b (r1 & r2)) (TWF_Conj r1deriv r2deriv) eprf = TWF_Conj (substPreservesRef r1deriv eprf) (substPreservesRef r2deriv eprf)
+  substPreservesTWF (SArr var t1 t2) (TWF_Arr t1prf t2prf) eprf = TWF_Arr (substPreservesTWF t1 t1prf eprf) ?later -- (substPreservesTWF t2 ?later ?later)
+  substPreservesTWF (SADT cons) (TWF_ADT alls) eprf = TWF_ADT $ substPreservesCons eprf alls
 
 mutual
   -- Well-formedness of a type in a context implies well-formedness of said context
