@@ -10,6 +10,7 @@ import Surface.Derivations
 
 import Helpers
 
+import Surface.Theorems.Lemmas
 import Surface.Theorems.Thinning
 
 %default total
@@ -31,7 +32,6 @@ mutual
   TWF_implies_TCTX (TWF_Conj twfr1 _) = TWF_implies_TCTX twfr1
   TWF_implies_TCTX (TWF_Arr twft1 _) = TWF_implies_TCTX twft1
   TWF_implies_TCTX (TWF_ADT (con1Ty :: _)) = TWF_implies_TCTX con1Ty
-
 
   -- Well-typedness of a term in a context implies well-formedness of its type in said context
   T_implies_TWF : (g |- e : t) -> (g |- t)

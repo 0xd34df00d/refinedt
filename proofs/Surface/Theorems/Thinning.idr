@@ -7,13 +7,11 @@ import Data.Vect.Quantifiers
 
 import Surface.Syntax
 import Surface.Derivations
+import Surface.Theorems.Lemmas
 
 import Helpers
 
 %default total
-
-arrWfImpliesDomWf : (g |- SArr x t1 t2) -> (g |- t1)
-arrWfImpliesDomWf (TWF_Arr dom _) = dom
 
 mutual
   export
