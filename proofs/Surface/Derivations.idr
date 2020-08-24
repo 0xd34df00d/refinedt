@@ -29,11 +29,11 @@ mutual
   data TWF : (g : Ctx) -> (t : SType) -> Type where
     TWF_TrueRef : g ok
                -> g |- { v : b | Τ }
-    TWF_Base    : (((v, { v1 : b | Τ }) :: g) |- e1 : { v2 : b' | Τ })
-               -> (((v, { v1 : b | Τ }) :: g) |- e2 : { v2 : b' | Τ })
+    TWF_Base    : (e1deriv : ((v, { v1 : b | Τ }) :: g) |- e1 : { v2 : b' | Τ })
+               -> (e2deriv : ((v, { v1 : b | Τ }) :: g) |- e2 : { v2 : b' | Τ })
                -> (g |- { v : b | e1 |=| e2 })
-    TWF_Conj    : (g |- { v : b | r1 })
-               -> (g |- { v : b | r2 })
+    TWF_Conj    : (r1deriv : g |- { v : b | r1 })
+               -> (r2deriv : g |- { v : b | r2 })
                -> (g |- { v : b | r1 & r2 })
     TWF_Arr     : (g |- t1)
                -> (((x, t1) :: g) |- t2)
