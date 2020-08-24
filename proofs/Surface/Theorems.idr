@@ -39,6 +39,6 @@ mutual
   T_implies_TWF (T_Var gok elemPrf) = anyTypeInCtxIsWellformed gok elemPrf
   T_implies_TWF (T_Abs arrWfPrf _) = arrWfPrf
   T_implies_TWF (T_App e1 e2) = ?T_implies_TWF_rhs_4
-  T_implies_TWF (T_Case x y z) = ?T_implies_TWF_rhs_5
-  T_implies_TWF (T_Con x y) = ?T_implies_TWF_rhs_6
-  T_implies_TWF (T_Sub x y) = ?T_implies_TWF_rhs_7
+  T_implies_TWF (T_Case wfPrf _ _) = wfPrf
+  T_implies_TWF (T_Con _ wfPrf) = wfPrf
+  T_implies_TWF (T_Sub x y) = ?T_implies_TWF_sub_hole
