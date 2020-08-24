@@ -38,9 +38,8 @@ mutual
   substPreservesTWF (TWF_Base e1deriv e2deriv) eprf = TWF_Base (substTermRBTCase _ Refl e1deriv eprf) (substTermRBTCase _ Refl e2deriv eprf)
   substPreservesTWF (TWF_Conj r1deriv r2deriv) eprf = TWF_Conj (substPreservesTWF r1deriv eprf) (substPreservesTWF r2deriv eprf)
   substPreservesTWF (TWF_Arr {x} {t1} {t2} t1prf t2prf) eprf =
-    TWF_Arr
-      (substPreservesTWF t1prf eprf)
-      ?later -- (substPreservesTWF ?later ?later)
+    let t1prf' = substPreservesTWF t1prf eprf
+     in TWF_Arr t1prf' ?arg
   substPreservesTWF (TWF_ADT alls) eprf = TWF_ADT $ substPreservesCons eprf alls
 
 mutual
