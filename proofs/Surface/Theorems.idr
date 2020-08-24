@@ -29,11 +29,6 @@ mutual
                   -> (g |- e : t1)
                   -> (((v, SRBT v1 b Τ) :: g) |- (substInTerm x e e') : SRBT v2 b' Τ)
 
-  substPreservesRef : (((x, t1) :: g) |- { v : b | r }) -> (g |- e : t1) -> (g |- { v : b | substInRef x e r })
-  substPreservesRef (TWF_TrueRef (TCTX_Bind gok _)) _ = TWF_TrueRef gok
-  substPreservesRef (TWF_Base e1deriv e2deriv) eprf = TWF_Base (substTermRBTCase _ Refl e1deriv eprf) (substTermRBTCase _ Refl e2deriv eprf)
-  substPreservesRef (TWF_Conj r1deriv r2deriv) eprf = TWF_Conj (substPreservesRef r1deriv eprf) (substPreservesRef r2deriv eprf)
-
   substPreservesCons : (g |- e : t1) -> All (\conTy => ((x, t1) :: g) |- conTy) cons -> All (\conTy => g |- conTy) (substInADT x e cons)
   substPreservesCons _ [] = []
   substPreservesCons eprf (con :: cons) = substPreservesTWF con eprf :: substPreservesCons eprf cons
@@ -41,7 +36,7 @@ mutual
   substPreservesTWF : (((x, t1) :: g) |- t2) -> (g |- e : t1) -> (g |- substInType x e t2)
   substPreservesTWF (TWF_TrueRef (TCTX_Bind gok _)) eprf = TWF_TrueRef gok
   substPreservesTWF (TWF_Base e1deriv e2deriv) eprf = TWF_Base (substTermRBTCase _ Refl e1deriv eprf) (substTermRBTCase _ Refl e2deriv eprf)
-  substPreservesTWF (TWF_Conj r1deriv r2deriv) eprf = TWF_Conj (substPreservesRef r1deriv eprf) (substPreservesRef r2deriv eprf)
+  substPreservesTWF (TWF_Conj r1deriv r2deriv) eprf = TWF_Conj (substPreservesTWF r1deriv eprf) (substPreservesTWF r2deriv eprf)
   substPreservesTWF (TWF_Arr {x} {t1} {t2} t1prf t2prf) eprf =
     TWF_Arr
       (substPreservesTWF t1prf eprf)
