@@ -23,6 +23,7 @@ anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) Here = twfWeaken init twfPrf tw
 anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) (There later) = twfWeaken init twfPrf $ anyTypeInCtxIsWellformed init later
 
 mutual
+  {-
   substTermRBTCase : (res : SType)
                   -> (res = SRBT v2 b' Τ)
                   -> (((v, SRBT v1 b Τ) :: (x, t1) :: g) |- e' : res)
@@ -41,8 +42,29 @@ mutual
     let t1prf' = substPreservesTWF t1prf eprf
      in TWF_Arr t1prf' ?arg
   substPreservesTWF (TWF_ADT alls) eprf = TWF_ADT $ substPreservesCons eprf alls
+             -}
+
+
+substInCtx : Var -> STerm -> Ctx -> Ctx
+substInCtx x e [] = []
+substInCtx x e ((x', ty) :: rest) = (x', substInType x e ty) :: substInCtx x e rest
 
 mutual
+  data ElemSplit : (front : Ctx) -> (elem : a) -> (back : Ctx) -> (g : Ctx) -> Type where
+    SHere : ElemSplit [] x xs (x :: xs)
+    SThere : (later : ElemSplit front x back g) -> ElemSplit ((var, ty) :: front) x back ((var, ty) :: g)
+
+  substPreservesTWF : ElemSplit front (x, s) back g
+                   -> (tprf : g |- t)
+                   -> (eprf : back |- e : s)
+                   -> ((substInCtx x e front ++ back) |- substInType x e t)
+  substPreservesTWF SHere tprf eprf = ?substPreservesTWF_rhs_1
+  substPreservesTWF (SThere later) tprf eprf = let rec = substPreservesTWF later ?w2 eprf
+                                                   rec' = twfWeaken (TWF_implies_TCTX rec) ?w4 rec
+                                                in rec'
+
+  substPreservesTWFHead : (((x, t1) :: g) |- t2) -> (g |- e : t1) -> (g |- substInType x e t2)
+
   -- Well-formedness of a type in a context implies well-formedness of said context
   -- TODO get rid of `assert_smaller` by carrying the depth of the tree explicitly
   TWF_implies_TCTX : (g |- t) -> g ok
