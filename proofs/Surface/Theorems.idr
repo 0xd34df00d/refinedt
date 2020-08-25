@@ -50,6 +50,7 @@ substInCtx x e [] = []
 substInCtx x e ((x', ty) :: rest) = (x', substInType x e ty) :: substInCtx x e rest
 
 mutual
+  {-
   data ElemSplit : (front : Ctx) -> (elem : a) -> (back : Ctx) -> (g : Ctx) -> Type where
     SHere : ElemSplit [] x xs (x :: xs)
     SThere : (later : ElemSplit front x back g) -> ElemSplit ((var, ty) :: front) x back ((var, ty) :: g)
@@ -62,6 +63,15 @@ mutual
   substPreservesTWF (SThere later) tprf eprf = let rec = substPreservesTWF later ?w2 eprf
                                                    rec' = twfWeaken (TWF_implies_TCTX rec) ?w4 rec
                                                 in rec'
+                                                -}
+  covering
+  substPreservesTWF : (tprf : (front ++ (x, s) :: back) |- t)
+                   -> (eprf : back |- e : s)
+                   -> ((substInCtx x e front ++ back) |- substInType x e t)
+  substPreservesTWF {front = []} tprf eprf = ?later
+  substPreservesTWF {front = ((var, ty) :: fs)} {t} {x} tprf eprf =
+    let rec = substPreservesTWF {t = t} {x = x} ?w1 eprf
+     in ?wut
 
   substPreservesTWFHead : (((x, t1) :: g) |- t2) -> (g |- e : t1) -> (g |- substInType x e t2)
 
