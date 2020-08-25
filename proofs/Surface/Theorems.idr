@@ -80,7 +80,7 @@ mutual
   T_implies_TWF (T_Unit gok) = TWF_TrueRef gok
   T_implies_TWF (T_Var gok elemPrf) = anyTypeInCtxIsWellformed gok elemPrf
   T_implies_TWF (T_Abs arrWfPrf _) = arrWfPrf
-  T_implies_TWF (T_App {t2} prf1 prf2) = substPreservesTWF (arrWfImpliesCodWf $ T_implies_TWF prf1) prf2
+  T_implies_TWF (T_App {t2} prf1 prf2) = substPreservesTWFHead (arrWfImpliesCodWf $ T_implies_TWF prf1) prf2
   T_implies_TWF (T_Case wfPrf _ _) = wfPrf
   T_implies_TWF (T_Con _ wfPrf) = wfPrf
   T_implies_TWF (T_Sub x y) = ?T_implies_TWF_sub_hole
