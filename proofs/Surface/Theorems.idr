@@ -2,6 +2,7 @@ module Surface.Theorems
 
 import Data.Fin
 import Data.List
+import Data.List.Views
 import Data.Vect
 import Data.Vect.Quantifiers
 
@@ -76,13 +77,20 @@ subst3lemma : ((d ++ (y, t) :: (x, s) :: g) |- tau)
            -> ?t_no_x
            -> ((d ++ (x, s) :: (y, t) :: g) |- tau)
 
-substPreservesTWF : (g |- e : s)
-                 -> ((d ++ (x, s) :: g) |- tau)
-                 -> ((substInCtx x e d ++ g) |- substInType x e tau)
-
-substPreservesTWFHead : (((x, t1) :: g) |- t2) -> (g |- e : t1) -> (g |- substInType x e t2)
-
 mutual
+  substPreservesTWF : (g |- e : s)
+                   -> ((d ++ (x, s) :: g) |- tau)
+                   -> SnocList d
+                   -> ((substInCtx x e d ++ g) |- substInType x e tau)
+  substPreservesTWF {x} {e} {g} {d = []} eprf tauprf Empty = ?later
+  substPreservesTWF {x} {e} {g} {d = d ++ [(y, t)]} eprf tauprf (Snoc init) =
+    let rec = substPreservesTWF {d = d} {x = x} {g = (y, substInType x e t) :: g} (tWeaken (TWF_implies_TCTX (T_implies_TWF eprf)) ?w1 eprf) ?w2 init
+     in rewrite substInCtxSnoc x e y t d
+     in rewrite tossMidElem (substInCtx x e d) (y, substInType x e t) g
+     in rec
+
+  substPreservesTWFHead : (((x, t1) :: g) |- t2) -> (g |- e : t1) -> (g |- substInType x e t2)
+
   -- Well-formedness of a type in a context implies well-formedness of said context
   -- TODO get rid of `assert_smaller` by carrying the depth of the tree explicitly
   TWF_implies_TCTX : (g |- t) -> g ok
