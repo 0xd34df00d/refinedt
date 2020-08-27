@@ -18,6 +18,9 @@ import Surface.Theorems.Thinning
 twfWeaken : (g ok) -> (g |- ht) -> (g |- t) -> (((_, ht) :: g) |- t)
 twfWeaken {g} gok htPrf tPrf = twfThinning (IgnoreHead $ sublistSelf g) (TCTX_Bind gok htPrf) tPrf
 
+tWeaken : (g ok) -> (g |- ht) -> (g |- e : t) -> (((_, ht) :: g) |- e : t)
+tWeaken {g} gok htPrf tPrf = tThinning (IgnoreHead $ sublistSelf g) (TCTX_Bind gok htPrf) tPrf
+
 anyTypeInCtxIsWellformed : (g ok) -> Elem (x, t) g -> (g |- t)
 anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) Here = twfWeaken init twfPrf twfPrf
 anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) (There later) = twfWeaken init twfPrf $ anyTypeInCtxIsWellformed init later
