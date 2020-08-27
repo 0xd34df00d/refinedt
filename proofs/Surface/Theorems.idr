@@ -49,9 +49,10 @@ substInCtx : Var -> STerm -> Ctx -> Ctx
 substInCtx x e [] = []
 substInCtx x e ((x', ty) :: rest) = (x', substInType x e ty) :: substInCtx x e rest
 
-substInCtxSnoc : (g : Ctx) -> substInCtx x e (g ++ [(y, t)]) = substInCtx x e g ++ [(y, substInType x e t)]
-substInCtxSnoc [] = Refl
-substInCtxSnoc ((x, t') :: g') = cong $ substInCtxSnoc g'
+substInCtxSnoc : (x : _) -> (e : _) -> (y : _) -> (t : _) -> (g : Ctx)
+              -> substInCtx x e (g ++ [(y, t)]) = substInCtx x e g ++ [(y, substInType x e t)]
+substInCtxSnoc _ _ _ _ [] = Refl
+substInCtxSnoc x e y t ((_, _) :: g') = cong $ substInCtxSnoc x e y t g'
 
 -- g is for Γ
 -- d is for Δ
