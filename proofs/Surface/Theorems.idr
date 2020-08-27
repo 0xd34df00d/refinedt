@@ -49,32 +49,27 @@ substInCtx : Var -> STerm -> Ctx -> Ctx
 substInCtx x e [] = []
 substInCtx x e ((x', ty) :: rest) = (x', substInType x e ty) :: substInCtx x e rest
 
+-- g is for Γ
+-- d is for Δ
+subst1lemma : (g |- e : s)
+           -> ((d ++ (x, s) :: g) |- tau)
+           -> ((d ++ (x, s) :: g) |- substInType x e tau)
+
+subst2lemma : (g |- e : s)
+           -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
+           -> ((d ++ (y, substInType x e t) :: (x, s) :: g) |- tau)
+
+subst3lemma : ((d ++ (y, t) :: (x, s) :: g) |- tau)
+           -> ?t_no_x
+           -> ((d ++ (x, s) :: (y, t) :: g) |- tau)
+
+substPreservesTWF : (g |- e : s)
+                 -> ((d ++ (x, s) :: g) |- tau)
+                 -> ((substInCtx x e d ++ g) |- substInType x e tau)
+
+substPreservesTWFHead : (((x, t1) :: g) |- t2) -> (g |- e : t1) -> (g |- substInType x e t2)
+
 mutual
-  {-
-  data ElemSplit : (front : Ctx) -> (elem : a) -> (back : Ctx) -> (g : Ctx) -> Type where
-    SHere : ElemSplit [] x xs (x :: xs)
-    SThere : (later : ElemSplit front x back g) -> ElemSplit ((var, ty) :: front) x back ((var, ty) :: g)
-
-  substPreservesTWF : ElemSplit front (x, s) back g
-                   -> (tprf : g |- t)
-                   -> (eprf : back |- e : s)
-                   -> ((substInCtx x e front ++ back) |- substInType x e t)
-  substPreservesTWF SHere tprf eprf = ?substPreservesTWF_rhs_1
-  substPreservesTWF (SThere later) tprf eprf = let rec = substPreservesTWF later ?w2 eprf
-                                                   rec' = twfWeaken (TWF_implies_TCTX rec) ?w4 rec
-                                                in rec'
-                                                -}
-  covering
-  substPreservesTWF : (tprf : (front ++ (x, s) :: back) |- t)
-                   -> (eprf : back |- e : s)
-                   -> ((substInCtx x e front ++ back) |- substInType x e t)
-  substPreservesTWF {front = []} tprf eprf = ?later
-  substPreservesTWF {front = ((var, ty) :: fs)} {t} {x} tprf eprf =
-    let rec = substPreservesTWF {t = t} {x = x} ?w1 eprf
-     in ?wut
-
-  substPreservesTWFHead : (((x, t1) :: g) |- t2) -> (g |- e : t1) -> (g |- substInType x e t2)
-
   -- Well-formedness of a type in a context implies well-formedness of said context
   -- TODO get rid of `assert_smaller` by carrying the depth of the tree explicitly
   TWF_implies_TCTX : (g |- t) -> g ok
