@@ -16,6 +16,17 @@ import Surface.Theorems.Thinning
 
 %default total
 
+T_implies_TCTX : (g |- e : t) -> g ok
+T_implies_TCTX (T_Unit gok) = gok
+T_implies_TCTX (T_Var gok _) = gok
+T_implies_TCTX (T_Abs _ bodyPrf) = case T_implies_TCTX bodyPrf of
+                                        TCTX_Bind gok _ => gok
+T_implies_TCTX (T_App arrWfPrf _) = T_implies_TCTX arrWfPrf
+T_implies_TCTX (T_Case _ consPrf _) = T_implies_TCTX consPrf
+T_implies_TCTX (T_Con eprf _) = T_implies_TCTX eprf
+T_implies_TCTX (T_Sub eprf _) = T_implies_TCTX eprf
+
+
 twfWeaken : (g ok) -> (g |- ht) -> (g |- t) -> (((_, ht) :: g) |- t)
 twfWeaken {g} gok htPrf tPrf = twfThinning (IgnoreHead $ sublistSelf g) (TCTX_Bind gok htPrf) tPrf
 
