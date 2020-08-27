@@ -16,6 +16,7 @@ import Surface.Theorems.Thinning
 
 %default total
 
+-- Well-typedness of a term in a context implies well-formedness of said context
 T_implies_TCTX : (g |- e : t) -> g ok
 T_implies_TCTX (T_Unit gok) = gok
 T_implies_TCTX (T_Var gok _) = gok
@@ -25,6 +26,16 @@ T_implies_TCTX (T_App arrWfPrf _) = T_implies_TCTX arrWfPrf
 T_implies_TCTX (T_Case _ consPrf _) = T_implies_TCTX consPrf
 T_implies_TCTX (T_Con eprf _) = T_implies_TCTX eprf
 T_implies_TCTX (T_Sub eprf _) = T_implies_TCTX eprf
+
+
+-- Well-formedness of a type in a context implies well-formedness of said context
+TWF_implies_TCTX : (g |- t) -> g ok
+TWF_implies_TCTX (TWF_TrueRef gok) = gok
+TWF_implies_TCTX (TWF_Base t1 _) = case T_implies_TCTX t1 of
+                                         TCTX_Bind gok _ => gok
+TWF_implies_TCTX (TWF_Conj twfr1 _) = TWF_implies_TCTX twfr1
+TWF_implies_TCTX (TWF_Arr twft1 _) = TWF_implies_TCTX twft1
+TWF_implies_TCTX (TWF_ADT (con1Ty :: _)) = TWF_implies_TCTX con1Ty
 
 
 twfWeaken : (g ok) -> (g |- ht) -> (g |- t) -> (((_, ht) :: g) |- t)
@@ -88,36 +99,26 @@ subst3lemma : ((d ++ (y, t) :: (x, s) :: g) |- tau)
            -> ?t_no_x
            -> ((d ++ (x, s) :: (y, t) :: g) |- tau)
 
-mutual
-  substPreservesTWF : (g |- e : s)
-                   -> ((d ++ (x, s) :: g) |- tau)
-                   -> SnocList d
-                   -> ((substInCtx x e d ++ g) |- substInType x e tau)
-  substPreservesTWF {x} {e} {g} {d = []} eprf tauprf Empty = ?later
-  substPreservesTWF {x} {e} {g} {d = d ++ [(y, t)]} eprf tauprf (Snoc init) =
-    let rec = substPreservesTWF {d = d} {x = x} {g = (y, substInType x e t) :: g} (tWeaken (T_implies_TCTX eprf) ?w1 eprf) ?w2 init
-     in rewrite substInCtxSnoc x e y t d
-     in rewrite tossMidElem (substInCtx x e d) (y, substInType x e t) g
-     in rec
+substPreservesTWF : (g |- e : s)
+                 -> ((d ++ (x, s) :: g) |- tau)
+                 -> SnocList d
+                 -> ((substInCtx x e d ++ g) |- substInType x e tau)
+substPreservesTWF {x} {e} {g} {d = []} eprf tauprf Empty = ?later
+substPreservesTWF {x} {e} {g} {d = d ++ [(y, t)]} eprf tauprf (Snoc init) =
+  let rec = substPreservesTWF {d = d} {x = x} {g = (y, substInType x e t) :: g} (tWeaken (T_implies_TCTX eprf) ?w1 eprf) ?w2 init
+   in rewrite substInCtxSnoc x e y t d
+   in rewrite tossMidElem (substInCtx x e d) (y, substInType x e t) g
+   in rec
 
-  substPreservesTWFHead : (g |- e : s) -> (((x, s) :: g) |- tau) -> (g |- substInType x e tau)
-  substPreservesTWFHead eprf tauprf = substPreservesTWF eprf tauprf Empty
+substPreservesTWFHead : (g |- e : s) -> (((x, s) :: g) |- tau) -> (g |- substInType x e tau)
+substPreservesTWFHead eprf tauprf = substPreservesTWF eprf tauprf Empty
 
-  -- Well-formedness of a type in a context implies well-formedness of said context
-  TWF_implies_TCTX : (g |- t) -> g ok
-  TWF_implies_TCTX (TWF_TrueRef gok) = gok
-  TWF_implies_TCTX (TWF_Base t1 _) = case T_implies_TCTX t1 of
-                                           TCTX_Bind gok _ => gok
-  TWF_implies_TCTX (TWF_Conj twfr1 _) = TWF_implies_TCTX twfr1
-  TWF_implies_TCTX (TWF_Arr twft1 _) = TWF_implies_TCTX twft1
-  TWF_implies_TCTX (TWF_ADT (con1Ty :: _)) = TWF_implies_TCTX con1Ty
-
-  -- Well-typedness of a term in a context implies well-formedness of its type in said context
-  T_implies_TWF : (g |- e : t) -> (g |- t)
-  T_implies_TWF (T_Unit gok) = TWF_TrueRef gok
-  T_implies_TWF (T_Var gok elemPrf) = anyTypeInCtxIsWellformed gok elemPrf
-  T_implies_TWF (T_Abs arrWfPrf _) = arrWfPrf
-  T_implies_TWF (T_App prf1 prf2) = substPreservesTWFHead prf2 (arrWfImpliesCodWf $ T_implies_TWF prf1)
-  T_implies_TWF (T_Case wfPrf _ _) = wfPrf
-  T_implies_TWF (T_Con _ wfPrf) = wfPrf
-  T_implies_TWF (T_Sub x y) = ?T_implies_TWF_sub_hole
+-- Well-typedness of a term in a context implies well-formedness of its type in said context
+T_implies_TWF : (g |- e : t) -> (g |- t)
+T_implies_TWF (T_Unit gok) = TWF_TrueRef gok
+T_implies_TWF (T_Var gok elemPrf) = anyTypeInCtxIsWellformed gok elemPrf
+T_implies_TWF (T_Abs arrWfPrf _) = arrWfPrf
+T_implies_TWF (T_App prf1 prf2) = substPreservesTWFHead prf2 (arrWfImpliesCodWf $ T_implies_TWF prf1)
+T_implies_TWF (T_Case wfPrf _ _) = wfPrf
+T_implies_TWF (T_Con _ wfPrf) = wfPrf
+T_implies_TWF (T_Sub x y) = ?T_implies_TWF_sub_hole
