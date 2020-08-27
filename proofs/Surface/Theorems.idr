@@ -57,6 +57,11 @@ substInCtxSnoc : (x : _) -> (e : _) -> (y : _) -> (t : _) -> (g : Ctx)
 substInCtxSnoc _ _ _ _ [] = Refl
 substInCtxSnoc x e y t ((_, _) :: g') = cong $ substInCtxSnoc x e y t g'
 
+tossMidElem : (front : List a) -> (mid : a) -> (back : List a)
+           -> ((front ++ [mid]) ++ back) = (front ++ mid :: back)
+tossMidElem [] mid back = Refl
+tossMidElem (f :: front') mid back = cong $ tossMidElem front' mid back
+
 -- g is for Γ
 -- d is for Δ
 subst1lemma : (g |- e : s)
