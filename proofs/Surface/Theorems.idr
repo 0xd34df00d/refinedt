@@ -95,12 +95,13 @@ mutual
                    -> ((substInCtx x e d ++ g) |- substInType x e tau)
   substPreservesTWF {x} {e} {g} {d = []} eprf tauprf Empty = ?later
   substPreservesTWF {x} {e} {g} {d = d ++ [(y, t)]} eprf tauprf (Snoc init) =
-    let rec = substPreservesTWF {d = d} {x = x} {g = (y, substInType x e t) :: g} (tWeaken (TWF_implies_TCTX (T_implies_TWF eprf)) ?w1 eprf) ?w2 init
+    let rec = substPreservesTWF {d = d} {x = x} {g = (y, substInType x e t) :: g} (tWeaken (T_implies_TCTX eprf) ?w1 eprf) ?w2 init
      in rewrite substInCtxSnoc x e y t d
      in rewrite tossMidElem (substInCtx x e d) (y, substInType x e t) g
      in rec
 
-  substPreservesTWFHead : (((x, t1) :: g) |- t2) -> (g |- e : t1) -> (g |- substInType x e t2)
+  substPreservesTWFHead : (g |- e : s) -> (((x, s) :: g) |- tau) -> (g |- substInType x e tau)
+  substPreservesTWFHead eprf tauprf = substPreservesTWF eprf tauprf Empty
 
   -- Well-formedness of a type in a context implies well-formedness of said context
   TWF_implies_TCTX : (g |- t) -> g ok
@@ -116,7 +117,7 @@ mutual
   T_implies_TWF (T_Unit gok) = TWF_TrueRef gok
   T_implies_TWF (T_Var gok elemPrf) = anyTypeInCtxIsWellformed gok elemPrf
   T_implies_TWF (T_Abs arrWfPrf _) = arrWfPrf
-  T_implies_TWF (T_App prf1 prf2) = substPreservesTWFHead (arrWfImpliesCodWf $ T_implies_TWF prf1) prf2
+  T_implies_TWF (T_App prf1 prf2) = substPreservesTWFHead prf2 (arrWfImpliesCodWf $ T_implies_TWF prf1)
   T_implies_TWF (T_Case wfPrf _ _) = wfPrf
   T_implies_TWF (T_Con _ wfPrf) = wfPrf
   T_implies_TWF (T_Sub x y) = ?T_implies_TWF_sub_hole
