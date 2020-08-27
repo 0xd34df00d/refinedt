@@ -103,10 +103,9 @@ mutual
   substPreservesTWFHead : (((x, t1) :: g) |- t2) -> (g |- e : t1) -> (g |- substInType x e t2)
 
   -- Well-formedness of a type in a context implies well-formedness of said context
-  -- TODO get rid of `assert_smaller` by carrying the depth of the tree explicitly
   TWF_implies_TCTX : (g |- t) -> g ok
   TWF_implies_TCTX (TWF_TrueRef gok) = gok
-  TWF_implies_TCTX (TWF_Base t1 t2) = case TWF_implies_TCTX (assert_smaller (TWF_Base t1 t2) (T_implies_TWF t1)) of
+  TWF_implies_TCTX (TWF_Base t1 _) = case T_implies_TCTX t1 of
                                            TCTX_Bind gok _ => gok
   TWF_implies_TCTX (TWF_Conj twfr1 _) = TWF_implies_TCTX twfr1
   TWF_implies_TCTX (TWF_Arr twft1 _) = TWF_implies_TCTX twft1
