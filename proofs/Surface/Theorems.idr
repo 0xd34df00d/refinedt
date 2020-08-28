@@ -85,6 +85,10 @@ tossMidElem : (front : List a) -> (mid : a) -> (back : List a)
 tossMidElem [] mid back = Refl
 tossMidElem (_ :: front') mid back = cong $ tossMidElem front' mid back
 
+tossTWF : (((d ++ [p1]) ++ p2 :: g) |- t)
+       -> ((d ++ p1 :: p2 :: g) |- t)
+tossTWF {d} {p1} {p2} {g} prf = rewrite sym $ tossMidElem d p1 (p2 :: g) in prf
+
 -- g is for Γ
 -- d is for Δ
 subst1lemma : (g |- e : s)
@@ -95,8 +99,8 @@ subst2lemma : (g |- e : s)
            -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
            -> ((d ++ (y, substInType x e t) :: (x, s) :: g) |- tau)
 
-subst3lemma : ((d ++ (y, t) :: (x, s) :: g) |- tau)
-           -> ?t_no_x
+subst3lemma : ?t_no_x
+           -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
            -> ((d ++ (x, s) :: (y, t) :: g) |- tau)
 
 substPreservesTWF : (g |- e : s)
@@ -106,8 +110,9 @@ substPreservesTWF : (g |- e : s)
 substPreservesTWF {d = []} eprf tauprf Empty = ?later
 substPreservesTWF {x} {e} {g} {d = d ++ [(y, t)]} eprf tauprf (Snoc init) =
   let tWellFormed = strip_d d tauprf
+      tauprf' = subst3lemma ?w1 $ subst2lemma eprf $ tossTWF tauprf
       tsubst_ok_in_g = substPreservesTWF eprf tWellFormed Empty
-      rec = substPreservesTWF {d = d} {x = x} {g = (y, substInType x e t) :: g} (tWeaken (T_implies_TCTX eprf) tsubst_ok_in_g eprf) ?w2 init
+      rec = substPreservesTWF {x = x} {g = (y, substInType x e t) :: g} (tWeaken (T_implies_TCTX eprf) tsubst_ok_in_g eprf) tauprf' init
    in rewrite substInCtxSnoc x e y t d
    in rewrite tossMidElem (substInCtx x e d) (y, substInType x e t) g
    in rec
