@@ -105,8 +105,9 @@ substPreservesTWF : (g |- e : s)
                  -> ((substInCtx x e d ++ g) |- substInType x e tau)
 substPreservesTWF {x} {e} {g} {d = []} eprf tauprf Empty = ?later
 substPreservesTWF {x} {e} {g} {d = d ++ [(y, t)]} eprf tauprf (Snoc init) =
-  let rec = substPreservesTWF {d = d} {x = x} {g = (y, substInType x e t) :: g} (tWeaken (T_implies_TCTX eprf) ?w1 eprf) ?w2 init
-      tWellFormed = strip_d d tauprf
+  let tWellFormed = strip_d d tauprf
+      tsubst_ok_in_g = substPreservesTWF eprf tWellFormed Empty
+      rec = substPreservesTWF {d = d} {x = x} {g = (y, substInType x e t) :: g} (tWeaken (T_implies_TCTX eprf) tsubst_ok_in_g eprf) ?w2 init
    in rewrite substInCtxSnoc x e y t d
    in rewrite tossMidElem (substInCtx x e d) (y, substInType x e t) g
    in rec
@@ -118,7 +119,7 @@ substPreservesTWF {x} {e} {g} {d = d ++ [(y, t)]} eprf tauprf (Snoc init) =
                                      TCTX_Bind _ tPrf => strip_d ds tPrf
 
 substPreservesTWFHead : (g |- e : s) -> (((x, s) :: g) |- tau) -> (g |- substInType x e tau)
-substPreservesTWFHead eprf tauprf = substPreservesTWF eprf tauprf Empty
+--substPreservesTWFHead eprf tauprf = substPreservesTWF eprf tauprf Empty
 
 -- Well-typedness of a term in a context implies well-formedness of its type in said context
 T_implies_TWF : (g |- e : t) -> (g |- t)
