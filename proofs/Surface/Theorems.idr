@@ -83,7 +83,7 @@ substInCtxSnoc x e y t ((_, _) :: g') = cong $ substInCtxSnoc x e y t g'
 tossMidElem : (front : List a) -> (mid : a) -> (back : List a)
            -> ((front ++ [mid]) ++ back) = (front ++ mid :: back)
 tossMidElem [] mid back = Refl
-tossMidElem (f :: front') mid back = cong $ tossMidElem front' mid back
+tossMidElem (_ :: front') mid back = cong $ tossMidElem front' mid back
 
 -- g is for Γ
 -- d is for Δ
@@ -103,7 +103,7 @@ substPreservesTWF : (g |- e : s)
                  -> ((d ++ (x, s) :: g) |- tau)
                  -> SnocList d
                  -> ((substInCtx x e d ++ g) |- substInType x e tau)
-substPreservesTWF {x} {e} {g} {d = []} eprf tauprf Empty = ?later
+substPreservesTWF {d = []} eprf tauprf Empty = ?later
 substPreservesTWF {x} {e} {g} {d = d ++ [(y, t)]} eprf tauprf (Snoc init) =
   let tWellFormed = strip_d d tauprf
       tsubst_ok_in_g = substPreservesTWF eprf tWellFormed Empty
@@ -115,8 +115,8 @@ substPreservesTWF {x} {e} {g} {d = d ++ [(y, t)]} eprf tauprf (Snoc init) =
     strip_d : (d : Ctx) -> (((d ++ [(_, t)]) ++ (x, s) :: g) |- _) -> (((x, s) :: g) |- t)
     strip_d [] prf = case TWF_implies_TCTX prf of
                           TCTX_Bind _ tPrf => tPrf
-    strip_d {s} (d :: ds) prf = case TWF_implies_TCTX prf of
-                                     TCTX_Bind _ tPrf => strip_d ds tPrf
+    strip_d (d :: ds) prf = case TWF_implies_TCTX prf of
+                                 TCTX_Bind _ tPrf => strip_d ds tPrf
 
 substPreservesTWFHead : (g |- e : s) -> (((x, s) :: g) |- tau) -> (g |- substInType x e tau)
 --substPreservesTWFHead eprf tauprf = substPreservesTWF eprf tauprf Empty
