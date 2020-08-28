@@ -106,9 +106,16 @@ substPreservesTWF : (g |- e : s)
 substPreservesTWF {x} {e} {g} {d = []} eprf tauprf Empty = ?later
 substPreservesTWF {x} {e} {g} {d = d ++ [(y, t)]} eprf tauprf (Snoc init) =
   let rec = substPreservesTWF {d = d} {x = x} {g = (y, substInType x e t) :: g} (tWeaken (T_implies_TCTX eprf) ?w1 eprf) ?w2 init
+      tWellFormed = strip_d d tauprf
    in rewrite substInCtxSnoc x e y t d
    in rewrite tossMidElem (substInCtx x e d) (y, substInType x e t) g
    in rec
+  where
+    strip_d : (d : Ctx) -> (((d ++ [(_, t)]) ++ (x, s) :: g) |- _) -> (((x, s) :: g) |- t)
+    strip_d [] prf = case TWF_implies_TCTX prf of
+                          TCTX_Bind _ tPrf => tPrf
+    strip_d {s} (d :: ds) prf = case TWF_implies_TCTX prf of
+                                     TCTX_Bind _ tPrf => strip_d ds tPrf
 
 substPreservesTWFHead : (g |- e : s) -> (((x, s) :: g) |- tau) -> (g |- substInType x e tau)
 substPreservesTWFHead eprf tauprf = substPreservesTWF eprf tauprf Empty
