@@ -1,6 +1,7 @@
 module Surface.Syntax
 
 import Data.Vect
+import Decidable.Equality
 
 %default total
 
