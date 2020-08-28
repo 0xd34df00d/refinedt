@@ -17,7 +17,7 @@ import Surface.Theorems.Thinning
 %default total
 
 -- Well-typedness of a term in a context implies well-formedness of said context
-T_implies_TCTX : (g |- e : t) -> g ok
+T_implies_TCTX : (g |- e :. t) -> ok g
 T_implies_TCTX (T_Unit gok) = gok
 T_implies_TCTX (T_Var gok _) = gok
 T_implies_TCTX (T_Abs _ bodyPrf) = case T_implies_TCTX bodyPrf of
@@ -29,7 +29,7 @@ T_implies_TCTX (T_Sub eprf _) = T_implies_TCTX eprf
 
 
 -- Well-formedness of a type in a context implies well-formedness of said context
-TWF_implies_TCTX : (g |- t) -> g ok
+TWF_implies_TCTX : (g |- t) -> ok g
 TWF_implies_TCTX (TWF_TrueRef gok) = gok
 TWF_implies_TCTX (TWF_Base t1 _) = case T_implies_TCTX t1 of
                                          TCTX_Bind gok _ => gok
@@ -38,10 +38,10 @@ TWF_implies_TCTX (TWF_Arr twft1 _) = TWF_implies_TCTX twft1
 TWF_implies_TCTX (TWF_ADT (con1Ty :: _)) = TWF_implies_TCTX con1Ty
 
 
-twfWeaken : (g ok) -> (g |- ht) -> (g |- t) -> (((_, ht) :: g) |- t)
+twfWeaken : (ok g) -> (g |- ht) -> (g |- t) -> (((_, ht) :: g) |- t)
 twfWeaken {g} gok htPrf tPrf = twfThinning (IgnoreHead $ sublistSelf g) (TCTX_Bind gok htPrf) tPrf
 
-tWeaken : (g ok) -> (g |- ht) -> (g |- e : t) -> (((_, ht) :: g) |- e : t)
+tWeaken : (ok g) -> (g |- ht) -> (g |- e :. t) -> (((_, ht) :: g) |- e :. t)
 tWeaken {g} gok htPrf tPrf = tThinning (IgnoreHead $ sublistSelf g) (TCTX_Bind gok htPrf) tPrf
 
 mutual
@@ -87,11 +87,11 @@ tossTWF {d} {p1} {p2} {g} prf = rewrite sym $ tossMidElem d p1 (p2 :: g) in prf
 
 -- g is for Γ
 -- d is for Δ
-subst1lemma : (g |- e : s)
+subst1lemma : (g |- e :. s)
            -> ((d ++ (x, s) :: g) |- tau)
            -> ((d ++ (x, s) :: g) |- substInType x e tau)
 
-subst2lemma : (g |- e : s)
+subst2lemma : (g |- e :. s)
            -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
            -> ((d ++ (y, substInType x e t) :: (x, s) :: g) |- tau)
 subst2lemma eprf (TWF_TrueRef x) = TWF_TrueRef ?w0
@@ -100,7 +100,7 @@ subst2lemma eprf (TWF_Conj r1deriv r2deriv) = TWF_Conj (subst2lemma eprf r1deriv
 subst2lemma eprf (TWF_Arr argTy bodyTy) = TWF_Arr (subst2lemma eprf argTy) ?w4 -- (subst2lemma eprf bodyTy)
 subst2lemma eprf (TWF_ADT cons) = TWF_ADT $ substCons eprf cons
   where
-    substCons : (g |- e : s)
+    substCons : (g |- e :. s)
              -> All (\ty => (d ++ (y, t) :: (x, s) :: g) |- ty) tys
              -> All (\ty => (d ++ (y, substInType x e t) :: (x, s) :: g) |- ty) tys
     substCons _ [] = []
@@ -111,7 +111,8 @@ subst3lemma : ?t_no_x
            -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
            -> ((d ++ (x, s) :: (y, t) :: g) |- tau)
 
-substPreservesTWF : (g |- e : s)
+covering
+substPreservesTWF : (g |- e :. s)
                  -> ((d ++ (x, s) :: g) |- tau)
                  -> SnocList d
                  -> ((substInCtx x e d ++ g) |- substInType x e tau)
@@ -131,15 +132,15 @@ substPreservesTWF {x} {e} {g} {d = d ++ [(y, t)]} eprf tauprf (Snoc init) =
     strip_d (d :: ds) prf = case TWF_implies_TCTX prf of
                                  TCTX_Bind _ tPrf => strip_d ds tPrf
 
-substPreservesTWFHead : (g |- e : s) -> (((x, s) :: g) |- tau) -> (g |- substInType x e tau)
+substPreservesTWFHead : (g |- e :. s) -> (((x, s) :: g) |- tau) -> (g |- substInType x e tau)
 --substPreservesTWFHead eprf tauprf = substPreservesTWF eprf tauprf Empty
 
 -- Well-typedness of a term in a context implies well-formedness of its type in said context
-T_implies_TWF : (g |- e : t) -> (g |- t)
+T_implies_TWF : (g |- e :. t) -> (g |- t)
 T_implies_TWF (T_Unit gok) = TWF_TrueRef gok
 T_implies_TWF (T_Var gok elemPrf) = anyTypeInCtxIsWellformed gok elemPrf
   where
-    anyTypeInCtxIsWellformed : (g ok) -> Elem (x, t) g -> (g |- t)
+    anyTypeInCtxIsWellformed : (ok g) -> Elem (x, t) g -> (g |- t)
     anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) Here = twfWeaken init twfPrf twfPrf
     anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) (There later) = twfWeaken init twfPrf $ anyTypeInCtxIsWellformed init later
 T_implies_TWF (T_Abs arrWfPrf _) = arrWfPrf

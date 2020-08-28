@@ -15,7 +15,7 @@ import Helpers
 
 mutual
   export
-  twfThinning : Sublist g g' -> g' ok -> (g |- t) -> (g' |- t)
+  twfThinning : Sublist g g' -> ok g' -> (g |- t) -> (g' |- t)
   twfThinning _      g'ok (TWF_TrueRef g') = TWF_TrueRef g'ok
   twfThinning subPrf g'ok (TWF_Base t1 t2) = let expCtxOk = TCTX_Bind g'ok (TWF_TrueRef g'ok)
                                               in TWF_Base (tThinning (AppendBoth subPrf) expCtxOk t1) (tThinning (AppendBoth subPrf) expCtxOk t2)
@@ -25,12 +25,12 @@ mutual
                                                   (twfThinning (AppendBoth subPrf) (TCTX_Bind g'ok (twfThinning subPrf g'ok twf1)) twf2)
   twfThinning subPrf g'ok (TWF_ADT preds) = TWF_ADT (thinAll subPrf g'ok preds)
     where
-      thinAll : Sublist g g' -> g' ok -> All (\t => g |- t) ls -> All (\t => g' |- t) ls
+      thinAll : Sublist g g' -> ok g' -> All (\t => g |- t) ls -> All (\t => g' |- t) ls
       thinAll _ _ [] = []
       thinAll subPrf g'ok (a :: as) = twfThinning subPrf g'ok a :: thinAll subPrf g'ok as
 
   export
-  tThinning : Sublist g g' -> g' ok -> (g |- e : t) -> (g' |- e : t)
+  tThinning : {e : STerm} -> Sublist g g' -> ok g' -> (g |- e :. t) -> (g' |- e :. t)
   tThinning subPrf g'ok (T_Unit gokPrf) = T_Unit g'ok
   tThinning subPrf g'ok (T_Var _ elemPrf) = T_Var g'ok (superListHasElems subPrf elemPrf)
   tThinning subPrf g'ok (T_Abs arrWfPrf body) = let arrWfPrf' = twfThinning subPrf g'ok arrWfPrf

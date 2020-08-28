@@ -19,7 +19,7 @@ public export
 DecEq Var where
   decEq (MkVar var1) (MkVar var2) = case decEq var1 var2 of
                                          Yes Refl => Yes Refl
-                                         No contra => No $ \Refl => contra Refl
+                                         No contra => No $ \(Refl) => contra Refl
 
 public export
 data BaseType = BUnit
@@ -46,11 +46,11 @@ mutual
     var : Var
     body : STerm
 
-  infixl 6 &
+  infixl 6 /\
   infixl 7 |=|
   public export
   data Refinement = (|=|) STerm STerm
-                  | (&) Refinement Refinement
+                  | (/\) Refinement Refinement
   %name Refinement r, r1, r2
 
   public export
@@ -82,8 +82,6 @@ public export
 Τ : Refinement
 Τ = SUnit |=| SUnit
 
-syntax "{" [v] ":" [b] "|" [r] "}" = SRBT v b r
-
 mutual
   public export
   substInType : Var -> STerm -> SType -> SType
@@ -94,7 +92,7 @@ mutual
   public export
   substInRef : Var -> STerm -> Refinement -> Refinement
   substInRef x e (e1 |=| e2) = substInTerm x e e1 |=| substInTerm x e e2
-  substInRef x e (r1 & r2) = substInRef x e r1 & substInRef x e r2
+  substInRef x e (r1 /\ r2) = substInRef x e r1 /\ substInRef x e r2
 
   public export
   substInTerm : Var -> STerm -> STerm -> STerm
