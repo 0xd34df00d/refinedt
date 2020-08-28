@@ -94,6 +94,18 @@ subst1lemma : (g |- e : s)
 subst2lemma : (g |- e : s)
            -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
            -> ((d ++ (y, substInType x e t) :: (x, s) :: g) |- tau)
+subst2lemma eprf (TWF_TrueRef x) = TWF_TrueRef ?w0
+subst2lemma eprf (TWF_Base e1deriv e2deriv) = TWF_Base ?w1 ?w2
+subst2lemma eprf (TWF_Conj r1deriv r2deriv) = TWF_Conj (subst2lemma eprf r1deriv) (subst2lemma eprf r2deriv)
+subst2lemma eprf (TWF_Arr argTy bodyTy) = TWF_Arr (subst2lemma eprf argTy) ?w4 -- (subst2lemma eprf bodyTy)
+subst2lemma eprf (TWF_ADT cons) = TWF_ADT $ substCons eprf cons
+  where
+    substCons : (g |- e : s)
+             -> All (\ty => (d ++ (y, t) :: (x, s) :: g) |- ty) tys
+             -> All (\ty => (d ++ (y, substInType x e t) :: (x, s) :: g) |- ty) tys
+    substCons _ [] = []
+    substCons {x} {t} {y} {d} eprf (a :: as) = subst2lemma {x} {t} {y} {d} eprf a :: substCons eprf as
+    -- TODO revisit these implicits in Idris 2
 
 subst3lemma : ?t_no_x
            -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
