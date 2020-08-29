@@ -115,7 +115,7 @@ mutual
                    -> ((d ++ (x, s) :: g) |- tau)
                    -> SnocList d
                    -> ((substInCtx x e d ++ g) |- substInType x e tau)
-  substPreservesTWF eprf tauprf Empty = ?later
+  substPreservesTWF eprf tauprf Empty = substPreservesTWFHead eprf tauprf
   substPreservesTWF {x} {e} {g} eprf tauprf (Snoc (y, t) d init) =
     let tWellFormed = strip_d d tauprf
         tauprf' = exchange ?t_no_x' $ singleSubstInCtxTWF eprf $ tossTWF tauprf
