@@ -52,19 +52,6 @@ mutual
                   -> (((v, SRBT v1 b Τ) :: (x, t1) :: g) |- e' : res)
                   -> (g |- e : t1)
                   -> (((v, SRBT v1 b Τ) :: g) |- (substInTerm x e e') : SRBT v2 b' Τ)
-
-  substPreservesCons : (g |- e : t1) -> All (\conTy => ((x, t1) :: g) |- conTy) cons -> All (\conTy => g |- conTy) (substInADT x e cons)
-  substPreservesCons _ [] = []
-  substPreservesCons eprf (con :: cons) = substPreservesTWF con eprf :: substPreservesCons eprf cons
-
-  substPreservesTWF : (((x, t1) :: g) |- t2) -> (g |- e : t1) -> (g |- substInType x e t2)
-  substPreservesTWF (TWF_TrueRef (TCTX_Bind gok _)) eprf = TWF_TrueRef gok
-  substPreservesTWF (TWF_Base e1deriv e2deriv) eprf = TWF_Base (substTermRBTCase _ Refl e1deriv eprf) (substTermRBTCase _ Refl e2deriv eprf)
-  substPreservesTWF (TWF_Conj r1deriv r2deriv) eprf = TWF_Conj (substPreservesTWF r1deriv eprf) (substPreservesTWF r2deriv eprf)
-  substPreservesTWF (TWF_Arr {x} {t1} {t2} t1prf t2prf) eprf =
-    let t1prf' = substPreservesTWF t1prf eprf
-     in TWF_Arr t1prf' ?arg
-  substPreservesTWF (TWF_ADT alls) eprf = TWF_ADT $ substPreservesCons eprf alls
              -}
 
 
@@ -145,7 +132,17 @@ mutual
                                    TCTX_Bind _ tPrf => strip_d ds tPrf
 
   substPreservesTWFHead : (g |- e :. s) -> (((x, s) :: g) |- tau) -> (g |- substInType x e tau)
-  --substPreservesTWFHead eprf tauprf = substPreservesTWF eprf tauprf Empty
+  substPreservesTWFHead eprf (TWF_TrueRef (TCTX_Bind gok _)) = TWF_TrueRef gok
+  substPreservesTWFHead eprf (TWF_Base e1deriv e2deriv) = ?later_2
+  substPreservesTWFHead eprf (TWF_Conj r1deriv r2deriv) = TWF_Conj (substPreservesTWFHead eprf r1deriv) (substPreservesTWFHead eprf r2deriv)
+  substPreservesTWFHead eprf (TWF_Arr t1prf t2prf) = ?later_4
+  substPreservesTWFHead eprf (TWF_ADT alls) = TWF_ADT $ substPreservesCons eprf alls
+    where
+      substPreservesCons : (g |- e :. t1)
+                        -> All (\conTy => ((x, t1) :: g) |- conTy) cons
+                        -> All (\conTy => g |- conTy) (substInADT x e cons)
+      substPreservesCons _ [] = []
+      substPreservesCons eprf (con :: cons) = substPreservesTWFHead eprf con :: substPreservesCons eprf cons
 
 -- Well-typedness of a term in a context implies well-formedness of its type in said context
 T_implies_TWF : {e : STerm} -> {g : _} -> (g |- e :. t) -> (g |- t)
