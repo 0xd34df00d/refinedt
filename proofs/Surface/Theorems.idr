@@ -93,11 +93,20 @@ mutual
                     -> ((d ++ (x, s) :: g) |- tau)
                     -> ((d ++ (x, s) :: g) |- substInType x e tau)
 
+  singleSubstInCtxTCTX : {g, d : _} -> {x, y : _} -> {t : _}
+                      -> (g |- e :. s)
+                      -> ok (d ++ (y, t) :: (x, s) :: g)
+                      -> ok (d ++ (y, substInType x e t) :: (x, s) :: g)
+  singleSubstInCtxTCTX {d = []} eprf (TCTX_Bind prevOk@(TCTX_Bind prevOk' tyPrf') tyPrf) =
+    TCTX_Bind prevOk (twfWeaken prevOk' tyPrf' $ substPreservesTWFHead eprf tyPrf)
+  singleSubstInCtxTCTX {d = (dx, dt) :: d} eprf (TCTX_Bind prevOk tyPrf) =
+    TCTX_Bind (singleSubstInCtxTCTX eprf prevOk) (singleSubstInCtxTWF eprf tyPrf)
+
   singleSubstInCtxTWF : {x, y : _} -> {t : _} -> {g, d : _}
                      -> (g |- e :. s)
                      -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
                      -> ((d ++ (y, substInType x e t) :: (x, s) :: g) |- tau)
-  singleSubstInCtxTWF eprf (TWF_TrueRef gok) = TWF_TrueRef ?w0
+  singleSubstInCtxTWF eprf (TWF_TrueRef gok) = TWF_TrueRef $ singleSubstInCtxTCTX eprf gok
   singleSubstInCtxTWF eprf (TWF_Base e1deriv e2deriv) = TWF_Base ?w1 ?w2
   singleSubstInCtxTWF eprf (TWF_Conj r1deriv r2deriv) = TWF_Conj (singleSubstInCtxTWF eprf r1deriv) (singleSubstInCtxTWF eprf r2deriv)
   singleSubstInCtxTWF eprf (TWF_Arr argTy bodyTy) = TWF_Arr (singleSubstInCtxTWF eprf argTy) ?w4 -- (singleSubstInCtxTWF eprf bodyTy)
