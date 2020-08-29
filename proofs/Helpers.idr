@@ -1,6 +1,7 @@
 module Helpers
 
 import Data.List
+import Data.List.Elem
 
 %default total
 

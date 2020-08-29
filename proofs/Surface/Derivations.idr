@@ -1,6 +1,7 @@
 module Surface.Derivations
 
 import Data.List
+import Data.List.Elem
 import Data.So
 import Data.Vect
 import Data.Vect.Quantifiers
@@ -57,7 +58,8 @@ mutual
   data TWF : (g : Ctx) -> (t : SType) -> Type where
     TWF_TrueRef : ok g
                -> (g |- SRBT v b Τ)
-    TWF_Base    : (e1deriv : ((v, SRBT v1 b Τ) :: g) |- e1 :. SRBT v2 b' Τ)
+    TWF_Base    : {e1, e2 : STerm}
+               -> (e1deriv : ((v, SRBT v1 b Τ) :: g) |- e1 :. SRBT v2 b' Τ)
                -> (e2deriv : ((v, SRBT v1 b Τ) :: g) |- e2 :. SRBT v2 b' Τ)
                -> (g |- SRBT v b (e1 |=| e2))
     TWF_Conj    : (r1deriv : g |- SRBT v b r1)
