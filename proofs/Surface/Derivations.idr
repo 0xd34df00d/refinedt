@@ -52,7 +52,7 @@ mutual
   public export
   data TCTX : (g : Ctx) -> Type where
     TCTX_Empty  : TCTX []
-    TCTX_Bind   : TCTX g -> (g |- t) -> TCTX ((var, t) :: g)
+    TCTX_Bind   : (prevOk : TCTX g) -> (tyPrf : g |- t) -> TCTX ((var, t) :: g)
 
   public export
   data TWF : (g : Ctx) -> (t : SType) -> Type where
