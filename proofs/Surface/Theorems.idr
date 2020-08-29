@@ -123,7 +123,6 @@ mutual
           -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
           -> ((d ++ (x, s) :: (y, t) :: g) |- tau)
 
-  covering
   substPreservesTWF : {x : _} -> {e : _} -> {g : _}
                    -> (g |- e :. s)
                    -> ((d ++ (x, s) :: g) |- tau)
@@ -133,7 +132,7 @@ mutual
   substPreservesTWF {x} {e} {g} eprf tauprf (Snoc (y, t) d init) =
     let tWellFormed = strip_d d tauprf
         tauprf' = exchange ?t_no_x' $ singleSubstInCtxTWF eprf $ tossTWF tauprf
-        tsubst_ok_in_g = substPreservesTWF eprf tWellFormed Empty
+        tsubst_ok_in_g = substPreservesTWFHead eprf tWellFormed
         rec = substPreservesTWF {x = x} {g = (y, substInType x e t) :: g} (tWeaken (T_implies_TCTX eprf) tsubst_ok_in_g eprf) tauprf' init
      in rewrite substInCtxSnoc x e y t d
      in rewrite tossMidElem (substInCtx x e d) (y, substInType x e t) g
