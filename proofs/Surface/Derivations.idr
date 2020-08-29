@@ -89,7 +89,8 @@ mutual
     T_Abs       : (g |- SArr x t1 t2)
                -> (((x, t1) :: g) |- e :. t2)
                -> (g |- (SLam x t1 e) :. SArr x t1 t2)
-    T_App       : (g |- e1 :. SArr x t1 t2)
+    T_App       : {x : _}
+               -> (g |- e1 :. SArr x t1 t2)
                -> (g |- e2 :. t1)
                -> (g |- (SApp e1 e2) :. substInType x e2 t2)
     T_Case      : (g |- t')
