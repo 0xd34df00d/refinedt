@@ -88,30 +88,30 @@ tossTWF {d} {p1} {p2} {g} prf = rewrite sym $ tossMidElem d p1 (p2 :: g) in prf
 
 -- g is for Γ
 -- d is for Δ
-subst1lemma : (g |- e :. s)
-           -> ((d ++ (x, s) :: g) |- tau)
-           -> ((d ++ (x, s) :: g) |- substInType x e tau)
+derivesSubstituted : (g |- e :. s)
+                  -> ((d ++ (x, s) :: g) |- tau)
+                  -> ((d ++ (x, s) :: g) |- substInType x e tau)
 
-subst2lemma : {x : _} -> {t : _} -> {y : _} -> {d : _}
-           -> (g |- e :. s)
-           -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
-           -> ((d ++ (y, substInType x e t) :: (x, s) :: g) |- tau)
-subst2lemma eprf (TWF_TrueRef x) = TWF_TrueRef ?w0
-subst2lemma eprf (TWF_Base e1deriv e2deriv) = TWF_Base ?w1 ?w2
-subst2lemma eprf (TWF_Conj r1deriv r2deriv) = TWF_Conj (subst2lemma eprf r1deriv) (subst2lemma eprf r2deriv)
-subst2lemma eprf (TWF_Arr argTy bodyTy) = TWF_Arr (subst2lemma eprf argTy) ?w4 -- (subst2lemma eprf bodyTy)
-subst2lemma eprf (TWF_ADT cons) = TWF_ADT $ substCons eprf cons
+singleSubstInCtx : {x : _} -> {t : _} -> {y : _} -> {d : _}
+                -> (g |- e :. s)
+                -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
+                -> ((d ++ (y, substInType x e t) :: (x, s) :: g) |- tau)
+singleSubstInCtx eprf (TWF_TrueRef gok) = TWF_TrueRef ?w0
+singleSubstInCtx eprf (TWF_Base e1deriv e2deriv) = TWF_Base ?w1 ?w2
+singleSubstInCtx eprf (TWF_Conj r1deriv r2deriv) = TWF_Conj (singleSubstInCtx eprf r1deriv) (singleSubstInCtx eprf r2deriv)
+singleSubstInCtx eprf (TWF_Arr argTy bodyTy) = TWF_Arr (singleSubstInCtx eprf argTy) ?w4 -- (singleSubstInCtx eprf bodyTy)
+singleSubstInCtx eprf (TWF_ADT cons) = TWF_ADT $ substCons eprf cons
   where
     substCons : {x : _} -> {t : _} -> {y : _} -> {d : _}
              -> (g |- e :. s)
              -> All (\ty => (d ++ (y, t) :: (x, s) :: g) |- ty) tys
              -> All (\ty => (d ++ (y, substInType x e t) :: (x, s) :: g) |- ty) tys
     substCons _ [] = []
-    substCons eprf (a :: as) = subst2lemma eprf a :: substCons eprf as
+    substCons eprf (a :: as) = singleSubstInCtx eprf a :: substCons eprf as
 
-subst3lemma : ?t_no_x
-           -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
-           -> ((d ++ (x, s) :: (y, t) :: g) |- tau)
+exchange : ?t_no_x
+        -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
+        -> ((d ++ (x, s) :: (y, t) :: g) |- tau)
 
 covering
 substPreservesTWF : {x : _} -> {e : _} -> {g : _}
@@ -122,7 +122,7 @@ substPreservesTWF : {x : _} -> {e : _} -> {g : _}
 substPreservesTWF eprf tauprf Empty = ?later
 substPreservesTWF {x} {e} {g} eprf tauprf (Snoc (y, t) d init) =
   let tWellFormed = strip_d d tauprf
-      tauprf' = subst3lemma ?y1 $ subst2lemma eprf $ tossTWF tauprf
+      tauprf' = exchange ?t_no_x' $ singleSubstInCtx eprf $ tossTWF tauprf
       tsubst_ok_in_g = substPreservesTWF eprf tWellFormed Empty
       rec = substPreservesTWF {x = x} {g = (y, substInType x e t) :: g} (tWeaken (T_implies_TCTX eprf) tsubst_ok_in_g eprf) tauprf' init
    in rewrite substInCtxSnoc x e y t d
@@ -130,12 +130,10 @@ substPreservesTWF {x} {e} {g} eprf tauprf (Snoc (y, t) d init) =
    in rec
   where
     strip_d : (d : Ctx) -> (((d ++ [(_, t)]) ++ (x, s) :: g) |- _) -> (((x, s) :: g) |- t)
-    {-
     strip_d [] prf = case TWF_implies_TCTX prf of
                           TCTX_Bind _ tPrf => tPrf
     strip_d (d :: ds) prf = case TWF_implies_TCTX prf of
                                  TCTX_Bind _ tPrf => strip_d ds tPrf
-                                 -}
 
 substPreservesTWFHead : (g |- e :. s) -> (((x, s) :: g) |- tau) -> (g |- substInType x e tau)
 --substPreservesTWFHead eprf tauprf = substPreservesTWF eprf tauprf Empty
