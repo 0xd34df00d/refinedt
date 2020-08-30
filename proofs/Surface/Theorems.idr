@@ -80,7 +80,7 @@ mutual
                     -> ((d ++ (x, s) :: g) |- tau)
                     -> ((d ++ (x, s) :: g) |- substInType x e tau)
 
-  singleSubstInCtxTCTX : {g, d : _} -> {x, y : _} -> {t : _}
+  singleSubstInCtxTCTX : {g, d, x, y, t, e : _}
                       -> (g |- e :. s)
                       -> ok (d ++ (y, t) :: (x, s) :: g)
                       -> ok (d ++ (y, substInType x e t) :: (x, s) :: g)
@@ -89,7 +89,7 @@ mutual
   singleSubstInCtxTCTX {d = (dx, dt) :: d} eprf (TCTX_Bind prevOk tyPrf) =
     TCTX_Bind (singleSubstInCtxTCTX eprf prevOk) (singleSubstInCtxTWF eprf tyPrf)
 
-  singleSubstInCtxTWF : {x, y : _} -> {t : _} -> {g, d : _}
+  singleSubstInCtxTWF : {x, y, t, g, d, e : _}
                      -> (g |- e :. s)
                      -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
                      -> ((d ++ (y, substInType x e t) :: (x, s) :: g) |- tau)
@@ -110,7 +110,7 @@ mutual
           -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
           -> ((d ++ (x, s) :: (y, t) :: g) |- tau)
 
-  substPreservesTWF : {x : _} -> {e : _} -> {g : _}
+  substPreservesTWF : {x, e, g : _}
                    -> (g |- e :. s)
                    -> ((d ++ (x, s) :: g) |- tau)
                    -> SnocList d
