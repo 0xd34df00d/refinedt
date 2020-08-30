@@ -65,7 +65,8 @@ mutual
     TWF_Conj    : (r1deriv : g |- SRBT v b r1)
                -> (r2deriv : g |- SRBT v b r2)
                -> (g |- SRBT v b (r1 /\ r2))
-    TWF_Arr     : (g |- t1)
+    TWF_Arr     : {x, t1 : _}
+               -> (g |- t1)
                -> (((x, t1) :: g) |- t2)
                -> (g |- SArr x t1 t2)
     TWF_ADT     : All (\conTy => g |- conTy) adtCons

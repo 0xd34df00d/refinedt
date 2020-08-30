@@ -131,11 +131,16 @@ mutual
       strip_d (d :: ds) prf = case TWF_implies_TCTX prf of
                                    TCTX_Bind _ tPrf => strip_d ds tPrf
 
-  substPreservesTWFHead : (g |- e :. s) -> (((x, s) :: g) |- tau) -> (g |- substInType x e tau)
+  substPreservesTWFHead : {x, e, g : _}
+                       -> (g |- e :. s) -> (((x, s) :: g) |- tau)
+                       -> (g |- substInType x e tau)
   substPreservesTWFHead eprf (TWF_TrueRef (TCTX_Bind gok _)) = TWF_TrueRef gok
-  substPreservesTWFHead eprf (TWF_Base e1deriv e2deriv) = ?later_2
+  substPreservesTWFHead eprf (TWF_Base e1deriv e2deriv) = TWF_Base ?y1 ?y2
   substPreservesTWFHead eprf (TWF_Conj r1deriv r2deriv) = TWF_Conj (substPreservesTWFHead eprf r1deriv) (substPreservesTWFHead eprf r2deriv)
-  substPreservesTWFHead eprf (TWF_Arr t1prf t2prf) = ?later_4
+  substPreservesTWFHead eprf (TWF_Arr {t1} {x} t1prf t2prf) =
+    let t1prf' = substPreservesTWFHead eprf t1prf
+        t2prf' = substPreservesTWF eprf t2prf (snocList [(x, t1)])
+     in TWF_Arr t1prf' t2prf'
   substPreservesTWFHead eprf (TWF_ADT alls) = TWF_ADT $ substPreservesCons eprf alls
     where
       substPreservesCons : (g |- e :. t1)
