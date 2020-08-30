@@ -71,6 +71,7 @@ G , x : ts ok
 
 defn G |- ts :: :: type_wf :: TWF_ {{ com type well-formedness }} by
 
+G ok
 -------------------- :: TrueRef
 G |- { v : B | top }
 
@@ -96,6 +97,7 @@ G |- < </ li : tsi // i /> >
 
 defn G |- es : ts :: :: typing :: T_ {{ com term typing }} by
 
+G ok
 x : ts in G
 ---------- :: Var
 G |- x : ts
