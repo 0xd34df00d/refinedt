@@ -99,7 +99,7 @@ mutual
   singleSubstInCtxTWF eprf (TWF_Arr argTy bodyTy) = TWF_Arr (singleSubstInCtxTWF eprf argTy) ?w4 -- (singleSubstInCtxTWF eprf bodyTy)
   singleSubstInCtxTWF eprf (TWF_ADT cons) = TWF_ADT $ substCons eprf cons
     where
-      substCons : {x : _} -> {t : _} -> {y : _} -> {d : _}
+      substCons : {x, t, y, d : _}
                -> (g |- e :. s)
                -> All (\ty => (d ++ (y, t) :: (x, s) :: g) |- ty) tys
                -> All (\ty => (d ++ (y, substInType x e t) :: (x, s) :: g) |- ty) tys
@@ -116,11 +116,11 @@ mutual
                    -> SnocList d
                    -> ((substInCtx x e d ++ g) |- substInType x e tau)
   substPreservesTWF eprf tauprf Empty = substPreservesTWFHead eprf tauprf
-  substPreservesTWF {x} {e} {g} eprf tauprf (Snoc (y, t) d init) =
+  substPreservesTWF eprf tauprf (Snoc (y, t) d init) =
     let tWellFormed = strip_d d tauprf
         tauprf' = exchange ?t_no_x' $ singleSubstInCtxTWF eprf $ tossTWF tauprf
         tsubst_ok_in_g = substPreservesTWFHead eprf tWellFormed
-        rec = substPreservesTWF {x = x} {g = (y, substInType x e t) :: g} (tWeaken (T_implies_TCTX eprf) tsubst_ok_in_g eprf) tauprf' init
+        rec = substPreservesTWF (tWeaken (T_implies_TCTX eprf) tsubst_ok_in_g eprf) tauprf' init
      in rewrite substInCtxSnoc x e y t d
      in rewrite tossMidElem (substInCtx x e d) (y, substInType x e t) g
      in rec
@@ -137,9 +137,9 @@ mutual
   substPreservesTWFHead eprf (TWF_TrueRef (TCTX_Bind gok _)) = TWF_TrueRef gok
   substPreservesTWFHead eprf (TWF_Base e1deriv e2deriv) = TWF_Base ?y1 ?y2
   substPreservesTWFHead eprf (TWF_Conj r1deriv r2deriv) = TWF_Conj (substPreservesTWFHead eprf r1deriv) (substPreservesTWFHead eprf r2deriv)
-  substPreservesTWFHead eprf (TWF_Arr {t1} {x} t1prf t2prf) =
+  substPreservesTWFHead eprf (TWF_Arr t1prf t2prf) =
     let t1prf' = substPreservesTWFHead eprf t1prf
-        t2prf' = substPreservesTWF eprf t2prf (snocList [(x, t1)])
+        t2prf' = substPreservesTWF eprf t2prf (snocList [_])
      in TWF_Arr t1prf' t2prf'
   substPreservesTWFHead eprf (TWF_ADT alls) = TWF_ADT $ substPreservesCons eprf alls
     where
