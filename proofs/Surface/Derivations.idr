@@ -21,30 +21,29 @@ mutual
   ok : (g : Ctx) -> Type
   ok = TCTX
 
+  infixl 3 |-
+  infixl 3 :.
+  infixl 3 <:
+
   namespace TWF_ops
-    infixl 3 |-
     public export
     (|-) : (g : Ctx) -> (t : SType) -> Type
     (|-) = TWF
 
   namespace T_ops
-    infixl 3 |-
     public export
     (|-) : (g : Ctx) -> (e : STerm) -> (t : SType) -> Type
     (|-) = T
 
-    infixl 3 :.
     public export
     (:.) : (SType -> Type) -> SType -> Type
     (:.) f x = f x
 
   namespace ST_ops
-    infixl 3 |-
     public export
     (|-) : (g : Ctx) -> (t1 : SType) -> (t2 : SType) -> Type
     (|-) = ST
 
-    infixl 3 <:
     public export
     (<:) : (SType -> Type) -> SType -> Type
     (<:) f x = f x
