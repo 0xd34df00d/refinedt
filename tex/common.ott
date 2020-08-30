@@ -5,6 +5,7 @@ terminals :: terminals_ ::=
   | /\      :: :: and {{ tex \land }}
   | ->      :: :: arr {{ tex \rightarrow }}
   | |->     :: :: subst {{ tex \mapsto }}
+  | GD		:: :: contextdelta {{ tex \Delta }}
   | ~~>		:: :: evalsto {{ tex \evalsto }}
   | in		:: :: in  {{ tex \in }}
   | |-		:: :: proves {{ tex \vdash }}

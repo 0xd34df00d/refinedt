@@ -44,6 +44,9 @@ G {{ tex \nonterm G }} :: env_ ::= {{ com typing contexts }}
   | empty			::   :: nil {{ com empty }}
   | G , x : ts		::   :: var {{ com variable }}
   | G , v : ts		:: M :: refvar {{ com refvar }}
+  | GD				:: M :: otherctx {{ com otherctx }}
+  | G , G'			:: M :: concat {{ com contexts concatenation }}
+  | [ x |-> es ] G	:: M :: subst {{ com substition }}
 
 L {{ tex \nonterm L }} :: logic_pred_ ::= {{ com logical predicate }}
   | es1 = es2		::   :: termEq {{ com term equality }}
