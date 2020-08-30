@@ -187,22 +187,63 @@ In the subsequent text we also assume the oracle can decide the resulting propos
 
 \subsubsection{Properties}
 
+We prove some of the usual metatheoretical properties of the proposed language.
+
 \begin{lemma}\label{lma:term_wf_implies_ctx_wf}
   If $[[ G |- es : ts ]]$, then $[[ G ok ]]$.
 \end{lemma}
 \begin{proof}
   Straightforward induction on the derivation of $[[ G |- es : ts ]]$.
-  \textsc{T-Unit} carries the witness explicitly,
-  and the other rules fall back to one of their premises.
+  \textsc{T-Unit} and \testsc{T-Var} carry the witness explicitly,
+  and the other rules recurse on one of their premises.
 
-  A formal proof is done as the \verb+T_implies_TCTX+ theorem in the supplemental code.
+  The \verb+T_implies_TCTX+ theorem in the supplemental code represents a formal proof of this lemma.
+\end{proof}
+
+\begin{lemma}\label{lma:type_wf_implies_ctx_wf}
+  If $[[ G |- ts ]]$, then $[[G ok]]$.
+\end{lemma}
+\begin{proof}
+  Straightforward induction on the derivation of $[[ G |- ts ]]$.
+  \textsc{TWF-TrueRef} carries the witness explicitly,
+  the case for \testsc{TWF-Base} uses \cref{lma:term_wf_implies_ctx_wf} on either of its premises,
+  and the other rules recurse on one of their premises.
+
+  The \verb+TWF_implies_TCTX+ theorem in the supplemental code represents a formal proof of this lemma.
+\end{proof}
+
+\begin{lemma}[Thinning]\label{lma:thinning}
+  Let $[[ G ]], [[ G' ]]$ be contexts such that $[[ G ]] \subset [[ G' ]]$ and $[[ G' ok ]]$.
+  Then:
+  \begin{itemize}
+    \item If $[[ G |- ts ]]$, then $[[ G' |- ts ]]$.
+    \item If $[[ G |- es : ts ]]$, then $[[ G' |- es : ts ]]$.
+  \end{itemize}
+\end{lemma}
+\begin{proof}
+  Mutual induction on the derivations of $[[ G |- ts ]]$ and $[[ G |- es : ts ]]$.
+
+  The formal proofs of the two implications in this lemma
+  are done as the \verb+twfThinning+ and \verb+tThinning+ theorems respectively.
+\end{proof}
+
+\begin{lemma}[Substitution on types]\label{lma:type_substitution}
+  Assume $[[ G, x : ts, GD |- ts' ]]$ and $[[ G |- es : ts ]]$, then $[[ G, [ x |-> es ] GD |- [ x |-> es ] ts' ]] $.
+\end{lemma}
+\begin{proof}
+  Due to the presence of a subset of dependent types the proof is a bit bulky.
+  We refer the interested reader to the \verb+substPreservesTWF+ theorem in the supplemental code.
 \end{proof}
 
 \begin{lemma}\label{lma:term_wf_implies_type_wf}
   If $[[ G |- es : ts ]]$, then $[[ G |- ts ]]$.
 \end{lemma}
 \begin{proof}
-  \todo[inline]{Do the proof.}
+  Straightforward induction on the derivation of $[[ G |- es : ts ]]$.
+  The interesting case is \textsc{T-App},
+  as it invokes the substitution lemma (\cref{lma:type_substitution}).
+
+  The \verb+T_implies_TWF+ theorem in the supplemental code represents a formal proof of this lemma.
 \end{proof}
 
 \subsection{Core language}
