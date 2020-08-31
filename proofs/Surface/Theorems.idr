@@ -103,9 +103,15 @@ mutual
   exchangeTCTX {d = []} no_x (TCTX_Bind (TCTX_Bind prevOk tyPrf') tyPrf) = TCTX_Bind (TCTX_Bind prevOk no_x) (twfWeaken prevOk no_x tyPrf')
   exchangeTCTX {d = (hx, ht) :: d} no_x (TCTX_Bind prevOk tyPrf) = TCTX_Bind (exchangeTCTX no_x prevOk) (exchangeTWF no_x tyPrf)
 
-  exchangeTWF : (g |- t)
+  exchangeTWF : {g, d : _}
+             -> (g |- t)
              -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
              -> ((d ++ (x, s) :: (y, t) :: g) |- tau)
+  exchangeTWF no_x (TWF_TrueRef gok) = TWF_TrueRef (exchangeTCTX no_x gok)
+  exchangeTWF no_x (TWF_Base e1deriv e2deriv) = TWF_Base ?e1 ?e2
+  exchangeTWF no_x (TWF_Conj r1deriv r2deriv) = TWF_Conj (exchangeTWF no_x r1deriv) (exchangeTWF no_x r2deriv)
+  exchangeTWF no_x (TWF_Arr w v) = ?exchange_rhs_4
+  exchangeTWF no_x (TWF_ADT w) = TWF_ADT ?e5
 
   substPreservesTWF : {x, e, g : _}
                    -> (g |- e :. s)
