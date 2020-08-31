@@ -96,9 +96,9 @@ mutual
       substCons _ [] = []
       substCons eprf (a :: as) = singleSubstInCtxTWF eprf a :: substCons eprf as
 
-  exchange : ?t_no_x
-          -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
-          -> ((d ++ (x, s) :: (y, t) :: g) |- tau)
+  exchangeTWF : (g |- t)
+             -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
+             -> ((d ++ (x, s) :: (y, t) :: g) |- tau)
 
   substPreservesTWF : {x, e, g : _}
                    -> (g |- e :. s)
@@ -108,7 +108,7 @@ mutual
   substPreservesTWF eprf tauprf Empty = substPreservesTWFHead eprf tauprf
   substPreservesTWF eprf tauprf (Snoc (y, t) d init) =
     let tWellFormed = strip_d d tauprf
-        tauprf' = exchange ?t_no_x' $ singleSubstInCtxTWF eprf $ tossTWF tauprf
+        tauprf' = exchangeTWF ?t_no_x' $ singleSubstInCtxTWF eprf $ tossTWF tauprf
         tsubst_ok_in_g = substPreservesTWFHead eprf tWellFormed
         rec = substPreservesTWF (tWeaken (T_implies_TCTX eprf) tsubst_ok_in_g eprf) tauprf' init
      in rewrite substInCtxSnoc x e y t d
