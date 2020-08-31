@@ -58,15 +58,15 @@ mutual
     TWF_TrueRef : ok g
                -> (g |- SRBT v b Τ)
     TWF_Base    : {e1, e2 : STerm}
-               -> (e1deriv : ((v, SRBT v1 b Τ) :: g) |- e1 :. SRBT v2 b' Τ)
-               -> (e2deriv : ((v, SRBT v1 b Τ) :: g) |- e2 :. SRBT v2 b' Τ)
+               -> (e1deriv : (v, SRBT v1 b Τ) :: g |- e1 :. SRBT v2 b' Τ)
+               -> (e2deriv : (v, SRBT v1 b Τ) :: g |- e2 :. SRBT v2 b' Τ)
                -> (g |- SRBT v b (e1 |=| e2))
     TWF_Conj    : (r1deriv : g |- SRBT v b r1)
                -> (r2deriv : g |- SRBT v b r2)
                -> (g |- SRBT v b (r1 /\ r2))
     TWF_Arr     : {x, t1 : _}
                -> (g |- t1)
-               -> (((x, t1) :: g) |- t2)
+               -> ((x, t1) :: g |- t2)
                -> (g |- SArr x t1 t2)
     TWF_ADT     : All (\conTy => g |- conTy) adtCons
                -> (g |- SADT adtCons)
@@ -75,7 +75,7 @@ mutual
   data BranchesHaveType : (cons : ADTCons n) -> (branches : CaseBranches n) -> (t' : SType) -> Type where
     NoBranches    : BranchesHaveType [] [] t'
     OneMoreBranch : {conTy : SType} -> {var : Var} -> {body : STerm}
-                 -> (((var, conTy) :: g) |- body :. t')         -- TODO x fresh name in context?
+                 -> ((var, conTy) :: g |- body :. t')         -- TODO x fresh name in context?
                  -> (rest : BranchesHaveType cons branches t')
                  -> BranchesHaveType (conTy :: cons) (MkCaseBranch var body :: branches) t'
 
@@ -85,21 +85,21 @@ mutual
                -> g |- SUnit :. SRBT v BUnit Τ
     T_Var       : ok g
                -> Elem (x, t) g
-               -> (g |- (SVar x) :. t)
+               -> (g |- SVar x :. t)
     T_Abs       : (g |- SArr x t1 t2)
-               -> (((x, t1) :: g) |- e :. t2)
-               -> (g |- (SLam x t1 e) :. SArr x t1 t2)
+               -> ((x, t1) :: g |- e :. t2)
+               -> (g |- SLam x t1 e :. SArr x t1 t2)
     T_App       : {x : _}
                -> (g |- e1 :. SArr x t1 t2)
                -> (g |- e2 :. t1)
-               -> (g |- (SApp e1 e2) :. substInType x e2 t2)
+               -> (g |- SApp e1 e2 :. substInType x e2 t2)
     T_Case      : (g |- t')
                -> (g |- e :. SADT cons)
                -> BranchesHaveType cons branches t'
-               -> (g |- (SCase e branches) :. t')
+               -> (g |- SCase e branches :. t')
     T_Con       : (g |- e :. tj)
                -> (g |- SADT cons)
-               -> (g |- (SCon idx e cons) :. SADT cons)
+               -> (g |- SCon idx e cons :. SADT cons)
     T_Sub       : {e : STerm}
                -> (g |- e :. t)
                -> (g |- t <: t')
@@ -111,5 +111,5 @@ mutual
                -> So (isJust (decide oracle v b r1 r2))
                -> (g |- SRBT v b r1 <: SRBT v b r2)
     ST_Arr      : (g |- t1' <: t1)
-               -> (((x, t1') :: g) |- t2 <: t2')
-               -> (g |- (SArr x t1 t2) <: (SArr x t1' t2'))
+               -> ((x, t1') :: g |- t2 <: t2')
+               -> (g |- SArr x t1 t2 <: SArr x t1' t2')
