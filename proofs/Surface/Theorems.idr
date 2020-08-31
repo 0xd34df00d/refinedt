@@ -45,16 +45,6 @@ twfWeaken {g} gok htPrf tPrf = twfThinning (IgnoreHead $ sublistSelf g) (TCTX_Bi
 tWeaken : {g : Ctx} -> {e : STerm} -> (ok g) -> (g |- ht) -> (g |- e :. t) -> (((_, ht) :: g) |- e :. t)
 tWeaken {g} gok htPrf tPrf = tThinning (IgnoreHead $ sublistSelf g) (TCTX_Bind gok htPrf) tPrf
 
-mutual
-  {-
-  substTermRBTCase : (res : SType)
-                  -> (res = SRBT v2 b' Τ)
-                  -> (((v, SRBT v1 b Τ) :: (x, t1) :: g) |- e' : res)
-                  -> (g |- e : t1)
-                  -> (((v, SRBT v1 b Τ) :: g) |- (substInTerm x e e') : SRBT v2 b' Τ)
-             -}
-
-
 substInCtx : Var -> STerm -> Ctx -> Ctx
 substInCtx x e [] = []
 substInCtx x e ((x', ty) :: rest) = (x', substInType x e ty) :: substInCtx x e rest
