@@ -96,6 +96,13 @@ mutual
       substCons _ [] = []
       substCons eprf (a :: as) = singleSubstInCtxTWF eprf a :: substCons eprf as
 
+  exchangeTCTX : {g, d : _}
+              -> (g |- t)
+              -> ok (d ++ (y, t) :: (x, s) :: g)
+              -> ok (d ++ (x, s) :: (y, t) :: g)
+  exchangeTCTX {d = []} no_x (TCTX_Bind (TCTX_Bind prevOk tyPrf') tyPrf) = TCTX_Bind (TCTX_Bind prevOk no_x) (twfWeaken prevOk no_x tyPrf')
+  exchangeTCTX {d = (hx, ht) :: d} no_x (TCTX_Bind prevOk tyPrf) = TCTX_Bind (exchangeTCTX no_x prevOk) (exchangeTWF no_x tyPrf)
+
   exchangeTWF : (g |- t)
              -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
              -> ((d ++ (x, s) :: (y, t) :: g) |- tau)
