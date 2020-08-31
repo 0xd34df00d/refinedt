@@ -49,7 +49,7 @@ substInCtx : Var -> STerm -> Ctx -> Ctx
 substInCtx x e [] = []
 substInCtx x e ((x', ty) :: rest) = (x', substInType x e ty) :: substInCtx x e rest
 
-substInCtxSnoc : (x : _) -> (e : _) -> (y : _) -> (t : _) -> (g : Ctx)
+substInCtxSnoc : (x, e, y, t, g : _)
               -> substInCtx x e (g ++ [(y, t)]) = substInCtx x e g ++ [(y, substInType x e t)]
 substInCtxSnoc _ _ _ _ [] = Refl
 substInCtxSnoc x e y t ((_, _) :: g') = rewrite substInCtxSnoc x e y t g' in Refl
