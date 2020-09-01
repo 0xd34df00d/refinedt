@@ -34,6 +34,7 @@ ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
   | f					:: M :: fvar
   | \ bnds : ec1 . ec2	:: M :: lambndsabs
   | \ _ : ec1 . ec2		:: M :: lamirrabs {{ com abstraction irrelevant }}
+  | Pi _ : ec1 . ec2	:: M :: piirr {{ com pi type irrelevant }}
   | seconddp			:: M :: map_second_dp {{ tex \secondDP }}
   | sigma				:: M :: oracle_sigma {{ tex \sigma }}
   | gamma				:: M :: subtyping_conversion
