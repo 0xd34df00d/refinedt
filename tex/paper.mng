@@ -324,31 +324,30 @@ and state some straightforward facts that will be useful later:
     to ``move'' the $x$ into the right position in the final $[[ GC ]]$.
   \item Non-dependent function type:
     \[
-      \nonterm{tc}_1 \rightarrow \nonterm{tc}_2 \triangleq \Pi \_ : \nonterm{tc}_1. \nonterm{tc}_2.
+      [[ tc1 -> tc2 ]] \triangleq [[ Pi _ : tc1. tc2 ]].
     \]
   \item Dependent pair type, or $\Sigma$-type,
     with the first component being a value $x$ of type $[[tc]]$
     and the second component being of type $P x$, where $P$ is usually of type $[[tc]] \rightarrow \star$:
     \[
-      (x : \nonterm{tc} \dast P x) \triangleq \Pi \alpha : \star. (\Pi x : \nonterm{tc}. P x \rightarrow \alpha) \rightarrow \alpha,
+      [[ (x : tc ** Pred x) ]] \triangleq [[ Pi alpha : sst. (Pi x : tc. Pred x -> alpha) -> alpha ]],
     \]
     with the corresponding constructor (we overload the syntax here to resemble Idris \cite{Idris13}):
     \[
-      (x \dast p) \triangleq \lambda \alpha : \star. \lambda f : (\Pi x' : \nonterm{tc}. P x' \rightarrow \alpha). f x p
-    \]
+			[[ (x ** p) ]] \triangleq [[ \ alpha : sst. \ f : (Pi x' : tc. Pred x' -> alpha). f x p ]]
+		\]
     and projections
     \[
-      \text{fst} \triangleq \lambda \sigma : (x : \nonterm{tc} \dast P x). \sigma \nonterm{tc} (\lambda x' : \nonterm{tc}. \lambda \_ : P x'. x'),
+      \text{fst} \triangleq [[ \ sigma : (x : tc ** Pred x). sigma tc (\ x' : tc. \ _ : Pred x'. x') ]],
     \]
     \[
-      \text{snd} \triangleq \lambda \sigma : (x : \nonterm{tc} \dast P x). \sigma \nonterm{tc} (\lambda x' : \nonterm{tc}. \lambda p : P x'. p).
+      \text{snd} \triangleq [[ \ sigma : (x : tc ** Pred x). sigma tc (\ x' : tc. \ p : Pred x'. p) ]].
     \]
     It is easy to see from the formation rule that
     \begin{lemma}\label{lma:dep_pair_typing}
-      If $\nonterm{tc}$ is typeable in $\nonterm{GC}$
-      and $P x$ is typeable in $\nonterm{GC} , x : \nonterm{tc}$,
-      then $(x : \nonterm{tc} \dast P x)$ is also typeable in $\nonterm{GC}$ and,
-      in particular, it has type $\star$.
+      If $[[ tc ]]$ is typeable in $[[ GC ]]$
+      and $[[ Pred x ]]$ is typeable in $[[ GC, x : tc ]]$,
+      then $[[ GC |- (x : tc ** Pred x ) : sst ]]$.
     \end{lemma}
 
     We also introduce a helper $[[seconddp]]$ that will be useful later.
