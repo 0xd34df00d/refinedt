@@ -37,6 +37,7 @@ ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
   | Pi _ : ec1 . ec2	:: M :: piirr {{ com pi type irrelevant }}
   | seconddp			:: M :: map_second_dp {{ tex \secondDP }}
   | sigma				:: M :: oracle_sigma {{ tex \sigma }}
+  | alpha				:: M :: alpha_type {{ tex \alpha }}
   | gamma				:: M :: subtyping_conversion
   | Pi bnds : ec . ec'	:: M :: pibndsabs
 
