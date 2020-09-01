@@ -66,10 +66,6 @@ tossTWF {d} {p1} {p2} {g} prf = rewrite sym $ tossMidElem d p1 (p2 :: g) in prf
 -- g is for Γ
 -- d is for Δ
 mutual
-  derivesSubstituted : (g |- e :. s)
-                    -> (d ++ (x, s) :: g |- tau)
-                    -> (d ++ (x, s) :: g |- substInType x e tau)
-
   singleSubstInCtxTCTX : {g, d, x, y, t, e : _}
                       -> (g |- e :. s)
                       -> ok (d ++ (y, t) :: (x, s) :: g)
