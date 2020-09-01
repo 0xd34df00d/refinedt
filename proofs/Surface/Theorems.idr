@@ -39,15 +39,6 @@ TWF_implies_TCTX (TWF_Arr twft1 _) = TWF_implies_TCTX twft1
 TWF_implies_TCTX (TWF_ADT (con1Ty :: _)) = TWF_implies_TCTX con1Ty
 
 
-substInCtx : Var -> STerm -> Ctx -> Ctx
-substInCtx x e [] = []
-substInCtx x e ((x', ty) :: rest) = (x', substInType x e ty) :: substInCtx x e rest
-
-substInCtxSnoc : (x, e, y, t, g : _)
-              -> substInCtx x e (g ++ [(y, t)]) = substInCtx x e g ++ [(y, substInType x e t)]
-substInCtxSnoc _ _ _ _ [] = Refl
-substInCtxSnoc x e y t ((_, _) :: g') = rewrite substInCtxSnoc x e y t g' in Refl
-
 tossMidElem : (front : List a) -> (mid : a) -> (back : List a)
            -> ((front ++ [mid]) ++ back) = (front ++ mid :: back)
 tossMidElem [] mid back = Refl
