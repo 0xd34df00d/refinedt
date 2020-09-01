@@ -332,7 +332,7 @@ and state some straightforward facts that will be useful later:
     \[
       (x : \nonterm{tc} \dast P x) \triangleq \Pi \alpha : \star. (\Pi x : \nonterm{tc}. P x \rightarrow \alpha) \rightarrow \alpha,
     \]
-    with the corresponding constructor (we overload the syntax here to resemble Idris):
+    with the corresponding constructor (we overload the syntax here to resemble Idris \cite{Idris13}):
     \[
       (x \dast p) \triangleq \lambda \alpha : \star. \lambda f : (\Pi x' : \nonterm{tc}. P x' \rightarrow \alpha). f x p
     \]
