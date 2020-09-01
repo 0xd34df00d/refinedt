@@ -249,6 +249,7 @@ We prove some of the usual metatheoretical properties of the proposed language.
 \subsection{Core language}
 
 We take $\lambda C$ \cite{TTFPLambdaC}
+(a pure type system \cite{FindSomethingForThis} with two sorts)
 extended with a unit type
 and a restricted form of ADTs as our core dependently typed language.
 We conjecture that these extensions
