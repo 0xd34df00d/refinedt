@@ -39,12 +39,6 @@ TWF_implies_TCTX (TWF_Arr twft1 _) = TWF_implies_TCTX twft1
 TWF_implies_TCTX (TWF_ADT (con1Ty :: _)) = TWF_implies_TCTX con1Ty
 
 
-twfWeaken : {g : Ctx} -> (ok g) -> (g |- ht) -> (g |- t) -> ((_, ht) :: g |- t)
-twfWeaken {g} gok htPrf tPrf = twfThinning (IgnoreHead $ sublistSelf g) (TCTX_Bind gok htPrf) tPrf
-
-tWeaken : {g : Ctx} -> {e : STerm} -> (ok g) -> (g |- ht) -> (g |- e :. t) -> ((_, ht) :: g |- e :. t)
-tWeaken {g} gok htPrf tPrf = tThinning (IgnoreHead $ sublistSelf g) (TCTX_Bind gok htPrf) tPrf
-
 substInCtx : Var -> STerm -> Ctx -> Ctx
 substInCtx x e [] = []
 substInCtx x e ((x', ty) :: rest) = (x', substInType x e ty) :: substInCtx x e rest

@@ -41,3 +41,11 @@ mutual
   tThinning subPrf g'ok (T_Case twf scrut branches) = T_Case (twfThinning subPrf g'ok twf) (tThinning subPrf g'ok scrut) branches
   tThinning subPrf g'ok (T_Con arg adtTy) = T_Con (tThinning subPrf g'ok arg) (twfThinning subPrf g'ok adtTy)
   tThinning subPrf g'ok (T_Sub x y) = ?thinning_sub_hole
+
+export
+twfWeaken : {g : Ctx} -> (ok g) -> (g |- ht) -> (g |- t) -> ((_, ht) :: g |- t)
+twfWeaken {g} gok htPrf tPrf = twfThinning (IgnoreHead $ sublistSelf g) (TCTX_Bind gok htPrf) tPrf
+
+export
+tWeaken : {g : Ctx} -> {e : STerm} -> (ok g) -> (g |- ht) -> (g |- e :. t) -> ((_, ht) :: g |- e :. t)
+tWeaken {g} gok htPrf tPrf = tThinning (IgnoreHead $ sublistSelf g) (TCTX_Bind gok htPrf) tPrf
