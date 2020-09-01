@@ -268,7 +268,14 @@ For instance, core typing contexts are denoted as $[[ GC ]]$ and core expression
 Although there is no separate syntactic notion of a type,
 $[[ tc ]]$ is used a a metavariable where a type (an inhabitant of $\star$) is expected.
 
-Even though we believe that our core language still enjoys the strong normalization property,
+In addition to that, we will somewhat frivolously use $\hat B$
+to denote the core language analogue of a surface language base type $B$,
+which exists for $\Unit$ ($\hat B$ then being $\Unitc$)
+and which we assume to exist for any other surface language base type
+mentioned in \cref{remark:surface_base_types}.
+We also assume that $\hat B$ has type $\star$ without any extra premises.
+
+Even though we believe that our core language enjoys the strong normalization property even with our extensions,
 we still explicitly define the evaluation rules (\figref{core_opsem}).
 Firstly, this allows fixing a specific evaluation strategy mirroring the one for the surface language,
 simplifying the subsequent proofs of some key theorems.
@@ -304,15 +311,9 @@ deserves some special attention.
   \label{fig:core_opsem}
 \end{figure}
 
-In addition to that, we will somewhat frivolously use $\hat B$
-to denote the core language analogue of a surface language base type $B$,
-which exists for $\Unit$ ($\hat B$ then being $\Unitc$)
-and which we assume to exist for any other surface language base type
-mentioned in \cref{remark:surface_base_types}.
-We also assume that $\hat B$ has type $\star$ without any extra premises.
-
 \newcommand{\dast}{\ **\ }
 
+\paragraph{Derived forms.}
 We also establish some derived forms in the core language to simplify the subsequent exposition,
 and state some straightforward facts that will be useful later:
 \begin{itemize}
