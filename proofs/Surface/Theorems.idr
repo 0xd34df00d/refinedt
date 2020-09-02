@@ -116,7 +116,8 @@ mutual
                                    TCTX_Bind _ tPrf => strip_d ds tPrf
 
   substPreservesTWFHead : {x, e, g : _}
-                       -> (g |- e :. s) -> (((x, s) :: g) |- tau)
+                       -> (g |- e :. s)
+                       -> ((x, s) :: g |- tau)
                        -> (g |- substInType x e tau)
   substPreservesTWFHead eprf (TWF_TrueRef (TCTX_Bind gok _)) = TWF_TrueRef gok
   substPreservesTWFHead eprf (TWF_Base e1deriv e2deriv) = TWF_Base ?y1 ?y2
