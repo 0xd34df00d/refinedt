@@ -450,9 +450,16 @@ with ``metatypes''
 \end{align*}
 Our helper functions $\tranty$ and $\tranterm$ are then defined to return the $\nonterm{tc}$ and $\nonterm{ec}$
 from the respective right-hand sides.
-
 The apparent asymmetry of $\Tranctx$, which does not produce a derivation as others do,
 is due to our core language not having a separate notion of a context well-formedness.
+
+Note that, due to \cref{lma:type_wf_implies_ctx_wf} we might assume that
+there is a derivation of $[[ G ok ]]$ around whenever there is a derivation of $[[ G |- ts ]]$.
+Indeed, the proof of \cref{lma:type_wf_implies_ctx_wf} is constructive,
+so there is a function taking a witness of $[[ G |- ts ]]$ and producing $[[ G ok ]]$.
+Analogously, \cref{lma:term_wf_implies_type_wf} and \cref{lma:term_wf_implies_ctx_wf}
+allow us to use a derivation of $[[ G |- ts ]]$ and $[[ G ok ]]$ respectively
+whenever there is a derivation of $[[ G |- es : ts ]]$.
 
 \paragraph{Contexts.}
 As a warm-up,
