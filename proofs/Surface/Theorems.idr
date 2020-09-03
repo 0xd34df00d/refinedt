@@ -65,9 +65,9 @@ mutual
                      -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
                      -> ((d ++ (y, substInType x e t) :: (x, s) :: g) |- tau)
   singleSubstInCtxTWF eprf (TWF_TrueRef gok) = TWF_TrueRef $ singleSubstInCtxTCTX eprf gok
-  singleSubstInCtxTWF eprf (TWF_Base e1deriv e2deriv) = TWF_Base ?w1 ?w2
+  singleSubstInCtxTWF eprf (TWF_Base e1deriv e2deriv) = TWF_Base ?later ?later
   singleSubstInCtxTWF eprf (TWF_Conj r1deriv r2deriv) = TWF_Conj (singleSubstInCtxTWF eprf r1deriv) (singleSubstInCtxTWF eprf r2deriv)
-  singleSubstInCtxTWF eprf (TWF_Arr argTy bodyTy) = TWF_Arr (singleSubstInCtxTWF eprf argTy) ?w4 -- (singleSubstInCtxTWF eprf bodyTy)
+  singleSubstInCtxTWF eprf (TWF_Arr argTy bodyTy) = TWF_Arr (singleSubstInCtxTWF eprf argTy) ?later -- (singleSubstInCtxTWF eprf bodyTy)
   singleSubstInCtxTWF eprf (TWF_ADT cons) = TWF_ADT $ substCons eprf cons
     where
       substCons : {x, t, y, d : _}
@@ -89,10 +89,10 @@ mutual
              -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
              -> ((d ++ (x, s) :: (y, t) :: g) |- tau)
   exchangeTWF no_x (TWF_TrueRef gok) = TWF_TrueRef (exchangeTCTX no_x gok)
-  exchangeTWF no_x (TWF_Base e1deriv e2deriv) = TWF_Base ?e1 ?e2
+  exchangeTWF no_x (TWF_Base e1deriv e2deriv) = TWF_Base ?later ?later
   exchangeTWF no_x (TWF_Conj r1deriv r2deriv) = TWF_Conj (exchangeTWF no_x r1deriv) (exchangeTWF no_x r2deriv)
-  exchangeTWF no_x (TWF_Arr w v) = ?exchange_rhs_4
-  exchangeTWF no_x (TWF_ADT w) = TWF_ADT ?e5
+  exchangeTWF no_x (TWF_Arr w v) = ?later
+  exchangeTWF no_x (TWF_ADT w) = TWF_ADT ?later
 
   substPreservesTWF : {x, e, g : _}
                    -> (g |- e :. s)
@@ -120,7 +120,7 @@ mutual
                        -> ((x, s) :: g |- tau)
                        -> (g |- substInType x e tau)
   substPreservesTWFHead eprf (TWF_TrueRef (TCTX_Bind gok _)) = TWF_TrueRef gok
-  substPreservesTWFHead eprf (TWF_Base e1deriv e2deriv) = TWF_Base ?y1 ?y2
+  substPreservesTWFHead eprf (TWF_Base e1deriv e2deriv) = TWF_Base ?later ?later
   substPreservesTWFHead eprf (TWF_Conj r1deriv r2deriv) = TWF_Conj (substPreservesTWFHead eprf r1deriv) (substPreservesTWFHead eprf r2deriv)
   substPreservesTWFHead eprf (TWF_Arr t1prf t2prf) =
     let t1prf' = substPreservesTWFHead eprf t1prf
