@@ -102,7 +102,8 @@ mutual
   substPreservesTWF eprf tauprf Empty = substPreservesTWFHead eprf tauprf
   substPreservesTWF eprf tauprf (Snoc (y, t) d init) =
     let tWellFormed = strip_d d tauprf
-        tauprf' = exchangeTWF ?t_no_x' $ singleSubstInCtxTWF eprf $ tossTWF tauprf
+        no_x_prf = substPreservesTWFHead eprf tWellFormed
+        tauprf' = exchangeTWF no_x_prf $ singleSubstInCtxTWF eprf $ tossTWF tauprf
         tsubst_ok_in_g = substPreservesTWFHead eprf tWellFormed
         rec = substPreservesTWF (tWeaken (T_implies_TCTX eprf) tsubst_ok_in_g eprf) tauprf' init
      in rewrite substInCtxSnoc x e y t d
