@@ -67,7 +67,7 @@ mutual
   singleSubstInCtxTWF eprf (TWF_TrueRef gok) = TWF_TrueRef $ singleSubstInCtxTCTX eprf gok
   singleSubstInCtxTWF eprf (TWF_Base e1deriv e2deriv) = TWF_Base ?later ?later
   singleSubstInCtxTWF eprf (TWF_Conj r1deriv r2deriv) = TWF_Conj (singleSubstInCtxTWF eprf r1deriv) (singleSubstInCtxTWF eprf r2deriv)
-  singleSubstInCtxTWF eprf (TWF_Arr argTy bodyTy) = TWF_Arr (singleSubstInCtxTWF eprf argTy) ?later -- (singleSubstInCtxTWF eprf bodyTy)
+  singleSubstInCtxTWF {d} eprf (TWF_Arr {x} {t1} argTy bodyTy) = TWF_Arr (singleSubstInCtxTWF eprf argTy) (singleSubstInCtxTWF {d = (x, t1) :: d} eprf bodyTy)
   singleSubstInCtxTWF eprf (TWF_ADT cons) = TWF_ADT $ substCons eprf cons
     where
       substCons : {x, t, y, d : _}
