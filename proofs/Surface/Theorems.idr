@@ -38,6 +38,10 @@ TWF_implies_TCTX (TWF_Conj twfr1 _) = TWF_implies_TCTX twfr1
 TWF_implies_TCTX (TWF_Arr twft1 _) = TWF_implies_TCTX twft1
 TWF_implies_TCTX (TWF_ADT (con1Ty :: _)) = TWF_implies_TCTX con1Ty
 
+anyTypeInCtxIsWellformed : {0 x : _} -> {g : _} -> (ok g) -> Elem (x, t) g -> (g |- t)
+anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) Here = twfWeaken init twfPrf twfPrf
+anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) (There later) = twfWeaken init twfPrf $ anyTypeInCtxIsWellformed init later
+
 -- g is for Γ
 -- d is for Δ
 mutual
@@ -132,10 +136,6 @@ mutual
 T_implies_TWF : {e : STerm} -> {g : _} -> (g |- e :. t) -> (g |- t)
 T_implies_TWF (T_Unit gok) = TWF_TrueRef gok
 T_implies_TWF (T_Var gok elemPrf) = anyTypeInCtxIsWellformed gok elemPrf
-  where
-    anyTypeInCtxIsWellformed : {g : _} -> (ok g) -> Elem (x, t) g -> (g |- t)
-    anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) Here = twfWeaken init twfPrf twfPrf
-    anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) (There later) = twfWeaken init twfPrf $ anyTypeInCtxIsWellformed init later
 T_implies_TWF (T_Abs arrWfPrf _) = arrWfPrf
 T_implies_TWF (T_App prf1 prf2) = substPreservesTWFHead prf2 (arrWfImpliesCodWf $ T_implies_TWF prf1)
 T_implies_TWF (T_Case wfPrf _ _) = wfPrf
