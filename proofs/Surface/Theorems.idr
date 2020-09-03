@@ -42,6 +42,12 @@ anyTypeInCtxIsWellformed : {0 x : _} -> {g : _} -> (ok g) -> Elem (x, t) g -> (g
 anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) Here = twfWeaken init twfPrf twfPrf
 anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) (There later) = twfWeaken init twfPrf $ anyTypeInCtxIsWellformed init later
 
+midCtxTWF : (d : Ctx) -> (((d ++ [(_, t)]) ++ g) |- _) -> (g |- t)
+midCtxTWF [] prf = case TWF_implies_TCTX prf of
+                        TCTX_Bind _ tPrf => tPrf
+midCtxTWF (d :: ds) prf = case TWF_implies_TCTX prf of
+                               TCTX_Bind _ tPrf => midCtxTWF ds tPrf
+
 -- g is for Γ
 -- d is for Δ
 mutual
@@ -99,7 +105,7 @@ mutual
                    -> (substInCtx x e d ++ g |- substInType x e tau)
   substPreservesTWF eprf tauprf Empty = substPreservesTWFHead eprf tauprf
   substPreservesTWF eprf tauprf (Snoc (y, t) d init) =
-    let tWellFormed = strip_d d tauprf
+    let tWellFormed = midCtxTWF d tauprf
         no_x_prf = substPreservesTWFHead eprf tWellFormed
         tauprf' = exchangeTWF no_x_prf $ singleSubstInCtxTWF eprf $ tossTWF tauprf
         tsubst_ok_in_g = substPreservesTWFHead eprf tWellFormed
@@ -107,12 +113,6 @@ mutual
      in rewrite substInCtxSnoc x e y t d
      in rewrite tossMidElem (substInCtx x e d) (y, substInType x e t) g
      in rec
-    where
-      strip_d : (d : Ctx) -> (((d ++ [(_, t)]) ++ (x, s) :: g) |- _) -> ((x, s) :: g |- t)
-      strip_d [] prf = case TWF_implies_TCTX prf of
-                            TCTX_Bind _ tPrf => tPrf
-      strip_d (d :: ds) prf = case TWF_implies_TCTX prf of
-                                   TCTX_Bind _ tPrf => strip_d ds tPrf
 
   substPreservesTWFHead : {x, e, g : _}
                        -> (g |- e :. s)
