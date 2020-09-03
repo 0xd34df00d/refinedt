@@ -68,14 +68,13 @@ mutual
   singleSubstInCtxTWF eprf (TWF_Base e1deriv e2deriv) = TWF_Base ?later ?later
   singleSubstInCtxTWF eprf (TWF_Conj r1deriv r2deriv) = TWF_Conj (singleSubstInCtxTWF eprf r1deriv) (singleSubstInCtxTWF eprf r2deriv)
   singleSubstInCtxTWF {d} eprf (TWF_Arr {x} {t1} argTy bodyTy) = TWF_Arr (singleSubstInCtxTWF eprf argTy) (singleSubstInCtxTWF {d = (x, t1) :: d} eprf bodyTy)
-  singleSubstInCtxTWF eprf (TWF_ADT cons) = TWF_ADT $ substCons eprf cons
+  singleSubstInCtxTWF eprf (TWF_ADT cons) = TWF_ADT $ substCons cons
     where
       substCons : {x, t, y, d : _}
-               -> (g |- e :. s)
                -> All (\ty => (d ++ (y, t) :: (x, s) :: g) |- ty) tys
                -> All (\ty => (d ++ (y, substInType x e t) :: (x, s) :: g) |- ty) tys
-      substCons _ [] = []
-      substCons eprf (a :: as) = singleSubstInCtxTWF eprf a :: substCons eprf as
+      substCons [] = []
+      substCons (a :: as) = singleSubstInCtxTWF eprf a :: substCons as
 
   exchangeTCTX : {g, d : _}
               -> (g |- t)
@@ -127,13 +126,12 @@ mutual
     let t1prf' = substPreservesTWFHead eprf t1prf
         t2prf' = substPreservesTWF eprf t2prf (snocList [_])
      in TWF_Arr t1prf' t2prf'
-  substPreservesTWFHead eprf (TWF_ADT alls) = TWF_ADT $ substPreservesCons eprf alls
+  substPreservesTWFHead eprf (TWF_ADT alls) = TWF_ADT $ substPreservesCons alls
     where
-      substPreservesCons : (g |- e :. t1)
-                        -> All (\conTy => (x, t1) :: g |- conTy) cons
+      substPreservesCons : All (\conTy => (x, s) :: g |- conTy) cons
                         -> All (\conTy => g |- conTy) (substInADT x e cons)
-      substPreservesCons _ [] = []
-      substPreservesCons eprf (con :: cons) = substPreservesTWFHead eprf con :: substPreservesCons eprf cons
+      substPreservesCons [] = []
+      substPreservesCons (con :: cons) = substPreservesTWFHead eprf con :: substPreservesCons cons
 
 -- Well-typedness of a term in a context implies well-formedness of its type in said context
 T_implies_TWF : {e : STerm} -> {g : _} -> (g |- e :. t) -> (g |- t)
