@@ -90,8 +90,13 @@ mutual
   exchangeTWF no_x (TWF_TrueRef gok) = TWF_TrueRef (exchangeTCTX no_x gok)
   exchangeTWF no_x (TWF_Base e1deriv e2deriv) = TWF_Base ?later ?later
   exchangeTWF no_x (TWF_Conj r1deriv r2deriv) = TWF_Conj (exchangeTWF no_x r1deriv) (exchangeTWF no_x r2deriv)
-  exchangeTWF no_x (TWF_Arr w v) = ?later
-  exchangeTWF no_x (TWF_ADT w) = TWF_ADT ?later
+  exchangeTWF {d} no_x (TWF_Arr {x} {t1} argTy bodyTy) = TWF_Arr (exchangeTWF no_x argTy) (exchangeTWF {d = (x, t1) :: d} no_x bodyTy)
+  exchangeTWF no_x (TWF_ADT cons) = TWF_ADT $ exchangeCons cons
+    where
+      exchangeCons : All (\conTy => (d ++ ((y, t) :: (x, s) :: g)) |- conTy) adtCons
+                  -> All (\conTy => (d ++ ((x, s) :: (y, t) :: g)) |- conTy) adtCons
+      exchangeCons [] = []
+      exchangeCons (a :: as) = exchangeTWF no_x a :: exchangeCons as
 
   substPreservesTWF : {x, e, g : _}
                    -> (g |- e :. s)
