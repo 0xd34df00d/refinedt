@@ -38,16 +38,6 @@ TWF_implies_TCTX (TWF_Conj twfr1 _) = TWF_implies_TCTX twfr1
 TWF_implies_TCTX (TWF_Arr twft1 _) = TWF_implies_TCTX twft1
 TWF_implies_TCTX (TWF_ADT (con1Ty :: _)) = TWF_implies_TCTX con1Ty
 
-
-tossMidElem : (front : List a) -> (mid : a) -> (back : List a)
-           -> ((front ++ [mid]) ++ back) = (front ++ mid :: back)
-tossMidElem [] mid back = Refl
-tossMidElem (_ :: front') mid back = rewrite tossMidElem front' mid back in Refl
-
-tossTWF : ((d ++ [p1]) ++ p2 :: g |- t)
-       -> (d ++ p1 :: p2 :: g |- t)
-tossTWF {d} {p1} {p2} {g} prf = rewrite sym $ tossMidElem d p1 (p2 :: g) in prf
-
 -- g is for Γ
 -- d is for Δ
 mutual
