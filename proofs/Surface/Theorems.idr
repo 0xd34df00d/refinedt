@@ -33,7 +33,7 @@ mutual
   exchangeTWF no_x (TWF_TrueRef gok) = TWF_TrueRef (exchangeTCTX no_x gok)
   exchangeTWF no_x (TWF_Base e1deriv e2deriv) = TWF_Base ?later ?later
   exchangeTWF no_x (TWF_Conj r1deriv r2deriv) = TWF_Conj (exchangeTWF no_x r1deriv) (exchangeTWF no_x r2deriv)
-  exchangeTWF {d} no_x (TWF_Arr {x} {t1} argTy bodyTy) = TWF_Arr (exchangeTWF no_x argTy) (exchangeTWF {d = (x, t1) :: d} no_x bodyTy)
+  exchangeTWF no_x (TWF_Arr argTy bodyTy) = TWF_Arr (exchangeTWF no_x argTy) (exchangeTWF {d = _ :: d} no_x bodyTy)
   exchangeTWF no_x (TWF_ADT cons) = TWF_ADT $ exchangeCons cons
     where
       exchangeCons : All (\conTy => (d ++ ((y, t) :: (x, s) :: g)) |- conTy) adtCons
@@ -61,7 +61,7 @@ mutual
   singleSubstInCtxTWF eprf (TWF_TrueRef gok) = TWF_TrueRef $ singleSubstInCtxTCTX eprf gok
   singleSubstInCtxTWF eprf (TWF_Base e1deriv e2deriv) = TWF_Base ?later ?later
   singleSubstInCtxTWF eprf (TWF_Conj r1deriv r2deriv) = TWF_Conj (singleSubstInCtxTWF eprf r1deriv) (singleSubstInCtxTWF eprf r2deriv)
-  singleSubstInCtxTWF {d} eprf (TWF_Arr {x} {t1} argTy bodyTy) = TWF_Arr (singleSubstInCtxTWF eprf argTy) (singleSubstInCtxTWF {d = (x, t1) :: d} eprf bodyTy)
+  singleSubstInCtxTWF eprf (TWF_Arr argTy bodyTy) = TWF_Arr (singleSubstInCtxTWF eprf argTy) (singleSubstInCtxTWF {d = _ :: d} eprf bodyTy)
   singleSubstInCtxTWF eprf (TWF_ADT cons) = TWF_ADT $ substCons cons
     where
       substCons : {x, t, y, d : _}
