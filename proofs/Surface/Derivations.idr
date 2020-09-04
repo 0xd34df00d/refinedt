@@ -57,7 +57,7 @@ mutual
   data TWF : (g : Ctx) -> (t : SType) -> Type where
     TWF_TrueRef : ok g
                -> (g |- SRBT v b Τ)
-    TWF_Base    : {e1, e2 : STerm}
+    TWF_Base    : {e1, e2 : STerm} -> {v, v1, b : _}
                -> (e1deriv : (v, SRBT v1 b Τ) :: g |- e1 :. SRBT v2 b' Τ)
                -> (e2deriv : (v, SRBT v1 b Τ) :: g |- e2 :. SRBT v2 b' Τ)
                -> (g |- SRBT v b (e1 |=| e2))
