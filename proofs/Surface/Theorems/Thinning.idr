@@ -23,11 +23,11 @@ mutual
   twfThinning subPrf g'ok (TWF_Arr twf1 twf2) = TWF_Arr
                                                   (twfThinning subPrf g'ok twf1)
                                                   (twfThinning (AppendBoth subPrf) (TCTX_Bind g'ok (twfThinning subPrf g'ok twf1)) twf2)
-  twfThinning subPrf g'ok (TWF_ADT preds) = TWF_ADT (thinAll subPrf g'ok preds)
+  twfThinning subPrf g'ok (TWF_ADT preds) = TWF_ADT (thinAll preds)
     where
-      thinAll : Sublist g g' -> ok g' -> All (\t => g |- t) ls -> All (\t => g' |- t) ls
-      thinAll _ _ [] = []
-      thinAll subPrf g'ok (a :: as) = twfThinning subPrf g'ok a :: thinAll subPrf g'ok as
+      thinAll : All (\t => g |- t) ls -> All (\t => g' |- t) ls
+      thinAll [] = []
+      thinAll (a :: as) = twfThinning subPrf g'ok a :: thinAll as
 
   export
   tThinning : {e : STerm} -> Sublist g g' -> ok g' -> (g |- e :. t) -> (g' |- e :. t)
