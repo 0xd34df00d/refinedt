@@ -18,6 +18,16 @@ import Surface.Theorems.TCTX
 
 %default total
 
+anyTypeInCtxIsWellformed : {0 x : _} -> {g : _} -> (ok g) -> Elem (x, t) g -> (g |- t)
+anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) Here = twfWeaken init twfPrf twfPrf
+anyTypeInCtxIsWellformed (TCTX_Bind init twfPrf) (There later) = twfWeaken init twfPrf $ anyTypeInCtxIsWellformed init later
+
+midCtxTWF : (d : Ctx) -> (((d ++ [(_, t)]) ++ g) |- _) -> (g |- t)
+midCtxTWF [] prf = case TWF_implies_TCTX prf of
+                        TCTX_Bind _ tPrf => tPrf
+midCtxTWF (d :: ds) prf = case TWF_implies_TCTX prf of
+                               TCTX_Bind _ tPrf => midCtxTWF ds tPrf
+
 mutual
   exchangeTCTX : {g, d : _}
               -> (g |- t)
