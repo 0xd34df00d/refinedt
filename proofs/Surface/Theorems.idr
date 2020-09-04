@@ -18,6 +18,30 @@ import Surface.Theorems.TCTX
 
 %default total
 
+mutual
+  exchangeTCTX : {g, d : _}
+              -> (g |- t)
+              -> ok (d ++ (y, t) :: (x, s) :: g)
+              -> ok (d ++ (x, s) :: (y, t) :: g)
+  exchangeTCTX {d = []} no_x (TCTX_Bind (TCTX_Bind prevOk tyPrf') tyPrf) = TCTX_Bind (TCTX_Bind prevOk no_x) (twfWeaken prevOk no_x tyPrf')
+  exchangeTCTX {d = (hx, ht) :: d} no_x (TCTX_Bind prevOk tyPrf) = TCTX_Bind (exchangeTCTX no_x prevOk) (exchangeTWF no_x tyPrf)
+
+  exchangeTWF : {g, d : _}
+             -> (g |- t)
+             -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
+             -> ((d ++ (x, s) :: (y, t) :: g) |- tau)
+  exchangeTWF no_x (TWF_TrueRef gok) = TWF_TrueRef (exchangeTCTX no_x gok)
+  exchangeTWF no_x (TWF_Base e1deriv e2deriv) = TWF_Base ?later ?later
+  exchangeTWF no_x (TWF_Conj r1deriv r2deriv) = TWF_Conj (exchangeTWF no_x r1deriv) (exchangeTWF no_x r2deriv)
+  exchangeTWF {d} no_x (TWF_Arr {x} {t1} argTy bodyTy) = TWF_Arr (exchangeTWF no_x argTy) (exchangeTWF {d = (x, t1) :: d} no_x bodyTy)
+  exchangeTWF no_x (TWF_ADT cons) = TWF_ADT $ exchangeCons cons
+    where
+      exchangeCons : All (\conTy => (d ++ ((y, t) :: (x, s) :: g)) |- conTy) adtCons
+                  -> All (\conTy => (d ++ ((x, s) :: (y, t) :: g)) |- conTy) adtCons
+      exchangeCons [] = []
+      exchangeCons (a :: as) = exchangeTWF no_x a :: exchangeCons as
+
+
 -- g is for Γ
 -- d is for Δ
 mutual
@@ -45,28 +69,6 @@ mutual
                -> All (\ty => (d ++ (y, substInType x e t) :: (x, s) :: g) |- ty) tys
       substCons [] = []
       substCons (a :: as) = singleSubstInCtxTWF eprf a :: substCons as
-
-  exchangeTCTX : {g, d : _}
-              -> (g |- t)
-              -> ok (d ++ (y, t) :: (x, s) :: g)
-              -> ok (d ++ (x, s) :: (y, t) :: g)
-  exchangeTCTX {d = []} no_x (TCTX_Bind (TCTX_Bind prevOk tyPrf') tyPrf) = TCTX_Bind (TCTX_Bind prevOk no_x) (twfWeaken prevOk no_x tyPrf')
-  exchangeTCTX {d = (hx, ht) :: d} no_x (TCTX_Bind prevOk tyPrf) = TCTX_Bind (exchangeTCTX no_x prevOk) (exchangeTWF no_x tyPrf)
-
-  exchangeTWF : {g, d : _}
-             -> (g |- t)
-             -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
-             -> ((d ++ (x, s) :: (y, t) :: g) |- tau)
-  exchangeTWF no_x (TWF_TrueRef gok) = TWF_TrueRef (exchangeTCTX no_x gok)
-  exchangeTWF no_x (TWF_Base e1deriv e2deriv) = TWF_Base ?later ?later
-  exchangeTWF no_x (TWF_Conj r1deriv r2deriv) = TWF_Conj (exchangeTWF no_x r1deriv) (exchangeTWF no_x r2deriv)
-  exchangeTWF {d} no_x (TWF_Arr {x} {t1} argTy bodyTy) = TWF_Arr (exchangeTWF no_x argTy) (exchangeTWF {d = (x, t1) :: d} no_x bodyTy)
-  exchangeTWF no_x (TWF_ADT cons) = TWF_ADT $ exchangeCons cons
-    where
-      exchangeCons : All (\conTy => (d ++ ((y, t) :: (x, s) :: g)) |- conTy) adtCons
-                  -> All (\conTy => (d ++ ((x, s) :: (y, t) :: g)) |- conTy) adtCons
-      exchangeCons [] = []
-      exchangeCons (a :: as) = exchangeTWF no_x a :: exchangeCons as
 
   substPreservesTWF : {x, e, g : _}
                    -> (g |- e :. s)
