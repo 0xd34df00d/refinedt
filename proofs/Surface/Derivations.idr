@@ -72,12 +72,12 @@ mutual
                -> (g |- SADT adtCons)
 
   public export
-  data BranchesHaveType : (cons : ADTCons n) -> (branches : CaseBranches n) -> (t' : SType) -> Type where
-    NoBranches    : BranchesHaveType [] [] t'
+  data BranchesHaveType : (g : Ctx) -> (cons : ADTCons n) -> (bs : CaseBranches n) -> (t' : SType) -> Type where
+    NoBranches    : BranchesHaveType g [] [] t'
     OneMoreBranch : {conTy : SType} -> {var : Var} -> {body : STerm}
-                 -> ((var, conTy) :: g |- body :. t')         -- TODO x fresh name in context?
-                 -> (rest : BranchesHaveType cons branches t')
-                 -> BranchesHaveType (conTy :: cons) (MkCaseBranch var body :: branches) t'
+                 -> (eprf : (var, conTy) :: g |- body :. t')         -- TODO x fresh name in context?
+                 -> (rest : BranchesHaveType g cons branches t')
+                 -> BranchesHaveType g (conTy :: cons) (MkCaseBranch var body :: branches) t'
 
   public export
   data T : (g : Ctx) -> (e : STerm) -> (t : SType) -> Type where
@@ -95,7 +95,7 @@ mutual
                -> (g |- SApp e1 e2 :. substInType x e2 t2)
     T_Case      : (g |- t')
                -> (g |- e :. SADT cons)
-               -> BranchesHaveType cons branches t'
+               -> BranchesHaveType g cons branches t'
                -> (g |- SCase e branches :. t')
     T_Con       : (g |- e :. tj)
                -> (g |- SADT cons)
