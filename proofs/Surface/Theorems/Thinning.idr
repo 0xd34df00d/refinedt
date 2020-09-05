@@ -45,8 +45,8 @@ mutual
       thinBranches NoBranches = NoBranches
       thinBranches (OneMoreBranch eprf rest) =
         case T_implies_TCTX eprf of
-             TCTX_Bind prevOk tyPrf => let conTyOk = twfThinning subPrf g'ok $ assert_smaller (OneMoreBranch eprf rest) tyPrf
-                                        in OneMoreBranch (tThinning (AppendBoth subPrf) (TCTX_Bind g'ok conTyOk) eprf) (thinBranches rest)
+             TCTX_Bind _ tyPrf => let conTyOk = twfThinning subPrf g'ok $ assert_smaller (OneMoreBranch eprf rest) tyPrf
+                                   in OneMoreBranch (tThinning (AppendBoth subPrf) (TCTX_Bind g'ok conTyOk) eprf) (thinBranches rest)
   tThinning subPrf g'ok (T_Con arg adtTy) = T_Con (tThinning subPrf g'ok arg) (twfThinning subPrf g'ok adtTy)
   tThinning subPrf g'ok (T_Sub x y) = ?thinning_sub_hole
 
