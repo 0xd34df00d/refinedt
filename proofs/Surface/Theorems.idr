@@ -36,13 +36,25 @@ mutual
   exchangeTCTX {d = []} no_x (TCTX_Bind (TCTX_Bind prevOk tyPrf') tyPrf) = TCTX_Bind (TCTX_Bind prevOk no_x) (twfWeaken prevOk no_x tyPrf')
   exchangeTCTX {d = (hx, ht) :: d} no_x (TCTX_Bind prevOk tyPrf) = TCTX_Bind (exchangeTCTX no_x prevOk) (exchangeTWF no_x tyPrf)
 
+  exchangeT : {e : STerm} -> {g, d : _}
+           -> (g |- t)
+           -> (d ++ (y, t) :: (x, s) :: g) |- e :. t'
+           -> (d ++ (x, s) :: (y, t) :: g) |- e :. t'
+  exchangeT no_x (T_Unit gok) = T_Unit (exchangeTCTX no_x gok)
+  exchangeT no_x (T_Var gok elemPrf) = T_Var (exchangeTCTX no_x gok) (elemSwap elemPrf)
+  exchangeT no_x (T_Abs argTy body) = T_Abs (exchangeTWF no_x argTy) (exchangeT {d = _ :: d} no_x body)
+  exchangeT no_x (T_App prf1 prf2) = T_App (exchangeT no_x prf1) (exchangeT no_x prf2)
+  exchangeT no_x (T_Case wfPrf scrut branches) = T_Case (exchangeTWF no_x wfPrf) (exchangeT no_x scrut) branches
+  exchangeT no_x (T_Con z w) = ?exchangeSRBT_rhs_6
+  exchangeT no_x (T_Sub z w) = ?exchangeSRBT_rhs_7
+
   %hint
   exchangeTWF : {g, d : _}
              -> (g |- t)
              -> ((d ++ (y, t) :: (x, s) :: g) |- tau)
              -> ((d ++ (x, s) :: (y, t) :: g) |- tau)
   exchangeTWF no_x (TWF_TrueRef gok) = TWF_TrueRef (exchangeTCTX no_x gok)
-  exchangeTWF no_x (TWF_Base e1deriv e2deriv) = TWF_Base ?later ?later
+  exchangeTWF no_x (TWF_Base e1deriv e2deriv) = TWF_Base (exchangeT {d = _ :: d} no_x e1deriv) (exchangeT {d = _ :: d} no_x e2deriv)
   exchangeTWF no_x (TWF_Conj r1deriv r2deriv) = TWF_Conj (exchangeTWF no_x r1deriv) (exchangeTWF no_x r2deriv)
   exchangeTWF no_x (TWF_Arr argTy bodyTy) = TWF_Arr (exchangeTWF no_x argTy) (exchangeTWF {d = _ :: d} no_x bodyTy)
   exchangeTWF no_x (TWF_ADT cons) = TWF_ADT $ exchangeCons cons
