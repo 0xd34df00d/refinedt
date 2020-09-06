@@ -47,7 +47,7 @@ mutual
                          T_Var gok _ => size gok
                          T_Abs arrTy bodyTy => size arrTy .+. size bodyTy
                          T_App funTy argTy => size funTy .+. size argTy
-                         T_Case resTWF scrutTy bs => ?wut
+                         T_Case resTWF scrutTy bs => size resTWF .+. size scrutTy .+. size bs
                          T_Con conArg adtTy => size conArg .+. size adtTy
                          T_Sub eprf subprf => size eprf .+. size subprf
 
