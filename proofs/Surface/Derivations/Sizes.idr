@@ -8,6 +8,8 @@ import Data.Vect.Quantifiers
 import Surface.Derivations
 import Surface.Syntax
 
+%default total
+
 infixl 8 .+.
 public export
 (.+.) : Nat -> Nat -> Nat
