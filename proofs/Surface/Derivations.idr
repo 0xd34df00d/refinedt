@@ -100,7 +100,7 @@ mutual
     T_Con       : (conArg : g |- e :. tj)
                -> (adtTy : g |- SADT cons)
                -> (g |- SCon idx e cons :. SADT cons)
-    T_Sub       : {e : STerm}
+    T_Sub       : {e : STerm} -> {t, t' : _}
                -> (g |- e :. t)
                -> (g |- t <: t')
                -> (g |- e :. t')
@@ -110,6 +110,7 @@ mutual
     ST_Base     : (oracle : Oracle)
                -> So (isJust (decide oracle v b r1 r2))
                -> (g |- SRBT v b r1 <: SRBT v b r2)
-    ST_Arr      : (g |- t1' <: t1)
+    ST_Arr      : {t1' : _}
+               -> (g |- t1' <: t1)
                -> ((x, t1') :: g |- t2 <: t2')
                -> (g |- SArr x t1 t2 <: SArr x t1' t2')
