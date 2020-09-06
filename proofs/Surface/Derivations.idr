@@ -65,10 +65,10 @@ mutual
                -> (r2deriv : g |- SRBT v b r2)
                -> (g |- SRBT v b (r1 /\ r2))
     TWF_Arr     : {x, t1 : _}
-               -> (g |- t1)
-               -> ((x, t1) :: g |- t2)
+               -> (argDeriv : g |- t1)
+               -> (resDeriv : (x, t1) :: g |- t2)
                -> (g |- SArr x t1 t2)
-    TWF_ADT     : All (\conTy => g |- conTy) adtCons
+    TWF_ADT     : (consDerivs : All (\conTy => g |- conTy) adtCons)
                -> (g |- SADT adtCons)
 
   public export
@@ -81,24 +81,24 @@ mutual
 
   public export
   data T : (g : Ctx) -> (e : STerm) -> (t : SType) -> Type where
-    T_Unit      : ok g
+    T_Unit      : (gok : ok g)
                -> g |- SUnit :. SRBT v BUnit Τ
-    T_Var       : ok g
-               -> Elem (x, t) g
+    T_Var       : (gok : ok g)
+               -> (elemPrf : Elem (x, t) g)
                -> (g |- SVar x :. t)
-    T_Abs       : (g |- SArr x t1 t2)
-               -> ((x, t1) :: g |- e :. t2)
+    T_Abs       : (arrTy : g |- SArr x t1 t2)
+               -> (bodyTy : (x, t1) :: g |- e :. t2)
                -> (g |- SLam x t1 e :. SArr x t1 t2)
     T_App       : {x : _}
-               -> (g |- e1 :. SArr x t1 t2)
-               -> (g |- e2 :. t1)
+               -> (funTy : g |- e1 :. SArr x t1 t2)
+               -> (argTy : g |- e2 :. t1)
                -> (g |- SApp e1 e2 :. substInType x e2 t2)
-    T_Case      : (g |- t')
-               -> (g |- e :. SADT cons)
-               -> BranchesHaveType g cons branches t'
+    T_Case      : (resTWF : g |- t')
+               -> (scrutTy : g |- e :. SADT cons)
+               -> (bs : BranchesHaveType g cons branches t')
                -> (g |- SCase e branches :. t')
-    T_Con       : (g |- e :. tj)
-               -> (g |- SADT cons)
+    T_Con       : (conArg : g |- e :. tj)
+               -> (adtTy : g |- SADT cons)
                -> (g |- SCon idx e cons :. SADT cons)
     T_Sub       : {e : STerm}
                -> (g |- e :. t)
