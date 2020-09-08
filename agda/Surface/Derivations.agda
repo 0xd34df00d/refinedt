@@ -20,8 +20,8 @@ record Oracle : Set where
 variable
   Γ : Ctx
   x x' ν ν₁ ν₂ : Var
-  τ τ' τ₁ τ₂ τ₁' τ₂' : SType
-  ε ε₁ ε₂ : STerm
+  τ τ' τ₁ τ₂ τ₁' τ₂' τᵢ τⱼ : SType
+  ε ε' ε₁ ε₂ : STerm
   b b' : BaseType
   ρ₁ ρ₂ : Refinement
 
@@ -29,6 +29,13 @@ data _ok : (Γ : Ctx) → Set
 data _⊢_⦂_ : (Γ : Ctx) → (ε : STerm) → (τ : SType) → Set
 data _⊢_<:_ : (Γ : Ctx) → (τ₁ τ₂ : SType) → Set
 data _⊢'_ : (Γ : Ctx) → (τ : SType) → Set
+
+data BranchesHaveType : ∀ {n} (Γ : Ctx) → (cons : ADTCons n) → (bs : CaseBranches n) → (τ' : SType) → Set where
+  NoBranches    : BranchesHaveType Γ [] [] τ'
+  OneMoreBranch : ∀ {conτ} {cons'} {bs'}
+                → (εδ : (Γ , x ⦂ conτ) ⊢ ε' ⦂ τ')
+                → (rest : BranchesHaveType Γ cons' bs' τ')
+                → BranchesHaveType Γ (conτ ∷ cons') (MkCaseBranch x ε' ∷ bs') τ'
 
 data _ok where
   TCTX_Empty : [] ok
@@ -63,6 +70,15 @@ data _⊢_⦂_ where
   T_App       : (δ₁ : Γ ⊢ ε₁ ⦂ SArr x τ₁ τ₂)
               → (δ₂ : Γ ⊢ ε₂ ⦂ τ₁)
               → Γ ⊢ SApp ε₁ ε₂ ⦂ [ x ↦ ε₂ ] τ₂
+  T_Case      : ∀ {cons} {branches}
+              → (resδ : Γ ⊢' τ')
+              → (scrutτδ : Γ ⊢ ε ⦂ SADT cons)
+              → (bs : BranchesHaveType Γ cons branches τ')
+              → Γ ⊢ SCase ε branches ⦂ τ'
+  T_Con       : ∀ {cons} {idx}
+              → (conArg : Γ ⊢ ε ⦂ τⱼ)
+              → (adtτ : Γ ⊢' SADT cons)
+              → Γ ⊢ SCon idx ε cons ⦂ SADT cons
 
 data _⊢_<:_ where
   ST_Base     : (oracle : Oracle)
