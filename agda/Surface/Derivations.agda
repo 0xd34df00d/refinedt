@@ -79,6 +79,9 @@ data _⊢_⦂_ where
               → (conArg : Γ ⊢ ε ⦂ τⱼ)
               → (adtτ : Γ ⊢' SADT cons)
               → Γ ⊢ SCon idx ε cons ⦂ SADT cons
+  T_Sub       : (Γ ⊢ ε ⦂ τ)
+              → (Γ ⊢ τ <: τ')
+              → Γ ⊢ ε ⦂ τ'
 
 data _⊢_<:_ where
   ST_Base     : (oracle : Oracle)
