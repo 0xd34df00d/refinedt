@@ -24,6 +24,7 @@ variable
   ε ε' ε₁ ε₂ : STerm
   b b' : BaseType
   ρ₁ ρ₂ : Refinement
+  n : Nat
 
 data _ok : (Γ : Ctx) → Set
 data _⊢_⦂_ : (Γ : Ctx) → (ε : STerm) → (τ : SType) → Set
@@ -32,7 +33,7 @@ data _⊢'_ : (Γ : Ctx) → (τ : SType) → Set
 
 data BranchesHaveType : ∀ {n} (Γ : Ctx) → (cons : ADTCons n) → (bs : CaseBranches n) → (τ' : SType) → Set where
   NoBranches    : BranchesHaveType Γ [] [] τ'
-  OneMoreBranch : ∀ {conτ} {cons'} {bs'}
+  OneMoreBranch : ∀ {conτ} {cons' : ADTCons n} {bs' : CaseBranches n}
                 → (εδ : (Γ , x ⦂ conτ) ⊢ ε' ⦂ τ')
                 → (rest : BranchesHaveType Γ cons' bs' τ')
                 → BranchesHaveType Γ (conτ ∷ cons') (MkCaseBranch x ε' ∷ bs') τ'
@@ -54,7 +55,7 @@ data _⊢'_ where
   TWF_Arr     : (argδ : Γ ⊢' τ₁)
               → (resδ : (Γ , x ⦂ τ₁) ⊢' τ₂)
               → Γ ⊢' SArr x τ₁ τ₂
-  TWF_ADT     : ∀ {adtCons}
+  TWF_ADT     : ∀ {adtCons : ADTCons (suc n)}
               → (consδs : All (λ conτ → Γ ⊢' conτ) adtCons)
               → Γ ⊢' SADT adtCons
 
@@ -70,12 +71,12 @@ data _⊢_⦂_ where
   T_App       : (δ₁ : Γ ⊢ ε₁ ⦂ SArr x τ₁ τ₂)
               → (δ₂ : Γ ⊢ ε₂ ⦂ τ₁)
               → Γ ⊢ SApp ε₁ ε₂ ⦂ [ x ↦ ε₂ ] τ₂
-  T_Case      : ∀ {cons} {branches}
+  T_Case      : ∀ {cons : ADTCons (suc n)} {branches : CaseBranches (suc n)}
               → (resδ : Γ ⊢' τ')
               → (scrutτδ : Γ ⊢ ε ⦂ SADT cons)
               → (bs : BranchesHaveType Γ cons branches τ')
               → Γ ⊢ SCase ε branches ⦂ τ'
-  T_Con       : ∀ {cons} {idx}
+  T_Con       : ∀ {idx} {cons : ADTCons (suc n)}
               → (conArg : Γ ⊢ ε ⦂ τⱼ)
               → (adtτ : Γ ⊢' SADT cons)
               → Γ ⊢ SCon idx ε cons ⦂ SADT cons
