@@ -42,5 +42,6 @@ substInBranches x ε (MkCaseBranch v body ∷ bs) =
       rest = substInBranches x ε bs
    in MkCaseBranch v body' ∷ rest
 
+infix 30 [_↦_]_
 [_↦_]_ : SubstIn SType
 [ x ↦ ε ] τ = substInType x ε τ
