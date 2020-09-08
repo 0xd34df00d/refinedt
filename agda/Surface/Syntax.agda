@@ -6,10 +6,8 @@ open import Agda.Builtin.Nat public
 open import Agda.Builtin.String
 
 open import Data.Fin public using (Fin)
-open import Data.Product public using (_×_)
+open import Data.Product public using (_×_; _,_)
 open import Data.Vec public
-
--- Syntax definitions
 
 record Var : Set where
   constructor MkVar
@@ -42,7 +40,7 @@ data STerm where
   SCon  : {n : _} → (idx : Fin n) → (body : STerm) → (adtCons : ADTCons n) → STerm
 
 data SType where
-  SRBT : (var : Var) → (b : BaseType) → (ρ : Refinement) → SType
+  SRBT : (ν : Var) → (b : BaseType) → (ρ : Refinement) → SType
   SArr : (var : Var) → (τ₁ : SType) → (τ₂ : SType) → SType
   SADT : {n : _} → (cons : ADTCons (suc n)) → SType
 
