@@ -1,14 +1,14 @@
 module Surface.Syntax where
 
 open import Agda.Builtin.Bool
-open import Agda.Builtin.List
-open import Agda.Builtin.Nat
+open import Agda.Builtin.List public
+open import Agda.Builtin.Nat public
 open import Agda.Builtin.String
 
 open import Data.Bool using (if_then_else_)
-open import Data.Fin
-open import Data.Product
-open import Data.Vec
+open import Data.Fin public using (Fin)
+open import Data.Product public using (_×_)
+open import Data.Vec public
 
 -- Syntax definitions
 
