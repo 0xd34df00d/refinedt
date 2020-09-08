@@ -65,3 +65,6 @@ CtxElem = Var × SType
 
 Ctx : Set
 Ctx = List CtxElem
+
+Τ : Refinement
+Τ = SUnit ≈ SUnit
