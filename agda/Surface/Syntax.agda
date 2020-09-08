@@ -66,8 +66,8 @@ CtxElem = Var × SType
 Ctx : Set
 Ctx = List CtxElem
 
-_,,_∷_ : Ctx → Var → SType → Ctx
-Γ ,, x ∷ τ = ( x , τ ) ∷ Γ
+_,_⦂_ : Ctx → Var → SType → Ctx
+Γ , x ⦂ τ = ( x , τ ) ∷ Γ
 
 infix 15 _∈_∣_
 _∈_∣_ : (ν : Var) → (b : BaseType) → (ρ : Refinement) → SType
