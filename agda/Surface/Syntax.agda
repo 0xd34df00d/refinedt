@@ -75,3 +75,12 @@ _∈_∣_ = SRBT
 
 Τ : Refinement
 Τ = SUnit ≈ SUnit
+
+variable
+  Γ : Ctx
+  x x' ν ν₁ ν₂ : Var
+  τ τ' τ₁ τ₂ τ₁' τ₂' τᵢ τⱼ : SType
+  ε ε' ε₁ ε₂ : STerm
+  b b' : BaseType
+  ρ₁ ρ₂ : Refinement
+  n : Nat

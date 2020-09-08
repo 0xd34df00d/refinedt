@@ -17,15 +17,6 @@ record Oracle : Set where
   field
     decide : (var : Var) → (b : BaseType) → (ρ₁ : Refinement) → (ρ₂ : Refinement) → Maybe PositiveDecision
 
-variable
-  Γ : Ctx
-  x x' ν ν₁ ν₂ : Var
-  τ τ' τ₁ τ₂ τ₁' τ₂' τᵢ τⱼ : SType
-  ε ε' ε₁ ε₂ : STerm
-  b b' : BaseType
-  ρ₁ ρ₂ : Refinement
-  n : Nat
-
 data _ok : (Γ : Ctx) → Set
 data _⊢_⦂_ : (Γ : Ctx) → (ε : STerm) → (τ : SType) → Set
 data _⊢_<:_ : (Γ : Ctx) → (τ₁ τ₂ : SType) → Set
