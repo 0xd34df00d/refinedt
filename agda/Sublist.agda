@@ -18,7 +18,7 @@ data _⊂_ {a : Set} : (xs xs' : List a) → Set where
 ⊂-refl [] = EmptyIsSublist
 ⊂-refl (x ∷ xs) = PrependBoth (⊂-refl xs)
 
-⊂-preserves-∈ : {a : Set} {x : a} {xs xs' : List a}
+⊂-preserves-∈ : ∀ {a xs xs'} {x : a}
               → xs ⊂ xs'
               → x ∈ xs
               → x ∈ xs'
