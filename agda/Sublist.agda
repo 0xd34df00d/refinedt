@@ -1,5 +1,8 @@
 module Sublist where
 
+open import Agda.Builtin.Equality
+open import Data.List.Relation.Unary.Any
+open import Data.List.Membership.Propositional
 open import Data.List
 
 data _⊂_ {a : Set} : (xs xs' : List a) → Set where
@@ -14,3 +17,11 @@ data _⊂_ {a : Set} : (xs xs' : List a) → Set where
 ⊂-refl : {a : Set} → (xs : List a) → xs ⊂ xs
 ⊂-refl [] = EmptyIsSublist
 ⊂-refl (x ∷ xs) = PrependBoth (⊂-refl xs)
+
+⊂-preserves-∈ : {a : Set} {x : a} {xs xs' : List a}
+              → xs ⊂ xs'
+              → x ∈ xs
+              → x ∈ xs'
+⊂-preserves-∈ (IgnoreHead ⊂-tail) ∈-prf = there (⊂-preserves-∈ ⊂-tail ∈-prf)
+⊂-preserves-∈ (PrependBoth ⊂-tail) (here px) = here px
+⊂-preserves-∈ (PrependBoth ⊂-tail) (there ∈-rest) = there (⊂-preserves-∈ ⊂-tail ∈-rest)
