@@ -48,7 +48,7 @@ data _⊢'_ where
               → (resδ : (Γ , x ⦂ τ₁) ⊢' τ₂)
               → Γ ⊢' SArr x τ₁ τ₂
   TWF-ADT     : ∀ {adtCons : ADTCons (suc n)}
-              → (consδs : All (λ conτ → Γ ⊢' conτ) adtCons)
+              → (consδs : All (Γ ⊢'_) adtCons)
               → Γ ⊢' SADT adtCons
 
 data _⊢_⦂_ where
