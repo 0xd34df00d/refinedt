@@ -77,7 +77,7 @@ _∈_∣_ = SRBT
 Τ = SUnit ≈ SUnit
 
 variable
-  Γ : Ctx
+  Γ Γ' : Ctx
   x x' ν ν₁ ν₂ : Var
   τ τ' τ₁ τ₂ τ₁' τ₂' τᵢ τⱼ : SType
   ε ε' ε₁ ε₂ : STerm
