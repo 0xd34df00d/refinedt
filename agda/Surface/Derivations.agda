@@ -36,7 +36,8 @@ data _ok where
              → (Γ , ν ⦂ τ) ok
 
 data _⊢'_ where
-  TWF_TrueRef : Γ ⊢' (ν ∈ b ∣ Τ)
+  TWF_TrueRef : Γ ok
+              → Γ ⊢' (ν ∈ b ∣ Τ)
   TWF_Base    : (ε₁δ : (Γ , ν ⦂ (ν₁ ∈ b ∣ Τ)) ⊢ ε₁ ⦂ (ν₂ ∈ b' ∣ Τ))
               → (ε₂δ : (Γ , ν ⦂ (ν₁ ∈ b ∣ Τ)) ⊢ ε₂ ⦂ (ν₂ ∈ b' ∣ Τ))
               → Γ ⊢' (ν ∈ b ∣ ε₁ ≈ ε₂)
