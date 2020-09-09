@@ -16,6 +16,10 @@ twfThinning ⊂-prf Γ'ok (TWF-Conj ρ₁ ρ₂) = TWF-Conj (twfThinning ⊂-prf
 twfThinning ⊂-prf Γ'ok (TWF-Arr argδ resδ) = TWF-Arr
                                                 (twfThinning ⊂-prf Γ'ok argδ)
                                                 (twfThinning (PrependBoth ⊂-prf) (TCTX-Bind Γ'ok (twfThinning ⊂-prf Γ'ok argδ)) resδ)
-twfThinning ⊂-prf Γ'ok (TWF-ADT consδs) = TWF-ADT (All-map (twfThinning ⊂-prf Γ'ok) consδs)
+twfThinning {Γ} {Γ'} ⊂-prf Γ'ok (TWF-ADT consδs)= TWF-ADT (mapCons consδs)
+  where
+    mapCons : {cons : ADTCons n} → All (Γ ⊢'_) cons → All (Γ' ⊢'_) cons
+    mapCons [] = []
+    mapCons (px ∷ pxs) = twfThinning ⊂-prf Γ'ok px ∷ mapCons pxs
 
 tThinning ⊂-prf Γ'ok x = {! x !}
