@@ -63,11 +63,11 @@ data _⊢_⦂_ where
   T-App       : (δ₁ : Γ ⊢ ε₁ ⦂ SArr x τ₁ τ₂)
               → (δ₂ : Γ ⊢ ε₂ ⦂ τ₁)
               → Γ ⊢ SApp ε₁ ε₂ ⦂ [ x ↦ ε₂ ] τ₂
-  T-Case      : ∀ {cons : ADTCons (suc n)} {branches : CaseBranches (suc n)}
+  T-Case      : ∀ {cons : ADTCons (suc n)} {bs : CaseBranches (suc n)}
               → (resδ : Γ ⊢' τ')
               → (scrutτδ : Γ ⊢ ε ⦂ SADT cons)
-              → (bs : BranchesHaveType Γ cons branches τ')
-              → Γ ⊢ SCase ε branches ⦂ τ'
+              → (branches : BranchesHaveType Γ cons bs τ')
+              → Γ ⊢ SCase ε bs ⦂ τ'
   T-Con       : ∀ {idx} {cons : ADTCons (suc n)}
               → (conArg : Γ ⊢ ε ⦂ τⱼ)
               → (adtτ : Γ ⊢' SADT cons)
