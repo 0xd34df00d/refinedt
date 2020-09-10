@@ -7,11 +7,11 @@ open import Surface.Derivations
 open import Sublist
 
 private
-  arr-wf-dom : Γ ⊢' SArr x τ₁ τ₂ → Γ ⊢' τ₁
+  arr-wf-dom : Γ ⊢ SArr x τ₁ τ₂ → Γ ⊢ τ₁
   arr-wf-dom (TWF-Arr domδ _) = domδ
 
 abstract
-  twf-thinning : Γ ⊂ Γ' → Γ' ok → (Γ ⊢' τ)    → (Γ' ⊢' τ)
+  twf-thinning : Γ ⊂ Γ' → Γ' ok → (Γ ⊢ τ)     → (Γ' ⊢ τ)
   t-thinning   : Γ ⊂ Γ' → Γ' ok → (Γ ⊢ ε ⦂ τ) → (Γ' ⊢ ε ⦂ τ)
 
   twf-thinning ⊂-prf Γ'ok (TWF-TrueRef _) = TWF-TrueRef Γ'ok
@@ -23,7 +23,7 @@ abstract
                                                   (twf-thinning (PrependBoth ⊂-prf) (TCTX-Bind Γ'ok (twf-thinning ⊂-prf Γ'ok argδ)) resδ)
   twf-thinning {Γ} {Γ'} ⊂-prf Γ'ok (TWF-ADT consδs)= TWF-ADT (map-cons consδs)
     where
-      map-cons : {cons : ADTCons n} → All (Γ ⊢'_) cons → All (Γ' ⊢'_) cons
+      map-cons : {cons : ADTCons n} → All (Γ ⊢_) cons → All (Γ' ⊢_) cons
       map-cons [] = []
       map-cons (px ∷ pxs) = twf-thinning ⊂-prf Γ'ok px ∷ map-cons pxs
 
