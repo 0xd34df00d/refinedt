@@ -14,14 +14,15 @@ data _⊂_ {a : Set} : (xs xs' : List a) → Set where
                   → xs ⊂ xs'
                   → (x ∷ xs) ⊂ (x ∷ xs')
 
-⊂-refl : {a : Set} → (xs : List a) → xs ⊂ xs
-⊂-refl [] = EmptyIsSublist
-⊂-refl (x ∷ xs) = PrependBoth (⊂-refl xs)
+abstract
+  ⊂-refl : {a : Set} → (xs : List a) → xs ⊂ xs
+  ⊂-refl [] = EmptyIsSublist
+  ⊂-refl (x ∷ xs) = PrependBoth (⊂-refl xs)
 
-⊂-preserves-∈ : ∀ {a xs xs'} {x : a}
-              → xs ⊂ xs'
-              → x ∈ xs
-              → x ∈ xs'
-⊂-preserves-∈ (IgnoreHead ⊂-tail) ∈-prf = there (⊂-preserves-∈ ⊂-tail ∈-prf)
-⊂-preserves-∈ (PrependBoth ⊂-tail) (here px) = here px
-⊂-preserves-∈ (PrependBoth ⊂-tail) (there ∈-rest) = there (⊂-preserves-∈ ⊂-tail ∈-rest)
+  ⊂-preserves-∈ : ∀ {a xs xs'} {x : a}
+                → xs ⊂ xs'
+                → x ∈ xs
+                → x ∈ xs'
+  ⊂-preserves-∈ (IgnoreHead ⊂-tail) ∈-prf = there (⊂-preserves-∈ ⊂-tail ∈-prf)
+  ⊂-preserves-∈ (PrependBoth ⊂-tail) (here px) = here px
+  ⊂-preserves-∈ (PrependBoth ⊂-tail) (there ∈-rest) = there (⊂-preserves-∈ ⊂-tail ∈-rest)
