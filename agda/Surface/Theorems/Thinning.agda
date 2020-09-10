@@ -1,7 +1,5 @@
 module Surface.Theorems.Thinning where
 
-open import Data.Vec.Relation.Unary.All renaming (map to All-map)
-
 open import Surface.Syntax
 open import Surface.Derivations
 open import Sublist

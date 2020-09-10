@@ -4,7 +4,7 @@ open import Agda.Builtin.Bool
 open import Agda.Builtin.Unit
 open import Data.Maybe
 open import Data.List.Membership.Propositional
-open import Data.Vec.Relation.Unary.All
+open import Data.Vec.Relation.Unary.All public
 
 open import Surface.Syntax
 open import Surface.Substitutions
