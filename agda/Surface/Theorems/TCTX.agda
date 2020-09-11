@@ -34,6 +34,7 @@ abstract
                                                <3 = <-trans <1 <2
                                             in <-trans <3 (s≤s (n≤m<>n (size-twf arrδ) (size-t bodyδ)))
   Γ⊢ε⦂τ-⇒-Γok-smaller (T-App δ₁ δ₂) = <-trans (Γ⊢ε⦂τ-⇒-Γok-smaller δ₂) (s≤s (n≤m<>n (size-t δ₁) (size-t δ₂)))
-  Γ⊢ε⦂τ-⇒-Γok-smaller (T-Case resδ scrutδ branches) = {! !}
+  Γ⊢ε⦂τ-⇒-Γok-smaller (T-Case resδ scrutδ branches) = let rec = Γ⊢ε⦂τ-⇒-Γok-smaller scrutδ
+                                                       in <-trans rec (s≤s (m≤m<>n (size-t scrutδ) (size-twf resδ ⊔ _)))
   Γ⊢ε⦂τ-⇒-Γok-smaller (T-Con x adtτ) = <-trans (Γ⊢ε⦂τ-⇒-Γok-smaller x) (s≤s (m≤m<>n (size-t x) (size-twf adtτ)))
   Γ⊢ε⦂τ-⇒-Γok-smaller (T-Sub δ sub) = <-trans (Γ⊢ε⦂τ-⇒-Γok-smaller δ) (s≤s (m≤m<>n (size-t δ) (size-st sub)))
