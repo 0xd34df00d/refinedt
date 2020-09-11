@@ -40,3 +40,11 @@ abstract
   Γ⊢ε⦂τ-⇒-Γok-smaller (T-Sub δ sub) = <-trans (Γ⊢ε⦂τ-⇒-Γok-smaller δ) (s≤s (m≤m<>n (size-t δ) (size-st sub)))
 
   Γ⊢ε⦂τ-⇒-Γok-tail-smaller δ = <-trans (Γok-tail-smaller (Γ⊢ε⦂τ-⇒-Γok δ)) (Γ⊢ε⦂τ-⇒-Γok-smaller δ)
+
+  Γ⊢τ-⇒-Γok-smaller : (δ : Γ ⊢ τ)
+                    → size-ok (Γ⊢τ-⇒-Γok δ) < size-twf δ
+  Γ⊢τ-⇒-Γok-smaller (TWF-TrueRef gok) = s≤s (≤-reflexive refl)
+  Γ⊢τ-⇒-Γok-smaller (TWF-Base ε₁δ ε₂δ) = <-trans (Γ⊢ε⦂τ-⇒-Γok-tail-smaller ε₁δ) (s≤s (m≤m<>n (size-t ε₁δ) (size-t ε₂δ)))
+  Γ⊢τ-⇒-Γok-smaller (TWF-Conj ρ₁δ ρ₂δ) = <-trans (Γ⊢τ-⇒-Γok-smaller ρ₁δ) (s≤s (m≤m<>n (size-twf ρ₁δ) (size-twf ρ₂δ)))
+  Γ⊢τ-⇒-Γok-smaller (TWF-Arr argδ resδ) = <-trans (Γ⊢τ-⇒-Γok-smaller argδ) (s≤s (m≤m<>n (size-twf argδ) (size-twf resδ)))
+  Γ⊢τ-⇒-Γok-smaller (TWF-ADT (px ∷ consδs)) = <-trans (Γ⊢τ-⇒-Γok-smaller px) (s≤s (m≤m<>n (size-twf px) _))
