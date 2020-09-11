@@ -1,6 +1,7 @@
 module Surface.Derivations.WF where
 
-open import Data.Nat.Base
+open import Data.Nat.Base public
+open import Data.Nat.Properties
 
 open import Surface.Derivations
 open import Surface.Syntax
@@ -13,6 +14,13 @@ size-st  : Γ ⊢ τ₁ <: τ₂ → ℕ
 infixl 20 _<>_
 _<>_ : ℕ → ℕ → ℕ
 _<>_ = _⊔_
+
+abstract
+  m≤m<>n : ∀ m n → m ≤ m <> n
+  m≤m<>n = m≤m⊔n
+
+  n≤m<>n : ∀ m n → n ≤ m <> n
+  n≤m<>n = n≤m⊔n
 
 size-ok TCTX-Empty = 0
 size-ok (TCTX-Bind prevOk τδ) = suc (size-ok prevOk <> size-twf τδ)
