@@ -38,9 +38,9 @@ abstract
     where
       thin-branches : ∀ {τ cons} {bs : CaseBranches n} → BranchesHaveType Γ cons bs τ → BranchesHaveType Γ' cons bs τ
       thin-branches NoBranches = NoBranches
-      thin-branches (OneMoreBranch εδ bs) =
-        let branch-Γ-ok = Γ⊢ε⦂τ-implies-Γok εδ
+      thin-branches (OneMoreBranch εδ rest) =
+        let branch-Γ-ok = Γ⊢ε⦂τ-⇒-Γok εδ
             branch'-Γ-ok = TCTX-Bind Γ'ok (twf-thinning ⊂-prf Γ'ok (Γok-head branch-Γ-ok))
-         in OneMoreBranch (t-thinning (PrependBoth ⊂-prf) branch'-Γ-ok εδ) (thin-branches bs)
+         in OneMoreBranch (t-thinning (PrependBoth ⊂-prf) branch'-Γ-ok εδ) (thin-branches rest)
   t-thinning ⊂-prf Γ'ok (T-Con conArg adtτ) = T-Con (t-thinning ⊂-prf Γ'ok conArg) (twf-thinning ⊂-prf Γ'ok adtτ)
   t-thinning ⊂-prf Γ'ok (T-Sub x x₁) = {! !}
