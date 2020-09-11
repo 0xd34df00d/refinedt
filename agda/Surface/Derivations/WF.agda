@@ -11,7 +11,7 @@ size-twf : Γ ⊢ τ        → ℕ
 size-t   : Γ ⊢ ε ⦂ τ    → ℕ
 size-st  : Γ ⊢ τ₁ <: τ₂ → ℕ
 
-infixl 20 _<>_
+infixr 20 _<>_
 _<>_ : ℕ → ℕ → ℕ
 _<>_ = _⊔_
 
@@ -39,7 +39,7 @@ size-t (T-Unit gok) = suc (size-ok gok)
 size-t (T-Var gok _) = suc (size-ok gok)
 size-t (T-Abs arrδ bodyδ) = suc (size-twf arrδ <> size-t bodyδ)
 size-t (T-App δ₁ δ₂) = suc (size-t δ₁ <> size-t δ₂)
-size-t (T-Case resδ scrutτδ branches) = suc (size-twf resδ <> size-t scrutτδ <> size-bs branches)
+size-t (T-Case resδ scrutτδ branches) = suc (size-t scrutτδ <> size-twf resδ <> size-bs branches)
   where
     size-bs : ∀ {τ cons} {bs : CaseBranches n} → BranchesHaveType Γ cons bs τ → ℕ
     size-bs NoBranches = 0
