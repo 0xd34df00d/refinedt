@@ -2,9 +2,9 @@ module Surface.Syntax where
 
 open import Agda.Builtin.Bool
 open import Agda.Builtin.List public
-open import Agda.Builtin.Nat public
 open import Agda.Builtin.String
 
+open import Data.Nat.Base public
 open import Data.Fin public using (Fin)
 open import Data.Product public using (_×_; _,_)
 open import Data.Vec public
@@ -26,8 +26,8 @@ data BaseType : Set where
 data STerm : Set
 data SType : Set
 data Refinement : Set
-CaseBranches : Nat → Set
-ADTCons : Nat → Set
+CaseBranches : ℕ → Set
+ADTCons : ℕ → Set
 
 record CaseBranch : Set
 
@@ -83,4 +83,4 @@ variable
   ε ε' ε₁ ε₂ : STerm
   b b' : BaseType
   ρ₁ ρ₂ : Refinement
-  n : Nat
+  n : ℕ
