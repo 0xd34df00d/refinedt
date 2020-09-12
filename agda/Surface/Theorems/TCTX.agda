@@ -37,20 +37,20 @@ abstract
 
   Γ⊢ε⦂τ-⇒-Γok-smaller : (δ : Γ ⊢ ε ⦂ τ)
                       → size-ok (Γ⊢ε⦂τ-⇒-Γok δ) < size-t δ
-  Γ⊢ε⦂τ-⇒-Γok-smaller (T-Unit gok) = s≤s (≤-reflexive refl)
-  Γ⊢ε⦂τ-⇒-Γok-smaller (T-Var gok x) = s≤s (≤-reflexive refl)
-  Γ⊢ε⦂τ-⇒-Γok-smaller (T-Abs arrδ bodyδ) = a<c-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-tail-smaller bodyδ)
-  Γ⊢ε⦂τ-⇒-Γok-smaller (T-App δ₁ δ₂) = a<c-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-smaller δ₂)
-  Γ⊢ε⦂τ-⇒-Γok-smaller (T-Case resδ scrutδ branches) = a<b-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-smaller scrutδ)
-  Γ⊢ε⦂τ-⇒-Γok-smaller (T-Con conArg adtτ) = a<b-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-smaller conArg)
-  Γ⊢ε⦂τ-⇒-Γok-smaller (T-Sub δ sub) = a<b-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-smaller δ)
+  Γ⊢ε⦂τ-⇒-Γok-smaller (T-Unit _) = s≤s (≤-reflexive refl)
+  Γ⊢ε⦂τ-⇒-Γok-smaller (T-Var _ _) = s≤s (≤-reflexive refl)
+  Γ⊢ε⦂τ-⇒-Γok-smaller (T-Abs _ bodyδ) = a<c-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-tail-smaller bodyδ)
+  Γ⊢ε⦂τ-⇒-Γok-smaller (T-App _ δ₂) = a<c-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-smaller δ₂)
+  Γ⊢ε⦂τ-⇒-Γok-smaller (T-Case _ scrutδ _) = a<b-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-smaller scrutδ)
+  Γ⊢ε⦂τ-⇒-Γok-smaller (T-Con conArg _) = a<b-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-smaller conArg)
+  Γ⊢ε⦂τ-⇒-Γok-smaller (T-Sub δ _) = a<b-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-smaller δ)
 
   Γ⊢ε⦂τ-⇒-Γok-tail-smaller δ = <-trans (Γok-tail-smaller (Γ⊢ε⦂τ-⇒-Γok δ)) (Γ⊢ε⦂τ-⇒-Γok-smaller δ)
 
   Γ⊢τ-⇒-Γok-smaller : (δ : Γ ⊢ τ)
                     → size-ok (Γ⊢τ-⇒-Γok δ) < size-twf δ
-  Γ⊢τ-⇒-Γok-smaller (TWF-TrueRef gok) = s≤s (≤-reflexive refl)
-  Γ⊢τ-⇒-Γok-smaller (TWF-Base ε₁δ ε₂δ) = a<b-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-tail-smaller ε₁δ)
-  Γ⊢τ-⇒-Γok-smaller (TWF-Conj ρ₁δ ρ₂δ) = a<b-⇒-a<b<>c (Γ⊢τ-⇒-Γok-smaller ρ₁δ)
-  Γ⊢τ-⇒-Γok-smaller (TWF-Arr argδ resδ) = a<b-⇒-a<b<>c (Γ⊢τ-⇒-Γok-smaller argδ)
-  Γ⊢τ-⇒-Γok-smaller (TWF-ADT (px ∷ consδs)) = a<b-⇒-a<b<>c (Γ⊢τ-⇒-Γok-smaller px)
+  Γ⊢τ-⇒-Γok-smaller (TWF-TrueRef _) = s≤s (≤-reflexive refl)
+  Γ⊢τ-⇒-Γok-smaller (TWF-Base ε₁δ _) = a<b-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-tail-smaller ε₁δ)
+  Γ⊢τ-⇒-Γok-smaller (TWF-Conj ρ₁δ _) = a<b-⇒-a<b<>c (Γ⊢τ-⇒-Γok-smaller ρ₁δ)
+  Γ⊢τ-⇒-Γok-smaller (TWF-Arr argδ _) = a<b-⇒-a<b<>c (Γ⊢τ-⇒-Γok-smaller argδ)
+  Γ⊢τ-⇒-Γok-smaller (TWF-ADT (px ∷ _)) = a<b-⇒-a<b<>c (Γ⊢τ-⇒-Γok-smaller px)
