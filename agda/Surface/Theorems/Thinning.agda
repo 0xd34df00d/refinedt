@@ -23,12 +23,18 @@ abstract
   t-thinning   : Γ ⊂ Γ' → Γ' ok → (δ : Γ ⊢ ε ⦂ τ) → Acc _<_ (size-t δ)   → (Γ' ⊢ ε ⦂ τ)
 
   twf-thinning ⊂-prf Γ'ok (TWF-TrueRef _) _ = TWF-TrueRef Γ'ok
-  twf-thinning ⊂-prf Γ'ok (TWF-Base ε₁δ ε₂δ) _ = let expCtxOk = TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)
-                                                  in TWF-Base (t-thinning (PrependBoth ⊂-prf) expCtxOk ε₁δ (<-wellFounded _)) (t-thinning (PrependBoth ⊂-prf) expCtxOk ε₂δ (<-wellFounded _))
-  twf-thinning ⊂-prf Γ'ok (TWF-Conj ρ₁ ρ₂) _ = TWF-Conj (twf-thinning ⊂-prf Γ'ok ρ₁ (<-wellFounded _)) (twf-thinning ⊂-prf Γ'ok ρ₂ (<-wellFounded _))
-  twf-thinning ⊂-prf Γ'ok (TWF-Arr argδ resδ) _ = TWF-Arr
-                                                    (twf-thinning ⊂-prf Γ'ok argδ (<-wellFounded _))
-                                                    (twf-thinning (PrependBoth ⊂-prf) (TCTX-Bind Γ'ok (twf-thinning ⊂-prf Γ'ok argδ (<-wellFounded _))) resδ (<-wellFounded _))
+  twf-thinning ⊂-prf Γ'ok (TWF-Base ε₁δ ε₂δ) (acc rec) = let expCtxOk = TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)
+                                                             rec₁ = rec (size-t ε₁δ) (s≤s (m≤m<>n (size-t ε₁δ) (size-t ε₂δ)))
+                                                             rec₂ = rec (size-t ε₂δ) (s≤s (n≤m<>n (size-t ε₁δ) (size-t ε₂δ)))
+                                                          in TWF-Base (t-thinning (PrependBoth ⊂-prf) expCtxOk ε₁δ rec₁) (t-thinning (PrependBoth ⊂-prf) expCtxOk ε₂δ rec₂)
+  twf-thinning ⊂-prf Γ'ok (TWF-Conj ρ₁ ρ₂) (acc rec) = let rec₁ = rec (size-twf ρ₁) (s≤s (m≤m<>n (size-twf ρ₁) (size-twf ρ₂)))
+                                                           rec₂ = rec (size-twf ρ₂) (s≤s (n≤m<>n (size-twf ρ₁) (size-twf ρ₂)))
+                                                        in TWF-Conj (twf-thinning ⊂-prf Γ'ok ρ₁ rec₁) (twf-thinning ⊂-prf Γ'ok ρ₂ rec₂)
+  twf-thinning ⊂-prf Γ'ok (TWF-Arr argδ resδ) (acc rec) = let rec₁ = rec (size-twf argδ) (s≤s (m≤m<>n (size-twf argδ) (size-twf resδ)))
+                                                              rec₂ = rec (size-twf resδ) (s≤s (n≤m<>n (size-twf argδ) (size-twf resδ)))
+                                                              argδ' = twf-thinning ⊂-prf Γ'ok argδ rec₁
+                                                              resδ' = twf-thinning (PrependBoth ⊂-prf) (TCTX-Bind Γ'ok argδ') resδ rec₂
+                                                           in TWF-Arr argδ' resδ'
   twf-thinning {Γ} {Γ'} ⊂-prf Γ'ok (TWF-ADT consδs) _ = TWF-ADT (map-cons consδs)
     where
       map-cons : {cons : ADTCons n} → All (Γ ⊢_) cons → All (Γ' ⊢_) cons
