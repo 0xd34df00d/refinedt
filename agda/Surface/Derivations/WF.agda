@@ -25,6 +25,9 @@ abstract
   n≤m<>n : ∀ m n → n ≤ m <> n
   n≤m<>n = n≤m⊔n
 
+  k≤m<>n<>k : ∀ m n k → k ≤ m <> n <> k
+  k≤m<>n<>k m n k = ≤-trans (n≤m<>n n k) (n≤m<>n m (n ⊔ k))
+
 size-ok TCTX-Empty = 0
 size-ok (TCTX-Bind prevOk τδ) = suc (size-ok prevOk <> size-twf τδ)
 
