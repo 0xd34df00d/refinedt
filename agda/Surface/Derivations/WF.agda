@@ -53,4 +53,4 @@ size-st (ST-Base _ _) = 0
 size-st (ST-Arr sub₁ sub₂) = suc (size-st sub₁ <> size-st sub₂)
 
 size-bs NoBranches = 0
-size-bs (OneMoreBranch εδ rest) = size-t εδ <> size-bs rest
+size-bs (OneMoreBranch εδ rest) = suc (size-t εδ <> size-bs rest)
