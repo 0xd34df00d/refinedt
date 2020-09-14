@@ -25,6 +25,12 @@ abstract
   n≤m<>n : ∀ m n → n ≤ m <> n
   n≤m<>n = n≤m⊔n
 
+  m≤m<>n<>k : ∀ m n k → m ≤ m <> n <> k
+  m≤m<>n<>k m n k = m≤m<>n m (n ⊔ k)
+
+  n≤m<>n<>k : ∀ m n k → n ≤ m <> n <> k
+  n≤m<>n<>k m n k = ≤-trans (m≤m<>n n k) (n≤m<>n m (n ⊔ k))
+
   k≤m<>n<>k : ∀ m n k → k ≤ m <> n <> k
   k≤m<>n<>k m n k = ≤-trans (n≤m<>n n k) (n≤m<>n m (n ⊔ k))
 
