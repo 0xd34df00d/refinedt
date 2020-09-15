@@ -13,6 +13,7 @@ size-st  : Γ ⊢ τ₁ <: τ₂ → ℕ
 size-bs  : ∀ {τ cons} {bs : CaseBranches n}
          → BranchesHaveType Γ cons bs τ
          → ℕ
+size-all-cons : {cons : ADTCons n} → All (Γ ⊢_) cons → ℕ
 
 infixr 20 _<>_
 _<>_ : ℕ → ℕ → ℕ
@@ -41,11 +42,10 @@ size-twf (TWF-TrueRef gok) = suc (size-ok gok)
 size-twf (TWF-Base ε₁δ ε₂δ) = suc (size-t ε₁δ <> size-t ε₂δ)
 size-twf (TWF-Conj ρ₁δ ρ₂δ) = suc (size-twf ρ₁δ <> size-twf ρ₂δ)
 size-twf (TWF-Arr argδ resδ) = suc (size-twf argδ <> size-twf resδ)
-size-twf (TWF-ADT consδs) = suc (size-cons consδs)
-  where
-    size-cons : {cons : ADTCons n} → All (Γ ⊢_) cons → ℕ
-    size-cons [] = zero
-    size-cons (px ∷ pxs) = size-twf px <> size-cons pxs
+size-twf (TWF-ADT consδs) = suc (size-all-cons consδs)
+
+size-all-cons [] = zero
+size-all-cons (px ∷ pxs) = size-twf px <> size-all-cons pxs
 
 size-t (T-Unit gok) = suc (size-ok gok)
 size-t (T-Var gok _) = suc (size-ok gok)
