@@ -53,4 +53,6 @@ abstract
   Γ⊢τ-⇒-Γok-smaller (TWF-Base ε₁δ _) = a<b-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-tail-smaller ε₁δ)
   Γ⊢τ-⇒-Γok-smaller (TWF-Conj ρ₁δ _) = a<b-⇒-a<b<>c (Γ⊢τ-⇒-Γok-smaller ρ₁δ)
   Γ⊢τ-⇒-Γok-smaller (TWF-Arr argδ _) = a<b-⇒-a<b<>c (Γ⊢τ-⇒-Γok-smaller argδ)
-  Γ⊢τ-⇒-Γok-smaller (TWF-ADT (px ∷ _)) = a<b-⇒-a<b<>c (Γ⊢τ-⇒-Γok-smaller px)
+  Γ⊢τ-⇒-Γok-smaller (TWF-ADT (px ∷ pxs)) = <-trans
+                                             (a<b-⇒-a<b<>c (Γ⊢τ-⇒-Γok-smaller px))
+                                             (n<1+n (suc (size-twf px ⊔ size-all-cons pxs)))
