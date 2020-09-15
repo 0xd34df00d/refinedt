@@ -49,17 +49,19 @@ abstract
                                                 in T-Abs arrδ' bodyδ'
   t-thinning ⊂-prf Γ'ok (T-App δ₁ δ₂) _ = T-App (t-thinning ⊂-prf Γ'ok δ₁ {! !}) (t-thinning ⊂-prf Γ'ok δ₂ (<-wellFounded _))
   t-thinning {Γ} {Γ'} ⊂-prf Γ'ok (T-Case resδ scrut branches) (acc rec) =
-    let recAcc = rec (size-bs branches) (s≤s (k≤m<>n<>k (size-t scrut) (size-twf resδ) (size-bs branches)))
-     in T-Case (twf-thinning ⊂-prf Γ'ok resδ {! !}) (t-thinning ⊂-prf Γ'ok scrut {! !}) (thin-branches branches recAcc)
+    let rec₁ = rec (size-twf resδ) (s≤s (n≤m<>n<>k (size-t scrut) (size-twf resδ) (size-bs branches)))
+        rec₂ = rec (size-t scrut) (s≤s (m≤m<>n<>k (size-t scrut) (size-twf resδ) (size-bs branches)))
+        rec₃ = rec (size-bs branches) (s≤s (k≤m<>n<>k (size-t scrut) (size-twf resδ) (size-bs branches)))
+     in T-Case (twf-thinning ⊂-prf Γ'ok resδ rec₁) (t-thinning ⊂-prf Γ'ok scrut rec₂) (thin-branches branches rec₃)
     where
       thin-branches : ∀ {τ cons} {bs : CaseBranches n} → (δ : BranchesHaveType Γ cons bs τ) → Acc _<_ (size-bs δ) → BranchesHaveType Γ' cons bs τ
       thin-branches NoBranches _ = NoBranches
       thin-branches (OneMoreBranch εδ rest) (acc rec') =
         let branch-Γ-ok = Γ⊢ε⦂τ-⇒-Γok εδ
-            rec1 = rec' (size-twf (Γok-head (Γ⊢ε⦂τ-⇒-Γok εδ))) (size-lemma₁ εδ)
-            rec2 = rec' (size-t εδ) (s≤s (m≤m<>n (size-t εδ) (size-bs rest)))
-            rec3 = rec' (size-bs rest) (s≤s (n≤m<>n (size-t εδ) (size-bs rest)))
-            branch'-Γ-ok = TCTX-Bind Γ'ok (twf-thinning ⊂-prf Γ'ok (Γok-head branch-Γ-ok) rec1)
-         in OneMoreBranch (t-thinning (PrependBoth ⊂-prf) branch'-Γ-ok εδ rec2) (thin-branches rest rec3)
+            rec₁ = rec' (size-twf (Γok-head (Γ⊢ε⦂τ-⇒-Γok εδ))) (size-lemma₁ εδ)
+            rec₂ = rec' (size-t εδ) (s≤s (m≤m<>n (size-t εδ) (size-bs rest)))
+            rec₃ = rec' (size-bs rest) (s≤s (n≤m<>n (size-t εδ) (size-bs rest)))
+            branch'-Γ-ok = TCTX-Bind Γ'ok (twf-thinning ⊂-prf Γ'ok (Γok-head branch-Γ-ok) rec₁)
+         in OneMoreBranch (t-thinning (PrependBoth ⊂-prf) branch'-Γ-ok εδ rec₂) (thin-branches rest rec₃)
   t-thinning ⊂-prf Γ'ok (T-Con conArg adtτ) _ = T-Con (t-thinning ⊂-prf Γ'ok conArg {! !}) (twf-thinning ⊂-prf Γ'ok adtτ {! !})
   t-thinning ⊂-prf Γ'ok (T-Sub x x₁) _ = {! !}
