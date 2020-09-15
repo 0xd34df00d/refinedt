@@ -43,11 +43,15 @@ abstract
 
   t-thinning ⊂-prf Γ'ok (T-Unit gok) _ = T-Unit Γ'ok
   t-thinning ⊂-prf Γ'ok (T-Var gok x) _ = T-Var Γ'ok (⊂-preserves-∈ ⊂-prf x)
-  t-thinning ⊂-prf Γ'ok (T-Abs arrδ bodyδ) _ = let arrδ' = twf-thinning ⊂-prf Γ'ok arrδ (<-wellFounded _)
-                                                   bodyδ'-ok = TCTX-Bind Γ'ok (arr-wf-dom arrδ')
-                                                   bodyδ' = t-thinning (PrependBoth ⊂-prf) bodyδ'-ok bodyδ (<-wellFounded _)
-                                                in T-Abs arrδ' bodyδ'
-  t-thinning ⊂-prf Γ'ok (T-App δ₁ δ₂) _ = T-App (t-thinning ⊂-prf Γ'ok δ₁ {! !}) (t-thinning ⊂-prf Γ'ok δ₂ (<-wellFounded _))
+  t-thinning ⊂-prf Γ'ok (T-Abs arrδ bodyδ) (acc rec) = let rec₁ = rec (size-twf arrδ) (s≤s (m≤m<>n (size-twf arrδ) (size-t bodyδ)))
+                                                           rec₂ = rec (size-t bodyδ) (s≤s (n≤m<>n (size-twf arrδ) (size-t bodyδ)))
+                                                           arrδ' = twf-thinning ⊂-prf Γ'ok arrδ rec₁
+                                                           bodyδ'-ok = TCTX-Bind Γ'ok (arr-wf-dom arrδ')
+                                                           bodyδ' = t-thinning (PrependBoth ⊂-prf) bodyδ'-ok bodyδ rec₂
+                                                        in T-Abs arrδ' bodyδ'
+  t-thinning ⊂-prf Γ'ok (T-App δ₁ δ₂) (acc rec) = let rec₁ = rec (size-t δ₁) (s≤s (m≤m<>n (size-t δ₁) (size-t δ₂)))
+                                                      rec₂ = rec (size-t δ₂) (s≤s (n≤m<>n (size-t δ₁) (size-t δ₂)))
+                                                   in T-App (t-thinning ⊂-prf Γ'ok δ₁ rec₁) (t-thinning ⊂-prf Γ'ok δ₂ rec₂)
   t-thinning {Γ} {Γ'} ⊂-prf Γ'ok (T-Case resδ scrut branches) (acc rec) =
     let rec₁ = rec (size-twf resδ) (s≤s (n≤m<>n<>k (size-t scrut) (size-twf resδ) (size-bs branches)))
         rec₂ = rec (size-t scrut) (s≤s (m≤m<>n<>k (size-t scrut) (size-twf resδ) (size-bs branches)))
@@ -63,5 +67,7 @@ abstract
             rec₃ = rec' (size-bs rest) (s≤s (n≤m<>n (size-t εδ) (size-bs rest)))
             branch'-Γ-ok = TCTX-Bind Γ'ok (twf-thinning ⊂-prf Γ'ok (Γok-head branch-Γ-ok) rec₁)
          in OneMoreBranch (t-thinning (PrependBoth ⊂-prf) branch'-Γ-ok εδ rec₂) (thin-branches rest rec₃)
-  t-thinning ⊂-prf Γ'ok (T-Con conArg adtτ) _ = T-Con (t-thinning ⊂-prf Γ'ok conArg {! !}) (twf-thinning ⊂-prf Γ'ok adtτ {! !})
+  t-thinning ⊂-prf Γ'ok (T-Con conArg adtτ) (acc rec) = let rec₁ = rec (size-t conArg) (s≤s (m≤m<>n (size-t conArg) (size-twf adtτ)))
+                                                            rec₂ = rec (size-twf adtτ) (s≤s (n≤m<>n (size-t conArg) (size-twf adtτ)))
+                                                         in T-Con (t-thinning ⊂-prf Γ'ok conArg rec₁) (twf-thinning ⊂-prf Γ'ok adtτ rec₂)
   t-thinning ⊂-prf Γ'ok (T-Sub x x₁) _ = {! !}
