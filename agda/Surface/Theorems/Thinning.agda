@@ -35,11 +35,14 @@ abstract
                                                               argδ' = twf-thinning ⊂-prf Γ'ok argδ rec₁
                                                               resδ' = twf-thinning (PrependBoth ⊂-prf) (TCTX-Bind Γ'ok argδ') resδ rec₂
                                                            in TWF-Arr argδ' resδ'
-  twf-thinning {Γ} {Γ'} ⊂-prf Γ'ok (TWF-ADT consδs) _ = TWF-ADT (map-cons consδs)
+  twf-thinning {Γ} {Γ'} ⊂-prf Γ'ok (TWF-ADT consδs) (acc rec) = let rec' = rec (size-all-cons consδs) ≤-refl
+                                                                 in TWF-ADT (map-cons consδs rec')
     where
-      map-cons : {cons : ADTCons n} → All (Γ ⊢_) cons → All (Γ' ⊢_) cons
-      map-cons [] = []
-      map-cons (px ∷ pxs) = twf-thinning ⊂-prf Γ'ok px (<-wellFounded _) ∷ map-cons pxs
+      map-cons : {cons : ADTCons n} → (α : All (Γ ⊢_) cons) → Acc _<_ (size-all-cons α) → All (Γ' ⊢_) cons
+      map-cons [] _ = []
+      map-cons (px ∷ pxs) (acc rec') = let rec₁ = rec' (size-twf px) (s≤s (m≤m<>n (size-twf px) (size-all-cons pxs)))
+                                           rec₂ = rec' (size-all-cons pxs) (s≤s (n≤m<>n (size-twf px) (size-all-cons pxs)))
+                                        in twf-thinning ⊂-prf Γ'ok px rec₁ ∷ map-cons pxs rec₂
 
   t-thinning ⊂-prf Γ'ok (T-Unit gok) _ = T-Unit Γ'ok
   t-thinning ⊂-prf Γ'ok (T-Var gok x) _ = T-Var Γ'ok (⊂-preserves-∈ ⊂-prf x)
