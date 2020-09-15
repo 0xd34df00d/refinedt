@@ -44,8 +44,8 @@ size-twf (TWF-Conj ρ₁δ ρ₂δ) = suc (size-twf ρ₁δ <> size-twf ρ₂δ)
 size-twf (TWF-Arr argδ resδ) = suc (size-twf argδ <> size-twf resδ)
 size-twf (TWF-ADT consδs) = suc (size-all-cons consδs)
 
-size-all-cons [] = zero
-size-all-cons (px ∷ pxs) = size-twf px <> size-all-cons pxs
+size-all-cons [] = 0
+size-all-cons (px ∷ pxs) = suc (size-twf px <> size-all-cons pxs)
 
 size-t (T-Unit gok) = suc (size-ok gok)
 size-t (T-Var gok _) = suc (size-ok gok)
