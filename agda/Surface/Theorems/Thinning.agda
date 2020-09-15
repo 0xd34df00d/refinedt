@@ -16,7 +16,11 @@ private
   arr-wf-dom : Γ ⊢ SArr x τ₁ τ₂ → Γ ⊢ τ₁
   arr-wf-dom (TWF-Arr domδ _) = domδ
 
-  size-lemma₁ : (δ : (Γ , x ⦂ τ') ⊢ ε ⦂ τ) → size-twf (Γok-head (Γ⊢ε⦂τ-⇒-Γok δ)) < suc (size-t δ <> n)
+  size-lemma₁ : (n : ℕ) → (δ : (Γ , x ⦂ τ') ⊢ ε ⦂ τ) → size-twf (Γok-head (Γ⊢ε⦂τ-⇒-Γok δ)) < suc (size-t δ <> n)
+  size-lemma₁ n δ = let r1 = Γok-head-smaller (Γ⊢ε⦂τ-⇒-Γok δ)
+                        r2 = Γ⊢ε⦂τ-⇒-Γok-smaller δ
+                        r3 = <-trans r1 r2
+                     in <-trans r3 (s≤s (m≤m<>n (size-t δ) n))
 
 abstract
   twf-thinning : Γ ⊂ Γ' → Γ' ok → (δ : Γ ⊢ τ)     → Acc _<_ (size-twf δ) → (Γ' ⊢ τ)
@@ -65,7 +69,7 @@ abstract
       thin-branches NoBranches _ = NoBranches
       thin-branches (OneMoreBranch εδ rest) (acc rec') =
         let branch-Γ-ok = Γ⊢ε⦂τ-⇒-Γok εδ
-            rec₁ = rec' (size-twf (Γok-head (Γ⊢ε⦂τ-⇒-Γok εδ))) (size-lemma₁ εδ)
+            rec₁ = rec' (size-twf (Γok-head (Γ⊢ε⦂τ-⇒-Γok εδ))) (size-lemma₁ (size-bs rest) εδ)
             rec₂ = rec' (size-t εδ) (s≤s (m≤m<>n (size-t εδ) (size-bs rest)))
             rec₃ = rec' (size-bs rest) (s≤s (n≤m<>n (size-t εδ) (size-bs rest)))
             branch'-Γ-ok = TCTX-Bind Γ'ok (twf-thinning ⊂-prf Γ'ok (Γok-head branch-Γ-ok) rec₁)
