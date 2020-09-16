@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Install bibtex
-        run: sudo apt-get install -y texlive-bibtex-extra
+      - name: Install latex
+        run: sudo apt-get install -y texlive-full
 
       - name: Install opam
         run: |
