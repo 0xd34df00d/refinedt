@@ -1,0 +1,25 @@
+name: BuildPDF
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install opam
+        run: |
+          sudo add-apt-repository ppa:avsm/ppa
+          sudo apt update
+          sudo apt install opam
+
+      - name: Install ott
+        run: opam install ott
+
+      - name: Build the paper
+        run: |
+          export PATH=$(opam config var prefix)/bin:$PATH
+          ./tex/build.sh
