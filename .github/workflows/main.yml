@@ -23,4 +23,10 @@ jobs:
       - name: Build the paper
         run: |
           export PATH=$(opam config var prefix)/bin:$PATH
-          ./tex/build.sh
+          cd tex
+          ./build.sh
+          
+      - uses: actions/upload-artifact@v2
+        with:
+          name: paper
+          path: tex/paper.pdf
