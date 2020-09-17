@@ -85,3 +85,9 @@ abstract
 
   t-thinning   : Γ ⊂ Γ' → Γ' ok → Γ ⊢ ε ⦂ τ → Γ' ⊢ ε ⦂ τ
   t-thinning ⊂-prf Γ'ok δ = t-thinning-sized ⊂-prf Γ'ok δ (<-wellFounded _)
+
+  twf-weakening : Γ ok → Γ ⊢ τ' → Γ ⊢ τ → (Γ , x ⦂ τ') ⊢ τ
+  twf-weakening {Γ} Γok τ'δ τδ = twf-thinning (IgnoreHead (⊂-refl Γ)) (TCTX-Bind Γok τ'δ) τδ
+
+  t-weakening : Γ ok → Γ ⊢ τ' → Γ ⊢ ε ⦂ τ → (Γ , x ⦂ τ') ⊢ ε ⦂ τ
+  t-weakening {Γ} Γok τ'δ εδ = t-thinning (IgnoreHead (⊂-refl Γ)) (TCTX-Bind Γok τ'δ) εδ
