@@ -8,7 +8,7 @@ open import Data.Nat.Base public
 open import Data.Fin public using (Fin)
 open import Data.Product public using (_×_)
 open import Data.Product using (_,_)
-open import Data.Vec public
+open import Data.Vec public hiding (_++_)
 
 record Var : Set where
   constructor MkVar
@@ -67,6 +67,7 @@ CtxElem = Var × SType
 Ctx : Set
 Ctx = List CtxElem
 
+infixl 20 _,_⦂_
 _,_⦂_ : Ctx → Var → SType → Ctx
 Γ , x ⦂ τ = ( x , τ ) ∷ Γ
 
@@ -82,8 +83,8 @@ _∈_∣_ = SRBT
 Τ = SUnit ≈ SUnit
 
 variable
-  Γ Γ' : Ctx
-  x x' ν ν₁ ν₂ : Var
+  Γ Γ' Δ : Ctx
+  x x' x₁ x₂ ν ν₁ ν₂ : Var
   τ τ' τ₁ τ₂ τ₁' τ₂' τᵢ τⱼ : SType
   ε ε' ε₁ ε₂ : STerm
   b b' : BaseType
