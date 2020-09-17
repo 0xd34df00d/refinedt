@@ -25,7 +25,6 @@ private
 private
   twf-thinning-sized : Γ ⊂ Γ' → Γ' ok → (δ : Γ ⊢ τ)         → Acc _<_ (size-twf δ) → (Γ' ⊢ τ)
   t-thinning-sized   : Γ ⊂ Γ' → Γ' ok → (δ : Γ ⊢ ε ⦂ τ)     → Acc _<_ (size-t δ)   → (Γ' ⊢ ε ⦂ τ)
-  st-thinning-sized  : Γ ⊂ Γ' → Γ' ok → (δ : Γ ⊢ τ₁ <: τ₂)  → Acc _<_ (size-st δ) → (Γ' ⊢ τ₁ <: τ₂)
 
   twf-thinning-sized ⊂-prf Γ'ok (TWF-TrueRef _) _ = TWF-TrueRef Γ'ok
   twf-thinning-sized ⊂-prf Γ'ok (TWF-Base ε₁δ ε₂δ) (acc rec) = let expCtxOk = TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)
@@ -78,14 +77,12 @@ private
   t-thinning-sized ⊂-prf Γ'ok (T-Con conArg adtτ) (acc rec) = let rec₁ = rec (size-t conArg) (s≤s (m≤m<>n (size-t conArg) (size-twf adtτ)))
                                                                   rec₂ = rec (size-twf adtτ) (s≤s (n≤m<>n (size-t conArg) (size-twf adtτ)))
                                                                in T-Con (t-thinning-sized ⊂-prf Γ'ok conArg rec₁) (twf-thinning-sized ⊂-prf Γ'ok adtτ rec₂)
-  t-thinning-sized ⊂-prf Γ'ok (T-Sub εδ <:δ) (acc rec) = let rec₁ = rec (size-t εδ) (s≤s (m≤m<>n (size-t εδ) (size-st <:δ)))
-                                                             rec₂ = rec (size-st <:δ) (s≤s (n≤m<>n (size-t εδ) (size-st <:δ)))
-                                                          in T-Sub (t-thinning-sized ⊂-prf Γ'ok εδ rec₁) (st-thinning-sized ⊂-prf Γ'ok <:δ rec₂)
-
-  st-thinning-sized ⊂-prf Γ'ok (ST-Base oracle x) _ = {! !}
-  st-thinning-sized ⊂-prf Γ'ok (ST-Arr δ₁ δ₂) (acc rec) = let rec₁ = rec (size-st δ₁) (s≤s (m≤m<>n (size-st δ₁) (size-st δ₂)))
-                                                              rec₂ = rec (size-st δ₂) (s≤s (n≤m<>n (size-st δ₁) (size-st δ₂)))
-                                                           in ST-Arr (st-thinning-sized ⊂-prf Γ'ok δ₁ rec₁) (st-thinning-sized (PrependBoth ⊂-prf) {! !} δ₂ rec₂)
+  t-thinning-sized ⊂-prf Γ'ok (T-Sub εδ <:δ) (acc rec) = let rec' = rec (size-t εδ) (s≤s (m≤m<>n (size-t εδ) (size-st <:δ)))
+                                                          in T-Sub (t-thinning-sized ⊂-prf Γ'ok εδ rec') (st-thinning-sized ⊂-prf <:δ)
+    where
+      st-thinning-sized  : ∀ {Γ Γ'} → Γ ⊂ Γ' → (δ : Γ ⊢ τ₁ <: τ₂) → (Γ' ⊢ τ₁ <: τ₂)
+      st-thinning-sized ⊂-prf (ST-Base oracle just-prf) = {! !}
+      st-thinning-sized ⊂-prf (ST-Arr δ₁ δ₂) = ST-Arr (st-thinning-sized ⊂-prf δ₁) (st-thinning-sized (PrependBoth ⊂-prf) δ₂)
 
 abstract
   twf-thinning : Γ ⊂ Γ' → Γ' ok → Γ ⊢ τ     → Γ' ⊢ τ
