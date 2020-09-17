@@ -1,0 +1,69 @@
+name: BuildPDF
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install latex
+        run: sudo apt-get install -y texlive-full
+
+      - name: Install opam
+        run: |
+          sudo add-apt-repository ppa:avsm/ppa
+          sudo apt update
+          sudo apt install opam
+          opam init
+
+      - name: Install ott
+        run: opam install ott
+
+      - name: Build the paper
+        run: |
+          export PATH=$(opam config var prefix)/bin:$PATH
+          cd tex
+          ./build.sh
+          
+      - uses: actions/upload-artifact@v2
+        with:
+          name: paper
+          path: tex/paper.pdf
+
+  mkrelease:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    needs: [build]
+    steps:
+      - name: Variables
+        id: vars
+        run: |
+          echo «::set-output name=date::$(date +'%Y-%m-%d')»
+          echo «::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-8)»
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: paper
+      - name: Create Release
+        uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: paper-${{ steps.vars.outputs.date }}-${{ steps.vars.outputs.sha8 }}
+          release_name: Main paper (version ${{ steps.vars.outputs.date }})
+          draft: false
+          prerelease: true
+      - name: Upload pdf
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./paper.pdf
+          asset_name: paper.pdf
+          asset_content_type: application/pdf
