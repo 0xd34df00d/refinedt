@@ -62,7 +62,7 @@ data _⊢_⦂_ where
   T-Unit      : (gok : Γ ok)
               → Γ ⊢ SUnit ⦂ (ν ∈ BUnit ∣ Τ)
   T-Var       : (gok : Γ ok)
-              → (x , τ) ∈ Γ
+              → x ⦂ τ ∈ Γ
               → Γ ⊢ SVar x ⦂ τ
   T-Abs       : (arrδ : Γ ⊢ SArr x τ₁ τ₂)
               → (bodyδ : (Γ , x ⦂ τ₁) ⊢ ε ⦂ τ₂)

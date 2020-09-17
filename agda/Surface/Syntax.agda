@@ -6,7 +6,8 @@ open import Agda.Builtin.String
 
 open import Data.Nat.Base public
 open import Data.Fin public using (Fin)
-open import Data.Product public using (_×_; _,_)
+open import Data.Product public using (_×_)
+open import Data.Product using (_,_)
 open import Data.Vec public
 
 record Var : Set where
@@ -68,6 +69,10 @@ Ctx = List CtxElem
 
 _,_⦂_ : Ctx → Var → SType → Ctx
 Γ , x ⦂ τ = ( x , τ ) ∷ Γ
+
+infix 19 _⦂_
+_⦂_ : Var → SType → Var × SType
+_⦂_ = _,_
 
 infix 15 _∈_∣_
 _∈_∣_ : (ν : Var) → (b : BaseType) → (ρ : Refinement) → SType
