@@ -81,7 +81,7 @@ private
                                                           in T-Sub (t-thinning-sized ⊂-prf Γ'ok εδ rec') (st-thinning-sized ⊂-prf <:δ)
     where
       st-thinning-sized  : ∀ {Γ Γ'} → Γ ⊂ Γ' → (δ : Γ ⊢ τ₁ <: τ₂) → (Γ' ⊢ τ₁ <: τ₂)
-      st-thinning-sized ⊂-prf (ST-Base oracle just-prf) = {! !}
+      st-thinning-sized ⊂-prf (ST-Base oracle just-prf) = ST-Base oracle (Oracle.thin oracle ⊂-prf just-prf)
       st-thinning-sized ⊂-prf (ST-Arr δ₁ δ₂) = ST-Arr (st-thinning-sized ⊂-prf δ₁) (st-thinning-sized (PrependBoth ⊂-prf) δ₂)
 
 abstract

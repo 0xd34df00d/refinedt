@@ -8,6 +8,7 @@ open import Data.Vec.Relation.Unary.All public
 
 open import Surface.Syntax
 open import Surface.Substitutions
+open import Sublist
 
 record PositiveDecision : Set where
   constructor MkPD
@@ -16,6 +17,10 @@ record Oracle : Set where
   constructor MkOracle
   field
     decide : (Γ : Ctx) → (var : Var) → (b : BaseType) → (ρ₁ ρ₂ : Refinement) → Maybe PositiveDecision
+    thin   : ∀ {Γ Γ' var b ρ₁ ρ₂}
+           → Γ ⊂ Γ'
+           → Is-just (decide Γ var b ρ₁ ρ₂)
+           → Is-just (decide Γ' var b ρ₁ ρ₂)
 
 data _ok : (Γ : Ctx) → Set
 data _⊢_⦂_ : (Γ : Ctx) → (ε : STerm) → (τ : SType) → Set
