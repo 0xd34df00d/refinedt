@@ -15,7 +15,7 @@ record PositiveDecision : Set where
 record Oracle : Set where
   constructor MkOracle
   field
-    decide : (var : Var) → (b : BaseType) → (ρ₁ : Refinement) → (ρ₂ : Refinement) → Maybe PositiveDecision
+    decide : (Γ : Ctx) → (var : Var) → (b : BaseType) → (ρ₁ ρ₂ : Refinement) → Maybe PositiveDecision
 
 data _ok : (Γ : Ctx) → Set
 data _⊢_⦂_ : (Γ : Ctx) → (ε : STerm) → (τ : SType) → Set
@@ -80,7 +80,7 @@ data _⊢_⦂_ where
 
 data _⊢_<:_ where
   ST-Base     : (oracle : Oracle)
-              → Is-just (Oracle.decide oracle ν b ρ₁ ρ₂)
+              → Is-just (Oracle.decide oracle Γ ν b ρ₁ ρ₂)
               → Γ ⊢ (ν ∈ b ∣ ρ₁) <: (ν ∈ b ∣ ρ₂)
   ST-Arr      : (Γ ⊢ τ₁' <: τ₁)
               → ((Γ , x ⦂ τ₁) ⊢ τ₂ <: τ₂')
