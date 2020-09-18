@@ -84,8 +84,8 @@ _∈_∣_ = SRBT
 
 variable
   Γ Γ' Δ : Ctx
-  x x' x₁ x₂ ν ν₁ ν₂ : Var
-  τ τ' τ₁ τ₂ τ₁' τ₂' τᵢ τⱼ : SType
+  x x' x₁ x₂ y ν ν₁ ν₂ : Var
+  τ τ' τ₁ τ₂ τ₁' τ₂' τᵢ τⱼ σ : SType
   ε ε' ε₁ ε₂ : STerm
   b b' : BaseType
   ρ₁ ρ₂ : Refinement
