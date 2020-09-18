@@ -69,7 +69,7 @@ data _⊢_⦂_ where
               → (Γ ⊢ SLam x τ₁ ε ⦂ SArr x τ₁ τ₂)
   T-App       : (δ₁ : Γ ⊢ ε₁ ⦂ SArr x τ₁ τ₂)
               → (δ₂ : Γ ⊢ ε₂ ⦂ τ₁)
-              → Γ ⊢ SApp ε₁ ε₂ ⦂ [ x ↦ ε₂ ] τ₂
+              → Γ ⊢ SApp ε₁ ε₂ ⦂ [ x ↦ₜ ε₂ ] τ₂
   T-Case      : ∀ {cons : ADTCons (suc n)} {bs : CaseBranches (suc n)}
               → (resδ : Γ ⊢ τ')
               → (scrutτδ : Γ ⊢ ε ⦂ SADT cons)
