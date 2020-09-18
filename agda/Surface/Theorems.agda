@@ -1,6 +1,8 @@
 module Surface.Theorems where
 
-open import Data.List.Base using (_++_)
+open import Agda.Builtin.Equality
+open import Data.List.Base using (_++_ ; [_])
+open import Data.List.Properties
 open import Data.Product renaming (_,_ to _,'_)
 
 open import Surface.Syntax
@@ -13,6 +15,7 @@ open import Surface.Theorems.Thinning
 
 open import Sublist
 open import Misc.Helpers
+open import Misc.SnocList
 
 infix 19 _,_
 _,_ : Ctx → Ctx → Ctx
@@ -67,6 +70,11 @@ sub-Γ⊢τ-head : Γ ⊢ ε ⦂ σ
              → Γ , x ⦂ σ ⊢ τ'
              → Γ ⊢ [ x ↦ₜ ε ] τ'
 
+sub-Γ⊢τ : Γ ⊢ ε ⦂ σ
+        → (Γ , x ⦂ σ , Δ) ⊢ τ'
+        → SnocList Δ
+        → (Γ , [ x ↦ₗ ε ] Δ) ⊢ [ x ↦ₜ ε ] τ'
+
 single-sub-Γ-ok {Δ = []} εδ (TCTX-Bind prevOk@(TCTX-Bind prevOk' τδ') τδ) = TCTX-Bind prevOk (twf-weakening prevOk' τδ' (sub-Γ⊢τ-head εδ τδ))
 single-sub-Γ-ok {Δ = _ ∷ Δ} εδ (TCTX-Bind prevOk τδ) = TCTX-Bind (single-sub-Γ-ok εδ prevOk) (single-sub-Γ⊢τ εδ τδ)
 
@@ -81,3 +89,16 @@ single-sub-Γ⊢τ {Γ = Γ} {ε = ε} {σ = σ} εδ (TWF-ADT consδs) = TWF-AD
              → All ((Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢_)  cons
     sub-cons [] = []
     sub-cons (px ∷ pxs) = single-sub-Γ⊢τ εδ px ∷ sub-cons pxs
+
+sub-Γ⊢τ εδ δ Empty = sub-Γ⊢τ-head εδ δ
+sub-Γ⊢τ {Γ} {ε} {σ} {x} {τ' = τ'} εδ δ (Snoc (y ,' τ) Δ snoc)
+  rewrite sub-ctx-snoc x ε y τ Δ
+  rewrite ++-assoc ( [ x ↦ₗ ε ] Δ ) [ ( y ,' [ x ↦ₜ ε ] τ )] Γ =
+  let rec = sub-Γ⊢τ {σ = σ} {! !} {! !} snoc
+   in rec
+
+sub-Γ⊢τ-head εδ (TWF-TrueRef (TCTX-Bind Γok τδ)) = TWF-TrueRef Γok
+sub-Γ⊢τ-head εδ (TWF-Base ε₁δ ε₂δ) = {! !}
+sub-Γ⊢τ-head εδ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (sub-Γ⊢τ-head εδ ρ₁δ) (sub-Γ⊢τ-head εδ ρ₂δ)
+sub-Γ⊢τ-head εδ (TWF-Arr argδ resδ) = TWF-Arr (sub-Γ⊢τ-head εδ argδ) (sub-Γ⊢τ εδ resδ _)
+sub-Γ⊢τ-head εδ (TWF-ADT consδs) = {! !}
