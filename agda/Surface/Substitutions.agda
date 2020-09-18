@@ -1,9 +1,11 @@
 module Surface.Substitutions where
 
+open import Agda.Builtin.Equality
 open import Agda.Builtin.Sigma
 open import Agda.Builtin.List
 open import Data.Bool using (if_then_else_)
-open import Data.Vec
+open import Data.List.Base
+open import Data.Vec using ([] ; _∷_)
 
 open import Surface.Syntax
 
@@ -50,3 +52,7 @@ substInBranches x ε (MkCaseBranch v body ∷ bs) =
 [_↦ₗ_]_ : SubstIn Ctx
 [ x ↦ₗ ε ] [] = []
 [ x ↦ₗ ε ] ((x' , τ) ∷ ctx) = (x' , [ x ↦ₜ ε ] τ) ∷ [ x ↦ₗ ε ] ctx
+
+sub-ctx-snoc : ∀ x ε y τ Δ → [ x ↦ₗ ε ] (Δ ++ [ (y , τ) ]) ≡ [ x ↦ₗ ε ] Δ ++ [ (y , [ x ↦ₜ ε ] τ) ]
+sub-ctx-snoc _ _ _ _ [] = refl
+sub-ctx-snoc x ε y τ ( _  ∷ Δ) rewrite sub-ctx-snoc x ε y τ Δ = refl
