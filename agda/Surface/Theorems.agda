@@ -38,6 +38,12 @@ exchange-Γ⊢ε⦂τ no-x Δ (T-Unit gok) = T-Unit (exchange-Γok no-x Δ gok)
 exchange-Γ⊢ε⦂τ no-x Δ (T-Var gok ∈) = T-Var (exchange-Γok no-x Δ gok) (∈-swap ∈)
 exchange-Γ⊢ε⦂τ no-x Δ (T-Abs arrδ bodyδ) = T-Abs (exchange-Γ⊢τ no-x Δ arrδ) (exchange-Γ⊢ε⦂τ no-x (_ ∷ Δ) bodyδ)
 exchange-Γ⊢ε⦂τ no-x Δ (T-App δ₁ δ₂) = T-App (exchange-Γ⊢ε⦂τ no-x Δ δ₁) (exchange-Γ⊢ε⦂τ no-x Δ δ₂)
-exchange-Γ⊢ε⦂τ no-x Δ (T-Case resδ δ branches) = T-Case (exchange-Γ⊢τ no-x Δ resδ) (exchange-Γ⊢ε⦂τ no-x Δ δ) {! !}
+exchange-Γ⊢ε⦂τ {Γ = Γ} {τ₂ = τ₂} no-x Δ (T-Case resδ δ branches) = T-Case (exchange-Γ⊢τ no-x Δ resδ) (exchange-Γ⊢ε⦂τ no-x Δ δ) (exchange-branches branches)
+  where
+    exchange-branches : ∀ {cons} {bs : CaseBranches n}
+                      → BranchesHaveType (Γ , x₁ ⦂ τ₁ , x₂ ⦂ τ₂ , Δ) cons bs τ
+                      → BranchesHaveType (Γ , x₂ ⦂ τ₂ , x₁ ⦂ τ₁ , Δ) cons bs τ
+    exchange-branches NoBranches = NoBranches
+    exchange-branches {τ₁ = τ₁} (OneMoreBranch {x = x} {conτ = conτ} εδ bht) = OneMoreBranch (exchange-Γ⊢ε⦂τ no-x (Δ , x ⦂ conτ) εδ) (exchange-branches bht)
 exchange-Γ⊢ε⦂τ no-x Δ (T-Con conArg adtτ) = T-Con (exchange-Γ⊢ε⦂τ no-x Δ conArg) (exchange-Γ⊢τ no-x Δ adtτ)
 exchange-Γ⊢ε⦂τ no-x Δ (T-Sub δ sub) = T-Sub (exchange-Γ⊢ε⦂τ no-x Δ δ) {! !}
