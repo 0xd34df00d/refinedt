@@ -11,6 +11,7 @@ open import Surface.Theorems.Helpers
 open import Surface.Theorems.Thinning
 
 open import Sublist
+open import Misc.Helpers
 
 infix 19 _,_
 _,_ : Ctx → Ctx → Ctx
@@ -34,7 +35,7 @@ exchange-Γ⊢τ {Γ = Γ} {τ₂ = τ₂} no-x Δ (TWF-ADT consδs) = TWF-ADT (
     exchange-cons (px ∷ pxs) = exchange-Γ⊢τ no-x Δ px ∷ exchange-cons pxs
 
 exchange-Γ⊢ε⦂τ no-x Δ (T-Unit gok) = T-Unit (exchange-Γok no-x Δ gok)
-exchange-Γ⊢ε⦂τ no-x Δ (T-Var gok ∈) = T-Var (exchange-Γok no-x Δ gok) {! !}
+exchange-Γ⊢ε⦂τ no-x Δ (T-Var gok ∈) = T-Var (exchange-Γok no-x Δ gok) (∈-swap ∈)
 exchange-Γ⊢ε⦂τ no-x Δ (T-Abs arrδ bodyδ) = T-Abs (exchange-Γ⊢τ no-x Δ arrδ) (exchange-Γ⊢ε⦂τ no-x (_ ∷ Δ) bodyδ)
 exchange-Γ⊢ε⦂τ no-x Δ (T-App δ₁ δ₂) = T-App (exchange-Γ⊢ε⦂τ no-x Δ δ₁) (exchange-Γ⊢ε⦂τ no-x Δ δ₂)
 exchange-Γ⊢ε⦂τ no-x Δ (T-Case resδ δ branches) = T-Case (exchange-Γ⊢τ no-x Δ resδ) (exchange-Γ⊢ε⦂τ no-x Δ δ) {! !}
