@@ -49,4 +49,4 @@ substInBranches x ε (MkCaseBranch v body ∷ bs) =
 
 [_↦ₗ_]_ : SubstIn Ctx
 [ x ↦ₗ ε ] [] = []
-[ x ↦ₗ ε ] ((x' , τ) ∷ ctx) = (x' , [ x ↦ₜ ε ] τ) ∷ ctx
+[ x ↦ₗ ε ] ((x' , τ) ∷ ctx) = (x' , [ x ↦ₜ ε ] τ) ∷ [ x ↦ₗ ε ] ctx
