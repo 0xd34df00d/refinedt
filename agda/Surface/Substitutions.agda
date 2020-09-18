@@ -1,5 +1,7 @@
 module Surface.Substitutions where
 
+open import Agda.Builtin.Sigma
+open import Agda.Builtin.List
 open import Data.Bool using (if_then_else_)
 
 open import Surface.Syntax
@@ -7,7 +9,7 @@ open import Surface.Syntax
 SubstIn : Set → Set
 SubstIn ty = Var → STerm → ty → ty
 
-infix 30 [_↦ₜ_]_ [_↦ₑ_]_ [_↦ᵣ_]_
+infix 30 [_↦ₜ_]_ [_↦ₑ_]_ [_↦ᵣ_]_ [_↦ₗ_]_
 [_↦ₜ_]_ : SubstIn SType
 [_↦ₑ_]_ : SubstIn STerm
 [_↦ᵣ_]_ : SubstIn Refinement
@@ -43,3 +45,7 @@ substInBranches x ε (MkCaseBranch v body ∷ bs) =
               else [ x ↦ₑ ε ] body
       rest = substInBranches x ε bs
    in MkCaseBranch v body' ∷ rest
+
+[_↦ₗ_]_ : SubstIn Ctx
+[ x ↦ₗ ε ] [] = []
+[ x ↦ₗ ε ] ((x' , τ) ∷ ctx) = (x' , [ x ↦ₜ ε ] τ) ∷ ctx
