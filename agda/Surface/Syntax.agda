@@ -8,7 +8,7 @@ open import Data.Nat.Base public
 open import Data.Fin public using (Fin)
 open import Data.Product public using (_×_)
 open import Data.Product using (_,_)
-open import Data.Vec public hiding (_++_)
+open import Data.Vec
 
 record Var : Set where
   constructor MkVar

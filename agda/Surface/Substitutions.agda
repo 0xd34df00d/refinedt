@@ -3,6 +3,7 @@ module Surface.Substitutions where
 open import Agda.Builtin.Sigma
 open import Agda.Builtin.List
 open import Data.Bool using (if_then_else_)
+open import Data.Vec
 
 open import Surface.Syntax
 
