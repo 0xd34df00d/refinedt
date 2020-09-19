@@ -237,9 +237,12 @@ this is a well-founded proof.
 \end{proof}
 \begin{proof}[Proof of \cref{lma:thinning_t}]
   Again, induction on the derivation of $[[ G |- es : ts ]]$.
-
-  Similarly, \textsc{T-Abs}, \textsc{T-Case} and \textsc{T-Con} rules require
+  \textsc{T-Abs}, \textsc{T-Case} and \textsc{T-Con} rules require
   thinning type well-formedness judgements, which is proven using \cref{lma:thinning_twf}.
+
+  In addition to that, the \textsc{T-Sub} rule requires the oracle to satisfy the following condition:
+  for any $[[ r1 ]], [[ r2 ]]$, if the oracle concludes $[[ [| G |] => A v. (r1 => r2) ]]$,
+  then it must conclude $[[ [| G' |] => A v. (r1 => r2) ]]$.
 \end{proof}
 
 \begin{lemma}[Substitution on types, \functionname{sub-Γ⊢τ}]\label{lma:type_substitution}
