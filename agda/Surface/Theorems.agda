@@ -14,12 +14,9 @@ open import Surface.Theorems.Helpers
 open import Surface.Theorems.Thinning
 
 open import Sublist
+open import Misc.ContextConcat
 open import Misc.Helpers
 open import Misc.SnocList
-
-infix 19 _,_
-_,_ : Ctx → Ctx → Ctx
-_,_ Γ Δ = Δ ++ Γ
 
 -- Exchange lemmas
 exchange-Γok   : Γ ⊢ τ₂ → ∀ Δ → (Γ , x₁ ⦂ τ₁ , x₂ ⦂ τ₂ , Δ) ok → (Γ , x₂ ⦂ τ₂ , x₁ ⦂ τ₁ , Δ) ok
