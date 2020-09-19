@@ -1,10 +1,12 @@
 % vim: set ft=tex:
 
 \documentclass[a4paper]{article}
+\tracinglostchars=2
 \usepackage{a4wide}
 \usepackage[utf8]{inputenc}
 \usepackage[T2A]{fontenc}
 \usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage{unicode-math}
 \usepackage{hyperref,cleveref}
 \usepackage{mathtools}
 \usepackage{xcolor}
@@ -12,7 +14,6 @@
 \usepackage{subcaption}
 \usepackage{cite,url,babelbib}
 \usepackage{todonotes}
-\usepackage{verbatim}
 \usepackage[english]{babel}
 
 \nonstopmode
@@ -37,6 +38,10 @@
 \newcommand{\evalsto}{\rightsquigarrow}
 \newcommand{\eqrefl}{\text{eq-refl~}}
 \newcommand{\secondDP}{\text{second-dp~}}
+
+\defaultfontfeatures{ Scale=MatchLowercase, Ligatures=TeX }
+\newfontfamily\symbolfont{STIX Two Math}
+\newcommand\functionname[1]{\textnormal{\symbolfont #1}}
 
 \begin{document}
 
@@ -188,19 +193,19 @@ In the subsequent text we also assume the oracle can decide the resulting propos
 \subsubsection{Properties}
 
 We prove some of the usual metatheoretical properties of the proposed language.
+We also provide machine-verified proofs of these theorems in the supplemental code,
+with the corresponding proof terms referred in lemmas statements.
 
-\begin{lemma}\label{lma:term_wf_implies_ctx_wf}
+\begin{lemma}[\functionname{Γ⊢ε⦂τ-⇒-Γok}]\label{lma:term_wf_implies_ctx_wf}
   If $[[ G |- es : ts ]]$, then $[[ G ok ]]$.
 \end{lemma}
 \begin{proof}
   Straightforward induction on the derivation of $[[ G |- es : ts ]]$.
   \textsc{T-Unit} and \testsc{T-Var} carry the witness explicitly,
   and the other rules recurse on one of their premises.
-
-  The \verb+T_implies_TCTX+ theorem in the supplemental code represents a formal proof of this lemma.
 \end{proof}
 
-\begin{lemma}\label{lma:type_wf_implies_ctx_wf}
+\begin{lemma}[\functionname{Γ⊢τ-⇒-Γok}]\label{lma:type_wf_implies_ctx_wf}
   If $[[ G |- ts ]]$, then $[[G ok]]$.
 \end{lemma}
 \begin{proof}
@@ -208,17 +213,15 @@ We prove some of the usual metatheoretical properties of the proposed language.
   \textsc{TWF-TrueRef} carries the witness explicitly,
   the case for \testsc{TWF-Base} uses \cref{lma:term_wf_implies_ctx_wf} on either of its premises,
   and the other rules recurse on one of their premises.
-
-  The \verb+TWF_implies_TCTX+ theorem in the supplemental code represents a formal proof of this lemma.
 \end{proof}
 
 For the following two lemmas,
 assume $[[ G ]]$, $[[ G' ]]$ are contexts such that $[[ G ]] \subset [[ G' ]]$ and $[[ G' ok ]]$.
 Then:
-\begin{lemma}[Thinning on types]\label{lma:thinning_twf}
+\begin{lemma}[Thinning on types, \functionname{twf-thinning}]\label{lma:thinning_twf}
   If $[[ G |- ts ]]$, then $[[ G' |- ts ]]$.
 \end{lemma}
-\begin{lemma}[Thinning on terms]\label{lma:thinning_t}
+\begin{lemma}[Thinning on terms, \functionname{t-thinning}]\label{lma:thinning_t}
   If $[[ G |- es : ts ]]$, then $[[ G' |- es : ts ]]$.
 \end{lemma}
 These two lemmas are proven using mutual induction,
@@ -239,23 +242,22 @@ this is a well-founded proof.
   thinning type well-formedness judgements, which is proven using \cref{lma:thinning_twf}.
 \end{proof}
 
-\begin{lemma}[Substitution on types]\label{lma:type_substitution}
+\begin{lemma}[Substitution on types, \functionname{sub-Γ⊢τ}]\label{lma:type_substitution}
   Assume $[[ G, x : ts, GD |- ts' ]]$ and $[[ G |- es : ts ]]$, then $[[ G, [ x |-> es ] GD |- [ x |-> es ] ts' ]] $.
 \end{lemma}
 \begin{proof}
-  Due to the presence of a subset of dependent types the proof is a bit bulky.
-  We refer the interested reader to the \verb+substPreservesTWF+ theorem in the supplemental code.
+  Due to the presence of a subset of dependent types the proof is a bit bulky,
+  using simultaneous induction on $\Delta$ and the derivation of $[[ G, x : ts, GD |- ts' ]]$.
+  We refer the interested reader to the formal proof of theorem in the supplemental code for more details.
 \end{proof}
 
-\begin{lemma}\label{lma:term_wf_implies_type_wf}
+\begin{lemma}[\functionname{Γ⊢ε⦂τ-⇒-Γ⊢τ}]\label{lma:term_wf_implies_type_wf}
   If $[[ G |- es : ts ]]$, then $[[ G |- ts ]]$.
 \end{lemma}
 \begin{proof}
   Straightforward induction on the derivation of $[[ G |- es : ts ]]$.
   The interesting case is \textsc{T-App},
   as it invokes the substitution lemma (\cref{lma:type_substitution}).
-
-  The \verb+T_implies_TWF+ theorem in the supplemental code represents a formal proof of this lemma.
 \end{proof}
 
 \subsection{Core language}
