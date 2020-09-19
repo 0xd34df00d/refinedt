@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install latex
-        run: sudo apt-get install -y texlive-full
+        run: sudo apt-get install -y texlive-full fonts-stix
 
       - name: Install opam
         run: |
