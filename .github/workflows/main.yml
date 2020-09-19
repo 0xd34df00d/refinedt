@@ -54,7 +54,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           #tag_name: paper-${{ steps.vars.outputs.date }}-${{ steps.vars.outputs.sha8 }}
-          tag_name: paper-${{ steps.vars.outputs.sha8 }}
+          tag_name: ${GITHUB_SHA}
           release_name: Main paper (version ${{ steps.vars.outputs.date }})
           draft: false
           prerelease: true
