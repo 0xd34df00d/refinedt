@@ -212,19 +212,31 @@ We prove some of the usual metatheoretical properties of the proposed language.
   The \verb+TWF_implies_TCTX+ theorem in the supplemental code represents a formal proof of this lemma.
 \end{proof}
 
-\begin{lemma}[Thinning]\label{lma:thinning}
-  Let $[[ G ]], [[ G' ]]$ be contexts such that $[[ G ]] \subset [[ G' ]]$ and $[[ G' ok ]]$.
-  Then:
-  \begin{itemize}
-    \item If $[[ G |- ts ]]$, then $[[ G' |- ts ]]$.
-    \item If $[[ G |- es : ts ]]$, then $[[ G' |- es : ts ]]$.
-  \end{itemize}
+For the following two lemmas,
+assume $[[ G ]]$, $[[ G' ]]$ are contexts such that $[[ G ]] \subset [[ G' ]]$ and $[[ G' ok ]]$.
+Then:
+\begin{lemma}[Thinning on types]\label{lma:thinning_twf}
+  If $[[ G |- ts ]]$, then $[[ G' |- ts ]]$.
 \end{lemma}
-\begin{proof}
-  Mutual induction on the derivations of $[[ G |- ts ]]$ and $[[ G |- es : ts ]]$.
+\begin{lemma}[Thinning on terms]\label{lma:thinning_t}
+  If $[[ G |- es : ts ]]$, then $[[ G' |- es : ts ]]$.
+\end{lemma}
+These two lemmas are proven using mutual induction,
+but since each lemma uses the other one (and itself) only on smaller derivation trees,
+this is a well-founded proof.
+\begin{proof}[Proof of \cref{lma:thinning_twf}]
+	Mostly straightforward induction on the derivation of $[[ G |- ts ]]$.
 
-  The formal proofs of the two implications in this lemma
-  are done as the \verb+twfThinning+ and \verb+tThinning+ theorems respectively.
+  The case for the \textsc{TWF-Base} rule is worth paying special attention.
+  Unlike other rules which only have type well-formedness premises,
+  this one has premises requiring judgements about certain terms being well-typed,
+  so this case uses the \cref{lma:thinning_t}.
+\end{proof}
+\begin{proof}[Proof of \cref{lma:thinning_t}]
+  Again, induction on the derivation of $[[ G |- es : ts ]]$.
+
+  Similarly, \textsc{T-Abs}, \textsc{T-Case} and \textsc{T-Con} rules require
+  thinning type well-formedness judgements, which is proven using \cref{lma:thinning_twf}.
 \end{proof}
 
 \begin{lemma}[Substitution on types]\label{lma:type_substitution}
