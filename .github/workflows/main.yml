@@ -2,6 +2,8 @@ name: BuildPDF
 on:
   push:
     branches: [ master ]
+    paths:
+    - 'tex/**'
   pull_request:
     branches: [ master ]
 
