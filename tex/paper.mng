@@ -201,7 +201,7 @@ with the corresponding proof terms referred in lemmas statements.
 \end{lemma}
 \begin{proof}
   Straightforward induction on the derivation of $[[ G |- es : ts ]]$.
-  \textsc{T-Unit} and \testsc{T-Var} carry the witness explicitly,
+  \textsc{T-Unit} and \textsc{T-Var} carry the witness explicitly,
   and the other rules recurse on one of their premises.
 \end{proof}
 
@@ -211,7 +211,7 @@ with the corresponding proof terms referred in lemmas statements.
 \begin{proof}
   Straightforward induction on the derivation of $[[ G |- ts ]]$.
   \textsc{TWF-TrueRef} carries the witness explicitly,
-  the case for \testsc{TWF-Base} uses \cref{lma:term_wf_implies_ctx_wf} on either of its premises,
+  the case for \textsc{TWF-Base} uses \cref{lma:term_wf_implies_ctx_wf} on either of its premises,
   and the other rules recurse on one of their premises.
 \end{proof}
 
