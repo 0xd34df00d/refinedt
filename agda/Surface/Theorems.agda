@@ -50,7 +50,11 @@ exchange-Γ⊢ε⦂τ {Γ = Γ} {τ₂ = τ₂} no-x Δ (T-Case resδ δ branche
     exchange-branches NoBranches = NoBranches
     exchange-branches {τ₁ = τ₁} (OneMoreBranch {x = x} {conτ = conτ} εδ bht) = OneMoreBranch (exchange-Γ⊢ε⦂τ no-x (Δ , x ⦂ conτ) εδ) (exchange-branches bht)
 exchange-Γ⊢ε⦂τ no-x Δ (T-Con conArg adtτ) = T-Con (exchange-Γ⊢ε⦂τ no-x Δ conArg) (exchange-Γ⊢τ no-x Δ adtτ)
-exchange-Γ⊢ε⦂τ no-x Δ (T-Sub δ sub) = T-Sub (exchange-Γ⊢ε⦂τ no-x Δ δ) {! !}
+exchange-Γ⊢ε⦂τ no-x Δ (T-Sub δ sub) = T-Sub (exchange-Γ⊢ε⦂τ no-x Δ δ) (exchange-sub Δ sub)
+  where
+    exchange-sub : ∀ {Γ} Δ → (Γ , x₁ ⦂ τ₁ , x₂ ⦂ τ₂ , Δ) ⊢ τ <: τ' → (Γ , x₂ ⦂ τ₂ , x₁ ⦂ τ₁ , Δ) ⊢ τ <: τ'
+    exchange-sub Δ (ST-Base oracle just-prf) = ST-Base oracle (Oracle.exchange oracle just-prf)
+    exchange-sub Δ (ST-Arr δ₁ δ₂) = ST-Arr (exchange-sub Δ δ₁) (exchange-sub (_ ∷ _) δ₂)
 
 
 -- Substitution lemmas
