@@ -2,6 +2,8 @@ name: BuildPDF
 on:
   push:
     branches: [ master ]
+    paths:
+    - 'tex/**'
   pull_request:
     branches: [ master ]
 
@@ -36,14 +38,16 @@ jobs:
 
   mkrelease:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
     needs: [build]
     steps:
       - name: Variables
         id: vars
         run: |
-          echo «::set-output name=date::$(date +'%Y-%m-%d')»
-          echo «::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-8)»
+          echo "::set-output name=date::$(date +'%Y-%m-%d')"
+          echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-8)"
+      - name: Test vars
+        run: |
+          echo 
       - name: Download artifacts
         uses: actions/download-artifact@v2
         with:
