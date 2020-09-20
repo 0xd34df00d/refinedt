@@ -126,7 +126,13 @@ sub-Γ⊢τ-head εδ (TWF-TrueRef (TCTX-Bind Γok τδ)) = TWF-TrueRef Γok
 sub-Γ⊢τ-head εδ (TWF-Base ε₁δ ε₂δ) = {! !}
 sub-Γ⊢τ-head εδ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (sub-Γ⊢τ-head εδ ρ₁δ) (sub-Γ⊢τ-head εδ ρ₂δ)
 sub-Γ⊢τ-head εδ (TWF-Arr argδ resδ) = TWF-Arr (sub-Γ⊢τ-head εδ argδ) (sub-Γ⊢τ εδ resδ _)
-sub-Γ⊢τ-head εδ (TWF-ADT consδs) = {! !}
+sub-Γ⊢τ-head {Γ = Γ} {ε = ε} {σ = σ} εδ (TWF-ADT consδs) = TWF-ADT (sub-cons consδs)
+  where
+    sub-cons : {cons : ADTCons n}
+             → All (λ conτ → (Γ , x ⦂ σ) ⊢ conτ) cons
+             → All (λ conτ → Γ ⊢ conτ) ([ x ↦ₐ ε ] cons)
+    sub-cons [] = []
+    sub-cons (px ∷ pxs) = sub-Γ⊢τ-head εδ px ∷ sub-cons pxs
 
 
 Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢ ε ⦂ τ → Γ ⊢ τ
