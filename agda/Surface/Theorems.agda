@@ -2,7 +2,9 @@ module Surface.Theorems where
 
 open import Agda.Builtin.Equality
 open import Data.List.Base using (_++_ ; [_])
+open import Data.List.Membership.Propositional
 open import Data.List.Properties
+open import Data.List.Relation.Unary.Any
 open import Data.Product renaming (_,_ to _,'_)
 
 open import Surface.Syntax
@@ -57,6 +59,12 @@ exchange-Γ⊢ε⦂τ no-x Δ (T-Sub δ sub) = T-Sub (exchange-Γ⊢ε⦂τ no-x
     exchange-sub Δ (ST-Arr δ₁ δ₂) = ST-Arr (exchange-sub Δ δ₁) (exchange-sub (_ ∷ _) δ₂)
 
 
+-- Some local helpers
+
+τ∈Γ-⇒-Γ⊢τ : Γ ok → x ⦂ τ ∈ Γ → Γ ⊢ τ
+τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (here refl) = twf-weakening δ τδ τδ
+τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (there ∈-prf) = twf-weakening δ τδ (τ∈Γ-⇒-Γ⊢τ δ ∈-prf)
+
 -- Substitution lemmas
 
 single-sub-Γ-ok : Γ ⊢ ε ⦂ σ
@@ -103,3 +111,13 @@ sub-Γ⊢τ-head εδ (TWF-Base ε₁δ ε₂δ) = {! !}
 sub-Γ⊢τ-head εδ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (sub-Γ⊢τ-head εδ ρ₁δ) (sub-Γ⊢τ-head εδ ρ₂δ)
 sub-Γ⊢τ-head εδ (TWF-Arr argδ resδ) = TWF-Arr (sub-Γ⊢τ-head εδ argδ) (sub-Γ⊢τ εδ resδ _)
 sub-Γ⊢τ-head εδ (TWF-ADT consδs) = {! !}
+
+
+Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢ ε ⦂ τ → Γ ⊢ τ
+Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Unit gok) = TWF-TrueRef gok
+Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Var gok ∈-prf) = τ∈Γ-⇒-Γ⊢τ gok ∈-prf
+Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Abs arrδ _) = arrδ
+Γ⊢ε⦂τ-⇒-Γ⊢τ (T-App δ₁ δ₂) = {! !}
+Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Case resδ _ _) = resδ
+Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Con _ adtτ) = adtτ
+Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Sub δ x) = {! !}

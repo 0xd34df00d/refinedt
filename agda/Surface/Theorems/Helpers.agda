@@ -1,6 +1,7 @@
 module Surface.Theorems.Helpers where
 
 open import Data.Nat.Properties
+
 open import Surface.Syntax
 open import Surface.Derivations
 open import Surface.Derivations.WF
