@@ -61,6 +61,12 @@ exchange-Γ⊢ε⦂τ no-x Δ (T-Sub δ sub) = T-Sub (exchange-Γ⊢ε⦂τ no-x
 
 -- Some local helpers
 
+mid-Γok-⇒-twf : ∀ Δ
+              → (Γ , ( [ x ⦂ τ ] , Δ ) ) ⊢ τ'
+              → Γ ⊢ τ
+mid-Γok-⇒-twf [] δ = Γok-head (Γ⊢τ-⇒-Γok δ)
+mid-Γok-⇒-twf (_ ∷ Δ) δ = mid-Γok-⇒-twf Δ (Γok-head (Γ⊢τ-⇒-Γok δ))
+
 τ∈Γ-⇒-Γ⊢τ : Γ ok → x ⦂ τ ∈ Γ → Γ ⊢ τ
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (here refl) = twf-weakening δ τδ τδ
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (there ∈-prf) = twf-weakening δ τδ (τ∈Γ-⇒-Γ⊢τ δ ∈-prf)
@@ -103,8 +109,18 @@ sub-Γ⊢τ εδ δ Empty = sub-Γ⊢τ-head εδ δ
 sub-Γ⊢τ {Γ} {ε} {σ} {x} {τ' = τ'} εδ δ (Snoc (y ,' τ) Δ snoc)
   rewrite sub-ctx-snoc x ε y τ Δ
   rewrite ++-assoc ( [ x ↦ₗ ε ] Δ ) [ ( y ,' [ x ↦ₜ ε ] τ )] Γ =
-  let rec = sub-Γ⊢τ {σ = σ} {! !} {! !} snoc
+  let Γ,x⦂σ⊢τ = mid-Γok-⇒-twf Δ δ
+      Γ⊢[x↦ε]τ = sub-Γ⊢τ-head εδ Γ,x⦂σ⊢τ
+      δ = toss-twf Δ ((x ,' σ) ∷ Γ) (y ,' τ) δ
+      δ = single-sub-Γ⊢τ εδ δ
+      δ = exchange-Γ⊢τ Γ⊢[x↦ε]τ Δ δ
+      rec = sub-Γ⊢τ {σ = σ} (t-weakening (Γ⊢τ-⇒-Γok Γ⊢[x↦ε]τ) Γ⊢[x↦ε]τ εδ) δ snoc
    in rec
+  where
+    toss-twf : ∀ {τ} Γ₁ Γ₂ m
+             → ((Γ₁ ++ [ m ]) ++ Γ₂) ⊢ τ
+             → (Γ₁ ++ m ∷ Γ₂) ⊢ τ
+    toss-twf Γ₁ Γ₂ m δ rewrite ++-assoc Γ₁ [ m ] Γ₂ = δ
 
 sub-Γ⊢τ-head εδ (TWF-TrueRef (TCTX-Bind Γok τδ)) = TWF-TrueRef Γok
 sub-Γ⊢τ-head εδ (TWF-Base ε₁δ ε₂δ) = {! !}
