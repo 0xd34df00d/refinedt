@@ -77,8 +77,9 @@ private
   t-thinning-sized ⊂-prf Γ'ok (T-Con conArg adtτ) (acc rec) = let rec₁ = rec _ (s≤s (m≤m<>n _ _))
                                                                   rec₂ = rec _ (s≤s (n≤m<>n _ _))
                                                                in T-Con (t-thinning-sized ⊂-prf Γ'ok conArg rec₁) (twf-thinning-sized ⊂-prf Γ'ok adtτ rec₂)
-  t-thinning-sized ⊂-prf Γ'ok (T-Sub εδ <:δ) (acc rec) = let rec' = rec _ (s≤s (m≤m<>n _ _))
-                                                          in T-Sub (t-thinning-sized ⊂-prf Γ'ok εδ rec') (st-thinning-sized ⊂-prf <:δ)
+  t-thinning-sized ⊂-prf Γ'ok (T-Sub εδ superδ <:δ) (acc rec) = let rec₁ = rec _ (s≤s (m≤m<>n _ _))
+                                                                    rec₂ = rec _ (s≤s (n≤m<>n<>k (size-t εδ) (size-twf superδ) (size-st <:δ)))
+                                                                 in T-Sub (t-thinning-sized ⊂-prf Γ'ok εδ rec₁) (twf-thinning-sized ⊂-prf Γ'ok superδ rec₂) (st-thinning-sized ⊂-prf <:δ)
     where
       st-thinning-sized  : ∀ {Γ Γ'} → Γ ⊂ Γ' → (δ : Γ ⊢ τ₁ <: τ₂) → (Γ' ⊢ τ₁ <: τ₂)
       st-thinning-sized ⊂-prf (ST-Base oracle just-prf) = ST-Base oracle (Oracle.thin oracle ⊂-prf just-prf)

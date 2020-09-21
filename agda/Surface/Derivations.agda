@@ -85,6 +85,7 @@ data _⊢_⦂_ where
               → (adtτ : Γ ⊢ SADT cons)
               → Γ ⊢ SCon idx ε cons ⦂ SADT cons
   T-Sub       : (Γ ⊢ ε ⦂ τ)
+              → (Γ ⊢ τ')
               → (Γ ⊢ τ <: τ')
               → Γ ⊢ ε ⦂ τ'
 

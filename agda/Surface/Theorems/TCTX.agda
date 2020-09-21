@@ -16,7 +16,7 @@ abstract
   Γ⊢ε⦂τ-⇒-Γok (T-App _ δ₂) = Γ⊢ε⦂τ-⇒-Γok δ₂
   Γ⊢ε⦂τ-⇒-Γok (T-Case _ scrut _) = Γ⊢ε⦂τ-⇒-Γok scrut
   Γ⊢ε⦂τ-⇒-Γok (T-Con conArg _) = Γ⊢ε⦂τ-⇒-Γok conArg
-  Γ⊢ε⦂τ-⇒-Γok (T-Sub δ _) = Γ⊢ε⦂τ-⇒-Γok δ
+  Γ⊢ε⦂τ-⇒-Γok (T-Sub δ _ _) = Γ⊢ε⦂τ-⇒-Γok δ
 
   Γ⊢τ-⇒-Γok : Γ ⊢ τ → Γ ok
   Γ⊢τ-⇒-Γok (TWF-TrueRef gok) = gok
@@ -43,7 +43,7 @@ abstract
   Γ⊢ε⦂τ-⇒-Γok-smaller (T-App _ δ₂) = a<c-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-smaller δ₂)
   Γ⊢ε⦂τ-⇒-Γok-smaller (T-Case _ scrutδ _) = a<b-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-smaller scrutδ)
   Γ⊢ε⦂τ-⇒-Γok-smaller (T-Con conArg _) = a<b-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-smaller conArg)
-  Γ⊢ε⦂τ-⇒-Γok-smaller (T-Sub δ _) = a<b-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-smaller δ)
+  Γ⊢ε⦂τ-⇒-Γok-smaller (T-Sub δ _ _) = a<b-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-smaller δ)
 
   Γ⊢ε⦂τ-⇒-Γok-tail-smaller δ = <-trans (Γok-tail-smaller (Γ⊢ε⦂τ-⇒-Γok δ)) (Γ⊢ε⦂τ-⇒-Γok-smaller δ)
 

@@ -52,7 +52,7 @@ exchange-Γ⊢ε⦂τ {Γ = Γ} {τ₂ = τ₂} no-x Δ (T-Case resδ δ branche
     exchange-branches NoBranches = NoBranches
     exchange-branches {τ₁ = τ₁} (OneMoreBranch {x = x} {conτ = conτ} εδ bht) = OneMoreBranch (exchange-Γ⊢ε⦂τ no-x (Δ , x ⦂ conτ) εδ) (exchange-branches bht)
 exchange-Γ⊢ε⦂τ no-x Δ (T-Con conArg adtτ) = T-Con (exchange-Γ⊢ε⦂τ no-x Δ conArg) (exchange-Γ⊢τ no-x Δ adtτ)
-exchange-Γ⊢ε⦂τ no-x Δ (T-Sub δ sub) = T-Sub (exchange-Γ⊢ε⦂τ no-x Δ δ) (exchange-sub Δ sub)
+exchange-Γ⊢ε⦂τ no-x Δ (T-Sub δ superδ sub) = T-Sub (exchange-Γ⊢ε⦂τ no-x Δ δ) (exchange-Γ⊢τ no-x Δ superδ) (exchange-sub Δ sub)
   where
     exchange-sub : ∀ {Γ} Δ → (Γ , x₁ ⦂ τ₁ , x₂ ⦂ τ₂ , Δ) ⊢ τ <: τ' → (Γ , x₂ ⦂ τ₂ , x₁ ⦂ τ₁ , Δ) ⊢ τ <: τ'
     exchange-sub Δ (ST-Base oracle just-prf) = ST-Base oracle (Oracle.exchange oracle just-prf)
@@ -138,4 +138,4 @@ mutual
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-App δ₁ δ₂) = sub-Γ⊢τ-head δ₂ (arr-wf-⇒-cod-wf (Γ⊢ε⦂τ-⇒-Γ⊢τ δ₁))
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Case resδ _ _) = resδ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Con _ adtτ) = adtτ
-Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Sub δ x) = {! !}
+Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Sub δ superδ sub) = superδ
