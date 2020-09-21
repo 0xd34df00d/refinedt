@@ -17,3 +17,6 @@ open import Surface.Derivations.WF
 
 Γok-head-smaller : (δ : (Γ , x ⦂ τ) ok) → size-twf (Γok-head δ) < size-ok δ
 Γok-head-smaller (TCTX-Bind prevOk τδ) = s≤s (n≤m<>n (size-ok prevOk) (size-twf τδ))
+
+arr-wf-⇒-cod-wf : Γ ⊢ SArr x τ₁ τ₂ → Γ , x ⦂ τ₁ ⊢ τ₂
+arr-wf-⇒-cod-wf (TWF-Arr _ δ) = δ

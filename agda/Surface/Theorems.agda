@@ -139,7 +139,7 @@ sub-Γ⊢τ-head {Γ = Γ} {ε = ε} {σ = σ} εδ (TWF-ADT consδs) = TWF-ADT 
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Unit gok) = TWF-TrueRef gok
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Var gok ∈-prf) = τ∈Γ-⇒-Γ⊢τ gok ∈-prf
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Abs arrδ _) = arrδ
-Γ⊢ε⦂τ-⇒-Γ⊢τ (T-App δ₁ δ₂) = {! !}
+Γ⊢ε⦂τ-⇒-Γ⊢τ (T-App δ₁ δ₂) = sub-Γ⊢τ-head δ₂ (arr-wf-⇒-cod-wf (Γ⊢ε⦂τ-⇒-Γ⊢τ δ₁))
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Case resδ _ _) = resδ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Con _ adtτ) = adtτ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Sub δ x) = {! !}
