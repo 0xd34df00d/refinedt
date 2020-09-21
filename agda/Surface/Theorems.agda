@@ -72,67 +72,63 @@ mid-Γok-⇒-twf (_ ∷ Δ) δ = mid-Γok-⇒-twf Δ (Γok-head (Γ⊢τ-⇒-Γo
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (there ∈-prf) = twf-weakening δ τδ (τ∈Γ-⇒-Γ⊢τ δ ∈-prf)
 
 -- Substitution lemmas
+mutual
+  single-sub-Γ-ok : Γ ⊢ ε ⦂ σ
+                  → (Γ , x ⦂ σ , y ⦂ τ , Δ) ok
+                  → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ok
+  single-sub-Γ-ok {Δ = []} εδ (TCTX-Bind prevOk@(TCTX-Bind prevOk' τδ') τδ) = TCTX-Bind prevOk (twf-weakening prevOk' τδ' (sub-Γ⊢τ-head εδ τδ))
+  single-sub-Γ-ok {Δ = _ ∷ Δ} εδ (TCTX-Bind prevOk τδ) = TCTX-Bind (single-sub-Γ-ok εδ prevOk) (single-sub-Γ⊢τ εδ τδ)
 
-single-sub-Γ-ok : Γ ⊢ ε ⦂ σ
-                → (Γ , x ⦂ σ , y ⦂ τ , Δ) ok
-                → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ok
+  single-sub-Γ⊢τ : Γ ⊢ ε ⦂ σ
+                 → (Γ , x ⦂ σ , y ⦂ τ , Δ) ⊢ τ'
+                 → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢ τ'
+  single-sub-Γ⊢τ εδ (TWF-TrueRef Γok) = TWF-TrueRef (single-sub-Γ-ok εδ Γok)
+  single-sub-Γ⊢τ εδ (TWF-Base ε₁δ ε₂δ) = TWF-Base {! !} {! !}
+  single-sub-Γ⊢τ εδ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (single-sub-Γ⊢τ εδ ρ₁δ) (single-sub-Γ⊢τ εδ ρ₂δ)
+  single-sub-Γ⊢τ εδ (TWF-Arr argδ resδ) = TWF-Arr (single-sub-Γ⊢τ εδ argδ) (single-sub-Γ⊢τ {Δ = _ ∷ _} εδ resδ)
+  single-sub-Γ⊢τ {Γ = Γ} {ε = ε} {σ = σ} εδ (TWF-ADT consδs) = TWF-ADT (sub-cons consδs)
+    where
+      sub-cons : {cons : ADTCons n}
+               → All ((Γ , x ⦂ σ , y ⦂ τ , Δ) ⊢_) cons
+               → All ((Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢_)  cons
+      sub-cons [] = []
+      sub-cons (px ∷ pxs) = single-sub-Γ⊢τ εδ px ∷ sub-cons pxs
 
-single-sub-Γ⊢τ : Γ ⊢ ε ⦂ σ
-               → (Γ , x ⦂ σ , y ⦂ τ , Δ) ⊢ τ'
-               → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢ τ'
+  sub-Γ⊢τ : Γ ⊢ ε ⦂ σ
+          → (Γ , x ⦂ σ , Δ) ⊢ τ'
+          → SnocList Δ
+          → (Γ , [ x ↦ₗ ε ] Δ) ⊢ [ x ↦ₜ ε ] τ'
+  sub-Γ⊢τ εδ δ Empty = sub-Γ⊢τ-head εδ δ
+  sub-Γ⊢τ {Γ} {ε} {σ} {x} {τ' = τ'} εδ δ (Snoc (y ,' τ) Δ snoc)
+    rewrite sub-ctx-snoc x ε y τ Δ
+    rewrite ++-assoc ( [ x ↦ₗ ε ] Δ ) [ ( y ,' [ x ↦ₜ ε ] τ )] Γ =
+    let Γ,x⦂σ⊢τ = mid-Γok-⇒-twf Δ δ
+        Γ⊢[x↦ε]τ = sub-Γ⊢τ-head εδ Γ,x⦂σ⊢τ
+        δ = toss-twf Δ ((x ,' σ) ∷ Γ) (y ,' τ) δ
+        δ = single-sub-Γ⊢τ εδ δ
+        δ = exchange-Γ⊢τ Γ⊢[x↦ε]τ Δ δ
+        rec = sub-Γ⊢τ {σ = σ} (t-weakening (Γ⊢τ-⇒-Γok Γ⊢[x↦ε]τ) Γ⊢[x↦ε]τ εδ) δ snoc
+     in rec
+    where
+      toss-twf : ∀ {τ} Γ₁ Γ₂ m
+               → ((Γ₁ ++ [ m ]) ++ Γ₂) ⊢ τ
+               → (Γ₁ ++ m ∷ Γ₂) ⊢ τ
+      toss-twf Γ₁ Γ₂ m δ rewrite ++-assoc Γ₁ [ m ] Γ₂ = δ
 
-sub-Γ⊢τ-head : Γ ⊢ ε ⦂ σ
-             → Γ , x ⦂ σ ⊢ τ'
-             → Γ ⊢ [ x ↦ₜ ε ] τ'
-
-sub-Γ⊢τ : Γ ⊢ ε ⦂ σ
-        → (Γ , x ⦂ σ , Δ) ⊢ τ'
-        → SnocList Δ
-        → (Γ , [ x ↦ₗ ε ] Δ) ⊢ [ x ↦ₜ ε ] τ'
-
-single-sub-Γ-ok {Δ = []} εδ (TCTX-Bind prevOk@(TCTX-Bind prevOk' τδ') τδ) = TCTX-Bind prevOk (twf-weakening prevOk' τδ' (sub-Γ⊢τ-head εδ τδ))
-single-sub-Γ-ok {Δ = _ ∷ Δ} εδ (TCTX-Bind prevOk τδ) = TCTX-Bind (single-sub-Γ-ok εδ prevOk) (single-sub-Γ⊢τ εδ τδ)
-
-single-sub-Γ⊢τ εδ (TWF-TrueRef Γok) = TWF-TrueRef (single-sub-Γ-ok εδ Γok)
-single-sub-Γ⊢τ εδ (TWF-Base ε₁δ ε₂δ) = TWF-Base {! !} {! !}
-single-sub-Γ⊢τ εδ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (single-sub-Γ⊢τ εδ ρ₁δ) (single-sub-Γ⊢τ εδ ρ₂δ)
-single-sub-Γ⊢τ εδ (TWF-Arr argδ resδ) = TWF-Arr (single-sub-Γ⊢τ εδ argδ) (single-sub-Γ⊢τ {Δ = _ ∷ _} εδ resδ)
-single-sub-Γ⊢τ {Γ = Γ} {ε = ε} {σ = σ} εδ (TWF-ADT consδs) = TWF-ADT (sub-cons consδs)
-  where
-    sub-cons : {cons : ADTCons n}
-             → All ((Γ , x ⦂ σ , y ⦂ τ , Δ) ⊢_) cons
-             → All ((Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢_)  cons
-    sub-cons [] = []
-    sub-cons (px ∷ pxs) = single-sub-Γ⊢τ εδ px ∷ sub-cons pxs
-
-sub-Γ⊢τ εδ δ Empty = sub-Γ⊢τ-head εδ δ
-sub-Γ⊢τ {Γ} {ε} {σ} {x} {τ' = τ'} εδ δ (Snoc (y ,' τ) Δ snoc)
-  rewrite sub-ctx-snoc x ε y τ Δ
-  rewrite ++-assoc ( [ x ↦ₗ ε ] Δ ) [ ( y ,' [ x ↦ₜ ε ] τ )] Γ =
-  let Γ,x⦂σ⊢τ = mid-Γok-⇒-twf Δ δ
-      Γ⊢[x↦ε]τ = sub-Γ⊢τ-head εδ Γ,x⦂σ⊢τ
-      δ = toss-twf Δ ((x ,' σ) ∷ Γ) (y ,' τ) δ
-      δ = single-sub-Γ⊢τ εδ δ
-      δ = exchange-Γ⊢τ Γ⊢[x↦ε]τ Δ δ
-      rec = sub-Γ⊢τ {σ = σ} (t-weakening (Γ⊢τ-⇒-Γok Γ⊢[x↦ε]τ) Γ⊢[x↦ε]τ εδ) δ snoc
-   in rec
-  where
-    toss-twf : ∀ {τ} Γ₁ Γ₂ m
-             → ((Γ₁ ++ [ m ]) ++ Γ₂) ⊢ τ
-             → (Γ₁ ++ m ∷ Γ₂) ⊢ τ
-    toss-twf Γ₁ Γ₂ m δ rewrite ++-assoc Γ₁ [ m ] Γ₂ = δ
-
-sub-Γ⊢τ-head εδ (TWF-TrueRef (TCTX-Bind Γok τδ)) = TWF-TrueRef Γok
-sub-Γ⊢τ-head εδ (TWF-Base ε₁δ ε₂δ) = {! !}
-sub-Γ⊢τ-head εδ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (sub-Γ⊢τ-head εδ ρ₁δ) (sub-Γ⊢τ-head εδ ρ₂δ)
-sub-Γ⊢τ-head εδ (TWF-Arr argδ resδ) = TWF-Arr (sub-Γ⊢τ-head εδ argδ) (sub-Γ⊢τ εδ resδ _)
-sub-Γ⊢τ-head {Γ = Γ} {ε = ε} {σ = σ} εδ (TWF-ADT consδs) = TWF-ADT (sub-cons consδs)
-  where
-    sub-cons : {cons : ADTCons n}
-             → All (λ conτ → (Γ , x ⦂ σ) ⊢ conτ) cons
-             → All (λ conτ → Γ ⊢ conτ) ([ x ↦ₐ ε ] cons)
-    sub-cons [] = []
-    sub-cons (px ∷ pxs) = sub-Γ⊢τ-head εδ px ∷ sub-cons pxs
+  sub-Γ⊢τ-head : Γ ⊢ ε ⦂ σ
+               → Γ , x ⦂ σ ⊢ τ'
+               → Γ ⊢ [ x ↦ₜ ε ] τ'
+  sub-Γ⊢τ-head εδ (TWF-TrueRef (TCTX-Bind Γok τδ)) = TWF-TrueRef Γok
+  sub-Γ⊢τ-head εδ (TWF-Base ε₁δ ε₂δ) = TWF-Base {! !} {! !}
+  sub-Γ⊢τ-head εδ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (sub-Γ⊢τ-head εδ ρ₁δ) (sub-Γ⊢τ-head εδ ρ₂δ)
+  sub-Γ⊢τ-head εδ (TWF-Arr argδ resδ) = TWF-Arr (sub-Γ⊢τ-head εδ argδ) (sub-Γ⊢τ εδ resδ _)
+  sub-Γ⊢τ-head {Γ = Γ} {ε = ε} {σ = σ} εδ (TWF-ADT consδs) = TWF-ADT (sub-cons consδs)
+    where
+      sub-cons : {cons : ADTCons n}
+               → All (λ conτ → (Γ , x ⦂ σ) ⊢ conτ) cons
+               → All (λ conτ → Γ ⊢ conτ) ([ x ↦ₐ ε ] cons)
+      sub-cons [] = []
+      sub-cons (px ∷ pxs) = sub-Γ⊢τ-head εδ px ∷ sub-cons pxs
 
 
 Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢ ε ⦂ τ → Γ ⊢ τ
