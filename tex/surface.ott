@@ -134,6 +134,7 @@ G |- < </ li : tsi // i /> >
 G |- < lj = es > as < </ li : tsi // i /> > : < </ li : tsi // i /> >
 
 G |- es : ts
+G |- es : ts'
 G |- ts <: ts'
 ------------ :: Sub
 G |- es : ts'
