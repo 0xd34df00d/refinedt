@@ -254,7 +254,7 @@ this is a well-founded proof.
   We refer the interested reader to the formal proof of theorem in the supplemental code for the specific details.
 
   It is also worth noting that this lemma requires the oracle to not depend on the order of bindings in the context.
-  More formally, if the oracle decides that $[[ [| G, x1 : ts1, x2 : ts2, GD |] => A v. (r1 => r2) ]]$,
+  More formally, if the oracle decides that $[[ [| G, x1 : ts1, x2 : ts2, GD |] => A v. (r1 => r2) ]]$ and $[[ G |- x2 : ts2 ]]$,
   then it also must decide $[[ [| G, x2 : ts2, x1 : ts1, GD |] => A v. (r1 => r2) ]]$.
 \end{proof}
 
