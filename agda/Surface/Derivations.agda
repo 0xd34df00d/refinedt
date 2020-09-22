@@ -93,6 +93,6 @@ data _⊢_<:_ where
   ST-Base     : (oracle : Oracle)
               → Is-just (Oracle.decide oracle Γ ν b ρ₁ ρ₂)
               → Γ ⊢ (ν ∈ b ∣ ρ₁) <: (ν ∈ b ∣ ρ₂)
-  ST-Arr      : (Γ ⊢ τ₁' <: τ₁)
-              → ((Γ , x ⦂ τ₁') ⊢ τ₂ <: τ₂')
-              → (Γ ⊢ SArr x τ₁ τ₂ <: SArr x τ₁' τ₂')
+  ST-Arr      : Γ ⊢ τ₁' <: τ₁
+              → (Γ , x ⦂ τ₁') ⊢ τ₂ <: τ₂'
+              → Γ ⊢ SArr x τ₁ τ₂ <: SArr x τ₁' τ₂'
