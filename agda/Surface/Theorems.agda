@@ -83,7 +83,7 @@ mutual
                  → (Γ , x ⦂ σ , y ⦂ τ , Δ) ⊢ τ'
                  → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢ τ'
   single-sub-Γ⊢τ εδ (TWF-TrueRef Γok) = TWF-TrueRef (single-sub-Γok εδ Γok)
-  single-sub-Γ⊢τ εδ (TWF-Base ε₁δ ε₂δ) = TWF-Base {! !} {! !}
+  single-sub-Γ⊢τ εδ (TWF-Base ε₁δ ε₂δ) = TWF-Base (single-sub-Γ⊢ε⦂τ {Δ = _ ∷ _}  εδ ε₁δ) (single-sub-Γ⊢ε⦂τ {Δ = _ ∷ _} εδ ε₂δ)
   single-sub-Γ⊢τ εδ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (single-sub-Γ⊢τ εδ ρ₁δ) (single-sub-Γ⊢τ εδ ρ₂δ)
   single-sub-Γ⊢τ εδ (TWF-Arr argδ resδ) = TWF-Arr (single-sub-Γ⊢τ εδ argδ) (single-sub-Γ⊢τ {Δ = _ ∷ _} εδ resδ)
   single-sub-Γ⊢τ {Γ = Γ} {ε = ε} {σ = σ} εδ (TWF-ADT consδs) = TWF-ADT (sub-cons consδs)
@@ -93,6 +93,17 @@ mutual
                → All ((Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢_)  cons
       sub-cons [] = []
       sub-cons (px ∷ pxs) = single-sub-Γ⊢τ εδ px ∷ sub-cons pxs
+
+  single-sub-Γ⊢ε⦂τ : Γ ⊢ ε ⦂ σ
+                   → (Γ , x ⦂ σ , y ⦂ τ , Δ) ⊢ ε' ⦂ τ'
+                   → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢ ε' ⦂ [ x ↦ₜ ε ] τ'
+  single-sub-Γ⊢ε⦂τ εδ (T-Unit gok) = T-Unit (single-sub-Γok εδ gok)
+  single-sub-Γ⊢ε⦂τ εδ (T-Var gok ∈-prf) = T-Var (single-sub-Γok εδ gok) {! !}
+  single-sub-Γ⊢ε⦂τ εδ (T-Abs arrδ δ) = {! !}
+  single-sub-Γ⊢ε⦂τ εδ (T-App δ₁ δ₂) = ? -- T-App {! !} {! !}
+  single-sub-Γ⊢ε⦂τ εδ (T-Case resδ δ branches) = {! !}
+  single-sub-Γ⊢ε⦂τ εδ (T-Con δ adtτ) = {! !}
+  single-sub-Γ⊢ε⦂τ εδ (T-Sub δ x x₁) = {! !}
 
   sub-Γ⊢τ : Γ ⊢ ε ⦂ σ
           → (Γ , x ⦂ σ , Δ) ⊢ τ'
