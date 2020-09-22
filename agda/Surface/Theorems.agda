@@ -73,16 +73,16 @@ mid-Γok-⇒-twf (_ ∷ Δ) δ = mid-Γok-⇒-twf Δ (Γok-head (Γ⊢τ-⇒-Γo
 
 -- Substitution lemmas
 mutual
-  single-sub-Γ-ok : Γ ⊢ ε ⦂ σ
-                  → (Γ , x ⦂ σ , y ⦂ τ , Δ) ok
-                  → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ok
-  single-sub-Γ-ok {Δ = []} εδ (TCTX-Bind prevOk@(TCTX-Bind prevOk' τδ') τδ) = TCTX-Bind prevOk (twf-weakening prevOk' τδ' (sub-Γ⊢τ-head εδ τδ))
-  single-sub-Γ-ok {Δ = _ ∷ Δ} εδ (TCTX-Bind prevOk τδ) = TCTX-Bind (single-sub-Γ-ok εδ prevOk) (single-sub-Γ⊢τ εδ τδ)
+  single-sub-Γok : Γ ⊢ ε ⦂ σ
+                 → (Γ , x ⦂ σ , y ⦂ τ , Δ) ok
+                 → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ok
+  single-sub-Γok {Δ = []} εδ (TCTX-Bind prevOk@(TCTX-Bind prevOk' τδ') τδ) = TCTX-Bind prevOk (twf-weakening prevOk' τδ' (sub-Γ⊢τ-head εδ τδ))
+  single-sub-Γok {Δ = _ ∷ Δ} εδ (TCTX-Bind prevOk τδ) = TCTX-Bind (single-sub-Γok εδ prevOk) (single-sub-Γ⊢τ εδ τδ)
 
   single-sub-Γ⊢τ : Γ ⊢ ε ⦂ σ
                  → (Γ , x ⦂ σ , y ⦂ τ , Δ) ⊢ τ'
                  → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢ τ'
-  single-sub-Γ⊢τ εδ (TWF-TrueRef Γok) = TWF-TrueRef (single-sub-Γ-ok εδ Γok)
+  single-sub-Γ⊢τ εδ (TWF-TrueRef Γok) = TWF-TrueRef (single-sub-Γok εδ Γok)
   single-sub-Γ⊢τ εδ (TWF-Base ε₁δ ε₂δ) = TWF-Base {! !} {! !}
   single-sub-Γ⊢τ εδ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (single-sub-Γ⊢τ εδ ρ₁δ) (single-sub-Γ⊢τ εδ ρ₂δ)
   single-sub-Γ⊢τ εδ (TWF-Arr argδ resδ) = TWF-Arr (single-sub-Γ⊢τ εδ argδ) (single-sub-Γ⊢τ {Δ = _ ∷ _} εδ resδ)
