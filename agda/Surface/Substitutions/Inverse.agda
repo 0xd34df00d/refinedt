@@ -6,6 +6,8 @@ open import Data.Bool
 open import Surface.Syntax
 open import Surface.Substitutions
 
+-- TODO this does not hold in general and will need to be revised to ensure ε ≠ SUnit or something similar
+
 ↦ₑ-inv-SUnit : [ x ↦ₑ ε ] ε' ≡ SUnit → ε' ≡ SUnit
 ↦ₑ-inv-SUnit {x = x} {ε' = SVar var} ≡prf with var-eq x var
 ... | eq = {! eq !}
