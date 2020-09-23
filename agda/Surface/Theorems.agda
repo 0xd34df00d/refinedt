@@ -94,6 +94,16 @@ mutual
       sub-cons [] = []
       sub-cons (px ∷ pxs) = single-sub-Γ⊢τ εδ px ∷ sub-cons pxs
 
+  single-sub-srbt : Γ ⊢ ε ⦂ σ
+                  → (Γ , x ⦂ σ , y ⦂ τ , Δ) ⊢ ε' ⦂ τ
+                  → τ ≡ (ν ∈ b ∣ Τ)
+                  → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢ ε' ⦂ (ν ∈ b ∣ Τ)
+  single-sub-srbt εδ (T-Unit gok) refl = T-Unit gok
+  single-sub-srbt εδ (T-Var gok ∈) refl = T-Var gok ∈
+  single-sub-srbt εδ (T-App δ₁ δ₂) ≡prf rewrite ≡prf = let app = T-App δ₁ δ₂ in {! !}
+  single-sub-srbt εδ (T-Case resδ δ branches) ≡prf = {! !}
+  single-sub-srbt εδ (T-Sub δ superδ sub) ≡prf = {! !}
+
   single-sub-Γ⊢ε⦂τ : Γ ⊢ ε ⦂ σ
                    → (Γ , x ⦂ σ , y ⦂ τ , Δ) ⊢ ε' ⦂ τ'
                    → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢ ε' ⦂ [ x ↦ₜ ε ] τ'
