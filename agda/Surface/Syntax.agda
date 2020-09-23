@@ -90,8 +90,3 @@ variable
   b b' b₁ b₂ : BaseType
   ρ ρ₁ ρ₂ : Refinement
   n : ℕ
-
-data _~ₜ_ : SType → SType → Set where
-  ~-SRBT : (ν₁ ∈ b₁ ∣ ρ₁) ~ₜ (ν₂ ∈ b₂ ∣ ρ₂)
-  ~-SArr : (SArr x₁ τ₁ τ₁') ~ₜ (SArr x₂ τ₂ τ₂')
-  ~-SADT : ∀ {n₁ n₂ cons₁ cons₂} → (SADT {n₁} cons₁) ~ₜ (SADT {n₂} cons₂)

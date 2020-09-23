@@ -108,6 +108,12 @@ mutual
       sub-cons [] = []
       sub-cons (px ∷ pxs) = single-sub-Γ⊢τ εδ px ∷ sub-cons pxs
 
+  data _~ₜ_ : SType → SType → Set where
+    ~-SRBT : (ν ∈ b ∣ ρ₁) ~ₜ (ν ∈ b ∣ ρ₂)
+    ~-SArr : (τ₁ ~ₜ τ₂) → (τ₁' ~ₜ τ₂') → (SArr x τ₁ τ₁') ~ₜ (SArr x τ₂ τ₂')
+    ~-SADT : ∀ {n₁ n₂ cons₁ cons₂} → (SADT {n₁} cons₁) ~ₜ (SADT {n₂} cons₂)
+
+
   sub-Γ⊢τ : Γ ⊢ ε ⦂ σ
           → (Γ , x ⦂ σ , Δ) ⊢ τ'
           → SnocList Δ
