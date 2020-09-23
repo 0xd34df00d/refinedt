@@ -107,17 +107,6 @@ mutual
   single-sub-srbt εδ (T-Case resδ δ branches) refl = T-Case resδ δ branches
   single-sub-srbt εδ (T-Sub δ superδ sub) refl = T-Sub δ superδ sub
 
-  single-sub-Γ⊢ε⦂τ : Γ ⊢ ε ⦂ σ
-                   → (Γ , x ⦂ σ , y ⦂ τ , Δ) ⊢ ε' ⦂ τ'
-                   → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢ ε' ⦂ [ x ↦ₜ ε ] τ'
-  single-sub-Γ⊢ε⦂τ εδ (T-Unit gok) = T-Unit (single-sub-Γok εδ gok)
-  single-sub-Γ⊢ε⦂τ εδ (T-Var gok ∈-prf) = T-Var (single-sub-Γok εδ gok) {! !}
-  single-sub-Γ⊢ε⦂τ εδ (T-Abs arrδ δ) = {! !}
-  single-sub-Γ⊢ε⦂τ εδ (T-App δ₁ δ₂) = ? -- T-App {! !} {! !}
-  single-sub-Γ⊢ε⦂τ εδ (T-Case resδ δ branches) = {! !}
-  single-sub-Γ⊢ε⦂τ εδ (T-Con δ adtτ) = {! !}
-  single-sub-Γ⊢ε⦂τ εδ (T-Sub δ x x₁) = {! !}
-
   sub-Γ⊢τ : Γ ⊢ ε ⦂ σ
           → (Γ , x ⦂ σ , Δ) ⊢ τ'
           → SnocList Δ
