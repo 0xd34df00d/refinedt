@@ -100,7 +100,10 @@ mutual
                   → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢ ε' ⦂ (ν ∈ b ∣ Τ)
   single-sub-srbt εδ (T-Unit gok) refl = T-Unit gok
   single-sub-srbt εδ (T-Var gok ∈) refl = T-Var gok ∈
-  single-sub-srbt εδ (T-App δ₁ δ₂) ≡prf rewrite ≡prf = let app = T-App δ₁ δ₂ in {! !}
+  single-sub-srbt εδ (T-App δ₁ δ₂) ≡prf rewrite ≡prf = replace (T-App δ₁ δ₂) ≡prf
+    where
+      replace : ∀ {Γ} → Γ ⊢ ε' ⦂ τ → τ ≡ (ν ∈ b ∣ Τ) → Γ ⊢ ε' ⦂ (ν ∈ b ∣ Τ)
+      replace δ ≡prf rewrite ≡prf = δ
   single-sub-srbt εδ (T-Case resδ δ branches) ≡prf = {! !}
   single-sub-srbt εδ (T-Sub δ superδ sub) ≡prf = {! !}
 
