@@ -72,6 +72,20 @@ mid-Γok-⇒-twf (_ ∷ Δ) δ = mid-Γok-⇒-twf Δ (Γok-head (Γ⊢τ-⇒-Γo
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (there ∈-prf) = twf-weakening δ τδ (τ∈Γ-⇒-Γ⊢τ δ ∈-prf)
 
 -- Substitution lemmas
+
+single-sub-srbt : Γ ⊢ ε ⦂ σ
+                → (Γ , x ⦂ σ , y ⦂ τ , Δ) ⊢ ε' ⦂ τ
+                → τ ≡ (ν ∈ b ∣ Τ)
+                → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢ ε' ⦂ (ν ∈ b ∣ Τ)
+single-sub-srbt εδ (T-Unit gok) refl = T-Unit gok
+single-sub-srbt εδ (T-Var gok ∈) refl = T-Var gok ∈
+single-sub-srbt εδ (T-App δ₁ δ₂) ≡prf rewrite ≡prf = replace (T-App δ₁ δ₂) ≡prf
+  where
+    replace : ∀ {Γ} → Γ ⊢ ε' ⦂ τ → τ ≡ (ν ∈ b ∣ Τ) → Γ ⊢ ε' ⦂ (ν ∈ b ∣ Τ)
+    replace δ ≡prf rewrite ≡prf = δ
+single-sub-srbt εδ (T-Case resδ δ branches) refl = T-Case resδ δ branches
+single-sub-srbt εδ (T-Sub δ superδ sub) refl = T-Sub δ superδ sub
+
 mutual
   single-sub-Γok : Γ ⊢ ε ⦂ σ
                  → (Γ , x ⦂ σ , y ⦂ τ , Δ) ok
@@ -93,19 +107,6 @@ mutual
                → All ((Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢_)  cons
       sub-cons [] = []
       sub-cons (px ∷ pxs) = single-sub-Γ⊢τ εδ px ∷ sub-cons pxs
-
-  single-sub-srbt : Γ ⊢ ε ⦂ σ
-                  → (Γ , x ⦂ σ , y ⦂ τ , Δ) ⊢ ε' ⦂ τ
-                  → τ ≡ (ν ∈ b ∣ Τ)
-                  → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢ ε' ⦂ (ν ∈ b ∣ Τ)
-  single-sub-srbt εδ (T-Unit gok) refl = T-Unit gok
-  single-sub-srbt εδ (T-Var gok ∈) refl = T-Var gok ∈
-  single-sub-srbt εδ (T-App δ₁ δ₂) ≡prf rewrite ≡prf = replace (T-App δ₁ δ₂) ≡prf
-    where
-      replace : ∀ {Γ} → Γ ⊢ ε' ⦂ τ → τ ≡ (ν ∈ b ∣ Τ) → Γ ⊢ ε' ⦂ (ν ∈ b ∣ Τ)
-      replace δ ≡prf rewrite ≡prf = δ
-  single-sub-srbt εδ (T-Case resδ δ branches) refl = T-Case resδ δ branches
-  single-sub-srbt εδ (T-Sub δ superδ sub) refl = T-Sub δ superδ sub
 
   sub-Γ⊢τ : Γ ⊢ ε ⦂ σ
           → (Γ , x ⦂ σ , Δ) ⊢ τ'
