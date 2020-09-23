@@ -104,8 +104,8 @@ mutual
     where
       replace : ∀ {Γ} → Γ ⊢ ε' ⦂ τ → τ ≡ (ν ∈ b ∣ Τ) → Γ ⊢ ε' ⦂ (ν ∈ b ∣ Τ)
       replace δ ≡prf rewrite ≡prf = δ
-  single-sub-srbt εδ (T-Case resδ δ branches) ≡prf = {! !}
-  single-sub-srbt εδ (T-Sub δ superδ sub) ≡prf = {! !}
+  single-sub-srbt εδ (T-Case resδ δ branches) refl = T-Case resδ δ branches
+  single-sub-srbt εδ (T-Sub δ superδ sub) refl = T-Sub δ superδ sub
 
   single-sub-Γ⊢ε⦂τ : Γ ⊢ ε ⦂ σ
                    → (Γ , x ⦂ σ , y ⦂ τ , Δ) ⊢ ε' ⦂ τ'
