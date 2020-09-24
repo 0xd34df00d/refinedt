@@ -4,15 +4,15 @@ open import Agda.Builtin.Equality
 open import Agda.Builtin.Sigma
 open import Agda.Builtin.List
 open import Data.Bool using (if_then_else_)
-open import Data.List.Base
-open import Data.Vec using ([] ; _∷_)
+open import Data.List.Base hiding (lookup)
+open import Data.Vec using ([] ; _∷_ ; lookup)
 
 open import Surface.Syntax
 
 SubstIn : Set → Set
 SubstIn ty = Var → STerm → ty → ty
 
-infix 30 [_↦ₜ_]_ [_↦ₑ_]_ [_↦ᵣ_]_ [_↦ₗ_]_ [_↦ₐ_]_
+infix 30 [_↦ₜ_]_ [_↦ₑ_]_ [_↦ᵣ_]_ [_↦ₗ_]_ [_↦ₐ_]_ [_↦ₘ_]_
 [_↦ₜ_]_ : SubstIn SType
 [_↦ₑ_]_ : SubstIn STerm
 [_↦ᵣ_]_ : SubstIn Refinement
@@ -52,6 +52,10 @@ substInBranches x ε (MkCaseBranch v body ∷ bs) =
 [_↦ₗ_]_ : SubstIn Ctx
 [ x ↦ₗ ε ] [] = []
 [ x ↦ₗ ε ] ((x' , τ) ∷ ctx) = (x' , [ x ↦ₜ ε ] τ) ∷ [ x ↦ₗ ε ] ctx
+
+[_↦ₘ_]_ : Fin n → STerm → CaseBranches n → STerm
+[ idx ↦ₘ ε ] branches = [ var ↦ₑ ε ] body
+  where open CaseBranch (lookup branches idx)
 
 sub-ctx-snoc : ∀ x ε y τ Δ → [ x ↦ₗ ε ] (Δ ++ [ (y , τ) ]) ≡ [ x ↦ₗ ε ] Δ ++ [ (y , [ x ↦ₜ ε ] τ) ]
 sub-ctx-snoc _ _ _ _ [] = refl
