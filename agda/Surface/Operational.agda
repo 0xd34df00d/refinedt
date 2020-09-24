@@ -7,17 +7,17 @@ data IsValue : STerm → Set where
   IV-Abs  : IsValue (SLam x τ ε)
   IV-Unit : IsValue SUnit
   IV-ADT  : ∀ {idx cons}
-          → IsValue ε
-          → IsValue (SCon idx ε cons)
+          → IsValue ϖ
+          → IsValue (SCon idx ϖ cons)
 
 data _↝_ : STerm → STerm → Set where
   E-AppL      : ε₁ ↝ ε₁'
               → SApp ε₁ ε₂ ↝ SApp ε₁' ε₂
-  E-AppR      : IsValue ε₁
+  E-AppR      : IsValue ϖ
               → ε₂ ↝ ε₂'
-              → SApp ε₁ ε₂ ↝ SApp ε₁ ε₂'
-  E-AppAbs    : IsValue ε₂
-              → SApp (SLam x τ ε) ε₂ ↝ [ x ↦ₑ ε₂ ] ε
+              → SApp ϖ ε₂ ↝ SApp ϖ ε₂'
+  E-AppAbs    : IsValue ϖ
+              → SApp (SLam x τ ε) ϖ ↝ [ x ↦ₑ ϖ ] ε
   E-ADT       : ∀ {idx cons}
               → ε ↝ ε'
               → SCon idx ε cons ↝ SCon idx ε' cons

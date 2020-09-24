@@ -86,7 +86,7 @@ variable
   Γ Γ' Δ : Ctx
   x x' x₁ x₂ y ν ν₁ ν₂ : Var
   τ τ' τ₁ τ₂ τ₁' τ₂' τᵢ τⱼ σ : SType
-  ε ε' ε₁ ε₂ ε₁' ε₂' : STerm
+  ε ε' ε₁ ε₂ ε₁' ε₂' ϖ : STerm
   b b' b₁ b₂ : BaseType
   ρ ρ₁ ρ₂ : Refinement
   n : ℕ
