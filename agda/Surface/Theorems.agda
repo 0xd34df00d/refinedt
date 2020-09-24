@@ -115,6 +115,18 @@ mutual
     ~-SADT : ∀ {n₁ n₂ cons₁ cons₂} → (SADT {n₁} cons₁) ~ₜ (SADT {n₂} cons₂)
   -}
 
+  single-sub-tcs : Γ ⊢ ε ⦂ σ
+                 → (Γ , x ⦂ σ , y ⦂ τ , Δ) ⊢ ε' ⦂ τ₁
+                 → Σ SType (λ τ₂ → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢ ε' ⦂ τ₂)
+  single-sub-tcs εδ (T-Unit gok) = (_ ∈ BUnit ∣ Τ) ,' T-Unit (single-sub-Γok εδ gok)
+  single-sub-tcs εδ (T-Var gok ∈) = {! !} ,' T-Var (single-sub-Γok εδ gok) {! !}
+  single-sub-tcs εδ (T-Abs arrδ bodyδ) with single-sub-tcs εδ bodyδ
+  ... | τ₂ ,' rec-body = let r' = single-sub-Γ⊢τ εδ arrδ in {! !} ,' T-Abs {! !} rec-body
+  single-sub-tcs εδ (T-App δ₁ δ₂) = {! !} ,' T-App {! !} {! !}
+  single-sub-tcs εδ (T-Case resδ δ branches) = {! !}
+  single-sub-tcs εδ (T-Con δ adtτ) = {! !}
+  single-sub-tcs εδ (T-Sub δ x x₁) = {! !}
+
   sub-Γ⊢τ : Γ ⊢ ε ⦂ σ
           → (Γ , x ⦂ σ , Δ) ⊢ τ'
           → SnocList Δ
