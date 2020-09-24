@@ -5,6 +5,7 @@ open import Agda.Builtin.String
 open import Data.Nat.Base public
 open import Data.Fin public using (Fin)
 open import Data.Product public using (_×_)
+open import Data.Product using (_,_)
 open import Data.Vec.Base
 
 data Sort : Set where
@@ -49,3 +50,20 @@ CtxElem = Var × CExpr
 
 Ctx : Set
 Ctx = List CtxElem
+
+infixl 21 _,_⦂_
+_,_⦂_ : Ctx → Var → CExpr → Ctx
+Γ , x ⦂ τ = ( x , τ ) ∷ Γ
+
+infix 19 _⦂_
+_⦂_ : Var → CExpr → Var × CExpr
+_⦂_ = _,_
+
+variable
+  Γ Γ' Δ : Ctx
+  x x' x₁ x₂ y ν ν₁ ν₂ : Var
+  τ τ' τ₁ τ₂ τ₁' τ₂' τᵢ τⱼ σ : CExpr
+  ε ε' ε₁ ε₂ ε₁' ε₂' : CExpr
+  b b' b₁ b₂ : CExpr
+  n : ℕ
+  s : Sort
