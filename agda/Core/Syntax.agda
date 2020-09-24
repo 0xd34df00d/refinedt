@@ -1,8 +1,10 @@
 module Core.Syntax where
 
+open import Agda.Builtin.List public
 open import Agda.Builtin.String
 open import Data.Nat.Base public
 open import Data.Fin public using (Fin)
+open import Data.Product public using (_×_)
 open import Data.Vec.Base
 
 data Sort : Set where
@@ -21,6 +23,7 @@ record CaseBranch : Set
 
 data CExpr : Set where
   CVar  : (var : Var) → CExpr
+  CSort : (s : Sort) → CExpr
   CPi   : (var : Var) → (ε₁ ε₂ : CExpr) → CExpr
   CLam  : (var : Var) → (ε₁ ε₂ : CExpr) → CExpr
   CApp  : (ε₁ ε₂ : CExpr) → CExpr
@@ -40,3 +43,9 @@ record CaseBranch where
     x : Var
     π : Var
     body : CExpr
+
+CtxElem : Set
+CtxElem = Var × CExpr
+
+Ctx : Set
+Ctx = List CtxElem
