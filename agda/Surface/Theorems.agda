@@ -73,19 +73,6 @@ mid-Γok-⇒-twf (_ ∷ Δ) δ = mid-Γok-⇒-twf Δ (Γok-head (Γ⊢τ-⇒-Γo
 
 -- Substitution lemmas
 
-single-sub-srbt : Γ ⊢ ε ⦂ σ
-                → (Γ , x ⦂ σ , y ⦂ τ , Δ) ⊢ ε' ⦂ τ
-                → τ ≡ (ν ∈ b ∣ Τ)
-                → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢ ε' ⦂ (ν ∈ b ∣ Τ)
-single-sub-srbt εδ (T-Unit gok) refl = T-Unit gok
-single-sub-srbt εδ (T-Var gok ∈) refl = T-Var gok ∈
-single-sub-srbt εδ (T-App δ₁ δ₂) ≡prf rewrite ≡prf = replace (T-App δ₁ δ₂) ≡prf
-  where
-    replace : ∀ {Γ} → Γ ⊢ ε' ⦂ τ → τ ≡ (ν ∈ b ∣ Τ) → Γ ⊢ ε' ⦂ (ν ∈ b ∣ Τ)
-    replace δ ≡prf rewrite ≡prf = δ
-single-sub-srbt εδ (T-Case resδ δ branches) refl = T-Case resδ δ branches
-single-sub-srbt εδ (T-Sub δ superδ sub) refl = T-Sub δ superδ sub
-
 mutual
   single-sub-Γok : Γ ⊢ ε ⦂ σ
                  → (Γ , x ⦂ σ , y ⦂ τ , Δ) ok
@@ -97,7 +84,7 @@ mutual
                  → (Γ , x ⦂ σ , y ⦂ τ , Δ) ⊢ τ'
                  → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢ τ'
   single-sub-Γ⊢τ εδ (TWF-TrueRef Γok) = TWF-TrueRef (single-sub-Γok εδ Γok)
-  single-sub-Γ⊢τ εδ (TWF-Base ε₁δ ε₂δ) = TWF-Base (single-sub-Γ⊢ε⦂τ {Δ = _ ∷ _}  εδ ε₁δ) (single-sub-Γ⊢ε⦂τ {Δ = _ ∷ _} εδ ε₂δ)
+  single-sub-Γ⊢τ εδ (TWF-Base ε₁δ ε₂δ) = TWF-Base ? ?
   single-sub-Γ⊢τ εδ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (single-sub-Γ⊢τ εδ ρ₁δ) (single-sub-Γ⊢τ εδ ρ₂δ)
   single-sub-Γ⊢τ εδ (TWF-Arr argδ resδ) = TWF-Arr (single-sub-Γ⊢τ εδ argδ) (single-sub-Γ⊢τ {Δ = _ ∷ _} εδ resδ)
   single-sub-Γ⊢τ {Γ = Γ} {ε = ε} {σ = σ} εδ (TWF-ADT consδs) = TWF-ADT (sub-cons consδs)
@@ -108,11 +95,25 @@ mutual
       sub-cons [] = []
       sub-cons (px ∷ pxs) = single-sub-Γ⊢τ εδ px ∷ sub-cons pxs
 
+  {-
+  single-sub-srbt : Γ ⊢ ε ⦂ σ
+                  → (Γ , x ⦂ σ , y ⦂ τ , Δ) ⊢ ε' ⦂ τ'
+                  → τ' ≡ (ν ∈ b ∣ Τ)
+                  → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢ ε' ⦂ (ν ∈ b ∣ Τ)
+  single-sub-srbt εδ (T-Unit gok) refl = T-Unit (single-sub-Γok εδ gok)
+  single-sub-srbt εδ (T-Var gok ∈) refl = T-Var (single-sub-Γok εδ gok) {! !}
+  single-sub-srbt εδ (T-App δ₁ δ₂) ≡prf rewrite ≡prf = replace (T-App {! !} {! !}) ≡prf
+    where
+      replace : ∀ {Γ} → Γ ⊢ ε' ⦂ τ → τ ≡ (ν ∈ b ∣ Τ) → Γ ⊢ ε' ⦂ (ν ∈ b ∣ Τ)
+      replace δ ≡prf rewrite ≡prf = δ
+  single-sub-srbt εδ (T-Case resδ δ branches) refl = T-Case (single-sub-Γ⊢τ εδ resδ) {! !} {! !}
+  single-sub-srbt εδ (T-Sub δ superδ sub) refl = T-Sub {! !} {! !} {! !}
+
   data _~ₜ_ : SType → SType → Set where
     ~-SRBT : (ν ∈ b ∣ ρ₁) ~ₜ (ν ∈ b ∣ ρ₂)
     ~-SArr : (τ₁ ~ₜ τ₂) → (τ₁' ~ₜ τ₂') → (SArr x τ₁ τ₁') ~ₜ (SArr x τ₂ τ₂')
     ~-SADT : ∀ {n₁ n₂ cons₁ cons₂} → (SADT {n₁} cons₁) ~ₜ (SADT {n₂} cons₂)
-
+  -}
 
   sub-Γ⊢τ : Γ ⊢ ε ⦂ σ
           → (Γ , x ⦂ σ , Δ) ⊢ τ'
