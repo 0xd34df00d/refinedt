@@ -74,6 +74,12 @@ mid-Γok-⇒-twf (_ ∷ Δ) δ = mid-Γok-⇒-twf Δ (Γok-head (Γ⊢τ-⇒-Γo
 -- Substitution lemmas
 
 mutual
+  sub-Γok : Γ ⊢ ε ⦂ σ
+          → (Γ , x ⦂ σ , Δ) ok
+          → (Γ , [ x ↦ₗ ε ] Δ) ok
+  sub-Γok {Δ = []} _ (TCTX-Bind prevOk _) = prevOk
+  sub-Γok {Δ = (x ,' τ) ∷ Δ} εδ (TCTX-Bind prevOk τδ) = TCTX-Bind (sub-Γok εδ prevOk) (sub-Γ⊢τ' εδ τδ)
+
   single-sub-Γok : Γ ⊢ ε ⦂ σ
                  → (Γ , x ⦂ σ , y ⦂ τ , Δ) ok
                  → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ok
@@ -147,6 +153,10 @@ mutual
                → ((Γ₁ ++ [ m ]) ++ Γ₂) ⊢ τ
                → (Γ₁ ++ m ∷ Γ₂) ⊢ τ
       toss-twf Γ₁ Γ₂ m δ rewrite ++-assoc Γ₁ [ m ] Γ₂ = δ
+
+  sub-Γ⊢τ' : Γ ⊢ ε ⦂ σ
+           → (Γ , x ⦂ σ , Δ) ⊢ τ'
+           → (Γ , [ x ↦ₗ ε ] Δ) ⊢ [ x ↦ₜ ε ] τ'
 
   sub-Γ⊢τ-head : Γ ⊢ ε ⦂ σ
                → Γ , x ⦂ σ ⊢ τ'
