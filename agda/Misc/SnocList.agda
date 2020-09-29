@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Misc.SnocList where
 
 open import Data.List.Base

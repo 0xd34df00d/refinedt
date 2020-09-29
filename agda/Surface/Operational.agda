@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Surface.Operational where
 
 open import Surface.Syntax

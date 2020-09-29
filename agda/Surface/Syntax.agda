@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Surface.Syntax where
 
 open import Agda.Builtin.Bool

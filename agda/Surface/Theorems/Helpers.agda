@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Surface.Theorems.Helpers where
 
 open import Data.Nat.Properties

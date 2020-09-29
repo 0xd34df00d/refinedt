@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Surface.Substitutions where
 
 open import Agda.Builtin.Equality

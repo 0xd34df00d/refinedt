@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Core.Syntax where
 
 open import Agda.Builtin.Bool

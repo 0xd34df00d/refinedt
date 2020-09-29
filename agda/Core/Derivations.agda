@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Core.Derivations where
 
 open import Agda.Builtin.Equality

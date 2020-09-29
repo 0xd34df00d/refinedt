@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Misc.Sublist where
 
 open import Agda.Builtin.Equality

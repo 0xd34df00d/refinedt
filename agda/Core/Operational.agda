@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Core.Operational where
 
 open import Core.Syntax

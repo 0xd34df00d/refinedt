@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Misc.Helpers where
 
 open import Agda.Builtin.Equality

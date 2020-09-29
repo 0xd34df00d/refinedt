@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Surface.Theorems where
 
 open import Agda.Builtin.Equality
@@ -96,7 +98,7 @@ mutual
             → (Γ , [ x ↦ₗ ε ] Δ) ⊢ [ x ↦ₑ ε ] ε' ⦂ [ x ↦ₜ ε ] τ'
   sub-Γ⊢ε⦂τ εδ _  (T-Unit gok) = T-Unit (sub-Γok εδ gok)
   sub-Γ⊢ε⦂τ {x = x} εδ (SVar x') (T-Var gok ∈) with var-eq x x'
-  ... | false = {! T-Var !}
+  ... | false = T-Var (sub-Γok εδ gok) {! !}
   ... | true = {! !}
   sub-Γ⊢ε⦂τ εδ _  (T-Abs arrδ bodyδ) = {! !}
   sub-Γ⊢ε⦂τ εδ ε' (T-App δ₁ δ₂) = {! !}

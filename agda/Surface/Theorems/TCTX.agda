@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Surface.Theorems.TCTX where
 
 open import Agda.Builtin.Equality

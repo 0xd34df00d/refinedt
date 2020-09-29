@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Surface.Derivations.WF where
 
 open import Data.Nat.Base public

@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Surface.Derivations where
 
 open import Agda.Builtin.Bool
@@ -10,7 +12,7 @@ open import Data.Vec.Relation.Unary.All public
 open import Surface.Syntax
 open import Surface.Substitutions
 open import Misc.ContextConcat
-open import Sublist
+open import Misc.Sublist
 
 record PositiveDecision : Set where
   constructor MkPD

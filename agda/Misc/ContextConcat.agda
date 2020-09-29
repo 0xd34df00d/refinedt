@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Misc.ContextConcat where
 
 open import Data.List.Base using (_++_)
