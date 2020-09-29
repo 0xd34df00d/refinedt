@@ -16,7 +16,7 @@ open import Surface.Theorems.TCTX
 open import Surface.Theorems.Helpers
 open import Surface.Theorems.Thinning
 
-open import Sublist
+open import Misc.Sublist
 open import Misc.ContextConcat
 open import Misc.Helpers
 open import Misc.SnocList

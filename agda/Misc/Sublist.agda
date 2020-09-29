@@ -1,4 +1,4 @@
-module Sublist where
+module Misc.Sublist where
 
 open import Agda.Builtin.Equality
 open import Data.List.Relation.Unary.Any

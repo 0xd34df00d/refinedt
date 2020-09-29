@@ -10,7 +10,7 @@ open import Surface.Derivations.WF
 open import Surface.Theorems.TCTX
 open import Surface.Theorems.Helpers
 
-open import Sublist
+open import Misc.Sublist
 
 private
   arr-wf-dom : Γ ⊢ SArr x τ₁ τ₂ → Γ ⊢ τ₁
