@@ -1,6 +1,7 @@
 module Surface.Theorems where
 
 open import Agda.Builtin.Equality
+open import Data.Bool.Base
 open import Data.List.Base using (_++_ ; [_])
 open import Data.List.Membership.Propositional
 open import Data.List.Properties
@@ -78,7 +79,7 @@ mutual
           → (Γ , x ⦂ σ , Δ) ⊢ τ'
           → (Γ , [ x ↦ₗ ε ] Δ) ⊢ [ x ↦ₜ ε ] τ'
   sub-Γ⊢τ εδ (TWF-TrueRef gok) = TWF-TrueRef (sub-Γok εδ gok)
-  sub-Γ⊢τ εδ (TWF-Base ε₁δ ε₂δ) = TWF-Base {! !} {! !}
+  sub-Γ⊢τ εδ (TWF-Base ε₁δ ε₂δ) = TWF-Base (sub-Γ⊢ε⦂τ εδ _ ε₁δ) (sub-Γ⊢ε⦂τ εδ _ ε₂δ)
   sub-Γ⊢τ εδ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (sub-Γ⊢τ εδ ρ₁δ) (sub-Γ⊢τ εδ ρ₂δ)
   sub-Γ⊢τ εδ (TWF-Arr arrδ resδ) = TWF-Arr (sub-Γ⊢τ εδ arrδ) (sub-Γ⊢τ εδ resδ)
   sub-Γ⊢τ {Γ = Γ} {ε = ε} {σ = σ} εδ (TWF-ADT consδs) = TWF-ADT (sub-cons consδs)
@@ -88,6 +89,20 @@ mutual
                → All (λ conτ → (Γ , [ x ↦ₗ ε ] Δ ) ⊢ conτ) ([ x ↦ₐ ε ] cons)
       sub-cons [] = []
       sub-cons (px ∷ pxs) = sub-Γ⊢τ εδ px ∷ sub-cons pxs
+
+  sub-Γ⊢ε⦂τ : Γ ⊢ ε ⦂ σ
+            → (ε' : _)
+            → (Γ , x ⦂ σ , Δ) ⊢ ε' ⦂ τ'
+            → (Γ , [ x ↦ₗ ε ] Δ) ⊢ [ x ↦ₑ ε ] ε' ⦂ [ x ↦ₜ ε ] τ'
+  sub-Γ⊢ε⦂τ εδ _  (T-Unit gok) = T-Unit (sub-Γok εδ gok)
+  sub-Γ⊢ε⦂τ {x = x} εδ (SVar x') (T-Var gok ∈) with var-eq x x'
+  ... | false = {! T-Var !}
+  ... | true = {! !}
+  sub-Γ⊢ε⦂τ εδ _  (T-Abs arrδ bodyδ) = {! !}
+  sub-Γ⊢ε⦂τ εδ ε' (T-App δ₁ δ₂) = {! !}
+  sub-Γ⊢ε⦂τ εδ _  (T-Case resδ δ branches) = {! !}
+  sub-Γ⊢ε⦂τ εδ _  (T-Con δ adtτ) = {! !}
+  sub-Γ⊢ε⦂τ εδ _  (T-Sub δ x x₁) = {! !}
 
 
 Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢ ε ⦂ τ → Γ ⊢ τ
