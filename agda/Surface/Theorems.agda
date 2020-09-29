@@ -61,12 +61,6 @@ exchange-Γ⊢ε⦂τ no-x Δ (T-Sub δ superδ sub) = T-Sub (exchange-Γ⊢ε�
 
 -- Some local helpers
 
-mid-Γok-⇒-twf : ∀ Δ
-              → (Γ , ( [ x ⦂ τ ] , Δ ) ) ⊢ τ'
-              → Γ ⊢ τ
-mid-Γok-⇒-twf [] δ = Γok-head (Γ⊢τ-⇒-Γok δ)
-mid-Γok-⇒-twf (_ ∷ Δ) δ = mid-Γok-⇒-twf Δ (Γok-head (Γ⊢τ-⇒-Γok δ))
-
 τ∈Γ-⇒-Γ⊢τ : Γ ok → x ⦂ τ ∈ Γ → Γ ⊢ τ
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (here refl) = twf-weakening δ τδ τδ
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (there ∈-prf) = twf-weakening δ τδ (τ∈Γ-⇒-Γ⊢τ δ ∈-prf)
@@ -78,107 +72,29 @@ mutual
           → (Γ , x ⦂ σ , Δ) ok
           → (Γ , [ x ↦ₗ ε ] Δ) ok
   sub-Γok {Δ = []} _ (TCTX-Bind prevOk _) = prevOk
-  sub-Γok {Δ = (x ,' τ) ∷ Δ} εδ (TCTX-Bind prevOk τδ) = TCTX-Bind (sub-Γok εδ prevOk) (sub-Γ⊢τ' εδ τδ)
-
-  single-sub-Γok : Γ ⊢ ε ⦂ σ
-                 → (Γ , x ⦂ σ , y ⦂ τ , Δ) ok
-                 → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ok
-  single-sub-Γok {Δ = []} εδ (TCTX-Bind prevOk@(TCTX-Bind prevOk' τδ') τδ) = TCTX-Bind prevOk (twf-weakening prevOk' τδ' (sub-Γ⊢τ-head εδ τδ))
-  single-sub-Γok {Δ = _ ∷ Δ} εδ (TCTX-Bind prevOk τδ) = TCTX-Bind (single-sub-Γok εδ prevOk) (single-sub-Γ⊢τ εδ τδ)
-
-  single-sub-Γ⊢τ : Γ ⊢ ε ⦂ σ
-                 → (Γ , x ⦂ σ , y ⦂ τ , Δ) ⊢ τ'
-                 → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢ τ'
-  single-sub-Γ⊢τ εδ (TWF-TrueRef Γok) = TWF-TrueRef (single-sub-Γok εδ Γok)
-  single-sub-Γ⊢τ εδ (TWF-Base ε₁δ ε₂δ) = TWF-Base ? ?
-  single-sub-Γ⊢τ εδ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (single-sub-Γ⊢τ εδ ρ₁δ) (single-sub-Γ⊢τ εδ ρ₂δ)
-  single-sub-Γ⊢τ εδ (TWF-Arr argδ resδ) = TWF-Arr (single-sub-Γ⊢τ εδ argδ) (single-sub-Γ⊢τ {Δ = _ ∷ _} εδ resδ)
-  single-sub-Γ⊢τ {Γ = Γ} {ε = ε} {σ = σ} εδ (TWF-ADT consδs) = TWF-ADT (sub-cons consδs)
-    where
-      sub-cons : {cons : ADTCons n}
-               → All ((Γ , x ⦂ σ , y ⦂ τ , Δ) ⊢_) cons
-               → All ((Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢_)  cons
-      sub-cons [] = []
-      sub-cons (px ∷ pxs) = single-sub-Γ⊢τ εδ px ∷ sub-cons pxs
-
-  {-
-  single-sub-srbt : Γ ⊢ ε ⦂ σ
-                  → (Γ , x ⦂ σ , y ⦂ τ , Δ) ⊢ ε' ⦂ τ'
-                  → τ' ≡ (ν ∈ b ∣ Τ)
-                  → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢ ε' ⦂ (ν ∈ b ∣ Τ)
-  single-sub-srbt εδ (T-Unit gok) refl = T-Unit (single-sub-Γok εδ gok)
-  single-sub-srbt εδ (T-Var gok ∈) refl = T-Var (single-sub-Γok εδ gok) {! !}
-  single-sub-srbt εδ (T-App δ₁ δ₂) ≡prf rewrite ≡prf = replace (T-App {! !} {! !}) ≡prf
-    where
-      replace : ∀ {Γ} → Γ ⊢ ε' ⦂ τ → τ ≡ (ν ∈ b ∣ Τ) → Γ ⊢ ε' ⦂ (ν ∈ b ∣ Τ)
-      replace δ ≡prf rewrite ≡prf = δ
-  single-sub-srbt εδ (T-Case resδ δ branches) refl = T-Case (single-sub-Γ⊢τ εδ resδ) {! !} {! !}
-  single-sub-srbt εδ (T-Sub δ superδ sub) refl = T-Sub {! !} {! !} {! !}
-
-  data _~ₜ_ : SType → SType → Set where
-    ~-SRBT : (ν ∈ b ∣ ρ₁) ~ₜ (ν ∈ b ∣ ρ₂)
-    ~-SArr : (τ₁ ~ₜ τ₂) → (τ₁' ~ₜ τ₂') → (SArr x τ₁ τ₁') ~ₜ (SArr x τ₂ τ₂')
-    ~-SADT : ∀ {n₁ n₂ cons₁ cons₂} → (SADT {n₁} cons₁) ~ₜ (SADT {n₂} cons₂)
-  -}
-
-  single-sub-tcs : Γ ⊢ ε ⦂ σ
-                 → (Γ , x ⦂ σ , y ⦂ τ , Δ) ⊢ ε' ⦂ τ₁
-                 → Σ SType (λ τ₂ → (Γ , x ⦂ σ , y ⦂ [ x ↦ₜ ε ] τ , Δ) ⊢ ε' ⦂ τ₂)
-  single-sub-tcs εδ (T-Unit gok) = (_ ∈ BUnit ∣ Τ) ,' T-Unit (single-sub-Γok εδ gok)
-  single-sub-tcs εδ (T-Var gok ∈) = {! !} ,' T-Var (single-sub-Γok εδ gok) {! !}
-  single-sub-tcs εδ (T-Abs arrδ bodyδ) with single-sub-tcs εδ bodyδ
-  ... | τ₂ ,' rec-body = let r' = single-sub-Γ⊢τ εδ arrδ in {! !} ,' T-Abs {! !} rec-body
-  single-sub-tcs εδ (T-App δ₁ δ₂) = {! !} ,' T-App {! !} {! !}
-  single-sub-tcs εδ (T-Case resδ δ branches) = {! !}
-  single-sub-tcs εδ (T-Con δ adtτ) = {! !}
-  single-sub-tcs εδ (T-Sub δ x x₁) = {! !}
+  sub-Γok {Δ = (x ,' τ) ∷ Δ} εδ (TCTX-Bind prevOk τδ) = TCTX-Bind (sub-Γok εδ prevOk) (sub-Γ⊢τ εδ τδ)
 
   sub-Γ⊢τ : Γ ⊢ ε ⦂ σ
           → (Γ , x ⦂ σ , Δ) ⊢ τ'
-          → SnocList Δ
           → (Γ , [ x ↦ₗ ε ] Δ) ⊢ [ x ↦ₜ ε ] τ'
-  sub-Γ⊢τ εδ δ Empty = sub-Γ⊢τ-head εδ δ
-  sub-Γ⊢τ {Γ} {ε} {σ} {x} {τ' = τ'} εδ δ (Snoc (y ,' τ) Δ snoc)
-    rewrite sub-ctx-snoc x ε y τ Δ
-    rewrite ++-assoc ( [ x ↦ₗ ε ] Δ ) [ ( y ,' [ x ↦ₜ ε ] τ )] Γ =
-    let Γ,x⦂σ⊢τ = mid-Γok-⇒-twf Δ δ
-        Γ⊢[x↦ε]τ = sub-Γ⊢τ-head εδ Γ,x⦂σ⊢τ
-        δ = toss-twf Δ ((x ,' σ) ∷ Γ) (y ,' τ) δ
-        δ = single-sub-Γ⊢τ εδ δ
-        δ = exchange-Γ⊢τ Γ⊢[x↦ε]τ Δ δ
-        rec = sub-Γ⊢τ {σ = σ} (t-weakening (Γ⊢τ-⇒-Γok Γ⊢[x↦ε]τ) Γ⊢[x↦ε]τ εδ) δ snoc
-     in rec
-    where
-      toss-twf : ∀ {τ} Γ₁ Γ₂ m
-               → ((Γ₁ ++ [ m ]) ++ Γ₂) ⊢ τ
-               → (Γ₁ ++ m ∷ Γ₂) ⊢ τ
-      toss-twf Γ₁ Γ₂ m δ rewrite ++-assoc Γ₁ [ m ] Γ₂ = δ
-
-  sub-Γ⊢τ' : Γ ⊢ ε ⦂ σ
-           → (Γ , x ⦂ σ , Δ) ⊢ τ'
-           → (Γ , [ x ↦ₗ ε ] Δ) ⊢ [ x ↦ₜ ε ] τ'
-
-  sub-Γ⊢τ-head : Γ ⊢ ε ⦂ σ
-               → Γ , x ⦂ σ ⊢ τ'
-               → Γ ⊢ [ x ↦ₜ ε ] τ'
-  sub-Γ⊢τ-head εδ (TWF-TrueRef (TCTX-Bind Γok τδ)) = TWF-TrueRef Γok
-  sub-Γ⊢τ-head εδ (TWF-Base ε₁δ ε₂δ) = TWF-Base {! !} {! !}
-  sub-Γ⊢τ-head εδ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (sub-Γ⊢τ-head εδ ρ₁δ) (sub-Γ⊢τ-head εδ ρ₂δ)
-  sub-Γ⊢τ-head εδ (TWF-Arr argδ resδ) = TWF-Arr (sub-Γ⊢τ-head εδ argδ) (sub-Γ⊢τ εδ resδ _)
-  sub-Γ⊢τ-head {Γ = Γ} {ε = ε} {σ = σ} εδ (TWF-ADT consδs) = TWF-ADT (sub-cons consδs)
+  sub-Γ⊢τ εδ (TWF-TrueRef gok) = TWF-TrueRef (sub-Γok εδ gok)
+  sub-Γ⊢τ εδ (TWF-Base ε₁δ ε₂δ) = TWF-Base {! !} {! !}
+  sub-Γ⊢τ εδ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (sub-Γ⊢τ εδ ρ₁δ) (sub-Γ⊢τ εδ ρ₂δ)
+  sub-Γ⊢τ εδ (TWF-Arr arrδ resδ) = TWF-Arr (sub-Γ⊢τ εδ arrδ) (sub-Γ⊢τ εδ resδ)
+  sub-Γ⊢τ {Γ = Γ} {ε = ε} {σ = σ} εδ (TWF-ADT consδs) = TWF-ADT (sub-cons consδs)
     where
       sub-cons : {cons : ADTCons n}
-               → All (λ conτ → (Γ , x ⦂ σ) ⊢ conτ) cons
-               → All (λ conτ → Γ ⊢ conτ) ([ x ↦ₐ ε ] cons)
+               → All (λ conτ → (Γ , x ⦂ σ , Δ) ⊢ conτ) cons
+               → All (λ conτ → (Γ , [ x ↦ₗ ε ] Δ ) ⊢ conτ) ([ x ↦ₐ ε ] cons)
       sub-cons [] = []
-      sub-cons (px ∷ pxs) = sub-Γ⊢τ-head εδ px ∷ sub-cons pxs
+      sub-cons (px ∷ pxs) = sub-Γ⊢τ εδ px ∷ sub-cons pxs
 
 
 Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢ ε ⦂ τ → Γ ⊢ τ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Unit gok) = TWF-TrueRef gok
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Var gok ∈-prf) = τ∈Γ-⇒-Γ⊢τ gok ∈-prf
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Abs arrδ _) = arrδ
-Γ⊢ε⦂τ-⇒-Γ⊢τ (T-App δ₁ δ₂) = sub-Γ⊢τ-head δ₂ (arr-wf-⇒-cod-wf (Γ⊢ε⦂τ-⇒-Γ⊢τ δ₁))
+Γ⊢ε⦂τ-⇒-Γ⊢τ (T-App δ₁ δ₂) = sub-Γ⊢τ δ₂ (arr-wf-⇒-cod-wf (Γ⊢ε⦂τ-⇒-Γ⊢τ δ₁))
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Case resδ _ _) = resδ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Con _ adtτ) = adtτ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Sub δ superδ sub) = superδ
