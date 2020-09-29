@@ -32,9 +32,9 @@ substInBranches : {n : _} → SubstIn (CaseBranches n)
 [ x ↦ₑ ε ] (SVar var) = if var-eq x var
                              then ε
                              else SVar var
-[ x ↦ₑ ε ] (SLam var τ ε') = if var-eq x var
-                                  then SLam var τ ε'
-                                  else ε
+[ x ↦ₑ ε ] (SLam var τ ε') = SLam var τ (if var-eq x var
+                                         then ε'
+                                         else [ x ↦ₑ ε ] ε')
 [ x ↦ₑ ε ] (SApp ε₁ ε₂) = SApp ([ x ↦ₑ ε ] ε₁) ([ x ↦ₑ ε ] ε₂)
 [ x ↦ₑ ε ] SUnit = SUnit
 [ x ↦ₑ ε ] (SCase scrut branches) = SCase ([ x ↦ₑ ε ] scrut) (substInBranches x ε branches)
