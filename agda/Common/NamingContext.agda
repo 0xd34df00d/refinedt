@@ -17,8 +17,8 @@ variable
   n : ℕ
   Γ↓ : NamingCtx
 
-grow-Γ↓ : NamingCtx → NamingCtx
-grow-Γ↓ Γ↓ = MkNamingCtx (suc (ctx-len Γ↓))
+expand-Γ↓ : NamingCtx → NamingCtx
+expand-Γ↓ Γ↓ = MkNamingCtx (suc (ctx-len Γ↓))
 
 Var : NamingCtx → Set
 Var Γ↓ = Fin (ctx-len Γ↓)
@@ -28,7 +28,7 @@ var-eq zero zero = true
 var-eq (suc n) (suc m) = var-eq n m
 var-eq _ _ = false
 
-closest-var : Var (grow-Γ↓ Γ↓)
+closest-var : Var (expand-Γ↓ Γ↓)
 closest-var = zero
 
 grow-var : Var Γ↓ → Var (grow-Γ↓ Γ↓)

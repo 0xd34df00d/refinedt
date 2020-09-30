@@ -27,15 +27,15 @@ Ctx n = Vec (SType (MkNamingCtx n)) n
 
 data STerm Γ↓ where
   SVar  : (var : Var Γ↓) → STerm Γ↓
-  SLam  : (τ : SType Γ↓) → (ε : STerm (grow-Γ↓ Γ↓)) → STerm Γ↓
+  SLam  : (τ : SType Γ↓) → (ε : STerm (expand-Γ↓ Γ↓)) → STerm Γ↓
   SApp  : (ε₁ : STerm Γ↓) → (ε₂ : STerm Γ↓) → STerm Γ↓
   SUnit : STerm Γ↓
   SCase : {bn : _} → (scrut : STerm Γ↓) → (branches : CaseBranches bn Γ↓) → STerm Γ↓
   SCon  : {bn : _} → (idx : Fin bn) → (body : STerm Γ↓) → (adtCons : ADTCons bn Γ↓) → STerm Γ↓
 
 data SType Γ↓ where
-  SRBT : (b : BaseType) → (ρ : Refinement (grow-Γ↓ Γ↓)) → SType Γ↓
-  SArr : (τ₁ : SType Γ↓) → (τ₂ : SType (grow-Γ↓ Γ↓)) → SType Γ↓
+  SRBT : (b : BaseType) → (ρ : Refinement (expand-Γ↓ Γ↓)) → SType Γ↓
+  SArr : (τ₁ : SType Γ↓) → (τ₂ : SType (expand-Γ↓ Γ↓)) → SType Γ↓
   SADT : {n : _} → (cons : ADTCons (suc n) Γ↓) → SType Γ↓
 
 data Refinement Γ↓ where
@@ -46,14 +46,14 @@ record CaseBranch (Γ↓ : NamingCtx) : Set where
   constructor MkCaseBranch
   inductive
   field
-    body : STerm (grow-Γ↓ Γ↓)
+    body : STerm (expand-Γ↓ Γ↓)
 
 CaseBranches n Γ↓ = Vec (CaseBranch Γ↓) n
 
 ADTCons n Γ↓ = Vec (SType Γ↓) n
 
 infix 15 _∣_
-_∣_ : (b : BaseType) → (ρ : Refinement (grow-Γ↓ Γ↓)) → SType Γ↓
+_∣_ : (b : BaseType) → (ρ : Refinement (expand-Γ↓ Γ↓)) → SType Γ↓
 _∣_ = SRBT
 
 Τ : Refinement Γ↓
