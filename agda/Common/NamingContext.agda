@@ -4,7 +4,7 @@ module Common.NamingContext where
 
 open import Data.Bool.Base
 open import Data.Nat.Base
-open import Data.Fin using (Fin; zero; suc)
+open import Data.Fin using (Fin; zero; suc; raise)
 
 record NamingCtx : Set where
   constructor MkNamingCtx
@@ -30,3 +30,6 @@ var-eq _ _ = false
 
 closest-var : Var (grow-Γ↓ Γ↓)
 closest-var = zero
+
+grow-var : Var Γ↓ → Var (grow-Γ↓ Γ↓)
+grow-var var = raise 1 var
