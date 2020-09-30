@@ -11,33 +11,10 @@ open import Data.Product public using (_×_)
 open import Data.Product using (_,_)
 open import Data.Vec
 
+open import Common.NamingContext
+
 data BaseType : Set where
   BUnit : BaseType
-
-record NamingCtx : Set where
-  constructor MkNamingCtx
-  field
-    ctx-len : ℕ
-
-open NamingCtx
-
-variable
-  n : ℕ
-  Γ↓ : NamingCtx
-
-grow-Γ↓ : NamingCtx → NamingCtx
-grow-Γ↓ Γ↓ = MkNamingCtx (suc (ctx-len Γ↓))
-
-Var : NamingCtx → Set
-Var Γ↓ = Fin (ctx-len Γ↓)
-
-var-eq : Var Γ↓ → Var Γ↓ → Bool
-var-eq zero zero = true
-var-eq (suc n) (suc m) = var-eq n m
-var-eq _ _ = false
-
-closest-var : Var (grow-Γ↓ Γ↓)
-closest-var = zero
 
 Ctx : ℕ → Set
 data SType (Γ↓ : NamingCtx) : Set
