@@ -43,8 +43,8 @@ Ctx : ℕ → Set
 data SType (Γ↓ : NamingCtx) : Set
 data STerm (Γ↓ : NamingCtx) : Set
 data Refinement (Γ↓ : NamingCtx) : Set
-CaseBranches : NamingCtx → ℕ → Set
-ADTCons : NamingCtx → ℕ → Set
+CaseBranches : ℕ → NamingCtx → Set
+ADTCons : ℕ → NamingCtx → Set
 Ctx n = Vec (SType (MkNamingCtx n)) n
 
 
@@ -53,13 +53,13 @@ data STerm Γ↓ where
   SLam  : (τ : SType Γ↓) → (ε : STerm (grow-Γ↓ Γ↓)) → STerm Γ↓
   SApp  : (ε₁ : STerm Γ↓) → (ε₂ : STerm Γ↓) → STerm Γ↓
   SUnit : STerm Γ↓
-  SCase : {bn : _} → (scrut : STerm Γ↓) → (branches : CaseBranches Γ↓ bn) → STerm Γ↓
-  SCon  : {bn : _} → (idx : Fin bn) → (body : STerm Γ↓) → (adtCons : ADTCons Γ↓ bn) → STerm Γ↓
+  SCase : {bn : _} → (scrut : STerm Γ↓) → (branches : CaseBranches bn Γ↓) → STerm Γ↓
+  SCon  : {bn : _} → (idx : Fin bn) → (body : STerm Γ↓) → (adtCons : ADTCons bn Γ↓) → STerm Γ↓
 
 data SType Γ↓ where
   SRBT : (b : BaseType) → (ρ : Refinement (grow-Γ↓ Γ↓)) → SType Γ↓
   SArr : (τ₁ : SType Γ↓) → (τ₂ : SType (grow-Γ↓ Γ↓)) → SType Γ↓
-  SADT : {n : _} → (cons : ADTCons Γ↓ (suc n)) → SType Γ↓
+  SADT : {n : _} → (cons : ADTCons (suc n) Γ↓) → SType Γ↓
 
 data Refinement Γ↓ where
   _≈_ : STerm Γ↓ → STerm Γ↓ → Refinement Γ↓
@@ -71,9 +71,9 @@ record CaseBranch (Γ↓ : NamingCtx) : Set where
   field
     body : STerm (grow-Γ↓ Γ↓)
 
-CaseBranches Γ↓ n = Vec (CaseBranch Γ↓) n
+CaseBranches n Γ↓ = Vec (CaseBranch Γ↓) n
 
-ADTCons Γ↓ n = Vec (SType Γ↓) n
+ADTCons n Γ↓ = Vec (SType Γ↓) n
 
 {-
 infix 15 _∣_
