@@ -6,59 +6,74 @@ open import Agda.Builtin.Bool
 open import Agda.Builtin.List public
 
 open import Data.Nat.Base public
-open import Data.Fin public using (Fin)
+open import Data.Fin public using (Fin; zero; suc)
 open import Data.Product public using (_×_)
 open import Data.Product using (_,_)
 open import Data.Vec
 
-variable
-  n : ℕ
-
 data BaseType : Set where
   BUnit : BaseType
 
+record NamingCtx : Set where
+  constructor MkNamingCtx
+  field
+    ctx-len : ℕ
 
-data Ctx : ℕ → Set
-data SType (Γ : Ctx n) : Set
-data STerm (Γ : Ctx n) : Set
-data Refinement (Γ : Ctx n) : Set
-CaseBranches : Ctx n → ℕ → Set
-ADTCons : Ctx n → ℕ → Set
-Τ : ∀ {Γ} → Refinement Γ
+open NamingCtx
 
-data Ctx where
-  empty : Ctx 0
-  _,_ : {n : ℕ} → (Γ : Ctx n) → (τ : SType Γ) → Ctx (suc n)
+variable
+  n : ℕ
+  Γ↓ : NamingCtx
 
-record CaseBranch {n} (Γ : Ctx n) : Set
+grow-Γ↓ : NamingCtx → NamingCtx
+grow-Γ↓ Γ↓ = MkNamingCtx (suc (ctx-len Γ↓))
 
-data STerm {n} Γ where
-  SVar  : (var : Fin n) → STerm Γ
-  SLam  : (τ : SType Γ) → (ε : STerm (Γ , τ)) → STerm Γ
-  SApp  : (ε₁ : STerm Γ) → (ε₂ : STerm Γ) → STerm Γ
-  SUnit : STerm Γ
-  SCase : {bn : _} → (scrut : STerm Γ) → (branches : CaseBranches Γ bn) → STerm Γ
-  SCon  : {bn : _} → (idx : Fin bn) → (body : STerm Γ) → (adtCons : ADTCons Γ bn) → STerm Γ
+Var : NamingCtx → Set
+Var Γ↓ = Fin (ctx-len Γ↓)
 
-data SType Γ where
-  SRBT : (b : BaseType) → (ρ : Refinement (Γ , SRBT b Τ)) → SType Γ
-  SArr : (τ₁ : SType Γ) → (τ₂ : SType (Γ , τ₁)) → SType Γ
-  SADT : {n : _} → (cons : ADTCons Γ (suc n)) → SType Γ
+var-eq : Var Γ↓ → Var Γ↓ → Bool
+var-eq zero zero = true
+var-eq (suc n) (suc m) = var-eq n m
+var-eq _ _ = false
 
-data Refinement Γ where
-  _≈_ : STerm Γ → STerm Γ → Refinement Γ
-  _∧_ : (ρ₁ : Refinement Γ) → (ρ₂ : Refinement Γ) → Refinement Γ
+closest-var : Var (grow-Γ↓ Γ↓)
+closest-var = zero
 
-record CaseBranch Γ where
+Ctx : ℕ → Set
+data SType (Γ↓ : NamingCtx) : Set
+data STerm (Γ↓ : NamingCtx) : Set
+data Refinement (Γ↓ : NamingCtx) : Set
+CaseBranches : NamingCtx → ℕ → Set
+ADTCons : NamingCtx → ℕ → Set
+Ctx n = Vec (SType (MkNamingCtx n)) n
+
+
+data STerm Γ↓ where
+  SVar  : (var : Var Γ↓) → STerm Γ↓
+  SLam  : (τ : SType Γ↓) → (ε : STerm (grow-Γ↓ Γ↓)) → STerm Γ↓
+  SApp  : (ε₁ : STerm Γ↓) → (ε₂ : STerm Γ↓) → STerm Γ↓
+  SUnit : STerm Γ↓
+  SCase : {bn : _} → (scrut : STerm Γ↓) → (branches : CaseBranches Γ↓ bn) → STerm Γ↓
+  SCon  : {bn : _} → (idx : Fin bn) → (body : STerm Γ↓) → (adtCons : ADTCons Γ↓ bn) → STerm Γ↓
+
+data SType Γ↓ where
+  SRBT : (b : BaseType) → (ρ : Refinement (grow-Γ↓ Γ↓)) → SType Γ↓
+  SArr : (τ₁ : SType Γ↓) → (τ₂ : SType (grow-Γ↓ Γ↓)) → SType Γ↓
+  SADT : {n : _} → (cons : ADTCons Γ↓ (suc n)) → SType Γ↓
+
+data Refinement Γ↓ where
+  _≈_ : STerm Γ↓ → STerm Γ↓ → Refinement Γ↓
+  _∧_ : (ρ₁ : Refinement Γ↓) → (ρ₂ : Refinement Γ↓) → Refinement Γ↓
+
+record CaseBranch (Γ↓ : NamingCtx) : Set where
   constructor MkCaseBranch
   inductive
   field
-    τ : SType Γ
-    body : STerm (Γ , τ)
+    body : STerm (grow-Γ↓ Γ↓)
 
-CaseBranches Γ n = Vec (CaseBranch Γ) n
+CaseBranches Γ↓ n = Vec (CaseBranch Γ↓) n
 
-ADTCons Γ n = Vec (SType Γ) n
+ADTCons Γ↓ n = Vec (SType Γ↓) n
 
 {-
 infix 15 _∣_
@@ -66,11 +81,12 @@ _∈_∣_ : (b : BaseType) → (ρ : Refinement) → SType
 _∈_∣_ = SRBT
 -}
 
+Τ : Refinement Γ↓
 Τ = SUnit ≈ SUnit
 
 variable
   Γ Γ' Δ : Ctx n
-  τ τ' τ₁ τ₂ τ₁' τ₂' τᵢ τⱼ σ : SType Γ
-  ε ε' ε₁ ε₂ ε₁' ε₂' ϖ : STerm Γ
+  τ τ' τ₁ τ₂ τ₁' τ₂' τᵢ τⱼ σ : SType Γ↓
+  ε ε' ε₁ ε₂ ε₁' ε₂' ϖ : STerm Γ↓
   b b' b₁ b₂ : BaseType
-  ρ ρ₁ ρ₂ : Refinement Γ
+  ρ ρ₁ ρ₂ : Refinement Γ↓
