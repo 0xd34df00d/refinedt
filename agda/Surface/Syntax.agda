@@ -75,11 +75,9 @@ CaseBranches n Γ↓ = Vec (CaseBranch Γ↓) n
 
 ADTCons n Γ↓ = Vec (SType Γ↓) n
 
-{-
 infix 15 _∣_
-_∈_∣_ : (b : BaseType) → (ρ : Refinement) → SType
-_∈_∣_ = SRBT
--}
+_∣_ : (b : BaseType) → (ρ : Refinement (grow-Γ↓ Γ↓)) → SType Γ↓
+_∣_ = SRBT
 
 Τ : Refinement Γ↓
 Τ = SUnit ≈ SUnit
