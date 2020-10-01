@@ -80,9 +80,12 @@ zero-cutoff = MkCutoff zero
 inc-cutoff : Cutoff Γ↓ → Cutoff (expand-Γ↓ Γ↓)
 inc-cutoff (MkCutoff c) = MkCutoff (suc c)
 
-shift-ε' : Cutoff Γ↓ → STerm Γ↓ → STerm (expand-Γ↓ Γ↓)
-shift-τ' : Cutoff Γ↓ → SType Γ↓ → SType (expand-Γ↓ Γ↓)
-shift-ρ' : Cutoff Γ↓ → Refinement Γ↓ → Refinement (expand-Γ↓ Γ↓)
+ShiftType : (NamingCtx → Set) → Set
+ShiftType ty = ∀ {Γ↓} → Cutoff Γ↓ → ty Γ↓ → ty (expand-Γ↓ Γ↓)
+
+shift-ε' : ShiftType STerm
+shift-τ' : ShiftType SType
+shift-ρ' : ShiftType Refinement
 
 shift-ε' c (SVar var) with raise 1 var
 ... | var↑ with compare var↑ (cutoff c)
