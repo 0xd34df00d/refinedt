@@ -83,9 +83,12 @@ inc-cutoff (MkCutoff c) = MkCutoff (suc c)
 ShiftType : (NamingCtx → Set) → Set
 ShiftType ty = ∀ {Γ↓} → Cutoff Γ↓ → ty Γ↓ → ty (expand-Γ↓ Γ↓)
 
-shift-ε' : ShiftType STerm
-shift-τ' : ShiftType SType
-shift-ρ' : ShiftType Refinement
+shift-ε'    : ShiftType STerm
+shift-τ'    : ShiftType SType
+shift-ρ'    : ShiftType Refinement
+shift-b'    : ShiftType CaseBranch
+shift-bs'   : ShiftType (CaseBranches n)
+shift-cons' : ShiftType (ADTCons n)
 
 shift-ε' c (SVar var) with raise 1 var
 ... | var↑ with compare var↑ (cutoff c)
@@ -94,8 +97,23 @@ shift-ε' c (SVar var) with raise 1 var
 shift-ε' c (SLam τ ε) = SLam (shift-τ' c τ) (shift-ε' (inc-cutoff c) ε)
 shift-ε' c (SApp ε₁ ε₂) = SApp (shift-ε' c ε₁) (shift-ε' c ε₂)
 shift-ε' c SUnit = SUnit
-shift-ε' c (SCase ε branches) = SCase (shift-ε' c ε) {! !}
-shift-ε' c (SCon idx ε adtCons) = SCon idx (shift-ε' c ε) {! !}
+shift-ε' c (SCase ε branches) = SCase (shift-ε' c ε) (shift-bs' c branches)
+shift-ε' c (SCon idx ε adtCons) = SCon idx (shift-ε' c ε) (shift-cons' c adtCons)
+
+shift-b' c (MkCaseBranch body) = MkCaseBranch (shift-ε' (inc-cutoff c) body)
+
+shift-bs' c [] = []
+shift-bs' c (b ∷ bs) = shift-b' c b ∷ shift-bs' c bs
+
+shift-cons' c [] = []
+shift-cons' c (τ ∷ cons) = shift-τ' c τ ∷ shift-cons' c cons
+
+shift-τ' c (SRBT b ρ) = SRBT b (shift-ρ' (inc-cutoff c) ρ)
+shift-τ' c (SArr τ₁ τ₂) = SArr (shift-τ' c τ₁) (shift-τ' (inc-cutoff c) τ₂)
+shift-τ' c (SADT cons) = SADT (shift-cons' c cons)
+
+shift-ρ' c (ε₁ ≈ ε₂) = shift-ε' c ε₁ ≈ shift-ε' c ε₂
+shift-ρ' c (ρ₁ ∧ ρ₂) = shift-ρ' c ρ₁ ∧ shift-ρ' c ρ₂
 
 shift-ε : STerm Γ↓ → STerm (expand-Γ↓ Γ↓)
 shift-ε = shift-ε' zero-cutoff
