@@ -5,8 +5,8 @@ module Surface.Syntax where
 open import Agda.Builtin.Bool
 open import Agda.Builtin.List public
 
-open import Data.Nat.Base public
-open import Data.Fin hiding (compare)
+open import Data.Nat.Base public hiding (compare)
+open import Data.Fin
 open import Data.Product public using (_×_)
 open import Data.Product using (_,_)
 open import Data.Vec
@@ -65,25 +65,40 @@ variable
   b b' b₁ b₂ : BaseType
   ρ ρ₁ ρ₂ : Refinement Γ↓
 
-shift-ε' : ℕ → STerm Γ↓ → STerm (expand-Γ↓ Γ↓)
-shift-τ' : ℕ → SType Γ↓ → SType (expand-Γ↓ Γ↓)
-shift-ρ' : ℕ → Refinement Γ↓ → Refinement (expand-Γ↓ Γ↓)
+open NamingCtx
 
-shift-ε' c (SVar var) with toℕ var
-... | varℕ with compare varℕ c
-... | less _ _ = SVar (raise 1 var)
+record Cutoff (Γ↓ : NamingCtx) : Set where
+  constructor MkCutoff
+  field
+    cutoff : Fin (suc (ctx-len Γ↓))
+
+open Cutoff
+
+zero-cutoff : Cutoff Γ↓
+zero-cutoff = MkCutoff zero
+
+inc-cutoff : Cutoff Γ↓ → Cutoff (expand-Γ↓ Γ↓)
+inc-cutoff (MkCutoff c) = MkCutoff (suc c)
+
+shift-ε' : Cutoff Γ↓ → STerm Γ↓ → STerm (expand-Γ↓ Γ↓)
+shift-τ' : Cutoff Γ↓ → SType Γ↓ → SType (expand-Γ↓ Γ↓)
+shift-ρ' : Cutoff Γ↓ → Refinement Γ↓ → Refinement (expand-Γ↓ Γ↓)
+
+shift-ε' c (SVar var) with raise 1 var
+... | var↑ with compare var↑ (cutoff c)
+... | less _ _ = SVar var↑
 ... | _ = SVar (suc var)
-shift-ε' c (SLam τ ε) = SLam (shift-τ' c τ) (shift-ε' (suc c) ε)
+shift-ε' c (SLam τ ε) = SLam (shift-τ' c τ) (shift-ε' (inc-cutoff c) ε)
 shift-ε' c (SApp ε₁ ε₂) = SApp (shift-ε' c ε₁) (shift-ε' c ε₂)
 shift-ε' c SUnit = SUnit
-shift-ε' c (SCase ε branches) = {! !}
-shift-ε' c (SCon idx ε adtCons) = {! !}
+shift-ε' c (SCase ε branches) = SCase (shift-ε' c ε) {! !}
+shift-ε' c (SCon idx ε adtCons) = SCon idx (shift-ε' c ε) {! !}
 
 shift-ε : STerm Γ↓ → STerm (expand-Γ↓ Γ↓)
-shift-ε = shift-ε' 0
+shift-ε = shift-ε' zero-cutoff
 
 shift-τ : SType Γ↓ → SType (expand-Γ↓ Γ↓)
-shift-τ = shift-τ' 0
+shift-τ = shift-τ' zero-cutoff
 
 shift-ρ : Refinement Γ↓ → Refinement (expand-Γ↓ Γ↓)
-shift-ρ = shift-ρ' 0
+shift-ρ = shift-ρ' zero-cutoff
