@@ -1,11 +1,15 @@
 % vim: set ft=tex:
 
+%\documentclass{jfp}
+%\usepackage{amsmath,amsfonts,amssymb}
+
 \documentclass[a4paper]{article}
-\tracinglostchars=2
 \usepackage{a4wide}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+
+\tracinglostchars=2
 \usepackage[utf8]{inputenc}
 \usepackage[T2A]{fontenc}
-\usepackage{amsmath,amsfonts,amssymb,amsthm}
 \usepackage{unicode-math}
 \usepackage{hyperref,cleveref}
 \usepackage{mathtools}
