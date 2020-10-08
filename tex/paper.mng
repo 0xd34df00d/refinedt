@@ -82,18 +82,18 @@
 
 \section{Introduction}
 
-\section{Overview}
+%TODO introduce refinement types, subtyping check, etc
 
-%TODO describe the notion of the oracle (like an SMT solver) and what we expect of the oracle.
+\section{Overview}
 
 \paragraph{Surface language.}
 We define a surface language with refinement types inspired by \cite{LiquidTypes08,Reflection18}.
-Broadly speaking, it is simply-typed lambda calculus with several extensions,
+Broadly speaking, it is a simply-typed lambda calculus with several extensions,
 refinements over the base types being the most important one.
 The other extensions are:
 \begin{itemize}
   \item dependent arrow types, to allow subsequent refinements refer preceding arguments,
-  \item a limited form of algebraic data types and dependent pattern matching insired by \cite{TAPLVariants,Eisenberg16},
+  \item a limited form of algebraic data types and dependent pattern matching inspired by \cite{TAPLVariants,Eisenberg16},
     to illustrate reasoning about these widely used constructs, as well as generalizing path sensitivity \cite{FindSomethingForThis}.
 \end{itemize}
 
