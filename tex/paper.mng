@@ -111,6 +111,21 @@ Unfortunately, this does not work in our case,
 as this encoding does not allow expressing the equality between the scrutinee of a pattern match and the patterns in each branch,
 and it seemingly cannot be easily extended to enable this.
 
+\paragraph{Subtyping oracle.}
+The refinements in our surface language may contain arbitrary terms, including function application.
+In general, this makes the subtyping check undecidable.
+We sidestep this by abstracting the checker away and introducing the notion of an oracle.
+The interface of said oracle boils down to a single function:
+it takes a typing context and two refinements over a base type, and decides whether one is the subtype of the other.
+
+Of course, the oracle can have false negatives, deciding that some refinements are not in the subtyping relationship, even if they are, in fact, related.
+This does not affect the type safety of the surface language; the only requirement is the lack of false positives.
+
+We also require certain properties regarding the oracle's behavior for the aforementioned surface language theorems to hold.
+As an example, if the oracle yields a ``positive'' decision in some typing context, then it also must yield a ``positive'' decision in any bigger context,
+extended with variable bindings irrelevant to the subtyping problem being considered.
+All the required properties are mentioned in each individual metatheorem directly relying on them.
+
 \section{Calculi definitions}
 
 \subsection{Surface language}
