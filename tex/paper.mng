@@ -86,19 +86,21 @@
 
 %TODO describe the notion of the oracle (like an SMT solver) and what we expect of the oracle.
 
+First, we define a surface language with refinement types inspired by \cite{LiquidTypes08,Reflection18}.
+Broadly speaking, it is simply-typed lambda calculus with several extensions,
+refinements over the base types being the most important one.
+The other extensions are:
+\begin{itemize}
+  \item dependent arrow types, to allow subsequent refinements refer preceding arguments,
+  \item a limited form of algebraic data types and dependent pattern matching
+    insired by \cite{TAPLVariants,Eisenberg16},
+    to illustrate reasoning about these widely used constructs,
+    as well as generalizing path sensitivity \cite{FindSomethingForThis}.
+\end{itemize}
+
 \section{Calculi definitions}
 
 \subsection{Surface language}
-
-Our surface language is based on simply typed lambda calculus.
-Refinements over the types are, of course, the most important extension.
-The other ones are:
-\begin{itemize}
-  \item dependent arrow types, to allow subsequent refinements refer preceding arguments,
-  \item limited form of algebraic data types and dependent pattern matching
-    insired by \cite{TAPLVariants,Eisenberg16},
-    to illustrate reasoning about those widely used constructs.
-\end{itemize}
 
 The syntax of the surface language is presented in \figref{surface_syntax}.
 The typing rules for the surface language are laid out in \figref{surface_typing}.
