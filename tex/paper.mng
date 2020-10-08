@@ -97,6 +97,10 @@ The other extensions are:
     to illustrate reasoning about these widely used constructs, as well as generalizing path sensitivity \cite{FindSomethingForThis}.
 \end{itemize}
 
+We also formulate and prove certain usual metatheorems about our surface language,
+like the substitution lemmas on types and terms,
+agreement lemmas between term well-typedness, type well-formedness and context well-formedness,
+and some others.
 
 \paragraph{Core language.}
 Our core language is a full dependently typed language $\lambda C$ \cite{TTFPLambdaC}
