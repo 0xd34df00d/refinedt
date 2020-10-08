@@ -86,17 +86,24 @@
 
 %TODO describe the notion of the oracle (like an SMT solver) and what we expect of the oracle.
 
-First, we define a surface language with refinement types inspired by \cite{LiquidTypes08,Reflection18}.
+\paragraph{Surface language.}
+We define a surface language with refinement types inspired by \cite{LiquidTypes08,Reflection18}.
 Broadly speaking, it is simply-typed lambda calculus with several extensions,
 refinements over the base types being the most important one.
 The other extensions are:
 \begin{itemize}
   \item dependent arrow types, to allow subsequent refinements refer preceding arguments,
-  \item a limited form of algebraic data types and dependent pattern matching
-    insired by \cite{TAPLVariants,Eisenberg16},
-    to illustrate reasoning about these widely used constructs,
-    as well as generalizing path sensitivity \cite{FindSomethingForThis}.
+  \item a limited form of algebraic data types and dependent pattern matching insired by \cite{TAPLVariants,Eisenberg16},
+    to illustrate reasoning about these widely used constructs, as well as generalizing path sensitivity \cite{FindSomethingForThis}.
 \end{itemize}
+
+\paragraph{Core language.}
+
+Our core language is a full dependently typed language $\lambda C$ \cite{TTFPLambdaC}
+(a pure type system \cite{FindSomethingForThis} with two sorts)
+extended with a unit type and a restricted form of ADTs as our core dependently typed language.
+We conjecture that these extensions do not break the usual metatheoretical properties of the system,
+and we explicitly prove progress and preservation theorems as a sanity check.
 
 \section{Calculi definitions}
 
@@ -276,14 +283,6 @@ this is a well-founded proof.
 \todo[inline]{What to do about the assumptions on the well-formedness of target context in oracle assumptions vs the Agda formal proof that doesn't do that?}
 
 \subsection{Core language}
-
-We take $\lambda C$ \cite{TTFPLambdaC}
-(a pure type system \cite{FindSomethingForThis} with two sorts)
-extended with a unit type
-and a restricted form of ADTs as our core dependently typed language.
-We conjecture that these extensions
-do not break the usual metatheoretical properties of the system,
-and we explicitly prove progress and preservation theorems as a sanity check.
 
 The syntax of the core language is presented in \figref{core_syntax},
 the core $\lambda C$ typing rules are defined in \figref{core_typing}
