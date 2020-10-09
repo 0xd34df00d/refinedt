@@ -110,7 +110,7 @@ We conjecture that these extensions do not break the usual metatheoretical prope
 and we explicitly prove progress and preservation theorems as a sanity check.
 
 One plausible way to avoid the doubt in type safety of our core language stemming from the presence of the ADTs is to
-encode them via the Boehm-Berarducci encoding \cite{FindSomethingForThis}.
+encode them via the Boehm-Berarducci encoding \cite{Bohm85}.
 Unfortunately, this does not work in our case,
 as this encoding does not allow expressing the equality between the scrutinee of a pattern match and the patterns in each branch,
 and it seemingly cannot be easily extended to enable this.
