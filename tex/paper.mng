@@ -104,7 +104,7 @@ and some others.
 
 \paragraph{Core language.}
 Our core language is a full dependently typed language $\lambda C$ \cite{TTFPLambdaC}
-(a pure type system \cite{FindSomethingForThis} with two sorts)
+(a pure type system \cite{Schmidt1994,Barendregt92} with two sorts)
 extended with a unit type and a restricted form of algebraic data types (ADTs) as our core dependently typed language.
 We conjecture that these extensions do not break the usual metatheoretical properties of the system,
 and we explicitly prove progress and preservation theorems as a sanity check.
