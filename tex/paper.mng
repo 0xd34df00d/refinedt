@@ -136,6 +136,20 @@ As an example, if the oracle yields a ``positive'' decision in some typing conte
 extended with variable bindings irrelevant to the subtyping problem being considered.
 All the required properties are mentioned in each individual metatheorem directly relying on them.
 
+\paragraph{Joining refinement and dependent types.}
+After formulating our surface and core languages, we define a translation from the former to the latter.
+We also formulate two key theorems proving that the translation makes sense.
+First, we prove that any well-typed surface language term has a translation to the core language.
+Then, we prove that the small-step operational semantics of the languages match and commute with the translation:
+if a surface language term evaluates to some other term in one step,
+then its translation to the core language evaluates into an equivalent (core language) value, although, perhaps, in several steps.
+
+The last theorem has two interesting corollaries for our surface language:
+\begin{itemize}
+  \item It is strongly normalizing.
+  \item Progress and preservation theorems automatically hold.
+\end{itemize}
+
 \section{Calculi definitions}
 
 \subsection{Surface language}
