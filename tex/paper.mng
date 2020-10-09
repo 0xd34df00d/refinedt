@@ -124,7 +124,7 @@ and it seemingly cannot be easily extended to enable this.
 \paragraph{Subtyping oracle.}
 The refinements in our surface language may contain arbitrary terms, including function application.
 In general, this makes the subtyping check undecidable.
-We sidestep this by abstracting the checker away and introducing the notion of an oracle.
+We sidestep this by abstracting the checker away and introducing a notion of an oracle.
 The interface of said oracle boils down to a single function:
 it takes a typing context and two refinements over a base type, and decides whether one is the subtype of the other.
 
