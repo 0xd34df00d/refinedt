@@ -290,10 +290,6 @@ this is a well-founded proof.
   Due to the presence of a subset of dependent types the proof is a bit bulky,
   using simultaneous induction on $\Delta$ and the derivation of $[[ G, x : ts, GD |- ts' ]]$.
   We refer the interested reader to the formal proof of theorem in the supplemental code for the specific details.
-
-  It is also worth noting that this lemma requires the oracle to not depend on the order of bindings in the context.
-  More formally, if the oracle decides that $[[ [| G, x1 : ts1, x2 : ts2, GD |] => A v. (r1 => r2) ]]$,
-  then it also must decide $[[ [| G, x2 : ts2, x1 : ts1, GD |] => A v. (r1 => r2) ]]$.
 \end{proof}
 
 \begin{lemma}[\functionname{Γ⊢ε⦂τ-⇒-Γ⊢τ}]\label{lma:term_wf_implies_type_wf}
