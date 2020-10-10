@@ -136,6 +136,8 @@ As an example, if the oracle yields a ``positive'' decision in some typing conte
 extended with variable bindings irrelevant to the subtyping problem being considered.
 All the required properties are mentioned in each individual metatheorem directly relying on them.
 
+It's worth noting that the work on liquid types usually assumes the subtyping checks are done via an SMT solver, which can be seen to fit our oracle abstraction.
+
 \paragraph{Joining refinement and dependent types.}
 After formulating our surface and core languages, we define a translation from the former to the latter.
 We also formulate two key theorems proving that the translation makes sense.
@@ -147,7 +149,7 @@ then its translation to the core language evaluates into an equivalent (core lan
 The last theorem has two interesting corollaries for our surface language:
 \begin{itemize}
   \item It is strongly normalizing.
-  \item Progress and preservation theorems automatically hold.
+  \item Progress and preservation theorems hold.
 \end{itemize}
 
 \section{Calculi definitions}
