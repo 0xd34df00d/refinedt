@@ -867,8 +867,8 @@ The second one claims that a well-typed surface language program evaluates to ``
 \end{proof}
 
 \begin{theorem}[Evaluation equivalence]
-  If a well-typed surface language term $[[ es ]]$ evaluates to $[[ vs ]]$,
-  then the translation of that term evaluates to $\tranterm(v)$:
+  If $[[ es ]]$ is a well-typed surface language term and $[[ es ~~> es' ]]$,
+  then the translation of $[[ es ]]$ evaluates to the translation of $[[ es' ]]$ (perhaps, in several steps).
 \end{theorem}
 \begin{proof}
 \end{proof}
