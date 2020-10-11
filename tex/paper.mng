@@ -26,6 +26,7 @@
 \addtolength{\textheight}{1.55in}
 
 \newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
 \newtheorem{lemma}{Lemma}
 \newtheorem{remark}{Remark}
 \crefname{lemma}{Lemma}{Lemmas}
