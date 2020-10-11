@@ -147,12 +147,6 @@ Then, we prove that the small-step operational semantics of the languages match 
 if a surface language term evaluates to some other term in one step,
 then its translation to the core language evaluates into an equivalent (core language) value, although, perhaps, in several steps.
 
-The last theorem has two interesting corollaries for our surface language:
-\begin{itemize}
-  \item It is strongly normalizing.
-  \item Progress and preservation theorems hold.
-\end{itemize}
-
 \section{Calculi definitions}
 
 \subsection{Surface language}
