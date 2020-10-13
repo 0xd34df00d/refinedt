@@ -84,8 +84,8 @@ infix 30 [_↦ₜ_]_ [_↦ₑ_]_ [_↦ᵣ_]_ [_↦ₗ_]_ [_↦ₐ_]_ [_↦ₘ_]_
 [_↦ₑ_]_ : SubstIn STerm
 [_↦ᵣ_]_ : SubstIn Refinement
 
-[_↦ₐ_]_ : {n : _} → SubstIn (ADTCons n)
-substInBranches : {n : _} → SubstIn (CaseBranches n)
+[_↦ₐ_]_ : ∀ {n} → SubstIn (ADTCons n)
+substInBranches : ∀ {n} → SubstIn (CaseBranches n)
 
 [ x ↦ₜ ε ] (SRBT b ρ) = SRBT b ([ suc x ↦ᵣ shift-ε ε ] ρ)
 [ x ↦ₜ ε ] (SArr τ₁ τ₂) = SArr ([ x ↦ₜ ε ] τ₁) ([ suc x ↦ₜ shift-ε ε ] τ₂)
