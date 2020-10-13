@@ -144,8 +144,8 @@ After formulating our surface and core languages, we define a translation from t
 We also formulate two key theorems proving that the translation makes sense.
 First, we prove that any well-typed surface language term has a translation to the core language.
 Then, we prove that the small-step operational semantics of the languages match and commute with the translation:
-if a surface language term evaluates to some other term in one step,
-then its translation to the core language evaluates into an equivalent (core language) value, although, perhaps, in several steps.
+if a surface language term $[[ es ]]$ evaluates to some other term $[[ es' ]]$ in one step,
+then the translation of $[[ es ]]$ to the core language evaluates into the translationof $[[ es' ]]$, although, perhaps, in several steps.
 
 \section{Calculi definitions}
 
