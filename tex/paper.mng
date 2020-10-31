@@ -96,7 +96,7 @@ even if the proofs lie within decidable theories
 Even if the language supports some form of proof automation (such as Coq's tactics, or proof by reflection, common for Agda),
 this is still something that the programmer has to pay attention to.
 Not only this consumes a part of human attention span (which is quite limited, compared to computers),
-but, arguably, it also prevents widespread adoption of dependent types for typical programming tasks.
+but, arguably, it also prevents widespread adoption of dependent types for mainstream programming.
 
 \section{Overview}
 
