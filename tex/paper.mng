@@ -111,6 +111,27 @@ as opposed to the usual dependently typed interpretation of
 one for said integer being non-negative and another one for it being less than the length of \verb+arr+''.
 Thus, refinement types are arguably more approachable and more usable in mainstream programming.
 
+The downside is that efficiently decidable refinement types are less expressive, limiting what can be specified and proven.
+Even though there are new developments pushing the envelope of what can be expressed with liquid types \cite{Reflection18},
+the natural question is what would it take to combine full dependent types and refinement types in a single language.
+Our work lays the theoretical foundation for answering this question.
+We choose to consider a dependently typed language as some ``core'' language,
+to which a ``surface'' language with just the refinement types is translated.
+This provides several nice metatheoretical properties:
+\begin{itemize}
+  \item Dependent types are a well-studied and well-understood subject,
+    so taking them as the translation target automatically provides us with the existing array of metatheorems.
+  \item Since we require the solver to produce a proof of the subtyping relation,
+    the result of the translation satisfies the de Bruijn criterion:
+    even if the solver makes a mistake and produces an incorrect proof,
+    this mistake would be caught by the type checker for the core language.
+    We deem this a desirable property, since type checkers are typically simpler and have smaller ``error surface'' than SMT solvers.
+  \item This approach transfers naturally to a fully dependently typed language such as Idris or Agda.
+    For instance, an implementation might choose to reserve certain syntax (such as \verb+{ v : Ty | Predicate v }+)
+    or a keyword to restrict type checking of a binding to the type theory with decidable proof finding.
+\end{itemize}
+
+
 \section{Overview}
 
 \paragraph{Surface language.}
