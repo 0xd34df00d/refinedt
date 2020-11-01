@@ -93,7 +93,7 @@ and so is type inference.
 Or, practically speaking, the programmer must care about the details of the proofs,
 even if the proofs lie within decidable theories
 (like some flavours of arithmetic, sufficient for reasoning about array accesses and preventing out-of-bounds errors).
-Even if the language supports some form of proof automation (such as Coq's tactics, or proof by reflection, common for Agda),
+Even if the language supports some form of proof automation (such as proof by reflection, or Coq's tactics, or Idris' elaborator reflection),
 this is still something that the programmer has to pay attention to.
 Not only this consumes a part of human attention span (which is quite limited, compared to computers),
 but, arguably, it also prevents widespread adoption of dependent types for mainstream programming.
