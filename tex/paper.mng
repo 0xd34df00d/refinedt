@@ -131,6 +131,10 @@ This provides several nice metatheoretical properties:
     or a keyword to restrict type checking of a binding to the type theory with decidable proof finding.
 \end{itemize}
 
+Since the ultimate goal of all these type systems is verification of programs for safer software,
+we believe in importance of having firm foundations and verifying that the type systems themselves do make sense.
+Thus, we also present mechanically verified proofs (in Agda) of all the key theorems about our surface language and its translation procedure.
+This is, as far as we are aware, also a new contribution, and no prior papers strived to mechanically verify refinement types to this extent.
 
 \section{Overview}
 
