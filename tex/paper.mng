@@ -85,7 +85,8 @@
 
 %TODO introduce refinement types, subtyping check, etc
 
-Type systems are a powerful tool for specifying and verifying programs, as well as eliminating certain kinds of unwanted behaviour.
+Type systems are a powerful tool for internal specification and verification of programs,
+ensuring that programs exhibit certain desirable properties and do not exhibit undesirable ones.
 In particular, dependent types \cite{FindSomethingForDTs} are powerful enough to encode pretty much arbitrary specifications within the programs
 (and even encode mathematics itself \cite{FindSomethingForCurryHoward}),
 but this power comes at a cost: term finding (or, equivalently, proof finding) for dependent types is undecidable,
