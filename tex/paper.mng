@@ -195,7 +195,7 @@ The oracle abstraction allows keeping the type checking decidable even in the pr
 For instance, an oracle might just treat all functions as uninterpreted constants,
 as is easily expressible in SMT solvers, and roughly as Idris type checker does \cite{Idris13}.
 
-\paragraph{Joining refinement and dependent types.}
+\paragraph{Combining refinement and dependent types.}
 After formulating our surface and core languages, we define a translation from the former to the latter.
 We also formulate two key theorems proving that the translation makes sense.
 First, we prove that any well-typed surface language term has a translation to the core language.
