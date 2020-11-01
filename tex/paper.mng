@@ -146,7 +146,7 @@ The other extensions are:
 \begin{itemize}
   \item dependent arrow types, to allow subsequent refinements refer preceding arguments,
   \item a limited form of algebraic data types (ADTs) and dependent pattern matching inspired by \cite{TAPLVariants,Eisenberg16},
-    to illustrate reasoning about these widely used constructs, as well as generalizing path sensitivity \cite{FindSomethingForThis}.
+    to illustrate reasoning about these widely used constructs, as well as generalizing path sensitivity \cite{FindSomethingForPathSensitivity}.
 \end{itemize}
 
 We also formulate and prove certain usual metatheorems about our surface language,
