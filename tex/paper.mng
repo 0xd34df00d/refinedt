@@ -136,7 +136,7 @@ This provides several nice metatheoretical properties:
     or a keyword to restrict type checking of a binding to the type theory with decidable proof finding.
 \end{itemize}
 
-Since the ultimate goal of all these type systems is verification of programs for safer software,
+Since verification of programs for safer software is the ultimate goal of all these type systems,
 we believe in importance of having firm foundations and verifying that the type systems themselves do make sense.
 Thus, we also present mechanically verified proofs (in Agda) of all the key theorems about our surface language and its translation procedure.
 This is, as far as we are aware, also a new contribution, and no prior papers strived to mechanically verify refinement types to this extent.
@@ -166,10 +166,10 @@ Extending our language with polymorphism is straightforward, while adding genera
 since the aim is to translate it to a some dependently typed language, which are typically strongly normalizing.
 
 \paragraph{Core language.}
-Our core language is a full dependently typed language $\lambda C$ \cite{TTFPLambdaC}
+Our core language is a fully dependently typed language $\lambda C$ \cite{TTFPLambdaC}
 (a pure type system \cite{Schmidt1994,Barendregt92} with two sorts)
 extended with a unit type and a restricted form of ADTs.
-We conjecture that these extensions do not break the usual metatheoretical properties of the system,
+We conjecture these extensions do not break the usual metatheoretical properties of the system,
 and we explicitly prove progress and preservation theorems as a sanity check.
 
 One plausible way to avoid the doubt in type safety of our core language stemming from the presence of the ADTs is to
