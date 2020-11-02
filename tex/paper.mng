@@ -128,6 +128,9 @@ This provides several nice metatheoretical properties:
     even if the solver makes a mistake and produces an incorrect proof,
     this mistake would be caught by the type checker for the core language.
     We deem this a desirable property, since type checkers are typically simpler and have smaller ``error surface'' than SMT solvers.
+  \item We do not consider the peculiarities of the subtyping check in the refinements language,
+    introducing instead the abstraction of a subtyping oracle.
+    This allows plugging not just SMT solvers but arbitrary decision procedures as long as they have certain properties we describe later.
   \item This approach transfers naturally to a fully dependently typed language such as Idris or Agda.
     For instance, an implementation might choose to reserve certain syntax (such as \verb+{ v : Ty | Predicate v }+)
     or a keyword to restrict type checking of a binding to the type theory with decidable proof finding.
