@@ -98,11 +98,11 @@ Not only this consumes a part of human attention span (which is quite limited, c
 but, arguably, it also prevents widespread adoption of dependent types for mainstream programming.
 
 Another approach considers limiting the expressive power of a type system to ensure decidability of proof finding.
-This approach is taken, for instance, in the works on liquid types \cite{LiquidTypes08},
+This approach is taken, for instance, in the works on \emph{liquid types} \cite{LiquidTypes08},
 where the type system only allows specifying properties which can be efficiently proven (or disproven) by an SMT solver.
-In particular, liquid types can be seen as a special case of a more general concept of refinement types \cite{Constable87,Rushby98},
+In particular, liquid types can be seen as a special case of a more general concept of \emph{refinement types} \cite{Constable87,Rushby98},
 which are some base types endowed with a predicate, possibly dependent on other values, like \verb+{ v : Int | v >= 0 & v < len arr }+.
-The logical implication on predicates gives rise to a natural subtyping relation:
+The logical implication on predicates gives rise to a natural \emph{subtyping relation}:
 for example, the aforementioned type is a subtype of \verb+{ v : Int | v >= -1 }+.
 The core idea of liquid types then is to ensure that this subtype relation is efficiently decidable by an SMT solver.
 
@@ -129,8 +129,8 @@ This provides several nice metatheoretical properties:
     this mistake would be caught by the type checker for the core language.
     We deem this a desirable property, since type checkers are typically simpler and have smaller ``error surface'' than SMT solvers.
   \item We do not consider the peculiarities of the subtyping check in the refinements language,
-    introducing instead the abstraction of a subtyping oracle.
-    This allows plugging not just SMT solvers but arbitrary decision procedures as long as they have certain properties we describe later.
+    introducing instead the abstraction of a \emph{subtyping oracle}.
+    This allows plugging in not just SMT solvers but arbitrary decision procedures as long as they have certain properties we describe later.
   \item This approach transfers naturally to a fully dependently typed language such as Idris or Agda.
     For instance, an implementation might choose to reserve certain syntax (such as \verb+{ v : Ty | Predicate v }+)
     or a keyword to restrict type checking of a binding to the type theory with decidable proof finding.
