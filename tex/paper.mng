@@ -100,16 +100,20 @@ Not only this consumes a part of human attention span (which is quite limited, c
 but, arguably, it also prevents widespread adoption of dependent types for mainstream programming.
 
 Another approach considers limiting the expressive power of a type system to ensure decidability of proof finding.
-This approach is taken in the works on liquid types \cite{LiquidTypes08},
+This approach is taken, for instance, in the works on liquid types \cite{LiquidTypes08},
 where the type system only allows specifying properties which can be efficiently proven (or disproven) by an SMT solver.
-More than that, liquid types are a special case of a more general concept of refinement types \cite{Constable87,Rushby98},
-which are some base types endowed with a predicate, merely restricting the set of admissible values.
-Refinement types have a fairly natural mental model:
+In particular, liquid types can be seen as a special case of a more general concept of refinement types \cite{Constable87,Rushby98},
+which are some base types endowed with a predicate, possibly dependent on other values, like \verb+{ v : Int | v >= 0 & v < len arr }+.
+The logical implication on predicates gives rise to a natural subtyping relation:
+for example, the aforementioned type is a subtype of \verb+{ v : Int | v >= -1 }+.
+The core idea of liquid types then is to ensure that this subtype relation is efficiently decidable by an SMT solver.
+
+Another desirable property of refinement types is that they have a natural mental model:
 indeed, it feels more approachable to treat \verb+{ v : Int | v >= 0 & v < len arr }+ as just an integer that is within some array's bounds
 as opposed to the usual dependently typed interpretation of
 ``a dependent pair consisting of an integer and a pair of proofs,
 one for said integer being non-negative and another one for it being less than the length of \verb+arr+''.
-Thus, refinement types are arguably more approachable and more usable in mainstream programming.
+Thus, refinement types are arguably more accessible and more usable in mainstream programming.
 
 The downside is that efficiently decidable refinement types are less expressive, limiting what can be specified and proven.
 Even though there are new developments pushing the envelope of what can be expressed with liquid types \cite{Reflection18},
