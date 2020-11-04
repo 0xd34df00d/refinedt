@@ -496,7 +496,7 @@ and state some straightforward facts that will be useful later:
         \triangleq
         \Pi P : \nonterm{tc} \rightarrow \star. (P \nonterm{ec}_1 \rightarrow P \nonterm{ec}_2, P \nonterm{ec}_2 \rightarrow P \nonterm{ec}_1).
     \]
-    The reader might recognize this as the Leibniz equality \cite{FindSomethingForThis}.
+    The reader might recognize this as the Leibniz equality \cite{FindSomethingForLeibnizEq}.
 
     The corresponding introduction rule $\eqrefl x$ of type $x \equiv x$
     stating that $x$ of type $\nonterm{tc}$ is equal to itself
