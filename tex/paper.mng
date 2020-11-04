@@ -10,7 +10,6 @@
 \tracinglostchars=2
 \usepackage[utf8]{inputenc}
 \usepackage[T2A]{fontenc}
-\usepackage{unicode-math}
 \usepackage{hyperref,cleveref}
 \usepackage{mathtools}
 \usepackage{xcolor}
@@ -43,10 +42,6 @@
 \newcommand{\evalsto}{\rightsquigarrow}
 \newcommand{\eqrefl}{\text{eq-refl~}}
 \newcommand{\secondDP}{\text{second-dp~}}
-
-\defaultfontfeatures{ Scale=MatchLowercase, Ligatures=TeX }
-\newfontfamily\symbolfont{STIX Two Math}
-\newcommand\functionname[1]{\textnormal{\symbolfont #1}}
 
 \begin{document}
 
