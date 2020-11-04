@@ -308,7 +308,7 @@ We prove some of the usual metatheoretical properties of the proposed language.
 We also provide machine-verified proofs of these theorems in the supplemental code,
 with the corresponding proof terms referred in lemmas statements.
 
-\begin{lemma}[\functionname{Γ⊢ε⦂τ-⇒-Γok}]\label{lma:term_wf_implies_ctx_wf}
+\begin{lemma}[\verb +T-implies-TCTX]\label{lma:term_wf_implies_ctx_wf}
   If $[[ G |- es : ts ]]$, then $[[ G ok ]]$.
 \end{lemma}
 \begin{proof}
@@ -317,7 +317,7 @@ with the corresponding proof terms referred in lemmas statements.
   and the other rules recurse on one of their premises.
 \end{proof}
 
-\begin{lemma}[\functionname{Γ⊢τ-⇒-Γok}]\label{lma:type_wf_implies_ctx_wf}
+\begin{lemma}[\verb +TWF-implies-TCTX]\label{lma:type_wf_implies_ctx_wf}
   If $[[ G |- ts ]]$, then $[[G ok]]$.
 \end{lemma}
 \begin{proof}
@@ -330,10 +330,10 @@ with the corresponding proof terms referred in lemmas statements.
 For the following two lemmas,
 assume $[[ G ]]$, $[[ G' ]]$ are contexts such that $[[ G ]] \subset [[ G' ]]$ and $[[ G' ok ]]$.
 Then:
-\begin{lemma}[Thinning on types, \functionname{twf-thinning}]\label{lma:thinning_twf}
+\begin{lemma}[Thinning on types, \verb +twf-thinning]\label{lma:thinning_twf}
   If $[[ G |- ts ]]$, then $[[ G' |- ts ]]$.
 \end{lemma}
-\begin{lemma}[Thinning on terms, \functionname{t-thinning}]\label{lma:thinning_t}
+\begin{lemma}[Thinning on terms, \verb +t-thinning]\label{lma:thinning_t}
   If $[[ G |- es : ts ]]$, then $[[ G' |- es : ts ]]$.
 \end{lemma}
 These two lemmas are proven using mutual induction,
@@ -357,7 +357,7 @@ this is a well-founded proof.
   then it must conclude $[[ [| G' |] => A v. (r1 => r2) ]]$.
 \end{proof}
 
-\begin{lemma}[Substitution on types, \functionname{sub-Γ⊢τ}]\label{lma:type_substitution}
+\begin{lemma}[Substitution on types, \verb +sub-TWF]\label{lma:type_substitution}
   Assume $[[ G, x : ts, GD |- ts' ]]$ and $[[ G |- es : ts ]]$, then $[[ G, [ x |-> es ] GD |- [ x |-> es ] ts' ]] $.
 \end{lemma}
 \begin{proof}
@@ -366,7 +366,7 @@ this is a well-founded proof.
   We refer the interested reader to the formal proof of theorem in the supplemental code for the specific details.
 \end{proof}
 
-\begin{lemma}[\functionname{Γ⊢ε⦂τ-⇒-Γ⊢τ}]\label{lma:term_wf_implies_type_wf}
+\begin{lemma}[\verb +T-implies-TWF]\label{lma:term_wf_implies_type_wf}
   If $[[ G |- es : ts ]]$, then $[[ G |- ts ]]$.
 \end{lemma}
 \begin{proof}
