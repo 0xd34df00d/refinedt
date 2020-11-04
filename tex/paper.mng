@@ -85,7 +85,7 @@
 
 Type systems are a powerful tool for internal specification and verification of programs,
 ensuring that programs exhibit certain desirable properties and do not exhibit undesirable ones.
-In particular, dependent types \cite{FindSomethingForDTs} are powerful enough to encode pretty much arbitrary specifications within the programs
+In particular, dependent types \cite{FindSomethingForDTs} are powerful enough to encode pretty much arbitrary specifications
 (and even encode mathematics itself \cite{FindSomethingForCurryHoward}),
 but this power comes at a cost: term finding (or, equivalently, proof finding) for dependent types is undecidable,
 and so is type inference.
@@ -106,7 +106,7 @@ The logical implication on predicates gives rise to a natural \emph{subtyping re
 for example, the aforementioned type is a subtype of \verb+{ v : Int | v >= -1 }+.
 The core idea of liquid types then is to ensure that this subtype relation is efficiently decidable by an SMT solver.
 
-Another desirable property of refinement types is that they have a natural mental model:
+Another useful property of refinement types is that they have a natural mental model:
 indeed, it feels more approachable to treat \verb+{ v : Int | v >= 0 & v < len arr }+ as just an integer that is within some array's bounds
 as opposed to the usual dependently typed interpretation of
 ``a dependent pair consisting of an integer and a pair of proofs,
