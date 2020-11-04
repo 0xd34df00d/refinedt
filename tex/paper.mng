@@ -372,8 +372,6 @@ this is a well-founded proof.
   as it invokes the substitution lemma (\cref{lma:type_substitution}).
 \end{proof}
 
-\todo[inline]{What to do about the assumptions on the well-formedness of target context in oracle assumptions vs the Agda formal proof that doesn't do that?}
-
 \subsection{Core language}
 
 The syntax of the core language is presented in \figref{core_syntax},
