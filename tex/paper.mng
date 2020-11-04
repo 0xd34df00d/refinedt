@@ -78,6 +78,9 @@
 
 \maketitle
 
+\begin{abstract}
+\end{abstract}
+
 \section{Introduction}
 
 Type systems are a powerful tool for internal specification and verification of programs,
