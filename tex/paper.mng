@@ -97,9 +97,8 @@ this is still something that the programmer has to pay attention to.
 Not only this consumes a part of human attention span (which is quite limited, compared to computers),
 but, arguably, it also prevents widespread adoption of dependent types for mainstream programming.
 
-Another approach considers limiting the expressive power of a type system to ensure decidability of proof finding.
-This approach is taken, for instance, in the works on \emph{liquid types} \cite{LiquidTypes08},
-where the type system only allows specifying properties which can be efficiently proven (or disproven) by an SMT solver.
+A different point on the spectrum is represented by \emph{liquid types} \cite{LiquidTypes08},
+where the expressive power is limited, and the type system only allows specifying properties that can be efficiently proven (or disproven) by an SMT solver.
 In particular, liquid types can be seen as a special case of a more general concept of \emph{refinement types} \cite{Constable87,Rushby98},
 which are some base types endowed with a predicate, possibly dependent on other values, like \verb+{ v : Int | v >= 0 & v < len arr }+.
 The logical implication on predicates gives rise to a natural \emph{subtyping relation}:
