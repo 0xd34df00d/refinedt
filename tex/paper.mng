@@ -938,7 +938,7 @@ the refinements can also be treated as first-class, passing them around, returni
 
 \section{Future work}
 
-As we mentioned above, our surface language misses two components critical for any practically useful language:
+As we mentioned in the overview, our surface language misses two components critical for any practically useful language:
 namely, polymorphism and recursion.
 Extending our language with polymorphism is straightforward, while adding general recursion is non-trivial,
 since it needs to be translated to some dependently typed language, and those are typically strongly normalizing.
