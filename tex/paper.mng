@@ -922,6 +922,20 @@ The second one claims that a well-typed surface language program evaluates to ``
 
 \section{Practical consequences}
 
+Having refinement types in a dependently typed language is useful in multiple ways.
+
+Firstly, it indeed lowers the cognitive load and the amount of (keyboard) typing that the programmer has to do.
+A significant class of runtime errors, such as out-of-bounds array access, division by zero, and other examples motivating refinement types,
+is eliminatable without any explicit proofs from the programmer.
+
+Then, the language combining these typing systems might allow both ``refinemently typed'' and dependently typed terms in a single module,
+while also allowing to use the former in the latter and vice versa.
+This enables the programmer to mostly write code with refinement types,
+only resorting to the full power of dependent types when refinements are not enough.
+
+Moreover, since types are first-class in a dependently typed language,
+the refinements can also be treated as first-class, passing them around, returning from functions and so on.
+
 \section{Future work}
 
 As we mentioned above, our surface language misses two components critical for any practically useful language:
