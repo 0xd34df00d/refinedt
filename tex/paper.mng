@@ -932,7 +932,7 @@ Investigating this is an interesting and useful direction for future work,
 and one might think of the following approaches (or a combination thereof):
 \begin{itemize}
   \item Require the oracle to produce a proof of termination of each recursive function.
-    The oracle then can use approaches analogous to the termination checkers in Idris or Agda \cite{abel1998foetus},
+    The oracle then can use approaches analogous to the termination checkers \cite{abel1998foetus} in Idris or Agda,
     or the heuristics outlined in the works on Liquid Haskell \cite{Vazou16}, or any other algorithm.
   \item Mark the recursive functions as non-terminating, propagate this property to the callers,
     and treat non-terminating functions as uninterpreted during type checking.
