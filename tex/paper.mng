@@ -936,7 +936,8 @@ and one might think of the following approaches (or a combination thereof):
     or the heuristics outlined in the works on Liquid Haskell \cite{Vazou16}, or any other algorithm.
   \item Mark the recursive functions as non-terminating, propagate this property to the callers,
     and treat non-terminating functions as uninterpreted during type checking.
-    This is roughly the approach used in Idris, which allows functions that are not provably terminating.
+    It is worth noting that, in particular,
+    Idris allows functions that are not provably terminating and treats them in a similar way \cite{Idris13}.
 
     Indeed, there are two reasons why termination is so desirable for a dependently typed language:
     \begin{itemize}
