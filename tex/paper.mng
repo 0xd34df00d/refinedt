@@ -968,6 +968,11 @@ and one might think of the following approaches (or a combination thereof):
     \end{itemize}
 \end{itemize}
 
+Another, practical direction for future work lies in reflecting the entities from the dependently typed language into the oracle world.
+For example, suppose the programmer has defined their own \verb+Nat+ type, among with the operations on it and proofs of their properties.
+What would it take to teach the oracle that type, its semantics and its operations?
+Investigating how to do this in a sound and feasible way seems important to make any language combining refinement types and dependent types practically useful.
+
 \section{Conclusions}
 
 \bibliographystyle{babunsrt-lf}
