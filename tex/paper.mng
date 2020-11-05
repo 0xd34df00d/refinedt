@@ -928,6 +928,30 @@ As we mentioned above, our surface language misses two components critical for a
 namely, polymorphism and recursion.
 Extending our language with polymorphism is straightforward, while adding general recursion is non-trivial,
 since it needs to be translated to some dependently typed language, and those are typically strongly normalizing.
+Investigating this is an interesting and useful direction for future work,
+and one might think of the following approaches (or a combination thereof):
+\begin{itemize}
+  \item Require the oracle to produce a proof of termination of each recursive function.
+    The oracle then can use approaches analogous to the termination checkers in Idris or Agda \cite{abel1998foetus},
+    or the heuristics outlined in the works on Liquid Haskell \cite{Vazou16}, or any other algorithm.
+  \item Mark the recursive functions as non-terminating, propagate this property to the callers,
+    and treat non-terminating functions as uninterpreted during type checking.
+    This is roughly the approach used in Idris, which allows functions that are not provably terminating.
+
+    Indeed, there are two reasons why termination is so desirable for a dependently typed language:
+    \begin{itemize}
+      \item Termination ensures decidability of type checking, which relies on $\beta$-equivalence of terms.
+        By treating functions that are not provably terminating as not having any reduction behaviour \emph{during type checking},
+        we ensure type checking remains decidable, even if at a cost of rejecting some programs that otherwise would be well-typed.
+        Moreover, we we deem this cost insignificant for the intended uses of languages with refinement typing.
+      \item Termination is crucial to the soundness of the logic that the language expresses.
+        Propagating the property of ``being non-terminating'' to the callers ensures that
+        $\bot$ can only be proven in contexts that are explicitly marked (by the type checker or the programmer) as non-total,
+        and hence the programmer knows they have not really proven anything.
+        But this is already the existing state of affairs: it is surely possible to have a term of type $\bot$, say, in Idris or Agda;
+        it is just the termination checker that needs to be disabled for such a term.
+    \end{itemize}
+\end{itemize}
 
 \section{Conclusions}
 
