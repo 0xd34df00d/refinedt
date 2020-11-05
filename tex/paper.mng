@@ -160,9 +160,6 @@ and some others.
 
 One major difference between our surface language and the languages in \cite{LiquidTypes08,Reflection18} is that both parametric polymorphism as well as recursion are omitted.
 This simplifies the formal model of the surface language considerably, while still giving meaningful results.
-% TODO move this next sentence to conclusion mentioning future work?
-Extending our language with polymorphism is straightforward, while adding general recursion is non-trivial,
-since the aim is to translate it to a some dependently typed language, which are typically strongly normalizing.
 
 \paragraph{Core language.}
 Our core language is a fully dependently typed language $\lambda C$ \cite{TTFPLambdaC}
@@ -926,6 +923,11 @@ The second one claims that a well-typed surface language program evaluates to ``
 \section{Practical consequences}
 
 \section{Future work}
+
+As we mentioned above, our surface language misses two components critical for any practically useful language:
+namely, polymorphism and recursion.
+Extending our language with polymorphism is straightforward, while adding general recursion is non-trivial,
+since it needs to be translated to some dependently typed language, and those are typically strongly normalizing.
 
 \section{Conclusions}
 
