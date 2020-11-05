@@ -923,6 +923,12 @@ The second one claims that a well-typed surface language program evaluates to ``
 \begin{proof}
 \end{proof}
 
+\section{Practical consequences}
+
+\section{Future work}
+
+\section{Conclusions}
+
 \bibliographystyle{babunsrt-lf}
 \bibliography{biblio}
 
