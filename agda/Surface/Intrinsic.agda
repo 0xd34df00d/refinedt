@@ -16,8 +16,13 @@ variable
 
 infix 5 _,_
 data Context where
-  ⊘ : Context
+  ⊘   : Context
   _,_ : (Γ : Context) → SType Γ → Context
+
+infix 4 _is-prefix_
+data _is-prefix_ : Context → Context → Set where
+  is-prefix-refl : Γ is-prefix Γ
+  is-prefix-snoc : ∀ {τ : SType Γ} → Γ' is-prefix Γ → Γ' is-prefix Γ , τ
 
 data SType where
   ⟨_∣_⟩ : (b : BaseType) → (ρ : Refinement Γ b) → SType Γ
