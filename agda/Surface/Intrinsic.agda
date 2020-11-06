@@ -35,6 +35,7 @@ _,`_ Γ b = Γ , ⟨ b ∣ {! !} ⟩
 data Refinement where
   _≈_ : ∀ {τ : SType (Γ ,` b)} → STerm (Γ ,` b) τ → STerm (Γ ,` b) τ → Refinement b Γ
   _∧_ : ∀ (ρ₁ ρ₂ : Refinement b Γ) → Refinement b Γ
+  ⊤R  : Refinement b Γ
 
 infix 4 _∈_
 data _∈_ : SType Γ → Context → Set where
