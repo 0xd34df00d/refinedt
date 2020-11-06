@@ -8,7 +8,7 @@ data BaseType : Set where
 data Context : Set
 data SType : Context → Set
 data STerm : (Γ : Context) → SType Γ → Set
-data Refinement : Context → BaseType → Set
+data Refinement : BaseType → Context → Set
 
 variable
   b : BaseType
@@ -25,7 +25,7 @@ data _is-prefix_ : Context → Context → Set where
   is-prefix-snoc : ∀ {τ : SType Γ} → Γ' is-prefix Γ → Γ' is-prefix Γ , τ
 
 data SType where
-  ⟨_∣_⟩ : (b : BaseType) → (ρ : Refinement Γ b) → SType Γ
+  ⟨_∣_⟩ : (b : BaseType) → (ρ : Refinement b Γ) → SType Γ
   _⇒_   : (τ : SType Γ) → SType (Γ , τ) → SType Γ
   -- TODO adt
 
@@ -33,8 +33,8 @@ _,`_ : Context → BaseType → Context
 _,`_ Γ b = Γ , ⟨ b ∣ {! !} ⟩
 
 data Refinement where
-  _≈_ : ∀ {τ : SType (Γ ,` b)} → STerm (Γ ,` b) τ → STerm (Γ ,` b) τ → Refinement Γ b
-  _∧_ : ∀ (ρ₁ ρ₂ : Refinement Γ b) → Refinement Γ b
+  _≈_ : ∀ {τ : SType (Γ ,` b)} → STerm (Γ ,` b) τ → STerm (Γ ,` b) τ → Refinement b Γ
+  _∧_ : ∀ (ρ₁ ρ₂ : Refinement b Γ) → Refinement b Γ
 
 infix 4 _∈_
 data _∈_ : SType Γ → Context → Set where
