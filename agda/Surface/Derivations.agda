@@ -25,6 +25,9 @@ record Oracle : Set where
            → Γ ⊂ Γ'
            → Is-just (decide Γ var b ρ₁ ρ₂)
            → Is-just (decide Γ' var b ρ₁ ρ₂)
+    exchange : ∀ {var b ρ₁ ρ₂}
+             → Is-just (decide (Γ , x₁ ⦂ τ₁ , x₂ ⦂ τ₂ , Δ) var b ρ₁ ρ₂)
+             → Is-just (decide (Γ , x₂ ⦂ τ₂ , x₁ ⦂ τ₁ , Δ) var b ρ₁ ρ₂)
 
 data _ok : (Γ : Ctx) → Set
 data _⊢_⦂_ : (Γ : Ctx) → (ε : STerm) → (τ : SType) → Set
