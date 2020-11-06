@@ -14,7 +14,7 @@ variable
   b : BaseType
   Γ Γ' Δ : Context
 
-infix 5 _,_
+infixl 5 _,_
 data Context where
   ⊘   : Context
   _,_ : (Γ : Context) → SType Γ → Context
