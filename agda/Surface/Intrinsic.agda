@@ -62,4 +62,4 @@ weaken-τ* (is-prefix-of-snoc pref) (τ₁ ⇒ τ₂) = weaken-τ* (is-prefix-of
 
 data STerm Γ where
   SUnit : STerm Γ ⟨ BUnit ∣ ⊤R ⟩
-  SVar  : ∀ {τ : SType Γ'} {pref} → τ ∈ Γ U pref → STerm Γ {! !}
+  SVar  : ∀ {τ : SType Γ'} {pref} → τ ∈ Γ U pref → STerm Γ (weaken-τ* pref τ)
