@@ -48,6 +48,18 @@ data _∈_U_ : SType Γ' → (Γ : Context) → Γ' is-prefix-of Γ → Set wher
          → τ ∈ Γ U pref
          → τ ∈ Γ , τ' U is-prefix-of-snoc pref
 
+weaken-ρ* : Γ' is-prefix-of Γ → Refinement b Γ' → Refinement b Γ
+weaken-τ* : Γ' is-prefix-of Γ → SType Γ' → SType Γ
+
+weaken-ρ* is-prefix-of-refl ρ = ρ
+weaken-ρ* (is-prefix-of-snoc pref) (x₁ ≈ x₂) = {! !} ≈ {! !}
+weaken-ρ* (is-prefix-of-snoc pref) (ρ₁ ∧ ρ₂) = {! !}
+weaken-ρ* (is-prefix-of-snoc pref) ⊤R = ⊤R
+
+weaken-τ* is-prefix-of-refl τ = τ
+weaken-τ* p@(is-prefix-of-snoc pref) ⟨ b ∣ ρ ⟩ = ⟨ b ∣ weaken-ρ* p ρ ⟩
+weaken-τ* (is-prefix-of-snoc pref) (τ₁ ⇒ τ₂) = weaken-τ* (is-prefix-of-snoc pref) τ₁ ⇒ {! !}
+
 data STerm Γ where
   SUnit : STerm Γ ⟨ BUnit ∣ ⊤R ⟩
   SVar  : ∀ {τ : SType Γ'} {pref} → τ ∈ Γ U pref → STerm Γ {! !}
