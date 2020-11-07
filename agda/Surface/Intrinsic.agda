@@ -44,4 +44,5 @@ data _∈_ : SType Γ → Context → Set where
 --  ∈-suc  : ∀ {τ : SType Γ'} → τ ∈ Γ' → τ ∈ Γ' , τ'
 
 data STerm where
+  SUnit : STerm Γ ⟨ BUnit ∣ ⊤R ⟩
   SVar : ∀ {τ : SType Γ} → τ ∈ Γ → STerm Γ τ
