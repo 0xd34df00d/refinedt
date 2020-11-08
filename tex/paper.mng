@@ -116,7 +116,7 @@ The downside is that efficiently decidable refinement types are less expressive,
 Even though there are new developments pushing the envelope of what can be expressed with liquid types \cite{Reflection18},
 the natural question is what would it take to combine full dependent types and refinement types in a single language.
 
-Our work lays the theoretical foundation for answering this question, which, to the best of our knowledge, is a new contribution.
+Our work lays the theoretical foundation for positively answering this question, which, to the best of our knowledge, is a new contribution.
 We consider a dependently typed language as some ``core'' language,
 to which a ``surface'' language with just the refinement types is translated.
 This provides several nice metatheoretical properties:
