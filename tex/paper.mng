@@ -138,7 +138,7 @@ This provides several nice metatheoretical properties:
 
 Since verification of programs for safer software is the ultimate goal of all these type systems,
 it seems important to have firm foundations and verify that the type systems themselves do make sense.
-Thus, we also present mechanically verified proofs (in Agda) of all the key theorems about our surface language and its translation procedure.
+Thus, we also present mechanically verified proofs in Agda of all the key theorems about our surface language and its translation procedure.
 This is, as far as we are aware, also a new contribution, and no prior papers strived to mechanically verify refinement types to this extent.
 
 \section{Overview}
@@ -959,7 +959,7 @@ and one might think of the following approaches (or a combination thereof):
       \item Termination ensures decidability of type checking, which relies on $\beta$-equivalence of terms.
         By treating functions that are not provably terminating as not having any reduction behaviour \emph{during type checking},
         we ensure type checking remains decidable, even if at a cost of rejecting some programs that otherwise would be well-typed.
-        Moreover, we we deem this cost insignificant for the intended uses of languages with refinement typing.
+        Moreover, we deem this cost insignificant for the intended uses of languages with refinement typing.
       \item Termination is crucial to the soundness of the logic that the language expresses.
         Propagating the property of ``being non-terminating'' to the callers ensures that
         $\bot$ can only be proven in contexts that are explicitly marked (by the type checker or the programmer) as non-total,
