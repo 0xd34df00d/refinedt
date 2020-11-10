@@ -136,9 +136,6 @@ This translation to a core dependently typed language provides several nice meta
     We deem this a desirable property as it reduces the trusted code base size,
     since type checkers are typically simpler and have smaller ``error surface'' than SMT solvers,
     and, moreover, the core type checker has to be trusted anyway.
-  \item This approach transfers naturally to a fully dependently typed language such as Idris or Agda.
-    For instance, an implementation might choose to reserve certain syntax (such as \verb+{ v : Ty | Predicate v }+)
-    or a keyword to restrict type checking of a binding to the type theory with decidable proof finding.
 \end{itemize}
 
 Since verification of programs for safer software is the ultimate goal of all these type systems,
