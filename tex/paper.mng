@@ -95,7 +95,7 @@ even if the proofs lie within decidable theories
 Even if the language supports some form of proof automation (such as proof by reflection, or Coq's tactics, or Idris' elaborator reflection),
 this is still something that the programmer has to pay attention to.
 Not only this consumes a part of human attention span (which is quite limited, compared to computers),
-but, arguably, it also prevents widespread adoption of dependent types for mainstream programming.
+but we believe it also prevents widespread adoption of dependent types for mainstream programming.
 
 A different point on the spectrum is represented by \emph{liquid types} \cite{LiquidTypes08},
 where the expressive power is limited, and the type system only allows specifying properties that can be efficiently proven (or disproven) by an SMT solver.
