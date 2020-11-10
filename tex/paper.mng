@@ -143,7 +143,8 @@ This provides several nice metatheoretical properties:
 Since verification of programs for safer software is the ultimate goal of all these type systems,
 it seems important to have firm foundations and verify that the type systems themselves do make sense.
 Thus, we also present mechanically verified proofs in Agda of all the key theorems about our surface language and its translation procedure.
-This is, as far as we are aware, also a new contribution, and no prior papers strived to mechanically verify refinement types to this extent.
+This is, as far as we are aware, also a new contribution,
+and no prior papers strived to mechanically verify the metatheoretical properties of refinement types to this extent.
 
 \section{Overview}
 
