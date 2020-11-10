@@ -99,7 +99,7 @@ but, arguably, it also prevents widespread adoption of dependent types for mains
 
 A different point on the spectrum is represented by \emph{liquid types} \cite{LiquidTypes08},
 where the expressive power is limited, and the type system only allows specifying properties that can be efficiently proven (or disproven) by an SMT solver.
-In particular, liquid types can be seen as a special case of a more general concept of \emph{refinement types} \cite{Constable87,Rushby98},
+Liquid types are a special case of a more general concept of \emph{refinement types} \cite{Constable87,Rushby98},
 which are some base types endowed with a predicate, possibly dependent on other values, like \verb+{ v : Int | v >= 0 & v < len arr }+.
 The logical implication on predicates
 (or, equivalently, the set inclusion relation on the sets defined by predicates)
