@@ -147,6 +147,24 @@ Thus, we also present mechanically verified proofs in Agda of all the key theore
 This is, as far as we are aware, also a new contribution,
 and no prior papers strived to mechanically verify the metatheoretical properties of refinement types to this extent.
 
+\section{Motivation}
+
+Having refinement types in a dependently typed language is useful in multiple ways.
+
+Firstly, it indeed lowers the cognitive load and the amount of (keyboard) typing that the programmer has to do.
+A significant class of runtime errors, such as out-of-bounds array access, division by zero, and other examples motivating refinement types,
+is eliminatable without any explicit proofs from the programmer.
+
+We also believe that the approach proposed in this paper is implementable in existing dependently typed languages such as Idris or Agda.
+A language might allow both ``refinemently typed'' and dependently typed terms in a single module,
+reserving a certain syntax such as \verb+foo : { v : Ty | Predicate v }+ to indicate that \verb+foo+ uses refinement types,
+while also allowing to use the former in the latter and vice versa.
+This enables the programmer to mostly write code with refinement types,
+only resorting to the full power of dependent types when refinements are not enough.
+
+Moreover, since types are first-class in a dependently typed language,
+the refinements can also be treated as first-class, passing them around, returning from functions and so on.
+
 \section{Overview}
 
 \paragraph{Surface language.}
@@ -926,22 +944,6 @@ The second one claims that a well-typed surface language program evaluates to ``
 \end{theorem}
 \begin{proof}
 \end{proof}
-
-\section{Practical consequences}
-
-Having refinement types in a dependently typed language is useful in multiple ways.
-
-Firstly, it indeed lowers the cognitive load and the amount of (keyboard) typing that the programmer has to do.
-A significant class of runtime errors, such as out-of-bounds array access, division by zero, and other examples motivating refinement types,
-is eliminatable without any explicit proofs from the programmer.
-
-Then, the language combining these typing systems might allow both ``refinemently typed'' and dependently typed terms in a single module,
-while also allowing to use the former in the latter and vice versa.
-This enables the programmer to mostly write code with refinement types,
-only resorting to the full power of dependent types when refinements are not enough.
-
-Moreover, since types are first-class in a dependently typed language,
-the refinements can also be treated as first-class, passing them around, returning from functions and so on.
 
 \section{Future work}
 
