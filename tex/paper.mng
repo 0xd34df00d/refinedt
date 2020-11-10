@@ -101,7 +101,9 @@ A different point on the spectrum is represented by \emph{liquid types} \cite{Li
 where the expressive power is limited, and the type system only allows specifying properties that can be efficiently proven (or disproven) by an SMT solver.
 In particular, liquid types can be seen as a special case of a more general concept of \emph{refinement types} \cite{Constable87,Rushby98},
 which are some base types endowed with a predicate, possibly dependent on other values, like \verb+{ v : Int | v >= 0 & v < len arr }+.
-The logical implication on predicates gives rise to a natural \emph{subtyping relation}:
+The logical implication on predicates
+(or, equivalently, the set inclusion relation on the sets defined by predicates)
+gives rise to a natural \emph{subtyping relation}:
 for example, the aforementioned type is a subtype of \verb+{ v : Int | v >= -1 }+.
 The core idea of liquid types then is to ensure that this subtype relation is efficiently decidable by an SMT solver.
 
