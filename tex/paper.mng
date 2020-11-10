@@ -121,20 +121,21 @@ the natural question is what would it take to combine full dependent types and r
 Our work lays the theoretical foundation for positively answering this question, which, to the best of our knowledge, is a new contribution.
 We consider a dependently typed language as some ``core'' language,
 to which a ``surface'' language with just the refinement types is translated.
-This provides several nice metatheoretical properties:
+Moreover, we do not consider the peculiarities of a specific algorithm performing the subtyping check in the refinements language,
+introducing instead the abstraction of a \emph{subtyping oracle}.
+This allows plugging in not just SMT solvers but arbitrary decision procedures as long as they have certain properties we describe later.
+
+This translation to a core dependently typed language provides several nice metatheoretical properties:
 \begin{itemize}
   \item Dependent types are a well-studied and well-understood subject,
     so taking them as the translation target automatically provides us with the existing array of metatheorems.
-  \item Since we require the solver to produce a proof of the subtyping relation,
+  \item Since we require the subtyping oracle to produce a proof of the subtyping relation,
     the result of the translation satisfies the de Bruijn criterion:
     even if the solver makes a mistake and produces an incorrect proof,
     this mistake would be caught by the type checker for the core language.
     We deem this a desirable property as it reduces the trusted code base size,
     since type checkers are typically simpler and have smaller ``error surface'' than SMT solvers,
     and, moreover, the core type checker has to be trusted anyway.
-  \item We do not consider the peculiarities of a specific algorithm performing the subtyping check in the refinements language,
-    introducing instead the abstraction of a \emph{subtyping oracle}.
-    This allows plugging in not just SMT solvers but arbitrary decision procedures as long as they have certain properties we describe later.
   \item This approach transfers naturally to a fully dependently typed language such as Idris or Agda.
     For instance, an implementation might choose to reserve certain syntax (such as \verb+{ v : Ty | Predicate v }+)
     or a keyword to restrict type checking of a binding to the type theory with decidable proof finding.
