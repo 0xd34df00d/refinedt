@@ -33,6 +33,7 @@ data STerm ℓ where
   SVar  : (idx : Fin ℓ)
         → STerm ℓ
   SLam  : (τ : SType (suc ℓ))
+        → (ε : STerm (suc ℓ))
         → STerm ℓ
   SApp  : (ε₁ ε₂ : STerm ℓ)
         → STerm ℓ
