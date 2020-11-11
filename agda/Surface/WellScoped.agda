@@ -12,7 +12,7 @@ data BaseType : Set where
   BUnit : BaseType
 
 variable
-  n ℓ : ℕ
+  n ℓ ℓ' : ℕ
   b b' b₁ b₂ : BaseType
 
 data SType (ℓ : ℕ) : Set
@@ -50,20 +50,33 @@ data Ctx : ℕ → Set where
   _,_ : Ctx ℓ → SType ℓ → Ctx (suc ℓ)
 
 module WeakenScope where
-  ws-ε : STerm ℓ → STerm (suc ℓ)
-  ws-ρ : Refinement ℓ → Refinement (suc ℓ)
+  ext : (Fin ℓ → Fin ℓ')
+      → Fin (suc ℓ) → Fin (suc ℓ')
+  ext f Fin.zero = Fin.zero
+  ext f (Fin.suc n) = Fin.suc (f n)
+
+  Renamer : (ℕ → Set) → Set
+  Renamer Ty = ∀ {ℓ ℓ'} → (Fin ℓ → Fin ℓ') → Ty ℓ → Ty ℓ'
+
+  rename-ρ : Renamer Refinement
+  rename-τ : Renamer SType
+  rename-ε : Renamer STerm
+
+  rename-ρ f (ε₁ ≃ ε₂) = rename-ε f ε₁ ≃ rename-ε f ε₂
+  rename-ρ f (ρ₁ ∧ ρ₂) = rename-ρ f ρ₁ ∧ rename-ρ f ρ₂
+
+  rename-τ f ⟨ b ∣ ρ ⟩ = ⟨ b ∣ rename-ρ (ext f) ρ ⟩
+  rename-τ f (τ₁ ⇒ τ₂) = rename-τ f τ₁ ⇒ rename-τ (ext f) τ₂
+
+  rename-ε f SUnit = SUnit
+  rename-ε f (SVar idx) = SVar (f idx)
+  rename-ε f (SLam τ ε) = SLam (rename-τ (ext f) τ) (rename-ε (ext f) ε)
+  rename-ε f (SApp ε₁ ε₂) = SApp (rename-ε f ε₁) (rename-ε f ε₂)
+
   ws-τ : SType ℓ → SType (suc ℓ)
+  ws-τ = rename-τ Fin.suc
 
-  ws-ε SUnit = SUnit
-  ws-ε (SVar idx) = SVar {! !}
-  ws-ε (SLam τ ε) = SLam (ws-τ τ) (ws-ε ε)
-  ws-ε (SApp ε₁ ε₂) = SApp (ws-ε ε₁) (ws-ε ε₂)
 
-  ws-ρ (ε₁ ≃ ε₂) = ws-ε ε₁ ≃ ws-ε ε₂
-  ws-ρ (ρ₁ ∧ ρ₂) = ws-ρ ρ₁ ∧ ws-ρ ρ₂
-
-  ws-τ ⟨ b ∣ ρ ⟩ = ⟨ b ∣ ws-ρ ρ ⟩
-  ws-τ (τ₁ ⇒ τ₂) = ws-τ τ₁ ⇒ ws-τ τ₂
 Τ : Refinement ℓ
 Τ = SUnit ≃ SUnit
 
