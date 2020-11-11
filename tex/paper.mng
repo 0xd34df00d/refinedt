@@ -150,7 +150,7 @@ Having refinement types in a dependently typed language is useful in multiple wa
 
 Firstly, it indeed lowers the cognitive load and the amount of (keyboard) typing that the programmer has to do.
 A significant class of runtime errors, such as out-of-bounds array access, division by zero, and other examples motivating refinement types,
-is eliminatable without any explicit proofs from the programmer.
+is eliminatable \cite{LiquidTypes08} without any explicit proofs from the programmer.
 
 We also believe that the approach proposed in this paper is implementable in existing dependently typed languages such as Idris or Agda.
 A language might allow both ``refinemently typed'' and dependently typed terms in a single module,
