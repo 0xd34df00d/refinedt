@@ -5,7 +5,7 @@ open import Agda.Builtin.List public
 open import Agda.Builtin.String
 
 open import Data.Nat.Base public
-open import Data.Fin public using (Fin)
+open import Data.Fin public using (Fin; suc; zero)
 open import Data.Vec
 
 data BaseType : Set where
@@ -52,8 +52,8 @@ data Ctx : ℕ → Set where
 module WeakenScope where
   ext : (Fin ℓ → Fin ℓ')
       → Fin (suc ℓ) → Fin (suc ℓ')
-  ext f Fin.zero = Fin.zero
-  ext f (Fin.suc n) = Fin.suc (f n)
+  ext f zero = zero
+  ext f (suc n) = suc (f n)
 
   Renamer : (ℕ → Set) → Set
   Renamer Ty = ∀ {ℓ ℓ'} → (Fin ℓ → Fin ℓ') → Ty ℓ → Ty ℓ'
@@ -74,7 +74,7 @@ module WeakenScope where
   rename-ε f (SApp ε₁ ε₂) = SApp (rename-ε f ε₁) (rename-ε f ε₂)
 
   ws-τ : SType ℓ → SType (suc ℓ)
-  ws-τ = rename-τ Fin.suc
+  ws-τ = rename-τ suc
 
 
 Τ : Refinement ℓ
