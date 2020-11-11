@@ -51,10 +51,9 @@ data _∈_U_ : SType Γ' → (Γ : Context) → Γ' is-prefix-of Γ → Set wher
 weaken-ρ* : Γ' is-prefix-of Γ → Refinement b Γ' → Refinement b Γ
 weaken-τ* : Γ' is-prefix-of Γ → SType Γ' → SType Γ
 
-weaken-ρ* is-prefix-of-refl ρ = ρ
-weaken-ρ* (is-prefix-of-snoc pref) (x₁ ≈ x₂) = {! !} ≈ {! !}
-weaken-ρ* (is-prefix-of-snoc pref) (ρ₁ ∧ ρ₂) = {! !}
-weaken-ρ* (is-prefix-of-snoc pref) ⊤R = ⊤R
+weaken-ρ* _ ⊤R = ⊤R
+weaken-ρ* p (x₁ ≈ x₂) = {! !} ≈ {! !}
+weaken-ρ* p (ρ₁ ∧ ρ₂) = weaken-ρ* p ρ₁ ∧ weaken-ρ* p ρ₂
 
 weaken-τ* is-prefix-of-refl τ = τ
 weaken-τ* p@(is-prefix-of-snoc pref) ⟨ b ∣ ρ ⟩ = ⟨ b ∣ weaken-ρ* p ρ ⟩
