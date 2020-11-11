@@ -50,9 +50,13 @@ data _∈_U_ : SType Γ' → (Γ : Context) → Γ' is-prefix-of Γ → Set wher
 
 weaken-ρ* : Γ' is-prefix-of Γ → Refinement b Γ' → Refinement b Γ
 weaken-τ* : Γ' is-prefix-of Γ → SType Γ' → SType Γ
+weaken-ε* : ∀ {τ : SType Γ'} (p : Γ' is-prefix-of Γ)
+          → STerm Γ' τ → STerm Γ (weaken-τ* p τ)
 
 weaken-ρ* _ ⊤R = ⊤R
-weaken-ρ* p (x₁ ≈ x₂) = {! !} ≈ {! !}
+weaken-ρ* p (ε₁ ≈ ε₂) = weaken-ε* {! !} ε₁ ≈ {!weaken-ε* p ε₂ !}
+-- ^ This doesn't work because Γ', b in general is not a prefix of Γ, b
+-- so the whole formulation of weakening is, ugh, too weak
 weaken-ρ* p (ρ₁ ∧ ρ₂) = weaken-ρ* p ρ₁ ∧ weaken-ρ* p ρ₂
 
 weaken-τ* is-prefix-of-refl τ = τ
