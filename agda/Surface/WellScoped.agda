@@ -71,17 +71,17 @@ module RenameScope where
   rename-ρ : Renamer Refinement
   rename-τ : Renamer SType
   rename-ε : Renamer STerm
+  rename-cons : Renamer (ADTCons nₐ)
 
   rename-ρ f (ε₁ ≃ ε₂) = rename-ε f ε₁ ≃ rename-ε f ε₂
   rename-ρ f (ρ₁ ∧ ρ₂) = rename-ρ f ρ₁ ∧ rename-ρ f ρ₂
 
   rename-τ f ⟨ b ∣ ρ ⟩ = ⟨ b ∣ rename-ρ (ext f) ρ ⟩
   rename-τ f (τ₁ ⇒ τ₂) = rename-τ f τ₁ ⇒ rename-τ (ext f) τ₂
-  rename-τ f (⊍ cons)  = ⊍ (go f cons)
-    where
-      go : (Fin ℓ → Fin ℓ') → ADTCons nₐ ℓ → ADTCons nₐ ℓ'
-      go _ [] = []
-      go f (τ ∷ τs) = rename-τ f τ ∷ go f τs
+  rename-τ f (⊍ cons)  = ⊍ (rename-cons f cons)
+
+  rename-cons _ [] = []
+  rename-cons f (τ ∷ τs) = rename-τ f τ ∷ rename-cons f τs
 
   rename-ε f SUnit = SUnit
   rename-ε f (SVar idx) = SVar (f idx)
