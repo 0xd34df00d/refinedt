@@ -18,6 +18,7 @@ record ℕₐ : Set where
 
 variable
   n ℓ ℓ' : ℕ
+  nₐ : ℕₐ
   b b' b₁ b₂ : BaseType
 
 data SType (ℓ : ℕ) : Set
@@ -76,12 +77,11 @@ module RenameScope where
 
   rename-τ f ⟨ b ∣ ρ ⟩ = ⟨ b ∣ rename-ρ (ext f) ρ ⟩
   rename-τ f (τ₁ ⇒ τ₂) = rename-τ f τ₁ ⇒ rename-τ (ext f) τ₂
-  rename-τ {ℓ} {ℓ'}
-           f (⊍ cons)  = ⊍ (go cons)
+  rename-τ f (⊍ cons)  = ⊍ (go f cons)
     where
-      go : ∀ {n} → ADTCons n ℓ → ADTCons n ℓ'
-      go [] = []
-      go (τ ∷ τs) = rename-τ f τ ∷ go τs
+      go : (Fin ℓ → Fin ℓ') → ADTCons nₐ ℓ → ADTCons nₐ ℓ'
+      go _ [] = []
+      go f (τ ∷ τs) = rename-τ f τ ∷ go f τs
 
   rename-ε f SUnit = SUnit
   rename-ε f (SVar idx) = SVar (f idx)
