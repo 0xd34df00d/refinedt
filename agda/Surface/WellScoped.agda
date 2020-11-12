@@ -11,6 +11,11 @@ open import Data.Vec
 data BaseType : Set where
   BUnit : BaseType
 
+record ℕ-ADT : Set where
+  constructor Mkℕ-ADT
+  field
+    get-length : ℕ
+
 variable
   n ℓ ℓ' : ℕ
   b b' b₁ b₂ : BaseType
@@ -18,6 +23,7 @@ variable
 data SType (ℓ : ℕ) : Set
 data STerm (ℓ : ℕ) : Set
 data Refinement (ℓ : ℕ) : Set
+ADTCons : ℕ-ADT → ℕ → Set
 
 data SType ℓ where
   ⟨_∣_⟩ : (b : BaseType)
@@ -26,7 +32,8 @@ data SType ℓ where
   _⇒_   : (τ₁ : SType ℓ)
         → (τ₂ : SType (suc ℓ))
         → SType ℓ
-  -- TODO adts
+  ⊍_    : (cons : ADTCons (Mkℕ-ADT (suc n)) ℓ)
+        → SType ℓ
 
 data STerm ℓ where
   SUnit : STerm ℓ
@@ -42,6 +49,8 @@ data STerm ℓ where
 data Refinement ℓ where
   _≃_ : (ε₁ ε₂ : STerm ℓ) → Refinement ℓ
   _∧_ : (ρ₁ ρ₂ : Refinement ℓ) → Refinement ℓ
+
+ADTCons (Mkℕ-ADT n) ℓ = Vec (SType ℓ) n
 
 
 infixl 5 _,_
@@ -67,6 +76,12 @@ module RenameScope where
 
   rename-τ f ⟨ b ∣ ρ ⟩ = ⟨ b ∣ rename-ρ (ext f) ρ ⟩
   rename-τ f (τ₁ ⇒ τ₂) = rename-τ f τ₁ ⇒ rename-τ (ext f) τ₂
+  rename-τ {ℓ} {ℓ'}
+           f (⊍ cons)  = ⊍ (go cons)
+    where
+      go : ∀ {n} → ADTCons n ℓ → ADTCons n ℓ'
+      go [] = []
+      go (τ ∷ τs) = rename-τ f τ ∷ go τs
 
   rename-ε f SUnit = SUnit
   rename-ε f (SVar idx) = SVar (f idx)
@@ -76,9 +91,16 @@ module RenameScope where
   ws-τ : SType ℓ → SType (suc ℓ)
   ws-τ = rename-τ suc
 
+variable
+  Γ Γ' Δ : Ctx ℓ
+  τ τ' τ₁ τ₂ : SType ℓ
+
+infix 4 _∈_
+data _∈_ : SType ℓ → Ctx ℓ → Set where
+  ∈-zero : RenameScope.ws-τ τ ∈ Γ , τ
+  ∈-suc  : τ ∈ Γ
+         → RenameScope.ws-τ τ ∈ Γ , τ'
+
 
 Τ : Refinement ℓ
 Τ = SUnit ≃ SUnit
-
-variable
-  Γ Γ' Δ : Ctx ℓ
