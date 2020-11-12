@@ -49,7 +49,7 @@ data Ctx : ℕ → Set where
   ⊘   : Ctx 0
   _,_ : Ctx ℓ → SType ℓ → Ctx (suc ℓ)
 
-module WeakenScope where
+module RenameScope where
   ext : (Fin ℓ → Fin ℓ')
       → Fin (suc ℓ) → Fin (suc ℓ')
   ext f zero = zero
