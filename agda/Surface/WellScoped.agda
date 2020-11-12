@@ -11,8 +11,8 @@ open import Data.Vec
 data BaseType : Set where
   BUnit : BaseType
 
-record ℕ-ADT : Set where
-  constructor Mkℕ-ADT
+record ℕₐ : Set where
+  constructor Mkℕₐ
   field
     get-length : ℕ
 
@@ -23,7 +23,9 @@ variable
 data SType (ℓ : ℕ) : Set
 data STerm (ℓ : ℕ) : Set
 data Refinement (ℓ : ℕ) : Set
-ADTCons : ℕ-ADT → ℕ → Set
+
+ADTCons : ℕₐ → ℕ → Set
+ADTCons (Mkℕₐ n) ℓ = Vec (SType ℓ) n
 
 data SType ℓ where
   ⟨_∣_⟩ : (b : BaseType)
@@ -32,7 +34,7 @@ data SType ℓ where
   _⇒_   : (τ₁ : SType ℓ)
         → (τ₂ : SType (suc ℓ))
         → SType ℓ
-  ⊍_    : (cons : ADTCons (Mkℕ-ADT (suc n)) ℓ)
+  ⊍_    : (cons : ADTCons (Mkℕₐ (suc n)) ℓ)
         → SType ℓ
 
 data STerm ℓ where
@@ -49,8 +51,6 @@ data STerm ℓ where
 data Refinement ℓ where
   _≃_ : (ε₁ ε₂ : STerm ℓ) → Refinement ℓ
   _∧_ : (ρ₁ ρ₂ : Refinement ℓ) → Refinement ℓ
-
-ADTCons (Mkℕ-ADT n) ℓ = Vec (SType ℓ) n
 
 
 infixl 5 _,_
