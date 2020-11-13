@@ -84,7 +84,7 @@ variable
 Τ = SUnit ≃ SUnit
 
 
-module RenameScope where
+module RenameScoped where
   ext : (Fin ℓ → Fin ℓ')
       → Fin (suc ℓ) → Fin (suc ℓ')
   ext r zero = zero
@@ -122,13 +122,38 @@ module RenameScope where
   ws-τ : SType ℓ → SType (suc ℓ)
   ws-τ = rename-τ suc
 
+module SubstScoped where
+  exts : (Fin ℓ → STerm ℓ')
+       → (Fin (suc ℓ) → STerm (suc ℓ'))
+
+  Subster : (ℕ → Set) → Set
+  Subster Ty = ∀ {ℓ ℓ'} → (Fin ℓ → STerm ℓ') → Ty ℓ → Ty ℓ'
+
+  subst-ρ : Subster Refinement
+  subst-τ : Subster SType
+  subst-ε : Subster STerm
+  subst-cons : Subster (ADTCons nₐ)
+
+  subst-ρ σ (ε₁ ≃ ε₂) = subst-ε σ ε₁ ≃ subst-ε σ ε₂
+  subst-ρ σ (ρ₁ ∧ ρ₂) = subst-ρ σ ρ₁ ∧ subst-ρ σ ρ₂
+
+  subst-τ σ ⟨ b ∣ ρ ⟩ = ⟨ b ∣ subst-ρ (exts σ) ρ ⟩
+  subst-τ σ (τ₁ ⇒ τ₂) = subst-τ σ τ₁ ⇒ subst-τ (exts σ) τ₂
+  subst-τ σ (⊍ cons) = ⊍ (subst-cons σ cons)
+
+  subst-cons _ [] = []
+  subst-cons σ (τ ∷ τs) = subst-τ σ τ ∷ subst-cons σ τs
+
+  subst-ε σ SUnit = SUnit
+  subst-ε σ (SVar idx) = σ idx
+  subst-ε σ (SLam τ ε) = SLam (subst-τ (exts σ) τ) (subst-ε (exts σ) ε)
+  subst-ε σ (SApp ε₁ ε₂) = SApp (subst-ε σ ε₁) (subst-ε σ ε₂)
+  subst-ε σ (SCase ε branches) = SCase (subst-ε σ ε) {! !}
+  subst-ε σ (SCon idx ε cons) = SCon idx (subst-ε σ ε) (subst-cons σ cons)
 
 infix 4 _∈_
 data _∈_ : SType ℓ → Ctx ℓ → Set where
-  ∈-zero : RenameScope.ws-τ τ ∈ Γ , τ
+  ∈-zero : RenameScoped.ws-τ τ ∈ Γ , τ
   ∈-suc  : τ ∈ Γ
-         → RenameScope.ws-τ τ ∈ Γ , τ'
+         → RenameScoped.ws-τ τ ∈ Γ , τ'
 
-subst-ε : ∀ {Γ : Ctx ℓ}
-        → (∀ {τ} → τ ∈ Γ → STerm ℓ')
-        → (STerm ℓ → STerm ℓ')
