@@ -124,6 +124,9 @@ data _∈_ : SType ℓ → Ctx ℓ → Set where
   ∈-suc  : τ ∈ Γ
          → RenameScope.ws-τ τ ∈ Γ , τ'
 
+subst-ε : ∀ {Γ : Ctx ℓ}
+        → (∀ {τ} → τ ∈ Γ → STerm ℓ')
+        → (STerm ℓ → STerm ℓ')
 
 Τ : Refinement ℓ
 Τ = SUnit ≃ SUnit
