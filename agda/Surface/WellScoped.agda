@@ -79,8 +79,8 @@ data Ctx : ℕ → Set where
 module RenameScope where
   ext : (Fin ℓ → Fin ℓ')
       → Fin (suc ℓ) → Fin (suc ℓ')
-  ext f zero = zero
-  ext f (suc n) = suc (f n)
+  ext r zero = zero
+  ext r (suc n) = suc (r n)
 
   Renamer : (ℕ → Set) → Set
   Renamer Ty = ∀ {ℓ ℓ'} → (Fin ℓ → Fin ℓ') → Ty ℓ → Ty ℓ'
@@ -90,26 +90,26 @@ module RenameScope where
   rename-ε : Renamer STerm
   rename-cons : Renamer (ADTCons nₐ)
 
-  rename-ρ f (ε₁ ≃ ε₂) = rename-ε f ε₁ ≃ rename-ε f ε₂
-  rename-ρ f (ρ₁ ∧ ρ₂) = rename-ρ f ρ₁ ∧ rename-ρ f ρ₂
+  rename-ρ r (ε₁ ≃ ε₂) = rename-ε r ε₁ ≃ rename-ε r ε₂
+  rename-ρ r (ρ₁ ∧ ρ₂) = rename-ρ r ρ₁ ∧ rename-ρ r ρ₂
 
-  rename-τ f ⟨ b ∣ ρ ⟩ = ⟨ b ∣ rename-ρ (ext f) ρ ⟩
-  rename-τ f (τ₁ ⇒ τ₂) = rename-τ f τ₁ ⇒ rename-τ (ext f) τ₂
-  rename-τ f (⊍ cons)  = ⊍ (rename-cons f cons)
+  rename-τ r ⟨ b ∣ ρ ⟩ = ⟨ b ∣ rename-ρ (ext r) ρ ⟩
+  rename-τ r (τ₁ ⇒ τ₂) = rename-τ r τ₁ ⇒ rename-τ (ext r) τ₂
+  rename-τ r (⊍ cons)  = ⊍ (rename-cons r cons)
 
   rename-cons _ [] = []
-  rename-cons f (τ ∷ τs) = rename-τ f τ ∷ rename-cons f τs
+  rename-cons r (τ ∷ τs) = rename-τ r τ ∷ rename-cons r τs
 
-  rename-ε f SUnit = SUnit
-  rename-ε f (SVar idx) = SVar (f idx)
-  rename-ε f (SLam τ ε) = SLam (rename-τ (ext f) τ) (rename-ε (ext f) ε)
-  rename-ε f (SApp ε₁ ε₂) = SApp (rename-ε f ε₁) (rename-ε f ε₂)
-  rename-ε f (SCase scrut branches) = SCase (rename-ε f scrut) (go f branches)
+  rename-ε r SUnit = SUnit
+  rename-ε r (SVar idx) = SVar (r idx)
+  rename-ε r (SLam τ ε) = SLam (rename-τ (ext r) τ) (rename-ε (ext r) ε)
+  rename-ε r (SApp ε₁ ε₂) = SApp (rename-ε r ε₁) (rename-ε r ε₂)
+  rename-ε r (SCase scrut branches) = SCase (rename-ε r scrut) (go r branches)
     where
       go : ∀ {n} → (Fin ℓ → Fin ℓ') → CaseBranches n ℓ → CaseBranches n ℓ'
       go _ [] = []
-      go f (MkCaseBranch body ∷ bs) = MkCaseBranch (rename-ε (ext f) body) ∷ go f bs
-  rename-ε f (SCon idx body adt-cons) = SCon idx (rename-ε f body) (rename-cons f adt-cons)
+      go r (MkCaseBranch body ∷ bs) = MkCaseBranch (rename-ε (ext r) body) ∷ go r bs
+  rename-ε r (SCon idx body adt-cons) = SCon idx (rename-ε r body) (rename-cons r adt-cons)
 
   ws-τ : SType ℓ → SType (suc ℓ)
   ws-τ = rename-τ suc
