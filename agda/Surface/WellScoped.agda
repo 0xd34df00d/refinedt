@@ -79,6 +79,7 @@ data Ctx : ℕ → Set where
 variable
   Γ Γ' Δ : Ctx ℓ
   τ τ' τ₁ τ₂ : SType ℓ
+  ε ε' ε₁ ε₂ : STerm ℓ
 
 Τ : Refinement ℓ
 Τ = SUnit ≃ SUnit
