@@ -83,78 +83,65 @@ variable
 Τ : Refinement ℓ
 Τ = SUnit ≃ SUnit
 
+record VarsAction : Set₁ where
+  field
+    Target : ℕ → Set
+    var-action : (Fin ℓ → Target ℓ')
+               → (Fin ℓ → STerm ℓ')
+    ext : (Fin ℓ → Target ℓ')
+        → (Fin (suc ℓ) → Target (suc ℓ'))
+
+module ActionScoped (act : VarsAction) where
+  open VarsAction act
+
+  ActionOn : (ℕ → Set) → Set
+  ActionOn Ty = ∀ {ℓ ℓ'} → (Fin ℓ → Target ℓ') → Ty ℓ → Ty ℓ'
+
+  act-ρ : ActionOn Refinement
+  act-τ : ActionOn SType
+  act-ε : ActionOn STerm
+  act-cons : ActionOn (ADTCons nₐ)
+
+  act-ρ f (ε₁ ≃ ε₂) = act-ε f ε₁ ≃ act-ε f ε₂
+  act-ρ f (ρ₁ ∧ ρ₂) = act-ρ f ρ₁ ∧ act-ρ f ρ₂
+
+  act-τ f ⟨ b ∣ ρ ⟩ = ⟨ b ∣ act-ρ (ext f) ρ ⟩
+  act-τ f (τ₁ ⇒ τ₂) = act-τ f τ₁ ⇒ act-τ (ext f) τ₂
+  act-τ f (⊍ cons)  = ⊍ (act-cons f cons)
+
+  act-cons _ [] = []
+  act-cons f (τ ∷ τs) = act-τ f τ ∷ act-cons f τs
+
+  act-ε f SUnit = SUnit
+  act-ε f (SVar idx) = var-action f idx
+  act-ε f (SLam τ ε) = SLam (act-τ (ext f) τ) (act-ε (ext f) ε)
+  act-ε f (SApp ε₁ ε₂) = SApp (act-ε f ε₁) (act-ε f ε₂)
+  act-ε f (SCase scrut branches) = SCase (act-ε f scrut) (go f branches)
+    where
+      go : ∀ {n} → (Fin ℓ → Target ℓ') → CaseBranches n ℓ → CaseBranches n ℓ'
+      go _ [] = []
+      go f (MkCaseBranch body ∷ bs) = MkCaseBranch (act-ε (ext f) body) ∷ go f bs
+  act-ε f (SCon idx body adt-cons) = SCon idx (act-ε f body) (act-cons f adt-cons)
 
 module RenameScoped where
-  ext : (Fin ℓ → Fin ℓ')
-      → Fin (suc ℓ) → Fin (suc ℓ')
-  ext r zero = zero
-  ext r (suc n) = suc (r n)
-
-  Renamer : (ℕ → Set) → Set
-  Renamer Ty = ∀ {ℓ ℓ'} → (Fin ℓ → Fin ℓ') → Ty ℓ → Ty ℓ'
-
-  rename-ρ : Renamer Refinement
-  rename-τ : Renamer SType
-  rename-ε : Renamer STerm
-  rename-cons : Renamer (ADTCons nₐ)
-
-  rename-ρ r (ε₁ ≃ ε₂) = rename-ε r ε₁ ≃ rename-ε r ε₂
-  rename-ρ r (ρ₁ ∧ ρ₂) = rename-ρ r ρ₁ ∧ rename-ρ r ρ₂
-
-  rename-τ r ⟨ b ∣ ρ ⟩ = ⟨ b ∣ rename-ρ (ext r) ρ ⟩
-  rename-τ r (τ₁ ⇒ τ₂) = rename-τ r τ₁ ⇒ rename-τ (ext r) τ₂
-  rename-τ r (⊍ cons)  = ⊍ (rename-cons r cons)
-
-  rename-cons _ [] = []
-  rename-cons r (τ ∷ τs) = rename-τ r τ ∷ rename-cons r τs
-
-  rename-ε r SUnit = SUnit
-  rename-ε r (SVar idx) = SVar (r idx)
-  rename-ε r (SLam τ ε) = SLam (rename-τ (ext r) τ) (rename-ε (ext r) ε)
-  rename-ε r (SApp ε₁ ε₂) = SApp (rename-ε r ε₁) (rename-ε r ε₂)
-  rename-ε r (SCase scrut branches) = SCase (rename-ε r scrut) (go r branches)
-    where
-      go : ∀ {n} → (Fin ℓ → Fin ℓ') → CaseBranches n ℓ → CaseBranches n ℓ'
-      go _ [] = []
-      go r (MkCaseBranch body ∷ bs) = MkCaseBranch (rename-ε (ext r) body) ∷ go r bs
-  rename-ε r (SCon idx body adt-cons) = SCon idx (rename-ε r body) (rename-cons r adt-cons)
+  open ActionScoped (record { Target = Fin
+                            ; var-action = λ r idx → SVar (r idx)
+                            ; ext = λ where _ zero → zero
+                                            r (suc n) → suc (r n)
+                            })
 
   weaken-τ : SType ℓ → SType (suc ℓ)
-  weaken-τ = rename-τ suc
+  weaken-τ = act-τ suc
 
   weaken-ε : STerm ℓ → STerm (suc ℓ)
-  weaken-ε = rename-ε suc
+  weaken-ε = act-ε suc
 
 module SubstScoped where
-  exts : (Fin ℓ → STerm ℓ')
-       → (Fin (suc ℓ) → STerm (suc ℓ'))
-  exts σ zero = SVar zero
-  exts σ (suc n) = RenameScoped.weaken-ε (σ n)
-
-  Subster : (ℕ → Set) → Set
-  Subster Ty = ∀ {ℓ ℓ'} → (Fin ℓ → STerm ℓ') → Ty ℓ → Ty ℓ'
-
-  subst-ρ : Subster Refinement
-  subst-τ : Subster SType
-  subst-ε : Subster STerm
-  subst-cons : Subster (ADTCons nₐ)
-
-  subst-ρ σ (ε₁ ≃ ε₂) = subst-ε σ ε₁ ≃ subst-ε σ ε₂
-  subst-ρ σ (ρ₁ ∧ ρ₂) = subst-ρ σ ρ₁ ∧ subst-ρ σ ρ₂
-
-  subst-τ σ ⟨ b ∣ ρ ⟩ = ⟨ b ∣ subst-ρ (exts σ) ρ ⟩
-  subst-τ σ (τ₁ ⇒ τ₂) = subst-τ σ τ₁ ⇒ subst-τ (exts σ) τ₂
-  subst-τ σ (⊍ cons) = ⊍ (subst-cons σ cons)
-
-  subst-cons _ [] = []
-  subst-cons σ (τ ∷ τs) = subst-τ σ τ ∷ subst-cons σ τs
-
-  subst-ε σ SUnit = SUnit
-  subst-ε σ (SVar idx) = σ idx
-  subst-ε σ (SLam τ ε) = SLam (subst-τ (exts σ) τ) (subst-ε (exts σ) ε)
-  subst-ε σ (SApp ε₁ ε₂) = SApp (subst-ε σ ε₁) (subst-ε σ ε₂)
-  subst-ε σ (SCase ε branches) = SCase (subst-ε σ ε) {! !}
-  subst-ε σ (SCon idx ε cons) = SCon idx (subst-ε σ ε) (subst-cons σ cons)
+  open ActionScoped (record { Target = STerm
+                            ; var-action = λ σ idx → σ idx
+                            ; ext = λ where _ zero → SVar zero
+                                            σ (suc n) → RenameScoped.weaken-ε (σ n)
+                            })
 
 infix 4 _∈_
 data _∈_ : SType ℓ → Ctx ℓ → Set where
