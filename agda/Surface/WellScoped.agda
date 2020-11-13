@@ -122,9 +122,14 @@ module RenameScoped where
   weaken-τ : SType ℓ → SType (suc ℓ)
   weaken-τ = rename-τ suc
 
+  weaken-ε : STerm ℓ → STerm (suc ℓ)
+  weaken-ε = rename-ε suc
+
 module SubstScoped where
   exts : (Fin ℓ → STerm ℓ')
        → (Fin (suc ℓ) → STerm (suc ℓ'))
+  exts σ zero = SVar zero
+  exts σ (suc n) = RenameScoped.weaken-ε (σ n)
 
   Subster : (ℕ → Set) → Set
   Subster Ty = ∀ {ℓ ℓ'} → (Fin ℓ → STerm ℓ') → Ty ℓ → Ty ℓ'
