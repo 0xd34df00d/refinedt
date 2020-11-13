@@ -28,6 +28,15 @@ data Refinement (ℓ : ℕ) : Set
 ADTCons : ℕₐ → ℕ → Set
 ADTCons (Mkℕₐ n) ℓ = Vec (SType ℓ) n
 
+record CaseBranch (ℓ : ℕ) : Set where
+  constructor MkCaseBranch
+  inductive
+  field
+    body : STerm (suc ℓ)
+
+CaseBranches : ℕₐ → ℕ → Set
+CaseBranches (Mkℕₐ n) ℓ = Vec (CaseBranch ℓ) n
+
 data SType ℓ where
   ⟨_∣_⟩ : (b : BaseType)
         → (ρ : Refinement (suc ℓ))
@@ -47,7 +56,13 @@ data STerm ℓ where
         → STerm ℓ
   SApp  : (ε₁ ε₂ : STerm ℓ)
         → STerm ℓ
-  -- TODO SCase and SCon
+  SCase : (scrut : STerm ℓ)
+        → (branches : CaseBranches nₐ ℓ)
+        → STerm ℓ
+  SCon  : (idx : Fin n)
+        → (body : STerm ℓ)
+        → (adt-cons : ADTCons (Mkℕₐ n) ℓ)
+        → STerm ℓ
 
 data Refinement ℓ where
   _≃_ : (ε₁ ε₂ : STerm ℓ) → Refinement ℓ
@@ -87,6 +102,12 @@ module RenameScope where
   rename-ε f (SVar idx) = SVar (f idx)
   rename-ε f (SLam τ ε) = SLam (rename-τ (ext f) τ) (rename-ε (ext f) ε)
   rename-ε f (SApp ε₁ ε₂) = SApp (rename-ε f ε₁) (rename-ε f ε₂)
+  rename-ε f (SCase scrut branches) = SCase (rename-ε f scrut) (go f branches)
+    where
+      go : ∀ {n} → (Fin ℓ → Fin ℓ') → CaseBranches n ℓ → CaseBranches n ℓ'
+      go _ [] = []
+      go f (MkCaseBranch body ∷ bs) = MkCaseBranch (rename-ε (ext f) body) ∷ go f bs
+  rename-ε f (SCon idx body adt-cons) = SCon idx (rename-ε f body) (rename-cons f adt-cons)
 
   ws-τ : SType ℓ → SType (suc ℓ)
   ws-τ = rename-τ suc
