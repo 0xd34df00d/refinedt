@@ -150,3 +150,6 @@ data _∈_ : SType ℓ → Ctx ℓ → Set where
   ∈-suc  : τ ∈ Γ
          → RenameScoped.weaken-τ τ ∈ Γ , τ'
 
+∈-idx : ∀ {Γ : Ctx ℓ} → τ ∈ Γ → Fin ℓ
+∈-idx ∈-zero = zero
+∈-idx (∈-suc τ∈Γ) = suc (∈-idx τ∈Γ)
