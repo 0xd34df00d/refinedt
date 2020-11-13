@@ -22,6 +22,7 @@ variable
   n ℓ ℓ' : ℕ
   nₐ : ℕₐ
   b b' b₁ b₂ : BaseType
+  idx : Fin ℓ
 
 data SType (ℓ : ℕ) : Set
 data STerm (ℓ : ℕ) : Set
@@ -145,12 +146,8 @@ module SubstScoped where
                                             σ (suc n) → RenameScoped.weaken-ε (σ n)
                             })
 
-infix 4 _∈_
-data _∈_ : SType ℓ → Ctx ℓ → Set where
-  ∈-zero : RenameScoped.weaken-τ τ ∈ Γ , τ
-  ∈-suc  : τ ∈ Γ
-         → RenameScoped.weaken-τ τ ∈ Γ , τ'
-
-∈-idx : ∀ {Γ : Ctx ℓ} → τ ∈ Γ → Fin ℓ
-∈-idx ∈-zero = zero
-∈-idx (∈-suc τ∈Γ) = suc (∈-idx τ∈Γ)
+infix 4 _∈_at_
+data _∈_at_ : SType ℓ → Ctx ℓ → Fin ℓ → Set where
+  ∈-zero : RenameScoped.weaken-τ τ ∈ (Γ , τ) at zero
+  ∈-suc  : τ ∈ Γ at idx
+         → RenameScoped.weaken-τ τ ∈ (Γ , τ') at suc idx
