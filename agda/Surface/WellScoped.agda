@@ -119,8 +119,8 @@ module RenameScoped where
       go r (MkCaseBranch body ∷ bs) = MkCaseBranch (rename-ε (ext r) body) ∷ go r bs
   rename-ε r (SCon idx body adt-cons) = SCon idx (rename-ε r body) (rename-cons r adt-cons)
 
-  ws-τ : SType ℓ → SType (suc ℓ)
-  ws-τ = rename-τ suc
+  weaken-τ : SType ℓ → SType (suc ℓ)
+  weaken-τ = rename-τ suc
 
 module SubstScoped where
   exts : (Fin ℓ → STerm ℓ')
@@ -153,7 +153,7 @@ module SubstScoped where
 
 infix 4 _∈_
 data _∈_ : SType ℓ → Ctx ℓ → Set where
-  ∈-zero : RenameScoped.ws-τ τ ∈ Γ , τ
+  ∈-zero : RenameScoped.weaken-τ τ ∈ Γ , τ
   ∈-suc  : τ ∈ Γ
-         → RenameScoped.ws-τ τ ∈ Γ , τ'
+         → RenameScoped.weaken-τ τ ∈ Γ , τ'
 
