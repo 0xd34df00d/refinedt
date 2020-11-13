@@ -67,7 +67,7 @@ data STerm ℓ where
         → STerm ℓ
 
 data Refinement ℓ where
-  _≃_ : (ε₁ ε₂ : STerm ℓ) → Refinement ℓ
+  _≈_ : (ε₁ ε₂ : STerm ℓ) → Refinement ℓ
   _∧_ : (ρ₁ ρ₂ : Refinement ℓ) → Refinement ℓ
 
 
@@ -82,7 +82,7 @@ variable
   ε ε' ε₁ ε₂ : STerm ℓ
 
 Τ : Refinement ℓ
-Τ = SUnit ≃ SUnit
+Τ = SUnit ≈ SUnit
 
 record VarsAction : Set₁ where
   field
@@ -103,7 +103,7 @@ module ActionScoped (act : VarsAction) where
   act-ε : ActionOn STerm
   act-cons : ActionOn (ADTCons nₐ)
 
-  act-ρ f (ε₁ ≃ ε₂) = act-ε f ε₁ ≃ act-ε f ε₂
+  act-ρ f (ε₁ ≈ ε₂) = act-ε f ε₁ ≈ act-ε f ε₂
   act-ρ f (ρ₁ ∧ ρ₂) = act-ρ f ρ₁ ∧ act-ρ f ρ₂
 
   act-τ f ⟨ b ∣ ρ ⟩ = ⟨ b ∣ act-ρ (ext f) ρ ⟩
