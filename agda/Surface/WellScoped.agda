@@ -76,6 +76,14 @@ data Ctx : ℕ → Set where
   ⊘   : Ctx 0
   _,_ : Ctx ℓ → SType ℓ → Ctx (suc ℓ)
 
+variable
+  Γ Γ' Δ : Ctx ℓ
+  τ τ' τ₁ τ₂ : SType ℓ
+
+Τ : Refinement ℓ
+Τ = SUnit ≃ SUnit
+
+
 module RenameScope where
   ext : (Fin ℓ → Fin ℓ')
       → Fin (suc ℓ) → Fin (suc ℓ')
@@ -114,9 +122,6 @@ module RenameScope where
   ws-τ : SType ℓ → SType (suc ℓ)
   ws-τ = rename-τ suc
 
-variable
-  Γ Γ' Δ : Ctx ℓ
-  τ τ' τ₁ τ₂ : SType ℓ
 
 infix 4 _∈_
 data _∈_ : SType ℓ → Ctx ℓ → Set where
@@ -127,6 +132,3 @@ data _∈_ : SType ℓ → Ctx ℓ → Set where
 subst-ε : ∀ {Γ : Ctx ℓ}
         → (∀ {τ} → τ ∈ Γ → STerm ℓ')
         → (STerm ℓ → STerm ℓ')
-
-Τ : Refinement ℓ
-Τ = SUnit ≃ SUnit
