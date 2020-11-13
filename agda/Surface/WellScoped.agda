@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Surface.WellScoped where
 
 open import Agda.Builtin.Bool
