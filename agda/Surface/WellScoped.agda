@@ -50,11 +50,14 @@ data SType ℓ where
   ⊍_    : (cons : ADTCons (Mkℕₐ (suc n)) ℓ)
         → SType ℓ
 
+-- NOTE having `SType ℓ` instead of `SType (suc ℓ)` in SLam's type prevents the type from referring the argument itself,
+-- which kinda breaks T-Exact and similar rules from the refinement reflection paper,
+-- but now I'm not sure if agreement holds for the type system in that paper.
 data STerm ℓ where
   SUnit : STerm ℓ
   SVar  : (idx : Fin ℓ)
         → STerm ℓ
-  SLam  : (τ : SType (suc ℓ))
+  SLam  : (τ : SType ℓ)
         → (ε : STerm (suc ℓ))
         → STerm ℓ
   SApp  : (ε₁ ε₂ : STerm ℓ)
@@ -117,7 +120,7 @@ module ActionScoped (act : VarsAction) where
 
   act-ε f SUnit = SUnit
   act-ε f (SVar idx) = var-action f idx
-  act-ε f (SLam τ ε) = SLam (act-τ (ext f) τ) (act-ε (ext f) ε)
+  act-ε f (SLam τ ε) = SLam (act-τ f τ) (act-ε (ext f) ε)
   act-ε f (SApp ε₁ ε₂) = SApp (act-ε f ε₁) (act-ε f ε₂)
   act-ε f (SCase scrut branches) = SCase (act-ε f scrut) (go f branches)
     where
