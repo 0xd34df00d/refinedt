@@ -37,10 +37,10 @@ infix 2 _⊢_⦂_
 infix 2 _⊢_<:_
 infix 1 _⊢_
 
-data BranchesHaveType : (Γ : Ctx ℓ) → (cons : ADTCons nₐ ℓ) → (bs : CaseBranches nₐ ℓ) → (τ' : SType (suc ℓ)) → Set where
+data BranchesHaveType : (Γ : Ctx ℓ) → (cons : ADTCons nₐ ℓ) → (bs : CaseBranches nₐ ℓ) → (τ' : SType ℓ) → Set where
   NoBranches    : BranchesHaveType Γ [] [] τ'
   OneMoreBranch : ∀ {conτ} {cons' : ADTCons nₐ ℓ} {bs' : CaseBranches nₐ ℓ}
-                → (εδ : (Γ , conτ) ⊢ ε' ⦂ τ')
+                → (εδ : (Γ , conτ) ⊢ ε' ⦂ RenameScoped.weaken-τ τ')
                 → (rest : BranchesHaveType Γ cons' bs' τ')
                 → BranchesHaveType Γ (conτ ∷ cons') (MkCaseBranch ε' ∷ bs') τ'
 
