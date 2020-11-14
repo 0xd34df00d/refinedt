@@ -5,7 +5,7 @@ module Surface.Theorems.TCTX where
 open import Agda.Builtin.Equality
 open import Data.Nat.Properties
 
-open import Surface.Syntax
+open import Surface.WellScoped
 open import Surface.Derivations
 open import Surface.Derivations.WF
 open import Surface.Theorems.Helpers
@@ -27,7 +27,7 @@ abstract
   Γ⊢τ-⇒-Γok (TWF-Arr argδ _) = Γ⊢τ-⇒-Γok argδ
   Γ⊢τ-⇒-Γok (TWF-ADT (px ∷ _)) = Γ⊢τ-⇒-Γok px
 
-  Γ⊢ε⦂τ-⇒-Γok-tail-smaller : (δ : (Γ , x ⦂ τ') ⊢ ε ⦂ τ)
+  Γ⊢ε⦂τ-⇒-Γok-tail-smaller : (δ : (Γ , τ') ⊢ ε ⦂ τ)
                            → size-ok (Γok-tail (Γ⊢ε⦂τ-⇒-Γok δ)) < size-t δ
 
   private
