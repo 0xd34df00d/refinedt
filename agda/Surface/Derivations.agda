@@ -11,6 +11,10 @@ open import Data.Vec.Relation.Unary.All public
 
 open import Surface.WellScoped
 open        Surface.WellScoped.SubstScoped using ([0↦ₜ_]_)
+-- TODO clean up modules
+-- open import Surface.Substitutions
+-- open import Misc.ContextConcat
+-- open import Misc.Sublist
 
 record PositiveDecision : Set where
   constructor MkPD
