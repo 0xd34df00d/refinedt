@@ -6,16 +6,16 @@ open import Data.Nat.Base public
 open import Data.Nat.Properties
 
 open import Surface.Derivations
-open import Surface.Syntax
+open import Surface.WellScoped
 
 size-ok  : Γ ok         → ℕ
 size-twf : Γ ⊢ τ        → ℕ
 size-t   : Γ ⊢ ε ⦂ τ    → ℕ
 size-st  : Γ ⊢ τ₁ <: τ₂ → ℕ
-size-bs  : ∀ {τ cons} {bs : CaseBranches n}
+size-bs  : ∀ {τ cons} {bs : CaseBranches nₐ ℓ}
          → BranchesHaveType Γ cons bs τ
          → ℕ
-size-all-cons : {cons : ADTCons n} → All (Γ ⊢_) cons → ℕ
+size-all-cons : {cons : ADTCons nₐ ℓ} → All (Γ ⊢_) cons → ℕ
 
 infixr 20 _<>_
 _<>_ : ℕ → ℕ → ℕ
