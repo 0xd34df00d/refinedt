@@ -134,7 +134,8 @@ module RenameScoped where
                             ; var-action = λ r idx → SVar (r idx)
                             ; ext = λ where _ zero → zero
                                             r (suc n) → suc (r n)
-                            })
+                            }
+                    ) public
 
   weaken-τ : SType ℓ → SType (suc ℓ)
   weaken-τ = act-τ suc
@@ -147,7 +148,8 @@ module SubstScoped where
                             ; var-action = λ σ idx → σ idx
                             ; ext = λ where _ zero → SVar zero
                                             σ (suc n) → RenameScoped.weaken-ε (σ n)
-                            })
+                            }
+                    ) public
 
   replace-outer : STerm ℓ → Fin (suc ℓ) → STerm ℓ
   replace-outer ε' zero = ε'
