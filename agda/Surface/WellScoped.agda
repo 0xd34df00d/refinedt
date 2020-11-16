@@ -20,7 +20,7 @@ record ℕₐ : Set where
     get-length : ℕ
 
 variable
-  n ℓ ℓ' : ℕ
+  n ℓ ℓ' ℓ₀ ℓ₁ ℓ₂ : ℕ
   nₐ : ℕₐ
   b b' b₁ b₂ : BaseType
   idx : Fin ℓ
