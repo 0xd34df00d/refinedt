@@ -98,7 +98,7 @@ record VarsAction : Set₁ where
         → (Fin (suc ℓ) → Target (suc ℓ'))
 
 module ActionScoped (act : VarsAction) where
-  open VarsAction act
+  open VarsAction act public
 
   ActionOn : (ℕ → Set) → Set
   ActionOn Ty = ∀ {ℓ ℓ'} → (Fin ℓ → Target ℓ') → Ty ℓ → Ty ℓ'
