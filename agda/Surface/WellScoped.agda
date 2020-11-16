@@ -9,6 +9,7 @@ open import Agda.Builtin.String
 open import Data.Nat.Base public
 open import Data.Fin public using (Fin; suc; zero)
 open import Data.Vec
+open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 data BaseType : Set where
   BUnit : BaseType
@@ -143,6 +144,12 @@ module RenameScoped where
   weaken-ε : STerm ℓ → STerm (suc ℓ)
   weaken-ε = act-ε suc
 
+  act-weaken-τ : ∀ (r : Fin ℓ → Fin ℓ') (τ : SType ℓ)
+               → act-τ (ext r) (weaken-τ τ) ≡ weaken-τ (act-τ r τ)
+  act-weaken-τ r ⟨ b ∣ ρ ⟩ = {! !}
+  act-weaken-τ r (τ₁ ⇒ τ₂) = {! !}
+  act-weaken-τ r (⊍ cons)  = {! !}
+
 module SubstScoped where
   open ActionScoped (record { Target = STerm
                             ; var-action = λ σ idx → σ idx
@@ -166,3 +173,21 @@ data _∈_at_ : SType ℓ → Ctx ℓ → Fin ℓ → Set where
   ∈-zero : RenameScoped.weaken-τ τ ∈ (Γ , τ) at zero
   ∈-suc  : τ ∈ Γ at idx
          → RenameScoped.weaken-τ τ ∈ (Γ , τ') at suc idx
+
+infix 4 _⊂_
+record _⊂_ {ℓ ℓ'} (Γ : Ctx ℓ) (Γ' : Ctx ℓ') : Set where
+  constructor MkTR
+  field
+    ρ   : Fin ℓ → Fin ℓ'
+    ρ-∈ : τ ∈ Γ at idx
+        → RenameScoped.act-τ ρ τ ∈ Γ' at ρ idx
+
+append-both : ∀ {ℓ ℓ'} {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ₀ : SType ℓ}
+            → (Γ⊂Γ' : Γ ⊂ Γ')
+            → Γ , τ₀ ⊂ Γ' , RenameScoped.act-τ (_⊂_.ρ Γ⊂Γ') τ₀
+append-both (MkTR ρ ρ-∈) = MkTR (RenameScoped.ext ρ) ρ-∈'
+  where
+    ρ-∈' : τ ∈ Γ , τ' at idx
+         → RenameScoped.act-τ (RenameScoped.ext ρ) τ ∈ Γ' , RenameScoped.act-τ ρ τ' at RenameScoped.ext ρ idx
+    ρ-∈' {τ' = τ'} ∈-zero rewrite RenameScoped.act-weaken-τ ρ τ' = ∈-zero
+    ρ-∈' (∈-suc x) = {! !}
