@@ -180,9 +180,10 @@ module RenameScoped where
                                             | act-ε-extensionality (≡-ext x-≡) ε = refl
   act-ε-extensionality x-≡ (SApp ε₁ ε₂) rewrite act-ε-extensionality x-≡ ε₁
                                               | act-ε-extensionality x-≡ ε₂ = refl
-  act-ε-extensionality x-≡ (SCase ε branches) rewrite act-ε-extensionality x-≡ ε = {! !}
+  act-ε-extensionality x-≡ (SCase ε branches) rewrite act-ε-extensionality x-≡ ε
+                                                    | act-branches-extensionality x-≡ branches = refl
   act-ε-extensionality x-≡ (SCon idx ε cons) rewrite act-ε-extensionality x-≡ ε
-                                                         | act-cons-extensionality x-≡ cons = refl
+                                                   | act-cons-extensionality x-≡ cons = refl
 
   act-cons-extensionality x-≡ [] = refl
   act-cons-extensionality x-≡ (τ ∷ τs) rewrite act-τ-extensionality x-≡ τ
