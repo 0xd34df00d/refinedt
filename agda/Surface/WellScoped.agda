@@ -247,11 +247,11 @@ module RenameScoped where
                                                           | act-ε-extensionality (ext-distr r₁ r₂) body = refl
 
 
-  act-weaken-τ : ∀ (r : Fin ℓ → Fin ℓ') (τ : SType ℓ)
+  weaken-τ-comm : ∀ (r : Fin ℓ → Fin ℓ') (τ : SType ℓ)
                → act-τ (ext r) (weaken-τ τ) ≡ weaken-τ (act-τ r τ)
-  act-weaken-τ r ⟨ b ∣ ρ ⟩ = {! !}
-  act-weaken-τ r (τ₁ ⇒ τ₂) = {! !}
-  act-weaken-τ r (⊍ cons)  = {! !}
+  weaken-τ-comm r τ rewrite act-τ-distr suc (ext r) τ
+                          | act-τ-distr r suc τ = refl
+
 
 module SubstScoped where
   open ActionScoped (record { Target = STerm
@@ -292,5 +292,5 @@ append-both (MkTR ρ ρ-∈) = MkTR (RenameScoped.ext ρ) ρ-∈'
   where
     ρ-∈' : τ ∈ Γ , τ' at idx
          → RenameScoped.act-τ (RenameScoped.ext ρ) τ ∈ Γ' , RenameScoped.act-τ ρ τ' at RenameScoped.ext ρ idx
-    ρ-∈' {τ' = τ'} ∈-zero rewrite RenameScoped.act-weaken-τ ρ τ' = ∈-zero
+    ρ-∈' {τ' = τ'} ∈-zero rewrite RenameScoped.weaken-τ-comm ρ τ' = ∈-zero
     ρ-∈' (∈-suc x) = {! !}
