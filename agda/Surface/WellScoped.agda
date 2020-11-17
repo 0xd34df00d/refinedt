@@ -285,12 +285,12 @@ record _⊂_ {ℓ ℓ'} (Γ : Ctx ℓ) (Γ' : Ctx ℓ') : Set where
     ρ-∈ : τ ∈ Γ at idx
         → RenameScoped.act-τ ρ τ ∈ Γ' at ρ idx
 
-append-both : ∀ {ℓ ℓ'} {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ₀ : SType ℓ}
+append-both : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ₀ : SType ℓ}
             → (Γ⊂Γ' : Γ ⊂ Γ')
             → Γ , τ₀ ⊂ Γ' , RenameScoped.act-τ (_⊂_.ρ Γ⊂Γ') τ₀
-append-both (MkTR ρ ρ-∈) = MkTR (RenameScoped.ext ρ) ρ-∈'
+append-both {Γ = Γ} {Γ' = Γ'} (MkTR ρ ρ-∈) = MkTR (RenameScoped.ext ρ) ρ-∈'
   where
     ρ-∈' : τ ∈ Γ , τ' at idx
          → RenameScoped.act-τ (RenameScoped.ext ρ) τ ∈ Γ' , RenameScoped.act-τ ρ τ' at RenameScoped.ext ρ idx
     ρ-∈' {τ' = τ'} ∈-zero rewrite RenameScoped.weaken-τ-comm ρ τ' = ∈-zero
-    ρ-∈' (∈-suc x) = {! !}
+    ρ-∈' (∈-suc {τ = τ} x) rewrite RenameScoped.weaken-τ-comm ρ τ = ∈-suc (ρ-∈ x)
