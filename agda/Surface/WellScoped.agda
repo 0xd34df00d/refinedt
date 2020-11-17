@@ -199,6 +199,17 @@ module RenameScoped where
   ext-distr _ _ zero = refl
   ext-distr _ _ (suc x) = refl
 
+  act-τ-distr : (r₁ : Fin ℓ₀ → Fin ℓ₁)
+              → (r₂ : Fin ℓ₁ → Fin ℓ₂)
+              → (τ : SType ℓ₀)
+              → act-τ r₂ (act-τ r₁ τ) ≡ act-τ (r₂ ∘ r₁) τ
+  act-τ-distr r₁ r₂ ⟨ b ∣ ρ ⟩ = {! !}
+  act-τ-distr r₁ r₂ (τ₁ ⇒ τ₂) rewrite act-τ-distr r₁ r₂ τ₁
+                                    | act-τ-distr (ext r₁) (ext r₂) τ₂
+                                    | act-τ-extensionality (ext-distr r₁ r₂) τ₂
+                                    = refl
+  act-τ-distr r₁ r₂ (⊍ cons) = {! !}
+
   act-weaken-τ : ∀ (r : Fin ℓ → Fin ℓ') (τ : SType ℓ)
                → act-τ (ext r) (weaken-τ τ) ≡ weaken-τ (act-τ r τ)
   act-weaken-τ r ⟨ b ∣ ρ ⟩ = {! !}
