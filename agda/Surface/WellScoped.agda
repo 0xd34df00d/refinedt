@@ -151,15 +151,41 @@ module RenameScoped where
   ≡-ext _ zero = refl
   ≡-ext x-≡ (suc x) rewrite x-≡ x = refl
 
-  act-τ-extensionality : ∀ {ℓ ℓ'}
-                       → (f₁ f₂ : Fin ℓ → Fin ℓ')
-                       → ((x : Fin ℓ) → f₁ x ≡ f₂ x)
-                       → (τ : SType ℓ)
-                       → act-τ f₁ τ ≡ act-τ f₂ τ
-  act-τ-extensionality _ _   x-≡ ⟨ b ∣ ρ ⟩ = {! !}
+  ActExtensionality : {Ty : ℕ → Set} → ActionOn Ty → Set
+  ActExtensionality {Ty} act = ∀ {ℓ ℓ'}
+                               → (f₁ f₂ : Fin ℓ → Fin ℓ')
+                               → ((x : Fin ℓ) → f₁ x ≡ f₂ x)
+                               → (v : Ty ℓ)
+                               → act f₁ v ≡ act f₂ v
+
+  act-τ-extensionality : ActExtensionality act-τ
+  act-ρ-extensionality : ActExtensionality act-ρ
+  act-ε-extensionality : ActExtensionality act-ε
+  act-cons-extensionality : ActExtensionality {ADTCons nₐ} act-cons
+
+  act-τ-extensionality f₁ f₂ x-≡ ⟨ b ∣ ρ ⟩ rewrite act-ρ-extensionality (ext f₁) (ext f₂) (≡-ext x-≡) ρ = refl
   act-τ-extensionality f₁ f₂ x-≡ (τ₁ ⇒ τ₂) rewrite act-τ-extensionality f₁ f₂ x-≡ τ₁
                                                  | act-τ-extensionality (ext f₁) (ext f₂) (≡-ext x-≡) τ₂ = refl
-  act-τ-extensionality f₁ f₂ x-≡ (⊍ cons) = {! !}
+  act-τ-extensionality f₁ f₂ x-≡ (⊍ cons) rewrite act-cons-extensionality f₁ f₂ x-≡ cons = refl
+
+  act-ρ-extensionality f₁ f₂ x-≡ (ε₁ ≈ ε₂) rewrite act-ε-extensionality f₁ f₂ x-≡ ε₁
+                                                 | act-ε-extensionality f₁ f₂ x-≡ ε₂ = refl
+  act-ρ-extensionality f₁ f₂ x-≡ (ρ₁ ∧ ρ₂) rewrite act-ρ-extensionality f₁ f₂ x-≡ ρ₁
+                                                 | act-ρ-extensionality f₁ f₂ x-≡ ρ₂ = refl
+
+  act-ε-extensionality f₁ f₂ x-≡ SUnit = refl
+  act-ε-extensionality f₁ f₂ x-≡ (SVar idx) rewrite x-≡ idx = refl
+  act-ε-extensionality f₁ f₂ x-≡ (SLam τ ε) rewrite act-τ-extensionality f₁ f₂ x-≡ τ
+                                                  | act-ε-extensionality (ext f₁) (ext f₂) (≡-ext x-≡) ε = refl
+  act-ε-extensionality f₁ f₂ x-≡ (SApp ε₁ ε₂) rewrite act-ε-extensionality f₁ f₂ x-≡ ε₁
+                                                    | act-ε-extensionality f₁ f₂ x-≡ ε₂ = refl
+  act-ε-extensionality f₁ f₂ x-≡ (SCase ε branches) rewrite act-ε-extensionality f₁ f₂ x-≡ ε = {! !}
+  act-ε-extensionality f₁ f₂ x-≡ (SCon idx ε cons) rewrite act-ε-extensionality f₁ f₂ x-≡ ε
+                                                         | act-cons-extensionality f₁ f₂ x-≡ cons = refl
+
+  act-cons-extensionality f₁ f₂ x-≡ [] = refl
+  act-cons-extensionality f₁ f₂ x-≡ (τ ∷ τs) rewrite act-τ-extensionality f₁ f₂ x-≡ τ
+                                                   | act-cons-extensionality f₁ f₂ x-≡ τs = refl
 
   ext-distr : (r₁ : Fin ℓ₀ → Fin ℓ₁)
             → (r₂ : Fin ℓ₁ → Fin ℓ₂)
