@@ -145,6 +145,29 @@ module RenameScoped where
   weaken-ε : STerm ℓ → STerm (suc ℓ)
   weaken-ε = act-ε suc
 
+  ≡-ext : {f₁ f₂ : Fin ℓ → Fin ℓ'}
+        → (∀ x → f₁ x ≡ f₂ x)
+        → (∀ x → ext f₁ x ≡ ext f₂ x)
+  ≡-ext _ zero = refl
+  ≡-ext x-≡ (suc x) rewrite x-≡ x = refl
+
+  act-τ-extensionality : ∀ {ℓ ℓ'}
+                       → (f₁ f₂ : Fin ℓ → Fin ℓ')
+                       → ((x : Fin ℓ) → f₁ x ≡ f₂ x)
+                       → (τ : SType ℓ)
+                       → act-τ f₁ τ ≡ act-τ f₂ τ
+  act-τ-extensionality _ _   x-≡ ⟨ b ∣ ρ ⟩ = {! !}
+  act-τ-extensionality {ℓ} {ℓ'} f₁ f₂ x-≡ (τ₁ ⇒ τ₂) = let ≡₁ = act-τ-extensionality f₁ f₂ x-≡ τ₁
+                                                          ≡₂ = act-τ-extensionality (ext f₁) (ext f₂) (≡-ext x-≡) τ₂
+                                                       in sub ≡₁ ≡₂
+    where
+      sub : {f : Fin ℓ → Fin ℓ'}
+          → act-τ f τ₁ ≡ τ₁'
+          → act-τ (ext f) τ₂ ≡ τ₂'
+          → act-τ f (τ₁ ⇒ τ₂) ≡ τ₁' ⇒ τ₂'
+      sub refl refl = refl
+  act-τ-extensionality f₁ f₂ x-≡ (⊍ cons) = {! !}
+
   ext-distr : (r₁ : Fin ℓ₀ → Fin ℓ₁)
             → (r₂ : Fin ℓ₁ → Fin ℓ₂)
             → ∀ x
