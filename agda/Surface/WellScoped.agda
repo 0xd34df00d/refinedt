@@ -157,15 +157,8 @@ module RenameScoped where
                        → (τ : SType ℓ)
                        → act-τ f₁ τ ≡ act-τ f₂ τ
   act-τ-extensionality _ _   x-≡ ⟨ b ∣ ρ ⟩ = {! !}
-  act-τ-extensionality {ℓ} {ℓ'} f₁ f₂ x-≡ (τ₁ ⇒ τ₂) = let ≡₁ = act-τ-extensionality f₁ f₂ x-≡ τ₁
-                                                          ≡₂ = act-τ-extensionality (ext f₁) (ext f₂) (≡-ext x-≡) τ₂
-                                                       in sub ≡₁ ≡₂
-    where
-      sub : {f : Fin ℓ → Fin ℓ'}
-          → act-τ f τ₁ ≡ τ₁'
-          → act-τ (ext f) τ₂ ≡ τ₂'
-          → act-τ f (τ₁ ⇒ τ₂) ≡ τ₁' ⇒ τ₂'
-      sub refl refl = refl
+  act-τ-extensionality {ℓ} {ℓ'} f₁ f₂ x-≡ (τ₁ ⇒ τ₂) rewrite act-τ-extensionality f₁ f₂ x-≡ τ₁
+                                                          | act-τ-extensionality (ext f₁) (ext f₂) (≡-ext x-≡) τ₂ = refl
   act-τ-extensionality f₁ f₂ x-≡ (⊍ cons) = {! !}
 
   ext-distr : (r₁ : Fin ℓ₀ → Fin ℓ₁)
