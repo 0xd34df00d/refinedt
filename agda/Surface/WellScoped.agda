@@ -9,6 +9,7 @@ open import Agda.Builtin.String
 open import Data.Nat.Base public
 open import Data.Fin public using (Fin; suc; zero)
 open import Data.Vec
+open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 data BaseType : Set where
@@ -143,6 +144,13 @@ module RenameScoped where
 
   weaken-ε : STerm ℓ → STerm (suc ℓ)
   weaken-ε = act-ε suc
+
+  ext-distr : (r₁ : Fin ℓ₀ → Fin ℓ₁)
+            → (r₂ : Fin ℓ₁ → Fin ℓ₂)
+            → ∀ x
+            → ext r₂ (ext r₁ x) ≡ ext (λ x → r₂ (r₁ x)) x
+  ext-distr _ _ zero = refl
+  ext-distr _ _ (suc x) = refl
 
   act-weaken-τ : ∀ (r : Fin ℓ → Fin ℓ') (τ : SType ℓ)
                → act-τ (ext r) (weaken-τ τ) ≡ weaken-τ (act-τ r τ)
