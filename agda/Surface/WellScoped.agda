@@ -162,6 +162,7 @@ module RenameScoped where
   act-ρ-extensionality : ActExtensionality act-ρ
   act-ε-extensionality : ActExtensionality act-ε
   act-cons-extensionality : ActExtensionality {ADTCons nₐ} act-cons
+  act-branches-extensionality : ActExtensionality {CaseBranches nₐ} act-branches
 
   act-τ-extensionality f₁ f₂ x-≡ ⟨ b ∣ ρ ⟩ rewrite act-ρ-extensionality (ext f₁) (ext f₂) (≡-ext x-≡) ρ = refl
   act-τ-extensionality f₁ f₂ x-≡ (τ₁ ⇒ τ₂) rewrite act-τ-extensionality f₁ f₂ x-≡ τ₁
@@ -186,6 +187,10 @@ module RenameScoped where
   act-cons-extensionality f₁ f₂ x-≡ [] = refl
   act-cons-extensionality f₁ f₂ x-≡ (τ ∷ τs) rewrite act-τ-extensionality f₁ f₂ x-≡ τ
                                                    | act-cons-extensionality f₁ f₂ x-≡ τs = refl
+
+  act-branches-extensionality f₁ f₂ x-≡ [] = refl
+  act-branches-extensionality f₁ f₂ x-≡ (MkCaseBranch body ∷ bs) rewrite act-ε-extensionality (ext f₁) (ext f₂) (≡-ext x-≡) body
+                                                                       | act-branches-extensionality f₁ f₂ x-≡ bs = refl
 
   ext-distr : (r₁ : Fin ℓ₀ → Fin ℓ₁)
             → (r₂ : Fin ℓ₁ → Fin ℓ₂)
