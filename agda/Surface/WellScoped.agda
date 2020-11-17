@@ -109,6 +109,7 @@ module ActionScoped (act : VarsAction) where
   act-τ : ActionOn SType
   act-ε : ActionOn STerm
   act-cons : ActionOn (ADTCons nₐ)
+  act-branches : ActionOn (CaseBranches nₐ)
 
   act-ρ f (ε₁ ≈ ε₂) = act-ε f ε₁ ≈ act-ε f ε₂
   act-ρ f (ρ₁ ∧ ρ₂) = act-ρ f ρ₁ ∧ act-ρ f ρ₂
@@ -120,15 +121,14 @@ module ActionScoped (act : VarsAction) where
   act-cons _ [] = []
   act-cons f (τ ∷ τs) = act-τ f τ ∷ act-cons f τs
 
+  act-branches _ [] = []
+  act-branches f (MkCaseBranch body ∷ bs) = MkCaseBranch (act-ε (ext f) body) ∷ act-branches f bs
+
   act-ε f SUnit = SUnit
   act-ε f (SVar idx) = var-action f idx
   act-ε f (SLam τ ε) = SLam (act-τ f τ) (act-ε (ext f) ε)
   act-ε f (SApp ε₁ ε₂) = SApp (act-ε f ε₁) (act-ε f ε₂)
-  act-ε f (SCase scrut branches) = SCase (act-ε f scrut) (go f branches)
-    where
-      go : ∀ {n} → (Fin ℓ → Target ℓ') → CaseBranches n ℓ → CaseBranches n ℓ'
-      go _ [] = []
-      go f (MkCaseBranch body ∷ bs) = MkCaseBranch (act-ε (ext f) body) ∷ go f bs
+  act-ε f (SCase scrut branches) = SCase (act-ε f scrut) (act-branches f branches)
   act-ε f (SCon idx body adt-cons) = SCon idx (act-ε f body) (act-cons f adt-cons)
 
 module RenameScoped where
