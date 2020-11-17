@@ -200,16 +200,52 @@ module RenameScoped where
   ext-distr _ _ zero = refl
   ext-distr _ _ (suc x) = refl
 
-  act-τ-distr : (r₁ : Fin ℓ₀ → Fin ℓ₁)
-              → (r₂ : Fin ℓ₁ → Fin ℓ₂)
-              → (τ : SType ℓ₀)
-              → act-τ r₂ (act-τ r₁ τ) ≡ act-τ (r₂ ∘ r₁) τ
-  act-τ-distr r₁ r₂ ⟨ b ∣ ρ ⟩ = {! !}
+  ActDistributivity : {Ty : ℕ → Set} → ActionOn Ty → Set
+  ActDistributivity {Ty} act = ∀ {ℓ₀ ℓ₁ ℓ₂}
+                             → (r₁ : Fin ℓ₀ → Fin ℓ₁)
+                             → (r₂ : Fin ℓ₁ → Fin ℓ₂)
+                             → (v : Ty ℓ₀)
+                             → act r₂ (act r₁ v) ≡ act (r₂ ∘ r₁) v
+
+  act-τ-distr : ActDistributivity act-τ
+  act-ρ-distr : ActDistributivity act-ρ
+  act-ε-distr : ActDistributivity act-ε
+  act-cons-distr : ActDistributivity {ADTCons nₐ} act-cons
+  act-branches-distr : ActDistributivity {CaseBranches nₐ} act-branches
+
+  act-τ-distr r₁ r₂ ⟨ b ∣ ρ ⟩ rewrite act-ρ-distr (ext r₁) (ext r₂) ρ
+                                    | act-ρ-extensionality (ext-distr r₁ r₂) ρ = refl
   act-τ-distr r₁ r₂ (τ₁ ⇒ τ₂) rewrite act-τ-distr r₁ r₂ τ₁
                                     | act-τ-distr (ext r₁) (ext r₂) τ₂
-                                    | act-τ-extensionality (ext-distr r₁ r₂) τ₂
-                                    = refl
-  act-τ-distr r₁ r₂ (⊍ cons) = {! !}
+                                    | act-τ-extensionality (ext-distr r₁ r₂) τ₂ = refl
+  act-τ-distr r₁ r₂ (⊍ cons) rewrite act-cons-distr r₁ r₂ cons = refl
+
+  act-ρ-distr r₁ r₂ (ε₁ ≈ ε₂) rewrite act-ε-distr r₁ r₂ ε₁
+                                    | act-ε-distr r₁ r₂ ε₂ = refl
+  act-ρ-distr r₁ r₂ (ρ₁ ∧ ρ₂) rewrite act-ρ-distr r₁ r₂ ρ₁
+                                    | act-ρ-distr r₁ r₂ ρ₂ = refl
+
+  act-ε-distr r₁ r₂ SUnit = refl
+  act-ε-distr r₁ r₂ (SVar idx) = refl
+  act-ε-distr r₁ r₂ (SLam τ ε) rewrite act-τ-distr r₁ r₂ τ
+                                     | act-ε-distr (ext r₁) (ext r₂) ε
+                                     | act-ε-extensionality (ext-distr r₁ r₂) ε = refl
+  act-ε-distr r₁ r₂ (SApp ε₁ ε₂) rewrite act-ε-distr r₁ r₂ ε₁
+                                       | act-ε-distr r₁ r₂ ε₂ = refl
+  act-ε-distr r₁ r₂ (SCase ε branches) rewrite act-ε-distr r₁ r₂ ε
+                                             | act-branches-distr r₁ r₂ branches = refl
+  act-ε-distr r₁ r₂ (SCon idx ε cons) rewrite act-ε-distr r₁ r₂ ε
+                                            | act-cons-distr r₁ r₂ cons = refl
+
+  act-cons-distr r₁ r₂ [] = refl
+  act-cons-distr r₁ r₂ (τ ∷ τs) rewrite act-τ-distr r₁ r₂ τ
+                                      | act-cons-distr r₁ r₂ τs = refl
+
+  act-branches-distr r₁ r₂ [] = refl
+  act-branches-distr r₁ r₂ (MkCaseBranch body ∷ bs) rewrite act-ε-distr (ext r₁) (ext r₂) body
+                                                          | act-branches-distr r₁ r₂ bs
+                                                          | act-ε-extensionality (ext-distr r₁ r₂) body = refl
+
 
   act-weaken-τ : ∀ (r : Fin ℓ → Fin ℓ') (τ : SType ℓ)
                → act-τ (ext r) (weaken-τ τ) ≡ weaken-τ (act-τ r τ)
