@@ -134,29 +134,23 @@ module ActionScoped (α : VarAction) where
   act-ε f (SCase scrut branches) = SCase (act-ε f scrut) (act-branches f branches)
   act-ε f (SCon idx body adt-cons) = SCon idx (act-ε f body) (act-cons f adt-cons)
 
-module RenameScoped where
-  open ActionScoped (record { Target = Fin
-                            ; var-action = λ r idx → SVar (r idx)
-                            ; ext = λ where _ zero → zero
-                                            r (suc n) → suc (r n)
-                            }
-                    ) public
+record VarActionProps (act : VarAction) : Set where
+  open VarAction act
+  field
+    ≡-ext : {f₁ f₂ : Fin ℓ → Target ℓ'}
+          → (∀ x → f₁ x ≡ f₂ x)
+          → (∀ x → ext f₁ x ≡ ext f₂ x)
+    var-action-cong : {f₁ f₂ : Fin ℓ → Target ℓ'}
+                    → (∀ x → f₁ x ≡ f₂ x)
+                    → (∀ x → var-action f₁ x ≡ var-action f₂ x)
 
-  weaken-τ : SType ℓ → SType (suc ℓ)
-  weaken-τ = act-τ suc
-
-  weaken-ε : STerm ℓ → STerm (suc ℓ)
-  weaken-ε = act-ε suc
-
-  ≡-ext : {f₁ f₂ : Fin ℓ → Fin ℓ'}
-        → (∀ x → f₁ x ≡ f₂ x)
-        → (∀ x → ext f₁ x ≡ ext f₂ x)
-  ≡-ext _ zero = refl
-  ≡-ext x-≡ (suc x) rewrite x-≡ x = refl
+module ActionScopedLemmas (act : VarAction) (props : VarActionProps act) where
+  open ActionScoped act
+  open VarActionProps props
 
   ActExtensionality : {Ty : ℕ → Set} → ActionOn Ty → Set
   ActExtensionality {Ty} act = ∀ {ℓ ℓ'}
-                               → {f₁ f₂ : Fin ℓ → Fin ℓ'}
+                               → {f₁ f₂ : Fin ℓ → Target ℓ'}
                                → ((x : Fin ℓ) → f₁ x ≡ f₂ x)
                                → (v : Ty ℓ)
                                → act f₁ v ≡ act f₂ v
@@ -178,7 +172,7 @@ module RenameScoped where
                                            | act-ρ-extensionality x-≡ ρ₂ = refl
 
   act-ε-extensionality x-≡ SUnit = refl
-  act-ε-extensionality x-≡ (SVar idx) rewrite x-≡ idx = refl
+  act-ε-extensionality x-≡ (SVar idx) rewrite var-action-cong x-≡ idx = refl
   act-ε-extensionality x-≡ (SLam τ ε) rewrite act-τ-extensionality x-≡ τ
                                             | act-ε-extensionality (≡-ext x-≡) ε = refl
   act-ε-extensionality x-≡ (SApp ε₁ ε₂) rewrite act-ε-extensionality x-≡ ε₁
@@ -195,6 +189,38 @@ module RenameScoped where
   act-branches-extensionality x-≡ [] = refl
   act-branches-extensionality x-≡ (MkCaseBranch body ∷ bs) rewrite act-ε-extensionality (≡-ext x-≡) body
                                                                  | act-branches-extensionality x-≡ bs = refl
+
+module RenameScoped where
+  open ActionScoped (record { Target = Fin
+                            ; var-action = λ r idx → SVar (r idx)
+                            ; ext = λ where _ zero → zero
+                                            r (suc n) → suc (r n)
+                            }
+                    ) public
+
+  weaken-τ : SType ℓ → SType (suc ℓ)
+  weaken-τ = act-τ suc
+
+  weaken-ε : STerm ℓ → STerm (suc ℓ)
+  weaken-ε = act-ε suc
+
+
+  ≡-ext : {f₁ f₂ : Fin ℓ → Fin ℓ'}
+        → (∀ x → f₁ x ≡ f₂ x)
+        → (∀ x → ext f₁ x ≡ ext f₂ x)
+  ≡-ext _ zero = refl
+  ≡-ext x-≡ (suc x) rewrite x-≡ x = refl
+
+  var-action-cong : {f₁ f₂ : Fin ℓ → Fin ℓ'}
+                  → (∀ x → f₁ x ≡ f₂ x)
+                  → (∀ x → var-action f₁ x ≡ var-action f₂ x)
+  var-action-cong x-≡ x rewrite x-≡ x = refl
+
+  open ActionScopedLemmas var-action-record
+                          record { ≡-ext = ≡-ext
+                                 ; var-action-cong = var-action-cong
+                                 }
+                          public
 
   ext-distr : (r₁ : Fin ℓ₀ → Fin ℓ₁)
             → (r₂ : Fin ℓ₁ → Fin ℓ₂)
