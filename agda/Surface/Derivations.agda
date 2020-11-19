@@ -28,11 +28,6 @@ record Oracle : Set where
            → (Γ⊂Γ' : Γ ⊂ Γ')
            → Is-just (decide Γ b ρ₁ ρ₂)
            → Is-just (decide Γ' b (act-ρ (ext (_⊂_.ρ Γ⊂Γ')) ρ₁) (act-ρ (ext (_⊂_.ρ Γ⊂Γ')) ρ₂))
-    {-
-    exchange : ∀ {var b ρ₁ ρ₂}
-             → Is-just (decide (Γ , x₁ ⦂ τ₁ , x₂ ⦂ τ₂ , Δ) var b ρ₁ ρ₂)
-             → Is-just (decide (Γ , x₂ ⦂ τ₂ , x₁ ⦂ τ₁ , Δ) var b ρ₁ ρ₂)
-    -}
 
 data _ok : (Γ : Ctx ℓ) → Set
 data _⊢_⦂_ : (Γ : Ctx ℓ) → (ε : STerm ℓ) → (τ : SType ℓ) → Set
