@@ -91,7 +91,7 @@ variable
 Τ : Refinement ℓ
 Τ = SUnit ≈ SUnit
 
-record VarsAction : Set₁ where
+record VarAction : Set₁ where
   field
     Target : ℕ → Set
     var-action : (Fin ℓ → Target ℓ')
@@ -99,8 +99,11 @@ record VarsAction : Set₁ where
     ext : (Fin ℓ → Target ℓ')
         → (Fin (suc ℓ) → Target (suc ℓ'))
 
-module ActionScoped (act : VarsAction) where
-  open VarsAction act public
+module ActionScoped (α : VarAction) where
+  open VarAction α public
+
+  var-action-record : VarAction
+  var-action-record = α
 
   ActionOn : (ℕ → Set) → Set
   ActionOn Ty = ∀ {ℓ ℓ'} → (Fin ℓ → Target ℓ') → Ty ℓ → Ty ℓ'
