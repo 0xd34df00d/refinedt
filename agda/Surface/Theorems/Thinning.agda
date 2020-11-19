@@ -107,7 +107,7 @@ private
                          → (Γ⊂Γ' : Γ ⊂ Γ')
                          → (Γ ⊢ τ₁ <: τ₂)
                          → (Γ' ⊢ RenameScoped.act-τ (_⊂_.ρ Γ⊂Γ') τ₁ <: RenameScoped.act-τ (_⊂_.ρ Γ⊂Γ') τ₂)
-      st-thinning-sized Γ⊂Γ' (ST-Base oracle just-prf) = ST-Base oracle ? -- (Oracle.thin oracle Γ⊂Γ' just-prf)
+      st-thinning-sized Γ⊂Γ' (ST-Base oracle just-prf) = ST-Base oracle (Oracle.thin oracle Γ⊂Γ' just-prf)
       st-thinning-sized Γ⊂Γ' (ST-Arr δ₁ δ₂) = ST-Arr (st-thinning-sized Γ⊂Γ' δ₁) (st-thinning-sized (append-both Γ⊂Γ') δ₂)
 
 {-
