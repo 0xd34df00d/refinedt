@@ -44,7 +44,9 @@ private
   twf-thinning-sized Γ⊂Γ' Γ'ok (TWF-Base ε₁δ ε₂δ) (acc rec) = let expCtxOk = TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)
                                                                   rec₁ = rec _ (s≤s (m≤m<>n _ _))
                                                                   rec₂ = rec _ (s≤s (n≤m<>n _ _))
-                                                               in TWF-Base (t-thinning-sized (append-both Γ⊂Γ') expCtxOk ε₁δ rec₁) (t-thinning-sized (append-both Γ⊂Γ') expCtxOk ε₂δ rec₂)
+                                                                  ε₁δ' = t-thinning-sized (append-both Γ⊂Γ') expCtxOk ε₁δ rec₁
+                                                                  ε₂δ' = t-thinning-sized (append-both Γ⊂Γ') expCtxOk ε₂δ rec₂
+                                                               in TWF-Base ε₁δ' ε₂δ'
   twf-thinning-sized Γ⊂Γ' Γ'ok (TWF-Conj ρ₁ ρ₂) (acc rec) = let rec₁ = rec _ (s≤s (m≤m<>n _ _))
                                                                 rec₂ = rec _ (s≤s (n≤m<>n _ _))
                                                              in TWF-Conj (twf-thinning-sized Γ⊂Γ' Γ'ok ρ₁ rec₁) (twf-thinning-sized Γ⊂Γ' Γ'ok ρ₂ rec₂)
@@ -101,9 +103,12 @@ private
                                                               in T-Con (t-thinning-sized Γ⊂Γ' Γ'ok conArg rec₁) (twf-thinning-sized Γ⊂Γ' Γ'ok adtτ rec₂)
   t-thinning-sized Γ⊂Γ' Γ'ok (T-Sub εδ superδ <:δ) (acc rec) = let rec₁ = rec _ (s≤s (m≤m<>n _ _))
                                                                    rec₂ = rec _ (s≤s (n≤m<>n<>k (size-t εδ) (size-twf superδ) (size-st <:δ)))
-                                                                in T-Sub (t-thinning-sized Γ⊂Γ' Γ'ok εδ rec₁) (twf-thinning-sized Γ⊂Γ' Γ'ok superδ rec₂) (st-thinning-sized Γ⊂Γ' <:δ)
+                                                                   εδ' = t-thinning-sized Γ⊂Γ' Γ'ok εδ rec₁
+                                                                   superδ' = twf-thinning-sized Γ⊂Γ' Γ'ok superδ rec₂
+                                                                   <:δ' = st-thinning-sized Γ⊂Γ' <:δ
+                                                                in T-Sub εδ' superδ' <:δ'
     where
-      st-thinning-sized  : ∀ {ℓ ℓ'} {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ₁ τ₂ : SType ℓ}
+      st-thinning-sized  : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ₁ τ₂ : SType ℓ}
                          → (Γ⊂Γ' : Γ ⊂ Γ')
                          → (Γ ⊢ τ₁ <: τ₂)
                          → (Γ' ⊢ RenameScoped.act-τ (_⊂_.ρ Γ⊂Γ') τ₁ <: RenameScoped.act-τ (_⊂_.ρ Γ⊂Γ') τ₂)
