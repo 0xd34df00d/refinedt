@@ -291,14 +291,14 @@ module SubstScoped where
                     ) public
 
   replace-outer : STerm ℓ → Fin (suc ℓ) → STerm ℓ
-  replace-outer ε' zero = ε'
+  replace-outer ε zero = ε
   replace-outer _ (suc idx) = SVar idx
 
   [0↦ₑ_]_ : STerm ℓ → STerm (suc ℓ) → STerm ℓ
-  [0↦ₑ_]_ ε' = act-ε (replace-outer ε')
+  [0↦ₑ_]_ ε = act-ε (replace-outer ε)
 
   [0↦ₜ_]_ : STerm ℓ → SType (suc ℓ) → SType ℓ
-  [0↦ₜ_]_ ε' = act-τ (replace-outer ε')
+  [0↦ₜ_]_ ε = act-τ (replace-outer ε)
 
 infix 4 _∈_at_
 data _∈_at_ : SType ℓ → Ctx ℓ → Fin ℓ → Set where
