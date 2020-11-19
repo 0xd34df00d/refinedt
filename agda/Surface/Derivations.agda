@@ -24,7 +24,7 @@ record Oracle : Set where
   open Surface.WellScoped.RenameScoped
   field
     decide : (Γ : Ctx ℓ) → (b : BaseType) → (ρ₁ ρ₂ : Refinement (suc ℓ)) → Maybe PositiveDecision
-    thin   : ∀ {b ρ₁ ρ₂} {Γ : Ctx ℓ} {Γ' : Ctx ℓ'}
+    thin   : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'}
            → (Γ⊂Γ' : Γ ⊂ Γ')
            → Is-just (decide Γ b ρ₁ ρ₂)
            → Is-just (decide Γ' b (act-ρ (ext (_⊂_.ρ Γ⊂Γ')) ρ₁) (act-ρ (ext (_⊂_.ρ Γ⊂Γ')) ρ₂))
