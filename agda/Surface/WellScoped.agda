@@ -277,7 +277,7 @@ module RenameScoped where
 
 
   weaken-τ-comm : ∀ (r : Fin ℓ → Fin ℓ') (τ : SType ℓ)
-               → act-τ (ext r) (weaken-τ τ) ≡ weaken-τ (act-τ r τ)
+                → act-τ (ext r) (weaken-τ τ) ≡ weaken-τ (act-τ r τ)
   weaken-τ-comm r τ rewrite act-τ-distr suc (ext r) τ
                           | act-τ-distr r suc τ = refl
 
