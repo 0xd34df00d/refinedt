@@ -300,6 +300,13 @@ module SubstScoped where
   [0↦ₜ_]_ : STerm ℓ → SType (suc ℓ) → SType ℓ
   [0↦ₜ_]_ ε = act-τ (replace-outer ε)
 
+
+  rename-subst-τ-distr : ∀ (r : Fin ℓ → Fin ℓ') ε τ
+                       → RenameScoped.act-τ r ([0↦ₜ ε ] τ) ≡ [0↦ₜ RenameScoped.act-ε r ε ] RenameScoped.act-τ (RenameScoped.ext r) τ
+  rename-subst-τ-distr r ε ⟨ b ∣ ρ ⟩ = {! !}
+  rename-subst-τ-distr r ε (τ₁ ⇒ τ₂) rewrite rename-subst-τ-distr r ε τ₁ = {! !}
+  rename-subst-τ-distr r ε (⊍ cons) = {! !}
+
 infix 4 _∈_at_
 data _∈_at_ : SType ℓ → Ctx ℓ → Fin ℓ → Set where
   ∈-zero : RenameScoped.weaken-τ τ ∈ (Γ , τ) at zero
