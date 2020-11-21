@@ -8,6 +8,7 @@ open import Agda.Builtin.String
 
 open import Data.Nat public using (ℕ; suc; zero)
 open import Data.Fin public using (Fin; suc; zero)
+open import Data.Fin.Extra
 open import Data.Vec
 open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
@@ -290,19 +291,17 @@ module SubstScoped where
                             }
                     ) public
 
-  replace-helper-decrement : (var-idx : Fin (suc ℓ)) → Fin′ var-idx → Fin ℓ
-  replace-helper-decrement (suc var-idx) _ = var-idx
 
   replace-at : Fin (suc ℓ) → STerm ℓ → Fin (suc ℓ) → STerm ℓ
-  replace-at replace-idx ε var-idx with compare replace-idx var-idx
+  replace-at replace-idx ε var-idx with replace-idx <>? var-idx
   -- replacement index is less than current variable index, so the variable points to a binder that just got closer to it,
   -- so decrement the variable index:
-  ... | less .var-idx least = SVar (replace-helper-decrement var-idx least)
+  ... | less rep<var = SVar (m<n-n-has-pred rep<var)
   -- just replace the current variable with the term:
-  ... | equal _ = ε
+  ... | equal = ε
   -- replacement index is greater than current variable index, so the variable still refers to the same binder,
   -- so leave the var index as-is, just shrinking the bound of Fin as the binders count just decremented:
-  ... | greater .replace-idx least = SVar {! !}
+  ... | greater rep>var = SVar (tighten rep>var)
 
   replace-outer : STerm ℓ → Fin (suc ℓ) → STerm ℓ
   replace-outer ε zero = ε
