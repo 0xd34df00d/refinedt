@@ -6,7 +6,7 @@ open import Agda.Builtin.Bool
 open import Agda.Builtin.List public
 open import Agda.Builtin.String
 
-open import Data.Nat.Base public
+open import Data.Nat public using (ℕ; suc; zero)
 open import Data.Fin public using (Fin; suc; zero)
 open import Data.Vec
 open import Function using (_∘_)
