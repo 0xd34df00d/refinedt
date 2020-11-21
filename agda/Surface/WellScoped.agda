@@ -310,15 +310,26 @@ module SubstScoped where
   [_↦ₜ_]_ idx ε = act-τ (replace-at idx ε)
 
 
+-- Goal:
+-- R.act-τ (R.ext ρ) (S.act-τ (S.ext (S.replace-at ι ε)) τ₂)
+-- S.act-τ (S.ext (S.replace-at (R.ext ρ ι) (R.act-ε ρ ε))) (R.act-τ (R.ext (R.ext ρ)) τ₂)
+
+-- IH:
+-- R.act-τ (R.ext ρ) (S.act-τ (S.replace-at (suc ι) (R.act-ε suc ε)) τ₂)
+-- S.act-τ (S.replace-at (suc (R.ext ρ ι)) (R.act-ε (R.ext ρ) (R.act-ε suc ε))) (R.act-τ (R.ext (R.ext ρ)) τ₂)
+  rename-subst-τ-distr : ∀ (ρ : Fin ℓ → Fin ℓ')
+                           (ε : STerm ℓ)
+                           (ι : Fin (suc ℓ))
+                           (τ : SType (suc ℓ))
+                       → R.act-τ ρ ([ ι ↦ₜ ε ] τ) ≡ [ R.ext ρ ι ↦ₜ R.act-ε ρ ε ] (R.act-τ (R.ext ρ) τ)
+  rename-subst-τ-distr ρ ε ι ⟨ b ∣ ρ₁ ⟩ = {! !}
+  rename-subst-τ-distr ρ ε ι (τ₁ ⇒ τ₂) rewrite rename-subst-τ-distr ρ ε ι τ₁ = let rec = rename-subst-τ-distr (R.ext ρ) (R.weaken-ε ε) (suc ι) τ₂ in {! !}
+  rename-subst-τ-distr ρ ε ι (⊍ cons) = {! !}
+
+{-
 -- R.act-τ (R.ext ρ) (S.act-τ (S.ext (f ε)) τ₂)
 -- S.act-τ (S.ext (f (R.act-ε ρ ε))) (R.act-τ (R.ext (R.ext ρ)) τ₂)
 
-  rename-subst-τ-distr : ∀ (ρ : Fin ℓ → Fin ℓ')
-                           (ε : STerm ℓ)
-                           (τ : SType (suc ℓ))
-                           (ι : Fin (suc ℓ))
-                       → R.act-τ ρ ([ ι ↦ₜ ε ] τ) ≡ [ R.ext ρ ι ↦ₜ R.act-ε ρ ε ] (R.act-τ (R.ext ρ) τ)
-{-
   rename-subst-τ-distr : ∀ (ρ : Fin ℓ → Fin ℓ') (σ : ∀ {ℓ₀} → STerm ℓ₀ → Fin (suc ℓ₀) → STerm ℓ₀) (ε : STerm ℓ) (τ : SType (suc ℓ))
                        → R.act-τ ρ (act-τ (σ ε) τ) ≡ act-τ (σ (R.act-ε ρ ε)) (R.act-τ (R.ext ρ) τ)
   rename-subst-τ-distr ρ f ε ⟨ b ∣ ρ₁ ⟩ = {! !}
@@ -327,6 +338,9 @@ module SubstScoped where
   -}
 
 {-
+-- R.act-τ (R.ext r) (S.act-τ (S.ext (S.replace-outer ε)) τ₂)
+-- S.act-τ (S.ext (S.replace-outer (R.act-ε r ε))) (R.act-τ (R.ext (R.ext r)) τ₂)
+
   rename-subst-τ-distr' : ∀ (r : Fin ℓ → Fin ℓ') ε τ
                         → R.act-τ r ([0↦ₜ ε ] τ) ≡ [0↦ₜ R.act-ε r ε ] R.act-τ (R.ext r) τ
   rename-subst-τ-distr' r ε ⟨ b ∣ ρ ⟩ = {! !}
