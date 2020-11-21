@@ -290,6 +290,20 @@ module SubstScoped where
                             }
                     ) public
 
+  replace-helper-decrement : (var-idx : Fin (suc ℓ)) → Fin′ var-idx → Fin ℓ
+  replace-helper-decrement (suc var-idx) _ = var-idx
+
+  replace-at : Fin (suc ℓ) → STerm ℓ → Fin (suc ℓ) → STerm ℓ
+  replace-at replace-idx ε var-idx with compare replace-idx var-idx
+  -- replacement index is less than current variable index, so the variable points to a binder that just got closer to it,
+  -- so decrement the variable index:
+  ... | less .var-idx least = SVar (replace-helper-decrement var-idx least)
+  -- just replace the current variable with the term:
+  ... | equal _ = ε
+  -- replacement index is greater than current variable index, so the variable still refers to the same binder,
+  -- so leave the var index as-is, just shrinking the bound of Fin as the binders count just decremented:
+  ... | greater .replace-idx least = SVar {! !}
+
   replace-outer : STerm ℓ → Fin (suc ℓ) → STerm ℓ
   replace-outer ε zero = ε
   replace-outer _ (suc idx) = SVar idx
