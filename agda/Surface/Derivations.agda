@@ -10,7 +10,7 @@ open import Data.Vec
 open import Data.Vec.Relation.Unary.All public
 
 open import Surface.WellScoped
-open        Surface.WellScoped.SubstScoped using ([0↦ₜ_]_)
+open        Surface.WellScoped.SubstScoped using ([_↦ₜ_]_)
 -- TODO clean up modules
 -- open import Surface.Substitutions
 -- open import Misc.ContextConcat
@@ -78,7 +78,7 @@ data _⊢_⦂_ where
               → (Γ ⊢ SLam τ₁ ε ⦂ τ₁ ⇒ τ₂)
   T-App       : (δ₁ : Γ ⊢ ε₁ ⦂ τ₁ ⇒ τ₂)
               → (δ₂ : Γ ⊢ ε₂ ⦂ τ₁)
-              → Γ ⊢ SApp ε₁ ε₂ ⦂ [0↦ₜ ε₁ ] τ₂
+              → Γ ⊢ SApp ε₁ ε₂ ⦂ [ zero ↦ₜ ε₁ ] τ₂
   T-Case      : ∀ {cons : ADTCons (Mkℕₐ (suc n)) ℓ} {bs : CaseBranches (Mkℕₐ (suc n)) ℓ}
               → (resδ : Γ ⊢ τ')
               → (scrutτδ : Γ ⊢ ε ⦂ ⊍ cons)

@@ -303,15 +303,11 @@ module SubstScoped where
   -- so leave the var index as-is, just shrinking the bound of Fin as the binders count just decremented:
   ... | greater rep>var = SVar (tighten rep>var)
 
-  replace-outer : STerm ℓ → Fin (suc ℓ) → STerm ℓ
-  replace-outer ε zero = ε
-  replace-outer _ (suc idx) = SVar idx
+  [_↦ₑ_]_ : Fin (suc ℓ) → STerm ℓ → STerm (suc ℓ) → STerm ℓ
+  [_↦ₑ_]_ idx ε = act-ε (replace-at idx ε)
 
-  [0↦ₑ_]_ : STerm ℓ → STerm (suc ℓ) → STerm ℓ
-  [0↦ₑ_]_ ε = act-ε (replace-outer ε)
-
-  [0↦ₜ_]_ : STerm ℓ → SType (suc ℓ) → SType ℓ
-  [0↦ₜ_]_ ε = act-τ (replace-outer ε)
+  [_↦ₜ_]_ : Fin (suc ℓ) → STerm ℓ → SType (suc ℓ) → SType ℓ
+  [_↦ₜ_]_ idx ε = act-τ (replace-at idx ε)
 
 
 -- R.act-τ (R.ext ρ) (S.act-τ (S.ext (f ε)) τ₂)
