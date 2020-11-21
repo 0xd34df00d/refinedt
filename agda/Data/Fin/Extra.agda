@@ -34,3 +34,19 @@ suc m <>? suc n with m <>? n
 ... | less m<n = less (<-suc m<n)
 ... | equal = equal
 ... | greater m>n = greater (<-suc m>n)
+
+m<n-n-has-pred : {m n : Fin (suc ℓ)} → m < n → Fin ℓ
+m<n-n-has-pred {n = suc n} _ = n
+
+m<n-n-has-pred-correct : ∀ {m n : Fin (suc ℓ)} → (m<n : m < n) → suc (m<n-n-has-pred m<n) ≡ n
+m<n-n-has-pred-correct {n = suc n} m<n = refl
+
+tighten : ∀ {m n : Fin (suc ℓ)} → m > n → Fin ℓ
+tighten (<-zero zero) = zero
+tighten (<-zero (suc m)) = zero
+tighten {ℓ = suc ℓ} (<-suc m>n) = suc (tighten m>n)
+
+tighten-is-same-ℕ : ∀ {m n : Fin (suc ℓ)} → (m>n : m > n) → toℕ (tighten m>n) ≡ toℕ n
+tighten-is-same-ℕ (<-zero zero) = refl
+tighten-is-same-ℕ (<-zero (suc n)) = refl
+tighten-is-same-ℕ {ℓ = suc ℓ} (<-suc m>n) rewrite tighten-is-same-ℕ m>n = refl
