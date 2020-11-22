@@ -381,6 +381,7 @@ module SubstScoped where
   rename-subst-ρ-distr : RenameSubstDistributivity R.act-ρ [_↦ρ_]_
   rename-subst-ε-distr : RenameSubstDistributivity R.act-ε [_↦ε_]_
   rename-subst-cons-distr : RenameSubstDistributivity {ADTCons nₐ} R.act-cons [_↦c_]_
+  rename-subst-branches-distr : RenameSubstDistributivity {CaseBranches nₐ} R.act-branches [_↦bs_]_
 
   rename-subst-τ-distr ρ ε ι ⟨ b ∣ ρ' ⟩ rewrite act-ρ-extensionality (ext-replace-comm ε ι) ρ'
                                               | act-ρ-extensionality (R-ext-replace-comm ε ρ ι) (R.act-ρ (R.ext (R.ext ρ)) ρ')
@@ -399,6 +400,12 @@ module SubstScoped where
   rename-subst-cons-distr ρ ε ι [] = refl
   rename-subst-cons-distr ρ ε ι (τ ∷ τs) rewrite rename-subst-τ-distr ρ ε ι τ
                                                | rename-subst-cons-distr ρ ε ι τs = refl
+
+  rename-subst-branches-distr ρ ε ι [] = refl
+  rename-subst-branches-distr ρ ε ι (MkCaseBranch body ∷ bs) rewrite act-ε-extensionality (ext-replace-comm ε ι) body
+                                                                   | act-ε-extensionality (R-ext-replace-comm ε ρ ι) (R.act-ε (R.ext (R.ext ρ)) body)
+                                                                   | rename-subst-ε-distr (R.ext ρ) (R.weaken-ε ε) (suc ι) body
+                                                                   | rename-subst-branches-distr ρ ε ι bs = refl
 
 {-
 -- R.act-τ (R.ext ρ) (S.act-τ (S.ext (f ε)) τ₂)
