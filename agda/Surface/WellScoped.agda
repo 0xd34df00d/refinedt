@@ -343,21 +343,29 @@ module SubstScoped where
   ... | equal = refl
   ... | greater m>n = refl
 
+  R-ext-replace-comm : ∀ ε (ρ : Fin ℓ → Fin ℓ') ι
+                     → (∀ var-idx → ext (replace-at (R.ext ρ ι) (R.act-ε ρ ε)) var-idx ≡ replace-at (suc (R.ext ρ ι)) (R.act-ε (R.ext ρ) (R.act-ε suc ε)) var-idx)
+  R-ext-replace-comm ε ρ zero zero = refl
+  R-ext-replace-comm ε ρ (suc ι) zero = refl
+  R-ext-replace-comm ε ρ zero (suc var-idx) with zero <>? var-idx
+  ... | less m<n rewrite m<n-n-pred-cancel m<n = refl
+  ... | equal rewrite R.weaken-ε-comm ρ ε = refl
+  R-ext-replace-comm ε ρ (suc ι) (suc var-idx) with suc (ρ ι) <>? var-idx
+  ... | less m<n rewrite m<n-n-pred-cancel m<n = refl
+  ... | equal rewrite R.weaken-ε-comm ρ ε = refl
+  ... | greater m>n = refl
 
--- Goal:
--- R.act-τ (R.ext ρ) (S.act-τ (S.ext (S.replace-at ι ε)) τ₂)
--- S.act-τ (S.ext (S.replace-at (R.ext ρ ι) (R.act-ε ρ ε))) (R.act-τ (R.ext (R.ext ρ)) τ₂)
 
--- IH:
--- R.act-τ (R.ext ρ) (S.act-τ (S.replace-at (suc ι) (R.act-ε suc ε)) τ₂)
--- S.act-τ (S.replace-at (suc (R.ext ρ ι)) (R.act-ε (R.ext ρ) (R.act-ε suc ε))) (R.act-τ (R.ext (R.ext ρ)) τ₂)
   rename-subst-τ-distr : ∀ (ρ : Fin ℓ → Fin ℓ')
                            (ε : STerm ℓ)
                            (ι : Fin (suc ℓ))
                            (τ : SType (suc ℓ))
                        → R.act-τ ρ ([ ι ↦ₜ ε ] τ) ≡ [ R.ext ρ ι ↦ₜ R.act-ε ρ ε ] (R.act-τ (R.ext ρ) τ)
   rename-subst-τ-distr ρ ε ι ⟨ b ∣ ρ₁ ⟩ = {! !}
-  rename-subst-τ-distr ρ ε ι (τ₁ ⇒ τ₂) rewrite rename-subst-τ-distr ρ ε ι τ₁ = let rec = rename-subst-τ-distr (R.ext ρ) (R.weaken-ε ε) (suc ι) τ₂ in {! !}
+  rename-subst-τ-distr ρ ε ι (τ₁ ⇒ τ₂) rewrite rename-subst-τ-distr ρ ε ι τ₁
+                                             | act-τ-extensionality (ext-replace-comm ε ι) τ₂
+                                             | act-τ-extensionality (R-ext-replace-comm ε ρ ι) (R.act-τ (R.ext (R.ext ρ)) τ₂)
+                                             | rename-subst-τ-distr (R.ext ρ) (R.weaken-ε ε) (suc ι) τ₂ = refl
   rename-subst-τ-distr ρ ε ι (⊍ cons) = {! !}
 
 {-
