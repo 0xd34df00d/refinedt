@@ -380,6 +380,7 @@ module SubstScoped where
   rename-subst-τ-distr : RenameSubstDistributivity R.act-τ [_↦τ_]_
   rename-subst-ρ-distr : RenameSubstDistributivity R.act-ρ [_↦ρ_]_
   rename-subst-ε-distr : RenameSubstDistributivity R.act-ε [_↦ε_]_
+  rename-subst-cons-distr : RenameSubstDistributivity {ADTCons nₐ} R.act-cons [_↦c_]_
 
   rename-subst-τ-distr ρ ε ι ⟨ b ∣ ρ' ⟩ rewrite act-ρ-extensionality (ext-replace-comm ε ι) ρ'
                                               | act-ρ-extensionality (R-ext-replace-comm ε ρ ι) (R.act-ρ (R.ext (R.ext ρ)) ρ')
@@ -388,12 +389,16 @@ module SubstScoped where
                                              | act-τ-extensionality (ext-replace-comm ε ι) τ₂
                                              | act-τ-extensionality (R-ext-replace-comm ε ρ ι) (R.act-τ (R.ext (R.ext ρ)) τ₂)
                                              | rename-subst-τ-distr (R.ext ρ) (R.weaken-ε ε) (suc ι) τ₂ = refl
-  rename-subst-τ-distr ρ ε ι (⊍ cons) = {! !}
+  rename-subst-τ-distr ρ ε ι (⊍ cons) rewrite rename-subst-cons-distr ρ ε ι cons = refl
 
   rename-subst-ρ-distr ρ ε ι (ε₁ ≈ ε₂) rewrite rename-subst-ε-distr ρ ε ι ε₁
                                              | rename-subst-ε-distr ρ ε ι ε₂ = refl
   rename-subst-ρ-distr ρ ε ι (ρ₁ ∧ ρ₂) rewrite rename-subst-ρ-distr ρ ε ι ρ₁
                                              | rename-subst-ρ-distr ρ ε ι ρ₂ = refl
+
+  rename-subst-cons-distr ρ ε ι [] = refl
+  rename-subst-cons-distr ρ ε ι (τ ∷ τs) rewrite rename-subst-τ-distr ρ ε ι τ
+                                               | rename-subst-cons-distr ρ ε ι τs = refl
 
 {-
 -- R.act-τ (R.ext ρ) (S.act-τ (S.ext (f ε)) τ₂)
