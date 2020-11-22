@@ -328,11 +328,20 @@ module SubstScoped where
   SubstOn : (ℕ → Set) → Set
   SubstOn Ty = ∀ {ℓ} → Fin (suc ℓ) → STerm ℓ → Ty (suc ℓ) → Ty ℓ
 
+  [_↦τ_]_ : SubstOn SType
+  [_↦τ_]_ idx ε = act-τ (replace-at idx ε)
+
+  [_↦ρ_]_ : SubstOn Refinement
+  [_↦ρ_]_ idx ε = act-ρ (replace-at idx ε)
+
   [_↦ε_]_ : SubstOn STerm
   [_↦ε_]_ idx ε = act-ε (replace-at idx ε)
 
-  [_↦τ_]_ : SubstOn SType
-  [_↦τ_]_ idx ε = act-τ (replace-at idx ε)
+  [_↦c_]_ : SubstOn (ADTCons nₐ)
+  [_↦c_]_ idx ε = act-cons (replace-at idx ε)
+
+  [_↦bs_]_ : SubstOn (CaseBranches nₐ)
+  [_↦bs_]_ idx ε = act-branches (replace-at idx ε)
 
 
   ext-replace-comm : ∀ ε (ι : Fin (suc ℓ))
