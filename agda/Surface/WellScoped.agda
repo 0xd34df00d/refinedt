@@ -326,14 +326,14 @@ module SubstScoped where
   [_↦ₜ_]_ : Fin (suc ℓ) → STerm ℓ → SType (suc ℓ) → SType ℓ
   [_↦ₜ_]_ idx ε = act-τ (replace-at idx ε)
 
-  ext-replace-comm : (ι : Fin (suc ℓ))
-                   → (∀ var-idx → ext (replace-at ι ε) var-idx ≡ replace-at (suc ι) (R.weaken-ε ε) var-idx)
-  ext-replace-comm zero zero = refl
-  ext-replace-comm (suc ι) zero = refl
-  ext-replace-comm zero (suc var-idx) with zero <>? var-idx
+  ext-replace-comm : ∀ ε (ι : Fin (suc ℓ))
+                   → (∀ var-idx → ext (replace-at ι ε) var-idx ≡ replace-at (suc ι) (R.act-ε suc ε) var-idx)
+  ext-replace-comm _ zero zero = refl
+  ext-replace-comm _ (suc ι) zero = refl
+  ext-replace-comm _ zero (suc var-idx) with zero <>? var-idx
   ... | less m<n rewrite m<n-n-pred-cancel m<n = refl
   ... | equal = refl
-  ext-replace-comm (suc ι) (suc var-idx) with suc ι <>? var-idx
+  ext-replace-comm _ (suc ι) (suc var-idx) with suc ι <>? var-idx
   ... | less m<n rewrite m<n-n-pred-cancel m<n = refl
   ... | equal = refl
   ... | greater m>n = refl
