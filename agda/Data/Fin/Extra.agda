@@ -35,11 +35,11 @@ suc m <>? suc n with m <>? n
 ... | equal = equal
 ... | greater m>n = greater (<-suc m>n)
 
-m<n-n-has-pred : {m n : Fin (suc ℓ)} → m < n → Fin ℓ
-m<n-n-has-pred {n = suc n} _ = n
+m<n-n-pred : {m n : Fin (suc ℓ)} → m < n → Fin ℓ
+m<n-n-pred {n = suc n} _ = n
 
-m<n-n-has-pred-correct : ∀ {m n : Fin (suc ℓ)} → (m<n : m < n) → suc (m<n-n-has-pred m<n) ≡ n
-m<n-n-has-pred-correct {n = suc n} m<n = refl
+m<n-n-pred-cancel : ∀ {m n : Fin (suc ℓ)} → (m<n : m < n) → suc (m<n-n-pred m<n) ≡ n
+m<n-n-pred-cancel {n = suc n} m<n = refl
 
 tighten : ∀ {m n : Fin (suc ℓ)} → m > n → Fin ℓ
 tighten (<-zero zero) = zero

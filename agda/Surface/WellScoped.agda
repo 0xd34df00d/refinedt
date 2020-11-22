@@ -296,7 +296,7 @@ module SubstScoped where
   replace-at replace-idx ε var-idx with replace-idx <>? var-idx
   -- replacement index is less than current variable index, so the variable points to a binder that just got closer to it,
   -- so decrement the variable index:
-  ... | less rep<var = SVar (m<n-n-has-pred rep<var)
+  ... | less rep<var = SVar (m<n-n-pred rep<var)
   -- just replace the current variable with the term:
   ... | equal = ε
   -- replacement index is greater than current variable index, so the variable still refers to the same binder,
