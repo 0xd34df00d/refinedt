@@ -232,10 +232,10 @@ module RenameScoped where
 
   ActDistributivity : {Ty : ℕ → Set} → ActionOn Ty → Set
   ActDistributivity {Ty} act = ∀ {ℓ₀ ℓ₁ ℓ₂}
-                             → (r₁ : Fin ℓ₀ → Fin ℓ₁)
-                             → (r₂ : Fin ℓ₁ → Fin ℓ₂)
-                             → (v : Ty ℓ₀)
-                             → act r₂ (act r₁ v) ≡ act (r₂ ∘ r₁) v
+                               → (r₁ : Fin ℓ₀ → Fin ℓ₁)
+                               → (r₂ : Fin ℓ₁ → Fin ℓ₂)
+                               → (v : Ty ℓ₀)
+                               → act r₂ (act r₁ v) ≡ act (r₂ ∘ r₁) v
 
   act-τ-distr : ActDistributivity act-τ
   act-ρ-distr : ActDistributivity act-ρ
