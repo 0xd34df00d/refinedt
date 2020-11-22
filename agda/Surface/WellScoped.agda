@@ -291,6 +291,23 @@ module SubstScoped where
                             }
                     ) public
 
+  ≡-ext : {f₁ f₂ : Fin ℓ → STerm ℓ'}
+        → (∀ x → f₁ x ≡ f₂ x)
+        → (∀ x → ext f₁ x ≡ ext f₂ x)
+  ≡-ext x-≡ zero = refl
+  ≡-ext x-≡ (suc x) rewrite x-≡ x = refl
+
+  var-action-cong : {f₁ f₂ : Fin ℓ → STerm ℓ'}
+                  → (∀ x → f₁ x ≡ f₂ x)
+                  → (∀ x → var-action f₁ x ≡ var-action f₂ x)
+  var-action-cong x-≡ x = x-≡ x
+
+  open ActionScopedLemmas var-action-record
+                          record { ≡-ext = ≡-ext
+                                 ; var-action-cong = var-action-cong
+                                 }
+                          public
+
 
   replace-at : Fin (suc ℓ) → STerm ℓ → Fin (suc ℓ) → STerm ℓ
   replace-at replace-idx ε var-idx with replace-idx <>? var-idx
