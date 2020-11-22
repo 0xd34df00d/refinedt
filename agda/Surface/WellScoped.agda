@@ -397,6 +397,16 @@ module SubstScoped where
   rename-subst-ρ-distr ρ ε ι (ρ₁ ∧ ρ₂) rewrite rename-subst-ρ-distr ρ ε ι ρ₁
                                              | rename-subst-ρ-distr ρ ε ι ρ₂ = refl
 
+  rename-subst-ε-distr ρ ε ι SUnit = refl
+  rename-subst-ε-distr ρ ε ι (SVar idx) = {! !}
+  rename-subst-ε-distr ρ ε ι (SLam τ ε') = {! !}
+  rename-subst-ε-distr ρ ε ι (SApp ε₁ ε₂) rewrite rename-subst-ε-distr ρ ε ι ε₁
+                                                | rename-subst-ε-distr ρ ε ι ε₂ = refl
+  rename-subst-ε-distr ρ ε ι (SCase ε' branches) rewrite rename-subst-ε-distr ρ ε ι ε'
+                                                       | rename-subst-branches-distr ρ ε ι branches = refl
+  rename-subst-ε-distr ρ ε ι (SCon idx ε' adt-cons) rewrite rename-subst-ε-distr ρ ε ι ε'
+                                                          | rename-subst-cons-distr ρ ε ι adt-cons = refl
+
   rename-subst-cons-distr ρ ε ι [] = refl
   rename-subst-cons-distr ρ ε ι (τ ∷ τs) rewrite rename-subst-τ-distr ρ ε ι τ
                                                | rename-subst-cons-distr ρ ε ι τs = refl
