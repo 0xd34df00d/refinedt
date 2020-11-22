@@ -277,10 +277,15 @@ module RenameScoped where
                                                           | act-ε-extensionality (ext-distr r₁ r₂) body = refl
 
 
-  weaken-τ-comm : ∀ (r : Fin ℓ → Fin ℓ') (τ : SType ℓ)
-                → act-τ (ext r) (weaken-τ τ) ≡ weaken-τ (act-τ r τ)
-  weaken-τ-comm r τ rewrite act-τ-distr suc (ext r) τ
-                          | act-τ-distr r suc τ = refl
+  weaken-τ-comm : ∀ (ρ : Fin ℓ → Fin ℓ') (τ : SType ℓ)
+                → act-τ (ext ρ) (weaken-τ τ) ≡ weaken-τ (act-τ ρ τ)
+  weaken-τ-comm ρ τ rewrite act-τ-distr suc (ext ρ) τ
+                          | act-τ-distr ρ suc τ = refl
+
+  weaken-ε-comm : ∀ (ρ : Fin ℓ → Fin ℓ') (ε : STerm ℓ)
+                → act-ε (ext ρ) (weaken-ε ε) ≡ weaken-ε (act-ε ρ ε)
+  weaken-ε-comm ρ ε rewrite act-ε-distr suc (ext ρ) ε
+                          | act-ε-distr ρ suc ε = refl
 
 
 module SubstScoped where
