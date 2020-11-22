@@ -325,11 +325,15 @@ module SubstScoped where
   -- so leave the var index as-is, just shrinking the bound of Fin as the binders count just decremented:
   ... | greater rep>var = SVar (tighten rep>var)
 
-  [_↦ₑ_]_ : Fin (suc ℓ) → STerm ℓ → STerm (suc ℓ) → STerm ℓ
-  [_↦ₑ_]_ idx ε = act-ε (replace-at idx ε)
+  SubstOn : (ℕ → Set) → Set
+  SubstOn Ty = ∀ {ℓ} → Fin (suc ℓ) → STerm ℓ → Ty (suc ℓ) → Ty ℓ
 
-  [_↦ₜ_]_ : Fin (suc ℓ) → STerm ℓ → SType (suc ℓ) → SType ℓ
-  [_↦ₜ_]_ idx ε = act-τ (replace-at idx ε)
+  [_↦ε_]_ : SubstOn STerm
+  [_↦ε_]_ idx ε = act-ε (replace-at idx ε)
+
+  [_↦τ_]_ : SubstOn SType
+  [_↦τ_]_ idx ε = act-τ (replace-at idx ε)
+
 
   ext-replace-comm : ∀ ε (ι : Fin (suc ℓ))
                    → (∀ var-idx → ext (replace-at ι ε) var-idx ≡ replace-at (suc ι) (R.act-ε suc ε) var-idx)
@@ -360,7 +364,7 @@ module SubstScoped where
                            (ε : STerm ℓ)
                            (ι : Fin (suc ℓ))
                            (τ : SType (suc ℓ))
-                       → R.act-τ ρ ([ ι ↦ₜ ε ] τ) ≡ [ R.ext ρ ι ↦ₜ R.act-ε ρ ε ] (R.act-τ (R.ext ρ) τ)
+                       → R.act-τ ρ ([ ι ↦τ ε ] τ) ≡ [ R.ext ρ ι ↦τ R.act-ε ρ ε ] (R.act-τ (R.ext ρ) τ)
   rename-subst-τ-distr ρ ε ι ⟨ b ∣ ρ₁ ⟩ = {! !}
   rename-subst-τ-distr ρ ε ι (τ₁ ⇒ τ₂) rewrite rename-subst-τ-distr ρ ε ι τ₁
                                              | act-τ-extensionality (ext-replace-comm ε ι) τ₂
