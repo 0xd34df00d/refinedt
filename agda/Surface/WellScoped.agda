@@ -381,7 +381,9 @@ module SubstScoped where
   rename-subst-ρ-distr : RenameSubstDistributivity R.act-ρ [_↦ρ_]_
   rename-subst-ε-distr : RenameSubstDistributivity R.act-ε [_↦ε_]_
 
-  rename-subst-τ-distr ρ ε ι ⟨ b ∣ ρ₁ ⟩ = {! !}
+  rename-subst-τ-distr ρ ε ι ⟨ b ∣ ρ' ⟩ rewrite act-ρ-extensionality (ext-replace-comm ε ι) ρ'
+                                              | act-ρ-extensionality (R-ext-replace-comm ε ρ ι) (R.act-ρ (R.ext (R.ext ρ)) ρ')
+                                              | rename-subst-ρ-distr (R.ext ρ) (R.weaken-ε ε) (suc ι) ρ' = refl
   rename-subst-τ-distr ρ ε ι (τ₁ ⇒ τ₂) rewrite rename-subst-τ-distr ρ ε ι τ₁
                                              | act-τ-extensionality (ext-replace-comm ε ι) τ₂
                                              | act-τ-extensionality (R-ext-replace-comm ε ρ ι) (R.act-τ (R.ext (R.ext ρ)) τ₂)
