@@ -399,7 +399,10 @@ module SubstScoped where
 
   rename-subst-ε-distr ρ ε ι SUnit = refl
   rename-subst-ε-distr ρ ε ι (SVar idx) = {! !}
-  rename-subst-ε-distr ρ ε ι (SLam τ ε') = {! !}
+  rename-subst-ε-distr ρ ε ι (SLam τ ε') rewrite rename-subst-τ-distr ρ ε ι τ
+                                               | act-ε-extensionality (ext-replace-comm ε ι) ε'
+                                               | act-ε-extensionality (R-ext-replace-comm ε ρ ι) (R.act-ε (R.ext (R.ext ρ)) ε')
+                                               | rename-subst-ε-distr (R.ext ρ) (R.weaken-ε ε) (suc ι) ε' = refl
   rename-subst-ε-distr ρ ε ι (SApp ε₁ ε₂) rewrite rename-subst-ε-distr ρ ε ι ε₁
                                                 | rename-subst-ε-distr ρ ε ι ε₂ = refl
   rename-subst-ε-distr ρ ε ι (SCase ε' branches) rewrite rename-subst-ε-distr ρ ε ι ε'
