@@ -360,11 +360,15 @@ module SubstScoped where
   ... | greater m>n = refl
 
 
-  rename-subst-τ-distr : ∀ (ρ : Fin ℓ → Fin ℓ')
-                           (ε : STerm ℓ)
-                           (ι : Fin (suc ℓ))
-                           (τ : SType (suc ℓ))
-                       → R.act-τ ρ ([ ι ↦τ ε ] τ) ≡ [ R.ext ρ ι ↦τ R.act-ε ρ ε ] (R.act-τ (R.ext ρ) τ)
+  RenameSubstDistributivity : {Ty : ℕ → Set} → R.ActionOn Ty → SubstOn Ty → Set
+  RenameSubstDistributivity {Ty} ρ-act [↦] = ∀ {ℓ ℓ'}
+                                             → (ρ : Fin ℓ → Fin ℓ')
+                                             → (ε : STerm ℓ)
+                                             → (ι : Fin (suc ℓ))
+                                             → (v : Ty (suc ℓ))
+                                             → ρ-act ρ ([↦] ι ε v) ≡ [↦] (R.ext ρ ι) (R.act-ε ρ ε) (ρ-act (R.ext ρ) v)
+
+  rename-subst-τ-distr : RenameSubstDistributivity R.act-τ [_↦τ_]_
   rename-subst-τ-distr ρ ε ι ⟨ b ∣ ρ₁ ⟩ = {! !}
   rename-subst-τ-distr ρ ε ι (τ₁ ⇒ τ₂) rewrite rename-subst-τ-distr ρ ε ι τ₁
                                              | act-τ-extensionality (ext-replace-comm ε ι) τ₂
