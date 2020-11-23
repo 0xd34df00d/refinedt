@@ -4,7 +4,9 @@ module Data.Fin.Extra where
 
 open import Data.Nat using (ℕ; zero; suc)
 open import Data.Fin using (Fin; zero; suc; toℕ)
+open import Data.Fin.Properties using (suc-injective)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Relation.Nullary using (¬_)
 
 private
   variable
@@ -18,8 +20,16 @@ data _<_ : Fin ℓ → Fin ℓ → Set where
          → m < n
          → suc m < suc n
 
+m<n-not-equal : m < n → ¬ m ≡ n
+m<n-not-equal (<-zero n) = λ ()
+m<n-not-equal (<-suc m<n) = λ suc-m≡suc-n → m<n-not-equal m<n (suc-injective suc-m≡suc-n)
+
 _>_ : Fin ℓ → Fin ℓ → Set
 m > n = n < m
+
+m<n-not-m>n : m < n → ¬ m > n
+m<n-not-m>n (<-zero n) ()
+m<n-not-m>n (<-suc m<n) (<-suc m>n) = m<n-not-m>n m<n m>n
 
 data _<>_ : Fin ℓ → Fin ℓ → Set where
   less    : (m<n : m < n) → m <> n
