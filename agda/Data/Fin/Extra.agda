@@ -8,7 +8,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 private
   variable
-    ℓ : ℕ
+    ℓ ℓ' : ℕ
     m n : Fin ℓ
 
 data _<_ : Fin ℓ → Fin ℓ → Set where
@@ -54,3 +54,6 @@ tighten-is-same-ℕ {ℓ = suc ℓ} (<-suc m>n) rewrite tighten-is-same-ℕ m>n 
 <>?-refl-equal : ∀ (n : Fin ℓ) → n <>? n ≡ equal
 <>?-refl-equal zero = refl
 <>?-refl-equal (suc n) rewrite <>?-refl-equal n = refl
+
+Monotonic : (f : Fin ℓ → Fin ℓ') → Set
+Monotonic f = ∀ {x y} → x < y → f x < f y
