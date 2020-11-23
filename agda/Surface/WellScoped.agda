@@ -420,28 +420,6 @@ module SubstScoped where
                                                                    | rename-subst-ε-distr (R.ext ρ) (R.weaken-ε ε) (suc ι) body
                                                                    | rename-subst-branches-distr ρ ε ι bs = refl
 
-{-
--- R.act-τ (R.ext ρ) (S.act-τ (S.ext (f ε)) τ₂)
--- S.act-τ (S.ext (f (R.act-ε ρ ε))) (R.act-τ (R.ext (R.ext ρ)) τ₂)
-
-  rename-subst-τ-distr : ∀ (ρ : Fin ℓ → Fin ℓ') (σ : ∀ {ℓ₀} → STerm ℓ₀ → Fin (suc ℓ₀) → STerm ℓ₀) (ε : STerm ℓ) (τ : SType (suc ℓ))
-                       → R.act-τ ρ (act-τ (σ ε) τ) ≡ act-τ (σ (R.act-ε ρ ε)) (R.act-τ (R.ext ρ) τ)
-  rename-subst-τ-distr ρ f ε ⟨ b ∣ ρ₁ ⟩ = {! !}
-  rename-subst-τ-distr ρ f ε (τ₁ ⇒ τ₂) rewrite rename-subst-τ-distr ρ f ε τ₁ = let rec = rename-subst-τ-distr (R.ext ρ) {! !} (R.weaken-ε ε) τ₂ in {! !}
-  rename-subst-τ-distr ρ f ε (⊍ cons) = {! !}
-  -}
-
-{-
--- R.act-τ (R.ext r) (S.act-τ (S.ext (S.replace-outer ε)) τ₂)
--- S.act-τ (S.ext (S.replace-outer (R.act-ε r ε))) (R.act-τ (R.ext (R.ext r)) τ₂)
-
-  rename-subst-τ-distr' : ∀ (r : Fin ℓ → Fin ℓ') ε τ
-                        → R.act-τ r ([0↦ₜ ε ] τ) ≡ [0↦ₜ R.act-ε r ε ] R.act-τ (R.ext r) τ
-  rename-subst-τ-distr' r ε ⟨ b ∣ ρ ⟩ = {! !}
-  rename-subst-τ-distr' r ε (τ₁ ⇒ τ₂) rewrite rename-subst-τ-distr' r ε τ₁ = {! !}
-  rename-subst-τ-distr' r ε (⊍ cons) = {! !}
-  -}
-
 infix 4 _∈_at_
 data _∈_at_ : SType ℓ → Ctx ℓ → Fin ℓ → Set where
   ∈-zero : RenameScoped.weaken-τ τ ∈ (Γ , τ) at zero
