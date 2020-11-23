@@ -6,12 +6,14 @@ open import Agda.Builtin.Bool
 open import Agda.Builtin.List public
 open import Agda.Builtin.String
 
-open import Data.Nat public using (ℕ; suc; zero)
+open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Fin public using (Fin; suc; zero)
 open import Data.Fin.Extra
+open import Data.Nat public using (ℕ; suc; zero)
 open import Data.Vec
 open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Relation.Nullary using (¬_)
 
 data BaseType : Set where
   BUnit : BaseType
@@ -402,18 +404,25 @@ module S where
   rename-subst-ρ-distr ρ ρ-mono ε ι (ρ₁ ∧ ρ₂) rewrite rename-subst-ρ-distr ρ ρ-mono ε ι ρ₁
                                                     | rename-subst-ρ-distr ρ ρ-mono ε ι ρ₂ = refl
 
-  rename-subst-var-distr : ∀ (ρ : Fin ℓ → Fin ℓ') ε ι idx
+  rename-subst-var-distr-lemma₁ : ∀ ε (ρ[ι] ρ[idx] : Fin ℓ') (_ : ρ[ι] < ρ[idx])
+                                → replace-at (suc (ρ[ι])) ε (suc (ρ[idx])) ≡ SVar (ρ[idx])
+  rename-subst-var-distr-lemma₁ _ ρ[ι] ρ[idx] ρ[ι]<ρ[idx] with ρ[ι] <>? ρ[idx]
+  ... | less m<n = refl
+  ... | equal = ⊥-elim (m<n-not-equal ρ[ι]<ρ[idx] refl)
+  ... | greater m>n = ⊥-elim (m<n-not-m>n m>n ρ[ι]<ρ[idx])
+
+  rename-subst-var-distr : ∀ (ρ : Fin ℓ → Fin ℓ') (ρ-mono : Monotonic ρ) ε ι idx
                          → R.act-ε ρ ([ ι ↦ε ε ] SVar idx) ≡ [ R.ext ρ ι ↦ε R.act-ε ρ ε ] R.act-ε (R.ext ρ) (SVar idx)
-  rename-subst-var-distr ρ ε zero zero = refl
-  rename-subst-var-distr ρ ε zero (suc idx) = refl
-  rename-subst-var-distr ρ ε (suc ι) zero = {! !}
-  rename-subst-var-distr ρ ε (suc ι) (suc idx) with ι <>? idx
-  ... | less m<n = {! !}
-  ... | equal = {! !}
+  rename-subst-var-distr ρ ρ-mono ε zero zero = refl
+  rename-subst-var-distr ρ ρ-mono ε zero (suc idx) = refl
+  rename-subst-var-distr ρ ρ-mono ε (suc ι) zero = {! !}
+  rename-subst-var-distr ρ ρ-mono ε (suc ι) (suc idx) with ι <>? idx
+  ... | less m<n rewrite rename-subst-var-distr-lemma₁ (R.act-ε ρ ε) (ρ ι) (ρ idx) (ρ-mono m<n) = refl
+  ... | equal rewrite <>?-refl-equal (ρ ι) = refl
   ... | greater m>n = {! !}
 
   rename-subst-ε-distr ρ ρ-mono ε ι SUnit = refl
-  rename-subst-ε-distr ρ ρ-mono ε ι (SVar idx) = {! !}
+  rename-subst-ε-distr ρ ρ-mono ε ι (SVar idx) = rename-subst-var-distr ρ ρ-mono ε ι idx
   rename-subst-ε-distr ρ ρ-mono ε ι (SLam τ ε') rewrite rename-subst-τ-distr ρ ρ-mono ε ι τ
                                                       | act-ε-extensionality (ext-replace-comm ε ι) ε'
                                                       | act-ε-extensionality (R-ext-replace-comm ε ρ ι) (R.act-ε (R.ext (R.ext ρ)) ε')
