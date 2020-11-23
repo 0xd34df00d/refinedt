@@ -191,7 +191,7 @@ module ActionScopedLemmas (act : VarAction) (props : VarActionProps act) where
   act-branches-extensionality x-≡ (MkCaseBranch body ∷ bs) rewrite act-ε-extensionality (≡-ext x-≡) body
                                                                  | act-branches-extensionality x-≡ bs = refl
 
-module RenameScoped where
+module R where
   open ActionScoped (record { Target = Fin
                             ; var-action = λ r idx → SVar (r idx)
                             ; ext = λ where _ zero → zero
@@ -288,11 +288,11 @@ module RenameScoped where
                           | act-ε-distr ρ suc ε = refl
 
 
-module SubstScoped where
+module S where
   open ActionScoped (record { Target = STerm
                             ; var-action = λ σ idx → σ idx
                             ; ext = λ where _ zero → SVar zero
-                                            σ (suc n) → RenameScoped.weaken-ε (σ n)
+                                            σ (suc n) → R.weaken-ε (σ n)
                             }
                     ) public
 
@@ -368,7 +368,6 @@ module SubstScoped where
   ... | equal rewrite R.weaken-ε-comm ρ ε = refl
   ... | greater m>n = refl
 
-
   RenameSubstDistributivity : {Ty : ℕ → Set} → R.ActionOn Ty → SubstOn Ty → Set
   RenameSubstDistributivity {Ty} ρ-act [↦] = ∀ {ℓ ℓ'}
                                              → (ρ : Fin ℓ → Fin ℓ')
@@ -422,9 +421,9 @@ module SubstScoped where
 
 infix 4 _∈_at_
 data _∈_at_ : SType ℓ → Ctx ℓ → Fin ℓ → Set where
-  ∈-zero : RenameScoped.weaken-τ τ ∈ (Γ , τ) at zero
+  ∈-zero : R.weaken-τ τ ∈ (Γ , τ) at zero
   ∈-suc  : τ ∈ Γ at idx
-         → RenameScoped.weaken-τ τ ∈ (Γ , τ') at suc idx
+         → R.weaken-τ τ ∈ (Γ , τ') at suc idx
 
 infix 4 _⊂_
 record _⊂_ {ℓ ℓ'} (Γ : Ctx ℓ) (Γ' : Ctx ℓ') : Set where
@@ -432,14 +431,14 @@ record _⊂_ {ℓ ℓ'} (Γ : Ctx ℓ) (Γ' : Ctx ℓ') : Set where
   field
     ρ   : Fin ℓ → Fin ℓ'
     ρ-∈ : τ ∈ Γ at idx
-        → RenameScoped.act-τ ρ τ ∈ Γ' at ρ idx
+        → R.act-τ ρ τ ∈ Γ' at ρ idx
 
 append-both : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ₀ : SType ℓ}
             → (Γ⊂Γ' : Γ ⊂ Γ')
-            → Γ , τ₀ ⊂ Γ' , RenameScoped.act-τ (_⊂_.ρ Γ⊂Γ') τ₀
-append-both {Γ = Γ} {Γ' = Γ'} (MkTR ρ ρ-∈) = MkTR (RenameScoped.ext ρ) ρ-∈'
+            → Γ , τ₀ ⊂ Γ' , R.act-τ (_⊂_.ρ Γ⊂Γ') τ₀
+append-both {Γ = Γ} {Γ' = Γ'} (MkTR ρ ρ-∈) = MkTR (R.ext ρ) ρ-∈'
   where
     ρ-∈' : τ ∈ Γ , τ' at idx
-         → RenameScoped.act-τ (RenameScoped.ext ρ) τ ∈ Γ' , RenameScoped.act-τ ρ τ' at RenameScoped.ext ρ idx
-    ρ-∈' {τ' = τ'} ∈-zero rewrite RenameScoped.weaken-τ-comm ρ τ' = ∈-zero
-    ρ-∈' (∈-suc {τ = τ} x) rewrite RenameScoped.weaken-τ-comm ρ τ = ∈-suc (ρ-∈ x)
+         → R.act-τ (R.ext ρ) τ ∈ Γ' , R.act-τ ρ τ' at R.ext ρ idx
+    ρ-∈' {τ' = τ'} ∈-zero rewrite R.weaken-τ-comm ρ τ' = ∈-zero
+    ρ-∈' (∈-suc {τ = τ} x) rewrite R.weaken-τ-comm ρ τ = ∈-suc (ρ-∈ x)
