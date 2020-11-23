@@ -396,8 +396,18 @@ module S where
   rename-subst-ρ-distr ρ ε ι (ρ₁ ∧ ρ₂) rewrite rename-subst-ρ-distr ρ ε ι ρ₁
                                              | rename-subst-ρ-distr ρ ε ι ρ₂ = refl
 
+  rename-subst-var-distr : ∀ (ρ : Fin ℓ → Fin ℓ') ε ι idx
+                         → R.act-ε ρ ([ ι ↦ε ε ] SVar idx) ≡ [ R.ext ρ ι ↦ε R.act-ε ρ ε ] R.act-ε (R.ext ρ) (SVar idx)
+  rename-subst-var-distr ρ ε zero zero = refl
+  rename-subst-var-distr ρ ε zero (suc idx) = refl
+  rename-subst-var-distr ρ ε (suc ι) zero = {! !}
+  rename-subst-var-distr ρ ε (suc ι) (suc idx) with ι <>? idx
+  ... | less m<n = {! !}
+  ... | equal = {! !}
+  ... | greater m>n = {! !}
+
   rename-subst-ε-distr ρ ε ι SUnit = refl
-  rename-subst-ε-distr ρ ε ι (SVar idx) = {! !}
+  rename-subst-ε-distr ρ ε ι (SVar idx) = rename-subst-var-distr ρ ε ι idx
   rename-subst-ε-distr ρ ε ι (SLam τ ε') rewrite rename-subst-τ-distr ρ ε ι τ
                                                | act-ε-extensionality (ext-replace-comm ε ι) ε'
                                                | act-ε-extensionality (R-ext-replace-comm ε ρ ι) (R.act-ε (R.ext (R.ext ρ)) ε')
