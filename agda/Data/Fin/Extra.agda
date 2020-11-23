@@ -50,3 +50,7 @@ tighten-is-same-ℕ : ∀ {m n : Fin (suc ℓ)} → (m>n : m > n) → toℕ (tig
 tighten-is-same-ℕ (<-zero zero) = refl
 tighten-is-same-ℕ (<-zero (suc n)) = refl
 tighten-is-same-ℕ {ℓ = suc ℓ} (<-suc m>n) rewrite tighten-is-same-ℕ m>n = refl
+
+<>?-refl-equal : ∀ (n : Fin ℓ) → n <>? n ≡ equal
+<>?-refl-equal zero = refl
+<>?-refl-equal (suc n) rewrite <>?-refl-equal n = refl
