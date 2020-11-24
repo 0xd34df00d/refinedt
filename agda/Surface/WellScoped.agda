@@ -370,6 +370,15 @@ module S where
   ... | equal rewrite R.weaken-ε-comm ρ ε = refl
   ... | greater m>n = refl
 
+  data CommutingRenamer : (ρ : Fin ℓ → Fin ℓ') → (ι : Fin (suc ℓ)) → Set where
+    comm-at-zero : ∀ {ρ : Fin ℓ → Fin ℓ'}
+                 → (ρ-mono : Monotonic ρ)
+                 → CommutingRenamer ρ zero
+    comm-at-suc  : ∀ {ρ : Fin (suc ℓ) → Fin (suc ℓ')}
+                 → (ρ-mono : Monotonic ρ)
+                 → (ρ-zero : ρ zero ≡ zero)
+                 → CommutingRenamer ρ (suc ι)
+
   ext-monotonic : ∀ {ρ : Fin ℓ → Fin ℓ'}
                 → Monotonic ρ
                 → Monotonic (R.ext ρ)
@@ -411,12 +420,18 @@ module S where
   ... | equal = ⊥-elim (m<n-not-equal ρ[ι]<ρ[idx] refl)
   ... | greater m>n = ⊥-elim (m<n-not-m>n m>n ρ[ι]<ρ[idx])
 
-  rename-subst-var-distr : ∀ (ρ : Fin ℓ → Fin ℓ') (ρ-mono : Monotonic ρ) ε ι idx
+  rename-subst-var-distr-lemma₂ : ∀ (ρ : Fin (suc ℓ) → Fin (suc ℓ')) ι
+                                → ρ zero ≡ zero
+                                → ρ (tighten (<-zero ι)) ≡ tighten (<-zero (ρ ι))
+  rename-subst-var-distr-lemma₂ ρ ι ρ-zero rewrite tighten-zero ι
+                                                 | tighten-zero (ρ ι) = ρ-zero
+
+  rename-subst-var-distr : ∀ (ρ : Fin ℓ → Fin ℓ') ε (ι : Fin (suc ℓ)) (ρ-comm : CommutingRenamer ρ ι) idx
                          → R.act-ε ρ ([ ι ↦ε ε ] SVar idx) ≡ [ R.ext ρ ι ↦ε R.act-ε ρ ε ] R.act-ε (R.ext ρ) (SVar idx)
-  rename-subst-var-distr ρ ρ-mono ε zero zero = refl
-  rename-subst-var-distr ρ ρ-mono ε zero (suc idx) = refl
-  rename-subst-var-distr ρ ρ-mono ε (suc ι) zero = {! !}
-  rename-subst-var-distr ρ ρ-mono ε (suc ι) (suc idx) with ι <>? idx
+  rename-subst-var-distr ρ ε zero _ zero = refl
+  rename-subst-var-distr ρ ε zero _ (suc idx) = refl
+  rename-subst-var-distr ρ ε (suc ι) (comm-at-suc ρ-mono ρ-zero) zero rewrite rename-subst-var-distr-lemma₂ ρ ι ρ-zero = refl
+  rename-subst-var-distr ρ ε (suc ι) (comm-at-suc ρ-mono ρ-zero) (suc idx) with ι <>? idx
   ... | less m<n rewrite rename-subst-var-distr-lemma₁ (R.act-ε ρ ε) (ρ ι) (ρ idx) (ρ-mono m<n) = refl
   ... | equal rewrite <>?-refl-equal (ρ ι) = refl
   ... | greater m>n = {! !}

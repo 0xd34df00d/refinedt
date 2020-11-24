@@ -61,6 +61,10 @@ tighten-is-same-ℕ (<-zero zero) = refl
 tighten-is-same-ℕ (<-zero (suc n)) = refl
 tighten-is-same-ℕ {ℓ = suc ℓ} (<-suc m>n) rewrite tighten-is-same-ℕ m>n = refl
 
+tighten-zero : ∀ (n : Fin (suc ℓ)) → tighten (<-zero n) ≡ zero
+tighten-zero zero = refl
+tighten-zero (suc n) = refl
+
 <>?-refl-equal : ∀ (n : Fin ℓ) → n <>? n ≡ equal
 <>?-refl-equal zero = refl
 <>?-refl-equal (suc n) rewrite <>?-refl-equal n = refl
