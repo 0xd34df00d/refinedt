@@ -422,13 +422,6 @@ module S where
   rename-subst-ρ-distr ρ ε ι ρ-comm (ρ₁ ∧ ρ₂) rewrite rename-subst-ρ-distr ρ ε ι ρ-comm ρ₁
                                                     | rename-subst-ρ-distr ρ ε ι ρ-comm ρ₂ = refl
 
-  rename-subst-var-distr-lemma₁ : ∀ ε (ρ[ι] ρ[idx] : Fin ℓ') (_ : ρ[ι] < ρ[idx])
-                                → replace-at (suc (ρ[ι])) ε (suc (ρ[idx])) ≡ SVar (ρ[idx])
-  rename-subst-var-distr-lemma₁ _ ρ[ι] ρ[idx] ρ[ι]<ρ[idx] with ρ[ι] <>? ρ[idx]
-  ... | less m<n = refl
-  ... | equal = ⊥-elim (m<n-not-equal ρ[ι]<ρ[idx] refl)
-  ... | greater m>n = ⊥-elim (m<n-not-m>n m>n ρ[ι]<ρ[idx])
-
   rename-subst-var-distr-lemma₂ : ∀ (ρ : Fin (suc ℓ) → Fin (suc ℓ')) ι
                                 → ρ zero ≡ zero
                                 → ρ (tighten (<-zero ι)) ≡ tighten (<-zero (ρ ι))
@@ -441,7 +434,7 @@ module S where
   rename-subst-var-distr ρ ε zero _ (suc idx) = refl
   rename-subst-var-distr ρ ε (suc ι) (comm-at-suc ρ-mono ρ-zero) zero rewrite rename-subst-var-distr-lemma₂ ρ ι ρ-zero = refl
   rename-subst-var-distr ρ ε (suc ι) (comm-at-suc ρ-mono ρ-zero) (suc idx) with ι <>? idx
-  ... | less m<n rewrite rename-subst-var-distr-lemma₁ (R.act-ε ρ ε) (ρ ι) (ρ idx) (ρ-mono m<n) = refl
+  ... | less m<n rewrite <>?-< (ρ-mono m<n) = refl
   ... | equal rewrite <>?-refl-equal (ρ ι) = refl
   ... | greater m>n = {! !}
 
