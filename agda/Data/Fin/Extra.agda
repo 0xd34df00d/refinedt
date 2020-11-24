@@ -69,5 +69,13 @@ tighten-zero (suc n) = refl
 <>?-refl-equal zero = refl
 <>?-refl-equal (suc n) rewrite <>?-refl-equal n = refl
 
+<>?-< : (m<n : m < n) → m <>? n ≡ less m<n
+<>?-< (<-zero n) = refl
+<>?-< (<-suc m<n) rewrite <>?-< m<n = refl
+
+<>?-> : (m>n : m > n) → m <>? n ≡ greater m>n
+<>?-> (<-zero n) = refl
+<>?-> (<-suc m>n) rewrite <>?-> m>n = refl
+
 Monotonic : (f : Fin ℓ → Fin ℓ') → Set
 Monotonic f = ∀ {x y} → x < y → f x < f y
