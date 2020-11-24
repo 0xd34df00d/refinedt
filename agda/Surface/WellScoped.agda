@@ -27,7 +27,7 @@ variable
   n ℓ ℓ' ℓ₀ ℓ₁ ℓ₂ : ℕ
   nₐ : ℕₐ
   b b' b₁ b₂ : BaseType
-  idx : Fin ℓ
+  idx ι : Fin ℓ
 
 data SType (ℓ : ℕ) : Set
 data STerm (ℓ : ℕ) : Set
@@ -382,7 +382,16 @@ module S where
   ext-monotonic : ∀ {ρ : Fin ℓ → Fin ℓ'}
                 → Monotonic ρ
                 → Monotonic (R.ext ρ)
-  ext-monotonic ρ-mono = {! !}
+  ext-monotonic ρ-mono {x = zero} {y = zero} ()
+  ext-monotonic ρ-mono {x = zero} {y = suc y} (<-zero .y) = <-zero _
+  ext-monotonic ρ-mono {x = suc x} {y = zero} ()
+  ext-monotonic ρ-mono {x = suc x} {y = suc y} (<-suc x<y) = <-suc (ρ-mono x<y)
+
+  ext-commuting : ∀ {ρ : Fin ℓ → Fin ℓ'} {ι}
+                → CommutingRenamer ρ ι
+                → CommutingRenamer (R.ext ρ) (suc ι)
+  ext-commuting (comm-at-zero ρ-mono) = comm-at-suc (ext-monotonic ρ-mono) refl
+  ext-commuting (comm-at-suc ρ-mono ρ-zero) = comm-at-suc (ext-monotonic ρ-mono) refl
 
   RenameSubstDistributivity : {Ty : ℕ → Set} → R.ActionOn Ty → SubstOn Ty → Set
   RenameSubstDistributivity {Ty} ρ-act [↦] = ∀ {ℓ ℓ'}
