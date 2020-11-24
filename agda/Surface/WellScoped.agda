@@ -396,9 +396,9 @@ module S where
   RenameSubstDistributivity : {Ty : ℕ → Set} → R.ActionOn Ty → SubstOn Ty → Set
   RenameSubstDistributivity {Ty} ρ-act [↦] = ∀ {ℓ ℓ'}
                                              → (ρ : Fin ℓ → Fin ℓ')
-                                             → (ρ-mono : Monotonic ρ)
                                              → (ε : STerm ℓ)
                                              → (ι : Fin (suc ℓ))
+                                             → (ρ-comm : CommutingRenamer ρ ι)
                                              → (v : Ty (suc ℓ))
                                              → ρ-act ρ ([↦] ι ε v) ≡ [↦] (R.ext ρ ι) (R.act-ε ρ ε) (ρ-act (R.ext ρ) v)
 
@@ -408,19 +408,19 @@ module S where
   rename-subst-cons-distr : RenameSubstDistributivity {ADTCons nₐ} R.act-cons [_↦c_]_
   rename-subst-branches-distr : RenameSubstDistributivity {CaseBranches nₐ} R.act-branches [_↦bs_]_
 
-  rename-subst-τ-distr ρ ρ-mono ε ι ⟨ b ∣ ρ' ⟩ rewrite act-ρ-extensionality (ext-replace-comm ε ι) ρ'
+  rename-subst-τ-distr ρ ε ι ρ-comm ⟨ b ∣ ρ' ⟩ rewrite act-ρ-extensionality (ext-replace-comm ε ι) ρ'
                                                      | act-ρ-extensionality (R-ext-replace-comm ε ρ ι) (R.act-ρ (R.ext (R.ext ρ)) ρ')
-                                                     | rename-subst-ρ-distr (R.ext ρ) ? (R.weaken-ε ε) (suc ι) ρ' = refl
-  rename-subst-τ-distr ρ ρ-mono ε ι (τ₁ ⇒ τ₂) rewrite rename-subst-τ-distr ρ ρ-mono ε ι τ₁
+                                                     | rename-subst-ρ-distr (R.ext ρ) (R.weaken-ε ε) (suc ι) (ext-commuting ρ-comm) ρ' = refl
+  rename-subst-τ-distr ρ ε ι ρ-comm (τ₁ ⇒ τ₂) rewrite rename-subst-τ-distr ρ ε ι ρ-comm τ₁
                                                     | act-τ-extensionality (ext-replace-comm ε ι) τ₂
                                                     | act-τ-extensionality (R-ext-replace-comm ε ρ ι) (R.act-τ (R.ext (R.ext ρ)) τ₂)
-                                                    | rename-subst-τ-distr (R.ext ρ) ? (R.weaken-ε ε) (suc ι) τ₂ = refl
-  rename-subst-τ-distr ρ ρ-mono ε ι (⊍ cons) rewrite rename-subst-cons-distr ρ ρ-mono ε ι cons = refl
+                                                    | rename-subst-τ-distr (R.ext ρ) (R.weaken-ε ε) (suc ι) (ext-commuting ρ-comm) τ₂ = refl
+  rename-subst-τ-distr ρ ε ι ρ-comm (⊍ cons) rewrite rename-subst-cons-distr ρ ε ι ρ-comm cons = refl
 
-  rename-subst-ρ-distr ρ ρ-mono ε ι (ε₁ ≈ ε₂) rewrite rename-subst-ε-distr ρ ρ-mono ε ι ε₁
-                                                    | rename-subst-ε-distr ρ ρ-mono ε ι ε₂ = refl
-  rename-subst-ρ-distr ρ ρ-mono ε ι (ρ₁ ∧ ρ₂) rewrite rename-subst-ρ-distr ρ ρ-mono ε ι ρ₁
-                                                    | rename-subst-ρ-distr ρ ρ-mono ε ι ρ₂ = refl
+  rename-subst-ρ-distr ρ ε ι ρ-comm (ε₁ ≈ ε₂) rewrite rename-subst-ε-distr ρ ε ι ρ-comm ε₁
+                                                    | rename-subst-ε-distr ρ ε ι ρ-comm ε₂ = refl
+  rename-subst-ρ-distr ρ ε ι ρ-comm (ρ₁ ∧ ρ₂) rewrite rename-subst-ρ-distr ρ ε ι ρ-comm ρ₁
+                                                    | rename-subst-ρ-distr ρ ε ι ρ-comm ρ₂ = refl
 
   rename-subst-var-distr-lemma₁ : ∀ ε (ρ[ι] ρ[idx] : Fin ℓ') (_ : ρ[ι] < ρ[idx])
                                 → replace-at (suc (ρ[ι])) ε (suc (ρ[idx])) ≡ SVar (ρ[idx])
@@ -445,28 +445,28 @@ module S where
   ... | equal rewrite <>?-refl-equal (ρ ι) = refl
   ... | greater m>n = {! !}
 
-  rename-subst-ε-distr ρ ρ-mono ε ι SUnit = refl
-  rename-subst-ε-distr ρ ρ-mono ε ι (SVar idx) = rename-subst-var-distr ρ ρ-mono ε ι idx
-  rename-subst-ε-distr ρ ρ-mono ε ι (SLam τ ε') rewrite rename-subst-τ-distr ρ ρ-mono ε ι τ
+  rename-subst-ε-distr ρ ε ι ρ-comm SUnit = refl
+  rename-subst-ε-distr ρ ε ι ρ-comm (SVar idx) = rename-subst-var-distr ρ ε ι ρ-comm idx
+  rename-subst-ε-distr ρ ε ι ρ-comm (SLam τ ε') rewrite rename-subst-τ-distr ρ ε ι ρ-comm τ
                                                       | act-ε-extensionality (ext-replace-comm ε ι) ε'
                                                       | act-ε-extensionality (R-ext-replace-comm ε ρ ι) (R.act-ε (R.ext (R.ext ρ)) ε')
-                                                      | rename-subst-ε-distr (R.ext ρ) ? (R.weaken-ε ε) (suc ι) ε' = refl
-  rename-subst-ε-distr ρ ρ-mono ε ι (SApp ε₁ ε₂) rewrite rename-subst-ε-distr ρ ρ-mono ε ι ε₁
-                                                       | rename-subst-ε-distr ρ ρ-mono ε ι ε₂ = refl
-  rename-subst-ε-distr ρ ρ-mono ε ι (SCase ε' branches) rewrite rename-subst-ε-distr ρ ρ-mono ε ι ε'
-                                                              | rename-subst-branches-distr ρ ρ-mono ε ι branches = refl
-  rename-subst-ε-distr ρ ρ-mono ε ι (SCon idx ε' adt-cons) rewrite rename-subst-ε-distr ρ ρ-mono ε ι ε'
-                                                                 | rename-subst-cons-distr ρ ρ-mono ε ι adt-cons = refl
+                                                      | rename-subst-ε-distr (R.ext ρ) (R.weaken-ε ε) (suc ι) (ext-commuting ρ-comm) ε' = refl
+  rename-subst-ε-distr ρ ε ι ρ-comm (SApp ε₁ ε₂) rewrite rename-subst-ε-distr ρ ε ι ρ-comm ε₁
+                                                       | rename-subst-ε-distr ρ ε ι ρ-comm ε₂ = refl
+  rename-subst-ε-distr ρ ε ι ρ-comm (SCase ε' branches) rewrite rename-subst-ε-distr ρ ε ι ρ-comm ε'
+                                                              | rename-subst-branches-distr ρ ε ι ρ-comm branches = refl
+  rename-subst-ε-distr ρ ε ι ρ-comm (SCon idx ε' adt-cons) rewrite rename-subst-ε-distr ρ ε ι ρ-comm ε'
+                                                                 | rename-subst-cons-distr ρ ε ι ρ-comm adt-cons = refl
 
-  rename-subst-cons-distr ρ ρ-mono ε ι [] = refl
-  rename-subst-cons-distr ρ ρ-mono ε ι (τ ∷ τs) rewrite rename-subst-τ-distr ρ ρ-mono ε ι τ
-                                                      | rename-subst-cons-distr ρ ρ-mono ε ι τs = refl
+  rename-subst-cons-distr ρ ε ι ρ-comm [] = refl
+  rename-subst-cons-distr ρ ε ι ρ-comm (τ ∷ τs) rewrite rename-subst-τ-distr ρ ε ι ρ-comm τ
+                                                      | rename-subst-cons-distr ρ ε ι ρ-comm τs = refl
 
-  rename-subst-branches-distr ρ ρ-mono ε ι [] = refl
-  rename-subst-branches-distr ρ ρ-mono ε ι (MkCaseBranch body ∷ bs) rewrite act-ε-extensionality (ext-replace-comm ε ι) body
+  rename-subst-branches-distr ρ ε ι ρ-comm [] = refl
+  rename-subst-branches-distr ρ ε ι ρ-comm (MkCaseBranch body ∷ bs) rewrite act-ε-extensionality (ext-replace-comm ε ι) body
                                                                           | act-ε-extensionality (R-ext-replace-comm ε ρ ι) (R.act-ε (R.ext (R.ext ρ)) body)
-                                                                          | rename-subst-ε-distr (R.ext ρ) ? (R.weaken-ε ε) (suc ι) body
-                                                                          | rename-subst-branches-distr ρ ρ-mono ε ι bs = refl
+                                                                          | rename-subst-ε-distr (R.ext ρ) (R.weaken-ε ε) (suc ι) (ext-commuting ρ-comm) body
+                                                                          | rename-subst-branches-distr ρ ε ι ρ-comm bs = refl
 
 infix 4 _∈_at_
 data _∈_at_ : SType ℓ → Ctx ℓ → Fin ℓ → Set where
