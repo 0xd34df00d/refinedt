@@ -12,7 +12,7 @@ open import Data.Fin.Extra
 open import Data.Nat public using (ℕ; suc; zero)
 open import Data.Vec
 open import Function using (_∘_)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym)
 open import Relation.Nullary using (¬_)
 
 data BaseType : Set where
@@ -435,19 +435,25 @@ module S where
                                 → ρ (suc (tighten ι>idx)) ≡ suc (tighten (ρ-mono ι>idx))
   rename-subst-var-distr-lemma₃ ρ ι idx ρ-mono ι>idx = {! !}
 
+  ρ-zero≡zero : ∀ (ρ : Fin (suc ℓ) → Fin (suc ℓ')) ι
+              → CommutingRenamer ρ (suc ι)
+              → ρ zero ≡ zero
+  ρ-zero≡zero ρ ι record { ρ-mono = _ ; ρ-id = ρ-id } rewrite sym (tighten-zero ι) = lift-ℕ-≡ (ρ-id (<-zero ι))
+
   rename-subst-var-distr : ∀ (ρ : Fin ℓ → Fin ℓ') ε (ι : Fin (suc ℓ)) (ρ-comm : CommutingRenamer ρ ι) idx
                          → R.act-ε ρ ([ ι ↦ε ε ] SVar idx) ≡ [ R.ext ρ ι ↦ε R.act-ε ρ ε ] R.act-ε (R.ext ρ) (SVar idx)
   rename-subst-var-distr ρ ε zero _ zero = refl
   rename-subst-var-distr ρ ε zero _ (suc idx) = refl
-  rename-subst-var-distr {ℓ' = zero} ρ ε (suc ι) commuting zero = Fin0-elim (ρ ι)
-  rename-subst-var-distr {ℓ = suc ℓ} {ℓ' = suc ℓ'} ρ ε (suc ι) commuting zero rewrite tighten-zero ι
-                                                                                    | tighten-zero (ρ ι) = {!  !}
-  rename-subst-var-distr {ℓ' = zero} ρ ε (suc ι) commuting (suc idx) = Fin0-elim (ρ ι)
-  rename-subst-var-distr {ℓ = suc ℓ} {ℓ' = suc ℓ'} ρ ε (suc ι) commuting (suc idx) with ι <>? idx
-  ... | less m<n rewrite <>?-< (ρ-mono commuting m<n) = refl
+  rename-subst-var-distr {ℓ' = zero} ρ ε (suc ι) ρ-comm zero = Fin0-elim (ρ ι)
+  rename-subst-var-distr {ℓ = suc ℓ} {ℓ' = suc ℓ'} ρ ε (suc ι) ρ-comm zero rewrite tighten-zero ι
+                                                                                 | tighten-zero (ρ ι)
+                                                                                 | ρ-zero≡zero ρ ι ρ-comm = refl
+  rename-subst-var-distr {ℓ' = zero} ρ ε (suc ι) ρ-comm (suc idx) = Fin0-elim (ρ ι)
+  rename-subst-var-distr {ℓ = suc ℓ} {ℓ' = suc ℓ'} ρ ε (suc ι) ρ-comm (suc idx) with ι <>? idx
+  ... | less m<n rewrite <>?-< (ρ-mono ρ-comm m<n) = refl
   ... | equal rewrite <>?-refl-equal (ρ ι) = refl
-  ... | greater m>n rewrite <>?-> (ρ-mono commuting m>n)
-                          | rename-subst-var-distr-lemma₃ ρ ι idx (ρ-mono commuting) m>n = refl
+  ... | greater m>n rewrite <>?-> (ρ-mono ρ-comm m>n)
+                          | rename-subst-var-distr-lemma₃ ρ ι idx (ρ-mono ρ-comm) m>n = refl
 
   rename-subst-ε-distr ρ ε ι ρ-comm SUnit = refl
   rename-subst-ε-distr ρ ε ι ρ-comm (SVar idx) = rename-subst-var-distr ρ ε ι ρ-comm idx
