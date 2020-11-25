@@ -7,7 +7,7 @@ open import Agda.Builtin.List public
 open import Agda.Builtin.String
 
 open import Data.Empty using (⊥; ⊥-elim)
-open import Data.Fin public using (Fin; suc; zero)
+open import Data.Fin public using (Fin; suc; zero; toℕ)
 open import Data.Fin.Extra
 open import Data.Nat public using (ℕ; suc; zero)
 open import Data.Vec
@@ -370,14 +370,15 @@ module S where
   ... | equal rewrite R.weaken-ε-comm ρ ε = refl
   ... | greater m>n = refl
 
-  data CommutingRenamer : (ρ : Fin ℓ → Fin ℓ') → (ι : Fin (suc ℓ)) → Set where
-    comm-at-zero : ∀ {ρ : Fin ℓ → Fin ℓ'}
-                 → (ρ-mono : Monotonic ρ)
-                 → CommutingRenamer ρ zero
-    comm-at-suc  : ∀ {ρ : Fin (suc ℓ) → Fin (suc ℓ')}
-                 → (ρ-mono : Monotonic ρ)
-                 → (ρ-zero : ρ zero ≡ zero)
-                 → CommutingRenamer ρ (suc ι)
+  IdentityUpTo : (Fin ℓ → Fin ℓ') → Fin (suc ℓ) → Set
+  IdentityUpTo ρ ι = ∀ {n} → (n<ι : n < ι) → toℕ (ρ (tighten n<ι)) ≡ toℕ n
+
+  record CommutingRenamer (ρ : Fin ℓ → Fin ℓ') (ι : Fin (suc ℓ)) : Set where
+    field
+      ρ-mono : Monotonic ρ
+      ρ-id   : IdentityUpTo ρ ι
+
+  open CommutingRenamer
 
   ext-monotonic : ∀ {ρ : Fin ℓ → Fin ℓ'}
                 → Monotonic ρ
@@ -387,11 +388,18 @@ module S where
   ext-monotonic ρ-mono {x = suc x} {y = zero} ()
   ext-monotonic ρ-mono {x = suc x} {y = suc y} (<-suc x<y) = <-suc (ρ-mono x<y)
 
+  ext-identity : ∀ {ρ : Fin ℓ → Fin ℓ'}
+               → IdentityUpTo ρ ι
+               → IdentityUpTo (R.ext ρ) (suc ι)
+  ext-identity ρ-id (<-zero ι) rewrite tighten-zero ι = refl
+  ext-identity ρ-id (<-suc n<ι) rewrite ρ-id n<ι = refl
+
   ext-commuting : ∀ {ρ : Fin ℓ → Fin ℓ'} {ι}
                 → CommutingRenamer ρ ι
                 → CommutingRenamer (R.ext ρ) (suc ι)
-  ext-commuting (comm-at-zero ρ-mono) = comm-at-suc (ext-monotonic ρ-mono) refl
-  ext-commuting (comm-at-suc ρ-mono ρ-zero) = comm-at-suc (ext-monotonic ρ-mono) refl
+  ext-commuting record { ρ-mono = ρ-mono ; ρ-id = ρ-id } = record { ρ-mono = ext-monotonic ρ-mono
+                                                                  ; ρ-id = ext-identity ρ-id
+                                                                  }
 
   RenameSubstDistributivity : {Ty : ℕ → Set} → R.ActionOn Ty → SubstOn Ty → Set
   RenameSubstDistributivity {Ty} ρ-act [↦] = ∀ {ℓ ℓ'}
@@ -422,17 +430,24 @@ module S where
   rename-subst-ρ-distr ρ ε ι ρ-comm (ρ₁ ∧ ρ₂) rewrite rename-subst-ρ-distr ρ ε ι ρ-comm ρ₁
                                                     | rename-subst-ρ-distr ρ ε ι ρ-comm ρ₂ = refl
 
+  rename-subst-var-distr-lemma₃ : ∀ (ρ : Fin (suc ℓ) → Fin (suc ℓ')) ι idx (ρ-mono : Monotonic ρ)
+                                → (ι>idx : ι > idx)
+                                → ρ (suc (tighten ι>idx)) ≡ suc (tighten (ρ-mono ι>idx))
+  rename-subst-var-distr-lemma₃ ρ ι idx ρ-mono ι>idx = {! !}
+
   rename-subst-var-distr : ∀ (ρ : Fin ℓ → Fin ℓ') ε (ι : Fin (suc ℓ)) (ρ-comm : CommutingRenamer ρ ι) idx
                          → R.act-ε ρ ([ ι ↦ε ε ] SVar idx) ≡ [ R.ext ρ ι ↦ε R.act-ε ρ ε ] R.act-ε (R.ext ρ) (SVar idx)
   rename-subst-var-distr ρ ε zero _ zero = refl
   rename-subst-var-distr ρ ε zero _ (suc idx) = refl
-  rename-subst-var-distr ρ ε (suc ι) (comm-at-suc _ ρ-zero) zero rewrite tighten-zero ι
-                                                                       | tighten-zero (ρ ι)
-                                                                       | ρ-zero = refl
-  rename-subst-var-distr ρ ε (suc ι) (comm-at-suc ρ-mono ρ-zero) (suc idx) with ι <>? idx
-  ... | less m<n rewrite <>?-< (ρ-mono m<n) = refl
+  rename-subst-var-distr {ℓ' = zero} ρ ε (suc ι) commuting zero = Fin0-elim (ρ ι)
+  rename-subst-var-distr {ℓ = suc ℓ} {ℓ' = suc ℓ'} ρ ε (suc ι) commuting zero rewrite tighten-zero ι
+                                                                                    | tighten-zero (ρ ι) = {!  !}
+  rename-subst-var-distr {ℓ' = zero} ρ ε (suc ι) commuting (suc idx) = Fin0-elim (ρ ι)
+  rename-subst-var-distr {ℓ = suc ℓ} {ℓ' = suc ℓ'} ρ ε (suc ι) commuting (suc idx) with ι <>? idx
+  ... | less m<n rewrite <>?-< (ρ-mono commuting m<n) = refl
   ... | equal rewrite <>?-refl-equal (ρ ι) = refl
-  ... | greater m>n = {! !}
+  ... | greater m>n rewrite <>?-> (ρ-mono commuting m>n)
+                          | rename-subst-var-distr-lemma₃ ρ ι idx (ρ-mono commuting) m>n = refl
 
   rename-subst-ε-distr ρ ε ι ρ-comm SUnit = refl
   rename-subst-ε-distr ρ ε ι ρ-comm (SVar idx) = rename-subst-var-distr ρ ε ι ρ-comm idx
