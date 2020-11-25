@@ -79,3 +79,6 @@ tighten-zero (suc n) = refl
 
 Monotonic : (f : Fin ℓ → Fin ℓ') → Set
 Monotonic f = ∀ {x y} → x < y → f x < f y
+
+Fin0-elim : {A : Set} → Fin zero → A
+Fin0-elim ()
