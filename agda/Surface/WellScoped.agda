@@ -430,10 +430,14 @@ module S where
   rename-subst-ρ-distr ρ ε ι ρ-comm (ρ₁ ∧ ρ₂) rewrite rename-subst-ρ-distr ρ ε ι ρ-comm ρ₁
                                                     | rename-subst-ρ-distr ρ ε ι ρ-comm ρ₂ = refl
 
-  rename-subst-var-distr-lemma₃ : ∀ (ρ : Fin (suc ℓ) → Fin (suc ℓ')) ι idx (ρ-mono : Monotonic ρ)
+  rename-subst-var-distr-lemma₃ : ∀ (ρ : Fin (suc ℓ) → Fin (suc ℓ')) ι idx (ρ-comm : CommutingRenamer ρ (suc ι))
                                 → (ι>idx : ι > idx)
-                                → ρ (suc (tighten ι>idx)) ≡ suc (tighten (ρ-mono ι>idx))
-  rename-subst-var-distr-lemma₃ ρ ι idx ρ-mono ι>idx = {! !}
+                                → ρ (tighten (<-suc ι>idx)) ≡ suc (tighten (ρ-mono ρ-comm ι>idx))
+  rename-subst-var-distr-lemma₃ ρ ι idx ρ-comm ι>idx = lift-ℕ-≡ sub
+    where
+      sub : toℕ (ρ (suc (tighten ι>idx))) ≡ suc (toℕ (tighten (ρ-mono ρ-comm ι>idx)))
+      sub rewrite ρ-id ρ-comm (<-suc ι>idx)
+                | tighten-is-same-ℕ (ρ-mono ρ-comm ι>idx) = let r = ρ-id ρ-comm in {! !}
 
   ρ-zero≡zero : ∀ (ρ : Fin (suc ℓ) → Fin (suc ℓ')) ι
               → CommutingRenamer ρ (suc ι)
