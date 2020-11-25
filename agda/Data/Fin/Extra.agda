@@ -3,6 +3,7 @@
 module Data.Fin.Extra where
 
 open import Data.Nat using (ℕ; zero; suc)
+open import Data.Nat.Properties renaming (suc-injective to ℕ-suc-injective)
 open import Data.Fin using (Fin; zero; suc; toℕ)
 open import Data.Fin.Properties using (suc-injective)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
@@ -82,3 +83,7 @@ Monotonic f = ∀ {x y} → x < y → f x < f y
 
 Fin0-elim : {A : Set} → Fin zero → A
 Fin0-elim ()
+
+lift-ℕ-≡ : toℕ m ≡ toℕ n → m ≡ n
+lift-ℕ-≡ {m = zero} {n = zero} ℕ-≡ = refl
+lift-ℕ-≡ {m = suc m} {n = suc n} ℕ-≡ rewrite lift-ℕ-≡ (ℕ-suc-injective ℕ-≡) = refl
