@@ -10,7 +10,7 @@ open import Data.Vec
 open import Data.Vec.Relation.Unary.All public
 
 open import Surface.WellScoped
-open        Surface.WellScoped.SubstScoped using ([_↦τ_]_)
+open        Surface.WellScoped.S using ([_↦τ_]_)
 -- TODO clean up modules
 -- open import Surface.Substitutions
 -- open import Misc.ContextConcat
@@ -21,7 +21,7 @@ record PositiveDecision : Set where
 
 record Oracle : Set where
   constructor MkOracle
-  open Surface.WellScoped.RenameScoped
+  open Surface.WellScoped.R
   field
     decide : (Γ : Ctx ℓ) → (b : BaseType) → (ρ₁ ρ₂ : Refinement (suc ℓ)) → Maybe PositiveDecision
     thin   : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'}
@@ -41,7 +41,7 @@ infix 1 _⊢_
 data BranchesHaveType (Γ : Ctx ℓ) : (cons : ADTCons nₐ ℓ) → (bs : CaseBranches nₐ ℓ) → (τ' : SType ℓ) → Set where
   NoBranches    : BranchesHaveType Γ [] [] τ'
   OneMoreBranch : ∀ {conτ} {cons' : ADTCons nₐ ℓ} {bs' : CaseBranches nₐ ℓ}
-                → (εδ : (Γ , conτ) ⊢ ε' ⦂ RenameScoped.weaken-τ τ')
+                → (εδ : (Γ , conτ) ⊢ ε' ⦂ R.weaken-τ τ')
                 → (rest : BranchesHaveType Γ cons' bs' τ')
                 → BranchesHaveType Γ (conτ ∷ cons') (MkCaseBranch ε' ∷ bs') τ'
 

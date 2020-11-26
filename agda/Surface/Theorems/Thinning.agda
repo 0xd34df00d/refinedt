@@ -32,13 +32,13 @@ private
                      → Γ' ok
                      → (δ : Γ ⊢ τ)
                      → Acc _<_ (size-twf δ)
-                     → (Γ' ⊢ RenameScoped.act-τ (_⊂_.ρ Γ⊂Γ') τ)
+                     → (Γ' ⊢ R.act-τ (_⊂_.ρ Γ⊂Γ') τ)
   t-thinning-sized   : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ : SType ℓ} {ε : STerm ℓ}
                      → (Γ⊂Γ' : Γ ⊂ Γ')
                      → Γ' ok
                      → (δ : Γ ⊢ ε ⦂ τ)
                      → Acc _<_ (size-t δ)
-                     → (Γ' ⊢ RenameScoped.act-ε (_⊂_.ρ Γ⊂Γ') ε ⦂ RenameScoped.act-τ (_⊂_.ρ Γ⊂Γ') τ)
+                     → (Γ' ⊢ R.act-ε (_⊂_.ρ Γ⊂Γ') ε ⦂ R.act-τ (_⊂_.ρ Γ⊂Γ') τ)
 
   twf-thinning-sized Γ⊂Γ' Γ'ok (TWF-TrueRef _) _ = TWF-TrueRef Γ'ok
   twf-thinning-sized Γ⊂Γ' Γ'ok (TWF-Base ε₁δ ε₂δ) (acc rec) = let expCtxOk = TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)
@@ -58,7 +58,7 @@ private
   twf-thinning-sized {ℓ} {_} {Γ} {Γ'} Γ⊂Γ' Γ'ok (TWF-ADT consδs) (acc rec) = let rec' = rec (size-all-cons consδs) ≤-refl
                                                                               in TWF-ADT (map-cons consδs rec')
     where
-      map-cons : {cons : ADTCons nₐ ℓ} → (α : All (Γ ⊢_) cons) → Acc _<_ (size-all-cons α) → All (Γ' ⊢_) (RenameScoped.act-cons (_⊂_.ρ Γ⊂Γ') cons)
+      map-cons : {cons : ADTCons nₐ ℓ} → (α : All (Γ ⊢_) cons) → Acc _<_ (size-all-cons α) → All (Γ' ⊢_) (R.act-cons (_⊂_.ρ Γ⊂Γ') cons)
       map-cons [] _ = []
       map-cons (px ∷ pxs) (acc rec') = let rec₁ = rec' _ (s≤s (m≤m<>n _ _))
                                            rec₂ = rec' _ (s≤s (n≤m<>n _ _))
@@ -86,9 +86,9 @@ private
                     → Acc _<_ (size-bs δ)
                     → BranchesHaveType
                         Γ'
-                        (RenameScoped.act-cons (_⊂_.ρ Γ⊂Γ') cons)
-                        (RenameScoped.act-branches (_⊂_.ρ Γ⊂Γ') bs)
-                        (RenameScoped.act-τ (_⊂_.ρ Γ⊂Γ') τ)
+                        (R.act-cons (_⊂_.ρ Γ⊂Γ') cons)
+                        (R.act-branches (_⊂_.ρ Γ⊂Γ') bs)
+                        (R.act-τ (_⊂_.ρ Γ⊂Γ') τ)
       thin-branches NoBranches _ = NoBranches
       thin-branches (OneMoreBranch εδ rest) (acc rec') =
         let branch-Γ-ok = Γ⊢ε⦂τ-⇒-Γok εδ
@@ -111,7 +111,7 @@ private
       st-thinning-sized  : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ₁ τ₂ : SType ℓ}
                          → (Γ⊂Γ' : Γ ⊂ Γ')
                          → (Γ ⊢ τ₁ <: τ₂)
-                         → (Γ' ⊢ RenameScoped.act-τ (_⊂_.ρ Γ⊂Γ') τ₁ <: RenameScoped.act-τ (_⊂_.ρ Γ⊂Γ') τ₂)
+                         → (Γ' ⊢ R.act-τ (_⊂_.ρ Γ⊂Γ') τ₁ <: R.act-τ (_⊂_.ρ Γ⊂Γ') τ₂)
       st-thinning-sized Γ⊂Γ' (ST-Base oracle just-prf) = ST-Base oracle (Oracle.thin oracle Γ⊂Γ' just-prf)
       st-thinning-sized Γ⊂Γ' (ST-Arr δ₁ δ₂) = ST-Arr (st-thinning-sized Γ⊂Γ' δ₁) (st-thinning-sized (append-both Γ⊂Γ') δ₂)
 
