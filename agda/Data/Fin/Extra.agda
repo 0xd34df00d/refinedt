@@ -69,6 +69,11 @@ tighten-zero : ∀ (n : Fin (suc ℓ)) → tighten (<-zero n) ≡ zero
 tighten-zero zero = refl
 tighten-zero (suc n) = refl
 
+tighten-preserves-< : (n>m : n > m) → tighten n>m < n
+tighten-preserves-< (<-zero zero) = <-zero zero
+tighten-preserves-< (<-zero (suc n)) = <-zero (suc n)
+tighten-preserves-< {ℓ = suc ℓ} (<-suc n>m) = <-suc (tighten-preserves-< n>m)
+
 <>?-refl-equal : ∀ (n : Fin ℓ) → n <>? n ≡ equal
 <>?-refl-equal zero = refl
 <>?-refl-equal (suc n) rewrite <>?-refl-equal n = refl
