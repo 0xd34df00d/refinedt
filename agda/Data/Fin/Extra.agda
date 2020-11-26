@@ -14,18 +14,17 @@ private
     ℓ ℓ' : ℕ
     m n : Fin ℓ
 
-data _<_ : Fin ℓ → Fin ℓ → Set where
-  <-zero : ∀ {ℓ} (n : Fin ℓ)
-         → zero < suc n
-  <-suc  : ∀ {ℓ} {m n : Fin ℓ}
-         → m < n
+data _<_ : Fin ℓ → Fin ℓ' → Set where
+  <-zero : (n : Fin ℓ')
+         → zero {n = ℓ} < suc n
+  <-suc  : m < n
          → suc m < suc n
 
 m<n-not-equal : m < n → ¬ m ≡ n
 m<n-not-equal (<-zero n) = λ ()
 m<n-not-equal (<-suc m<n) = λ suc-m≡suc-n → m<n-not-equal m<n (suc-injective suc-m≡suc-n)
 
-_>_ : Fin ℓ → Fin ℓ → Set
+_>_ : Fin ℓ → Fin ℓ' → Set
 m > n = n < m
 
 m<n-not-m>n : m < n → ¬ m > n
