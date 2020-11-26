@@ -27,6 +27,10 @@ m<n-not-equal (<-suc m<n) = λ suc-m≡suc-n → m<n-not-equal m<n (suc-injectiv
 _>_ : Fin ℓ → Fin ℓ' → Set
 m > n = n < m
 
+<-weaken : m < n → m < suc n
+<-weaken (<-zero n) = <-zero (suc n)
+<-weaken (<-suc m<n) = <-suc (<-weaken m<n)
+
 m<n-not-m>n : m < n → ¬ m > n
 m<n-not-m>n (<-zero n) ()
 m<n-not-m>n (<-suc m<n) (<-suc m>n) = m<n-not-m>n m<n m>n
