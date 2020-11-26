@@ -371,7 +371,7 @@ module S where
   ... | greater m>n = refl
 
   IdentityUpTo : (Fin ℓ → Fin ℓ') → Fin (suc ℓ) → Set
-  IdentityUpTo ρ ι = ∀ {n} → (n<ι : n < ι) → toℕ (ρ (tighten n<ι)) ≡ toℕ n
+  IdentityUpTo ρ ι = ∀ {n} → (n<ι : n < ι) → toℕ (ρ n) ≡ toℕ n
 
   record CommutingRenamer (ρ : Fin ℓ → Fin ℓ') (ι : Fin (suc ℓ)) : Set where
     field
@@ -432,17 +432,19 @@ module S where
 
   rename-subst-var-distr-lemma₃ : ∀ (ρ : Fin (suc ℓ) → Fin (suc ℓ')) ι idx (ρ-comm : CommutingRenamer ρ (suc ι))
                                 → (ι>idx : ι > idx)
-                                → ρ (tighten (<-suc ι>idx)) ≡ suc (tighten (ρ-mono ρ-comm ι>idx))
+                                → ρ (tighten (<-suc ι>idx)) ≡ tighten (<-suc (ρ-mono ρ-comm ι>idx))
   rename-subst-var-distr-lemma₃ ρ ι idx ρ-comm ι>idx = lift-ℕ-≡ sub
     where
       sub : toℕ (ρ (suc (tighten ι>idx))) ≡ suc (toℕ (tighten (ρ-mono ρ-comm ι>idx)))
-      sub rewrite ρ-id ρ-comm (<-suc ι>idx)
-                | tighten-is-same-ℕ (ρ-mono ρ-comm ι>idx) = let r = ρ-id ρ-comm in {! !}
+      sub rewrite ρ-id ρ-comm (<-suc (tighten-preserves-< ι>idx))
+                | tighten-is-same-ℕ ι>idx
+                | tighten-is-same-ℕ (ρ-mono ρ-comm ι>idx)
+                | ρ-id ρ-comm {idx} (<-weaken ι>idx) = refl
 
   ρ-zero≡zero : ∀ (ρ : Fin (suc ℓ) → Fin (suc ℓ')) ι
               → CommutingRenamer ρ (suc ι)
               → ρ zero ≡ zero
-  ρ-zero≡zero ρ ι record { ρ-mono = _ ; ρ-id = ρ-id } rewrite sym (tighten-zero ι) = lift-ℕ-≡ (ρ-id (<-zero ι))
+  ρ-zero≡zero ρ ι record { ρ-mono = _ ; ρ-id = ρ-id } = lift-ℕ-≡ (ρ-id (<-zero ι))
 
   rename-subst-var-distr : ∀ (ρ : Fin ℓ → Fin ℓ') ε (ι : Fin (suc ℓ)) (ρ-comm : CommutingRenamer ρ ι) idx
                          → R.act-ε ρ ([ ι ↦ε ε ] SVar idx) ≡ [ R.ext ρ ι ↦ε R.act-ε ρ ε ] R.act-ε (R.ext ρ) (SVar idx)
@@ -457,7 +459,7 @@ module S where
   ... | less m<n rewrite <>?-< (ρ-mono ρ-comm m<n) = refl
   ... | equal rewrite <>?-refl-equal (ρ ι) = refl
   ... | greater m>n rewrite <>?-> (ρ-mono ρ-comm m>n)
-                          | rename-subst-var-distr-lemma₃ ρ ι idx (ρ-mono ρ-comm) m>n = refl
+                          | rename-subst-var-distr-lemma₃ ρ ι idx ρ-comm m>n = refl
 
   rename-subst-ε-distr ρ ε ι ρ-comm SUnit = refl
   rename-subst-ε-distr ρ ε ι ρ-comm (SVar idx) = rename-subst-var-distr ρ ε ι ρ-comm idx
