@@ -484,6 +484,13 @@ module S where
                                                                           | rename-subst-ε-distr (R.ext ρ) (R.weaken-ε ε) (suc ι) (ext-commuting ρ-comm) body
                                                                           | rename-subst-branches-distr ρ ε ι ρ-comm bs = refl
 
+  rename-subst-τ-distr-0 : (ρ : Fin ℓ → Fin ℓ')
+                         → (ε : STerm ℓ)
+                         → Monotonic ρ
+                         → (τ : SType (suc ℓ))
+                         → R.act-τ ρ ([ zero ↦τ ε ] τ) ≡ [ zero ↦τ R.act-ε ρ ε ] (R.act-τ (R.ext ρ) τ)
+  rename-subst-τ-distr-0 ρ ε ρ-mono τ = rename-subst-τ-distr ρ ε zero (record { ρ-mono = ρ-mono ; ρ-id = λ () }) τ
+
 infix 4 _∈_at_
 data _∈_at_ : SType ℓ → Ctx ℓ → Fin ℓ → Set where
   ∈-zero : R.weaken-τ τ ∈ (Γ , τ) at zero
