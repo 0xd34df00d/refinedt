@@ -72,9 +72,10 @@ private
                                                                 bodyδ'-ok = TCTX-Bind Γ'ok (arr-wf-dom arrδ')
                                                                 bodyδ' = t-thinning-sized (append-both Γ⊂Γ') bodyδ'-ok bodyδ rec₂
                                                              in T-Abs arrδ' bodyδ'
-  t-thinning-sized Γ⊂Γ' Γ'ok (T-App δ₁ δ₂) (acc rec) = let rec₁ = rec _ (s≤s (m≤m<>n _ _))
-                                                           rec₂ = rec _ (s≤s (n≤m<>n _ _))
-                                                        in {! T-App !} -- T-App (t-thinning-sized Γ⊂Γ' Γ'ok δ₁ rec₁) (t-thinning-sized Γ⊂Γ' Γ'ok δ₂ rec₂)
+  t-thinning-sized Γ⊂Γ' Γ'ok (T-App {ε₁ = ε₁} {τ₂ = τ₂} δ₁ δ₂) (acc rec) rewrite S.rename-subst-τ-distr-0 (_⊂_.ρ Γ⊂Γ') ε₁ (_⊂_.ρ-mono Γ⊂Γ') τ₂ =
+    let rec₁ = rec _ (s≤s (m≤m<>n _ _))
+        rec₂ = rec _ (s≤s (n≤m<>n _ _))
+     in T-App (t-thinning-sized Γ⊂Γ' Γ'ok δ₁ rec₁) (t-thinning-sized Γ⊂Γ' Γ'ok δ₂ rec₂)
   t-thinning-sized {ℓ} {_} {Γ} {Γ'} Γ⊂Γ' Γ'ok (T-Case resδ scrut branches) (acc rec) =
     let rec₁ = rec _ (s≤s (n≤m<>n<>k (size-t scrut) (size-twf resδ) (size-bs branches)))
         rec₂ = rec _ (s≤s (m≤m<>n<>k (size-t scrut) (size-twf resδ) (size-bs branches)))
