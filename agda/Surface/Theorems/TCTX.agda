@@ -3,6 +3,7 @@
 module Surface.Theorems.TCTX where
 
 open import Agda.Builtin.Equality
+open import Data.Nat.Base
 open import Data.Nat.Properties
 
 open import Surface.WellScoped

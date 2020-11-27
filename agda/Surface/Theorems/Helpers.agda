@@ -2,6 +2,7 @@
 
 module Surface.Theorems.Helpers where
 
+open import Data.Nat.Base
 open import Data.Nat.Properties
 
 open import Surface.WellScoped

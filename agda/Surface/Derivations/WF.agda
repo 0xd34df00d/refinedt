@@ -2,7 +2,7 @@
 
 module Surface.Derivations.WF where
 
-open import Data.Nat.Base public
+open import Data.Nat.Base using (_⊔_; _≤_)
 open import Data.Nat.Properties
 
 open import Surface.Derivations
