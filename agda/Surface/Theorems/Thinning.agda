@@ -5,6 +5,7 @@ module Surface.Theorems.Thinning where
 open import Data.Nat.Base
 open import Data.Nat.Induction
 open import Data.Nat.Properties
+open import Relation.Binary.PropositionalEquality using (sym)
 
 open import Surface.WellScoped
 open import Surface.Derivations
@@ -91,14 +92,14 @@ private
                         (R.act-branches (_⊂_.ρ Γ⊂Γ') bs)
                         (R.act-τ (_⊂_.ρ Γ⊂Γ') τ)
       thin-branches NoBranches _ = NoBranches
-      thin-branches (OneMoreBranch εδ rest) (acc rec') =
-        let branch-Γ-ok = Γ⊢ε⦂τ-⇒-Γok εδ
-            rec₁ = rec' (size-twf (Γok-head (Γ⊢ε⦂τ-⇒-Γok εδ))) (size-lemma₁ (size-bs rest) εδ)
-            rec₂ = rec' _ (s≤s (m≤m<>n _ _))
-            rec₃ = rec' _ (s≤s (n≤m<>n _ _))
-            branch'-Γ-ok = TCTX-Bind Γ'ok (twf-thinning-sized Γ⊂Γ' Γ'ok (Γok-head branch-Γ-ok) rec₁)
-         -- in OneMoreBranch (t-thinning-sized {! append-both Γ⊂Γ' !} branch'-Γ-ok {! εδ !} rec₂) (thin-branches rest rec₃)
-         in OneMoreBranch {! !} (thin-branches rest rec₃)
+      thin-branches {τ = τ} (OneMoreBranch {ε' = ε'} {conτ = conτ} εδ rest) (acc rec') = OneMoreBranch εδ' (thin-branches rest (rec' _ (s≤s (n≤m<>n _ _))))
+        where
+          εδ' : Γ' , R.act-τ (_⊂_.ρ Γ⊂Γ') conτ ⊢ R.act-ε (R.ext (_⊂_.ρ Γ⊂Γ')) ε' ⦂ R.weaken-τ (R.act-τ (_⊂_.ρ Γ⊂Γ') τ)
+          εδ' rewrite sym (R.weaken-τ-comm (_⊂_.ρ Γ⊂Γ') τ) = let branch-Γ-ok = Γ⊢ε⦂τ-⇒-Γok εδ
+                                                                 rec₁ = rec' (size-twf (Γok-head (Γ⊢ε⦂τ-⇒-Γok εδ))) (size-lemma₁ (size-bs rest) εδ)
+                                                                 rec₂ = rec' _ (s≤s (m≤m<>n _ _))
+                                                                 branch'-Γ-ok = TCTX-Bind Γ'ok (twf-thinning-sized Γ⊂Γ' Γ'ok (Γok-head branch-Γ-ok) rec₁)
+                                                              in t-thinning-sized (append-both Γ⊂Γ') branch'-Γ-ok εδ rec₂
   t-thinning-sized Γ⊂Γ' Γ'ok (T-Con conArg adtτ) (acc rec) = let rec₁ = rec _ (s≤s (m≤m<>n _ _))
                                                                  rec₂ = rec _ (s≤s (n≤m<>n _ _))
                                                               in T-Con (t-thinning-sized Γ⊂Γ' Γ'ok conArg rec₁) (twf-thinning-sized Γ⊂Γ' Γ'ok adtτ rec₂)
