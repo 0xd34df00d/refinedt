@@ -31,6 +31,22 @@ open import Surface.Theorems.Thinning
 
 -- Substitution lemmas
 
+mutual
+  sub-Γ⊢τ : Γ ⊢ ε ⦂ σ
+          → Γ , σ ⊢ τ
+          → Γ ⊢ [ zero ↦τ ε ] τ
+  sub-Γ⊢τ εδ (TWF-TrueRef Γok) = TWF-TrueRef (Γok-tail Γok)
+  sub-Γ⊢τ εδ (TWF-Base ε₁δ ε₂δ) = {! !}
+  sub-Γ⊢τ εδ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (sub-Γ⊢τ εδ ρ₁δ) (sub-Γ⊢τ εδ ρ₂δ)
+  sub-Γ⊢τ εδ (TWF-Arr arrδ resδ) = TWF-Arr (sub-Γ⊢τ εδ arrδ) {! !}
+  sub-Γ⊢τ {Γ = Γ} {ε = ε} {σ = σ} εδ (TWF-ADT consδs) = TWF-ADT (sub-cons consδs)
+    where
+      sub-cons : {cons : ADTCons nₐ _}
+               → All (λ conτ → (Γ , σ) ⊢ conτ) cons
+               → All (λ conτ → Γ ⊢ conτ) ([ zero ↦c ε ] cons)
+      sub-cons [] = []
+      sub-cons (px ∷ pxs) = sub-Γ⊢τ εδ px ∷ sub-cons pxs
+
 {-
 mutual
   sub-Γok : Γ ⊢ ε ⦂ σ
