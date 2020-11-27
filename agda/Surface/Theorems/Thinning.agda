@@ -132,10 +132,16 @@ abstract
                → Γ' ⊢ R.act-ε (_⊂_.ρ Γ⊂Γ') ε ⦂ R.act-τ (_⊂_.ρ Γ⊂Γ') τ
   t-thinning Γ⊂Γ' Γ'ok δ = t-thinning-sized Γ⊂Γ' Γ'ok δ (<-wellFounded _)
 
-{-
-  twf-weakening : Γ ok → Γ ⊢ τ' → Γ ⊢ τ → (Γ , τ') ⊢ τ
-  twf-weakening {Γ} Γok τ'δ τδ = twf-thinning (IgnoreHead (⊂-refl Γ)) (TCTX-Bind Γok τ'δ) τδ
+  twf-weakening : ∀ {Γ : Ctx ℓ}
+                → Γ ok
+                → Γ ⊢ τ'
+                → Γ ⊢ τ
+                → (Γ , τ') ⊢ R.weaken-τ τ
+  twf-weakening {Γ} Γok τ'δ τδ = twf-thinning ignore-head (TCTX-Bind Γok τ'δ) τδ
 
-  t-weakening : Γ ok → Γ ⊢ τ' → Γ ⊢ ε ⦂ τ → (Γ , τ') ⊢ ε ⦂ τ
-  t-weakening {Γ} Γok τ'δ εδ = t-thinning (IgnoreHead (⊂-refl Γ)) (TCTX-Bind Γok τ'δ) εδ
-  -}
+  t-weakening : ∀ {Γ : Ctx ℓ}
+              → Γ ok
+              → Γ ⊢ τ'
+              → Γ ⊢ ε ⦂ τ
+              → (Γ , τ') ⊢ R.weaken-ε ε ⦂ R.weaken-τ τ
+  t-weakening {Γ} Γok τ'δ εδ = t-thinning ignore-head (TCTX-Bind Γok τ'δ) εδ
