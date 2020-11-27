@@ -515,3 +515,7 @@ append-both {Γ = Γ} {Γ' = Γ'} (MkTR ρ ρ-∈ ρ-mono) = MkTR (R.ext ρ) ρ-
          → R.act-τ (R.ext ρ) τ ∈ Γ' , R.act-τ ρ τ' at R.ext ρ idx
     ρ-∈' {τ' = τ'} ∈-zero rewrite R.weaken-τ-comm ρ τ' = ∈-zero
     ρ-∈' (∈-suc {τ = τ} x) rewrite R.weaken-τ-comm ρ τ = ∈-suc (ρ-∈ x)
+
+ignore-head : ∀ {Γ : Ctx ℓ}
+            → Γ ⊂ Γ , τ
+ignore-head = MkTR suc ∈-suc <-suc
