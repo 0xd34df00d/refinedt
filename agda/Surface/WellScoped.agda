@@ -9,7 +9,7 @@ open import Agda.Builtin.String
 open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Fin public using (Fin; suc; zero; toℕ)
 open import Data.Fin.Extra
-open import Data.Nat public using (ℕ; suc; zero)
+open import Data.Nat public using (ℕ; suc; zero; _+_)
 open import Data.Vec
 open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym)
@@ -206,6 +206,10 @@ module R where
 
   weaken-ε : STerm ℓ → STerm (suc ℓ)
   weaken-ε = act-ε suc
+
+  weaken-ε-k : ∀ k → STerm ℓ → STerm (k + ℓ)
+  weaken-ε-k zero ε = ε
+  weaken-ε-k (suc k) ε = act-ε suc (weaken-ε-k k ε)
 
 
   ≡-ext : {f₁ f₂ : Fin ℓ → Fin ℓ'}
