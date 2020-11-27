@@ -117,14 +117,22 @@ private
       st-thinning-sized Γ⊂Γ' (ST-Base oracle just-prf) = ST-Base oracle (Oracle.thin oracle Γ⊂Γ' just-prf)
       st-thinning-sized Γ⊂Γ' (ST-Arr δ₁ δ₂) = ST-Arr (st-thinning-sized Γ⊂Γ' δ₁) (st-thinning-sized (append-both Γ⊂Γ') δ₂)
 
-{-
 abstract
-  twf-thinning : Γ ⊂ Γ' → Γ' ok → Γ ⊢ τ     → Γ' ⊢ τ
+  twf-thinning : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ : SType ℓ}
+               → (Γ⊂Γ' : Γ ⊂ Γ')
+               → Γ' ok
+               → Γ ⊢ τ
+               → Γ' ⊢ R.act-τ (_⊂_.ρ Γ⊂Γ') τ
   twf-thinning Γ⊂Γ' Γ'ok δ = twf-thinning-sized Γ⊂Γ' Γ'ok δ (<-wellFounded _)
 
-  t-thinning   : Γ ⊂ Γ' → Γ' ok → Γ ⊢ ε ⦂ τ → Γ' ⊢ ε ⦂ τ
+  t-thinning   : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ : SType ℓ}
+               → (Γ⊂Γ' : Γ ⊂ Γ')
+               → Γ' ok
+               → Γ ⊢ ε ⦂ τ
+               → Γ' ⊢ R.act-ε (_⊂_.ρ Γ⊂Γ') ε ⦂ R.act-τ (_⊂_.ρ Γ⊂Γ') τ
   t-thinning Γ⊂Γ' Γ'ok δ = t-thinning-sized Γ⊂Γ' Γ'ok δ (<-wellFounded _)
 
+{-
   twf-weakening : Γ ok → Γ ⊢ τ' → Γ ⊢ τ → (Γ , τ') ⊢ τ
   twf-weakening {Γ} Γok τ'δ τδ = twf-thinning (IgnoreHead (⊂-refl Γ)) (TCTX-Bind Γok τ'δ) τδ
 
