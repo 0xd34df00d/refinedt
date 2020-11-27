@@ -4,13 +4,12 @@ module Surface.Theorems where
 
 open import Agda.Builtin.Equality
 open import Data.Bool.Base
-open import Data.List.Base using (_++_ ; [_])
-open import Data.List.Membership.Propositional
-open import Data.List.Properties
-open import Data.List.Relation.Unary.Any
+open import Data.Fin.Base using (fromℕ<)
+open import Data.Nat.Properties using (≤-stepsʳ; ≤-refl)
 open import Data.Product renaming (_,_ to _,'_)
 
-open import Surface.Syntax
+open import Surface.WellScoped
+open        Surface.WellScoped.S using ([_↦τ_]_; [_↦c_]_)
 open import Surface.Substitutions
 open import Surface.Derivations
 open import Surface.Derivations.WF
@@ -18,19 +17,21 @@ open import Surface.Theorems.TCTX
 open import Surface.Theorems.Helpers
 open import Surface.Theorems.Thinning
 
-open import Misc.Sublist
-open import Misc.ContextConcat
-open import Misc.Helpers
-open import Misc.SnocList
+-- TODO cleanup these modules
+-- open import Misc.Sublist
+-- open import Misc.ContextConcat
+-- open import Misc.Helpers
+-- open import Misc.SnocList
 
 -- Some local helpers
 
-τ∈Γ-⇒-Γ⊢τ : Γ ok → x ⦂ τ ∈ Γ → Γ ⊢ τ
-τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (here refl) = twf-weakening δ τδ τδ
-τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (there ∈-prf) = twf-weakening δ τδ (τ∈Γ-⇒-Γ⊢τ δ ∈-prf)
+τ∈Γ-⇒-Γ⊢τ : Γ ok → τ ∈ Γ at ι → Γ ⊢ τ
+τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) ∈-zero = twf-weakening δ τδ τδ
+τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (∈-suc ∈) = twf-weakening δ τδ (τ∈Γ-⇒-Γ⊢τ δ ∈)
 
 -- Substitution lemmas
 
+{-
 mutual
   sub-Γok : Γ ⊢ ε ⦂ σ
           → (Γ , x ⦂ σ , Δ) ok
@@ -66,9 +67,11 @@ mutual
   sub-Γ⊢ε⦂τ εδ _  (T-Case resδ δ branches) = {! !}
   sub-Γ⊢ε⦂τ εδ _  (T-Con δ adtτ) = {! !}
   sub-Γ⊢ε⦂τ εδ _  (T-Sub δ x x₁) = {! !}
+  -}
 
 
-Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢ ε ⦂ τ → Γ ⊢ τ
+Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢ ε ⦂ τ
+            → Γ ⊢ τ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Unit gok) = TWF-TrueRef gok
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Var gok ∈-prf) = τ∈Γ-⇒-Γ⊢τ gok ∈-prf
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Abs arrδ _) = arrδ
