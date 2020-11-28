@@ -207,6 +207,10 @@ module R where
   weaken-ε : STerm ℓ → STerm (suc ℓ)
   weaken-ε = act-ε suc
 
+  weaken-τ-k : ∀ k → SType ℓ → SType (k + ℓ)
+  weaken-τ-k zero τ = τ
+  weaken-τ-k (suc k) τ = act-τ suc (weaken-τ-k k τ)
+
   weaken-ε-k : ∀ k → STerm ℓ → STerm (k + ℓ)
   weaken-ε-k zero ε = ε
   weaken-ε-k (suc k) ε = act-ε suc (weaken-ε-k k ε)
