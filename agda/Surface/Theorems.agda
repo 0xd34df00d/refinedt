@@ -44,9 +44,28 @@ ctx-idx ℓ = fromℕ< (≤-stepsʳ ℓ ≤-refl)
 -- Substitution lemmas
 
 mutual
-  sub-Γ⊢τ : Γ ⊢ ε ⦂ σ
-          → Γ , σ ⊢ τ
-          → Γ ⊢ [ zero ↦τ ε ] τ
+  sub-Γok : ∀ k {Γ : Ctx (suc (k + ℓ))} {τ : SType (suc (k + ℓ))}
+          → Γ ⊢ R.weaken-ε-k (suc k) ε ⦂ R.weaken-τ-k (suc k) σ
+          → Γ ok
+          → ([ ℓ ↦Γ ε ] Γ) ok
+  sub-Γok zero {Γ , _} εδ (TCTX-Bind Γok τδ) = Γok
+  sub-Γok (suc k) {Γ , x} εδ (TCTX-Bind Γok τδ) = TCTX-Bind {! sub-Γok !} {! !}
+
+  sub-Γ⊢τ : ∀ k {Γ : Ctx (suc (k + ℓ))} {τ : SType (suc (k + ℓ))}
+          → Γ ⊢ R.weaken-ε-k (suc k) ε ⦂ R.weaken-τ-k (suc k) σ
+          → Γ ⊢ τ
+          → [ ℓ ↦Γ ε ] Γ ⊢ [ ctx-idx ℓ ↦τ R.weaken-ε-k k ε ] τ
+  sub-Γ⊢τ k εδ (TWF-TrueRef Γok) = TWF-TrueRef (sub-Γok k εδ Γok)
+  sub-Γ⊢τ k εδ (TWF-Base ε₁δ ε₂δ) = {! !}
+  sub-Γ⊢τ k εδ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (sub-Γ⊢τ k εδ ρ₁δ) (sub-Γ⊢τ k εδ ρ₂δ)
+  sub-Γ⊢τ k εδ (TWF-Arr arrδ resδ) = TWF-Arr (sub-Γ⊢τ k εδ arrδ) {! !}
+  sub-Γ⊢τ k εδ (TWF-ADT consδs) = {! !}
+
+  sub-Γ⊢τ-front : Γ ⊢ ε ⦂ σ
+                → Γ , σ ⊢ τ
+                → Γ ⊢ [ zero ↦τ ε ] τ
+  sub-Γ⊢τ-front εδ τδ = sub-Γ⊢τ zero (t-weakening (Γ⊢ε⦂τ-⇒-Γok εδ) (Γok-head (Γ⊢τ-⇒-Γok τδ)) εδ) τδ
+  {-
   sub-Γ⊢τ εδ (TWF-TrueRef Γok) = TWF-TrueRef (Γok-tail Γok)
   sub-Γ⊢τ εδ (TWF-Base ε₁δ ε₂δ) = {! !}
   sub-Γ⊢τ εδ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (sub-Γ⊢τ εδ ρ₁δ) (sub-Γ⊢τ εδ ρ₂δ)
@@ -58,6 +77,7 @@ mutual
                → All (λ conτ → Γ ⊢ conτ) ([ zero ↦c ε ] cons)
       sub-cons [] = []
       sub-cons (px ∷ pxs) = sub-Γ⊢τ εδ px ∷ sub-cons pxs
+  -}
 
 {-
 mutual
@@ -103,7 +123,7 @@ mutual
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Unit gok) = TWF-TrueRef gok
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Var gok ∈-prf) = τ∈Γ-⇒-Γ⊢τ gok ∈-prf
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Abs arrδ _) = arrδ
-Γ⊢ε⦂τ-⇒-Γ⊢τ (T-App δ₁ δ₂) = sub-Γ⊢τ δ₂ (arr-wf-⇒-cod-wf (Γ⊢ε⦂τ-⇒-Γ⊢τ δ₁))
+Γ⊢ε⦂τ-⇒-Γ⊢τ (T-App δ₁ δ₂) = sub-Γ⊢τ-front δ₂ (arr-wf-⇒-cod-wf (Γ⊢ε⦂τ-⇒-Γ⊢τ δ₁))
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Case resδ _ _) = resδ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Con _ adtτ) = adtτ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Sub δ superδ sub) = superδ
