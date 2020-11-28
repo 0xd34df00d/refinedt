@@ -29,6 +29,9 @@ open import Surface.Theorems.Thinning
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) ∈-zero = twf-weakening δ τδ τδ
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (∈-suc ∈) = twf-weakening δ τδ (τ∈Γ-⇒-Γ⊢τ δ ∈)
 
+ctx-idx : ∀ {k} ℓ → Fin (suc (k + ℓ))
+ctx-idx ℓ = fromℕ< (≤-stepsʳ ℓ ≤-refl)
+
 -- Substitution on contexts: this is essentially replacing Γ, x ⦂ σ, Δ with Γ, [ x ↦ ε ] Δ
 -- Here, ℓ is the length of Γ (which ε must live in), and k is the length of Δ.
 [_↦Γ_]_ : ∀ {k} ℓ
@@ -36,8 +39,7 @@ open import Surface.Theorems.Thinning
         → Ctx (suc (k + ℓ))
         → Ctx (k + ℓ)
 [_↦Γ_]_ {k = zero} ℓ ε (Γ , _) = Γ
-[_↦Γ_]_ {k = suc k} ℓ ε (Γ,Δ , τ) = let k-fin = fromℕ< (≤-stepsʳ ℓ ≤-refl)
-                                     in ([ ℓ ↦Γ ε ] Γ,Δ) , ([ k-fin  ↦τ R.weaken-ε-k k ε ] τ)
+[_↦Γ_]_ {k = suc k} ℓ ε (Γ,Δ , τ) = ([ ℓ ↦Γ ε ] Γ,Δ) , ([ ctx-idx ℓ ↦τ R.weaken-ε-k k ε ] τ)
 
 -- Substitution lemmas
 
