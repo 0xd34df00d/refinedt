@@ -43,6 +43,20 @@ ctx-idx ℓ = fromℕ< (≤-stepsʳ ℓ ≤-refl)
 
 -- Substitution lemmas
 
+-- It's interesting to note that _⊂_ does not work as nicely to express the notion of a prefix of a context.
+-- Indeed, the information that the last element of the supercontext can be chopped off is lost:
+-- _⊂_ can also imply that arbitrary bindings are inserted in the middle of the context, not necessarily appended to it.
+-- We could have used _⊂_ with an extra requirement that ρ : Fin ℓ → Fin ℓ' is such that ∀ x → toℕ x ≡ toℕ (ρ x),
+-- but it gets super messy really soon. For example, even proving that if ℓ' ≠ ℓ,
+-- then extra elements were appended to the supercontext, is non-trivial.
+-- It's perhaps cleanest and cheapest to just add an extra predicate.
+
+infix 3 _is-prefix-of_
+data _is-prefix-of_ : (Γ : Ctx ℓ) → (Γ' : Ctx ℓ') → Set where
+  prefix-refl : Γ is-prefix-of Γ
+  prefix-cons : Γ is-prefix-of Γ'
+              → Γ is-prefix-of Γ' , τ
+
 mutual
   sub-Γok : ∀ k {Γ : Ctx (suc (k + ℓ))} {τ : SType (suc (k + ℓ))}
           → Γ ⊢ R.weaken-ε-k (suc k) ε ⦂ R.weaken-τ-k (suc k) σ
