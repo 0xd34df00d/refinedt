@@ -4,8 +4,9 @@ module Surface.Theorems where
 
 open import Agda.Builtin.Equality
 open import Data.Bool.Base
+open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Fin.Base using (fromℕ<)
-open import Data.Nat.Properties using (≤-stepsʳ; ≤-refl)
+open import Data.Nat.Properties using (≤-stepsʳ; ≤-refl; m≢1+n+m)
 open import Data.Product renaming (_,_ to _,'_)
 
 open import Surface.WellScoped
@@ -62,11 +63,33 @@ data _is-prefix-of_ : (Γ : Ctx ℓ) → (Γ' : Ctx ℓ') → Set where
 [_↦τ<_]_ ℓ ⦃ ℓ'-eq = refl ⦄ ε τ = [ ctx-idx ℓ ↦τ R.weaken-ε-k _ ε ] τ
 
 mutual
+  sub-Γok : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx ℓ'}
+          → Γ ⊢ ε ⦂ σ
+          → Γ is-prefix-of Γ,σ,Δ
+          → ⦃ ℓ'-eq : ℓ' ≡ suc (k + ℓ) ⦄
+          → Γ,σ,Δ ok
+          → ([ ℓ ↦Γ ε ] Γ,σ,Δ) ok
+  sub-Γok {ℓ = ℓ} {k = suc _} _ prefix-refl ⦃ ℓ'-eq ⦄ _ = ⊥-elim (m≢1+n+m ℓ ℓ'-eq)
+  sub-Γok {k = zero}  _  _                            ⦃ ℓ'-eq = refl ⦄ (TCTX-Bind Γ,σ,Δok τδ) = Γ,σ,Δok
+  sub-Γok {k = suc _} εδ (prefix-cons Γ-prefix-Γ,σ,Δ) ⦃ ℓ'-eq = refl ⦄ (TCTX-Bind Γ,σ,Δok τδ) =
+      TCTX-Bind (sub-Γok εδ Γ-prefix-Γ,σ,Δ Γ,σ,Δok) (sub-Γ⊢τ εδ Γ-prefix-Γ,σ,Δ τδ)
+
+  sub-Γ⊢τ : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx ℓ'} {τ : SType ℓ'}
+          → Γ ⊢ ε ⦂ σ
+          → Γ is-prefix-of Γ,σ,Δ
+          → ⦃ ℓ'-eq : ℓ' ≡ suc (k + ℓ) ⦄
+          → Γ,σ,Δ ⊢ τ
+          → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ℓ ↦τ< ε ] τ
+  sub-Γ⊢τ εδ prefix ⦃ ℓ'-eq = refl ⦄ (TWF-TrueRef Γok) = TWF-TrueRef (sub-Γok εδ prefix Γok)
+  sub-Γ⊢τ εδ prefix ⦃ ℓ'-eq = refl ⦄ (TWF-Base ε₁δ ε₂δ) = {! !}
+  sub-Γ⊢τ εδ prefix ⦃ ℓ'-eq = refl ⦄ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (sub-Γ⊢τ εδ prefix ρ₁δ) (sub-Γ⊢τ εδ prefix ρ₂δ)
+  sub-Γ⊢τ εδ prefix ⦃ ℓ'-eq = refl ⦄ (TWF-Arr arrδ resδ) = TWF-Arr (sub-Γ⊢τ εδ prefix arrδ) {! !}
+  sub-Γ⊢τ εδ prefix ⦃ ℓ'-eq = refl ⦄ (TWF-ADT consδs) = {! !}
 
   sub-Γ⊢τ-front : Γ ⊢ ε ⦂ σ
                 → Γ , σ ⊢ τ
                 → Γ ⊢ [ zero ↦τ ε ] τ
-  sub-Γ⊢τ-front εδ τδ = sub-Γ⊢τ zero (t-weakening (Γ⊢ε⦂τ-⇒-Γok εδ) (Γok-head (Γ⊢τ-⇒-Γok τδ)) εδ) τδ
+  sub-Γ⊢τ-front εδ τδ = sub-Γ⊢τ εδ (prefix-cons prefix-refl) τδ
   {-
   sub-Γ⊢τ εδ (TWF-TrueRef Γok) = TWF-TrueRef (Γok-tail Γok)
   sub-Γ⊢τ εδ (TWF-Base ε₁δ ε₂δ) = {! !}
