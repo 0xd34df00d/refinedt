@@ -34,12 +34,12 @@ ctx-idx ℓ = fromℕ< (≤-stepsʳ ℓ ≤-refl)
 
 -- Substitution on contexts: this is essentially replacing Γ, x ⦂ σ, Δ with Γ, [ x ↦ ε ] Δ
 -- Here, ℓ is the length of Γ (which ε must live in), and k is the length of Δ.
-[_↦Γ_]_ : ∀ {k} ℓ
+[_↦Γ_]_ : ∀ {k} ℓ {ℓ'} ⦃ ℓ'-eq : ℓ' ≡ suc (k + ℓ) ⦄
         → (ε : STerm ℓ)
-        → Ctx (suc (k + ℓ))
+        → Ctx ℓ'
         → Ctx (k + ℓ)
-[_↦Γ_]_ {k = zero} ℓ ε (Γ , _) = Γ
-[_↦Γ_]_ {k = suc k} ℓ ε (Γ,Δ , τ) = ([ ℓ ↦Γ ε ] Γ,Δ) , ([ ctx-idx ℓ ↦τ R.weaken-ε-k k ε ] τ)
+[_↦Γ_]_ {k = zero} ℓ ⦃ ℓ'-eq = refl ⦄ ε (Γ , _) = Γ
+[_↦Γ_]_ {k = suc k} ℓ ⦃ ℓ'-eq = refl ⦄ ε (Γ,Δ , τ) = ([ ℓ ↦Γ ε ] Γ,Δ) , ([ ctx-idx ℓ ↦τ R.weaken-ε-k k ε ] τ)
 
 -- Substitution lemmas
 
@@ -58,22 +58,6 @@ data _is-prefix-of_ : (Γ : Ctx ℓ) → (Γ' : Ctx ℓ') → Set where
               → Γ is-prefix-of Γ' , τ
 
 mutual
-  sub-Γok : ∀ k {Γ : Ctx (suc (k + ℓ))} {τ : SType (suc (k + ℓ))}
-          → Γ ⊢ R.weaken-ε-k (suc k) ε ⦂ R.weaken-τ-k (suc k) σ
-          → Γ ok
-          → ([ ℓ ↦Γ ε ] Γ) ok
-  sub-Γok zero {Γ , _} εδ (TCTX-Bind Γok τδ) = Γok
-  sub-Γok (suc k) {Γ , x} εδ (TCTX-Bind Γok τδ) = TCTX-Bind {! sub-Γok !} {! !}
-
-  sub-Γ⊢τ : ∀ k {Γ : Ctx (suc (k + ℓ))} {τ : SType (suc (k + ℓ))}
-          → Γ ⊢ R.weaken-ε-k (suc k) ε ⦂ R.weaken-τ-k (suc k) σ
-          → Γ ⊢ τ
-          → [ ℓ ↦Γ ε ] Γ ⊢ [ ctx-idx ℓ ↦τ R.weaken-ε-k k ε ] τ
-  sub-Γ⊢τ k εδ (TWF-TrueRef Γok) = TWF-TrueRef (sub-Γok k εδ Γok)
-  sub-Γ⊢τ k εδ (TWF-Base ε₁δ ε₂δ) = {! !}
-  sub-Γ⊢τ k εδ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (sub-Γ⊢τ k εδ ρ₁δ) (sub-Γ⊢τ k εδ ρ₂δ)
-  sub-Γ⊢τ k εδ (TWF-Arr arrδ resδ) = TWF-Arr (sub-Γ⊢τ k εδ arrδ) {! !}
-  sub-Γ⊢τ k εδ (TWF-ADT consδs) = {! !}
 
   sub-Γ⊢τ-front : Γ ⊢ ε ⦂ σ
                 → Γ , σ ⊢ τ
