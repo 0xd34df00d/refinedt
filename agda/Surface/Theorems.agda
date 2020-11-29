@@ -57,6 +57,10 @@ data _is-prefix-of_ : (Γ : Ctx ℓ) → (Γ' : Ctx ℓ') → Set where
   prefix-cons : Γ is-prefix-of Γ'
               → Γ is-prefix-of Γ' , τ
 
+[_↦τ<_]_ : ∀ {k ℓ'} ℓ ⦃ ℓ'-eq : ℓ' ≡ suc (k + ℓ) ⦄
+         → (ε : STerm ℓ) → SType ℓ' → SType (k + ℓ)
+[_↦τ<_]_ ℓ ⦃ ℓ'-eq = refl ⦄ ε τ = [ ctx-idx ℓ ↦τ R.weaken-ε-k _ ε ] τ
+
 mutual
 
   sub-Γ⊢τ-front : Γ ⊢ ε ⦂ σ
