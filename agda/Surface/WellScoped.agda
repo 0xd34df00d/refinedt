@@ -193,6 +193,7 @@ module ActionScopedLemmas (act : VarAction) (props : VarActionProps act) where
   act-branches-extensionality x-≡ (MkCaseBranch body ∷ bs) rewrite act-ε-extensionality (≡-ext x-≡) body
                                                                  | act-branches-extensionality x-≡ bs = refl
 
+-- Variable renaming definitions and lemmas
 module R where
   open ActionScoped (record { Target = Fin
                             ; var-action = λ r idx → SVar (r idx)
@@ -298,6 +299,7 @@ module R where
                           | act-ε-distr ρ suc ε = refl
 
 
+-- Variable ↦ term substition definitions and lemmas
 module S where
   open ActionScoped (record { Target = STerm
                             ; var-action = λ σ idx → σ idx

@@ -12,6 +12,7 @@ open import Surface.Derivations.WF
 open import Surface.Theorems.Helpers
 
 abstract
+  -- Referred to as T-implies-TCTX in the paper
   Γ⊢ε⦂τ-⇒-Γok : Γ ⊢ ε ⦂ τ → Γ ok
   Γ⊢ε⦂τ-⇒-Γok (T-Unit gok) = gok
   Γ⊢ε⦂τ-⇒-Γok (T-Var gok _) = gok
@@ -21,6 +22,7 @@ abstract
   Γ⊢ε⦂τ-⇒-Γok (T-Con conArg _) = Γ⊢ε⦂τ-⇒-Γok conArg
   Γ⊢ε⦂τ-⇒-Γok (T-Sub δ _ _) = Γ⊢ε⦂τ-⇒-Γok δ
 
+  -- Referred to as TWF-implies-TCTX in the paper
   Γ⊢τ-⇒-Γok : Γ ⊢ τ → Γ ok
   Γ⊢τ-⇒-Γok (TWF-TrueRef gok) = gok
   Γ⊢τ-⇒-Γok (TWF-Base ε₁δ _) = Γok-tail (Γ⊢ε⦂τ-⇒-Γok ε₁δ)
