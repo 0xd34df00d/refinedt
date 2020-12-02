@@ -30,8 +30,8 @@ open import Surface.Theorems.Thinning
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) ∈-zero = twf-weakening δ τδ τδ
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (∈-suc ∈) = twf-weakening δ τδ (τ∈Γ-⇒-Γ⊢τ δ ∈)
 
-ctx-idx : ∀ {k} ℓ → Fin (suc (k + ℓ))
-ctx-idx ℓ = fromℕ< (≤-stepsʳ ℓ ≤-refl)
+ctx-idx : ∀ k → Fin (suc (k + ℓ))
+ctx-idx {ℓ} _ = fromℕ< (≤-stepsʳ ℓ ≤-refl)
 
 -- Substitution on contexts: this is essentially replacing Γ, x ⦂ σ, Δ with Γ, [ x ↦ ε ] Δ
 -- Here, ℓ is the length of Γ (which ε must live in), and k is the length of Δ.
@@ -40,7 +40,7 @@ ctx-idx ℓ = fromℕ< (≤-stepsʳ ℓ ≤-refl)
         → Ctx ℓ'
         → Ctx (k + ℓ)
 [_↦Γ_]_ {k = zero} ℓ ⦃ ℓ'-eq = refl ⦄ ε (Γ , _) = Γ
-[_↦Γ_]_ {k = suc k} ℓ ⦃ ℓ'-eq = refl ⦄ ε (Γ,Δ , τ) = ([ ℓ ↦Γ ε ] Γ,Δ) , ([ ctx-idx ℓ ↦τ R.weaken-ε-k k ε ] τ)
+[_↦Γ_]_ {k = suc k} ℓ ⦃ ℓ'-eq = refl ⦄ ε (Γ,Δ , τ) = ([ ℓ ↦Γ ε ] Γ,Δ) , ([ ctx-idx k ↦τ R.weaken-ε-k k ε ] τ)
 
 -- Substitution lemmas
 
@@ -60,7 +60,7 @@ data _is-prefix-of_ : (Γ : Ctx ℓ) → (Γ' : Ctx ℓ') → Set where
 
 [_↦τ<_]_ : ∀ {k ℓ'} ℓ ⦃ ℓ'-eq : ℓ' ≡ suc (k + ℓ) ⦄
          → (ε : STerm ℓ) → SType ℓ' → SType (k + ℓ)
-[_↦τ<_]_ ℓ ⦃ ℓ'-eq = refl ⦄ ε τ = [ ctx-idx ℓ ↦τ R.weaken-ε-k _ ε ] τ
+[_↦τ<_]_ {k = k} _ ⦃ ℓ'-eq = refl ⦄ ε τ = [ ctx-idx k ↦τ R.weaken-ε-k _ ε ] τ
 
 mutual
   sub-Γok : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx ℓ'}
@@ -88,7 +88,7 @@ mutual
     where
       sub-cons : ∀ {cons : ADTCons nₐ _}
                → All (λ conτ → Γ,σ,Δ ⊢ conτ) cons
-               → All (λ conτ → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ conτ) ([ ctx-idx ℓ ↦c R.weaken-ε-k k ε ] cons)
+               → All (λ conτ → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ conτ) ([ ctx-idx k ↦c R.weaken-ε-k k ε ] cons)
       sub-cons [] = []
       sub-cons (px ∷ pxs) = sub-Γ⊢τ εδ prefix px ∷ sub-cons pxs
 
