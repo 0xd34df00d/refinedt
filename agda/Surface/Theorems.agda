@@ -77,7 +77,7 @@ mutual
           → ⦃ ℓ'-eq : ℓ' ≡ suc (k + ℓ) ⦄
           → Γ,σ,Δ ok
           → ([ ℓ ↦Γ ε ] Γ,σ,Δ) ok
-  sub-Γok {ℓ = ℓ} {k = suc _} _ prefix-refl ⦃ ℓ'-eq ⦄ _ = ⊥-elim (m≢1+n+m ℓ ℓ'-eq)
+  sub-Γok {k = suc _} _ prefix-refl ⦃ ℓ'-eq ⦄                          _                      = ⊥-elim (m≢1+n+m _ ℓ'-eq)
   sub-Γok {k = zero}  _  _                            ⦃ ℓ'-eq = refl ⦄ (TCTX-Bind Γ,σ,Δok τδ) = Γ,σ,Δok
   sub-Γok {k = suc _} εδ (prefix-cons Γ-prefix-Γ,σ,Δ) ⦃ ℓ'-eq = refl ⦄ (TCTX-Bind Γ,σ,Δok τδ) =
       TCTX-Bind (sub-Γok εδ Γ-prefix-Γ,σ,Δ Γ,σ,Δok) (sub-Γ⊢τ εδ Γ-prefix-Γ,σ,Δ τδ)
