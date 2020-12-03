@@ -27,12 +27,6 @@ open import Surface.Theorems.Thinning
 -- open import Misc.Helpers
 -- open import Misc.SnocList
 
--- Some local helpers
-
-τ∈Γ-⇒-Γ⊢τ : Γ ok → τ ∈ Γ at ι → Γ ⊢ τ
-τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) ∈-zero = twf-weakening δ τδ τδ
-τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (∈-suc ∈) = twf-weakening δ τδ (τ∈Γ-⇒-Γ⊢τ δ ∈)
-
 -- Substitution lemmas
 
 -- It's interesting to note that _⊂_ does not work as nicely to express the notion of a prefix of a context.
@@ -48,6 +42,12 @@ data _is-prefix-of_ : (Γ : Ctx ℓ) → (Γ' : Ctx ℓ') → Set where
   prefix-refl : Γ is-prefix-of Γ
   prefix-cons : Γ is-prefix-of Γ'
               → Γ is-prefix-of Γ' , τ
+
+-- Some local helpers
+
+τ∈Γ-⇒-Γ⊢τ : Γ ok → τ ∈ Γ at ι → Γ ⊢ τ
+τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) ∈-zero = twf-weakening δ τδ τδ
+τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (∈-suc ∈) = twf-weakening δ τδ (τ∈Γ-⇒-Γ⊢τ δ ∈)
 
 prefix-subst : ∀ {k} {Γ : Ctx ℓ} {Γ' : Ctx ℓ'}
              → Γ is-prefix-of Γ'
