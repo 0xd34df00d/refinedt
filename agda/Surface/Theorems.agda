@@ -33,19 +33,6 @@ open import Surface.Theorems.Thinning
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) ∈-zero = twf-weakening δ τδ τδ
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (∈-suc ∈) = twf-weakening δ τδ (τ∈Γ-⇒-Γ⊢τ δ ∈)
 
-ctx-idx : ∀ k → Fin (suc (k + ℓ))
-ctx-idx zero = zero
-ctx-idx (suc k) = suc (ctx-idx k)
-
--- Substitution on contexts: this is essentially replacing Γ, x ⦂ σ, Δ with Γ, [ x ↦ ε ] Δ
--- Here, ℓ is the length of Γ (which ε must live in), and k is the length of Δ.
-[_↦Γ_]_ : ∀ {k} ℓ {ℓ'} ⦃ ℓ'-eq : ℓ' ≡ suc (k + ℓ) ⦄
-        → (ε : STerm ℓ)
-        → Ctx ℓ'
-        → Ctx (k + ℓ)
-[_↦Γ_]_ {k = zero} ℓ ⦃ ℓ'-eq = refl ⦄ ε (Γ , _) = Γ
-[_↦Γ_]_ {k = suc k} ℓ ⦃ ℓ'-eq = refl ⦄ ε (Γ,Δ , τ) = ([ ℓ ↦Γ ε ] Γ,Δ) , ([ ctx-idx k ↦τ R.weaken-ε-k k ε ] τ)
-
 -- Substitution lemmas
 
 -- It's interesting to note that _⊂_ does not work as nicely to express the notion of a prefix of a context.

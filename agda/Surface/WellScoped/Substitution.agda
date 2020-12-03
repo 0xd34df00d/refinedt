@@ -2,7 +2,7 @@
 
 module Surface.WellScoped.Substitution where
 
-open import Data.Nat using (ℕ; suc; zero)
+open import Data.Nat using (ℕ; suc; zero; _+_)
 open import Data.Fin using (Fin; suc; zero; toℕ)
 open import Data.Vec
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
@@ -209,3 +209,17 @@ rename-subst-τ-distr-0 : (ρ : Fin ℓ → Fin ℓ')
                        → (τ : SType (suc ℓ))
                        → R.act-τ ρ ([ zero ↦τ ε ] τ) ≡ [ zero ↦τ R.act-ε ρ ε ] (R.act-τ (R.ext ρ) τ)
 rename-subst-τ-distr-0 ρ ε ρ-mono τ = rename-subst-τ-distr ρ ε zero (record { ρ-mono = ρ-mono ; ρ-id = λ () }) τ
+
+
+ctx-idx : ∀ k → Fin (suc (k + ℓ))
+ctx-idx zero = zero
+ctx-idx (suc k) = suc (ctx-idx k)
+
+-- Substitution on contexts: this is essentially replacing Γ, x ⦂ σ, Δ with Γ, [ x ↦ ε ] Δ
+-- Here, ℓ is the length of Γ (which ε must live in), and k is the length of Δ.
+[_↦Γ_]_ : ∀ {k} ℓ {ℓ'} ⦃ ℓ'-eq : ℓ' ≡ suc (k + ℓ) ⦄
+        → (ε : STerm ℓ)
+        → Ctx ℓ'
+        → Ctx (k + ℓ)
+[_↦Γ_]_ {k = zero} ℓ ⦃ ℓ'-eq = refl ⦄ ε (Γ , _) = Γ
+[_↦Γ_]_ {k = suc k} ℓ ⦃ ℓ'-eq = refl ⦄ ε (Γ,Δ , τ) = ([ ℓ ↦Γ ε ] Γ,Δ) , ([ ctx-idx k ↦τ R.weaken-ε-k k ε ] τ)
