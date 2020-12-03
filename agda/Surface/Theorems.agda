@@ -10,7 +10,7 @@ open import Data.Nat.Properties using (≤-stepsʳ; ≤-refl; m≢1+n+m)
 open import Data.Product renaming (_,_ to _,'_)
 
 open import Surface.WellScoped
-open        Surface.WellScoped.S using ([_↦τ_]_; [_↦c_]_)
+open        Surface.WellScoped.S using ([_↦τ_]_; [_↦ε_]_; [_↦c_]_)
 open import Surface.Substitutions
 open import Surface.Derivations
 open import Surface.Derivations.WF
@@ -62,6 +62,10 @@ data _is-prefix-of_ : (Γ : Ctx ℓ) → (Γ' : Ctx ℓ') → Set where
 [_↦τ<_]_ : ∀ {k ℓ'} ℓ ⦃ ℓ'-eq : ℓ' ≡ suc (k + ℓ) ⦄
          → (ε : STerm ℓ) → SType ℓ' → SType (k + ℓ)
 [_↦τ<_]_ {k = k} _ ⦃ ℓ'-eq = refl ⦄ ε τ = [ ctx-idx k ↦τ R.weaken-ε-k _ ε ] τ
+
+[_↦ε<_]_ : ∀ {k ℓ'} ℓ ⦃ ℓ'-eq : ℓ' ≡ suc (k + ℓ) ⦄
+         → (ε : STerm ℓ) → STerm ℓ' → STerm (k + ℓ)
+[_↦ε<_]_ {k = k} _ ⦃ ℓ'-eq = refl ⦄ ε ε' = [ ctx-idx k ↦ε R.weaken-ε-k _ ε ] ε'
 
 mutual
   sub-Γok : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx ℓ'}
