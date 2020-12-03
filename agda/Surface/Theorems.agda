@@ -23,7 +23,6 @@ open import Surface.Theorems.Helpers
 open import Surface.Theorems.Thinning
 
 -- TODO cleanup these modules
--- open import Misc.Sublist
 -- open import Misc.ContextConcat
 -- open import Misc.Helpers
 -- open import Misc.SnocList

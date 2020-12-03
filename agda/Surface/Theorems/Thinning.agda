@@ -16,9 +16,6 @@ open import Surface.Derivations.WF
 open import Surface.Theorems.TCTX
 open import Surface.Theorems.Helpers
 
--- TODO cleanup this module
--- open import Misc.Sublist
-
 private
   arr-wf-dom : Γ ⊢ τ₁ ⇒ τ₂
              → Γ ⊢ τ₁

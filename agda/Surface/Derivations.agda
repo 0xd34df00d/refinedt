@@ -12,9 +12,7 @@ open import Surface.WellScoped.Substitution using ([_↦τ_]_)
 open import Surface.WellScoped.Membership
 import Surface.WellScoped.Renaming as R
 -- TODO clean up modules
--- open import Surface.Substitutions
 -- open import Misc.ContextConcat
--- open import Misc.Sublist
 
 record PositiveDecision : Set where
   constructor MkPD
