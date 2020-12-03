@@ -31,7 +31,8 @@ open import Surface.Theorems.Thinning
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (∈-suc ∈) = twf-weakening δ τδ (τ∈Γ-⇒-Γ⊢τ δ ∈)
 
 ctx-idx : ∀ k → Fin (suc (k + ℓ))
-ctx-idx {ℓ} _ = fromℕ< (≤-stepsʳ ℓ ≤-refl)
+ctx-idx zero = zero
+ctx-idx (suc k) = suc (ctx-idx k)
 
 -- Substitution on contexts: this is essentially replacing Γ, x ⦂ σ, Δ with Γ, [ x ↦ ε ] Δ
 -- Here, ℓ is the length of Γ (which ε must live in), and k is the length of Δ.
