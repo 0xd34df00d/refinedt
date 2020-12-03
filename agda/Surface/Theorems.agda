@@ -101,43 +101,6 @@ mutual
                 → Γ ⊢ [ zero ↦τ ε ] τ
   sub-Γ⊢τ-front εδ τδ = sub-Γ⊢τ εδ (prefix-cons prefix-refl) τδ
 
-{-
-mutual
-  sub-Γok : Γ ⊢ ε ⦂ σ
-          → (Γ , x ⦂ σ , Δ) ok
-          → (Γ , [ x ↦ₗ ε ] Δ) ok
-  sub-Γok {Δ = []} _ (TCTX-Bind prevOk _) = prevOk
-  sub-Γok {Δ = (x ,' τ) ∷ Δ} εδ (TCTX-Bind prevOk τδ) = TCTX-Bind (sub-Γok εδ prevOk) (sub-Γ⊢τ εδ τδ)
-
-  sub-Γ⊢τ : Γ ⊢ ε ⦂ σ
-          → (Γ , x ⦂ σ , Δ) ⊢ τ'
-          → (Γ , [ x ↦ₗ ε ] Δ) ⊢ [ x ↦ₜ ε ] τ'
-  sub-Γ⊢τ εδ (TWF-TrueRef gok) = TWF-TrueRef (sub-Γok εδ gok)
-  sub-Γ⊢τ εδ (TWF-Base ε₁δ ε₂δ) = TWF-Base (sub-Γ⊢ε⦂τ εδ _ ε₁δ) (sub-Γ⊢ε⦂τ εδ _ ε₂δ)
-  sub-Γ⊢τ εδ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (sub-Γ⊢τ εδ ρ₁δ) (sub-Γ⊢τ εδ ρ₂δ)
-  sub-Γ⊢τ εδ (TWF-Arr arrδ resδ) = TWF-Arr (sub-Γ⊢τ εδ arrδ) (sub-Γ⊢τ εδ resδ)
-  sub-Γ⊢τ {Γ = Γ} {ε = ε} {σ = σ} εδ (TWF-ADT consδs) = TWF-ADT (sub-cons consδs)
-    where
-      sub-cons : {cons : ADTCons n}
-               → All (λ conτ → (Γ , x ⦂ σ , Δ) ⊢ conτ) cons
-               → All (λ conτ → (Γ , [ x ↦ₗ ε ] Δ ) ⊢ conτ) ([ x ↦ₐ ε ] cons)
-      sub-cons [] = []
-      sub-cons (px ∷ pxs) = sub-Γ⊢τ εδ px ∷ sub-cons pxs
-
-  sub-Γ⊢ε⦂τ : Γ ⊢ ε ⦂ σ
-            → (ε' : _)
-            → (Γ , x ⦂ σ , Δ) ⊢ ε' ⦂ τ'
-            → (Γ , [ x ↦ₗ ε ] Δ) ⊢ [ x ↦ₑ ε ] ε' ⦂ [ x ↦ₜ ε ] τ'
-  sub-Γ⊢ε⦂τ εδ _  (T-Unit gok) = T-Unit (sub-Γok εδ gok)
-  sub-Γ⊢ε⦂τ {x = x} εδ (SVar x') (T-Var gok ∈) with var-eq x x'
-  ... | false = T-Var (sub-Γok εδ gok) {! !}
-  ... | true = {! !}
-  sub-Γ⊢ε⦂τ εδ _  (T-Abs arrδ bodyδ) = {! !}
-  sub-Γ⊢ε⦂τ εδ ε' (T-App δ₁ δ₂) = {! !}
-  sub-Γ⊢ε⦂τ εδ _  (T-Case resδ δ branches) = {! !}
-  sub-Γ⊢ε⦂τ εδ _  (T-Con δ adtτ) = {! !}
-  sub-Γ⊢ε⦂τ εδ _  (T-Sub δ x x₁) = {! !}
-  -}
 
 
 Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢ ε ⦂ τ
