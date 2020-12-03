@@ -84,7 +84,10 @@ mutual
   sub-Γ⊢τ εδ prefix ⦃ ℓ'-eq = refl ⦄ (TWF-TrueRef Γok) = TWF-TrueRef (sub-Γok εδ prefix Γok)
   sub-Γ⊢τ εδ prefix ⦃ ℓ'-eq = refl ⦄ (TWF-Base ε₁δ ε₂δ) = {! !}
   sub-Γ⊢τ εδ prefix ⦃ ℓ'-eq = refl ⦄ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (sub-Γ⊢τ εδ prefix ρ₁δ) (sub-Γ⊢τ εδ prefix ρ₂δ)
-  sub-Γ⊢τ εδ prefix ⦃ ℓ'-eq = refl ⦄ (TWF-Arr arrδ resδ) = TWF-Arr (sub-Γ⊢τ εδ prefix arrδ) {! !}
+  sub-Γ⊢τ {ε = ε} {k = k} εδ prefix ⦃ ℓ'-eq = refl ⦄ (TWF-Arr {τ₂ = τ₂} arrδ resδ)
+      rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂ =
+          TWF-Arr (sub-Γ⊢τ εδ prefix arrδ) (sub-Γ⊢τ εδ (prefix-cons prefix) resδ)
+
   sub-Γ⊢τ {ℓ = ℓ} {ε = ε} {σ = σ} {k = k} {Γ = Γ} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix ⦃ ℓ'-eq = refl ⦄ (TWF-ADT consδs) = TWF-ADT (sub-cons consδs)
     where
       sub-cons : ∀ {cons : ADTCons nₐ _}
