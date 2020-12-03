@@ -8,6 +8,9 @@ open import Data.Nat.Properties
 open import Relation.Binary.PropositionalEquality using (sym)
 
 open import Surface.WellScoped
+open import Surface.WellScoped.Membership
+open import Surface.WellScoped.Renaming as R
+open import Surface.WellScoped.Substitution as S
 open import Surface.Derivations
 open import Surface.Derivations.WF
 open import Surface.Theorems.TCTX

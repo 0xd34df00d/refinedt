@@ -3,14 +3,18 @@
 module Surface.Theorems where
 
 open import Agda.Builtin.Equality
-open import Data.Bool.Base
 open import Data.Empty using (⊥; ⊥-elim)
-open import Data.Fin.Base using (fromℕ<)
+open import Data.Fin.Base using (suc; zero; fromℕ<)
+open import Data.Nat.Base using (suc; zero; _+_)
 open import Data.Nat.Properties using (≤-stepsʳ; ≤-refl; m≢1+n+m)
 open import Data.Product renaming (_,_ to _,'_)
 
+open import Data.Fin.Extra
 open import Surface.WellScoped
-open        Surface.WellScoped.S using ([_↦τ_]_; [_↦ε_]_; [_↦c_]_)
+open import Surface.WellScoped.Substitution using ([_↦τ_]_; [_↦ε_]_; [_↦c_]_)
+open import Surface.WellScoped.Membership
+open import Surface.WellScoped.Renaming as R
+open import Surface.WellScoped.Substitution as S
 open import Surface.Substitutions
 open import Surface.Derivations
 open import Surface.Derivations.WF
@@ -111,13 +115,16 @@ mutual
             → Γ,σ,Δ ⊢ ε₀ ⦂ τ
             → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ℓ ↦ε< ε ] ε₀ ⦂ [ ℓ ↦τ< ε ] τ
   sub-Γ⊢ε⦂τ εδ prefix ⦃ ℓ'-eq = refl ⦄ (T-Unit Γok) = T-Unit (sub-Γok εδ prefix Γok)
-  sub-Γ⊢ε⦂τ εδ prefix ⦃ ℓ'-eq = refl ⦄ (T-Var Γok x) = {! !}
+  sub-Γ⊢ε⦂τ {k = k} εδ prefix ⦃ ℓ'-eq = refl ⦄ (T-Var {idx = idx} Γok x) with ctx-idx k <>? idx
+  ... | less m<n = T-Var (sub-Γok εδ prefix Γok) {! !}
+  ... | equal = {! !}
+  ... | greater m>n = T-Var (sub-Γok εδ prefix Γok) {! !}
   sub-Γ⊢ε⦂τ {ℓ = ℓ} {ε = ε} {k = k} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix ⦃ ℓ'-eq = refl ⦄ (T-Abs {τ₁ = τ₁} {τ₂ = τ₂} {ε = ε'} arrδ bodyδ)
     = T-Abs (sub-Γ⊢τ εδ prefix arrδ) bodyδ'
     where
-      bodyδ' : ([ ℓ ↦Γ ε ] Γ,σ,Δ) , [ ℓ ↦τ< ε ] τ₁
-             ⊢ S.act-ε (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ε'
-             ⦂ S.act-τ (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) τ₂
+      bodyδ' :   [ ℓ ↦Γ ε ] (Γ,σ,Δ , τ₁)
+               ⊢ S.act-ε (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ε'
+               ⦂ S.act-τ (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) τ₂
       bodyδ' rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
                    | S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
                    = sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) bodyδ

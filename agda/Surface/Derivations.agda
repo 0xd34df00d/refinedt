@@ -2,15 +2,15 @@
 
 module Surface.Derivations where
 
-open import Agda.Builtin.Bool
-open import Agda.Builtin.Unit
+open import Data.Fin using (zero)
 open import Data.Maybe
-open import Data.List.Membership.Propositional
 open import Data.Vec
 open import Data.Vec.Relation.Unary.All public
 
 open import Surface.WellScoped
-open        Surface.WellScoped.S using ([_↦τ_]_)
+open import Surface.WellScoped.Substitution using ([_↦τ_]_)
+open import Surface.WellScoped.Membership
+import Surface.WellScoped.Renaming as R
 -- TODO clean up modules
 -- open import Surface.Substitutions
 -- open import Misc.ContextConcat
@@ -21,7 +21,7 @@ record PositiveDecision : Set where
 
 record Oracle : Set where
   constructor MkOracle
-  open Surface.WellScoped.R
+  open R
   field
     decide : (Γ : Ctx ℓ) → (b : BaseType) → (ρ₁ ρ₂ : Refinement (suc ℓ)) → Maybe PositiveDecision
     thin   : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'}
