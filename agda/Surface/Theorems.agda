@@ -73,7 +73,7 @@ mutual
           → ⦃ ℓ'-eq : ℓ' ≡ suc (k + ℓ) ⦄
           → Γ,σ,Δ ok
           → ([ ℓ ↦Γ ε ] Γ,σ,Δ) ok
-  sub-Γok {k = suc _} _ prefix-refl ⦃ ℓ'-eq ⦄                          _                      = ⊥-elim (m≢1+n+m _ ℓ'-eq)
+  sub-Γok {k = suc _} _  prefix-refl                  ⦃ ℓ'-eq ⦄        _                      = ⊥-elim (m≢1+n+m _ ℓ'-eq)
   sub-Γok {k = zero}  _  _                            ⦃ ℓ'-eq = refl ⦄ (TCTX-Bind Γ,σ,Δok τδ) = Γ,σ,Δok
   sub-Γok {k = suc _} εδ (prefix-cons Γ-prefix-Γ,σ,Δ) ⦃ ℓ'-eq = refl ⦄ (TCTX-Bind Γ,σ,Δok τδ) =
       TCTX-Bind (sub-Γok εδ Γ-prefix-Γ,σ,Δ Γ,σ,Δok) (sub-Γ⊢τ εδ Γ-prefix-Γ,σ,Δ τδ)
@@ -111,9 +111,9 @@ mutual
             → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ℓ ↦ε< ε ] ε₀ ⦂ [ ℓ ↦τ< ε ] τ
   sub-Γ⊢ε⦂τ εδ prefix ⦃ ℓ'-eq = refl ⦄ (T-Unit Γok) = T-Unit (sub-Γok εδ prefix Γok)
   sub-Γ⊢ε⦂τ {k = k} εδ prefix ⦃ ℓ'-eq = refl ⦄ (T-Var {idx = idx} Γok x) with ctx-idx k <>? idx
-  ... | less m<n = T-Var (sub-Γok εδ prefix Γok) {! !}
+  ... | less rep<var = T-Var (sub-Γok εδ prefix Γok) {! !}
   ... | equal = {! !}
-  ... | greater m>n = T-Var (sub-Γok εδ prefix Γok) {! !}
+  ... | greater rep>var = T-Var (sub-Γok εδ prefix Γok) {! !}
   sub-Γ⊢ε⦂τ {ℓ = ℓ} {ε = ε} {k = k} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix ⦃ ℓ'-eq = refl ⦄ (T-Abs {τ₁ = τ₁} {τ₂ = τ₂} {ε = ε'} arrδ bodyδ)
     = T-Abs (sub-Γ⊢τ εδ prefix arrδ) bodyδ'
     where
