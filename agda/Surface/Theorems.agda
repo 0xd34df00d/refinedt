@@ -84,7 +84,10 @@ mutual
           → Γ,σ,Δ ⊢ τ
           → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ℓ ↦τ< ε ] τ
   sub-Γ⊢τ εδ prefix (TWF-TrueRef Γok) = TWF-TrueRef (sub-Γok εδ prefix Γok)
-  sub-Γ⊢τ εδ prefix (TWF-Base ε₁δ ε₂δ) = {! !}
+  sub-Γ⊢τ {ε = ε} {k = k} εδ prefix (TWF-Base {ε₁ = ε₁} {ε₂ = ε₂} ε₁δ ε₂δ)
+    rewrite S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε₁
+          | S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε₂
+          = TWF-Base (sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) ε₁δ) (sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) ε₂δ)
   sub-Γ⊢τ εδ prefix (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (sub-Γ⊢τ εδ prefix ρ₁δ) (sub-Γ⊢τ εδ prefix ρ₂δ)
   sub-Γ⊢τ {ε = ε} {k = k} εδ prefix (TWF-Arr {τ₂ = τ₂} arrδ resδ)
       rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂ =
