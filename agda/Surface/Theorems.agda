@@ -6,7 +6,7 @@ open import Agda.Builtin.Equality
 open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Fin.Base using (suc; zero; fromℕ<)
 open import Data.Nat.Base using (suc; zero; _+_)
-open import Data.Nat.Properties using (≤-stepsʳ; ≤-refl; m≢1+n+m)
+open import Data.Nat.Properties using (≤-stepsʳ; ≤-refl; m≢1+n+m; suc-injective)
 open import Data.Product renaming (_,_ to _,'_)
 
 open import Data.Fin.Extra
@@ -69,18 +69,18 @@ prefix-subst {k = suc k} (prefix-cons prefix) ⦃ ℓ'-eq = refl ⦄ = prefix-co
 mutual
   sub-Γok : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx ℓ'}
           → Γ ⊢ ε ⦂ σ
-          → Γ is-prefix-of Γ,σ,Δ
+          → Γ , σ is-prefix-of Γ,σ,Δ
           → ⦃ ℓ'-eq : ℓ' ≡ suc (k + ℓ) ⦄
           → Γ,σ,Δ ok
           → ([ ℓ ↦Γ ε ] Γ,σ,Δ) ok
-  sub-Γok {k = suc _} _  prefix-refl                  ⦃ ℓ'-eq ⦄        _                      = ⊥-elim (m≢1+n+m _ ℓ'-eq)
+  sub-Γok {k = suc _} _  prefix-refl                  ⦃ ℓ'-eq ⦄        _                      = ⊥-elim (m≢1+n+m _ (suc-injective ℓ'-eq))
   sub-Γok {k = zero}  _  _                            ⦃ ℓ'-eq = refl ⦄ (TCTX-Bind Γ,σ,Δok τδ) = Γ,σ,Δok
   sub-Γok {k = suc _} εδ (prefix-cons Γ-prefix-Γ,σ,Δ) ⦃ ℓ'-eq = refl ⦄ (TCTX-Bind Γ,σ,Δok τδ) =
       TCTX-Bind (sub-Γok εδ Γ-prefix-Γ,σ,Δ Γ,σ,Δok) (sub-Γ⊢τ εδ Γ-prefix-Γ,σ,Δ τδ)
 
   sub-Γ⊢τ : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc (k + ℓ))} {τ : SType (suc (k + ℓ))}
           → Γ ⊢ ε ⦂ σ
-          → Γ is-prefix-of Γ,σ,Δ
+          → Γ , σ is-prefix-of Γ,σ,Δ
           → Γ,σ,Δ ⊢ τ
           → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ℓ ↦τ< ε ] τ
   sub-Γ⊢τ εδ prefix (TWF-TrueRef Γok) = TWF-TrueRef (sub-Γok εδ prefix Γok)
@@ -103,11 +103,11 @@ mutual
   sub-Γ⊢τ-front : Γ ⊢ ε ⦂ σ
                 → Γ , σ ⊢ τ
                 → Γ ⊢ [ zero ↦τ ε ] τ
-  sub-Γ⊢τ-front εδ τδ = sub-Γ⊢τ εδ (prefix-cons prefix-refl) τδ
+  sub-Γ⊢τ-front εδ τδ = sub-Γ⊢τ εδ prefix-refl τδ
 
   sub-Γ⊢ε⦂τ : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc (k + ℓ))} {ε₀ : STerm (suc (k + ℓ))} {τ : SType (suc (k + ℓ))}
             → Γ ⊢ ε ⦂ σ
-            → Γ is-prefix-of Γ,σ,Δ
+            → Γ , σ is-prefix-of Γ,σ,Δ
             → Γ,σ,Δ ⊢ ε₀ ⦂ τ
             → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ℓ ↦ε< ε ] ε₀ ⦂ [ ℓ ↦τ< ε ] τ
   sub-Γ⊢ε⦂τ εδ prefix (T-Unit Γok) = T-Unit (sub-Γok εδ prefix Γok)
