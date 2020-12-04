@@ -37,11 +37,12 @@ open import Surface.Theorems.Thinning
 -- then extra elements were appended to the supercontext, is non-trivial.
 -- It's perhaps cleanest and cheapest to just add an extra predicate.
 
-infix 3 _is-prefix-of_
-data _is-prefix-of_ : (Γ : Ctx ℓ) → (Γ' : Ctx ℓ') → Set where
-  prefix-refl : Γ is-prefix-of Γ
-  prefix-cons : Γ is-prefix-of Γ'
-              → Γ is-prefix-of Γ' , τ
+infix 3 _prefix-at_of_
+data _prefix-at_of_ : (Γ : Ctx ℓ) → (k : ℕ) → (Γ' : Ctx (k + ℓ)) → Set where
+  prefix-refl : Γ prefix-at zero of Γ
+  prefix-cons : ∀ {k} {Γ : Ctx ℓ} {Γ' : Ctx (k + ℓ)} {τ : SType (k + ℓ)}
+              → Γ prefix-at k of Γ'
+              → Γ prefix-at (suc k) of (Γ' , τ)
 
 -- Some local helpers
 
@@ -49,38 +50,41 @@ data _is-prefix-of_ : (Γ : Ctx ℓ) → (Γ' : Ctx ℓ') → Set where
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) ∈-zero = twf-weakening δ τδ τδ
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (∈-suc ∈) = twf-weakening δ τδ (τ∈Γ-⇒-Γ⊢τ δ ∈)
 
-prefix-subst : ∀ {k} {Γ : Ctx ℓ} {Γ' : Ctx ℓ'}
-             → Γ is-prefix-of Γ'
-             → ⦃ ℓ'-eq : ℓ' ≡ suc (k + ℓ) ⦄
-             → Γ is-prefix-of ([ ℓ ↦Γ ε ] Γ')
-prefix-subst {k = zero} (prefix-cons prefix) ⦃ ℓ'-eq = refl ⦄ = prefix
-prefix-subst {k = suc k} prefix-refl ⦃ ℓ'-eq ⦄ = ⊥-elim (m≢1+n+m _ ℓ'-eq)
-prefix-subst {k = suc k} (prefix-cons prefix) ⦃ ℓ'-eq = refl ⦄ = prefix-cons (prefix-subst prefix)
+prefix-subst : ∀ {k} {Γ : Ctx ℓ} {Γ' : Ctx (suc k + ℓ)}
+             → Γ prefix-at suc k of Γ'
+             → Γ prefix-at k of ([ ℓ ↦Γ ε ] Γ')
+prefix-subst {k = zero} (prefix-cons prefix) = prefix
+prefix-subst {k = suc k} (prefix-cons prefix) = prefix-cons (prefix-subst prefix)
 
 
-[_↦τ<_]_ : ∀ {k ℓ'} ℓ ⦃ ℓ'-eq : ℓ' ≡ suc (k + ℓ) ⦄
-         → (ε : STerm ℓ) → SType ℓ' → SType (k + ℓ)
-[_↦τ<_]_ {k = k} _ ⦃ ℓ'-eq = refl ⦄ ε τ = [ ctx-idx k ↦τ R.weaken-ε-k _ ε ] τ
+[_↦τ<_]_ : ∀ {k} ℓ
+         → (ε : STerm ℓ) → SType (suc k + ℓ) → SType (k + ℓ)
+[_↦τ<_]_ {k = k} _ ε τ = [ ctx-idx k ↦τ R.weaken-ε-k _ ε ] τ
 
-[_↦ε<_]_ : ∀ {k ℓ'} ℓ ⦃ ℓ'-eq : ℓ' ≡ suc (k + ℓ) ⦄
-         → (ε : STerm ℓ) → STerm ℓ' → STerm (k + ℓ)
-[_↦ε<_]_ {k = k} _ ⦃ ℓ'-eq = refl ⦄ ε ε' = [ ctx-idx k ↦ε R.weaken-ε-k _ ε ] ε'
+[_↦ε<_]_ : ∀ {k} ℓ
+         → (ε : STerm ℓ) → STerm (suc k + ℓ) → STerm (k + ℓ)
+[_↦ε<_]_ {k = k} _ ε ε' = [ ctx-idx k ↦ε R.weaken-ε-k _ ε ] ε'
+
+prefix-∈-≡ : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {τ : SType (suc k + ℓ)}
+           → Γ prefix-at suc k of Γ,σ,Δ
+           → τ ∈ Γ,σ,Δ at ctx-idx k
+           → τ ≡ weaken-τ-k (suc k) σ
+prefix-∈-≡ {k = zero} prefix ∈ = {! !}
+prefix-∈-≡ {k = suc k} prefix ∈ = {! !}
 
 mutual
-  sub-Γok : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx ℓ'}
+  sub-Γok : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)}
           → Γ ⊢ ε ⦂ σ
-          → Γ , σ is-prefix-of Γ,σ,Δ
-          → ⦃ ℓ'-eq : ℓ' ≡ suc (k + ℓ) ⦄
+          → Γ prefix-at suc k of Γ,σ,Δ
           → Γ,σ,Δ ok
           → ([ ℓ ↦Γ ε ] Γ,σ,Δ) ok
-  sub-Γok {k = suc _} _  prefix-refl                  ⦃ ℓ'-eq ⦄        _                      = ⊥-elim (m≢1+n+m _ (suc-injective ℓ'-eq))
-  sub-Γok {k = zero}  _  _                            ⦃ ℓ'-eq = refl ⦄ (TCTX-Bind Γ,σ,Δok τδ) = Γ,σ,Δok
-  sub-Γok {k = suc _} εδ (prefix-cons Γ-prefix-Γ,σ,Δ) ⦃ ℓ'-eq = refl ⦄ (TCTX-Bind Γ,σ,Δok τδ) =
+  sub-Γok {k = zero}  _  _                            (TCTX-Bind Γ,σ,Δok τδ) = Γ,σ,Δok
+  sub-Γok {k = suc _} εδ (prefix-cons Γ-prefix-Γ,σ,Δ) (TCTX-Bind Γ,σ,Δok τδ) =
       TCTX-Bind (sub-Γok εδ Γ-prefix-Γ,σ,Δ Γ,σ,Δok) (sub-Γ⊢τ εδ Γ-prefix-Γ,σ,Δ τδ)
 
-  sub-Γ⊢τ : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc (k + ℓ))} {τ : SType (suc (k + ℓ))}
+  sub-Γ⊢τ : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {τ : SType (suc k + ℓ)}
           → Γ ⊢ ε ⦂ σ
-          → Γ , σ is-prefix-of Γ,σ,Δ
+          → Γ prefix-at suc k of Γ,σ,Δ
           → Γ,σ,Δ ⊢ τ
           → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ℓ ↦τ< ε ] τ
   sub-Γ⊢τ εδ prefix (TWF-TrueRef Γok) = TWF-TrueRef (sub-Γok εδ prefix Γok)
@@ -103,11 +107,11 @@ mutual
   sub-Γ⊢τ-front : Γ ⊢ ε ⦂ σ
                 → Γ , σ ⊢ τ
                 → Γ ⊢ [ zero ↦τ ε ] τ
-  sub-Γ⊢τ-front εδ τδ = sub-Γ⊢τ εδ prefix-refl τδ
+  sub-Γ⊢τ-front εδ τδ = sub-Γ⊢τ εδ (prefix-cons prefix-refl) τδ
 
-  sub-Γ⊢ε⦂τ : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc (k + ℓ))} {ε₀ : STerm (suc (k + ℓ))} {τ : SType (suc (k + ℓ))}
+  sub-Γ⊢ε⦂τ : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc (k + ℓ))} {ε₀ : STerm (suc k + ℓ)} {τ : SType (suc k + ℓ)}
             → Γ ⊢ ε ⦂ σ
-            → Γ , σ is-prefix-of Γ,σ,Δ
+            → Γ prefix-at suc k of Γ,σ,Δ
             → Γ,σ,Δ ⊢ ε₀ ⦂ τ
             → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ℓ ↦ε< ε ] ε₀ ⦂ [ ℓ ↦τ< ε ] τ
   sub-Γ⊢ε⦂τ εδ prefix (T-Unit Γok) = T-Unit (sub-Γok εδ prefix Γok)
