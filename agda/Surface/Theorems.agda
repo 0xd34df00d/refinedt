@@ -78,19 +78,18 @@ mutual
   sub-Γok {k = suc _} εδ (prefix-cons Γ-prefix-Γ,σ,Δ) ⦃ ℓ'-eq = refl ⦄ (TCTX-Bind Γ,σ,Δok τδ) =
       TCTX-Bind (sub-Γok εδ Γ-prefix-Γ,σ,Δ Γ,σ,Δok) (sub-Γ⊢τ εδ Γ-prefix-Γ,σ,Δ τδ)
 
-  sub-Γ⊢τ : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx ℓ'} {τ : SType ℓ'}
+  sub-Γ⊢τ : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc (k + ℓ))} {τ : SType (suc (k + ℓ))}
           → Γ ⊢ ε ⦂ σ
           → Γ is-prefix-of Γ,σ,Δ
-          → ⦃ ℓ'-eq : ℓ' ≡ suc (k + ℓ) ⦄
           → Γ,σ,Δ ⊢ τ
           → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ℓ ↦τ< ε ] τ
-  sub-Γ⊢τ εδ prefix ⦃ ℓ'-eq = refl ⦄ (TWF-TrueRef Γok) = TWF-TrueRef (sub-Γok εδ prefix Γok)
-  sub-Γ⊢τ εδ prefix ⦃ ℓ'-eq = refl ⦄ (TWF-Base ε₁δ ε₂δ) = {! !}
-  sub-Γ⊢τ εδ prefix ⦃ ℓ'-eq = refl ⦄ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (sub-Γ⊢τ εδ prefix ρ₁δ) (sub-Γ⊢τ εδ prefix ρ₂δ)
-  sub-Γ⊢τ {ε = ε} {k = k} εδ prefix ⦃ ℓ'-eq = refl ⦄ (TWF-Arr {τ₂ = τ₂} arrδ resδ)
+  sub-Γ⊢τ εδ prefix (TWF-TrueRef Γok) = TWF-TrueRef (sub-Γok εδ prefix Γok)
+  sub-Γ⊢τ εδ prefix (TWF-Base ε₁δ ε₂δ) = {! !}
+  sub-Γ⊢τ εδ prefix (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (sub-Γ⊢τ εδ prefix ρ₁δ) (sub-Γ⊢τ εδ prefix ρ₂δ)
+  sub-Γ⊢τ {ε = ε} {k = k} εδ prefix (TWF-Arr {τ₂ = τ₂} arrδ resδ)
       rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂ =
           TWF-Arr (sub-Γ⊢τ εδ prefix arrδ) (sub-Γ⊢τ εδ (prefix-cons prefix) resδ)
-  sub-Γ⊢τ {ℓ = ℓ} {ε = ε} {σ = σ} {k = k} {Γ = Γ} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix ⦃ ℓ'-eq = refl ⦄ (TWF-ADT consδs) = TWF-ADT (sub-cons consδs)
+  sub-Γ⊢τ {ℓ = ℓ} {ε = ε} {σ = σ} {k = k} {Γ = Γ} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix (TWF-ADT consδs) = TWF-ADT (sub-cons consδs)
     where
       sub-cons : ∀ {cons : ADTCons nₐ _}
                → All (λ conτ → Γ,σ,Δ ⊢ conτ) cons
@@ -103,18 +102,17 @@ mutual
                 → Γ ⊢ [ zero ↦τ ε ] τ
   sub-Γ⊢τ-front εδ τδ = sub-Γ⊢τ εδ (prefix-cons prefix-refl) τδ
 
-  sub-Γ⊢ε⦂τ : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx ℓ'} {τ : SType ℓ'}
+  sub-Γ⊢ε⦂τ : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc (k + ℓ))} {ε₀ : STerm (suc (k + ℓ))} {τ : SType (suc (k + ℓ))}
             → Γ ⊢ ε ⦂ σ
             → Γ is-prefix-of Γ,σ,Δ
-            → ⦃ ℓ'-eq : ℓ' ≡ suc (k + ℓ) ⦄
             → Γ,σ,Δ ⊢ ε₀ ⦂ τ
             → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ℓ ↦ε< ε ] ε₀ ⦂ [ ℓ ↦τ< ε ] τ
-  sub-Γ⊢ε⦂τ εδ prefix ⦃ ℓ'-eq = refl ⦄ (T-Unit Γok) = T-Unit (sub-Γok εδ prefix Γok)
-  sub-Γ⊢ε⦂τ {k = k} εδ prefix ⦃ ℓ'-eq = refl ⦄ (T-Var {idx = idx} Γok x) with ctx-idx k <>? idx
+  sub-Γ⊢ε⦂τ εδ prefix (T-Unit Γok) = T-Unit (sub-Γok εδ prefix Γok)
+  sub-Γ⊢ε⦂τ {k = k} εδ prefix (T-Var {idx = idx} Γok x) with ctx-idx k <>? idx
   ... | less rep<var = T-Var (sub-Γok εδ prefix Γok) {! !}
   ... | equal = {! !}
   ... | greater rep>var = T-Var (sub-Γok εδ prefix Γok) {! !}
-  sub-Γ⊢ε⦂τ {ℓ = ℓ} {ε = ε} {k = k} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix ⦃ ℓ'-eq = refl ⦄ (T-Abs {τ₁ = τ₁} {τ₂ = τ₂} {ε = ε'} arrδ bodyδ)
+  sub-Γ⊢ε⦂τ {ℓ = ℓ} {ε = ε} {k = k} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix (T-Abs {τ₁ = τ₁} {τ₂ = τ₂} {ε = ε'} arrδ bodyδ)
     = T-Abs (sub-Γ⊢τ εδ prefix arrδ) bodyδ'
     where
       bodyδ' :   [ ℓ ↦Γ ε ] (Γ,σ,Δ , τ₁)
@@ -123,10 +121,10 @@ mutual
       bodyδ' rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
                    | S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
                    = sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) bodyδ
-  sub-Γ⊢ε⦂τ εδ prefix ⦃ ℓ'-eq = refl ⦄ (T-App ε₁δ ε₂δ) = {! !}
-  sub-Γ⊢ε⦂τ εδ prefix ⦃ ℓ'-eq = refl ⦄ (T-Case resδ ε₀δ branches) = {! !}
-  sub-Γ⊢ε⦂τ εδ prefix ⦃ ℓ'-eq = refl ⦄ (T-Con conδ adtτ) = {! !}
-  sub-Γ⊢ε⦂τ εδ prefix ⦃ ℓ'-eq = refl ⦄ (T-Sub ε₀δ superδ <:δ) = {! !}
+  sub-Γ⊢ε⦂τ εδ prefix (T-App ε₁δ ε₂δ) = {! !}
+  sub-Γ⊢ε⦂τ εδ prefix (T-Case resδ ε₀δ branches) = {! !}
+  sub-Γ⊢ε⦂τ εδ prefix (T-Con conδ adtτ) = {! !}
+  sub-Γ⊢ε⦂τ εδ prefix (T-Sub ε₀δ superδ <:δ) = {! !}
 
 
 Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢ ε ⦂ τ
