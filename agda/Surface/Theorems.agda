@@ -15,7 +15,6 @@ open import Surface.WellScoped.Substitution using ([_↦τ_]_; [_↦ε_]_; [_↦
 open import Surface.WellScoped.Membership
 open import Surface.WellScoped.Renaming as R
 open import Surface.WellScoped.Substitution as S
-open import Surface.Substitutions
 open import Surface.Derivations
 open import Surface.Derivations.WF
 open import Surface.Theorems.TCTX
