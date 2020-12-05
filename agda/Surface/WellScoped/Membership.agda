@@ -3,6 +3,7 @@
 module Surface.WellScoped.Membership where
 
 open import Data.Fin using (Fin; zero; suc)
+open import Data.Nat using (ℕ; zero; suc; _+_)
 
 open import Data.Fin.Extra
 open import Surface.WellScoped
@@ -37,3 +38,11 @@ append-both {Γ = Γ} {Γ' = Γ'} (MkTR ρ ρ-∈ ρ-mono) = MkTR (R.ext ρ) ρ-
 ignore-head : ∀ {Γ : Ctx ℓ}
             → Γ ⊂ Γ , τ
 ignore-head = MkTR suc ∈-suc <-suc
+
+
+infix 4 _ℕ-idx_∈_
+data _ℕ-idx_∈_ : (k : ℕ) → SType ℓ → Ctx (suc k + ℓ) → Set where
+  ∈-zero : zero ℕ-idx τ ∈ (Γ , τ)
+  ∈-suc  : ∀ {k} {Γ : Ctx (suc k + ℓ)} {τ' : SType (suc k + ℓ)}
+         → k ℕ-idx τ ∈ Γ
+         → suc k ℕ-idx τ ∈ (Γ , τ')
