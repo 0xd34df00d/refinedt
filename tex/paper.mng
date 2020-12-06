@@ -241,22 +241,26 @@ max3 x y z =
                                              lteRefl))
 \end{lstlisting}
 
+In general, refinement types are expressive enough to eliminate a fair share \cite{LiquidTypes08} of run-time errors such as out-of-bounds array accesses or division by zero.
 
-%Having refinement types in a dependently typed language is useful in multiple ways.
-%
-%Firstly, it indeed lowers the cognitive load and the amount of (keyboard) typing that the programmer has to do.
-%A significant class of runtime errors, such as out-of-bounds array access, division by zero, and other examples motivating refinement types,
-%is eliminatable \cite{LiquidTypes08} without any explicit proofs from the programmer.
-%
-%We also believe that the approach proposed in this paper is implementable in existing dependently typed languages such as Idris or Agda.
+On the other hand, certain things are not expressible with refinement types.
+In particular, we claim without proof that refinement types cannot affect run-time behaviour of the program
+(although the reader familiar with the notion of run-time irrelevance or Coq's \verb+Prop+ universe might find those concepts useful to build the intuitive agreement with our claim).
+For example, a type-safe variadic \verb+printf+ whose \emph{type}, argument count and run-time behaviour \emph{depend} on the formatting string argument \emph{value} is not expressible with refinement types.
+
+Moreover, for fundamental reasons such as Rice's theorem, there is no algorithm that decides arbitrary non-trivial semantic properties of a program,
+so human assistance will always be needed for sufficiently complex programs, and this is where dependent types also come useful.
+And, in practice, most existing SMT solvers do not support higher-order reasoning, or reasoning beyond some simple arithmetic or arrays,
+so, for instance, formally proving the properties of the type system proposed in this very paper is something that, currently, a human should do.
+
+There is also a certain synergy coming from uniting dependent types and refinement types:
+for example, since types are first-class in a dependently typed language, the refinements can also be treated as first-class, for example, passing them to and returning from functions.
 %A language might allow both ``refinemently typed'' and dependently typed terms in a single module,
 %reserving a certain syntax such as \verb+foo : { v : Ty | Predicate v }+ to indicate that \verb+foo+ uses refinement types,
 %while also allowing to use the former in the latter and vice versa.
 %This enables the programmer to mostly write code with refinement types,
 %only resorting to the full power of dependent types when refinements are not enough.
 %
-%Moreover, since types are first-class in a dependently typed language,
-%the refinements can also be treated as first-class, for example, passing them to and returning from functions.
 
 \section{Overview}
 
