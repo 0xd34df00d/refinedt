@@ -200,6 +200,48 @@ funnyAdd' x y = x + y + x
 \end{lstlisting}
 Updating the Idris code is left as an exercise to the reader.
 
+As an another example, consider the function calculating the maximum of three numbers.
+Implementing it with refinement types is about as straightforward as it might get:
+\begin{lstlisting}[language=Haskell]
+max3 : (x : Int) → (y : Int) → (z : Int)
+     → { v : Int | v >= x & v >= y & v >= z }
+max3 x y z = if x > y then
+                 if x > z then x else z
+             else
+                 if y > z then y else z
+\end{lstlisting}
+
+Casting integers aside and working with plain naturals again, the dependently typed solution might look a bit move involved:
+\begin{lstlisting}[language=Haskell]
+notLTE : (x, y : Nat)
+      -> (x `LTE` y -> Void)
+      -> y `LTE` x
+notLTE x Z not = LTEZero
+notLTE Z (S y) not = void (not LTEZero)
+notLTE (S x) (S y) notS = LTESucc (notLTE x y (\not => notS (LTESucc not)))
+
+max3 : (x, y, z : Nat)
+    -> (v : Nat ** (x `LTE` v, y `LTE` v, z `LTE` v))
+max3 x y z =
+  case y `isLTE` x of
+       Yes y_LTE_x =>
+            case z `isLTE` x of
+                 Yes z_LTE_x => (x ** (lteRefl, y_LTE_x, z_LTE_x))
+                 No contra => let x_LTE_z = notLTE _ _ contra
+                               in (z ** (x_LTE_z,
+                                         lteTransitive y_LTE_x x_LTE_z,
+                                         lteRefl))
+       No contra =>
+            let x_LTE_y = notLTE _ _ contra
+             in case z `isLTE` y of
+                     Yes z_LTE_y => (y ** (x_LTE_y, lteRefl, z_LTE_y))
+                     No contra => let y_LTE_z = notLTE _ _ contra
+                                   in (z ** (lteTransitive x_LTE_y y_LTE_z,
+                                             y_LTE_z,
+                                             lteRefl))
+\end{lstlisting}
+
+
 %Having refinement types in a dependently typed language is useful in multiple ways.
 %
 %Firstly, it indeed lowers the cognitive load and the amount of (keyboard) typing that the programmer has to do.
