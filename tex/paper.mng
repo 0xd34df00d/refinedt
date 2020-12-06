@@ -255,12 +255,19 @@ so, for instance, formally proving the properties of the type system proposed in
 
 There is also a certain synergy coming from uniting dependent types and refinement types:
 for example, since types are first-class in a dependently typed language, the refinements can also be treated as first-class, for example, passing them to and returning from functions.
-%A language might allow both ``refinemently typed'' and dependently typed terms in a single module,
-%reserving a certain syntax such as \verb+foo : { v : Ty | Predicate v }+ to indicate that \verb+foo+ uses refinement types,
-%while also allowing to use the former in the latter and vice versa.
-%This enables the programmer to mostly write code with refinement types,
-%only resorting to the full power of dependent types when refinements are not enough.
-%
+
+Given all of the above, it is desirable to have both refinement types and dependent types in a single language.
+But having both in a single core type checker seems extravagant, and, since refinement types can be seen as a subset of dependent types,
+a reasonable way to go is to have a core type checker for full dependent types, a surface language with both type systems,
+and translating, respectively, refinements to dependent types and SMT decisions to proof terms.
+
+This paper focuses on formulating the translation part and proving that the translation ``makes sense'' and has certain reasonable and useful properties.
+We believe that the approach proposed in this paper is implementable in existing dependently typed languages such as Idris or Agda.
+A language might allow both ``refinemently typed'' and dependently typed terms in a single module,
+reserving a certain syntax such as \verb+foo : { v : Ty | Predicate v }+ to indicate that \verb+foo+ uses refinement types,
+while also allowing to use the former in the latter and vice versa.
+This enables the programmer to mostly write code with refinement types,
+only resorting to the full power of dependent types when refinements are not enough.
 
 \section{Overview}
 
