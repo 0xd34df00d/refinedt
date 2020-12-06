@@ -71,8 +71,8 @@ mutual
           → Γ,σ,Δ ok
           → ([ ℓ ↦Γ ε ] Γ,σ,Δ) ok
   sub-Γok {k = zero}  _  _                            (TCTX-Bind Γ,σ,Δok τδ) = Γ,σ,Δok
-  sub-Γok {k = suc _} εδ (prefix-cons Γ-prefix-Γ,σ,Δ) (TCTX-Bind Γ,σ,Δok τδ) =
-      TCTX-Bind (sub-Γok εδ Γ-prefix-Γ,σ,Δ Γ,σ,Δok) (sub-Γ⊢τ εδ Γ-prefix-Γ,σ,Δ τδ)
+  sub-Γok {k = suc _} εδ (prefix-cons Γ-prefix-Γ,σ,Δ) (TCTX-Bind Γ,σ,Δok τδ)
+      = TCTX-Bind (sub-Γok εδ Γ-prefix-Γ,σ,Δ σ-∈ Γ,σ,Δok) (sub-Γ⊢τ εδ Γ-prefix-Γ,σ,Δ σ-∈ τδ)
 
   sub-Γ⊢τ : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {τ : SType (suc k + ℓ)}
           → Γ ⊢ ε ⦂ σ
@@ -86,8 +86,8 @@ mutual
           = TWF-Base (sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) ε₁δ) (sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) ε₂δ)
   sub-Γ⊢τ εδ prefix (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (sub-Γ⊢τ εδ prefix ρ₁δ) (sub-Γ⊢τ εδ prefix ρ₂δ)
   sub-Γ⊢τ {ε = ε} {k = k} εδ prefix (TWF-Arr {τ₂ = τ₂} arrδ resδ)
-      rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂ =
-          TWF-Arr (sub-Γ⊢τ εδ prefix arrδ) (sub-Γ⊢τ εδ (prefix-cons prefix) resδ)
+    rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
+          = TWF-Arr (sub-Γ⊢τ εδ prefix arrδ) (sub-Γ⊢τ εδ (prefix-cons prefix) resδ)
   sub-Γ⊢τ {ℓ = ℓ} {ε = ε} {σ = σ} {k = k} {Γ = Γ} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix (TWF-ADT consδs) = TWF-ADT (sub-cons consδs)
     where
       sub-cons : ∀ {cons : ADTCons nₐ _}
