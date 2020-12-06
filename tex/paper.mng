@@ -17,6 +17,7 @@
 \usepackage{subcaption}
 \usepackage{cite,url,babelbib}
 \usepackage{todonotes}
+\usepackage{listings}
 \usepackage[english]{babel}
 
 \nonstopmode
@@ -44,6 +45,10 @@
 \newcommand{\secondDP}{\text{second-dp~}}
 
 \newcommand\prooftermname[1]{\texttt{#1}}
+
+\lstset{literate=
+  {→}{{$\to$}}1
+}
 
 \begin{document}
 
@@ -146,21 +151,70 @@ and no prior papers strived to mechanically verify the metatheoretical propertie
 
 \section{Motivation}
 
-Having refinement types in a dependently typed language is useful in multiple ways.
+Having refinement types and dependent types in a single language is useful in multiple ways.
 
-Firstly, it indeed lowers the cognitive load and the amount of (keyboard) typing that the programmer has to do.
-A significant class of runtime errors, such as out-of-bounds array access, division by zero, and other examples motivating refinement types,
-is eliminatable \cite{LiquidTypes08} without any explicit proofs from the programmer.
+Firstly, refinement types indeed lower the cognitive load and the amount of (keyboard) typing the programmer has to do.
+As an example, consider a function taking two natural numbers $x, y$ and returning $x + y + x$ along with a proof that each summand is less than or equal to the sum.
+In a language with refinement types writing such a function is at most\footnote{Some implementations like \cite{LiquidTypes08} can infer refinements automatically}
+a matter of decorating its type with the right refinements, along the lines of:
+\begin{lstlisting}[language=Haskell]
+funnyAdd : (x : { v : Int | v >= 0 })
+         → (y : { v : Int | v >= 0 })
+         → { v : Int | v >= x & v >= y }
+funnyAdd x y = x + y + x
+\end{lstlisting}
+Then, it's up to the SMT solver to verify that the function satisfies the refinements.
 
-We also believe that the approach proposed in this paper is implementable in existing dependently typed languages such as Idris or Agda.
-A language might allow both ``refinemently typed'' and dependently typed terms in a single module,
-reserving a certain syntax such as \verb+foo : { v : Ty | Predicate v }+ to indicate that \verb+foo+ uses refinement types,
-while also allowing to use the former in the latter and vice versa.
-This enables the programmer to mostly write code with refinement types,
-only resorting to the full power of dependent types when refinements are not enough.
+What if we wanted to write a similar function with similar guarantees in a dependently typed language with explicit proofs?
 
-Moreover, since types are first-class in a dependently typed language,
-the refinements can also be treated as first-class, passing them around, returning from functions and so on.
+First of all, the basic question of representing integers in a proof-friendly way is non-obvious.
+For example, the construction known as Grothendieck group over the monoid of naturals is sometimes used, which, broadly speaking,
+uses the pair $(m, n)$ with $m, n \in \mathbb{N}$ to denote the integer $m - n$, but it comes with its own array of difficulties:
+for example, the equality on integers becomes a non-trivial equivalence relation, resulting in what's known in folklore as ``setoid hell''.
+So, let's give the dependently typed implementation a leg-up and assume natural numbers everywhere.
+Even with this allowance, the task becomes a good interview question for a middle-grade position, with an example Idris solution:
+\begin{lstlisting}[language=Haskell]
+ltePlusLeft : (x, y : Nat) -> x `LTE` y + x
+ltePlusLeft x Z = lteRefl
+ltePlusLeft x (S y) = lteSuccRight (ltePlusLeft x y)
+
+ltePlusFunny : (x, y : Nat) -> y `LTE` x + y + x
+ltePlusFunny x y = rewrite plusCommutative (x + y) x
+                in rewrite plusAssociative x x y
+                in ltePlusLeft y (x + x)
+
+funnyAdd : (x : Nat)
+        -> (y : Nat)
+        -> (v : Nat ** (x `LTE` v, y `LTE` v))
+funnyAdd x y = (x + y + x ** (ltePlusLeft x (x + y), ltePlusFunny x y))
+\end{lstlisting}
+Despite extensive use of library lemmas like \verb+lteRefl+, \verb+lteSuccRight+, \verb+plusCommutative+ and \verb+plusAssociative+,
+the code is considerably longer and is riddled with unnecessary details.
+
+More than that, slight variations of the pre- and post-conditions are just a matter of updating the signature with refinement types:
+\begin{lstlisting}[language=Haskell]
+funnyAdd' : (x : { v : Int | v > 0 })
+          → (y : { v : Int | v > 0 })
+          → { v : Int | v > x & v > y }
+funnyAdd' x y = x + y + x
+\end{lstlisting}
+Updating the Idris code is left as an exercise to the reader.
+
+%Having refinement types in a dependently typed language is useful in multiple ways.
+%
+%Firstly, it indeed lowers the cognitive load and the amount of (keyboard) typing that the programmer has to do.
+%A significant class of runtime errors, such as out-of-bounds array access, division by zero, and other examples motivating refinement types,
+%is eliminatable \cite{LiquidTypes08} without any explicit proofs from the programmer.
+%
+%We also believe that the approach proposed in this paper is implementable in existing dependently typed languages such as Idris or Agda.
+%A language might allow both ``refinemently typed'' and dependently typed terms in a single module,
+%reserving a certain syntax such as \verb+foo : { v : Ty | Predicate v }+ to indicate that \verb+foo+ uses refinement types,
+%while also allowing to use the former in the latter and vice versa.
+%This enables the programmer to mostly write code with refinement types,
+%only resorting to the full power of dependent types when refinements are not enough.
+%
+%Moreover, since types are first-class in a dependently typed language,
+%the refinements can also be treated as first-class, for example, passing them to and returning from functions.
 
 \section{Overview}
 
