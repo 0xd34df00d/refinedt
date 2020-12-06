@@ -155,7 +155,7 @@ Having refinement types and dependent types in a single language is useful in mu
 
 Firstly, refinement types indeed lower the cognitive load and the amount of (keyboard) typing the programmer has to do.
 As an example, consider a function taking two natural numbers $x, y$ and returning $x + y + x$ along with a proof that each summand is less than or equal to the sum.
-In a language with refinement types writing such a function is at most\footnote{Some implementations like \cite{LiquidTypes08} can infer refinements automatically}
+In a language with refinement types writing such a function is at most\footnote{Some implementations \cite{LiquidTypes08} can infer refinements automatically}
 a matter of decorating its type with the right refinements, along the lines of:
 \begin{lstlisting}[language=Haskell]
 funnyAdd : (x : { v : Int | v >= 0 })
@@ -168,7 +168,7 @@ Then, it's up to the SMT solver to verify that the function satisfies the refine
 What if we wanted to write a similar function with similar guarantees in a dependently typed language with explicit proofs?
 
 First of all, the basic question of representing integers in a proof-friendly way is non-obvious.
-For example, the construction known as Grothendieck group over the monoid of naturals is sometimes used, which, broadly speaking,
+For example, the construction known as the Grothendieck group over the monoid of naturals is sometimes used, which, roughly speaking,
 uses the pair $(m, n)$ with $m, n \in \mathbb{N}$ to denote the integer $m - n$, but it comes with its own array of difficulties:
 for example, the equality on integers becomes a non-trivial equivalence relation, resulting in what's known in folklore as ``setoid hell''.
 So, let's give the dependently typed implementation a leg-up and assume natural numbers everywhere.
@@ -198,7 +198,7 @@ funnyAdd' : (x : { v : Int | v > 0 })
           → { v : Int | v > x & v > y }
 funnyAdd' x y = x + y + x
 \end{lstlisting}
-Updating the Idris code is left as an exercise to the reader.
+On the other hand, updating the code with explicit proofs requires more human work and is left as an exercise to the reader.
 
 As an another example, consider the function calculating the maximum of three numbers.
 Implementing it with refinement types is about as straightforward as it might get:
@@ -246,7 +246,7 @@ In general, refinement types are expressive enough to eliminate a fair share \ci
 On the other hand, certain things are not expressible with refinement types.
 In particular, we claim without proof that refinement types cannot affect run-time behaviour of the program
 (although the reader familiar with the notion of run-time irrelevance or Coq's \verb+Prop+ universe might find those concepts useful to build the intuitive agreement with our claim).
-For example, a type-safe variadic \verb+printf+ whose \emph{type}, argument count and run-time behaviour \emph{depend} on the formatting string argument \emph{value} is not expressible with refinement types.
+For example, a type-safe variadic \verb+printf+ whose arguments count, their \emph{types}, and run-time behaviour \emph{depend} on the formatting string argument \emph{value} is not expressible with refinement types.
 
 Moreover, for fundamental reasons such as Rice's theorem, there is no algorithm that decides arbitrary non-trivial semantic properties of a program,
 so human assistance will always be needed for sufficiently complex programs, and this is where dependent types also come useful.
