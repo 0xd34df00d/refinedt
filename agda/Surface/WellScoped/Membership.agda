@@ -4,6 +4,7 @@ module Surface.WellScoped.Membership where
 
 open import Data.Fin using (Fin; zero; suc)
 open import Data.Nat using (ℕ; zero; suc; _+_)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Data.Fin.Extra
 open import Surface.WellScoped
@@ -15,6 +16,12 @@ data _∈_at_ : SType ℓ → Ctx ℓ → Fin ℓ → Set where
   ∈-zero : R.weaken-τ τ ∈ (Γ , τ) at zero
   ∈-suc  : τ ∈ Γ at idx
          → R.weaken-τ τ ∈ (Γ , τ') at suc idx
+
+∈-injective : τ₁ ∈ Γ at ι
+            → τ₂ ∈ Γ at ι
+            → τ₁ ≡ τ₂
+∈-injective ∈-zero ∈-zero = refl
+∈-injective (∈-suc ∈₁) (∈-suc ∈₂) rewrite ∈-injective ∈₁ ∈₂ = refl
 
 infix 4 _⊂_
 record _⊂_ {ℓ ℓ'} (Γ : Ctx ℓ) (Γ' : Ctx ℓ') : Set where
