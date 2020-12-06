@@ -64,13 +64,6 @@ prefix-subst {k = suc k} (prefix-cons prefix) = prefix-cons (prefix-subst prefix
          → (ε : STerm ℓ) → STerm (suc k + ℓ) → STerm (k + ℓ)
 [_↦ε<_]_ {k = k} _ ε ε' = [ ctx-idx k ↦ε R.weaken-ε-k _ ε ] ε'
 
-prefix-∈-≡ : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {τ : SType (suc k + ℓ)}
-           → Γ prefix-at suc k of Γ,σ,Δ
-           → τ ∈ Γ,σ,Δ at ctx-idx k
-           → τ ≡ weaken-τ-k (suc k) σ
-prefix-∈-≡ {k = zero} prefix ∈ = {! !}
-prefix-∈-≡ {k = suc k} prefix ∈ = {! !}
-
 mutual
   sub-Γok : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)}
           → Γ ⊢ ε ⦂ σ
