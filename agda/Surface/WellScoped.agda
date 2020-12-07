@@ -19,7 +19,7 @@ variable
   n ℓ ℓ' ℓ₀ ℓ₁ ℓ₂ : ℕ
   nₐ : ℕₐ
   b b' b₁ b₂ : BaseType
-  idx ι : Fin ℓ
+  idx ι ι₁ ι₂ : Fin ℓ
 
 data SType (ℓ : ℕ) : Set
 data STerm (ℓ : ℕ) : Set
