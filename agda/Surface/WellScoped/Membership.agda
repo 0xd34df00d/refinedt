@@ -13,15 +13,17 @@ open import Surface.WellScoped.Substitution as S
 
 infix 4 _∈_at_
 data _∈_at_ : SType ℓ → Ctx ℓ → Fin ℓ → Set where
-  ∈-zero : R.weaken-τ τ ∈ (Γ , τ) at zero
-  ∈-suc  : τ ∈ Γ at idx
-         → R.weaken-τ τ ∈ (Γ , τ') at suc idx
+  ∈-zero : (≡-prf : τ₀ ≡ R.weaken-τ τ)
+         → τ₀ ∈ Γ , τ at zero
+  ∈-suc  : (≡-prf : τ₀ ≡ R.weaken-τ τ)
+         → (there : τ ∈ Γ at ι)
+         → τ₀ ∈ Γ , τ' at suc ι
 
 ∈-injective : τ₁ ∈ Γ at ι
             → τ₂ ∈ Γ at ι
             → τ₁ ≡ τ₂
-∈-injective ∈-zero ∈-zero = refl
-∈-injective (∈-suc ∈₁) (∈-suc ∈₂) rewrite ∈-injective ∈₁ ∈₂ = refl
+∈-injective (∈-zero refl) (∈-zero refl) = refl
+∈-injective (∈-suc refl ∈₁) (∈-suc refl ∈₂) rewrite ∈-injective ∈₁ ∈₂ = refl
 
 infix 4 _⊂_
 record _⊂_ {ℓ ℓ'} (Γ : Ctx ℓ) (Γ' : Ctx ℓ') : Set where
@@ -39,12 +41,12 @@ append-both {Γ = Γ} {Γ' = Γ'} (MkTR ρ ρ-∈ ρ-mono) = MkTR (R.ext ρ) ρ-
   where
     ρ-∈' : τ ∈ Γ , τ' at idx
          → R.act-τ (R.ext ρ) τ ∈ Γ' , R.act-τ ρ τ' at R.ext ρ idx
-    ρ-∈' {τ' = τ'} ∈-zero rewrite R.weaken-τ-comm ρ τ' = ∈-zero
-    ρ-∈' (∈-suc {τ = τ} x) rewrite R.weaken-τ-comm ρ τ = ∈-suc (ρ-∈ x)
+    ρ-∈' {τ' = τ'} (∈-zero refl) rewrite R.weaken-τ-comm ρ τ' = ∈-zero refl
+    ρ-∈' (∈-suc {τ = τ} refl there) rewrite R.weaken-τ-comm ρ τ = ∈-suc refl (ρ-∈ there)
 
 ignore-head : ∀ {Γ : Ctx ℓ}
             → Γ ⊂ Γ , τ
-ignore-head = MkTR suc ∈-suc <-suc
+ignore-head = MkTR suc (∈-suc refl) <-suc
 
 
 infix 4 _ℕ-idx_∈_
