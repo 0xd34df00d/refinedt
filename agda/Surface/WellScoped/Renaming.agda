@@ -171,3 +171,10 @@ act-branches-injectivity f-inj {[]} {[]} ≡-prf = refl
 act-branches-injectivity f-inj {MkCaseBranch ε₁ ∷ bs₁} {MkCaseBranch ε₂ ∷ bs₂} ≡-prf
     rewrite act-ε-injectivity (ext-inj f-inj) {ε₁} {ε₂} (CaseBranch-inj (∷-inj₁ ≡-prf))
           | act-branches-injectivity f-inj (∷-inj₂ ≡-prf) = refl
+
+
+weaken-τ-injective : Injective {SType ℓ} {SType (suc ℓ)} weaken-τ
+weaken-τ-injective = act-τ-injectivity suc-injective
+
+weaken-ε-injective : Injective {STerm ℓ} {STerm (suc ℓ)} weaken-ε
+weaken-ε-injective = act-ε-injectivity suc-injective
