@@ -127,7 +127,7 @@ ext-inj f-inj {zero} {zero} ext-≡ = refl
 ext-inj f-inj {suc x₁} {suc x₂} ext-≡ rewrite f-inj (suc-injective ext-≡) = refl
 
 ActInjectivity : {Ty : ℕ → Set} → ActionOn Ty → Set
-ActInjectivity {Ty} act = ∀ {ℓ ℓ'} {v₁ v₂ : Ty ℓ} {f : Fin ℓ → Target ℓ'}
+ActInjectivity {Ty} act = ∀ {ℓ ℓ'} {f : Fin ℓ → Target ℓ'}
                           → Injective f
                           → Injective (act f)
 
