@@ -153,8 +153,8 @@ and no prior papers strived to mechanically verify the metatheoretical propertie
 
 Having refinement types and dependent types in a single language is useful in multiple ways.
 
-Firstly, refinement types indeed lower the cognitive load and the amount of (keyboard) typing the programmer has to do.
-As an example, consider a function taking two natural numbers $x, y$ and returning $x + y + x$ along with a proof that each summand is less than or equal to the sum.
+Firstly, refinement types indeed lower the cognitive load and the amount of (both keyboard and mathematical) typing the programmer has to do.
+As an example, consider a function taking two non-negative numbers $x, y$ and returning $x + y + x$ along with a proof that each summand is less than or equal to the sum.
 In a language with refinement types writing such a function is at most\footnote{Some implementations \cite{LiquidTypes08} can infer refinements automatically}
 a matter of decorating its type with the right refinements, along the lines of:
 \begin{lstlisting}[language=Haskell]
@@ -172,7 +172,7 @@ For example, the construction known as the Grothendieck group over the monoid of
 uses the pair $(m, n)$ with $m, n \in \mathbb{N}$ to denote the integer $m - n$, but it comes with its own array of difficulties:
 for example, the equality on integers becomes a non-trivial equivalence relation, resulting in what's known in folklore as ``setoid hell''.
 So, let's give the dependently typed implementation a leg-up and assume natural numbers everywhere.
-Even with this allowance, the task becomes a good interview question for a middle-grade position, with an example Idris solution:
+Even with this allowance, the task is non-trivial, with an example Idris solution:
 \begin{lstlisting}[language=Haskell]
 ltePlusLeft : (x, y : Nat) -> x `LTE` y + x
 ltePlusLeft x Z = lteRefl
@@ -254,7 +254,7 @@ And, in practice, most existing SMT solvers do not support higher-order reasonin
 so, for instance, formally proving the properties of the type system proposed in this very paper is something that, currently, a human should do.
 
 There is also a certain synergy coming from uniting dependent types and refinement types:
-for example, since types are first-class in a dependently typed language, the refinements can also be treated as first-class, for example, passing them to and returning from functions.
+for example, since types are first-class in a dependently typed language, the refinements can also be treated as first-class, for instance, passing them to and returning from functions.
 
 Given all of the above, it is desirable to have both refinement types and dependent types in a single language.
 But having both in a single core type checker seems extravagant, and, since refinement types can be seen as a subset of dependent types,
