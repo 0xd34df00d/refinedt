@@ -4,7 +4,7 @@ module Surface.WellScoped.Membership where
 
 open import Data.Fin using (Fin; zero; suc)
 open import Data.Nat using (ℕ; zero; suc; _+_)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 
 open import Data.Fin.Extra
 open import Surface.WellScoped
@@ -48,9 +48,20 @@ append-both {Γ = Γ} {Γ' = Γ'} (MkTR ρ ρ-∈ ρ-mono) = MkTR (R.ext ρ) ρ-
     ρ-∈' {τ' = τ'} (∈-zero refl) rewrite R.weaken-τ-comm ρ τ' = ∈-zero refl
     ρ-∈' (∈-suc {τ = τ} refl there) rewrite R.weaken-τ-comm ρ τ = ∈-suc refl (ρ-∈ there)
 
-ignore-head : ∀ {Γ : Ctx ℓ}
-            → Γ ⊂ Γ , τ
-ignore-head = MkTR suc (∈-suc refl) <-suc
+ignore-head : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'}
+            → Γ ⊂ Γ'
+            → Γ ⊂ Γ' , τ
+ignore-head {ℓ} {ℓ'} {Γ = Γ} {Γ' = Γ'} (MkTR ρ ρ-∈ ρ-mono) = MkTR ρ' ρ'-∈ ρ'-mono
+  where
+    ρ' : Fin ℓ → Fin (suc ℓ')
+    ρ' n = suc (ρ n)
+
+    ρ'-∈ : τ ∈ Γ at ι
+         → R.act-τ ρ' τ ∈ Γ' , τ' at ρ' ι
+    ρ'-∈ {τ = τ} τ∈Γ-at-ι rewrite sym (R.act-τ-distr ρ suc τ) = ∈-suc refl (ρ-∈ τ∈Γ-at-ι)
+
+    ρ'-mono : Monotonic ρ'
+    ρ'-mono x<y = <-suc (ρ-mono x<y)
 
 ⊂-refl : Γ ⊂ Γ
 ⊂-refl {Γ = Γ} = MkTR (λ z → z) ρ-∈ (λ z → z)

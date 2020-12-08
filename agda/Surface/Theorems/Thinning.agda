@@ -137,11 +137,11 @@ abstract
                 → Γ ⊢ τ'
                 → Γ ⊢ τ
                 → (Γ , τ') ⊢ R.weaken-τ τ
-  twf-weakening {Γ} Γok τ'δ τδ = twf-thinning ignore-head (TCTX-Bind Γok τ'δ) τδ
+  twf-weakening {Γ} Γok τ'δ τδ = twf-thinning (ignore-head ⊂-refl) (TCTX-Bind Γok τ'δ) τδ
 
   t-weakening : ∀ {Γ : Ctx ℓ}
               → Γ ok
               → Γ ⊢ τ'
               → Γ ⊢ ε ⦂ τ
               → (Γ , τ') ⊢ R.weaken-ε ε ⦂ R.weaken-τ τ
-  t-weakening {Γ} Γok τ'δ εδ = t-thinning ignore-head (TCTX-Bind Γok τ'δ) εδ
+  t-weakening {Γ} Γok τ'δ εδ = t-thinning (ignore-head ⊂-refl) (TCTX-Bind Γok τ'δ) εδ
