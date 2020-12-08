@@ -109,7 +109,8 @@ which are some base types endowed with a predicate, possibly dependent on other 
 The logical implication on predicates
 (or, equivalently, the set inclusion relation on the sets defined by predicates)
 gives rise to a natural \emph{subtyping relation}:
-for example, the aforementioned type is a subtype of \verb+{ v : Int | v >= -1 }+.
+for example, the aforementioned type is a subtype of \verb+{ v : Int | v >= -1 }+,
+and the corresponding implication (which, in this case, is a tautology) is known as a \emph{verification condition} (VC).
 The core idea of liquid types then is to ensure that this subtype relation is efficiently decidable by an SMT solver.
 
 Another useful property of refinement types is that they have a natural mental model:
