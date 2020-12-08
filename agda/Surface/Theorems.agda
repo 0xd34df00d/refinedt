@@ -11,10 +11,11 @@ open import Data.Product renaming (_,_ to _,'_)
 
 open import Data.Fin.Extra
 open import Surface.WellScoped
-open import Surface.WellScoped.Substitution using ([_↦τ_]_; [_↦ε_]_; [_↦c_]_)
+open import Surface.WellScoped.CtxPrefix
 open import Surface.WellScoped.Membership
 open import Surface.WellScoped.Renaming as R
 open import Surface.WellScoped.Substitution as S
+open import Surface.WellScoped.Substitution using ([_↦τ_]_; [_↦ε_]_; [_↦c_]_)
 open import Surface.Derivations
 open import Surface.Derivations.WF
 open import Surface.Theorems.TCTX
@@ -28,33 +29,11 @@ open import Surface.Theorems.Thinning
 
 -- Substitution lemmas
 
--- It's interesting to note that _⊂_ does not work as nicely to express the notion of a prefix of a context.
--- Indeed, the information that the last element of the supercontext can be chopped off is lost:
--- _⊂_ can also imply that arbitrary bindings are inserted in the middle of the context, not necessarily appended to it.
--- We could have used _⊂_ with an extra requirement that ρ : Fin ℓ → Fin ℓ' is such that ∀ x → toℕ x ≡ toℕ (ρ x),
--- but it gets super messy really soon. For example, even proving that if ℓ' ≠ ℓ,
--- then extra elements were appended to the supercontext, is non-trivial.
--- It's perhaps cleanest and cheapest to just add an extra predicate.
-
-infix 3 _prefix-at_of_
-data _prefix-at_of_ : (Γ : Ctx ℓ) → (k : ℕ) → (Γ' : Ctx (k + ℓ)) → Set where
-  prefix-refl : Γ prefix-at zero of Γ
-  prefix-cons : ∀ {k} {Γ : Ctx ℓ} {Γ' : Ctx (k + ℓ)} {τ : SType (k + ℓ)}
-              → Γ prefix-at k of Γ'
-              → Γ prefix-at (suc k) of (Γ' , τ)
-
 -- Some local helpers
 
 τ∈Γ-⇒-Γ⊢τ : Γ ok → τ ∈ Γ at ι → Γ ⊢ τ
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (∈-zero refl) = twf-weakening δ τδ τδ
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (∈-suc refl ∈) = twf-weakening δ τδ (τ∈Γ-⇒-Γ⊢τ δ ∈)
-
-prefix-subst : ∀ {k} {Γ : Ctx ℓ} {Γ' : Ctx (suc k + ℓ)}
-             → Γ prefix-at suc k of Γ'
-             → Γ prefix-at k of ([ ℓ ↦Γ ε ] Γ')
-prefix-subst {k = zero} (prefix-cons prefix) = prefix
-prefix-subst {k = suc k} (prefix-cons prefix) = prefix-cons (prefix-subst prefix)
-
 
 [_↦τ<_]_ : ∀ {k} ℓ
          → (ε : STerm ℓ) → SType (suc k + ℓ) → SType (k + ℓ)
