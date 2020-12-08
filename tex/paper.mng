@@ -143,6 +143,18 @@ This translation to a core dependently typed language provides several nice meta
     and, moreover, the core type checker has to be trusted anyway.
 \end{itemize}
 
+Of course, there are related developments. Perhaps the closest one is F* and, in particular, Meta-F* (which is still based on F*).
+(Meta-)F* also supports dependent types, but they are rather used to manipulate the VCs to turn them into an SMT-decidable form,
+or discharge certain proof obligations not decidable via SMT\@.
+The main difference between (Meta-)F* and our approach is that F*'s core type checker still relies on an SMT solver,
+while our approach keeps the core type checker limited to a dependent type theory.
+
+Another example of a closely related work is Hammer, which brings some form of automation to Coq.
+Although it achieves a similar goal of producing proof terms that are then verified using the core Coq type checker,
+using either a decidable fragment of Coq's logic in case of the \verb+sauto+ tactic,
+or machine learning and external automated theorem provers in case of the \verb+hammer+ tactic,
+it still requires the programmer to think in terms of full dependent types.
+
 Since verification of programs for safer software is the ultimate goal of all these type systems,
 it seems important to have firm foundations and verify that the type systems themselves do make sense.
 Thus, we also present mechanically verified proofs in Agda of all the key theorems about our surface language and its translation procedure.
