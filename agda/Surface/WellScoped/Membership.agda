@@ -52,6 +52,13 @@ ignore-head : ∀ {Γ : Ctx ℓ}
             → Γ ⊂ Γ , τ
 ignore-head = MkTR suc (∈-suc refl) <-suc
 
+⊂-refl : Γ ⊂ Γ
+⊂-refl {Γ = Γ} = MkTR (λ z → z) ρ-∈ (λ z → z)
+  where
+    ρ-∈ : τ ∈ Γ at ι
+        → R.act-τ (λ z → z) τ ∈ Γ at ι
+    ρ-∈ {τ = τ} τ∈Γ-at-ι rewrite act-τ-id (λ _ → refl) τ = τ∈Γ-at-ι
+
 
 infix 4 _ℕ-idx_∈_
 data _ℕ-idx_∈_ : (k : ℕ) → SType ℓ → Ctx (suc k + ℓ) → Set where
