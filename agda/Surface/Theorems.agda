@@ -82,16 +82,17 @@ mutual
                 → Γ ⊢ [ zero ↦τ ε ] τ
   sub-Γ⊢τ-front εδ τδ = sub-Γ⊢τ εδ (prefix-cons prefix-refl) (∈-zero refl) τδ
 
-  sub-Γ⊢ε⦂τ : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc (k + ℓ))} {ε₀ : STerm (suc k + ℓ)} {τ : SType (suc k + ℓ)}
+  sub-Γ⊢ε⦂τ : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {ε₀ : STerm (suc k + ℓ)} {τ : SType (suc k + ℓ)}
             → Γ ⊢ ε ⦂ σ
             → Γ prefix-at suc k of Γ,σ,Δ
             → R.weaken-τ-k (suc k) σ ∈ Γ,σ,Δ at ctx-idx k
             → Γ,σ,Δ ⊢ ε₀ ⦂ τ
             → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ℓ ↦ε< ε ] ε₀ ⦂ [ ℓ ↦τ< ε ] τ
   sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Unit Γok) = T-Unit (sub-Γok εδ prefix σ-∈ Γok)
-  sub-Γ⊢ε⦂τ {k = k} εδ prefix σ-∈ (T-Var {idx = idx} Γok x) with ctx-idx k <>? idx
+  sub-Γ⊢ε⦂τ {k = k} εδ prefix σ-∈ (T-Var {idx = idx} Γok τ-∈) with ctx-idx k <>? idx
   ... | less rep<var = T-Var (sub-Γok εδ prefix σ-∈ Γok) {! !}
-  ... | equal = {! !}
+  ... | equal = let εδ' = t-weakening-prefix (prefix-subst prefix) (sub-Γok εδ prefix σ-∈ Γok) εδ
+                 in {! !}
   ... | greater rep>var = T-Var (sub-Γok εδ prefix σ-∈ Γok) {! !}
   sub-Γ⊢ε⦂τ {ℓ = ℓ} {ε = ε} {k = k} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (T-Abs {τ₁ = τ₁} {τ₂ = τ₂} {ε = ε'} arrδ bodyδ)
     = T-Abs (sub-Γ⊢τ εδ prefix σ-∈ arrδ) bodyδ'
