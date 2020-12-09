@@ -43,8 +43,8 @@ open import Surface.Theorems.Thinning
          → (ε : STerm ℓ) → STerm (suc k + ℓ) → STerm (k + ℓ)
 [_↦ε<_]_ {k = k} _ ε ε' = [ ctx-idx k ↦ε R.weaken-ε-k _ ε ] ε'
 
-replace-weakened-τ : ∀ k (ε : STerm (k + ℓ)) (τ : SType ℓ)
-                   → [ ctx-idx k ↦τ ε ] (weaken-τ-k (suc k) τ) ≡ weaken-τ-k k τ
+replace-weakened-τ : ∀ k (ε : STerm (k + ℓ)) (σ : SType ℓ)
+                   → [ ctx-idx k ↦τ ε ] (weaken-τ-k (suc k) σ) ≡ weaken-τ-k k σ
 replace-weakened-τ k ε τ = {! !}
 
 mutual
@@ -95,9 +95,9 @@ mutual
   sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Unit Γok) = T-Unit (sub-Γok εδ prefix σ-∈ Γok)
   sub-Γ⊢ε⦂τ {ε = ε} {σ = σ} {k = k} εδ prefix σ-∈ (T-Var {idx = idx} Γok τ-∈) with ctx-idx k <>? idx
   ... | less rep<var = T-Var (sub-Γok εδ prefix σ-∈ Γok) {! !}
-  ... | equal rewrite ∈-injective τ-∈ σ-∈
-                    | replace-weakened-τ k (weaken-ε-k k ε) σ
-                    = t-weakening-prefix (prefix-subst prefix) (sub-Γok εδ prefix σ-∈ Γok) εδ
+  ... | equal refl rewrite ∈-injective τ-∈ σ-∈
+                         | replace-weakened-τ k (weaken-ε-k k ε) σ
+                         = t-weakening-prefix (prefix-subst prefix) (sub-Γok εδ prefix σ-∈ Γok) εδ
   ... | greater rep>var = T-Var (sub-Γok εδ prefix σ-∈ Γok) {! !}
   sub-Γ⊢ε⦂τ {ℓ = ℓ} {ε = ε} {k = k} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (T-Abs {τ₁ = τ₁} {τ₂ = τ₂} {ε = ε'} arrδ bodyδ)
     = T-Abs (sub-Γ⊢τ εδ prefix σ-∈ arrδ) bodyδ'

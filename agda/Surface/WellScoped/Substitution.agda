@@ -41,7 +41,7 @@ replace-at replace-idx ε var-idx with replace-idx <>? var-idx
 -- so decrement the variable index:
 ... | less rep<var = SVar (m<n-n-pred rep<var)
 -- just replace the current variable with the term:
-... | equal = ε
+... | equal m≡n = ε
 -- replacement index is greater than current variable index, so the variable still refers to the same binder,
 -- so leave the var index as-is, just shrinking the bound of Fin as the binders count just decremented:
 ... | greater rep>var = SVar (tighten rep>var)
@@ -71,10 +71,10 @@ ext-replace-comm _ zero zero = refl
 ext-replace-comm _ (suc ι) zero = refl
 ext-replace-comm _ zero (suc var-idx) with zero <>? var-idx
 ... | less m<n rewrite m<n-n-pred-cancel m<n = refl
-... | equal = refl
+... | equal refl = refl
 ext-replace-comm _ (suc ι) (suc var-idx) with suc ι <>? var-idx
 ... | less m<n rewrite m<n-n-pred-cancel m<n = refl
-... | equal = refl
+... | equal refl = refl
 ... | greater m>n = refl
 
 R-ext-replace-comm : ∀ ε (ρ : Fin ℓ → Fin ℓ') ι
@@ -83,10 +83,10 @@ R-ext-replace-comm ε ρ zero zero = refl
 R-ext-replace-comm ε ρ (suc ι) zero = refl
 R-ext-replace-comm ε ρ zero (suc var-idx) with zero <>? var-idx
 ... | less m<n rewrite m<n-n-pred-cancel m<n = refl
-... | equal rewrite R.weaken-ε-comm ρ ε = refl
+... | equal refl rewrite R.weaken-ε-comm ρ ε = refl
 R-ext-replace-comm ε ρ (suc ι) (suc var-idx) with suc (ρ ι) <>? var-idx
 ... | less m<n rewrite m<n-n-pred-cancel m<n = refl
-... | equal rewrite R.weaken-ε-comm ρ ε = refl
+... | equal refl rewrite R.weaken-ε-comm ρ ε = refl
 ... | greater m>n = refl
 
 IdentityUpTo : (Fin ℓ → Fin ℓ') → Fin (suc ℓ) → Set
@@ -119,6 +119,7 @@ ext-commuting : ∀ {ρ : Fin ℓ → Fin ℓ'} {ι}
 ext-commuting record { ρ-mono = ρ-mono ; ρ-id = ρ-id } = record { ρ-mono = ext-monotonic ρ-mono
                                                                 ; ρ-id = ext-identity ρ-id
                                                                 }
+
 
 RenameSubstDistributivity : {Ty : ℕ → Set} → R.ActionOn Ty → SubstOn Ty → Set
 RenameSubstDistributivity {Ty} ρ-act [↦] = ∀ {ℓ ℓ'}
@@ -176,7 +177,7 @@ rename-subst-var-distr {ℓ = suc ℓ} {ℓ' = suc ℓ'} ρ ε (suc ι) ρ-comm 
 rename-subst-var-distr {ℓ' = zero} ρ ε (suc ι) ρ-comm (suc idx) = Fin0-elim (ρ ι)
 rename-subst-var-distr {ℓ = suc ℓ} {ℓ' = suc ℓ'} ρ ε (suc ι) ρ-comm (suc idx) with ι <>? idx
 ... | less m<n rewrite <>?-< (ρ-mono ρ-comm m<n) = refl
-... | equal rewrite <>?-refl-equal (ρ ι) = refl
+... | equal refl rewrite <>?-refl-equal (ρ ι) = refl
 ... | greater m>n rewrite <>?-> (ρ-mono ρ-comm m>n)
                         | rename-subst-var-distr-lemma₃ ρ ι idx ρ-comm m>n = refl
 

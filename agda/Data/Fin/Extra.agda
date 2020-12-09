@@ -37,16 +37,16 @@ m<n-not-m>n (<-suc m<n) (<-suc m>n) = m<n-not-m>n m<n m>n
 
 data _<>_ : Fin ℓ → Fin ℓ → Set where
   less    : (m<n : m < n) → m <> n
-  equal   :                 m <> m
+  equal   : (m ≡ n)       → m <> n
   greater : (m>n : m > n) → m <> n
 
 _<>?_ : (m n : Fin ℓ) → m <> n
-zero <>? zero = equal
+zero <>? zero = equal refl
 zero <>? suc n = less (<-zero n)
 suc m <>? zero = greater (<-zero m)
 suc m <>? suc n with m <>? n
 ... | less m<n = less (<-suc m<n)
-... | equal = equal
+... | equal refl = equal refl
 ... | greater m>n = greater (<-suc m>n)
 
 m<n-n-pred : {m n : Fin (suc ℓ)} → m < n → Fin ℓ
@@ -74,7 +74,7 @@ tighten-preserves-< (<-zero zero) = <-zero zero
 tighten-preserves-< (<-zero (suc n)) = <-zero (suc n)
 tighten-preserves-< {ℓ = suc ℓ} (<-suc n>m) = <-suc (tighten-preserves-< n>m)
 
-<>?-refl-equal : ∀ (n : Fin ℓ) → n <>? n ≡ equal
+<>?-refl-equal : ∀ (n : Fin ℓ) → n <>? n ≡ equal refl
 <>?-refl-equal zero = refl
 <>?-refl-equal (suc n) rewrite <>?-refl-equal n = refl
 
