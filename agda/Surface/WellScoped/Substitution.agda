@@ -122,13 +122,13 @@ ext-commuting record { ρ-mono = ρ-mono ; ρ-id = ρ-id } = record { ρ-mono = 
 
 
 RenameSubstDistributivity : {Ty : ℕ → Set} → R.ActionOn Ty → SubstOn Ty → Set
-RenameSubstDistributivity {Ty} ρ-act [↦] = ∀ {ℓ ℓ'}
-                                           → (ρ : Fin ℓ → Fin ℓ')
-                                           → (ε : STerm ℓ)
-                                           → (ι : Fin (suc ℓ))
-                                           → (ρ-comm : CommutingRenamer ρ ι)
-                                           → (v : Ty (suc ℓ))
-                                           → ρ-act ρ ([↦] ι ε v) ≡ [↦] (R.ext ρ ι) (R.act-ε ρ ε) (ρ-act (R.ext ρ) v)
+RenameSubstDistributivity {Ty} ρ-act [_↦_]_ = ∀ {ℓ ℓ'}
+                                              → (ρ : Fin ℓ → Fin ℓ')
+                                              → (ε : STerm ℓ)
+                                              → (ι : Fin (suc ℓ))
+                                              → (ρ-comm : CommutingRenamer ρ ι)
+                                              → (v : Ty (suc ℓ))
+                                              → ρ-act ρ ([ ι ↦ ε ] v) ≡ [ R.ext ρ ι ↦ R.act-ε ρ ε ] (ρ-act (R.ext ρ) v)
 
 rename-subst-τ-distr : RenameSubstDistributivity R.act-τ [_↦τ_]_
 rename-subst-ρ-distr : RenameSubstDistributivity R.act-ρ [_↦ρ_]_
