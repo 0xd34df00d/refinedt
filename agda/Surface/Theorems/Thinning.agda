@@ -8,6 +8,7 @@ open import Data.Nat.Properties
 open import Relation.Binary.PropositionalEquality using (sym)
 
 open import Surface.WellScoped
+open import Surface.WellScoped.CtxPrefix
 open import Surface.WellScoped.Membership
 open import Surface.WellScoped.Renaming as R
 open import Surface.WellScoped.Substitution as S
@@ -145,3 +146,12 @@ abstract
               → Γ ⊢ ε ⦂ τ
               → (Γ , τ') ⊢ R.weaken-ε ε ⦂ R.weaken-τ τ
   t-weakening {Γ} Γok τ'δ εδ = t-thinning (ignore-head ⊂-refl) (TCTX-Bind Γok τ'δ) εδ
+
+  t-weakening-prefix : ∀ {k} {Γ : Ctx ℓ} {Γ' : Ctx (k + ℓ)}
+                     → Γ prefix-at k of Γ'
+                     → Γ' ok
+                     → Γ ⊢ ε ⦂ τ
+                     → Γ' ⊢ weaken-ε-k k ε ⦂ weaken-τ-k k τ
+  t-weakening-prefix {ε = ε} {τ = τ} prefix Γ'ok εδ rewrite prefix-weakening-ε prefix ε
+                                                          | prefix-weakening-τ prefix τ
+                                                          = t-thinning (prefix-as-⊂ prefix) Γ'ok εδ
