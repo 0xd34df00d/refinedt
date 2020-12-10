@@ -17,24 +17,6 @@ open import Surface.WellScoped.Actions (record { Target = STerm
                                                }
                                        ) public
 
-≡-ext : {f₁ f₂ : Fin ℓ → STerm ℓ'}
-      → (∀ x → f₁ x ≡ f₂ x)
-      → (∀ x → ext f₁ x ≡ ext f₂ x)
-≡-ext x-≡ zero = refl
-≡-ext x-≡ (suc x) rewrite x-≡ x = refl
-
-var-action-cong : {f₁ f₂ : Fin ℓ → STerm ℓ'}
-                → (∀ x → f₁ x ≡ f₂ x)
-                → (∀ x → var-action f₁ x ≡ var-action f₂ x)
-var-action-cong x-≡ x = x-≡ x
-
-open import Surface.WellScoped.ActionsLemmas var-action-record
-                                             record { ≡-ext = ≡-ext
-                                                    ; var-action-cong = var-action-cong
-                                                    }
-                                             public
-
-
 replace-at : Fin (suc ℓ) → STerm ℓ → Fin (suc ℓ) → STerm ℓ
 replace-at replace-idx ε var-idx with replace-idx <>? var-idx
 -- replacement index is less than current variable index, so the variable points to a binder that just got closer to it,
@@ -64,6 +46,23 @@ SubstOn Ty = ∀ {ℓ} → Fin (suc ℓ) → STerm ℓ → Ty (suc ℓ) → Ty �
 [_↦bs_]_ : SubstOn (CaseBranches nₐ)
 [_↦bs_]_ idx ε = act-branches (replace-at idx ε)
 
+
+≡-ext : {f₁ f₂ : Fin ℓ → STerm ℓ'}
+      → (∀ x → f₁ x ≡ f₂ x)
+      → (∀ x → ext f₁ x ≡ ext f₂ x)
+≡-ext x-≡ zero = refl
+≡-ext x-≡ (suc x) rewrite x-≡ x = refl
+
+var-action-cong : {f₁ f₂ : Fin ℓ → STerm ℓ'}
+                → (∀ x → f₁ x ≡ f₂ x)
+                → (∀ x → var-action f₁ x ≡ var-action f₂ x)
+var-action-cong x-≡ x = x-≡ x
+
+open import Surface.WellScoped.ActionsLemmas var-action-record
+                                             record { ≡-ext = ≡-ext
+                                                    ; var-action-cong = var-action-cong
+                                                    }
+                                             public
 
 ext-replace-comm : ∀ ε (ι : Fin (suc ℓ))
                  → (∀ var-idx → ext (replace-at ι ε) var-idx ≡ replace-at (suc ι) (R.act-ε suc ε) var-idx)
