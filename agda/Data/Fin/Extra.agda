@@ -37,7 +37,7 @@ m<n-not-m>n (<-suc m<n) (<-suc m>n) = m<n-not-m>n m<n m>n
 
 data _<>_ : Fin ℓ → Fin ℓ → Set where
   less    : (m<n : m < n) → m <> n
-  equal   : (m ≡ n)       → m <> n
+  equal   : (m≡n : m ≡ n) → m <> n
   greater : (m>n : m > n) → m <> n
 
 _<>?_ : (m n : Fin ℓ) → m <> n
