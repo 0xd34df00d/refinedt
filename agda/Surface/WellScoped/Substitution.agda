@@ -231,9 +231,11 @@ subst-rename-ε-distr : SubstRenameDistributivity act-ε R.act-ε
 subst-rename-cons-distr : SubstRenameDistributivity {ADTCons nₐ} act-cons R.act-cons
 subst-rename-branches-distr : SubstRenameDistributivity {CaseBranches nₐ} act-branches R.act-branches
 
-subst-rename-τ-distr σ ρ ⟨ b ∣ ρ' ⟩ rewrite subst-rename-ρ-distr (ext σ) (R.ext ρ) ρ' = {! !}
+subst-rename-τ-distr σ ρ ⟨ b ∣ ρ' ⟩ rewrite subst-rename-ρ-distr (ext σ) (R.ext ρ) ρ'
+                                          | act-ρ-extensionality (ext-Rext-distr σ ρ) ρ' = refl
 subst-rename-τ-distr σ ρ (τ₁ ⇒ τ₂) rewrite subst-rename-τ-distr σ ρ τ₁
-                                         | subst-rename-τ-distr (ext σ) (R.ext ρ) τ₂ = {! !}
+                                         | subst-rename-τ-distr (ext σ) (R.ext ρ) τ₂
+                                         | act-τ-extensionality (ext-Rext-distr σ ρ) τ₂ = refl
 subst-rename-τ-distr σ ρ (⊍ cons) rewrite subst-rename-cons-distr σ ρ cons = refl
 
 subst-rename-ρ-distr σ ρ (ε₁ ≈ ε₂) rewrite subst-rename-ε-distr σ ρ ε₁
@@ -241,15 +243,26 @@ subst-rename-ρ-distr σ ρ (ε₁ ≈ ε₂) rewrite subst-rename-ε-distr σ �
 subst-rename-ρ-distr σ ρ (ρ₁ ∧ ρ₂) rewrite subst-rename-ρ-distr σ ρ ρ₁
                                          | subst-rename-ρ-distr σ ρ ρ₂ = refl
 
-subst-rename-ε-distr σ ρ ε = {! !}
+subst-rename-ε-distr σ ρ SUnit = refl
+subst-rename-ε-distr σ ρ (SVar idx) = refl
+subst-rename-ε-distr σ ρ (SLam τ ε) rewrite subst-rename-τ-distr σ ρ τ
+                                          | subst-rename-ε-distr (ext σ) (R.ext ρ) ε
+                                          | act-ε-extensionality (ext-Rext-distr σ ρ) ε = refl
+subst-rename-ε-distr σ ρ (SApp ε₁ ε₂) rewrite subst-rename-ε-distr σ ρ ε₁
+                                            | subst-rename-ε-distr σ ρ ε₂ = refl
+subst-rename-ε-distr σ ρ (SCase ε branches) rewrite subst-rename-ε-distr σ ρ ε
+                                                  | subst-rename-branches-distr σ ρ branches = refl
+subst-rename-ε-distr σ ρ (SCon idx ε cons) rewrite subst-rename-ε-distr σ ρ ε
+                                                 | subst-rename-cons-distr σ ρ cons = refl
 
 subst-rename-cons-distr σ ρ [] = refl
 subst-rename-cons-distr σ ρ (τ ∷ cons) rewrite subst-rename-τ-distr σ ρ τ
                                              | subst-rename-cons-distr σ ρ cons = refl
 
 subst-rename-branches-distr σ ρ [] = refl
-subst-rename-branches-distr σ ρ (MkCaseBranch body ∷ branches) rewrite subst-rename-ε-distr (ext σ) (R.ext ρ) body
-                                                                     | subst-rename-branches-distr σ ρ branches = {! !}
+subst-rename-branches-distr σ ρ (MkCaseBranch ε ∷ bs) rewrite subst-rename-ε-distr (ext σ) (R.ext ρ) ε
+                                                            | subst-rename-branches-distr σ ρ bs
+                                                            | act-ε-extensionality (ext-Rext-distr σ ρ) ε = refl
 
 
 ctx-idx : ∀ k → Fin (suc (k + ℓ))
