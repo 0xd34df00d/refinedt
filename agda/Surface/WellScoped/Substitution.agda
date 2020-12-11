@@ -5,6 +5,7 @@ module Surface.WellScoped.Substitution where
 open import Data.Nat using (ℕ; suc; zero; _+_)
 open import Data.Fin using (Fin; suc; zero; toℕ)
 open import Data.Vec
+open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Data.Fin.Extra
@@ -209,6 +210,39 @@ rename-subst-τ-distr-0 : (ρ : Fin ℓ → Fin ℓ')
                        → (τ : SType (suc ℓ))
                        → R.act-τ ρ ([ zero ↦τ ε ] τ) ≡ [ zero ↦τ R.act-ε ρ ε ] (R.act-τ (R.ext ρ) τ)
 rename-subst-τ-distr-0 ρ ε ρ-mono τ = rename-subst-τ-distr ρ ε zero (record { ρ-mono = ρ-mono ; ρ-id = λ () }) τ
+
+SubstRenameDistributivity : {Ty : ℕ → Set} → ActionOn Ty → R.ActionOn Ty → Set
+SubstRenameDistributivity {Ty} σ-act ρ-act = ∀ {ℓ ℓ'}
+                                             → (σ : Fin ℓ' → STerm ℓ)
+                                             → (ρ : Fin ℓ → Fin ℓ')
+                                             → (v : Ty ℓ)
+                                             → σ-act σ (ρ-act ρ v) ≡ σ-act (σ ∘ ρ) v
+
+subst-rename-τ-distr : SubstRenameDistributivity act-τ R.act-τ
+subst-rename-ρ-distr : SubstRenameDistributivity act-ρ R.act-ρ
+subst-rename-ε-distr : SubstRenameDistributivity act-ε R.act-ε
+subst-rename-cons-distr : SubstRenameDistributivity {ADTCons nₐ} act-cons R.act-cons
+subst-rename-branches-distr : SubstRenameDistributivity {CaseBranches nₐ} act-branches R.act-branches
+
+subst-rename-τ-distr σ ρ ⟨ b ∣ ρ' ⟩ rewrite subst-rename-ρ-distr (ext σ) (R.ext ρ) ρ' = {! !}
+subst-rename-τ-distr σ ρ (τ₁ ⇒ τ₂) rewrite subst-rename-τ-distr σ ρ τ₁
+                                         | subst-rename-τ-distr (ext σ) (R.ext ρ) τ₂ = {! !}
+subst-rename-τ-distr σ ρ (⊍ cons) rewrite subst-rename-cons-distr σ ρ cons = refl
+
+subst-rename-ρ-distr σ ρ (ε₁ ≈ ε₂) rewrite subst-rename-ε-distr σ ρ ε₁
+                                         | subst-rename-ε-distr σ ρ ε₂ = refl
+subst-rename-ρ-distr σ ρ (ρ₁ ∧ ρ₂) rewrite subst-rename-ρ-distr σ ρ ρ₁
+                                         | subst-rename-ρ-distr σ ρ ρ₂ = refl
+
+subst-rename-ε-distr σ ρ ε = {! !}
+
+subst-rename-cons-distr σ ρ [] = refl
+subst-rename-cons-distr σ ρ (τ ∷ cons) rewrite subst-rename-τ-distr σ ρ τ
+                                             | subst-rename-cons-distr σ ρ cons = refl
+
+subst-rename-branches-distr σ ρ [] = refl
+subst-rename-branches-distr σ ρ (MkCaseBranch body ∷ branches) rewrite subst-rename-ε-distr (ext σ) (R.ext ρ) body
+                                                                     | subst-rename-branches-distr σ ρ branches = {! !}
 
 
 ctx-idx : ∀ k → Fin (suc (k + ℓ))
