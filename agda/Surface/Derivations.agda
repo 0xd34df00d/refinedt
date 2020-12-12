@@ -11,8 +11,6 @@ open import Surface.WellScoped
 open import Surface.WellScoped.Substitution using ([_↦τ_]_)
 open import Surface.WellScoped.Membership
 import Surface.WellScoped.Renaming as R
--- TODO clean up modules
--- open import Misc.ContextConcat
 
 record PositiveDecision : Set where
   constructor MkPD
