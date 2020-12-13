@@ -2,7 +2,7 @@
 
 module Surface.WellScoped.CtxPrefix where
 
-open import Data.Fin.Base using (suc)
+open import Data.Fin.Base using (suc; raise)
 open import Data.Nat.Base using (suc; zero; _+_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 
@@ -38,20 +38,20 @@ prefix-as-⊂ : ∀ {k} {Γ : Ctx ℓ} {Γ' : Ctx (k + ℓ)}
 prefix-as-⊂ prefix-refl = ⊂-refl
 prefix-as-⊂ (prefix-cons prefix) = ignore-head (prefix-as-⊂ prefix)
 
+prefix-is-raise : ∀ {k} {Γ : Ctx ℓ} {Γ' : Ctx (k + ℓ)}
+                → (prefix : Γ prefix-at k of Γ')
+                → (∀ n → raise k n ≡ _⊂_.ρ (prefix-as-⊂ prefix) n)
+prefix-is-raise prefix-refl n = refl
+prefix-is-raise (prefix-cons prefix) n rewrite prefix-is-raise prefix n = refl
+
 prefix-weakening-ε : ∀ {k} {Γ : Ctx ℓ} {Γ' : Ctx (k + ℓ)}
                    → (prefix : Γ prefix-at k of Γ')
                    → (ε : STerm ℓ)
                    → weaken-ε-k k ε ≡ R.act-ε (_⊂_.ρ (prefix-as-⊂ prefix)) ε
-prefix-weakening-ε prefix-refl ε rewrite R.act-ε-id (λ _ → refl) ε = refl
-prefix-weakening-ε (prefix-cons prefix) ε rewrite sym (R.act-ε-distr (_⊂_.ρ (prefix-as-⊂ prefix)) suc ε)
-                                                | prefix-weakening-ε prefix ε
-                                                = refl
+prefix-weakening-ε prefix ε rewrite act-ε-extensionality (prefix-is-raise prefix) ε = refl
 
 prefix-weakening-τ : ∀ {k} {Γ : Ctx ℓ} {Γ' : Ctx (k + ℓ)}
                    → (prefix : Γ prefix-at k of Γ')
                    → (τ : SType ℓ)
                    → weaken-τ-k k τ ≡ R.act-τ (_⊂_.ρ (prefix-as-⊂ prefix)) τ
-prefix-weakening-τ prefix-refl τ rewrite R.act-τ-id (λ _ → refl) τ = refl
-prefix-weakening-τ (prefix-cons prefix) τ rewrite sym (R.act-τ-distr (_⊂_.ρ (prefix-as-⊂ prefix)) suc τ)
-                                                | prefix-weakening-τ prefix τ
-                                                = refl
+prefix-weakening-τ prefix τ rewrite act-τ-extensionality (prefix-is-raise prefix) τ = refl

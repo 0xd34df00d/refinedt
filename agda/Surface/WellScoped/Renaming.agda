@@ -2,7 +2,7 @@
 
 module Surface.WellScoped.Renaming where
 
-open import Data.Fin using (zero; suc)
+open import Data.Fin using (zero; suc; raise)
 open import Data.Fin.Properties using (suc-injective)
 open import Data.Nat using (_+_; zero; suc)
 open import Data.Vec
@@ -23,12 +23,10 @@ weaken-ε : STerm ℓ → STerm (suc ℓ)
 weaken-ε = act-ε suc
 
 weaken-τ-k : ∀ k → SType ℓ → SType (k + ℓ)
-weaken-τ-k zero τ = τ
-weaken-τ-k (suc k) τ = act-τ suc (weaken-τ-k k τ)
+weaken-τ-k k = act-τ (raise k)
 
 weaken-ε-k : ∀ k → STerm ℓ → STerm (k + ℓ)
-weaken-ε-k zero ε = ε
-weaken-ε-k (suc k) ε = act-ε suc (weaken-ε-k k ε)
+weaken-ε-k k = act-ε (raise k)
 
 
 ≡-ext : {f₁ f₂ : Fin ℓ → Fin ℓ'}
