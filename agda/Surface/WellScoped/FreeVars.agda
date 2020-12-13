@@ -30,7 +30,7 @@ data _free-in-ρ_ ι where
   free-∧ : ι free-in-ρ ρ₁ ⊎ ι free-in-ρ ρ₂
          → ι free-in-ρ (ρ₁ ∧ ρ₂)
 
-data _free-in-ε_ ι where
+data _free-in-ε_ {ℓ} ι where
   free-SVar   : ι free-in-ε SVar ι
   free-SLam-τ : ι free-in-τ τ
               → ι free-in-ε SLam τ ε
@@ -38,6 +38,12 @@ data _free-in-ε_ ι where
               → ι free-in-ε SLam τ ε
   free-SApp   : ι free-in-ε ε₁ ⊎ ι free-in-ε ε₂
               → ι free-in-ε SApp ε₁ ε₂
+  free-SCase  : ∀ {scrut} {branches : CaseBranches nₐ ℓ}
+              → ι free-in-ε ε ⊎ ι free-in-branches branches
+              → ι free-in-ε SCase scrut branches
+  free-SCon   : ∀ {idx : Fin n} {cons : ADTCons (Mkℕₐ n) ℓ}
+              → ι free-in-ε ε ⊎ ι free-in-cons cons
+              → ι free-in-ε SCon idx ε cons
 
 data _free-in-cons_ {ℓ} ι where
   free-cons-here  : ∀ {cons : ADTCons nₐ ℓ}
