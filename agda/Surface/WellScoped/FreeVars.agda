@@ -14,12 +14,12 @@ data _free-in-ε_ (ι : Fin ℓ) : (ε : STerm ℓ) → Set
 data _free-in-cons_ (ι : Fin ℓ) : (cons : ADTCons nₐ ℓ) → Set
 data _free-in-branches_ (ι : Fin ℓ) : (cons : CaseBranches nₐ ℓ) → Set
 
-data _free-in-τ_ ι where
+data _free-in-τ_ {ℓ} ι where
   free-⟨∣⟩ : suc ι free-in-ρ ρ
            → ι free-in-τ ⟨ b ∣ ρ ⟩
   free-⇒   : ι free-in-τ τ₁ ⊎ suc ι free-in-τ τ₂
            → ι free-in-τ (τ₁ ⇒ τ₂)
-  free-⊍   : ∀ {cons}
+  free-⊍   : ∀ {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
            → ι free-in-cons cons
            → ι free-in-τ (⊍ cons)
 
@@ -38,18 +38,18 @@ data _free-in-ε_ ι where
   free-SApp   : ι free-in-ε ε₁ ⊎ ι free-in-ε ε₂
               → ι free-in-ε SApp ε₁ ε₂
 
-data _free-in-cons_ ι where
-  free-cons-here  : ∀ {cons}
+data _free-in-cons_ {ℓ} ι where
+  free-cons-here  : ∀ {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
                   → ι free-in-τ τ
                   → ι free-in-cons (τ ∷ cons)
-  free-cons-there : ∀ {cons}
+  free-cons-there : ∀ {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
                   → ι free-in-cons cons
                   → ι free-in-cons (τ ∷ cons)
 
-data _free-in-branches_ ι where
-  free-branches-here  : ∀ {branches}
+data _free-in-branches_ {ℓ} ι where
+  free-branches-here  : ∀ {branches : CaseBranches nₐ ℓ}
                       → suc ι free-in-ε ε
                       → ι free-in-branches (MkCaseBranch ε ∷ branches)
-  free-branches-there : ∀ {b branches}
+  free-branches-there : ∀ {b} {branches : CaseBranches nₐ ℓ}
                       → ι free-in-branches branches
                       → ι free-in-branches (b ∷ branches)
