@@ -2,12 +2,12 @@
 
 module Surface.Theorems where
 
-open import Agda.Builtin.Equality
 open import Data.Empty using (⊥; ⊥-elim)
-open import Data.Fin.Base using (suc; zero; fromℕ<)
+open import Data.Fin.Base using (suc; zero; fromℕ<; raise)
 open import Data.Nat.Base using (suc; zero; _+_)
 open import Data.Nat.Properties using (≤-stepsʳ; ≤-refl; m≢1+n+m; suc-injective)
 open import Data.Product renaming (_,_ to _,'_)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 
 open import Data.Fin.Extra
 open import Surface.WellScoped
@@ -42,6 +42,11 @@ replace-weakened-τ : ∀ k (ε : STerm (k + ℓ)) (σ : SType ℓ)
                    → [ ctx-idx k ↦τ ε ] (weaken-τ-k (suc k) σ) ≡ weaken-τ-k k σ
 replace-weakened-τ k ε τ = {! !}
 
+∈-sucify : ∀ {k} {τ : SType ℓ} {Γ : Ctx (k + ℓ)} {τ' : SType (k + ℓ)} {ι : Fin (k + ℓ)}
+         → R.weaken-τ-k (suc k) τ ∈ Γ , τ' at suc ι
+         → R.weaken-τ (R.weaken-τ-k k τ) ∈ Γ , τ' at suc ι
+∈-sucify {k = k} {τ = τ} {Γ = Γ} {τ' = τ'} {ι = ι} ∈ rewrite weaken-τ-suc-k k τ = ∈
+
 mutual
   sub-Γok : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)}
           → Γ ⊢ ε ⦂ σ
@@ -51,7 +56,7 @@ mutual
           → ([ ℓ ↦Γ ε ] Γ,σ,Δ) ok
   sub-Γok {k = zero}  _  _                            _   (TCTX-Bind Γ,σ,Δok τδ) = Γ,σ,Δok
   sub-Γok {k = suc _} εδ (prefix-cons Γ-prefix-Γ,σ,Δ) σ-∈ (TCTX-Bind Γ,σ,Δok τδ)
-      = TCTX-Bind (sub-Γok εδ Γ-prefix-Γ,σ,Δ (∈-chop σ-∈) Γ,σ,Δok) (sub-Γ⊢τ εδ Γ-prefix-Γ,σ,Δ (∈-chop σ-∈) τδ)
+      = TCTX-Bind (sub-Γok εδ Γ-prefix-Γ,σ,Δ (∈-chop (∈-sucify σ-∈)) Γ,σ,Δok) (sub-Γ⊢τ εδ Γ-prefix-Γ,σ,Δ (∈-chop (∈-sucify σ-∈)) τδ)
 
   sub-Γ⊢τ : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {τ : SType (suc k + ℓ)}
           → Γ ⊢ ε ⦂ σ
@@ -63,11 +68,13 @@ mutual
   sub-Γ⊢τ {ε = ε} {k = k} εδ prefix σ-∈ (TWF-Base {ε₁ = ε₁} {ε₂ = ε₂} ε₁δ ε₂δ)
     rewrite S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε₁
           | S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε₂
-          = TWF-Base (sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) (∈-suc refl σ-∈) ε₁δ) (sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) (∈-suc refl σ-∈) ε₂δ)
+          | R.act-ε-distr (raise k) suc ε
+          = TWF-Base (sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) (∈-suc (weaken-τ-suc-k _ _) σ-∈) ε₁δ) (sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) (∈-suc (weaken-τ-suc-k _ _) σ-∈) ε₂δ)
   sub-Γ⊢τ εδ prefix σ-∈ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (sub-Γ⊢τ εδ prefix σ-∈ ρ₁δ) (sub-Γ⊢τ εδ prefix σ-∈ ρ₂δ)
   sub-Γ⊢τ {ε = ε} {k = k} εδ prefix σ-∈ (TWF-Arr {τ₂ = τ₂} arrδ resδ)
     rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
-          = TWF-Arr (sub-Γ⊢τ εδ prefix σ-∈ arrδ) (sub-Γ⊢τ εδ (prefix-cons prefix) (∈-suc refl σ-∈) resδ)
+          | R.act-ε-distr (raise k) suc ε
+          = TWF-Arr (sub-Γ⊢τ εδ prefix σ-∈ arrδ) (sub-Γ⊢τ εδ (prefix-cons prefix) (∈-suc (weaken-τ-suc-k _ _) σ-∈) resδ)
   sub-Γ⊢τ {ℓ = ℓ} {ε = ε} {σ = σ} {k = k} {Γ = Γ} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (TWF-ADT consδs) = TWF-ADT (sub-cons consδs)
     where
       sub-cons : ∀ {cons : ADTCons nₐ _}
@@ -76,10 +83,16 @@ mutual
       sub-cons [] = []
       sub-cons (px ∷ pxs) = sub-Γ⊢τ εδ prefix σ-∈ px ∷ sub-cons pxs
 
-  sub-Γ⊢τ-front : Γ ⊢ ε ⦂ σ
+  sub-Γ⊢τ-front : ∀ {Γ : Ctx ℓ}
+                → Γ ⊢ ε ⦂ σ
                 → Γ , σ ⊢ τ
                 → Γ ⊢ [ zero ↦τ ε ] τ
-  sub-Γ⊢τ-front εδ τδ = sub-Γ⊢τ εδ (prefix-cons prefix-refl) (∈-zero refl) τδ
+  sub-Γ⊢τ-front {ℓ = ℓ} {ε = ε} {τ = τ} {Γ = Γ} εδ τδ = prf'
+    where
+      prf : Γ ⊢ [ ℓ ↦τ< ε ] τ
+      prf = sub-Γ⊢τ εδ (prefix-cons prefix-refl) (∈-zero refl) τδ
+      prf' : Γ ⊢ [ zero ↦τ ε ] τ
+      prf' rewrite sym (R.act-ε-id {f = λ i → i} (λ _ → refl) ε) = prf
 
   sub-Γ⊢ε⦂τ : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {ε₀ : STerm (suc k + ℓ)} {τ : SType (suc k + ℓ)}
             → Γ ⊢ ε ⦂ σ
@@ -102,7 +115,8 @@ mutual
                ⦂ S.act-τ (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) τ₂
       bodyδ' rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
                    | S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
-                   = sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) (∈-suc refl σ-∈) bodyδ
+                   | R.act-ε-distr (raise k) suc ε
+                   = sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) (∈-suc (weaken-τ-suc-k _ _) σ-∈) bodyδ
   sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-App ε₁δ ε₂δ) = {! !}
   sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Case resδ ε₀δ branches) = {! !}
   sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Con conδ adtτ) = {! !}

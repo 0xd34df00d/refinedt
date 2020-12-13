@@ -227,3 +227,11 @@ weaken-τ-injective = act-τ-injectivity suc-injective
 
 weaken-ε-injective : Injective {STerm ℓ} {STerm (suc ℓ)} weaken-ε
 weaken-ε-injective = act-ε-injectivity suc-injective
+
+weaken-τ-suc-k : ∀ k (τ : SType ℓ)
+               → weaken-τ-k (suc k) τ ≡ weaken-τ (weaken-τ-k k τ)
+weaken-τ-suc-k k τ = sym (act-τ-distr (raise k) suc τ)
+
+weaken-ε-suc-k : ∀ k (ε : STerm ℓ)
+               → weaken-ε-k (suc k) ε ≡ weaken-ε (weaken-ε-k k ε)
+weaken-ε-suc-k k ε = sym (act-ε-distr (raise k) suc ε)
