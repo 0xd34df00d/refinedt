@@ -38,9 +38,9 @@ data _free-in-ε_ {ℓ} ι where
               → ι free-in-ε SLam τ ε
   free-SApp   : ι free-in-ε ε₁ ⊎ ι free-in-ε ε₂
               → ι free-in-ε SApp ε₁ ε₂
-  free-SCase  : ∀ {scrut} {branches : CaseBranches nₐ ℓ}
+  free-SCase  : ∀ {branches : CaseBranches nₐ ℓ}
               → ι free-in-ε ε ⊎ ι free-in-branches branches
-              → ι free-in-ε SCase scrut branches
+              → ι free-in-ε SCase ε branches
   free-SCon   : ∀ {idx : Fin n} {cons : ADTCons (Mkℕₐ n) ℓ}
               → ι free-in-ε ε ⊎ ι free-in-cons cons
               → ι free-in-ε SCon idx ε cons
