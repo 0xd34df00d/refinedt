@@ -81,7 +81,7 @@ variable
   Γ Γ' Δ : Ctx ℓ
   τ τ' τ₀ τ₀' τ₁ τ₂ τ₁' τ₂' τᵢ τⱼ σ : SType ℓ
   ε ε' ε₀ ε₁ ε₂ : STerm ℓ
-  ρ ρ₁ ρ₂ : Refinement ℓ
+  ρ₁ ρ₂ : Refinement ℓ
 
 Τ : Refinement ℓ
 Τ = SUnit ≈ SUnit

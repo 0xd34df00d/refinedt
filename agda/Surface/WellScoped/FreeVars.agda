@@ -15,7 +15,8 @@ data _free-in-cons_ (ι : Fin ℓ) : (cons : ADTCons nₐ ℓ) → Set
 data _free-in-branches_ (ι : Fin ℓ) : (cons : CaseBranches nₐ ℓ) → Set
 
 data _free-in-τ_ {ℓ} ι where
-  free-⟨∣⟩ : suc ι free-in-ρ ρ
+  free-⟨∣⟩ : ∀ {ρ}
+           → suc ι free-in-ρ ρ
            → ι free-in-τ ⟨ b ∣ ρ ⟩
   free-⇒   : ι free-in-τ τ₁ ⊎ suc ι free-in-τ τ₂
            → ι free-in-τ (τ₁ ⇒ τ₂)
