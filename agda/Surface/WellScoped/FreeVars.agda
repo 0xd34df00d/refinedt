@@ -40,10 +40,10 @@ data _free-in-ε_ ι where
               → ι free-in-ε SApp ε₁ ε₂
 
 data _free-in-cons_ {ℓ} ι where
-  free-cons-here  : ∀ {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
+  free-cons-here  : ∀ {cons : ADTCons nₐ ℓ}
                   → ι free-in-τ τ
                   → ι free-in-cons (τ ∷ cons)
-  free-cons-there : ∀ {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
+  free-cons-there : ∀ {cons : ADTCons nₐ ℓ}
                   → ι free-in-cons cons
                   → ι free-in-cons (τ ∷ cons)
 
