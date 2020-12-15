@@ -213,14 +213,14 @@ rename-subst-τ-distr-0 ρ ε ρ-mono τ = rename-subst-τ-distr ρ ε zero (rec
 
 
 SubstRenameDistributivity : {Ty : ℕ → Set} → ActionOn Ty → R.ActionOn Ty → Set
-SubstRenameDistributivity {Ty} σ-act ρ-act = ∀ {ℓ ℓ'}
-                                             → (σ : Fin ℓ' → STerm ℓ)
-                                             → (ρ : Fin ℓ → Fin ℓ')
-                                             → (v : Ty ℓ)
+SubstRenameDistributivity {Ty} σ-act ρ-act = ∀ {ℓ₀ ℓ₁ ℓ₂}
+                                             → (σ : Fin ℓ₁ → STerm ℓ₂)
+                                             → (ρ : Fin ℓ₀ → Fin ℓ₁)
+                                             → (v : Ty ℓ₀)
                                              → σ-act σ (ρ-act ρ v) ≡ σ-act (σ ∘ ρ) v
 
-ext-Rext-distr : (σ : Fin ℓ' → STerm ℓ)
-               → (ρ : Fin ℓ → Fin ℓ')
+ext-Rext-distr : (σ : Fin ℓ₁ → STerm ℓ₂)
+               → (ρ : Fin ℓ₀ → Fin ℓ₁)
                → (∀ x → ext σ (R.ext ρ x) ≡ ext (σ ∘ ρ) x)
 ext-Rext-distr σ ρ zero = refl
 ext-Rext-distr σ ρ (suc x) = refl
