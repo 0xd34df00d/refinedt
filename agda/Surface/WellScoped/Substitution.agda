@@ -3,8 +3,7 @@
 module Surface.WellScoped.Substitution where
 
 open import Data.Nat using (ℕ; suc; zero; _+_)
-open import Data.Fin using (Fin; suc; zero; toℕ; raise)
-open import Data.Sum using (_⊎_; inj₁; inj₂)
+open import Data.Fin using (Fin; suc; zero; toℕ)
 open import Data.Vec
 open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
@@ -269,65 +268,6 @@ subst-rename-branches-distr σ ρ (MkCaseBranch ε ∷ bs) rewrite subst-rename-
 ctx-idx : ∀ k → Fin (suc (k + ℓ))
 ctx-idx zero = zero
 ctx-idx (suc k) = suc (ctx-idx k)
-
-open import Surface.WellScoped.FreeVars
-
-replace-suc-id : ∀ k (ε : STerm (k + ℓ)) (ι : Fin (k + ℓ))
-               → ctx-idx k < suc ι
-               → replace-at (ctx-idx k) ε (suc ι) ≡ SVar ι
-replace-suc-id k ε ι var-is-far rewrite <>?-< var-is-far = refl
-
-{-
-weakened-vars-are-far-τ : ∀ k (τ : SType ℓ) (ι : Fin (k + ℓ))
-                        → ι free-in-τ R.weaken-τ-k k τ
-                        → ctx-idx {ℓ} k < suc ι
-weakened-vars-are-far-τ k ⟨ b ∣ ρ ⟩ ι (free-⟨∣⟩ x) = {! !}
-weakened-vars-are-far-τ k (τ₁ ⇒ τ₂) ι (free-⇒ x) = {! !}
-weakened-vars-are-far-τ k (⊍ cons) ι (free-⊍ x) = {! !}
-
-weakened-vars-are-far-ε : ∀ k (ε : STerm ℓ) (ι : Fin (k + ℓ))
-                        → ι free-in-ε R.weaken-ε-k k ε
-                        → ctx-idx {ℓ} k < suc ι
-weakened-vars-are-far-ε k (SVar idx) ι free-SVar = {! !}
-weakened-vars-are-far-ε k (SLam τ ε) ι (free-SLam-τ free-τ) = weakened-vars-are-far-τ k τ ι free-τ
-weakened-vars-are-far-ε k (SLam τ ε) ι (free-SLam-ε free-ε) = let rec = weakened-vars-are-far-ε {! !} {! !} {! !} {! !} in {! !}
-weakened-vars-are-far-ε k (SApp ε₁ ε₂) ι (free-SApp (inj₁ free-ε₁)) = weakened-vars-are-far-ε k ε₁ ι free-ε₁
-weakened-vars-are-far-ε k (SApp ε₁ ε₂) ι (free-SApp (inj₂ free-ε₂)) = weakened-vars-are-far-ε k ε₂ ι free-ε₂
-weakened-vars-are-far-ε k (SCase ε branches) ι (free-SCase (inj₁ free-ε)) = weakened-vars-are-far-ε k ε ι free-ε
-weakened-vars-are-far-ε k (SCase ε branches) ι (free-SCase (inj₂ free-branches)) = {! !}
-weakened-vars-are-far-ε k (SCon idx ε cons) ι (free-SCon (inj₁ free-ε)) = weakened-vars-are-far-ε k ε ι free-ε
-weakened-vars-are-far-ε k (SCon idx ε cons) ι (free-SCon (inj₂ free-cons)) = {! !}
--}
-
-f-ext-stable-SLam : ∀ {ε : STerm (suc ℓ)} {f : Fin ℓ → STerm ℓ}
-                  → (∀ ι → ι free-in-ε SLam τ ε → f ι ≡ SVar ι)
-                  → (∀ ι → ι free-in-ε ε → ext f ι ≡ SVar ι)
-f-ext-stable-SLam f-stable zero free = refl
-f-ext-stable-SLam f-stable (suc ι) free rewrite f-stable ι (free-SLam-ε free) = refl
-
-act-τ-stable : ∀ (τ : SType ℓ) {f : Fin ℓ → STerm ℓ}
-             → (∀ ι → ι free-in-τ τ → f ι ≡ SVar ι)
-             → act-τ f τ ≡ τ
-act-ρ-stable : ∀ (ρ : Refinement ℓ) {f : Fin ℓ → STerm ℓ}
-             → (∀ ι → ι free-in-ρ ρ → f ι ≡ SVar ι)
-             → act-ρ f ρ ≡ ρ
-act-ε-stable : ∀ (ε : STerm ℓ) {f : Fin ℓ → STerm ℓ}
-             → (∀ ι → ι free-in-ε ε → f ι ≡ SVar ι)
-             → act-ε f ε ≡ ε
-
-act-τ-stable τ f-stable = {! !}
-
-act-ρ-stable ρ f-stable = {! !}
-
-act-ε-stable SUnit f-stable = refl
-act-ε-stable (SVar ι) f-stable = f-stable ι free-SVar
-act-ε-stable (SLam τ ε) f-stable rewrite act-τ-stable τ (λ ι free-τ → f-stable ι (free-SLam-τ free-τ))
-                                       | act-ε-stable ε (f-ext-stable-SLam f-stable) = refl
-act-ε-stable (SApp ε₁ ε₂) f-stable rewrite act-ε-stable ε₁ (λ ι free-ε₁ → f-stable ι (free-SApp (inj₁ free-ε₁)))
-                                         | act-ε-stable ε₂ (λ ι free-ε₂ → f-stable ι (free-SApp (inj₂ free-ε₂))) = refl
-act-ε-stable (SCase ε branches) f-stable = {! !}
-act-ε-stable (SCon idx ε adt-cons) f-stable = {! !}
-
 
 -- Substitution on contexts: this is essentially replacing Γ, x ⦂ σ, Δ with Γ, [ x ↦ ε ] Δ
 -- Here, ℓ is the length of Γ (which ε must live in), and k is the length of Δ.
