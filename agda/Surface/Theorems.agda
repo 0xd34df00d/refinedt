@@ -39,6 +39,14 @@ open import Surface.Theorems.Thinning
          → (ε : STerm ℓ) → STerm (suc k + ℓ) → STerm (k + ℓ)
 [_↦ε<_]_ {k = k} _ ε ε' = [ ctx-idx k ↦ε R.weaken-ε-k _ ε ] ε'
 
+[_↦c<_]_ : ∀ {k} ℓ
+         → (ε : STerm ℓ) → ADTCons nₐ (suc k + ℓ) → ADTCons nₐ (k + ℓ)
+[_↦c<_]_ {k = k} _ ε cons = [ ctx-idx k ↦c R.weaken-ε-k _ ε ] cons
+
+[_↦bs<_]_ : ∀ {k} ℓ
+         → (ε : STerm ℓ) → CaseBranches nₐ (suc k + ℓ) → CaseBranches nₐ (k + ℓ)
+[_↦bs<_]_ {k = k} _ ε bs = [ ctx-idx k ↦bs R.weaken-ε-k _ ε ] bs
+
 ∈-sucify : ∀ {k} {τ : SType ℓ} {Γ : Ctx (k + ℓ)} {τ' : SType (k + ℓ)} {ι : Fin (k + ℓ)}
          → R.weaken-τ-k (suc k) τ ∈ Γ , τ' at suc ι
          → R.weaken-τ (R.weaken-τ-k k τ) ∈ Γ , τ' at suc ι
