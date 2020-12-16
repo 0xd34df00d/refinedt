@@ -47,6 +47,12 @@ open import Surface.Theorems.Thinning
          → (ε : STerm ℓ) → CaseBranches nₐ (suc k + ℓ) → CaseBranches nₐ (k + ℓ)
 [_↦bs<_]_ {k = k} _ ε bs = [ ctx-idx k ↦bs R.weaken-ε-k _ ε ] bs
 
+weaken-↦<-τ-commute : ∀ {k}
+                    → (ε : STerm ℓ)
+                    → (τ : SType (suc k + ℓ))
+                    → R.weaken-τ ([ ℓ ↦τ< ε ] τ) ≡ [ ℓ ↦τ< ε ] (R.weaken-τ τ)
+weaken-↦<-τ-commute = {! !}
+
 ∈-sucify : ∀ {k} {τ : SType ℓ} {Γ : Ctx (k + ℓ)} {τ' : SType (k + ℓ)} {ι : Fin (k + ℓ)}
          → R.weaken-τ-k (suc k) τ ∈ Γ , τ' at suc ι
          → R.weaken-τ (R.weaken-τ-k k τ) ∈ Γ , τ' at suc ι
@@ -115,7 +121,21 @@ mutual
                    | R.act-ε-distr (raise k) suc ε
                    = sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) (∈-suc (weaken-τ-suc-k _ _) σ-∈) bodyδ
   sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-App ε₁δ ε₂δ) = {! !}
-  sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Case resδ ε₀δ branches) = T-Case (sub-Γ⊢τ εδ prefix σ-∈ resδ) (sub-Γ⊢ε⦂τ εδ prefix σ-∈ ε₀δ) {! !}
+  sub-Γ⊢ε⦂τ {ℓ = ℓ} {ε = ε} {k = k} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (T-Case resδ ε₀δ branches)
+    = T-Case (sub-Γ⊢τ εδ prefix σ-∈ resδ) (sub-Γ⊢ε⦂τ εδ prefix σ-∈ ε₀δ) (sub-branches branches)
+    where
+      sub-branches : ∀ {bs : CaseBranches nₐ (suc k + ℓ)} {cons : ADTCons nₐ (suc k + ℓ)}
+                   → BranchesHaveType Γ,σ,Δ cons bs τ
+                   → BranchesHaveType ([ ℓ ↦Γ ε ] Γ,σ,Δ) ([ ℓ ↦c< ε ] cons) ([ ℓ ↦bs< ε ] bs) ([ ℓ ↦τ< ε ] τ)
+      sub-branches NoBranches = NoBranches
+      sub-branches {τ = τ} (OneMoreBranch {ε' = ε'} {conτ = conτ} branch-εδ bs)
+        = OneMoreBranch branch-εδ' (sub-branches bs)
+        where
+          branch-εδ' : [ ℓ ↦Γ ε ] (Γ,σ,Δ , conτ) ⊢ S.act-ε (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ε' ⦂ weaken-τ ([ ℓ ↦τ< ε ] τ)
+          branch-εδ' rewrite weaken-↦<-τ-commute ε τ
+                           | S.act-ε-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
+                           | R.act-ε-distr (raise k) suc ε
+                           = sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) (∈-suc (weaken-τ-suc-k _ _) σ-∈) branch-εδ
   sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Con conδ adtτ) = T-Con (sub-Γ⊢ε⦂τ εδ prefix σ-∈ conδ) (sub-Γ⊢τ εδ prefix σ-∈ adtτ)
   sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Sub ε₀δ superδ <:δ) = T-Sub
                                                     (sub-Γ⊢ε⦂τ εδ prefix σ-∈ ε₀δ)
