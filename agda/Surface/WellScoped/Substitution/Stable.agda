@@ -10,6 +10,7 @@ open import Data.Fin.Extra
 open import Surface.WellScoped
 open import Surface.WellScoped.Substitution as S
 open import Surface.WellScoped.Substitution.FromRenaming
+open import Surface.WellScoped.Substitution.Distributivity
 import Surface.WellScoped.Renaming as R
 
 k-<-x+k : ∀ k (x : Fin ℓ)
