@@ -83,17 +83,6 @@ mutual
       sub-cons [] = []
       sub-cons (px ∷ pxs) = sub-Γ⊢τ εδ prefix σ-∈ px ∷ sub-cons pxs
 
-  sub-Γ⊢τ-front : ∀ {Γ : Ctx ℓ}
-                → Γ ⊢ ε ⦂ σ
-                → Γ , σ ⊢ τ
-                → Γ ⊢ [ zero ↦τ ε ] τ
-  sub-Γ⊢τ-front {ℓ = ℓ} {ε = ε} {τ = τ} {Γ = Γ} εδ τδ = prf'
-    where
-      prf : Γ ⊢ [ ℓ ↦τ< ε ] τ
-      prf = sub-Γ⊢τ εδ (prefix-cons prefix-refl) (∈-zero refl) τδ
-      prf' : Γ ⊢ [ zero ↦τ ε ] τ
-      prf' rewrite sym (R.act-ε-id {f = λ i → i} (λ _ → refl) ε) = prf
-
   sub-Γ⊢ε⦂τ : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {ε₀ : STerm (suc k + ℓ)} {τ : SType (suc k + ℓ)}
             → Γ ⊢ ε ⦂ σ
             → Γ prefix-at suc k of Γ,σ,Δ
@@ -122,6 +111,17 @@ mutual
   sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Con conδ adtτ) = T-Con (sub-Γ⊢ε⦂τ εδ prefix σ-∈ conδ) (sub-Γ⊢τ εδ prefix σ-∈ adtτ)
   sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Sub ε₀δ superδ <:δ) = T-Sub (sub-Γ⊢ε⦂τ εδ prefix σ-∈ ε₀δ) (sub-Γ⊢τ εδ prefix σ-∈ superδ) {! !}
 
+
+sub-Γ⊢τ-front : ∀ {Γ : Ctx ℓ}
+              → Γ ⊢ ε ⦂ σ
+              → Γ , σ ⊢ τ
+              → Γ ⊢ [ zero ↦τ ε ] τ
+sub-Γ⊢τ-front {ℓ = ℓ} {ε = ε} {τ = τ} {Γ = Γ} εδ τδ = prf'
+  where
+    prf : Γ ⊢ [ ℓ ↦τ< ε ] τ
+    prf = sub-Γ⊢τ εδ (prefix-cons prefix-refl) (∈-zero refl) τδ
+    prf' : Γ ⊢ [ zero ↦τ ε ] τ
+    prf' rewrite sym (R.act-ε-id {f = λ i → i} (λ _ → refl) ε) = prf
 
 Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢ ε ⦂ τ
             → Γ ⊢ τ
