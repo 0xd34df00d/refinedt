@@ -109,7 +109,19 @@ mutual
   sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-App ε₁δ ε₂δ) = {! !}
   sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Case resδ ε₀δ branches) = T-Case (sub-Γ⊢τ εδ prefix σ-∈ resδ) (sub-Γ⊢ε⦂τ εδ prefix σ-∈ ε₀δ) {! !}
   sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Con conδ adtτ) = T-Con (sub-Γ⊢ε⦂τ εδ prefix σ-∈ conδ) (sub-Γ⊢τ εδ prefix σ-∈ adtτ)
-  sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Sub ε₀δ superδ <:δ) = T-Sub (sub-Γ⊢ε⦂τ εδ prefix σ-∈ ε₀δ) (sub-Γ⊢τ εδ prefix σ-∈ superδ) {! !}
+  sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Sub ε₀δ superδ <:δ) = T-Sub
+                                                    (sub-Γ⊢ε⦂τ εδ prefix σ-∈ ε₀δ)
+                                                    (sub-Γ⊢τ εδ prefix σ-∈ superδ)
+                                                    (sub-Γ⊢τ<:τ' εδ prefix σ-∈ <:δ)
+
+  sub-Γ⊢τ<:τ' : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {τ τ' : SType (suc k + ℓ)}
+              → Γ ⊢ ε ⦂ σ
+              → Γ prefix-at suc k of Γ,σ,Δ
+              → R.weaken-τ-k (suc k) σ ∈ Γ,σ,Δ at ctx-idx k
+              → Γ,σ,Δ ⊢ τ <: τ'
+              → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ℓ ↦τ< ε ] τ <: [ ℓ ↦τ< ε ] τ'
+  sub-Γ⊢τ<:τ' εδ prefix σ-∈ (ST-Base oracle x) = ST-Base oracle {! !}
+  sub-Γ⊢τ<:τ' εδ prefix σ-∈ (ST-Arr <:₁ <:₂) = ST-Arr (sub-Γ⊢τ<:τ' εδ prefix σ-∈ <:₁) (sub-Γ⊢τ<:τ' {! !} {! !} {! !} <:₂)
 
 
 sub-Γ⊢τ-front : ∀ {Γ : Ctx ℓ}
