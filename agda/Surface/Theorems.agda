@@ -16,6 +16,7 @@ open import Surface.WellScoped.Membership
 open import Surface.WellScoped.Renaming as R
 open import Surface.WellScoped.Substitution as S
 open import Surface.WellScoped.Substitution using ([_↦τ_]_; [_↦ε_]_; [_↦c_]_)
+open import Surface.WellScoped.Substitution.Stable
 open import Surface.Derivations
 open import Surface.Derivations.WF
 open import Surface.Theorems.TCTX
@@ -37,10 +38,6 @@ open import Surface.Theorems.Thinning
 [_↦ε<_]_ : ∀ {k} ℓ
          → (ε : STerm ℓ) → STerm (suc k + ℓ) → STerm (k + ℓ)
 [_↦ε<_]_ {k = k} _ ε ε' = [ ctx-idx k ↦ε R.weaken-ε-k _ ε ] ε'
-
-replace-weakened-τ : ∀ k (ε : STerm (k + ℓ)) (σ : SType ℓ)
-                   → [ ctx-idx k ↦τ ε ] (weaken-τ-k (suc k) σ) ≡ weaken-τ-k k σ
-replace-weakened-τ k ε τ = {! !}
 
 ∈-sucify : ∀ {k} {τ : SType ℓ} {Γ : Ctx (k + ℓ)} {τ' : SType (k + ℓ)} {ι : Fin (k + ℓ)}
          → R.weaken-τ-k (suc k) τ ∈ Γ , τ' at suc ι
