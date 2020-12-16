@@ -118,9 +118,9 @@ mutual
                    | R.act-ε-distr (raise k) suc ε
                    = sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) (∈-suc (weaken-τ-suc-k _ _) σ-∈) bodyδ
   sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-App ε₁δ ε₂δ) = {! !}
-  sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Case resδ ε₀δ branches) = {! !}
+  sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Case resδ ε₀δ branches) = T-Case (sub-Γ⊢τ εδ prefix σ-∈ resδ) (sub-Γ⊢ε⦂τ εδ prefix σ-∈ ε₀δ) {! !}
   sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Con conδ adtτ) = T-Con (sub-Γ⊢ε⦂τ εδ prefix σ-∈ conδ) (sub-Γ⊢τ εδ prefix σ-∈ adtτ)
-  sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Sub ε₀δ superδ <:δ) = {! !}
+  sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Sub ε₀δ superδ <:δ) = T-Sub (sub-Γ⊢ε⦂τ εδ prefix σ-∈ ε₀δ) (sub-Γ⊢τ εδ prefix σ-∈ superδ) {! !}
 
 
 Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢ ε ⦂ τ
