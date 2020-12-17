@@ -48,14 +48,14 @@ open import Surface.Theorems.Thinning
          → (ε : STerm ℓ) → CaseBranches nₐ (suc k + ℓ) → CaseBranches nₐ (k + ℓ)
 [_↦bs<_]_ {k = k} _ ε bs = [ ctx-idx k ↦bs R.weaken-ε-k _ ε ] bs
 
-weaken-↦<-τ-commute : (ι : Fin (suc ℓ))
-                    → (ε : STerm ℓ)
-                    → (τ : SType (suc ℓ))
-                    → R.weaken-τ ([ ι ↦τ ε ] τ) ≡ [ suc ι ↦τ R.weaken-ε ε ] (R.weaken-τ τ)
-weaken-↦<-τ-commute ι ε τ rewrite ρ-σ-distr-τ suc (replace-at ι ε) τ
-                                | σ-ρ-distr-τ (replace-at (suc ι) (R.weaken-ε ε)) suc τ
-                                | S.act-τ-extensionality (weaken-replace-comm ε ι) τ
-                                = refl
+weaken-↦<-τ-comm : (ι : Fin (suc ℓ))
+                 → (ε : STerm ℓ)
+                 → (τ : SType (suc ℓ))
+                 → R.weaken-τ ([ ι ↦τ ε ] τ) ≡ [ suc ι ↦τ R.weaken-ε ε ] (R.weaken-τ τ)
+weaken-↦<-τ-comm ι ε τ rewrite ρ-σ-distr-τ suc (replace-at ι ε) τ
+                             | σ-ρ-distr-τ (replace-at (suc ι) (R.weaken-ε ε)) suc τ
+                             | S.act-τ-extensionality (weaken-replace-comm ε ι) τ
+                             = refl
 
 ∈-sucify : ∀ {k} {τ : SType ℓ} {Γ : Ctx (k + ℓ)} {τ' : SType (k + ℓ)} {ι : Fin (k + ℓ)}
          → R.weaken-τ-k (suc k) τ ∈ Γ , τ' at suc ι
@@ -137,7 +137,7 @@ mutual
         where
           branch-εδ' : [ ℓ ↦Γ ε ] (Γ,σ,Δ , conτ) ⊢ S.act-ε (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ε' ⦂ weaken-τ ([ ℓ ↦τ< ε ] τ)
           branch-εδ' rewrite R.weaken-ε-suc-k k ε
-                           | weaken-↦<-τ-commute (ctx-idx k) (R.weaken-ε-k _ ε) τ
+                           | weaken-↦<-τ-comm (ctx-idx k) (R.weaken-ε-k _ ε) τ
                            | S.act-ε-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
                            | R.act-ε-distr (raise k) suc ε
                            = sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) (∈-suc (weaken-τ-suc-k _ _) σ-∈) branch-εδ
