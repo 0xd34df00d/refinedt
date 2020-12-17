@@ -47,11 +47,11 @@ open import Surface.Theorems.Thinning
          → (ε : STerm ℓ) → CaseBranches nₐ (suc k + ℓ) → CaseBranches nₐ (k + ℓ)
 [_↦bs<_]_ {k = k} _ ε bs = [ ctx-idx k ↦bs R.weaken-ε-k _ ε ] bs
 
-weaken-↦<-τ-commute : ∀ {k}
-                    → (ε : STerm ℓ)
+weaken-↦<-τ-commute : (k : ℕ)
+                    → (ε : STerm (k + ℓ))
                     → (τ : SType (suc k + ℓ))
-                    → R.weaken-τ ([ ℓ ↦τ< ε ] τ) ≡ [ ℓ ↦τ< ε ] (R.weaken-τ τ)
-weaken-↦<-τ-commute = {! !}
+                    → R.weaken-τ ([ ctx-idx k ↦τ ε ] τ) ≡ [ ctx-idx (suc k) ↦τ R.weaken-ε ε ] (R.weaken-τ τ)
+weaken-↦<-τ-commute k ε τ = {! !}
 
 ∈-sucify : ∀ {k} {τ : SType ℓ} {Γ : Ctx (k + ℓ)} {τ' : SType (k + ℓ)} {ι : Fin (k + ℓ)}
          → R.weaken-τ-k (suc k) τ ∈ Γ , τ' at suc ι
@@ -132,7 +132,8 @@ mutual
         = OneMoreBranch branch-εδ' (sub-branches bs)
         where
           branch-εδ' : [ ℓ ↦Γ ε ] (Γ,σ,Δ , conτ) ⊢ S.act-ε (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ε' ⦂ weaken-τ ([ ℓ ↦τ< ε ] τ)
-          branch-εδ' rewrite weaken-↦<-τ-commute ε τ
+          branch-εδ' rewrite R.weaken-ε-suc-k k ε
+                           | weaken-↦<-τ-commute k (R.weaken-ε-k _ ε) τ
                            | S.act-ε-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
                            | R.act-ε-distr (raise k) suc ε
                            = sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) (∈-suc (weaken-τ-suc-k _ _) σ-∈) branch-εδ
