@@ -27,16 +27,22 @@ m<n-not-equal (<-suc m<n) = λ suc-m≡suc-n → m<n-not-equal m<n (suc-injectiv
 m<n⇒0<n : m < n → zero {n = ℓ} < n
 m<n⇒0<n {n = suc n} _ = <-zero n
 
-_>_ : Fin ℓ → Fin ℓ' → Set
-m > n = n < m
-
 <-weaken : m < n → m < suc n
 <-weaken (<-zero n) = <-zero (suc n)
 <-weaken (<-suc m<n) = <-suc (<-weaken m<n)
 
+_>_ : Fin ℓ → Fin ℓ' → Set
+m > n = n < m
+
 m<n-not-m>n : m < n → ¬ m > n
 m<n-not-m>n (<-zero n) ()
 m<n-not-m>n (<-suc m<n) (<-suc m>n) = m<n-not-m>n m<n m>n
+
+m<n-n-pred : {m n : Fin (suc ℓ)} → m < n → Fin ℓ
+m<n-n-pred {n = suc n} _ = n
+
+m<n-n-pred-cancel : ∀ {m n : Fin (suc ℓ)} → (m<n : m < n) → suc (m<n-n-pred m<n) ≡ n
+m<n-n-pred-cancel {n = suc n} m<n = refl
 
 data _<>_ : Fin ℓ → Fin ℓ → Set where
   less    : (m<n : m < n) → m <> n
@@ -51,12 +57,6 @@ suc m <>? suc n with m <>? n
 ... | less m<n = less (<-suc m<n)
 ... | equal refl = equal refl
 ... | greater m>n = greater (<-suc m>n)
-
-m<n-n-pred : {m n : Fin (suc ℓ)} → m < n → Fin ℓ
-m<n-n-pred {n = suc n} _ = n
-
-m<n-n-pred-cancel : ∀ {m n : Fin (suc ℓ)} → (m<n : m < n) → suc (m<n-n-pred m<n) ≡ n
-m<n-n-pred-cancel {n = suc n} m<n = refl
 
 tighten : ∀ {m n : Fin (suc ℓ)} → m > n → Fin ℓ
 tighten (<-zero zero) = zero
