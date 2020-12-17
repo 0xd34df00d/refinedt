@@ -26,6 +26,6 @@ replace-too-far k ε x rewrite <>?-< (k-<-x+k k x) = refl
 replace-weakened-τ : ∀ k (ε : STerm (k + ℓ)) (σ : SType ℓ)
                    → [ ctx-idx k ↦τ ε ] (R.weaken-τ-k (suc k) σ) ≡ R.weaken-τ-k k σ
 replace-weakened-τ k ε σ rewrite ρ-as-σ-τ (raise k) σ
-                               | σ-ρ-τ-distr (replace-at (ctx-idx k) ε) (raise (suc k)) σ
+                               | σ-ρ-distr-τ (replace-at (ctx-idx k) ε) (raise (suc k)) σ
                                | act-τ-extensionality (replace-too-far k ε) σ
                                = refl
