@@ -44,6 +44,12 @@ m<n-n-pred {n = suc n} _ = n
 m<n-n-pred-cancel : ∀ {m n : Fin (suc ℓ)} → (m<n : m < n) → suc (m<n-n-pred m<n) ≡ n
 m<n-n-pred-cancel {n = suc n} m<n = refl
 
+pred-always-same : ∀ {m₁ m₂ n : Fin (suc ℓ)}
+                 → (m₁<n : m₁ < n)
+                 → (m₂<n : m₂ < n)
+                 → m<n-n-pred m₁<n ≡ m<n-n-pred m₂<n
+pred-always-same {n = suc n} _ _ = refl
+
 data _<>_ : Fin ℓ → Fin ℓ → Set where
   less    : (m<n : m < n) → m <> n
   equal   : (m≡n : m ≡ n) → m <> n
