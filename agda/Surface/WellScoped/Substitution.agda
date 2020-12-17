@@ -93,6 +93,16 @@ R-ext-replace-comm ε ρ (suc ι) (suc var-idx) with suc (ρ ι) <>? var-idx
 ... | equal refl rewrite R.weaken-ε-comm ρ ε = refl
 ... | greater m>n = refl
 
+weaken-replace-comm : ∀ ε (ι : Fin (suc ℓ))
+                    → R.weaken-ε ∘ replace-at ι ε f≡ replace-at (suc ι) (R.weaken-ε ε) ∘ suc
+weaken-replace-comm ε zero zero = refl
+weaken-replace-comm ε zero (suc x) = refl
+weaken-replace-comm ε (suc ι) zero = refl
+weaken-replace-comm ε (suc ι) (suc x) with ι <>? x
+... | less m<n = refl
+... | equal refl = refl
+... | greater m>n = refl
+
 IdentityUpTo : (Fin ℓ → Fin ℓ') → Fin (suc ℓ) → Set
 IdentityUpTo ρ ι = ∀ {n} → (n<ι : n < ι) → toℕ (ρ n) ≡ toℕ n
 
