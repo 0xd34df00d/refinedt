@@ -65,8 +65,12 @@ open import Surface.WellScoped.ActionsLemmas var-action-record
                                                     }
                                              public
 
+infix 2 _f≡_
+_f≡_ : ∀ {A B : Set} (f₁ f₂ : A → B) → Set
+f₁ f≡ f₂ = ∀ x → f₁ x ≡ f₂ x
+
 ext-replace-comm : ∀ ε (ι : Fin (suc ℓ))
-                 → (∀ var-idx → ext (replace-at ι ε) var-idx ≡ replace-at (suc ι) (R.act-ε suc ε) var-idx)
+                 → ext (replace-at ι ε) f≡ replace-at (suc ι) (R.act-ε suc ε)
 ext-replace-comm _ zero zero = refl
 ext-replace-comm _ (suc ι) zero = refl
 ext-replace-comm _ zero (suc var-idx) with zero <>? var-idx
@@ -78,7 +82,7 @@ ext-replace-comm _ (suc ι) (suc var-idx) with suc ι <>? var-idx
 ... | greater m>n = refl
 
 R-ext-replace-comm : ∀ ε (ρ : Fin ℓ → Fin ℓ') ι
-                   → (∀ var-idx → ext (replace-at (R.ext ρ ι) (R.act-ε ρ ε)) var-idx ≡ replace-at (suc (R.ext ρ ι)) (R.act-ε (R.ext ρ) (R.act-ε suc ε)) var-idx)
+                   → ext (replace-at (R.ext ρ ι) (R.act-ε ρ ε)) f≡ replace-at (suc (R.ext ρ ι)) (R.act-ε (R.ext ρ) (R.act-ε suc ε))
 R-ext-replace-comm ε ρ zero zero = refl
 R-ext-replace-comm ε ρ (suc ι) zero = refl
 R-ext-replace-comm ε ρ zero (suc var-idx) with zero <>? var-idx
