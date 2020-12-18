@@ -183,7 +183,14 @@ mutual
               → Γ,σ,Δ ⊢ τ <: τ'
               → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ℓ ↦τ< ε ] τ <: [ ℓ ↦τ< ε ] τ'
   sub-Γ⊢τ<:τ' εδ prefix σ-∈ (ST-Base oracle x) = ST-Base oracle {! !}
-  sub-Γ⊢τ<:τ' εδ prefix σ-∈ (ST-Arr <:₁ <:₂) = ST-Arr (sub-Γ⊢τ<:τ' εδ prefix σ-∈ <:₁) (sub-Γ⊢τ<:τ' {! !} {! !} {! !} <:₂)
+  sub-Γ⊢τ<:τ' {ℓ = ℓ} {ε = ε} {k = k} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (ST-Arr {τ₁' = τ₁'} {τ₂ = τ₂} {τ₂' = τ₂'} <:₁ <:₂)
+    = ST-Arr (sub-Γ⊢τ<:τ' εδ prefix σ-∈ <:₁) <:₂'
+    where
+      <:₂' : [ ℓ ↦Γ ε ] (Γ,σ,Δ , τ₁') ⊢ S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂ <: S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂'
+      <:₂' rewrite S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂
+                 | S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂'
+                 | R.act-ε-distr (raise k) suc ε
+                 = sub-Γ⊢τ<:τ' εδ (prefix-cons prefix) (∈-suc (weaken-τ-suc-k _ _) σ-∈) <:₂
 
 
 sub-Γ⊢τ-front : ∀ {Γ : Ctx ℓ}
