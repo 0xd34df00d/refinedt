@@ -32,6 +32,7 @@ replace-at replace-idx ε var-idx with replace-idx <>? var-idx
 SubstOn : (ℕ → Set) → Set
 SubstOn Ty = ∀ {ℓ} → Fin (suc ℓ) → STerm ℓ → Ty (suc ℓ) → Ty ℓ
 
+infixr 6 [_↦τ_]_ [_↦ρ_]_ [_↦ε_]_ [_↦c_]_ [_↦bs_]_
 [_↦τ_]_ : SubstOn SType
 [_↦τ_]_ idx ε = act-τ (replace-at idx ε)
 
