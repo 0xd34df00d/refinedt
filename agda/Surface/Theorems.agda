@@ -17,7 +17,7 @@ open import Surface.WellScoped.Renaming as R
 open import Surface.WellScoped.Substitution as S
 open import Surface.WellScoped.Substitution using ([_↦τ_]_; [_↦ε_]_; [_↦c_]_)
 open import Surface.WellScoped.Substitution.Stable
-open import Surface.WellScoped.Substitution.Distributivity
+open import Surface.WellScoped.Substitution.Distributivity as S
 open import Surface.Derivations
 open import Surface.Derivations.WF
 open import Surface.Theorems.TCTX
@@ -57,9 +57,27 @@ weaken-↦<-τ-comm ι ε τ rewrite ρ-σ-distr-τ suc (replace-at ι ε) τ
                              | S.act-τ-extensionality (weaken-replace-comm ε ι) τ
                              = refl
 
-subst-commutes : ∀ (ι : Fin (suc ℓ)) (ε : STerm ℓ) (ε₂ : STerm (suc ℓ)) (τ : SType (suc (suc ℓ)))
+subst-commutes-var : ∀ ε (ε₂ : STerm (suc ℓ)) ι
+                   → ∀ var → [ ι ↦ε ε ] [ zero ↦ε ε₂ ] (SVar var) ≡ [ zero ↦ε [ ι ↦ε ε ] ε₂ ] [ suc ι ↦ε R.weaken-ε ε ] (SVar var)
+subst-commutes-var ε ε₂ zero zero = refl
+subst-commutes-var ε ε₂ zero (suc var) with zero <>? var
+... | less m<n rewrite <>?-< m<n = refl
+... | equal refl rewrite replace-weakened-ε zero ([ zero ↦ε ε ] ε₂) ε
+                       | R.act-ε-id (λ _ → refl) ε = refl
+subst-commutes-var ε ε₂ (suc ι) zero = refl
+subst-commutes-var ε ε₂ (suc ι) (suc var) with suc ι <>? var
+... | less m<n rewrite <>?-< (m<n⇒0<n m<n)
+                     | pred-always-same m<n (m<n⇒0<n m<n) = refl
+... | equal refl rewrite replace-weakened-ε zero ([ suc ι ↦ε ε ] ε₂) ε
+                       | R.act-ε-id (λ _ → refl) ε = refl
+... | greater m>n = refl
+
+subst-commutes : ∀ ι ε ε₂ (τ : SType (suc (suc ℓ)))
                → [ ι ↦τ ε ] [ zero ↦τ ε₂ ] τ ≡ [ zero ↦τ [ ι ↦ε ε ] ε₂ ] [ suc ι ↦τ R.weaken-ε ε ] τ
-subst-commutes = {! !}
+subst-commutes ι ε ε₂ τ rewrite S.act-τ-distr (replace-at zero ε₂) (replace-at ι ε) τ
+                              | S.act-τ-distr (replace-at (suc ι) (R.weaken-ε ε)) (replace-at zero ([ ι ↦ε ε ] ε₂)) τ
+                              | S.act-τ-extensionality (subst-commutes-var ε ε₂ ι) τ
+                              = refl
 
 ∈-sucify : ∀ {k} {τ : SType ℓ} {Γ : Ctx (k + ℓ)} {τ' : SType (k + ℓ)} {ι : Fin (k + ℓ)}
          → R.weaken-τ-k (suc k) τ ∈ Γ , τ' at suc ι
