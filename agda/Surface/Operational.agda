@@ -36,4 +36,5 @@ data _↝_ : STerm ℓ → STerm ℓ → Set where
               → ε ↝ ε'
               → SCase ε branches ↝ SCase ε' branches
   E-CaseMatch : ∀ {idx : Fin n} {cons : ADTCons (Mkℕₐ n) ℓ} {branches : CaseBranches (Mkℕₐ n) ℓ}
-              → SCase (SCon idx ε cons) branches ↝ [ idx ↦ₘ ε ] branches
+              → IsValue ϖ
+              → SCase (SCon idx ϖ cons) branches ↝ [ idx ↦ₘ ϖ ] branches
