@@ -95,6 +95,7 @@ mutual
   sub-Γok {k = suc _} εδ (prefix-cons Γ-prefix-Γ,σ,Δ) σ-∈ (TCTX-Bind Γ,σ,Δok τδ)
       = TCTX-Bind (sub-Γok εδ Γ-prefix-Γ,σ,Δ (∈-chop (∈-sucify σ-∈)) Γ,σ,Δok) (sub-Γ⊢τ εδ Γ-prefix-Γ,σ,Δ (∈-chop (∈-sucify σ-∈)) τδ)
 
+  -- Referred to as sub-TWF in the paper
   sub-Γ⊢τ : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {τ : SType (suc k + ℓ)}
           → Γ ⊢ ε ⦂ σ
           → Γ prefix-at suc k of Γ,σ,Δ
@@ -204,6 +205,7 @@ sub-Γ⊢τ-front {ℓ = ℓ} {ε = ε} {τ = τ} {Γ = Γ} εδ τδ = prf'
     prf' : Γ ⊢ [ zero ↦τ ε ] τ
     prf' rewrite sym (R.act-ε-id {f = λ i → i} (λ _ → refl) ε) = prf
 
+-- Referred to as T-implies-TWF in the paper
 Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢ ε ⦂ τ
             → Γ ⊢ τ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Unit gok) = TWF-TrueRef gok
