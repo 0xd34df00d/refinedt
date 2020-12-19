@@ -10,11 +10,11 @@ open import Surface.Operational
 
 data Canonical : STerm ℓ → SType ℓ → Set where
   C-Unit : Canonical (SUnit {ℓ}) ⟨ BUnit ∣ Τ ⟩
-  C-Lam  : ⊘ ⊢ SLam τ₁ ε ⦂ τ₁ ⇒ τ₂
+  C-Lam  : (lam-δ : ⊘ ⊢ SLam τ₁ ε ⦂ τ₁ ⇒ τ₂)
          → Canonical (SLam τ ε) (τ₁ ⇒ τ₂)
   C-Con  : ∀ {cons : ADTCons (Mkℕₐ (suc n)) zero}
-         → ⊘ ⊢ SCon idx ε cons ⦂ ⊍ cons
-         → Canonical ε τ
+         → (con-δ : ⊘ ⊢ SCon idx ε cons ⦂ ⊍ cons)
+         → (scrut-canonical : Canonical ε τ)
          → Canonical (SCon idx ε cons) (⊍ cons)
 
 canonical : ⊘ ⊢ ε ⦂ τ
@@ -45,9 +45,14 @@ progress (T-App {ε₂ = ε₂} εδ₁ εδ₂) with progress εδ₁
 ... | step ε↝ε' = step (E-AppL ε↝ε')
 ... | done is-value-ε₁ with progress εδ₂
 ...   | step ε↝ε' = step (E-AppR is-value-ε₁ ε↝ε')
-...   | done is-value₁ = {! !}
+...   | done is-value-ε₂ with canonical εδ₁ is-value-ε₁
+...     | C-Lam lam-δ = step (E-AppAbs is-value-ε₂)
 progress (T-Case resδ εδ branches) with progress εδ
 ... | step ε↝ε' = step (E-CaseScrut ε↝ε')
-... | done is-value = {! !}
-progress (T-Con εδ adtτ) = {! !}
+... | done is-value with canonical εδ is-value
+...   | C-Con con-δ scrut-canonical with is-value
+...     | IV-ADT ε-value = step (E-CaseMatch ε-value)
+progress (T-Con εδ adtτ) with progress εδ
+... | step ε↝ε' = step (E-ADT ε↝ε')
+... | done is-value = done (IV-ADT is-value)
 progress (T-Sub εδ τδ τ<:τ') = progress εδ
