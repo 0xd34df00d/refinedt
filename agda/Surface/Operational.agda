@@ -10,7 +10,7 @@ open import Surface.WellScoped.Substitution
 
 data IsValue : STerm ℓ → Set where
   IV-Abs  : IsValue (SLam τ ε)
-  IV-Unit : IsValue SUnit
+  IV-Unit : IsValue (SUnit {ℓ})
   IV-ADT  : ∀ {cons} {idx : Fin n}
           → IsValue ϖ
           → IsValue (SCon idx ϖ cons)
