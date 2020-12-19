@@ -26,4 +26,4 @@ progress (T-Case resδ εδ branches) with progress εδ
 ... | step ε' ε↝ε' = step (SCase ε' _) (E-CaseScrut ε↝ε')
 ... | done is-value = {! !}
 progress (T-Con εδ adtτ) = {! !}
-progress (T-Sub εδ τδ τ<:τ') = {! !}
+progress (T-Sub εδ τδ τ<:τ') = progress εδ
