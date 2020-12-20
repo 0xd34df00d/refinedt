@@ -60,3 +60,15 @@ progress (T-Con εδ adtτ) with progress εδ
 ... | step ε↝ε' = step (E-ADT ε↝ε')
 ... | done is-value = done (IV-ADT is-value)
 progress (T-Sub εδ τδ τ<:τ') = progress εδ
+
+
+preservation : ε ↝ ε'
+             → Γ ⊢ ε ⦂ τ
+             → Γ ⊢ ε' ⦂ τ
+preservation ε↝ε' (T-Sub εδ Γ⊢τ' Γ⊢τ<:τ') = T-Sub (preservation ε↝ε' εδ) Γ⊢τ' Γ⊢τ<:τ'
+preservation (E-AppL ε↝ε') (T-App εδ₁ εδ₂) = T-App (preservation ε↝ε' εδ₁) εδ₂
+preservation (E-AppR x ε↝ε') (T-App εδ₁ εδ₂) = {! !}
+preservation (E-AppAbs x) (T-App εδ₁ εδ₂) = {! !}
+preservation (E-ADT ε↝ε') (T-Con εδ adtτ) = T-Con (preservation ε↝ε' εδ) adtτ
+preservation (E-CaseScrut ε↝ε') (T-Case resδ εδ branches) = T-Case resδ (preservation ε↝ε' εδ) branches
+preservation (E-CaseMatch x) (T-Case resδ εδ branches) = {! !}
