@@ -20,7 +20,7 @@ data Canonical : STerm ℓ → SType ℓ → Set where
 canonical-<: : ⊘ ⊢ τ <: τ'
              → Canonical ε τ
              → Canonical ε τ'
-canonical-<: (ST-Base oracle x) C-Unit = {! !}
+canonical-<: (ST-Base oracle is-just) C-Unit rewrite Oracle.⇒-consistent oracle is-just = C-Unit
 canonical-<: (ST-Arr <: <:₁) (C-Lam lam-δ) = {! !}
 
 canonical : ⊘ ⊢ ε ⦂ τ
