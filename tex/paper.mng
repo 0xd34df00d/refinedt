@@ -515,6 +515,31 @@ this is a well-founded proof.
   as it invokes the substitution lemma (\cref{lma:type_substitution}).
 \end{proof}
 
+\begin{lemma}[Canonical forms, \prooftermname{canonical}]\label{lma:canonical_forms}
+  If $[[ empty |- es : ts ]]$ and $[[ es ]]$ is a value, then $[[ ts ]]$ can only be:
+  \begin{itemize}
+  \end{itemize}
+\end{lemma}
+\begin{proof}
+  Straightforward induction on the derivation of $[[ empty |- es : ts ]]$, eliminating the cases ruled out by the requirement that $[[ es ]]$ is a value (for example, this implies that \textsc{T-App} cannot be the final rule in the derivation).
+\end{proof}
+
+\begin{theorem}[Progress, \prooftermname{progress}]\label{thm:surface_progress}
+  If $[[ empty |- es : ts ]]$, then either $[[ es ]]$ is a value, or there exists $[[ es' ]]$ such that $[[ es ~~> es' ]]$.
+\end{theorem}
+\begin{proof}
+  Straightforward induction on the derivation of $[[ empty |- es : ts ]]$.
+  The canonical forms lemma \ref{lma:canonical_forms} is used in \textsc{T-App} case if both terms are values and in \textsc{T-Case} case if the scrutinee is a value.
+\end{proof}
+
+\begin{theorem}[Preservation, \prooftermname{preservation}]\label{thm:surface_preservation}
+  If $[[ G |- es : ts ]]$, and $[[ es ~~> es' ]]$, then there exists $[[ ts' ]]$ such that $[[ G |- es' : ts' ]]$.
+\end{theorem}
+\begin{proof}
+  Simultaneous induction on the derivation of $[[ G |- es : ts ]]$ and on the derivation of $[[ es ~~> es' ]]$.
+\end{proof}
+
+
 \subsection{Core language}
 
 The syntax of the core language is presented in \figref{core_syntax},
