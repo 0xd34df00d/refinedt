@@ -546,6 +546,9 @@ Now, if $[[ es1 ]]$ is a value, but $[[ es2 ]]$ is not (thus $[[ es2 ~~> es2' ]]
 and the type of $[[ es1 es2' ]]$ is then $[[ [ x |-> es2' ] ts2 ]]$, which, in general, is (syntactically) different from the original type $[[ [ x |-> es2 ] ts2 ]]$.
 Of course, these two types turn out to $\beta$-equivalent, but, for the sake of simplicity, our type system has no typing rules concerning $\beta$-equivalence of types.
 
+Moreover, we do not lose in type safety by relaxing the preservation theorem: the presented statements still allow repeated application of progress and preservation to ensure that we either get a value or have an evaluation rule to apply.
+In fact, the existence of a translation to the core language implies that our surface language is strongly normalizing, so any well-typed term will eventually be reduced to a value.
+
 \subsection{Core language}
 
 The syntax of the core language is presented in \figref{core_syntax},
