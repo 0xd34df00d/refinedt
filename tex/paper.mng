@@ -1076,20 +1076,23 @@ Having defined these functions, we formulate a simple but useful lemma:
 
 The correctness of the translation hinges on two key theorems.
 The first one claims that a well-typed program in surface language remains well-typed after the translation to the core language.
-The second one claims that a well-typed surface language program evaluates to ``the same'' value as the translated one.
 
 \begin{theorem}[Well-typedness preservation]
   For any well-typed surface language term $[[ es ]]$,
-  the result of the translation via $[[ muE ]]$ is ``equivalently'' typeable in the core language.
+  the result of the translation via $[[ muE ]]$ is typeable in the core language.
 \end{theorem}
 \begin{proof}
   This follows directly from the definition of $\tranterm$ via $\Tranterm$,
   the latter being total and mapping onto typing derivations in the core language.
 \end{proof}
 
+The second one claims that a well-typed surface language term evaluates to ``the same'' value as the translated one.
+In other words, the translation and evaluation relations commute.
+
 \begin{theorem}[Evaluation equivalence]
   If $[[ es ]]$ is a well-typed surface language term and $[[ es ~~> es' ]]$,
-  then the translation of $[[ es ]]$ evaluates to the translation of $[[ es' ]]$ (perhaps, in several steps).
+  then $[[ es' ]]$ also has a translation $[[ ec' ]]$ to the core language,
+  and the translation of $[[ es ]]$ evaluates to $[[ ec' ]]$ (perhaps, in several steps).
 \end{theorem}
 \begin{proof}
 \end{proof}
