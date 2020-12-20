@@ -1077,7 +1077,7 @@ Having defined these functions, we formulate a simple but useful lemma:
 The correctness of the translation hinges on two key theorems.
 The first one claims that a well-typed program in surface language remains well-typed after the translation to the core language.
 
-\begin{theorem}[Well-typedness preservation]
+\begin{theorem}[Well-typedness preservation]\label{thm:tran_preservation}
   For any well-typed surface language term $[[ es ]]$,
   the result of the translation via $[[ muE ]]$ is typeable in the core language.
 \end{theorem}
@@ -1090,11 +1090,13 @@ The second one claims that a well-typed surface language term evaluates to ``the
 In other words, the translation and evaluation relations commute.
 
 \begin{theorem}[Evaluation equivalence]
-  If $[[ es ]]$ is a well-typed surface language term and $[[ es ~~> es' ]]$,
-  then $[[ es' ]]$ also has a translation $[[ ec' ]]$ to the core language,
+  If $[[ es ]]$ is a well-typed closed surface language term (thus $[[ empty |- es : ts ]]$) and $[[ es ~~> es' ]]$,
+  then $[[ es' ]]$ also has a (well-typed) translation $[[ ec' ]]$ to the core language,
   and the translation of $[[ es ]]$ evaluates to $[[ ec' ]]$ (perhaps, in several steps).
 \end{theorem}
 \begin{proof}
+  The existence of $[[ ec' ]]$ follows from the preservation theorem for the surface language \ref{thm:surface_preservation} and well-typedness preservation \ref{thm:tran_preservation}.
+  The rest is proven with induction on the derivation of $[[ empty |- es : ts ]]$ and $[[ es ~~> es']]$.
 \end{proof}
 
 \section{Future work}
