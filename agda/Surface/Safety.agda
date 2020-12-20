@@ -17,6 +17,12 @@ data Canonical : STerm ℓ → SType ℓ → Set where
          → (scrut-canonical : Canonical ε τ)
          → Canonical (SCon idx ε cons) (⊍ cons)
 
+canonical-<: : ⊘ ⊢ τ <: τ'
+             → Canonical ε τ
+             → Canonical ε τ'
+canonical-<: (ST-Base oracle x) C-Unit = {! !}
+canonical-<: (ST-Arr <: <:₁) (C-Lam lam-δ) = {! !}
+
 canonical : ⊘ ⊢ ε ⦂ τ
           → IsValue ε
           → Canonical ε τ
@@ -26,9 +32,7 @@ canonical (T-Case _ _ _) ()
 canonical (T-Unit Γok) IV-Unit = C-Unit
 canonical (T-Abs arrδ εδ) IV-Abs = C-Lam (T-Abs arrδ εδ)
 canonical (T-Con εδ adtτ) (IV-ADT is-value) = C-Con (T-Con εδ adtτ) (canonical εδ is-value)
-canonical (T-Sub εδ Γ⊢τ' <:) IV-Unit = {! !}
-canonical (T-Sub εδ Γ⊢τ' <:) IV-Abs = {! !}
-canonical (T-Sub εδ Γ⊢τ' <:) (IV-ADT is-value) = {! !}
+canonical (T-Sub εδ Γ⊢τ' <:) is-value = canonical-<: <: (canonical εδ is-value)
 
 
 data Progress (ε : STerm ℓ) : Set where
