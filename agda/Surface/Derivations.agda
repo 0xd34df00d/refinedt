@@ -7,6 +7,7 @@ open import Data.Maybe
 open import Data.Nat.Base using (_+_)
 open import Data.Vec
 open import Data.Vec.Relation.Unary.All public
+open import Relation.Binary.PropositionalEquality using (_≡_)
 
 open import Surface.WellScoped
 open import Surface.WellScoped.CtxPrefix
@@ -94,6 +95,10 @@ record Oracle where
            → (Γ⊂Γ' : Γ ⊂ Γ')
            → Is-just (decide Γ b ρ₁ ρ₂)
            → Is-just (decide Γ' b (act-ρ (ext (_⊂_.ρ Γ⊂Γ')) ρ₁) (act-ρ (ext (_⊂_.ρ Γ⊂Γ')) ρ₂))
+    ⇒-consistent
+           : ∀ {ρ : Refinement 1}
+           → Is-just (decide ⊘ b Τ ρ)
+           → ρ ≡ Τ
            {-
     subst  : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {ρ₁ ρ₂ : Refinement (suc (suc k + ℓ))}
            → Γ ⊢ ε ⦂ σ
