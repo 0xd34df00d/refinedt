@@ -144,7 +144,7 @@ This translation to a core dependently typed language provides several nice meta
     and, moreover, the core type checker has to be trusted anyway.
 \end{itemize}
 
-Of course, there are related developments. Perhaps the closest one is F* and, in particular, Meta-F*\cite{MetaFStar} (which is still based on F*).
+Of course, there are related developments. Perhaps the closest one is F* and, in particular, Meta-F*\cite{MetaFStar} (which is also based on F* core).
 (Meta-)F* also supports dependent types, but they are rather used to manipulate the VCs to turn them into an SMT-decidable form,
 or discharge certain proof obligations not decidable via SMT\@.
 The main difference between (Meta-)F* and our approach is that F*'s core type checker still relies on an SMT solver,
@@ -1073,6 +1073,8 @@ Having defined these functions, we formulate a simple but useful lemma:
   Then, each function recurses on structurally smaller inputs,
   and, since derivation trees are finite,
   this implies each function terminates for any input.
+
+  The Agda implementations of these functions represent the formal proof of this statement.
 \end{proof}
 
 \subsection{Correctness}
