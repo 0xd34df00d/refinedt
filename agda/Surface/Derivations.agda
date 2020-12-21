@@ -67,7 +67,7 @@ data _⊢_⦂_ where
               → Γ ⊢ SVar idx ⦂ τ
   T-Abs       : (arrδ : Γ ⊢ τ₁ ⇒ τ₂)
               → (bodyδ : Γ , τ₁ ⊢ ε ⦂ τ₂)
-              → (Γ ⊢ SLam τ₁ ε ⦂ τ₁ ⇒ τ₂)
+              → Γ ⊢ SLam τ₁ ε ⦂ τ₁ ⇒ τ₂
   T-App       : (δ₁ : Γ ⊢ ε₁ ⦂ τ₁ ⇒ τ₂)
               → (δ₂ : Γ ⊢ ε₂ ⦂ τ₁)
               → Γ ⊢ SApp ε₁ ε₂ ⦂ [ zero ↦τ ε₂ ] τ₂
@@ -96,7 +96,7 @@ record Oracle where
            → Is-just (decide Γ b ρ₁ ρ₂)
            → Is-just (decide Γ' b (act-ρ (ext (_⊂_.ρ Γ⊂Γ')) ρ₁) (act-ρ (ext (_⊂_.ρ Γ⊂Γ')) ρ₂))
     ⇒-consistent
-           : ∀ {ρ : Refinement 1}
+           : ∀ {ρ}
            → Is-just (decide ⊘ b Τ ρ)
            → ρ ≡ Τ
            {-
