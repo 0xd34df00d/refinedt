@@ -281,7 +281,7 @@ But having both in a single core type checker seems extravagant, and, since refi
 a reasonable way to go is to have a core type checker for full dependent types, a surface language with both type systems,
 and translating, respectively, refinements to dependent types and SMT decisions to proof terms.
 
-This paper focuses on formulating the translation part and proving that the translation ``makes sense'' and has certain reasonable and useful properties.
+This paper focuses on formulating the translation part and proving that the translation preserves semantics and has certain reasonable and useful properties.
 We believe that the approach proposed in this paper is implementable in existing dependently typed languages such as Idris or Agda.
 A language might allow both ``refinemently typed'' and dependently typed terms in a single module,
 reserving a certain syntax such as \verb+foo : { v : Ty | Predicate v }+ to indicate that \verb+foo+ uses refinement types,
