@@ -267,7 +267,14 @@ And, in practice, most existing SMT solvers do not support higher-order reasonin
 so, for instance, formally proving the properties of the type system proposed in this very paper is something that, currently, a human should do.
 
 There is also a certain synergy coming from uniting dependent types and refinement types:
-for example, since types are first-class in a dependently typed language, the refinements can also be treated as first-class, for instance, passing them to and returning from functions.
+for intance, since types are first-class in a dependently typed language, the refinements can also be treated as first-class.
+As an example, \verb+filter+ function is conceivable which amends (arbitrary) refinements on the input, along the lines of
+\begin{lstlisting}[language=Haskell]
+filter : forall Pred
+       → List { v | Pred }
+       → (f : {v | Pred} → Bool)
+       → List {v | Pred & f v = True}
+\end{lstlisting}
 
 Given all of the above, it is desirable to have both refinement types and dependent types in a single language.
 But having both in a single core type checker seems extravagant, and, since refinement types can be seen as a subset of dependent types,
