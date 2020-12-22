@@ -533,21 +533,10 @@ this is a well-founded proof.
 \end{proof}
 
 \begin{theorem}[Preservation, \prooftermname{preservation}]\label{thm:surface_preservation}
-  If $[[ G |- es : ts ]]$, and $[[ es ~~> es' ]]$, then there exists $[[ ts' ]]$ such that $[[ G |- es' : ts' ]]$.
+  If $[[ G |- es : ts ]]$, and $[[ es ~~> es' ]]$, then $[[ G |- es' : ts ]]$.
 \end{theorem}
 \begin{proof}
-  Simultaneous induction on the derivation of $[[ G |- es : ts ]]$ and on the derivation of $[[ es ~~> es' ]]$.
 \end{proof}
-
-It is worth noting that, for the preservation theorem, we do not state the result of the evaluation has \emph{the same} type, proving instead that it has just \emph{some} type.
-As a motivation for this ``weakening'' of the theorem, consider the (well-typed) application of two terms $[[ es1 es2 ]]$, where $[[ G |- es1 : (x : ts1) -> ts2 ]]$ and $[[ G |- es2 : ts1 ]]$.
-The type of the application is then $[[ [ x |-> es2 ] ts2 ]]$.
-Now, if $[[ es1 ]]$ is a value, but $[[ es2 ]]$ is not (thus $[[ es2 ~~> es2' ]]$ for some $[[ es2' ]]$), then $[[ es1 es2 ~~> es1 es2' ]]$,
-and the type of $[[ es1 es2' ]]$ is then $[[ [ x |-> es2' ] ts2 ]]$, which, in general, is (syntactically) different from the original type $[[ [ x |-> es2 ] ts2 ]]$.
-Of course, these two types turn out to $\beta$-equivalent, but, for the sake of simplicity, our type system has no typing rules concerning $\beta$-equivalence of types.
-
-Moreover, we do not lose in type safety by relaxing the preservation theorem: the presented statements still allow repeated application of progress and preservation to ensure that we either get a value or have an evaluation rule to apply.
-In fact, the existence of a translation to the core language implies that our surface language is strongly normalizing, so any well-typed term will eventually be reduced to a value.
 
 \subsection{Core language}
 
