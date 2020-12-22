@@ -518,10 +518,14 @@ this is a well-founded proof.
 \begin{lemma}[Canonical forms, \prooftermname{canonical}]\label{lma:canonical_forms}
   If $[[ empty |- es : ts ]]$ and $[[ es ]]$ is a value, then $[[ ts ]]$ can only be:
   \begin{itemize}
+    \item $[[ { v : B | top } ]]$, in which case $[[ es ]]$ is $\unit$.
+    \item $[[ (x : ts1) -> ts2 ]]$, in which case $[[ es ]]$ is of the form $[[ \ x : ts . es ]]$ (where $[[ ts ]]$ is not necessarily equal to $[[ ts1 ]]$ because of subtyping).
+    \item $[[ < </ li : tsi // i /> > ]]$, in which case $[[ es ]]$ is of the form $[[ < l = es' > as < </ li : tsi // i /> > ]]$ and $[[ es' ]]$ is a value.
   \end{itemize}
 \end{lemma}
 \begin{proof}
-  Straightforward induction on the derivation of $[[ empty |- es : ts ]]$, eliminating the cases ruled out by the requirement that $[[ es ]]$ is a value (for example, this implies that \textsc{T-App} cannot be the final rule in the derivation).
+  Straightforward induction on the derivation of $[[ empty |- es : ts ]]$, eliminating the cases ruled out by the requirement that $[[ es ]]$ is a value
+  (for example, this implies that \textsc{T-App} cannot be the final rule in the derivation).
 \end{proof}
 
 \begin{theorem}[Progress, \prooftermname{progress}]\label{thm:surface_progress}
