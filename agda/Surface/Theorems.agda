@@ -183,7 +183,7 @@ mutual
               → R.weaken-τ-k (suc k) σ ∈ Γ,σ,Δ at ctx-idx k
               → Γ,σ,Δ ⊢ τ <: τ'
               → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ℓ ↦τ< ε ] τ <: [ ℓ ↦τ< ε ] τ'
-  sub-Γ⊢τ<:τ' εδ prefix σ-∈ (ST-Base oracle x) = ST-Base oracle {! !}
+  sub-Γ⊢τ<:τ' εδ prefix σ-∈ (ST-Base oracle x) = ST-Base oracle (Oracle.subst oracle prefix σ-∈ x)
   sub-Γ⊢τ<:τ' {ℓ = ℓ} {ε = ε} {k = k} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (ST-Arr {τ₁' = τ₁'} {τ₂ = τ₂} {τ₂' = τ₂'} <:₁ <:₂)
     = ST-Arr (sub-Γ⊢τ<:τ' εδ prefix σ-∈ <:₁) <:₂'
     where

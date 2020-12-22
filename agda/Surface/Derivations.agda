@@ -99,14 +99,12 @@ record Oracle where
            : ∀ {ρ}
            → Is-just (decide ⊘ b Τ ρ)
            → ρ ≡ Τ
-           {-
     subst  : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {ρ₁ ρ₂ : Refinement (suc (suc k + ℓ))}
-           → Γ ⊢ ε ⦂ σ
+           -- This gets funny with strict positivity, and arguably does not make sense for SMT: → Γ ⊢ ε ⦂ σ
            → Γ prefix-at suc k of Γ,σ,Δ
            → R.weaken-τ-k (suc k) σ ∈ Γ,σ,Δ at S.ctx-idx k
            → Is-just (decide Γ,σ,Δ b ρ₁ ρ₂)
            → Is-just (decide ([ ℓ ↦Γ ε ] Γ,σ,Δ) b (S.act-ρ (S.ext (S.replace-at (S.ctx-idx k) (R.weaken-ε-k k ε))) ρ₁) (S.act-ρ (S.ext (S.replace-at (S.ctx-idx k) (R.weaken-ε-k k ε))) ρ₂))
-           -}
 
 data _⊢_<:_ where
   ST-Base     : (oracle : Oracle)
