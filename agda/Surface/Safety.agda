@@ -2,11 +2,14 @@
 
 module Surface.Safety where
 
+open import Data.Fin using (zero)
 open import Data.Nat using (zero)
 
 open import Surface.WellScoped
+open import Surface.WellScoped.Substitution
 open import Surface.Derivations
 open import Surface.Operational
+open import Surface.Theorems.SubstTyping
 
 data Canonical : STerm ℓ → SType ℓ → Set where
   C-Unit : Canonical (SUnit {ℓ}) ⟨ BUnit ∣ Τ ⟩
@@ -58,6 +61,10 @@ progress (T-Con εδ adtτ) with progress εδ
 ... | done is-value = done (IV-ADT is-value)
 progress (T-Sub εδ τδ τ<:τ') = progress εδ
 
+SLam-inv : Γ ⊢ SLam τ ε ⦂ τ₁ ⇒ τ₂
+         → Γ , τ₁ ⊢ ε ⦂ τ₂
+SLam-inv (T-Abs _ εδ) = εδ
+SLam-inv (T-Sub {τ = τ₁' ⇒ τ₂'} εδ ⇒-ok (ST-Arr <:₁ <:₂)) = let rec = SLam-inv εδ in {! !}
 
 preservation : ε ↝ ε'
              → Γ ⊢ ε ⦂ τ
@@ -65,7 +72,7 @@ preservation : ε ↝ ε'
 preservation ε↝ε' (T-Sub εδ Γ⊢τ' Γ⊢τ<:τ') = T-Sub (preservation ε↝ε' εδ) Γ⊢τ' Γ⊢τ<:τ'
 preservation (E-AppL ε↝ε') (T-App εδ₁ εδ₂) = T-App (preservation ε↝ε' εδ₁) εδ₂
 preservation (E-AppR x ε↝ε') (T-App εδ₁ εδ₂) = {! !}
-preservation (E-AppAbs x) (T-App εδ₁ εδ₂) = {! !}
+preservation (E-AppAbs ε₂-is-value) (T-App εδ₁ εδ₂) = sub-Γ⊢ε⦂τ-front εδ₂ (SLam-inv εδ₁)
 preservation (E-ADT ε↝ε') (T-Con εδ adtτ) = T-Con (preservation ε↝ε' εδ) adtτ
 preservation (E-CaseScrut ε↝ε') (T-Case resδ εδ branches) = T-Case resδ (preservation ε↝ε' εδ) branches
 preservation (E-CaseMatch x) (T-Case resδ εδ branches) = {! !}
