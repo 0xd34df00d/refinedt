@@ -104,7 +104,9 @@ record Oracle where
            → Γ prefix-at suc k of Γ,σ,Δ
            → R.weaken-τ-k (suc k) σ ∈ Γ,σ,Δ at S.ctx-idx k
            → Is-just (decide Γ,σ,Δ b ρ₁ ρ₂)
-           → Is-just (decide ([ ℓ ↦Γ ε ] Γ,σ,Δ) b (S.act-ρ (S.ext (S.replace-at (S.ctx-idx k) (R.weaken-ε-k k ε))) ρ₁) (S.act-ρ (S.ext (S.replace-at (S.ctx-idx k) (R.weaken-ε-k k ε))) ρ₂))
+           → Is-just (decide ([ ℓ ↦Γ ε ] Γ,σ,Δ) b
+                        (S.act-ρ (S.ext (S.replace-at (S.ctx-idx k) (R.weaken-ε-k k ε))) ρ₁)
+                        (S.act-ρ (S.ext (S.replace-at (S.ctx-idx k) (R.weaken-ε-k k ε))) ρ₂))
 
 data _⊢_<:_ where
   ST-Base     : (oracle : Oracle)
