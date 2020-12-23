@@ -61,10 +61,14 @@ var-before-subst-remains : ∀ {k} {Γ : Ctx (suc k + ℓ)} {τ : SType (suc k +
                          → (k<ι : ctx-idx k < ι)
                          → [ ctx-idx k ↦τ R.weaken-ε-k k ε ] τ ∈ [ ℓ ↦Γ ε ] Γ at m<n-n-pred k<ι
 var-before-subst-remains {k = zero} ε (∈-suc {τ = τ} refl τ∈Γatι) (<-zero _) rewrite replace-weakened-τ-zero (R.weaken-ε-k zero ε) τ = τ∈Γatι
-var-before-subst-remains {ℓ = ℓ} {k = suc k} {Γ = Γ , τ'} {ι = suc ι} ε (∈-suc {τ = τ} refl τ∈Γatι) (<-suc k<ι) rewrite sym (m<n-n-pred-cancel k<ι) = sub
+var-before-subst-remains {ℓ = ℓ} {k = suc k} {Γ = Γ , τ'} {ι = suc ι} ε (∈-suc {τ = τ} refl τ∈Γatι) (<-suc k<ι)
+  rewrite sym (m<n-n-pred-cancel k<ι)
+        = ∈-suc suc-≡ (var-before-subst-remains ε τ∈Γatι (m<n⇒n<suc-pred-n k<ι))
   where
-    sub : [ suc (ctx-idx k) ↦τ weaken-ε-k (suc k) ε ] weaken-τ τ ∈ [ ℓ ↦Γ ε ] (Γ , τ') at suc (m<n-n-pred k<ι)
-    sub = ∈-suc {! !} (var-before-subst-remains ε τ∈Γatι (m<n⇒n<suc-pred-n k<ι))
+    suc-≡ : [ suc (ctx-idx k) ↦τ weaken-ε-k (suc k) ε ] weaken-τ τ ≡ weaken-τ ([ ctx-idx k ↦τ weaken-ε-k k ε ] τ)
+    suc-≡ rewrite weaken-↦<-τ-comm (ctx-idx k) (weaken-ε-k k ε) τ
+                | weaken-ε-suc-k k ε
+                = refl
 
 mutual
   sub-Γok : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)}
