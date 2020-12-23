@@ -114,7 +114,7 @@ mutual
             → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ℓ ↦ε< ε ] ε₀ ⦂ [ ℓ ↦τ< ε ] τ
   sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Unit Γok) = T-Unit (sub-Γok εδ prefix σ-∈ Γok)
   sub-Γ⊢ε⦂τ {ε = ε} {σ = σ} {k = k} εδ prefix σ-∈ (T-Var {idx = idx} Γok τ-∈) with ctx-idx k <>? idx
-  ... | less rep<var = T-Var (sub-Γok εδ prefix σ-∈ Γok) {! !}
+  ... | less rep<var = T-Var (sub-Γok εδ prefix σ-∈ Γok) (var-before-subst-remains ε τ-∈ rep<var)
   ... | equal refl rewrite ∈-injective τ-∈ σ-∈
                          | replace-weakened-τ k (weaken-ε-k k ε) σ
                          = t-weakening-prefix (prefix-subst prefix) (sub-Γok εδ prefix σ-∈ Γok) εδ
