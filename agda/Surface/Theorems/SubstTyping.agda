@@ -56,14 +56,14 @@ weaken-↦<-τ-comm ι ε τ rewrite ρ-σ-distr-τ suc (replace-at ι ε) τ
          → R.weaken-τ (R.weaken-τ-k k τ) ∈ Γ , τ' at suc ι
 ∈-sucify {k = k} {τ = τ} {Γ = Γ} {τ' = τ'} {ι = ι} ∈ rewrite weaken-τ-suc-k k τ = ∈
 
-var-before-subst-remains : ∀ {k} {Γ : Ctx (suc k + ℓ)} {τ : SType (suc k + ℓ)} {ι : Fin (suc k + ℓ)} ε
+var-earlier-in-Γ-remains : ∀ {k} {Γ : Ctx (suc k + ℓ)} {τ : SType (suc k + ℓ)} {ι : Fin (suc k + ℓ)} ε
                          → τ ∈ Γ at ι
                          → (k<ι : ctx-idx k < ι)
                          → [ ctx-idx k ↦τ R.weaken-ε-k k ε ] τ ∈ [ ℓ ↦Γ ε ] Γ at m<n-n-pred k<ι
-var-before-subst-remains {k = zero} ε (∈-suc {τ = τ} refl τ∈Γatι) (<-zero _) rewrite replace-weakened-τ-zero (R.weaken-ε-k zero ε) τ = τ∈Γatι
-var-before-subst-remains {ℓ = ℓ} {k = suc k} {Γ = Γ , τ'} {ι = suc ι} ε (∈-suc {τ = τ} refl τ∈Γatι) (<-suc k<ι)
+var-earlier-in-Γ-remains {k = zero} ε (∈-suc {τ = τ} refl τ∈Γatι) (<-zero _) rewrite replace-weakened-τ-zero (R.weaken-ε-k zero ε) τ = τ∈Γatι
+var-earlier-in-Γ-remains {ℓ = ℓ} {k = suc k} {Γ = Γ , τ'} {ι = suc ι} ε (∈-suc {τ = τ} refl τ∈Γatι) (<-suc k<ι)
   rewrite sym (m<n-n-pred-cancel k<ι)
-        = ∈-suc suc-≡ (var-before-subst-remains ε τ∈Γatι (m<n⇒n<suc-pred-n k<ι))
+        = ∈-suc suc-≡ (var-earlier-in-Γ-remains ε τ∈Γatι (m<n⇒n<suc-pred-n k<ι))
   where
     suc-≡ : [ suc (ctx-idx k) ↦τ weaken-ε-k (suc k) ε ] weaken-τ τ ≡ weaken-τ ([ ctx-idx k ↦τ weaken-ε-k k ε ] τ)
     suc-≡ rewrite weaken-↦<-τ-comm (ctx-idx k) (weaken-ε-k k ε) τ
@@ -118,7 +118,7 @@ mutual
             → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ℓ ↦ε< ε ] ε₀ ⦂ [ ℓ ↦τ< ε ] τ
   sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Unit Γok) = T-Unit (sub-Γok εδ prefix σ-∈ Γok)
   sub-Γ⊢ε⦂τ {ε = ε} {σ = σ} {k = k} εδ prefix σ-∈ (T-Var {idx = idx} Γok τ-∈) with ctx-idx k <>? idx
-  ... | less rep<var = T-Var (sub-Γok εδ prefix σ-∈ Γok) (var-before-subst-remains ε τ-∈ rep<var)
+  ... | less rep<var = T-Var (sub-Γok εδ prefix σ-∈ Γok) (var-earlier-in-Γ-remains ε τ-∈ rep<var)
   ... | equal refl rewrite ∈-injective τ-∈ σ-∈
                          | replace-weakened-τ k (weaken-ε-k k ε) σ
                          = t-weakening-prefix (prefix-subst prefix) (sub-Γok εδ prefix σ-∈ Γok) εδ
