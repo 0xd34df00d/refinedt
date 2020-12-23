@@ -193,6 +193,16 @@ mutual
                  | R.act-ε-distr (raise k) suc ε
                  = sub-Γ⊢τ<:τ' εδ (prefix-cons prefix) (∈-suc (weaken-τ-suc-k _ _) σ-∈) <:₂
 
+sub-Γ⊢ε⦂τ-front : ∀ {Γ : Ctx ℓ}
+                → Γ ⊢ ϖ ⦂ σ
+                → Γ , σ ⊢ ε ⦂ τ
+                → Γ ⊢ [ zero ↦ε ϖ ] ε ⦂ [ zero ↦τ ϖ ] τ
+sub-Γ⊢ε⦂τ-front {ℓ = ℓ} {ϖ = ϖ} {ε = ε} {τ = τ} {Γ = Γ} ϖδ εδ = prf'
+  where
+    prf : Γ ⊢ [ ℓ ↦ε< ϖ ] ε ⦂ ([ ℓ ↦τ< ϖ ] τ)
+    prf = sub-Γ⊢ε⦂τ ϖδ _ _ εδ
+    prf' : Γ ⊢ [ zero ↦ε ϖ ] ε ⦂ [ zero ↦τ ϖ ] τ
+    prf' rewrite sym (act-ε-id (λ _ → refl) ϖ) = prf
 
 sub-Γ⊢τ-front : ∀ {Γ : Ctx ℓ}
               → Γ ⊢ ε ⦂ σ
