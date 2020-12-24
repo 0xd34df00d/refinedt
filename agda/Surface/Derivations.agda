@@ -74,7 +74,7 @@ data _⊢_⦂_ where
   T-Case      : ∀ {cons : ADTCons (Mkℕₐ (suc n)) ℓ} {bs : CaseBranches (Mkℕₐ (suc n)) ℓ}
               → (resδ : Γ ⊢ τ')
               → (scrutτδ : Γ ⊢ ε ⦂ ⊍ cons)
-              → (branches : BranchesHaveType Γ cons bs τ')
+              → (branches-well-typed : BranchesHaveType Γ cons bs τ')
               → Γ ⊢ SCase ε bs ⦂ τ'
   T-Con       : ∀ {idx} {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
               → (conArg : Γ ⊢ ε ⦂ τⱼ)
