@@ -4,6 +4,7 @@ open import Surface.WellScoped
 
 module Surface.WellScoped.ActionsLemmas (act : VarAction) (props : VarActionProps act) where
 
+open import Data.Fin using (zero; suc)
 open import Data.Vec
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
@@ -51,3 +52,11 @@ act-cons-extensionality x-≡ (τ ∷ τs) rewrite act-τ-extensionality x-≡ �
 act-branches-extensionality x-≡ [] = refl
 act-branches-extensionality x-≡ (MkCaseBranch body ∷ bs) rewrite act-ε-extensionality (≡-ext x-≡) body
                                                                | act-branches-extensionality x-≡ bs = refl
+
+act-cons-member : ∀ {act : Fin ℓ → Target ℓ'}
+                → (idx : _)
+                → (cons : ADTCons (Mkℕₐ n) ℓ)
+                → τ ≡ lookup cons idx
+                → act-τ act τ ≡ lookup (act-cons act cons) idx
+act-cons-member zero (conτ ∷ cons) refl = refl
+act-cons-member (suc idx) (conτ ∷ cons) ≡-prf = act-cons-member idx cons ≡-prf
