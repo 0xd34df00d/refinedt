@@ -17,7 +17,7 @@
 \usepackage{subcaption}
 \usepackage{cite,url,babelbib}
 \usepackage{todonotes}
-\usepackage{listings}
+\usepackage{minted}
 \usepackage[english]{babel}
 
 \nonstopmode
@@ -45,10 +45,6 @@
 \newcommand{\secondDP}{\text{second-dp~}}
 
 \newcommand\prooftermname[1]{\texttt{#1}}
-
-\lstset{literate=
-  {→}{{$\to$}}1
-}
 
 \begin{document}
 
@@ -170,12 +166,12 @@ Firstly, refinement types indeed lower the cognitive load and the amount of (bot
 As an example, consider a function taking two non-negative numbers $x, y$ and returning $x + y + x$ along with a proof that each summand is less than or equal to the sum.
 In a language with refinement types writing such a function is at most\footnote{Some implementations \cite{LiquidTypes08} can infer refinements automatically}
 a matter of decorating its type with the right refinements, along the lines of:
-\begin{lstlisting}[language=Haskell]
+\begin{minted}{idris}
 funnyAdd : (x : { v : Int | v >= 0 })
          → (y : { v : Int | v >= 0 })
          → { v : Int | v >= x & v >= y }
 funnyAdd x y = x + y + x
-\end{lstlisting}
+\end{minted}
 Then, it's up to the SMT solver to verify that the function satisfies the refinements.
 
 What if we wanted to write a similar function with similar guarantees in a dependently typed language with explicit proofs?
@@ -186,7 +182,7 @@ uses the pair $(m, n)$ with $m, n \in \mathbb{N}$ to denote the integer $m - n$,
 for example, the equality on integers becomes a non-trivial equivalence relation, resulting in what's known in folklore as ``setoid hell''.
 So, let's give the dependently typed implementation a leg-up and assume natural numbers everywhere.
 Even with this allowance, the task is non-trivial, with an example Idris solution:
-\begin{lstlisting}[language=Haskell]
+\begin{minted}{idris}
 ltePlusLeft : (x, y : Nat) -> x `LTE` y + x
 ltePlusLeft x Z = lteRefl
 ltePlusLeft x (S y) = lteSuccRight (ltePlusLeft x y)
@@ -200,32 +196,32 @@ funnyAdd : (x : Nat)
         -> (y : Nat)
         -> (v : Nat ** (x `LTE` v, y `LTE` v))
 funnyAdd x y = (x + y + x ** (ltePlusLeft x (x + y), ltePlusFunny x y))
-\end{lstlisting}
+\end{minted}
 Despite extensive use of library lemmas like \verb+lteRefl+, \verb+lteSuccRight+, \verb+plusCommutative+ and \verb+plusAssociative+,
 the code is considerably longer and is riddled with unnecessary details.
 
 More than that, slight variations of the pre- and post-conditions are just a matter of updating the signature with refinement types:
-\begin{lstlisting}[language=Haskell]
+\begin{minted}{idris}
 funnyAdd' : (x : { v : Int | v > 0 })
           → (y : { v : Int | v > 0 })
           → { v : Int | v > x & v > y }
 funnyAdd' x y = x + y + x
-\end{lstlisting}
+\end{minted}
 On the other hand, updating the code with explicit proofs requires more human work and is left as an exercise to the reader.
 
 As an another example, consider the function calculating the maximum of three numbers.
 Implementing it with refinement types is about as straightforward as it might get:
-\begin{lstlisting}[language=Haskell]
+\begin{minted}{idris}
 max3 : (x : Int) → (y : Int) → (z : Int)
      → { v : Int | v >= x & v >= y & v >= z }
 max3 x y z = if x > y then
                  if x > z then x else z
              else
                  if y > z then y else z
-\end{lstlisting}
+\end{minted}
 
 Casting integers aside and working with plain naturals again, the dependently typed solution might look a bit move involved:
-\begin{lstlisting}[language=Haskell]
+\begin{minted}{idris}
 notLTE : (x, y : Nat)
       -> (x `LTE` y -> Void)
       -> y `LTE` x
@@ -252,7 +248,6 @@ max3 x y z =
                                    in (z ** (lteTransitive x_LTE_y y_LTE_z,
                                              y_LTE_z,
                                              lteRefl))
-\end{lstlisting}
 
 In general, refinement types are expressive enough to eliminate a fair share \cite{LiquidTypes08} of run-time errors such as out-of-bounds array accesses or division by zero.
 
@@ -269,12 +264,12 @@ so, for instance, formally proving the properties of the type system proposed in
 There is also a certain synergy coming from uniting dependent types and refinement types:
 for intance, since types are first-class in a dependently typed language, the refinements can also be treated as first-class.
 As an example, \verb+filter+ function is conceivable which amends (arbitrary) refinements on the input, along the lines of
-\begin{lstlisting}[language=Haskell]
-filter : forall Pred
+\begin{minted}{idris}
+filter : forall Pred.
        → List { v | Pred }
        → (f : {v | Pred} → Bool)
        → List {v | Pred & f v = True}
-\end{lstlisting}
+\end{minted}
 
 Given all of the above, it is desirable to have both refinement types and dependent types in a single language.
 But having both in a single core type checker seems extravagant, and, since refinement types can be seen as a subset of dependent types,
