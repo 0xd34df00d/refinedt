@@ -61,7 +61,7 @@ var-earlier-in-Γ-remains : ∀ {k} {Γ : Ctx (suc k + ℓ)} {τ : SType (suc k 
                          → (k<ι : ctx-idx k < ι)
                          → [ ctx-idx k ↦τ R.weaken-ε-k k ε ] τ ∈ [ ℓ ↦Γ ε ] Γ at m<n-n-pred k<ι
 var-earlier-in-Γ-remains {k = zero} ε (∈-suc {τ = τ} refl τ∈Γatι) (<-zero _) rewrite replace-weakened-τ-zero (R.weaken-ε-k zero ε) τ = τ∈Γatι
-var-earlier-in-Γ-remains {ℓ = ℓ} {k = suc k} {Γ = Γ , τ'} {ι = suc ι} ε (∈-suc {τ = τ} refl τ∈Γatι) (<-suc k<ι)
+var-earlier-in-Γ-remains {k = suc k} ε (∈-suc {τ = τ} refl τ∈Γatι) (<-suc k<ι)
   rewrite sym (m<n-n-pred-cancel k<ι)
         = ∈-suc suc-≡ (var-earlier-in-Γ-remains ε τ∈Γatι (m<n⇒n<suc-pred-n k<ι))
   where
