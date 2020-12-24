@@ -4,8 +4,7 @@ on:
     branches: [ master ]
     paths:
     - 'tex/**'
-  pull_request:
-    branches: [ master ]
+    - '.github/workflows/**'
 
 jobs:
   build:
@@ -13,7 +12,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install latex
-        run: sudo apt-get install -y texlive-full fonts-stix
+        run: |
+          sudo apt-get update -y
+          sudo apt-get dist-upgrade -y
+          sudo apt-get install -y texlive-full fonts-stix
 
       - name: Install opam
         run: |
