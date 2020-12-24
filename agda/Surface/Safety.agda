@@ -55,7 +55,7 @@ progress (T-Case resδ εδ branches) with progress εδ
 ... | step ε↝ε' = step (E-CaseScrut ε↝ε')
 ... | done is-value with canonical εδ is-value
 ...   | C-Con scrut-canonical with is-value
-...     | IV-ADT ε-value = step (E-CaseMatch ε-value)
+...     | IV-ADT ε-value = step (E-CaseMatch ε-value _)
 progress (T-Con εδ adtτ) with progress εδ
 ... | step ε↝ε' = step (E-ADT ε↝ε')
 ... | done is-value = done (IV-ADT is-value)
@@ -75,4 +75,4 @@ preservation (E-AppR x ε↝ε') (T-App εδ₁ εδ₂) = {! !}
 preservation (E-AppAbs ε₂-is-value) (T-App εδ₁ εδ₂) = sub-Γ⊢ε⦂τ-front εδ₂ (SLam-inv εδ₁)
 preservation (E-ADT ε↝ε') (T-Con εδ adtτ) = T-Con (preservation ε↝ε' εδ) adtτ
 preservation (E-CaseScrut ε↝ε') (T-Case resδ εδ branches) = T-Case resδ (preservation ε↝ε' εδ) branches
-preservation (E-CaseMatch x) (T-Case resδ εδ branches) = {! !}
+preservation (E-CaseMatch ε-is-value idx) (T-Case resδ εδ branches) = {! !}
