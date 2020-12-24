@@ -173,7 +173,8 @@ mutual
                            | S.act-ε-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
                            | R.act-ε-distr (raise k) suc ε
                            = sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) (∈-suc (weaken-τ-suc-k _ _) σ-∈) branch-εδ
-  sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Con conδ adtτ) = T-Con (sub-Γ⊢ε⦂τ εδ prefix σ-∈ conδ) (sub-Γ⊢τ εδ prefix σ-∈ adtτ)
+  sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Con {cons = cons} ≡-prf conδ adtτ)
+    = T-Con (S.act-cons-member _ cons ≡-prf) (sub-Γ⊢ε⦂τ εδ prefix σ-∈ conδ) (sub-Γ⊢τ εδ prefix σ-∈ adtτ)
   sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Sub ε₀δ superδ <:δ) = T-Sub
                                                     (sub-Γ⊢ε⦂τ εδ prefix σ-∈ ε₀δ)
                                                     (sub-Γ⊢τ εδ prefix σ-∈ superδ)

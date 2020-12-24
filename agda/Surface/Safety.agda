@@ -32,7 +32,7 @@ canonical (T-App _ _) ()
 canonical (T-Case _ _ _) ()
 canonical (T-Unit Γok) IV-Unit = C-Unit
 canonical (T-Abs arrδ εδ) IV-Abs = C-Lam
-canonical (T-Con εδ adtτ) (IV-ADT is-value) = C-Con (canonical εδ is-value)
+canonical (T-Con _ εδ adtτ) (IV-ADT is-value) = C-Con (canonical εδ is-value)
 canonical (T-Sub εδ Γ⊢τ' <:) is-value = canonical-<: <: (canonical εδ is-value)
 
 data Progress (ε : STerm ℓ) : Set where
@@ -56,7 +56,7 @@ progress (T-Case resδ εδ branches) with progress εδ
 ... | done is-value with canonical εδ is-value
 ...   | C-Con scrut-canonical with is-value
 ...     | IV-ADT ε-value = step (E-CaseMatch ε-value _)
-progress (T-Con εδ adtτ) with progress εδ
+progress (T-Con _ εδ adtτ) with progress εδ
 ... | step ε↝ε' = step (E-ADT ε↝ε')
 ... | done is-value = done (IV-ADT is-value)
 progress (T-Sub εδ τδ τ<:τ') = progress εδ
@@ -73,6 +73,6 @@ preservation ε↝ε' (T-Sub εδ Γ⊢τ' Γ⊢τ<:τ') = T-Sub (preservation �
 preservation (E-AppL ε↝ε') (T-App εδ₁ εδ₂) = T-App (preservation ε↝ε' εδ₁) εδ₂
 preservation (E-AppR x ε↝ε') (T-App εδ₁ εδ₂) = {! !}
 preservation (E-AppAbs ε₂-is-value) (T-App εδ₁ εδ₂) = sub-Γ⊢ε⦂τ-front εδ₂ (SLam-inv εδ₁)
-preservation (E-ADT ε↝ε') (T-Con εδ adtτ) = T-Con (preservation ε↝ε' εδ) adtτ
+preservation (E-ADT ε↝ε') (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (preservation ε↝ε' εδ) adtτ
 preservation (E-CaseScrut ε↝ε') (T-Case resδ εδ branches) = T-Case resδ (preservation ε↝ε' εδ) branches
 preservation (E-CaseMatch ε-is-value idx) (T-Case resδ εδ branches) = {! !}

@@ -2,10 +2,12 @@
 
 module Surface.Theorems.Thinning where
 
+open import Data.Fin.Base using (zero; suc)
 open import Data.Nat.Base
 open import Data.Nat.Induction
 open import Data.Nat.Properties
-open import Relation.Binary.PropositionalEquality using (sym)
+open import Data.Vec.Base using (lookup; _∷_)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 
 open import Surface.WellScoped
 open import Surface.WellScoped.CtxPrefix
@@ -101,9 +103,10 @@ private
                                                                  rec₂ = rec' _ (s≤s (m≤m<>n _ _))
                                                                  branch'-Γ-ok = TCTX-Bind Γ'ok (twf-thinning-sized Γ⊂Γ' Γ'ok (Γok-head branch-Γ-ok) rec₁)
                                                               in t-thinning-sized (append-both Γ⊂Γ') branch'-Γ-ok εδ rec₂
-  t-thinning-sized Γ⊂Γ' Γ'ok (T-Con conArg adtτ) (acc rec) = let rec₁ = rec _ (s≤s (m≤m<>n _ _))
-                                                                 rec₂ = rec _ (s≤s (n≤m<>n _ _))
-                                                              in T-Con (t-thinning-sized Γ⊂Γ' Γ'ok conArg rec₁) (twf-thinning-sized Γ⊂Γ' Γ'ok adtτ rec₂)
+  t-thinning-sized Γ⊂Γ' Γ'ok (T-Con {cons = cons} ≡-prf conArg adtτ) (acc rec) =
+    let rec₁ = rec _ (s≤s (m≤m<>n _ _))
+        rec₂ = rec _ (s≤s (n≤m<>n _ _))
+     in T-Con (R.act-cons-member _ cons ≡-prf) (t-thinning-sized Γ⊂Γ' Γ'ok conArg rec₁) (twf-thinning-sized Γ⊂Γ' Γ'ok adtτ rec₂)
   t-thinning-sized Γ⊂Γ' Γ'ok (T-Sub εδ superδ <:δ) (acc rec) = let rec₁ = rec _ (s≤s (m≤m<>n _ _))
                                                                    rec₂ = rec _ (s≤s (n≤m<>n<>k (size-t εδ) (size-twf superδ) (size-st <:δ)))
                                                                    εδ' = t-thinning-sized Γ⊂Γ' Γ'ok εδ rec₁

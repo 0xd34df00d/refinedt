@@ -77,6 +77,7 @@ data _⊢_⦂_ where
               → (branches-well-typed : BranchesHaveType Γ cons bs τ')
               → Γ ⊢ SCase ε bs ⦂ τ'
   T-Con       : ∀ {idx} {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
+              → (≡-prf : τⱼ ≡ lookup cons idx)
               → (conArg : Γ ⊢ ε ⦂ τⱼ)
               → (adtτ : Γ ⊢ ⊍ cons)
               → Γ ⊢ SCon idx ε cons ⦂ ⊍ cons
