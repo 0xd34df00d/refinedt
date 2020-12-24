@@ -70,6 +70,24 @@ var-earlier-in-Γ-remains {k = suc k} ε (∈-suc {τ = τ} refl τ∈Γatι) (<
                 | weaken-ε-suc-k k ε
                 = refl
 
+var-later-in-Γ-remains : ∀ {k} {Γ : Ctx (suc k + ℓ)} {τ : SType (suc k + ℓ)} {ι : Fin (suc k + ℓ)} ε
+                       → τ ∈ Γ at ι
+                       → (k>ι : ctx-idx k > ι)
+                       → [ ctx-idx k ↦τ R.weaken-ε-k k ε ] τ ∈ [ ℓ ↦Γ ε ] Γ at tighten k>ι
+var-later-in-Γ-remains {ℓ = ℓ} {k = suc k} {ι = zero} ε (∈-zero {τ = τ} refl) (<-zero _)
+  rewrite tighten-zero (ctx-idx {ℓ} k) = ∈-zero ≡-prf
+  where
+    ≡-prf : [ suc (ctx-idx k) ↦τ weaken-ε-k (suc k) ε ] (weaken-τ τ) ≡ R.weaken-τ ([ ctx-idx k ↦τ weaken-ε-k k ε ] τ)
+    ≡-prf rewrite weaken-↦<-τ-comm (ctx-idx k) (weaken-ε-k k ε) τ
+                | weaken-ε-suc-k k ε
+                = refl
+var-later-in-Γ-remains {k = suc k} {ι = suc ι} ε (∈-suc {τ = τ} refl τ∈Γatι) (<-suc k>ι) = ∈-suc suc-≡ (var-later-in-Γ-remains ε τ∈Γatι k>ι)
+  where
+    suc-≡ : [ suc (ctx-idx k) ↦τ weaken-ε-k (suc k) ε ] weaken-τ τ ≡ weaken-τ ([ ctx-idx k ↦τ weaken-ε-k k ε ] τ)
+    suc-≡ rewrite weaken-↦<-τ-comm (ctx-idx k) (weaken-ε-k k ε) τ
+                | weaken-ε-suc-k k ε
+                = refl
+
 mutual
   sub-Γok : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)}
           → Γ ⊢ ε ⦂ σ
@@ -122,7 +140,7 @@ mutual
   ... | equal refl rewrite ∈-injective τ-∈ σ-∈
                          | replace-weakened-τ k (weaken-ε-k k ε) σ
                          = t-weakening-prefix (prefix-subst prefix) (sub-Γok εδ prefix σ-∈ Γok) εδ
-  ... | greater rep>var = T-Var (sub-Γok εδ prefix σ-∈ Γok) {! !}
+  ... | greater rep>var = T-Var (sub-Γok εδ prefix σ-∈ Γok) (var-later-in-Γ-remains ε τ-∈ rep>var)
   sub-Γ⊢ε⦂τ {ℓ = ℓ} {ε = ε} {k = k} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (T-Abs {τ₁ = τ₁} {τ₂ = τ₂} {ε = ε'} arrδ bodyδ)
     = T-Abs (sub-Γ⊢τ εδ prefix σ-∈ arrδ) bodyδ'
     where
