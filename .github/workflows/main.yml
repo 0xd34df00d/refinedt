@@ -4,6 +4,7 @@ on:
     branches: [ master ]
     paths:
     - 'tex/**'
+    - '.github/workflows/**'
 
 jobs:
   build:
