@@ -79,7 +79,7 @@ data Ctx : ℕ → Set where
 
 variable
   Γ Γ' Δ : Ctx ℓ
-  τ τ' τ₀ τ₀' τ₁ τ₂ τ₁' τ₂' τᵢ τⱼ σ : SType ℓ
+  τ τ' τ₀ τ₀' τ₁ τ₂ τ₁' τ₂' τ₃ τ₃' τᵢ τⱼ σ : SType ℓ
   ε ε' ε₀ ε₁ ε₁' ε₂ ε₂' ϖ : STerm ℓ
   ρ₁ ρ₂ ρ₃ : Refinement ℓ
 
