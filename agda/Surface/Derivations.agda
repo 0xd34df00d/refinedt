@@ -1,9 +1,11 @@
 {-# OPTIONS --safe #-}
 
-module Surface.Derivations where
+open import Surface.Oracle
+
+module Surface.Derivations(ω : Oracle) where
 
 open import Data.Fin using (zero)
-open import Data.Maybe
+open import Data.Maybe using (Is-just)
 open import Data.Nat.Base using (_+_)
 open import Data.Vec
 open import Data.Vec.Relation.Unary.All using (All; _∷_; []) public
@@ -15,11 +17,6 @@ open import Surface.WellScoped.Substitution using ([_↦τ_]_; [_↦Γ_]_)
 open import Surface.WellScoped.Membership
 import Surface.WellScoped.Renaming as R
 import Surface.WellScoped.Substitution as S
-
-record PositiveDecision : Set where
-  constructor MkPD
-
-record Oracle : Set
 
 data _ok : (Γ : Ctx ℓ) → Set
 data _⊢_⦂_ : (Γ : Ctx ℓ) → (ε : STerm ℓ) → (τ : SType ℓ) → Set
@@ -86,32 +83,8 @@ data _⊢_⦂_ where
               → (Γ ⊢ τ <: τ')
               → Γ ⊢ ε ⦂ τ'
 
-record Oracle where
-  inductive
-  constructor MkOracle
-  open R
-  field
-    decide : (Γ : Ctx ℓ) → (b : BaseType) → (ρ₁ ρ₂ : Refinement (suc ℓ)) → Maybe PositiveDecision
-    thin   : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'}
-           → (Γ⊂Γ' : Γ ⊂ Γ')
-           → Is-just (decide Γ b ρ₁ ρ₂)
-           → Is-just (decide Γ' b (act-ρ (ext (_⊂_.ρ Γ⊂Γ')) ρ₁) (act-ρ (ext (_⊂_.ρ Γ⊂Γ')) ρ₂))
-    ⇒-consistent
-           : ∀ {ρ}
-           → Is-just (decide ⊘ b Τ ρ)
-           → ρ ≡ Τ
-    subst  : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {ρ₁ ρ₂ : Refinement (suc (suc k + ℓ))}
-           -- This gets funny with strict positivity, and arguably does not make sense for SMT: → Γ ⊢ ε ⦂ σ
-           → Γ prefix-at suc k of Γ,σ,Δ
-           → R.weaken-τ-k (suc k) σ ∈ Γ,σ,Δ at S.ctx-idx k
-           → Is-just (decide Γ,σ,Δ b ρ₁ ρ₂)
-           → Is-just (decide ([ ℓ ↦Γ ε ] Γ,σ,Δ) b
-                        (S.act-ρ (S.ext (S.replace-at (S.ctx-idx k) (R.weaken-ε-k k ε))) ρ₁)
-                        (S.act-ρ (S.ext (S.replace-at (S.ctx-idx k) (R.weaken-ε-k k ε))) ρ₂))
-
 data _⊢_<:_ where
-  ST-Base     : (oracle : Oracle)
-              → Is-just (Oracle.decide oracle Γ b ρ₁ ρ₂)
+  ST-Base     : Is-just (Oracle.decide ω Γ b ρ₁ ρ₂)
               → Γ ⊢ ⟨ b ∣ ρ₁ ⟩ <: ⟨ b ∣ ρ₂ ⟩
   ST-Arr      : Γ ⊢ τ₁' <: τ₁
               → Γ , τ₁' ⊢ τ₂ <: τ₂'

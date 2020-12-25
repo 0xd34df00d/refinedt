@@ -1,6 +1,9 @@
 {-# OPTIONS --safe #-}
 
-module Surface.Theorems.Thinning where
+open import Surface.Oracle
+open import Surface.OracleProps
+
+module Surface.Theorems.Thinning(ω : Oracle) (ω-props : OracleProps ω) where
 
 open import Data.Fin.Base using (zero; suc)
 open import Data.Nat.Base
@@ -14,10 +17,10 @@ open import Surface.WellScoped.CtxPrefix
 open import Surface.WellScoped.Membership
 open import Surface.WellScoped.Renaming as R
 open import Surface.WellScoped.Substitution as S
-open import Surface.Derivations
-open import Surface.Derivations.WF
-open import Surface.Theorems.TCTX
-open import Surface.Theorems.Helpers
+open import Surface.Derivations ω
+open import Surface.Derivations.WF ω
+open import Surface.Theorems.TCTX ω
+open import Surface.Theorems.Helpers ω
 
 private
   arr-wf-dom : Γ ⊢ τ₁ ⇒ τ₂
@@ -118,7 +121,7 @@ private
                          → (Γ⊂Γ' : Γ ⊂ Γ')
                          → (Γ ⊢ τ₁ <: τ₂)
                          → (Γ' ⊢ R.act-τ (_⊂_.ρ Γ⊂Γ') τ₁ <: R.act-τ (_⊂_.ρ Γ⊂Γ') τ₂)
-      st-thinning-sized Γ⊂Γ' (ST-Base oracle just-prf) = ST-Base oracle (Oracle.thin oracle Γ⊂Γ' just-prf)
+      st-thinning-sized Γ⊂Γ' (ST-Base just-prf) = ST-Base (OracleProps.thin ω-props Γ⊂Γ' just-prf)
       st-thinning-sized Γ⊂Γ' (ST-Arr δ₁ δ₂) = ST-Arr (st-thinning-sized Γ⊂Γ' δ₁) (st-thinning-sized (append-both Γ⊂Γ') δ₂)
 
 abstract

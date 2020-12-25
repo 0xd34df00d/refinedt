@@ -1,13 +1,15 @@
 {-# OPTIONS --safe #-}
 
-module Surface.Theorems.Helpers where
+open import Surface.Oracle
+
+module Surface.Theorems.Helpers(ω : Oracle) where
 
 open import Data.Nat.Base
 open import Data.Nat.Properties
 
 open import Surface.WellScoped
-open import Surface.Derivations
-open import Surface.Derivations.WF
+open import Surface.Derivations ω
+open import Surface.Derivations.WF ω
 
 Γok-tail : (Γ , τ) ok → Γ ok
 Γok-tail (TCTX-Bind prev _) = prev
