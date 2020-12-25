@@ -1,17 +1,15 @@
 {-# OPTIONS --safe #-}
 
-open import Surface.Oracle
-
-module Surface.Theorems.TCTX(ω : Oracle) where
+module Surface.Theorems.TCTX where
 
 open import Agda.Builtin.Equality
 open import Data.Nat.Base
 open import Data.Nat.Properties
 
 open import Surface.WellScoped
-open import Surface.Derivations ω
-open import Surface.Derivations.WF ω
-open import Surface.Theorems.Helpers ω
+open import Surface.Derivations
+open import Surface.Derivations.WF
+open import Surface.Theorems.Helpers
 
 abstract
   -- Referred to as T-implies-TCTX in the paper

@@ -1,9 +1,6 @@
 {-# OPTIONS --safe #-}
 
-open import Surface.Oracle
-open import Surface.OracleProps
-
-module Surface.Theorems.SubstTyping(ω : Oracle) (ω-props : OracleProps ω) where
+module Surface.Theorems.SubstTyping where
 
 open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Fin.Base using (suc; zero; fromℕ<; raise)
@@ -22,8 +19,8 @@ open import Surface.WellScoped.Substitution using ([_↦τ_]_; [_↦ε_]_; [_↦
 open import Surface.WellScoped.Substitution.Stable
 open import Surface.WellScoped.Substitution.Distributivity as S
 open import Surface.WellScoped.Substitution.Commutativity
-open import Surface.Derivations ω
-open import Surface.Theorems.Thinning ω ω-props
+open import Surface.Derivations
+open import Surface.Theorems.Thinning
 
 -- Substitution lemmas
 
@@ -189,7 +186,7 @@ mutual
               → R.weaken-τ-k (suc k) σ ∈ Γ,σ,Δ at ctx-idx k
               → Γ,σ,Δ ⊢ τ <: τ'
               → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ℓ ↦τ< ε ] τ <: [ ℓ ↦τ< ε ] τ'
-  sub-Γ⊢τ<:τ' εδ prefix σ-∈ (ST-Base x) = ST-Base (OracleProps.subst ω-props εδ prefix σ-∈ x)
+  sub-Γ⊢τ<:τ' εδ prefix σ-∈ (ST-Base oracle x) = ST-Base oracle (Oracle.subst oracle prefix σ-∈ x)
   sub-Γ⊢τ<:τ' {ℓ = ℓ} {ε = ε} {k = k} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (ST-Arr {τ₁' = τ₁'} {τ₂ = τ₂} {τ₂' = τ₂'} <:₁ <:₂)
     = ST-Arr (sub-Γ⊢τ<:τ' εδ prefix σ-∈ <:₁) <:₂'
     where

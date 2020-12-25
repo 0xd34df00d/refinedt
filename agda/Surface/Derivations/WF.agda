@@ -1,13 +1,11 @@
 {-# OPTIONS --safe #-}
 
-open import Surface.Oracle
-
-module Surface.Derivations.WF(ω : Oracle) where
+module Surface.Derivations.WF where
 
 open import Data.Nat.Base using (_⊔_; _≤_)
 open import Data.Nat.Properties
 
-open import Surface.Derivations ω
+open import Surface.Derivations
 open import Surface.WellScoped
 
 size-ok  : Γ ok         → ℕ
@@ -59,7 +57,7 @@ size-t (T-Case resδ scrutτδ branches) = suc (size-t scrutτδ <> size-twf res
 size-t (T-Con _ conArg adtτ) = suc (size-t conArg <> size-twf adtτ)
 size-t (T-Sub δ superδ sub) = suc (size-t δ <> size-twf superδ <> size-st sub)
 
-size-st (ST-Base _) = 0
+size-st (ST-Base _ _) = 0
 size-st (ST-Arr sub₁ sub₂) = suc (size-st sub₁ <> size-st sub₂)
 
 size-bs NoBranches = 0
