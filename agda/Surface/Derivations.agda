@@ -108,6 +108,9 @@ record Oracle where
            → Is-just (decide ([ ℓ ↦Γ ε ] Γ,σ,Δ) b
                         (S.act-ρ (S.ext (S.replace-at (S.ctx-idx k) (R.weaken-ε-k k ε))) ρ₁)
                         (S.act-ρ (S.ext (S.replace-at (S.ctx-idx k) (R.weaken-ε-k k ε))) ρ₂))
+    trans : Is-just (decide Γ b ρ₁ ρ₂)
+          → Is-just (decide Γ b ρ₂ ρ₃)
+          → Is-just (decide Γ b ρ₁ ρ₃)
 
 
 -- Purely technical requirement to avoid parametrizing all of the modules by the same oracle and making hole types ugly
