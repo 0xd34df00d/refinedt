@@ -41,5 +41,5 @@ open import Surface.Theorems.SubstTyping
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Abs arrδ _) = arrδ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-App δ₁ δ₂) = sub-Γ⊢τ-front δ₂ (arr-wf-⇒-cod-wf (Γ⊢ε⦂τ-⇒-Γ⊢τ δ₁))
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Case resδ _ _) = resδ
-Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Con _ adtτ) = adtτ
+Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Con _ _ adtτ) = adtτ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Sub δ superδ sub) = superδ
