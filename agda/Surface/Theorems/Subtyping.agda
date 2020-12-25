@@ -2,32 +2,30 @@
 
 module Surface.Theorems.Subtyping where
 
+open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+
 open import Surface.WellScoped
+open import Surface.WellScoped.Membership
 open import Surface.Derivations
 
-Γ⊢τ'<:τ-⇒-Γ⊢τ : Γ ⊢ τ' <: τ
-              → Γ ⊢ τ
-Γ⊢τ'<:τ-⇒-Γ⊢τ (ST-Base oracle x) = {! !}
-Γ⊢τ'<:τ-⇒-Γ⊢τ (ST-Arr <: <:₁) = {! !}
-
-Γ⊢τ'<:τ-⇒-Γ⊢τ' : Γ ⊢ τ' <: τ
-               → Γ ⊢ τ'
-Γ⊢τ'<:τ-⇒-Γ⊢τ' (ST-Base oracle x) = {! !}
-Γ⊢τ'<:τ-⇒-Γ⊢τ' (ST-Arr <:₁ <:₂) = TWF-Arr (Γ⊢τ'<:τ-⇒-Γ⊢τ <:₁) {! !}
-
-
-<:-in-Γok : Γ ⊢ τ' <: τ
-          → (Γ , τ) ok
-          → (Γ , τ') ok
-<:-in-Γok <: (TCTX-Bind Γok τδ) = TCTX-Bind Γok {! !}
+<:-trans : Γ ⊢ τ₁ <: τ₂
+         → Γ ⊢ τ₂ <: τ₃
+         → Γ ⊢ τ₁ <: τ₃
+<:-trans (ST-Base oracle ⦃ UoO ⦄ is-just₁) (ST-Base oracle' is-just₂)
+  rewrite UniquenessOfOracles.oracles-equal UoO oracle' oracle
+        = ST-Base oracle ⦃ UoO ⦄ (Oracle.trans oracle is-just₁ is-just₂)
+<:-trans (ST-Arr <:₁ <:₂) (ST-Arr <:₁' <:₂') = ST-Arr (<:-trans <:₁' <:₁) {! !} -- ST-Arr {! !} {! !}
+-- Goal : Γ ⊢ τ₁ ⇒ τ₂ <: (τ₁' ⇒ τ₂')
 
 <:-in-Γ⊢ε⦂τ : Γ ⊢ τ' <: τ
+            → Γ ⊢ τ'
             → Γ , τ ⊢ ε ⦂ τ₀
             → Γ , τ' ⊢ ε ⦂ τ₀
-<:-in-Γ⊢ε⦂τ <: (T-Unit Γok) = T-Unit {! !}
-<:-in-Γ⊢ε⦂τ <: (T-Var Γok x) = {! !}
-<:-in-Γ⊢ε⦂τ <: (T-Abs arrδ εδ) = {! !}
-<:-in-Γ⊢ε⦂τ <: (T-App εδ εδ₁) = {! !}
-<:-in-Γ⊢ε⦂τ <: (T-Case resδ εδ branches-well-typed) = {! !}
-<:-in-Γ⊢ε⦂τ <: (T-Con ≡-prf εδ adtτ) = {! !}
-<:-in-Γ⊢ε⦂τ <: (T-Sub εδ x x₁) = {! !}
+<:-in-Γ⊢ε⦂τ <: Γ⊢τ' (T-Unit (TCTX-Bind Γok τδ)) = T-Unit (TCTX-Bind Γok Γ⊢τ')
+<:-in-Γ⊢ε⦂τ <: Γ⊢τ' (T-Var (TCTX-Bind _ τδ) (∈-zero refl)) = T-Sub {! !} {! !} {! !}
+<:-in-Γ⊢ε⦂τ <: Γ⊢τ' (T-Var Γok (∈-suc refl x)) = {! !}
+<:-in-Γ⊢ε⦂τ <: Γ⊢τ' (T-Abs arrδ εδ) = {! !}
+<:-in-Γ⊢ε⦂τ <: Γ⊢τ' (T-App εδ εδ₁) = T-App (<:-in-Γ⊢ε⦂τ <: Γ⊢τ' εδ) (<:-in-Γ⊢ε⦂τ <: Γ⊢τ' εδ₁)
+<:-in-Γ⊢ε⦂τ <: Γ⊢τ' (T-Case resδ εδ branches-well-typed) = {! !}
+<:-in-Γ⊢ε⦂τ <: Γ⊢τ' (T-Con ≡-prf εδ adtτ) = {! !}
+<:-in-Γ⊢ε⦂τ <: Γ⊢τ' (T-Sub εδ x x₁) = {! !}
