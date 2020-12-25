@@ -109,8 +109,15 @@ record Oracle where
                         (S.act-ρ (S.ext (S.replace-at (S.ctx-idx k) (R.weaken-ε-k k ε))) ρ₁)
                         (S.act-ρ (S.ext (S.replace-at (S.ctx-idx k) (R.weaken-ε-k k ε))) ρ₂))
 
+
+-- Purely technical requirement to avoid parametrizing all of the modules by the same oracle and making hole types ugly
+record UniquenessOfOracles : Set where
+  field
+    oracles-equal : ∀ (ω₁ ω₂ : Oracle) → ω₁ ≡ ω₂
+
 data _⊢_<:_ where
   ST-Base     : (oracle : Oracle)
+              → ⦃ UoO : UniquenessOfOracles ⦄
               → Is-just (Oracle.decide oracle Γ b ρ₁ ρ₂)
               → Γ ⊢ ⟨ b ∣ ρ₁ ⟩ <: ⟨ b ∣ ρ₂ ⟩
   ST-Arr      : Γ ⊢ τ₁' <: τ₁
