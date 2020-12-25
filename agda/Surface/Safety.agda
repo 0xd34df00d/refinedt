@@ -2,11 +2,15 @@
 
 module Surface.Safety where
 
-open import Data.Fin using (zero)
+open import Data.Fin using (zero; suc)
 open import Data.Nat using (zero)
+open import Data.Vec.Base using (lookup)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Surface.WellScoped
-open import Surface.WellScoped.Substitution
+open import Surface.WellScoped.Substitution as S
+open import Surface.WellScoped.Substitution.Stable
+open import Surface.WellScoped.Renaming as R
 open import Surface.Derivations
 open import Surface.Operational
 open import Surface.Theorems.SubstTyping
@@ -75,4 +79,18 @@ preservation (E-AppR x ε↝ε') (T-App εδ₁ εδ₂) = {! !}
 preservation (E-AppAbs ε₂-is-value) (T-App εδ₁ εδ₂) = sub-Γ⊢ε⦂τ-front εδ₂ (SLam-inv εδ₁)
 preservation (E-ADT ε↝ε') (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (preservation ε↝ε' εδ) adtτ
 preservation (E-CaseScrut ε↝ε') (T-Case resδ εδ branches) = T-Case resδ (preservation ε↝ε' εδ) branches
-preservation (E-CaseMatch ε-is-value idx) (T-Case resδ εδ branches) = {! !}
+preservation (E-CaseMatch ε-is-value idx) (T-Case resδ εδ branches) =
+  let branchδ = sub-Γ⊢ε⦂τ-front (con-has-type εδ) (branch-has-type idx branches)
+   in subst-Γ⊢ε⦂τ-τ (replace-weakened-τ-zero _ _) branchδ
+  where
+    branch-has-type : ∀ {cons : ADTCons (Mkℕₐ n) ℓ} {bs : CaseBranches (Mkℕₐ n) ℓ} {τ}
+                    → (idx : Fin n)
+                    → BranchesHaveType Γ cons bs τ
+                    → Γ , lookup cons idx ⊢ CaseBranch.body (lookup bs idx) ⦂ R.weaken-τ τ
+    branch-has-type zero (OneMoreBranch εδ bht) = εδ
+    branch-has-type (suc idx) (OneMoreBranch εδ bht) = branch-has-type idx bht
+
+    con-has-type : ∀ {cons cons' : ADTCons (Mkℕₐ (suc n)) ℓ} {idx}
+                 → Γ ⊢ SCon idx ε cons ⦂ ⊍ cons'
+                 → Γ ⊢ ε ⦂ lookup cons' idx
+    con-has-type (T-Con refl conδ adtτ) = conδ
