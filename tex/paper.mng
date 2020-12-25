@@ -254,12 +254,12 @@ In general, refinement types are expressive enough to eliminate a fair share \ci
 
 On the other hand, certain things are not expressible with refinement types.
 In particular, we claim without proof that refinement types cannot affect run-time behaviour of the program
-(although the reader familiar with the notion of run-time irrelevance or Coq's \verb+Prop+ universe might find those concepts useful to build the intuitive agreement with our claim).
-For example, a type-safe variadic \verb+printf+ whose arguments count, their \emph{types}, and run-time behaviour \emph{depend} on the formatting string argument \emph{value} is not expressible with refinement types.
+(and the reader familiar with the notion of run-time irrelevance or Coq's \verb+Prop+ universe might find those concepts useful to build the intuitive agreement with our claim).
+For example, a type-safe variadic \verb+printf+ (whose arguments count, their \emph{types}, and run-time behaviour \emph{depend} on the formatting string argument \emph{value}) is not expressible with refinement types.
 
 Moreover, for fundamental reasons such as Rice's theorem, there is no algorithm that decides arbitrary non-trivial semantic properties of a program,
 so human assistance will always be needed for sufficiently complex programs, and this is where dependent types also come useful.
-And, in practice, most existing SMT solvers do not support higher-order reasoning, or reasoning beyond some simple arithmetic or arrays,
+And, in practice, most existing SMT solvers do not support higher-order reasoning (in fact, it is not supported in the current SMT-LIB v2), or reasoning beyond some simple arithmetic or arrays,
 so, for instance, formally proving the properties of the type system proposed in this very paper is something that, currently, a human should do.
 
 There is also a certain synergy coming from uniting dependent types and refinement types:
