@@ -1,6 +1,9 @@
 {-# OPTIONS --safe #-}
 
-module Surface.Safety where
+open import Surface.Oracle
+open import Surface.OracleProps
+
+module Surface.Safety(ω : Oracle) (ω-props : OracleProps ω) where
 
 open import Data.Fin using (zero; suc)
 open import Data.Nat using (zero)
@@ -11,9 +14,9 @@ open import Surface.WellScoped
 open import Surface.WellScoped.Substitution as S
 open import Surface.WellScoped.Substitution.Stable
 open import Surface.WellScoped.Renaming as R
-open import Surface.Derivations
+open import Surface.Derivations ω
 open import Surface.Operational
-open import Surface.Theorems.SubstTyping
+open import Surface.Theorems.SubstTyping ω ω-props
 
 data Canonical : STerm ℓ → SType ℓ → Set where
   C-Unit : Canonical (SUnit {ℓ}) ⟨ BUnit ∣ Τ ⟩
@@ -25,7 +28,7 @@ data Canonical : STerm ℓ → SType ℓ → Set where
 canonical-<: : ⊘ ⊢ τ <: τ'
              → Canonical ε τ
              → Canonical ε τ'
-canonical-<: (ST-Base oracle is-just) C-Unit rewrite Oracle.⇒-consistent oracle is-just = C-Unit
+canonical-<: (ST-Base is-just) C-Unit rewrite OracleProps.⇒-consistent ω-props is-just = C-Unit
 canonical-<: (ST-Arr _ _) C-Lam = C-Lam
 
 canonical : ⊘ ⊢ ε ⦂ τ

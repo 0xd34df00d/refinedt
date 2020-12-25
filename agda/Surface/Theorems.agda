@@ -1,6 +1,9 @@
 {-# OPTIONS --safe #-}
 
-module Surface.Theorems where
+open import Surface.Oracle
+open import Surface.OracleProps
+
+module Surface.Theorems(ω : Oracle) (ω-props : OracleProps ω) where
 
 open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Fin.Base using (suc; zero; fromℕ<; raise)
