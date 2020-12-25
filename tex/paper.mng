@@ -248,6 +248,7 @@ max3 x y z =
                                    in (z ** (lteTransitive x_LTE_y y_LTE_z,
                                              y_LTE_z,
                                              lteRefl))
+\end{minted}
 
 In general, refinement types are expressive enough to eliminate a fair share \cite{LiquidTypes08} of run-time errors such as out-of-bounds array accesses or division by zero.
 
