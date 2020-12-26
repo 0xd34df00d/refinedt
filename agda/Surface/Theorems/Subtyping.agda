@@ -40,11 +40,20 @@ mutual
                 → Γ ⊢ σ'
                 → Γ , σ  ++ Δ ⊢ τ
                 → Γ , σ' ++ Δ ⊢ τ
-  Γ⊢τ-narrowing Δ <: Γ⊢σ' (TWF-TrueRef x) = {! !}
-  Γ⊢τ-narrowing Δ <: Γ⊢σ' (TWF-Base ε₁δ ε₂δ) = {! !}
-  Γ⊢τ-narrowing Δ <: Γ⊢σ' (TWF-Conj τδ τδ₁) = {! !}
-  Γ⊢τ-narrowing Δ <: Γ⊢σ' (TWF-Arr τδ τδ₁) = {! !}
-  Γ⊢τ-narrowing Δ <: Γ⊢σ' (TWF-ADT consδs) = {! !}
+  Γ⊢τ-narrowing Δ <: Γ⊢σ' (TWF-TrueRef Γok) = TWF-TrueRef (Γok-narrowing Δ <: Γ⊢σ' Γok)
+  Γ⊢τ-narrowing Δ <: Γ⊢σ' (TWF-Base ε₁δ ε₂δ) = TWF-Base (Γ⊢ε⦂τ-narrowing (Δ , _) <: Γ⊢σ' ε₁δ) (Γ⊢ε⦂τ-narrowing (Δ , _) <: Γ⊢σ' ε₂δ)
+  Γ⊢τ-narrowing Δ <: Γ⊢σ' (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (Γ⊢τ-narrowing Δ <: Γ⊢σ' ρ₁δ) (Γ⊢τ-narrowing Δ <: Γ⊢σ' ρ₂δ)
+  Γ⊢τ-narrowing Δ <: Γ⊢σ' (TWF-Arr argδ resδ) = TWF-Arr (Γ⊢τ-narrowing Δ <: Γ⊢σ' argδ) (Γ⊢τ-narrowing (Δ , _) <: Γ⊢σ' resδ)
+  Γ⊢τ-narrowing Δ _  Γ⊢σ' (TWF-ADT consδs) = TWF-ADT (narrow-cons Δ _ Γ⊢σ' consδs)
+    where
+      narrow-cons : ∀ {cons : ADTCons nₐ (k + suc ℓ)}
+                  → (Δ : CtxSuffix (suc ℓ) k)
+                  → Γ ⊢ σ' <: σ
+                  → Γ ⊢ σ'
+                  → All ((Γ , σ  ++ Δ) ⊢_) cons
+                  → All ((Γ , σ' ++ Δ) ⊢_) cons
+      narrow-cons Δ <: _ [] = []
+      narrow-cons Δ <: Γ⊢σ' (δ ∷ consδs) = Γ⊢τ-narrowing Δ <: Γ⊢σ' δ ∷ narrow-cons Δ <: Γ⊢σ' consδs
 
   Γ⊢ε⦂τ-narrowing : (Δ : CtxSuffix (suc ℓ) k)
                   → Γ ⊢ σ' <: σ
