@@ -5,9 +5,17 @@ module Surface.Theorems.Subtyping where
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Surface.WellScoped
+open import Surface.WellScoped.CtxSuffix
 open import Surface.WellScoped.Membership
 open import Surface.Derivations
 open import Surface.Theorems.Thinning
+
+<:-narrowing : ∀ Δ
+             → Γ ⊢ σ' <: σ
+             → Γ , σ  ++ Δ ⊢ τ₂ <: τ₂'
+             → Γ , σ' ++ Δ ⊢ τ₂ <: τ₂'
+<:-narrowing _ σ-<: (ST-Base oracle is-just) = ST-Base oracle (Oracle.narrowing oracle {- TODO σ-<: -} is-just)
+<:-narrowing Δ σ-<: (ST-Arr <:₁ <:₂) = ST-Arr (<:-narrowing Δ σ-<: <:₁) (<:-narrowing (Δ , _) σ-<: <:₂)
 
 <:-trans : Γ ⊢ τ₁ <: τ₂
          → Γ ⊢ τ₂ <: τ₃
