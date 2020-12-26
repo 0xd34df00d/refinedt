@@ -30,6 +30,14 @@ private
                         r3 = <-trans r1 r2
                      in <-trans r3 (s≤s (m≤m<>n (size-t δ) n))
 
+abstract
+  st-thinning : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ₁ τ₂ : SType ℓ}
+              → (Γ⊂Γ' : Γ ⊂ Γ')
+              → (Γ ⊢ τ₁ <: τ₂)
+              → (Γ' ⊢ R.act-τ (_⊂_.ρ Γ⊂Γ') τ₁ <: R.act-τ (_⊂_.ρ Γ⊂Γ') τ₂)
+  st-thinning Γ⊂Γ' (ST-Base oracle just-prf) = ST-Base oracle (Oracle.thin oracle Γ⊂Γ' just-prf)
+  st-thinning Γ⊂Γ' (ST-Arr δ₁ δ₂) = ST-Arr (st-thinning Γ⊂Γ' δ₁) (st-thinning (append-both Γ⊂Γ') δ₂)
+
 private
   twf-thinning-sized : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ : SType ℓ}
                      → (Γ⊂Γ' : Γ ⊂ Γ')
@@ -111,15 +119,8 @@ private
                                                                    rec₂ = rec _ (s≤s (n≤m<>n<>k (size-t εδ) (size-twf superδ) (size-st <:δ)))
                                                                    εδ' = t-thinning-sized Γ⊂Γ' Γ'ok εδ rec₁
                                                                    superδ' = twf-thinning-sized Γ⊂Γ' Γ'ok superδ rec₂
-                                                                   <:δ' = st-thinning-sized Γ⊂Γ' <:δ
+                                                                   <:δ' = st-thinning Γ⊂Γ' <:δ
                                                                 in T-Sub εδ' superδ' <:δ'
-    where
-      st-thinning-sized  : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ₁ τ₂ : SType ℓ}
-                         → (Γ⊂Γ' : Γ ⊂ Γ')
-                         → (Γ ⊢ τ₁ <: τ₂)
-                         → (Γ' ⊢ R.act-τ (_⊂_.ρ Γ⊂Γ') τ₁ <: R.act-τ (_⊂_.ρ Γ⊂Γ') τ₂)
-      st-thinning-sized Γ⊂Γ' (ST-Base oracle just-prf) = ST-Base oracle (Oracle.thin oracle Γ⊂Γ' just-prf)
-      st-thinning-sized Γ⊂Γ' (ST-Arr δ₁ δ₂) = ST-Arr (st-thinning-sized Γ⊂Γ' δ₁) (st-thinning-sized (append-both Γ⊂Γ') δ₂)
 
 abstract
   twf-thinning : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ : SType ℓ}
