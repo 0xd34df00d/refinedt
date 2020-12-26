@@ -137,6 +137,11 @@ abstract
                → Γ' ⊢ R.act-ε (_⊂_.ρ Γ⊂Γ') ε ⦂ R.act-τ (_⊂_.ρ Γ⊂Γ') τ
   t-thinning Γ⊂Γ' Γ'ok δ = t-thinning-sized Γ⊂Γ' Γ'ok δ (<-wellFounded _)
 
+  st-weakening : Γ ok
+               → Γ ⊢ τ₁ <: τ₂
+               → (Γ , τ') ⊢ R.weaken-τ τ₁ <: R.weaken-τ τ₂
+  st-weakening Γok <: = st-thinning (ignore-head ⊂-refl) <:
+
   twf-weakening : ∀ {Γ : Ctx ℓ}
                 → Γ ok
                 → Γ ⊢ τ'
