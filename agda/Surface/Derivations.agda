@@ -11,6 +11,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Surface.WellScoped
 open import Surface.WellScoped.CtxPrefix
+open import Surface.WellScoped.CtxSuffix
 open import Surface.WellScoped.Substitution using ([_↦τ_]_; [_↦Γ_]_)
 open import Surface.WellScoped.Membership
 import Surface.WellScoped.Renaming as R
@@ -101,7 +102,7 @@ record Oracle where
            → Is-just (decide ⊘ b Τ ρ)
            → ρ ≡ Τ
     subst  : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {ρ₁ ρ₂ : Refinement (suc (suc k + ℓ))}
-           -- This gets funny with strict positivity, and arguably does not make sense for SMT: → Γ ⊢ ε ⦂ σ
+           -- TODO add this back when parametrizing everything by an oracle: → Γ ⊢ ε ⦂ σ
            → Γ prefix-at suc k of Γ,σ,Δ
            → R.weaken-τ-k (suc k) σ ∈ Γ,σ,Δ at S.ctx-idx k
            → Is-just (decide Γ,σ,Δ b ρ₁ ρ₂)
@@ -111,6 +112,10 @@ record Oracle where
     trans : Is-just (decide Γ b ρ₁ ρ₂)
           → Is-just (decide Γ b ρ₂ ρ₃)
           → Is-just (decide Γ b ρ₁ ρ₃)
+    narrowing
+          -- TODO add this back when parametrizing everything by an oracle: → Γ ⊢ σ' <: σ
+          : Is-just (decide (Γ , σ  ++ Δ) b ρ₁ ρ₂)
+          → Is-just (decide (Γ , σ' ++ Δ) b ρ₁ ρ₂)
 
 
 -- Purely technical requirement to avoid parametrizing all of the modules by the same oracle and making hole types ugly
