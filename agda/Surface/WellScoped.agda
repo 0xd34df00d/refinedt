@@ -4,7 +4,7 @@ module Surface.WellScoped where
 
 open import Data.Fin public using (Fin)
 open import Data.Nat public using (ℕ; suc)
-open import Data.Vec
+open import Data.Vec using (Vec)
 open import Relation.Binary.PropositionalEquality using (_≡_)
 
 data BaseType : Set where
@@ -16,7 +16,7 @@ record ℕₐ : Set where
     get-length : ℕ
 
 variable
-  n ℓ ℓ' ℓ₀ ℓ₁ ℓ₂ : ℕ
+  k n ℓ ℓ' ℓ₀ ℓ₁ ℓ₂ : ℕ
   nₐ : ℕₐ
   b b' b₁ b₂ : BaseType
   idx ι ι₁ ι₂ : Fin ℓ
@@ -78,7 +78,7 @@ data Ctx : ℕ → Set where
   _,_ : Ctx ℓ → SType ℓ → Ctx (suc ℓ)
 
 variable
-  Γ Γ' Δ : Ctx ℓ
+  Γ Γ' : Ctx ℓ
   τ τ' τ₀ τ₀' τ₁ τ₂ τ₁' τ₂' τ₃ τ₃' τᵢ τⱼ σ σ' : SType ℓ
   ε ε' ε₀ ε₁ ε₁' ε₂ ε₂' ϖ : STerm ℓ
   ρ₁ ρ₂ ρ₃ : Refinement ℓ
