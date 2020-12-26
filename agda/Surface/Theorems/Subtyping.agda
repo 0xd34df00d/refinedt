@@ -23,8 +23,7 @@ open import Surface.Theorems.Thinning
 <:-trans (ST-Base oracle ⦃ UoO ⦄ is-just₁) (ST-Base oracle' is-just₂)
   rewrite UniquenessOfOracles.oracles-equal UoO oracle' oracle
         = ST-Base oracle ⦃ UoO ⦄ (Oracle.trans oracle is-just₁ is-just₂)
-<:-trans (ST-Arr <:₁ <:₂) (ST-Arr <:₁' <:₂') = ST-Arr (<:-trans <:₁' <:₁) {! !} -- ST-Arr {! !} {! !}
--- Goal : Γ ⊢ τ₁ ⇒ τ₂ <: (τ₁' ⇒ τ₂')
+<:-trans (ST-Arr <:₁ <:₂) (ST-Arr <:₁' <:₂') = ST-Arr (<:-trans <:₁' <:₁) (<:-trans (<:-narrowing ⊘ <:₁' <:₂) <:₂')
 
 <:-in-Γ⊢ε⦂τ : Γ ⊢ τ' <: τ
             → Γ ⊢ τ'
