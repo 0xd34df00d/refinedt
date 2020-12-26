@@ -81,9 +81,9 @@ data _⊢_⦂_ where
               → (conArg : Γ ⊢ ε ⦂ τⱼ)
               → (adtτ : Γ ⊢ ⊍ cons)
               → Γ ⊢ SCon idx ε cons ⦂ ⊍ cons
-  T-Sub       : (Γ ⊢ ε ⦂ τ)
-              → (Γ ⊢ τ')
-              → (Γ ⊢ τ <: τ')
+  T-Sub       : (εδ : Γ ⊢ ε ⦂ τ)
+              → (τ'δ : Γ ⊢ τ')
+              → (<: : Γ ⊢ τ <: τ')
               → Γ ⊢ ε ⦂ τ'
 
 record Oracle where
