@@ -25,6 +25,7 @@ open import Surface.Theorems.Thinning
         = ST-Base oracle ⦃ UoO ⦄ (Oracle.trans oracle is-just₁ is-just₂)
 <:-trans (ST-Arr <:₁ <:₂) (ST-Arr <:₁' <:₂') = ST-Arr (<:-trans <:₁' <:₁) (<:-trans (<:-narrowing ⊘ <:₁' <:₂) <:₂')
 
+-- Referred to as typing-narrowing in the paper
 mutual
   Γok-narrowing : (Δ : CtxSuffix (suc ℓ) k)
                 → Γ ⊢ σ' <: σ

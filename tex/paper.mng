@@ -447,9 +447,11 @@ In the subsequent text we also assume the oracle can decide the resulting propos
 
 \subsubsection{Requirements on the oracle}
 
-Since the surface language uses the subtyping oracle in its type system, the metatheoretical properties of the language depend on the oracle satisfying certain crucial properties.
-These properties are listed below, and each specific property is referred to in the proofs of lemmas relying on that property:
+Since the surface language uses the subtyping oracle in its type system, the metatheoretical properties of the language depend on the oracle satisfying certain crucial requirements.
 \begin{enumerate}
+  \item\label{orprop:trans}
+    \emph{Transitivity}: if the oracle concludes $[[ [| G |] => A v. (r1 => r2) ]]$ and $[[ [| G |] => A v. (r2 => r3) ]]$, then it must conclude $[[ [| G |] => A v. (r1 => r3) ]]$.
+
   \item\label{orprop:thinning}
     \emph{Thinning}: if $[[ G ]] \subset [[ G' ]]$ and the oracle concludes $[[ [| G |] => A v. (r1 => r2) ]]$, then it must conclude $[[ [| G' |] => A v. (r1 => r2) ]]$.
 
@@ -464,6 +466,8 @@ These properties are listed below, and each specific property is referred to in 
     But this also means that, given the derivation of $[[ [| G, x : ts, GD |] => A v. (r1 => r2) ]]$ and a context $[[ G, x : ts', GD ]]$, we could first derive an object of type $[[ ts ]]$ using just the context $[[ G ]]$,
     and then use that object in place of $x$ in the derivation of $[[ [| G, x : ts, GD |] => A v. (r1 => r2) ]]$.
 \end{enumerate}
+
+Note that each of these requirements codifies natural expectations from any logical system.
 
 \subsubsection{Properties}
 
@@ -539,6 +543,35 @@ with the corresponding proof terms referred in lemmas names.
   Straightforward induction on the derivation of $[[ G |- es : ts ]]$.
   The interesting case is \textsc{T-App},
   as it invokes the substitution lemma (\cref{lma:type_substitution}).
+\end{proof}
+
+\begin{lemma}[Subtyping narrowing, \prooftermname{<:-narrowing}]\label{lma:st_narrowing}
+  If $[[ G |- ts' <: ts ]]$ and $[[ G, x : ts, GD |- ts1 <: ts2 ]]$, then $[[ G, x : ts', GD |- ts1 <: ts2 ]]$.
+\end{lemma}
+\begin{proof}
+  Straightforward induction on the derivation of $[[ G, x : ts, GD |- ts1 <: ts2 ]]$.
+  The \textsc{SC-Base} case relies on the oracle narrowing property \ref{orprop:narrowing}.
+\end{proof}
+
+\begin{lemma}[Subtyping transitivity, \prooftermname{<:-trans}]\label{lma:st_transitivity}
+  If $[[ G |- ts1 <: ts2 ]]$ and $[[ G |- ts2 <: ts3 ]]$, then $[[ G |- ts1 <: ts3 ]]$.
+\end{lemma}
+\begin{proof}
+  Simultaneous induction on both subtyping derivations, noting that they must have the same ``shape''~--- if one is \textsc{ST-Base}, then so is the other, since the $[[ ts2 ]]$ type is ``shared'' between the two.
+  In particular, if both are \textsc{ST-Base}, then the oracle transitivity property is used \ref{orprop:trans}.
+  The \textsc{SC-Arr} case uses the subtyping narrowing \cref{lma:st_narrowing}.
+\end{proof}
+
+\begin{lemma}[Narrowing, \prooftermname{typing-narrowing}]\label{lma:narrowing}
+  Assume that $[[ G |- ts0' <: ts0 ]]$ and $[[ G |- ts0' ]]$. Then:
+  \begin{itemize}
+    \item If $[[ G , x : ts0, GD ok ]]$, then $[[ G , x : ts0', GD ok ]]$.
+    \item If $[[ G , x : ts0, GD |- ts ]]$, then $[[ G , x : ts0', GD |- ts ]]$.
+    \item If $[[ G , x : ts0, GD |- es : ts ]]$, then $[[ G , x : ts0', GD |- es : ts ]]$.
+  \end{itemize}
+\end{lemma}
+\begin{proof}
+  Mutual induction on the derivations, using the subtyping narrowing \cref{lma:st_narrowing} in the \textsc{T-Sub} case.
 \end{proof}
 
 \begin{lemma}[Canonical forms, \prooftermname{canonical}]\label{lma:canonical_forms}
