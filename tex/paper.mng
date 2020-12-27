@@ -451,9 +451,11 @@ Since the surface language uses the subtyping oracle in its type system, the met
 These properties are listed below, and each specific property is referred to in the proofs of lemmas relying on that property:
 \begin{enumerate}
   \item\label{orprop:thinning}
-    \emph{Thinning}: for all $[[ G ]] \subset [[ G' ]]$ and $[[ r1 ]], [[ r2 ]]$, if the oracle concludes $[[ [| G |] => A v. (r1 => r2) ]]$, then it must conclude $[[ [| G' |] => A v. (r1 => r2) ]]$.
+    \emph{Thinning}: if $[[ G ]] \subset [[ G' ]]$ and the oracle concludes $[[ [| G |] => A v. (r1 => r2) ]]$, then it must conclude $[[ [| G' |] => A v. (r1 => r2) ]]$.
 
-    In words, if an oracle concludes that $[[ r1 ]]$ implies $[[ r2 ]]$ in some context, then it must also conclude this implication in any bigger context.
+    In words, if an oracle concludes that $[[ r1 ]]$ implies $[[ r2 ]]$ in some context $[[ G ]]$, then it must also conclude this implication in any bigger context $[[ G' ]]$.
+    Intuitively, if the bigger context $[[ G' ]]$ does not contradict the smaller one $[[ G ]]$, then the oracle ought to be able to use just the assumptions from the subset of $[[ G' ]]$ isomorphic to $[[ G ]]$.
+    Otherwise, if some bindings in $[[ G' ]]$ introduce a contradiction, then anything is derivable, including the required conclusion.
 \end{enumerate}
 
 \subsubsection{Properties}
