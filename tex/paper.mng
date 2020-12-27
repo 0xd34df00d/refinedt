@@ -449,7 +449,7 @@ In the subsequent text we also assume the oracle can decide the resulting propos
 
 We prove some of the usual metatheoretical properties of the proposed language.
 We also provide machine-verified proofs of these theorems in the supplemental code,
-with the corresponding proof terms referred in lemmas statements.
+with the corresponding proof terms referred in lemmas names.
 
 \begin{lemma}[Agreement I, \prooftermname{T-implies-TCTX}]\label{lma:term_wf_implies_ctx_wf}
   If $[[ G |- es : ts ]]$, then $[[ G ok ]]$.
@@ -470,34 +470,39 @@ with the corresponding proof terms referred in lemmas statements.
   and the other rules recurse on one of their premises.
 \end{proof}
 
-For the following two lemmas,
-assume $[[ G ]]$, $[[ G' ]]$ are contexts such that $[[ G ]] \subset [[ G' ]]$ and $[[ G' ok ]]$.
-Then:
-\begin{lemma}[Thinning on types, \prooftermname{twf-thinning}]\label{lma:thinning_twf}
-  If $[[ G |- ts ]]$, then $[[ G' |- ts ]]$.
+\begin{lemma}[Thinning of subtyping relation, \prooftermname{st-thinning}]\label{lma:thinning_st}
+  Let $[[ G ]]$, $[[ G' ]]$ be contexts such that $[[ G ]] \subset [[ G' ]]$.
+  Then, $[[ G |- ts1 <: ts2 ]]$ implies $[[ G' |- ts1 <: ts2 ]]$.
 \end{lemma}
-\begin{lemma}[Thinning on terms, \prooftermname{t-thinning}]\label{lma:thinning_t}
-  If $[[ G |- es : ts ]]$, then $[[ G' |- es : ts ]]$.
-\end{lemma}
-These two lemmas are proven using mutual induction,
-but since each lemma uses the other one (and itself) only on smaller derivation trees,
-this is a well-founded proof.
-\begin{proof}[Proof of \cref{lma:thinning_twf}]
-	Mostly straightforward induction on the derivation of $[[ G |- ts ]]$.
-
-  The case for the \textsc{TWF-Base} rule is worth paying special attention.
-  Unlike other rules which only have type well-formedness premises,
-  this one has premises requiring judgements about certain terms being well-typed,
-  so this case uses the \cref{lma:thinning_t}.
-\end{proof}
-\begin{proof}[Proof of \cref{lma:thinning_t}]
-  Again, induction on the derivation of $[[ G |- es : ts ]]$.
-  \textsc{T-Abs}, \textsc{T-Case} and \textsc{T-Con} rules require
-  thinning type well-formedness judgements, which is proven using \cref{lma:thinning_twf}.
-
-  In addition to that, the \textsc{T-Sub} rule requires the oracle to satisfy the following condition:
+\begin{proof}
+  Straightforward induction on the derivation of $[[ G |- ts1 <: ts2 ]]$.
+  The \textsc{ST-Base} case requires the oracle to satisfy the following condition:
   for any $[[ r1 ]], [[ r2 ]]$, if the oracle concludes $[[ [| G |] => A v. (r1 => r2) ]]$,
   then it must conclude $[[ [| G' |] => A v. (r1 => r2) ]]$.
+\end{proof}
+
+\begin{lemma}[Thinning]\label{lma:thinning}
+  Let $[[ G ]]$, $[[ G' ]]$ be contexts such that $[[ G ]] \subset [[ G' ]]$ and $[[ G' ok ]]$.
+  Then:
+  \begin{itemize}
+    \item If $[[ G |- ts ]]$, then $[[ G' |- ts ]]$ (\prooftermname{twf-thinning}).
+    \item If $[[ G |- es : ts ]]$, then $[[ G' |- es : ts ]]$ (\prooftermname{t-thinning}).
+  \end{itemize}
+\end{lemma}
+\begin{proof}
+  Mutual induction on the derivations of type well-formedness and term well-typedness.
+  Since each clause uses the other one (and, of course, itself) only on smaller derivation trees,
+  this is a well-founded proof.
+
+  In particular, the need for mutual induction appears in the following cases:
+  \begin{itemize}
+    \item \textsc{TWF-Base}. Unlike other type well-formedness rules,
+      its premises contain judgements about certain terms being well-typed, so this case uses thinning on types.
+    \item \textsc{T-Abs}, \textsc{T-Case}, \textsc{T-Con}.
+      These rules require certain judgements about type well-formedness to hold, so these cases use thinning on terms.
+  \end{itemize}
+
+  In addition to that, the \textsc{T-Sub} rule relies on \cref{lma:thinning_st}.
 \end{proof}
 
 \begin{lemma}[Substitution on types, \prooftermname{sub-TWF}]\label{lma:type_substitution}
