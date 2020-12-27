@@ -74,10 +74,22 @@ mutual
                   → Γ ⊢ σ'
                   → Γ , σ  ++ Δ ⊢ ε ⦂ τ
                   → Γ , σ' ++ Δ ⊢ ε ⦂ τ
-  Γ⊢ε⦂τ-narrowing Δ <: Γ⊢σ' (T-Case resδ εδ branches-well-typed) = {! !}
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Unit Γok) = T-Unit (Γok-narrowing Δ σ-<: Γ⊢σ' Γok)
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Var Γok ∈) = SVar-narrowing Δ Γok σ-<: Γ⊢σ' ∈
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Abs arrδ εδ) = T-Abs (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' arrδ) (Γ⊢ε⦂τ-narrowing (Δ , _) σ-<: Γ⊢σ' εδ)
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-App εδ εδ₁) = T-App (Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ) (Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ₁)
+  Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Case resδ εδ branches-well-typed)
+    = let resδ' = Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' resδ
+          εδ' = Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ
+       in T-Case resδ' εδ' (narrow-branches Δ σ-<: Γ⊢σ' branches-well-typed)
+    where
+      narrow-branches : ∀ {cons : ADTCons nₐ (k + suc ℓ)} {bs : CaseBranches nₐ (k + suc ℓ)}
+                      → (Δ : CtxSuffix (suc ℓ) k)
+                      → Γ ⊢ σ' <: σ
+                      → Γ ⊢ σ'
+                      → BranchesHaveType (Γ , σ  ++ Δ) cons bs τ
+                      → BranchesHaveType (Γ , σ' ++ Δ) cons bs τ
+      narrow-branches Δ σ-<: Γ⊢σ' NoBranches = NoBranches
+      narrow-branches Δ σ-<: Γ⊢σ' (OneMoreBranch εδ bs) = OneMoreBranch (Γ⊢ε⦂τ-narrowing (Δ , _) σ-<: Γ⊢σ' εδ) (narrow-branches Δ σ-<: Γ⊢σ' bs)
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ) (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' adtτ)
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Sub εδ τ'δ <:₁) = {! !}
