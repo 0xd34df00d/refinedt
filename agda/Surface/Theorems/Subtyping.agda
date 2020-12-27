@@ -55,13 +55,27 @@ mutual
       narrow-cons Δ <: _ [] = []
       narrow-cons Δ <: Γ⊢σ' (δ ∷ consδs) = Γ⊢τ-narrowing Δ <: Γ⊢σ' δ ∷ narrow-cons Δ <: Γ⊢σ' consδs
 
+  SVar-narrowing : (Δ : CtxSuffix (suc ℓ) k)
+                 → (Γ , σ ++ Δ) ok
+                 → Γ ⊢ σ' <: σ
+                 → Γ ⊢ σ'
+                 → τ ∈ Γ , σ ++ Δ at ι
+                 → Γ , σ' ++ Δ ⊢ SVar ι ⦂ τ
+  SVar-narrowing ⊘ (TCTX-Bind Γok τδ) <: Γ⊢σ' (∈-zero refl) = T-Sub (T-Var (TCTX-Bind Γok Γ⊢σ') (∈-zero refl)) (twf-weakening Γok Γ⊢σ' τδ) (st-weakening Γok <:)
+  SVar-narrowing ⊘ (TCTX-Bind Γok _) <: Γ⊢σ' (∈-suc refl ∈) = T-Var (TCTX-Bind Γok Γ⊢σ') (∈-suc refl ∈)
+  SVar-narrowing (Δ , τ) Γ,σ,Δok <: Γ⊢σ' (∈-zero refl) = T-Var (Γok-narrowing (Δ , _) <: Γ⊢σ' Γ,σ,Δok) (∈-zero refl)
+  SVar-narrowing (Δ , τ) (TCTX-Bind Γ,σ,Δok Γ,σ,Δ⊢τ) <: Γ⊢σ' (∈-suc refl ∈)
+    = let Γ,σ',Δok = Γok-narrowing Δ <: Γ⊢σ' Γ,σ,Δok
+          Γ,σ',Δ⊢τ = Γ⊢τ-narrowing Δ <: Γ⊢σ' Γ,σ,Δ⊢τ
+       in t-weakening Γ,σ',Δok Γ,σ',Δ⊢τ (SVar-narrowing Δ Γ,σ,Δok <: Γ⊢σ' ∈)
+
   Γ⊢ε⦂τ-narrowing : (Δ : CtxSuffix (suc ℓ) k)
                   → Γ ⊢ σ' <: σ
                   → Γ ⊢ σ'
                   → Γ , σ  ++ Δ ⊢ ε ⦂ τ
                   → Γ , σ' ++ Δ ⊢ ε ⦂ τ
   Γ⊢ε⦂τ-narrowing Δ <: Γ⊢σ' (T-Unit Γok) = T-Unit (Γok-narrowing Δ <: Γ⊢σ' Γok)
-  Γ⊢ε⦂τ-narrowing Δ <: Γ⊢σ' (T-Var Γok x) = {! !}
+  Γ⊢ε⦂τ-narrowing Δ <: Γ⊢σ' (T-Var Γok ∈) = SVar-narrowing Δ Γok <: Γ⊢σ' ∈
   Γ⊢ε⦂τ-narrowing Δ <: Γ⊢σ' (T-Abs arrδ εδ) = {! !}
   Γ⊢ε⦂τ-narrowing Δ <: Γ⊢σ' (T-App εδ εδ₁) = T-App (Γ⊢ε⦂τ-narrowing Δ <: Γ⊢σ' εδ) (Γ⊢ε⦂τ-narrowing Δ <: Γ⊢σ' εδ₁)
   Γ⊢ε⦂τ-narrowing Δ <: Γ⊢σ' (T-Case resδ εδ branches-well-typed) = {! !}
