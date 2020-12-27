@@ -456,6 +456,13 @@ These properties are listed below, and each specific property is referred to in 
     In words, if an oracle concludes that $[[ r1 ]]$ implies $[[ r2 ]]$ in some context $[[ G ]]$, then it must also conclude this implication in any bigger context $[[ G' ]]$.
     Intuitively, if the bigger context $[[ G' ]]$ does not contradict the smaller one $[[ G ]]$, then the oracle ought to be able to use just the assumptions from the subset of $[[ G' ]]$ isomorphic to $[[ G ]]$.
     Otherwise, if some bindings in $[[ G' ]]$ introduce a contradiction, then anything is derivable, including the required conclusion.
+
+  \item\label{orprop:narrowing}
+    \emph{Narrowing}: if $[[ G |- ts' <: ts ]]$, and the oracle concludes $[[ [| G, x : ts, GD |] => A v. (r1 => r2) ]]$, then it must conclude $[[ [| G, x : ts', GD |] => A v. (r1 => r2) ]]$.
+
+    To intuitively justify this requirement, note the analogy to the chained implication in logic, and, speaking in terms of logic, $[[ G |- ts' <: ts ]]$ means that the implication $\tau' \implies \tau$ holds in $[[ G ]]$.
+    But this also means that, given the derivation of $[[ [| G, x : ts, GD |] => A v. (r1 => r2) ]]$ and a context $[[ G, x : ts', GD ]]$, we could first derive an object of type $[[ ts ]]$ using just the context $[[ G ]]$,
+    and then use that object in place of $x$ in the derivation of $[[ [| G, x : ts, GD |] => A v. (r1 => r2) ]]$.
 \end{enumerate}
 
 \subsubsection{Properties}
