@@ -445,6 +445,17 @@ that the oracle knows how to translate the atomic refinements.
 In the subsequent text we also assume the oracle can decide the resulting proposition
 (otherwise it might be left as a separate lemma to be filled out by the user in the core language, or rejected altogether).
 
+\subsubsection{Requirements on the oracle}
+
+Since the surface language uses the subtyping oracle in its type system, the metatheoretical properties of the language depend on the oracle satisfying certain crucial properties.
+These properties are listed below, and each specific property is referred to in the proofs of lemmas relying on that property:
+\begin{enumerate}
+  \item\label{orprop:thinning}
+    \emph{Thinning}: for all $[[ G ]] \subset [[ G' ]]$ and $[[ r1 ]], [[ r2 ]]$, if the oracle concludes $[[ [| G |] => A v. (r1 => r2) ]]$, then it must conclude $[[ [| G' |] => A v. (r1 => r2) ]]$.
+
+    In words, if an oracle concludes that $[[ r1 ]]$ implies $[[ r2 ]]$ in some context, then it must also conclude this implication in any bigger context.
+\end{enumerate}
+
 \subsubsection{Properties}
 
 We prove some of the usual metatheoretical properties of the proposed language.
@@ -476,9 +487,7 @@ with the corresponding proof terms referred in lemmas names.
 \end{lemma}
 \begin{proof}
   Straightforward induction on the derivation of $[[ G |- ts1 <: ts2 ]]$.
-  The \textsc{ST-Base} case requires the oracle to satisfy the following condition:
-  for any $[[ r1 ]], [[ r2 ]]$, if the oracle concludes $[[ [| G |] => A v. (r1 => r2) ]]$,
-  then it must conclude $[[ [| G' |] => A v. (r1 => r2) ]]$.
+  The \textsc{ST-Base} case depends the oracle thinning property~\ref{orprop:thinning}.
 \end{proof}
 
 \begin{lemma}[Thinning]\label{lma:thinning}
