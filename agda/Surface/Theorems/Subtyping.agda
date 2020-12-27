@@ -76,8 +76,8 @@ mutual
                   → Γ , σ' ++ Δ ⊢ ε ⦂ τ
   Γ⊢ε⦂τ-narrowing Δ <: Γ⊢σ' (T-Unit Γok) = T-Unit (Γok-narrowing Δ <: Γ⊢σ' Γok)
   Γ⊢ε⦂τ-narrowing Δ <: Γ⊢σ' (T-Var Γok ∈) = SVar-narrowing Δ Γok <: Γ⊢σ' ∈
-  Γ⊢ε⦂τ-narrowing Δ <: Γ⊢σ' (T-Abs arrδ εδ) = {! !}
+  Γ⊢ε⦂τ-narrowing Δ <: Γ⊢σ' (T-Abs arrδ εδ) = T-Abs (Γ⊢τ-narrowing Δ <: Γ⊢σ' arrδ) (Γ⊢ε⦂τ-narrowing (Δ , _) <: Γ⊢σ' εδ)
   Γ⊢ε⦂τ-narrowing Δ <: Γ⊢σ' (T-App εδ εδ₁) = T-App (Γ⊢ε⦂τ-narrowing Δ <: Γ⊢σ' εδ) (Γ⊢ε⦂τ-narrowing Δ <: Γ⊢σ' εδ₁)
   Γ⊢ε⦂τ-narrowing Δ <: Γ⊢σ' (T-Case resδ εδ branches-well-typed) = {! !}
-  Γ⊢ε⦂τ-narrowing Δ <: Γ⊢σ' (T-Con ≡-prf εδ adtτ) = {! !}
+  Γ⊢ε⦂τ-narrowing Δ <: Γ⊢σ' (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (Γ⊢ε⦂τ-narrowing Δ <: Γ⊢σ' εδ) (Γ⊢τ-narrowing Δ <: Γ⊢σ' adtτ)
   Γ⊢ε⦂τ-narrowing Δ <: Γ⊢σ' (T-Sub εδ τ'δ <:₁) = {! !}
