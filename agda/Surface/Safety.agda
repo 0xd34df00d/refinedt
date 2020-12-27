@@ -8,12 +8,14 @@ open import Data.Vec.Base using (lookup)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Surface.WellScoped
+open import Surface.WellScoped.CtxSuffix
 open import Surface.WellScoped.Renaming as R
 open import Surface.WellScoped.Substitution as S
 open import Surface.WellScoped.Substitution.Stable
 open import Surface.Derivations
 open import Surface.Operational
 open import Surface.Theorems.SubstTyping
+open import Surface.Theorems.Subtyping
 
 data Canonical : STerm ℓ → SType ℓ → Set where
   C-Unit : Canonical (SUnit {ℓ}) ⟨ BUnit ∣ Τ ⟩
@@ -65,34 +67,11 @@ progress (T-Con _ εδ adtτ) with progress εδ
 ... | done is-value = done (IV-ADT is-value)
 progress (T-Sub εδ τδ τ<:τ') = progress εδ
 
-{-
-SLam-inv-arg-<: : Γ ⊢ SLam τ ε ⦂ τ₁ ⇒ τ₂
-                → τ₁ ≡ τ ⊎ Γ ⊢ τ₁ <: τ
-SLam-inv-arg-<: (T-Abs arrδ εδ) = inj₁ refl
-SLam-inv-arg-<: (T-Sub εδ ⇒-ok (ST-Arr <:₁ <:₂)) with SLam-inv-arg-<: εδ
-... | inj₁ refl = inj₂ <:₁
-... | inj₂ <: = inj₂ (<:-trans <:₁ <:)
-
-SLam-inv : Γ ⊢ SLam τ ε ⦂ τ₁ ⇒ τ₂
-         → Γ , τ ⊢ ε ⦂ τ₂
-SLam-inv (T-Abs _ εδ) = εδ
-SLam-inv SLam-δ@(T-Sub {τ = τ₁' ⇒ τ₂'} εδ τ'δ (ST-Arr <:₁ <:₂)) with SLam-inv-arg-<: SLam-δ
-... | inj₁ refl = case τ'δ of λ where (TWF-Arr _ τ₂-ok) → T-Sub (SLam-inv εδ) τ₂-ok <:₂
-... | inj₂ <: = let rec = SLam-inv εδ in {! !}
--- ^ the above won't work, since the hole type is:
--- Γ , τ ⊢ ε ⦂ τ₂
--- rec's type is:
--- Γ , τ ⊢ ε ⦂ τ₂'
--- and we know that
--- <:₂ : Γ , τ₁ ⊢ τ₂' <: τ₂
--- but Γ ⊢ τ₁ <: τ and not the vice versa, so even narrowing wouldn't help
--}
-
 
 SLam-inv : Γ ⊢ SLam τ ε ⦂ τ₁ ⇒ τ₂
          → Γ , τ₁ ⊢ ε ⦂ τ₂
 SLam-inv (T-Abs _ εδ) = εδ
-SLam-inv (T-Sub {τ = τ₁' ⇒ τ₂'} εδ ⇒-ok (ST-Arr <:₁ <:₂)) = let rec = SLam-inv εδ in {! !}
+SLam-inv (T-Sub {τ = τ₁' ⇒ τ₂'} εδ (TWF-Arr τ₁-ok τ₂-ok₁) (ST-Arr <:₁ <:₂)) = T-Sub (Γ⊢ε⦂τ-narrowing ⊘ <:₁ τ₁-ok (SLam-inv εδ)) τ₂-ok₁ <:₂
 
 preservation : ε ↝ ε'
              → Γ ⊢ ε ⦂ τ
