@@ -2,7 +2,6 @@
 
 module Surface.Theorems.Subtyping where
 
-open import Data.Nat using (suc)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Surface.WellScoped
@@ -92,4 +91,8 @@ mutual
       narrow-branches Δ σ-<: Γ⊢σ' NoBranches = NoBranches
       narrow-branches Δ σ-<: Γ⊢σ' (OneMoreBranch εδ bs) = OneMoreBranch (Γ⊢ε⦂τ-narrowing (Δ , _) σ-<: Γ⊢σ' εδ) (narrow-branches Δ σ-<: Γ⊢σ' bs)
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ) (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' adtτ)
-  Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Sub εδ τ'δ <:₁) = {! !}
+  Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Sub εδ τ'δ <:)
+    = let εδ-narrowed = Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ
+          τ'δ-narrowed = Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' τ'δ
+          <:-narrowed = <:-narrowing Δ σ-<: <:
+       in T-Sub εδ-narrowed τ'δ-narrowed <:-narrowed
