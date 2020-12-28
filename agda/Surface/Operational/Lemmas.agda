@@ -24,7 +24,6 @@ open import Surface.Operational
           → Monotonic ρ
           → ∀ ι ε
           → (bs : CaseBranches (Mkℕₐ n) ℓ)
-          → (let branch = CaseBranch.body (lookup bs ι))
           → R.act-ε ρ ([ ι ↦ₘ ε ] bs) ≡ [ ι ↦ₘ R.act-ε ρ ε ] R.act-branches ρ bs
 ρ-↦ₘ-comm {ρ = ρ} ρ-mono ι ε bs rewrite ρ-subst-distr-ε-0 _ ρ-mono ε (CaseBranch.body (lookup bs ι))
                                       | R.branch-lookup-comm ρ ι bs

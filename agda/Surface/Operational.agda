@@ -17,8 +17,8 @@ data IsValue : STerm ℓ → Set where
 
 infix 6 [_↦ₘ_]_
 [_↦ₘ_]_ : Fin n → STerm ℓ → CaseBranches (Mkℕₐ n) ℓ → STerm ℓ
-[ idx ↦ₘ ε ] bs = [ zero ↦ε ε ] body
-  where open CaseBranch (lookup bs idx)
+[ ι ↦ₘ ε ] bs = [ zero ↦ε ε ] body
+  where open CaseBranch (lookup bs ι)
 
 infix 4 _↝_
 data _↝_ : STerm ℓ → STerm ℓ → Set where
