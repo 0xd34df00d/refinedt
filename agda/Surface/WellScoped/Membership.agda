@@ -41,7 +41,7 @@ record _⊂_ {ℓ ℓ'} (Γ : Ctx ℓ) (Γ' : Ctx ℓ') : Set where
 append-both : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ₀ : SType ℓ}
             → (Γ⊂Γ' : Γ ⊂ Γ')
             → Γ , τ₀ ⊂ Γ' , R.act-τ (_⊂_.ρ Γ⊂Γ') τ₀
-append-both {Γ = Γ} {Γ' = Γ'} (MkTR ρ ρ-∈ ρ-mono) = MkTR (R.ext ρ) ρ-∈' (S.ext-monotonic ρ-mono)
+append-both {Γ = Γ} {Γ' = Γ'} (MkTR ρ ρ-∈ ρ-mono) = MkTR (R.ext ρ) ρ-∈' (R.ext-monotonic ρ-mono)
   where
     ρ-∈' : τ ∈ Γ , τ' at idx
          → R.act-τ (R.ext ρ) τ ∈ Γ' , R.act-τ ρ τ' at R.ext ρ idx

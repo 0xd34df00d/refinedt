@@ -2,12 +2,14 @@
 
 module Surface.WellScoped.Substitution.Distributivity where
 
-open import Data.Fin using (Fin; suc; zero; raise)
+open import Data.Fin using (Fin; suc; zero; raise; toℕ)
 open import Data.Nat using (ℕ; suc; zero; _+_)
 open import Data.Vec
 open import Function using (_∘_)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; cong)
+open Relation.Binary.PropositionalEquality.≡-Reasoning using (begin_; _≡⟨⟩_; step-≡; _∎)
 
+open import Data.Fin.Extra
 open import Surface.WellScoped
 open import Surface.WellScoped.Substitution as S
 import Surface.WellScoped.Renaming as R
@@ -203,3 +205,91 @@ act-branches-distr σ₁ σ₂ (MkCaseBranch ε ∷ bs) rewrite act-ε-distr (ex
                                                      | act-ε-extensionality (act-ε-ext-distr σ₁ σ₂) ε
                                                      | act-branches-distr σ₁ σ₂ bs
                                                      = refl
+
+
+IdentityUpTo : (Fin ℓ → Fin ℓ') → Fin (suc ℓ) → Set
+IdentityUpTo ρ ι = ∀ {n} → (n<ι : n < ι) → toℕ (ρ n) ≡ toℕ n
+
+record CommutingRenamer (ρ : Fin ℓ → Fin ℓ') (ι : Fin (suc ℓ)) : Set where
+  field
+    ρ-mono : Monotonic ρ
+    ρ-id   : IdentityUpTo ρ ι
+
+open CommutingRenamer
+
+ext-identity : ∀ {ρ : Fin ℓ → Fin ℓ'}
+             → IdentityUpTo ρ ι
+             → IdentityUpTo (R.ext ρ) (suc ι)
+ext-identity ρ-id (<-zero ι) rewrite tighten-zero ι = refl
+ext-identity ρ-id (<-suc n<ι) rewrite ρ-id n<ι = refl
+
+ext-commuting : ∀ {ρ : Fin ℓ → Fin ℓ'} {ι}
+              → CommutingRenamer ρ ι
+              → CommutingRenamer (R.ext ρ) (suc ι)
+ext-commuting record { ρ-mono = ρ-mono ; ρ-id = ρ-id } = record { ρ-mono = R.ext-monotonic ρ-mono
+                                                                ; ρ-id = ext-identity ρ-id
+                                                                }
+
+ρ-SubstDistributivity : {Ty : ℕ → Set} → R.ActionOn Ty → SubstOn Ty → Set
+ρ-SubstDistributivity {Ty} ρ-act [_↦_]_ = ∀ {ℓ ℓ'}
+                                          → (ρ : Fin ℓ → Fin ℓ')
+                                          → (ι : Fin (suc ℓ))
+                                          → (ρ-comm : CommutingRenamer ρ ι)
+                                          → (ε : STerm ℓ)
+                                          → (v : Ty (suc ℓ))
+                                          → ρ-act ρ ([ ι ↦ ε ] v) ≡ [ R.ext ρ ι ↦ R.act-ε ρ ε ] (ρ-act (R.ext ρ) v)
+
+ρ-<-pred-comm : ∀ {ρ : Fin ℓ → Fin ℓ'} {ι} {var}
+              → (ρ-mono : Monotonic ρ)
+              → (ι<var : ι < var)
+              → ρ (m<n-n-pred ι<var) ≡ m<n-n-pred (R.ext-monotonic ρ-mono ι<var)
+ρ-<-pred-comm {var = suc var} ρ-mono ι<var = refl
+
+ρ->-tighten-comm : ∀ {ι}
+                 → (ρ : Fin ℓ → Fin ℓ')
+                 → (ρ-comm : CommutingRenamer ρ ι)
+                 → (let ρ-mono = CommutingRenamer.ρ-mono ρ-comm)
+                 → (var : _)
+                 → (ι>var : ι > var)
+                 → ρ (tighten ι>var) ≡ tighten (R.ext-monotonic ρ-mono ι>var)
+ρ->-tighten-comm {ℓ = zero} _ _ _ (<-zero n) = Fin0-elim n
+ρ->-tighten-comm {ℓ' = zero} ρ _ _ (<-zero n) = Fin0-elim (ρ n)
+ρ->-tighten-comm {ℓ = suc ℓ} {ℓ' = suc ℓ'} ρ ρ-comm zero (<-zero n) = lift-ℕ-≡ (CommutingRenamer.ρ-id ρ-comm (<-zero n))
+ρ->-tighten-comm {ℓ = suc ℓ} ρ ρ-comm (suc var) (<-suc ι>var) = lift-ℕ-≡ (
+  begin
+    toℕ (ρ (suc (tighten ι>var)))
+  ≡⟨ CommutingRenamer.ρ-id ρ-comm (suc-tighten ι>var) ⟩
+    suc (toℕ (tighten ι>var))
+  ≡⟨ cong suc (tighten-is-same-ℕ ι>var) ⟩
+    suc (toℕ var)
+  ≡⟨ cong suc (sym (CommutingRenamer.ρ-id ρ-comm (<-weaken ι>var))) ⟩
+    suc (toℕ (ρ var))
+  ≡⟨ sym (tighten-is-same-ℕ (<-suc (CommutingRenamer.ρ-mono ρ-comm ι>var))) ⟩
+    toℕ (tighten (<-suc (CommutingRenamer.ρ-mono ρ-comm ι>var)))
+  ∎
+  )
+
+ρ-replace-comm : ∀ (ρ : Fin ℓ → Fin ℓ') ι ε
+               → CommutingRenamer ρ ι
+               → ∀ var → R.act-ε ρ (replace-at ι ε var) ≡ replace-at (R.ext ρ ι) (R.act-ε ρ ε) (R.ext ρ var)
+ρ-replace-comm ρ ι ε ρ-comm var with ι <>? var
+... | less ι<var rewrite <>?-< (R.ext-monotonic (CommutingRenamer.ρ-mono ρ-comm) ι<var)
+                       | ρ-<-pred-comm (CommutingRenamer.ρ-mono ρ-comm) ι<var
+                       = refl
+... | equal refl rewrite <>?-refl-equal (R.ext ρ ι) = refl
+... | greater ι>var rewrite <>?-> (R.ext-monotonic (CommutingRenamer.ρ-mono ρ-comm) ι>var)
+                          | ρ->-tighten-comm ρ ρ-comm var ι>var
+                          = refl
+
+ρ-subst-distr-τ : ρ-SubstDistributivity R.act-τ [_↦τ_]_
+ρ-subst-distr-τ ρ ι ρ-comm ε τ rewrite ρ-σ-distr-τ ρ (replace-at ι ε) τ
+                                     | σ-ρ-distr-τ (replace-at (R.ext ρ ι) (R.act-ε ρ ε)) (R.ext ρ) τ
+                                     | S.act-τ-extensionality (ρ-replace-comm ρ ι ε ρ-comm) τ
+                                     = refl
+
+ρ-subst-distr-τ-0 : (ρ : Fin ℓ → Fin ℓ')
+                  → Monotonic ρ
+                  → (ε : STerm ℓ)
+                  → (τ : SType (suc ℓ))
+                  → R.act-τ ρ ([ zero ↦τ ε ] τ) ≡ [ zero ↦τ R.act-ε ρ ε ] (R.act-τ (R.ext ρ) τ)
+ρ-subst-distr-τ-0 ρ ρ-mono = ρ-subst-distr-τ ρ zero (record { ρ-mono = ρ-mono ; ρ-id = λ () })

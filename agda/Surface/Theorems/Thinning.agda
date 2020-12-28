@@ -14,6 +14,7 @@ open import Surface.WellScoped.CtxPrefix
 open import Surface.WellScoped.Membership
 open import Surface.WellScoped.Renaming as R
 open import Surface.WellScoped.Substitution as S
+open import Surface.WellScoped.Substitution.Distributivity
 open import Surface.Derivations
 open import Surface.Derivations.WF
 open import Surface.Theorems.TCTX
@@ -92,7 +93,7 @@ private
           bodyδ'-ok = TCTX-Bind Γ'ok (arr-wf-dom arrδ')
           bodyδ' = t-thinning-sized (append-both Γ⊂Γ') bodyδ'-ok bodyδ rec₂
        in T-Abs arrδ' bodyδ'
-  t-thinning-sized Γ⊂Γ' Γ'ok (T-App {τ₂ = τ₂} {ε₂ = ε₂} δ₁ δ₂) (acc rec) rewrite S.rename-subst-τ-distr-0 (_⊂_.ρ Γ⊂Γ') ε₂ (_⊂_.ρ-mono Γ⊂Γ') τ₂
+  t-thinning-sized Γ⊂Γ' Γ'ok (T-App {τ₂ = τ₂} {ε₂ = ε₂} δ₁ δ₂) (acc rec) rewrite ρ-subst-distr-τ-0 (_⊂_.ρ Γ⊂Γ') (_⊂_.ρ-mono Γ⊂Γ') ε₂ τ₂
     = let rec₁ = rec _ (s≤s (m≤m<>n _ _))
           rec₂ = rec _ (s≤s (n≤m<>n _ _))
        in T-App (t-thinning-sized Γ⊂Γ' Γ'ok δ₁ rec₁) (t-thinning-sized Γ⊂Γ' Γ'ok δ₂ rec₂)

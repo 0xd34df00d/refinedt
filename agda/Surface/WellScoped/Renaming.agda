@@ -9,6 +9,7 @@ open import Data.Vec
 open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym)
 
+open import Data.Fin.Extra
 open import Surface.WellScoped
 open import Surface.WellScoped.Actions (record { Target = Fin
                                                ; var-action = λ r idx → SVar (r idx)
@@ -27,6 +28,15 @@ weaken-τ-k k = act-τ (raise k)
 
 weaken-ε-k : ∀ k → STerm ℓ → STerm (k + ℓ)
 weaken-ε-k k = act-ε (raise k)
+
+
+ext-monotonic : ∀ {ρ : Fin ℓ → Fin ℓ'}
+              → Monotonic ρ
+              → Monotonic (ext ρ)
+ext-monotonic ρ-mono {x = zero} {y = zero} ()
+ext-monotonic ρ-mono {x = zero} {y = suc y} (<-zero .y) = <-zero _
+ext-monotonic ρ-mono {x = suc x} {y = zero} ()
+ext-monotonic ρ-mono {x = suc x} {y = suc y} (<-suc x<y) = <-suc (ρ-mono x<y)
 
 
 ≡-ext : {f₁ f₂ : Fin ℓ → Fin ℓ'}
