@@ -30,6 +30,13 @@ weaken-ε-k : ∀ k → STerm ℓ → STerm (k + ℓ)
 weaken-ε-k k = act-ε (raise k)
 
 
+branch-lookup-comm : (ρ : Fin ℓ → Fin ℓ')
+                   → (ι : Fin n)
+                   → (bs : CaseBranches (Mkℕₐ n) ℓ)
+                   → act-ε (ext ρ) (CaseBranch.body (lookup bs ι)) ≡ CaseBranch.body (lookup (act-branches ρ bs) ι)
+branch-lookup-comm ρ zero (_ ∷ _) = refl
+branch-lookup-comm ρ (suc ι) (_ ∷ bs) = branch-lookup-comm ρ ι bs
+
 ext-monotonic : ∀ {ρ : Fin ℓ → Fin ℓ'}
               → Monotonic ρ
               → Monotonic (ext ρ)
