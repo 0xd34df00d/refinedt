@@ -68,22 +68,18 @@ suc m <>? suc n with m <>? n
 ... | greater m>n = greater (<-suc m>n)
 
 tighten : ∀ {m n : Fin (suc ℓ)} → m > n → Fin ℓ
-tighten (<-zero zero) = zero
-tighten (<-zero (suc m)) = zero
+tighten {ℓ = suc ℓ} (<-zero _) = zero
 tighten {ℓ = suc ℓ} (<-suc m>n) = suc (tighten m>n)
 
 tighten-is-same-ℕ : ∀ {m n : Fin (suc ℓ)} → (m>n : m > n) → toℕ (tighten m>n) ≡ toℕ n
-tighten-is-same-ℕ (<-zero zero) = refl
-tighten-is-same-ℕ (<-zero (suc n)) = refl
+tighten-is-same-ℕ {ℓ = suc ℓ} (<-zero _) = refl
 tighten-is-same-ℕ {ℓ = suc ℓ} (<-suc m>n) rewrite tighten-is-same-ℕ m>n = refl
 
 tighten-zero : ∀ (n : Fin (suc ℓ)) → tighten (<-zero n) ≡ zero
-tighten-zero zero = refl
-tighten-zero (suc n) = refl
+tighten-zero _ = refl
 
-tighten-preserves-< : (n>m : n > m) → tighten n>m < n
-tighten-preserves-< (<-zero zero) = <-zero zero
-tighten-preserves-< (<-zero (suc n)) = <-zero (suc n)
+tighten-preserves-< : (n>m : m < n) → tighten n>m < n
+tighten-preserves-< {ℓ = suc ℓ} (<-zero n) = <-zero n
 tighten-preserves-< {ℓ = suc ℓ} (<-suc n>m) = <-suc (tighten-preserves-< n>m)
 
 <>?-refl-equal : ∀ (n : Fin ℓ) → n <>? n ≡ equal refl
