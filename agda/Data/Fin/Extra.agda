@@ -82,6 +82,10 @@ tighten-preserves-< : (n>m : m < n) → tighten n>m < n
 tighten-preserves-< {ℓ = suc ℓ} (<-zero n) = <-zero n
 tighten-preserves-< {ℓ = suc ℓ} (<-suc n>m) = <-suc (tighten-preserves-< n>m)
 
+suc-tighten : ∀ {m n : Fin (suc ℓ)} → (m<n : m < n) → suc (tighten m<n) < suc n
+suc-tighten {ℓ = suc ℓ} (<-zero n) = <-suc (<-zero n)
+suc-tighten {ℓ = suc ℓ} (<-suc m<n) = <-suc (suc-tighten m<n)
+
 <>?-refl-equal : ∀ (n : Fin ℓ) → n <>? n ≡ equal refl
 <>?-refl-equal zero = refl
 <>?-refl-equal (suc n) rewrite <>?-refl-equal n = refl
