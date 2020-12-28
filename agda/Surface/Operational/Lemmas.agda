@@ -20,6 +20,13 @@ open import Surface.Operational
 ρ-preserves-values IV-Unit = IV-Unit
 ρ-preserves-values (IV-ADT is-value) = IV-ADT (ρ-preserves-values is-value)
 
+σ-preserves-values : {σ : Fin (suc ℓ) → STerm ℓ}
+                   → IsValue ϖ
+                   → IsValue (S.act-ε σ ϖ)
+σ-preserves-values IV-Abs = IV-Abs
+σ-preserves-values IV-Unit = IV-Unit
+σ-preserves-values (IV-ADT is-value) = IV-ADT (σ-preserves-values is-value)
+
 ρ-↦ₘ-comm : {ρ : Fin ℓ → Fin ℓ'}
           → Monotonic ρ
           → ∀ ι ε
