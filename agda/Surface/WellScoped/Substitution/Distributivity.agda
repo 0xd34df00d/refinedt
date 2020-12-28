@@ -287,9 +287,22 @@ ext-commuting record { ρ-mono = ρ-mono ; ρ-id = ρ-id } = record { ρ-mono = 
                                      | S.act-τ-extensionality (ρ-replace-comm ρ ι ε ρ-comm) τ
                                      = refl
 
+ρ-subst-distr-ε : ρ-SubstDistributivity R.act-ε [_↦ε_]_
+ρ-subst-distr-ε ρ ι ρ-comm ε ε' rewrite ρ-σ-distr-ε ρ (replace-at ι ε) ε'
+                                      | σ-ρ-distr-ε (replace-at (R.ext ρ ι) (R.act-ε ρ ε)) (R.ext ρ) ε'
+                                      | S.act-ε-extensionality (ρ-replace-comm ρ ι ε ρ-comm) ε'
+                                      = refl
+
 ρ-subst-distr-τ-0 : (ρ : Fin ℓ → Fin ℓ')
                   → Monotonic ρ
                   → (ε : STerm ℓ)
                   → (τ : SType (suc ℓ))
                   → R.act-τ ρ ([ zero ↦τ ε ] τ) ≡ [ zero ↦τ R.act-ε ρ ε ] (R.act-τ (R.ext ρ) τ)
 ρ-subst-distr-τ-0 ρ ρ-mono = ρ-subst-distr-τ ρ zero (record { ρ-mono = ρ-mono ; ρ-id = λ () })
+
+ρ-subst-distr-ε-0 : (ρ : Fin ℓ → Fin ℓ')
+                  → Monotonic ρ
+                  → (ε : STerm ℓ)
+                  → (ε' : STerm (suc ℓ))
+                  → R.act-ε ρ ([ zero ↦ε ε ] ε') ≡ [ zero ↦ε R.act-ε ρ ε ] (R.act-ε (R.ext ρ) ε')
+ρ-subst-distr-ε-0 ρ ρ-mono = ρ-subst-distr-ε ρ zero (record { ρ-mono = ρ-mono ; ρ-id = λ () })
