@@ -11,6 +11,7 @@ open import Surface.WellScoped
 open import Surface.WellScoped.Renaming as R
 open import Surface.WellScoped.Substitution as S
 open import Surface.WellScoped.Substitution.Distributivity as S
+open import Surface.WellScoped.Substitution.Stable
 open import Surface.Operational
 
 ρ-preserves-values : {ρ : Fin ℓ → Fin ℓ'}
@@ -39,7 +40,8 @@ open import Surface.Operational
 σ-replace-comm : (σ : Fin (suc ℓ) → STerm ℓ)
                → ∀ ε
                → ∀ x → S.act-ε σ (replace-at zero ε x) ≡ S.act-ε (replace-at zero (S.act-ε σ ε)) (S.ext σ x)
-σ-replace-comm σ ε x = {! !}
+σ-replace-comm σ ε zero = refl
+σ-replace-comm σ ε (suc x) rewrite replace-weakened-ε-zero (S.act-ε σ ε) (σ x) = refl
 
 σ-↦ₘ-comm : (σ : Fin (suc ℓ) → STerm ℓ)
           → ∀ ι ε
