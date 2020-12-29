@@ -42,3 +42,9 @@ replace-weakened-ε k ε ε₀ rewrite ρ-as-σ-ε (raise k) ε₀
                                 | σ-ρ-distr-ε (replace-at (ctx-idx k) ε) (raise (suc k)) ε₀
                                 | act-ε-extensionality (replace-too-far k ε) ε₀
                                 = refl
+
+replace-weakened-ε-zero : ∀ (ε ε₀ : STerm ℓ)
+                        → [ zero ↦ε ε ] (R.weaken-ε ε₀) ≡ ε₀
+replace-weakened-ε-zero ε ε₀ rewrite replace-weakened-ε zero ε ε₀
+                                   | R.act-ε-id (λ _ → refl) ε₀
+                                   = refl
