@@ -49,6 +49,14 @@ infixr 6 [_↦τ_]_ [_↦ρ_]_ [_↦ε_]_ [_↦c_]_ [_↦bs_]_
 [_↦bs_]_ idx ε = act-branches (replace-at idx ε)
 
 
+branch-lookup-comm : (σ : Fin (suc ℓ) → STerm ℓ)
+                   → (ι : Fin n)
+                   → (bs : CaseBranches (Mkℕₐ n) (suc ℓ))
+                   → act-ε (ext σ) (CaseBranch.body (lookup bs ι)) ≡ CaseBranch.body (lookup (act-branches σ bs) ι)
+branch-lookup-comm σ zero (_ ∷ _) = refl
+branch-lookup-comm σ (suc ι) (_ ∷ bs) = branch-lookup-comm σ ι bs
+
+
 ≡-ext : {f₁ f₂ : Fin ℓ → STerm ℓ'}
       → (∀ x → f₁ x ≡ f₂ x)
       → (∀ x → ext f₁ x ≡ ext f₂ x)
