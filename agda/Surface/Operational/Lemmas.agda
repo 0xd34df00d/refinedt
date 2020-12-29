@@ -4,13 +4,13 @@ module Surface.Operational.Lemmas where
 
 open import Data.Fin using (zero; suc)
 open import Data.Vec using (lookup; _∷_)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 
 open import Data.Fin.Extra
 open import Surface.WellScoped
 open import Surface.WellScoped.Renaming as R
 open import Surface.WellScoped.Substitution as S
-open import Surface.WellScoped.Substitution.Distributivity
+open import Surface.WellScoped.Substitution.Distributivity as S
 open import Surface.Operational
 
 ρ-preserves-values : {ρ : Fin ℓ → Fin ℓ'}
@@ -35,6 +35,22 @@ open import Surface.Operational
 ρ-↦ₘ-comm {ρ = ρ} ρ-mono ι ε bs rewrite ρ-subst-distr-ε-0 _ ρ-mono ε (CaseBranch.body (lookup bs ι))
                                       | R.branch-lookup-comm ρ ι bs
                                       = refl
+
+σ-replace-comm : (σ : Fin (suc ℓ) → STerm ℓ)
+               → ∀ ε
+               → ∀ x → S.act-ε σ (replace-at zero ε x) ≡ S.act-ε (replace-at zero (S.act-ε σ ε)) (S.ext σ x)
+σ-replace-comm σ ε x = {! !}
+
+σ-↦ₘ-comm : (σ : Fin (suc ℓ) → STerm ℓ)
+          → ∀ ι ε
+          → (bs : CaseBranches (Mkℕₐ n) (suc ℓ))
+          → S.act-ε σ ([ ι ↦ₘ ε ] bs) ≡ [ ι ↦ₘ S.act-ε σ ε ] S.act-branches σ bs
+σ-↦ₘ-comm σ ι ε bs rewrite sym (S.branch-lookup-comm σ ι bs)
+                         | S.act-ε-distr (replace-at zero ε) σ (CaseBranch.body (lookup bs ι))
+                         | S.act-ε-distr (S.ext σ) (replace-at zero (S.act-ε σ ε)) (CaseBranch.body (lookup bs ι))
+                         | S.act-ε-extensionality (σ-replace-comm σ ε) (CaseBranch.body (lookup bs ι))
+                         = refl
+
 
 ρ-preserves-↝ : {ρ : Fin ℓ → Fin ℓ'}
               → Monotonic ρ
