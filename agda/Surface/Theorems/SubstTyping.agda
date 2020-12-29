@@ -152,7 +152,7 @@ mutual
                    | R.act-ε-distr (raise k) suc ε
                    = sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) (∈-suc (weaken-τ-suc-k _ _) σ-∈) bodyδ
   sub-Γ⊢ε⦂τ {ℓ = ℓ} {ε = ε} {k = k} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (T-App {ε₁ = ε₁} {τ₁} {τ₂} {ε₂} ε₁δ ε₂δ)
-    rewrite subst-commutes (ctx-idx k) (R.weaken-ε-k _ ε) ε₂ τ₂
+    rewrite subst-commutes-τ (ctx-idx k) (R.weaken-ε-k _ ε) ε₂ τ₂
           = T-App ε₁δ' (sub-Γ⊢ε⦂τ εδ prefix σ-∈ ε₂δ)
     where
       ε₁δ' : [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ctx-idx k ↦ε R.weaken-ε-k k ε ] ε₁ ⦂ ([ ctx-idx k ↦τ R.weaken-ε-k k ε ] τ₁) ⇒
