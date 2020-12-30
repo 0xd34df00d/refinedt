@@ -16,9 +16,9 @@ open import Surface.Operational.Lemmas
 
 infix 5 _≡rβ_
 data _≡rβ_ : SType ℓ → SType ℓ → Set where
-  ≡rβ-Subst   : ∀ ε ε' (τ : SType (suc ℓ))
-              → (ε↝ε' : ε ↝ ε')
-              → [ zero ↦τ ε' ] τ ≡rβ [ zero ↦τ ε ] τ
+  ≡rβ-Subst : ∀ ε ε' (τ : SType (suc ℓ))
+            → (ε↝ε' : ε ↝ ε')
+            → [ zero ↦τ ε' ] τ ≡rβ [ zero ↦τ ε ] τ
 
 ρ-preserves-≡rβ : ∀ {ρ : Fin ℓ → Fin ℓ'}
                 → Monotonic ρ
@@ -51,3 +51,19 @@ subst-preserves-↝ ι ε₀ (E-CaseMatch {ϖ = ϖ} {bs = bs} is-value idx)
   rewrite subst-commutes-τ ι ε₀ ε' τ
         | subst-commutes-τ ι ε₀ ε  τ
         = ≡rβ-Subst _ _ ([ suc ι ↦τ weaken-ε ε₀ ] τ) (subst-preserves-↝ ι ε₀ ε↝ε')
+
+infix 5 _≡rβ'_
+data _≡rβ'_ : SType ℓ → SType ℓ → Set where
+  ≡rβ'-Subst : ∀ ε ε' (τ : SType (suc ℓ))
+             → (ε↝ε' : ε ↝ ε')
+             → (τ₁-≡ : τ₁ ≡ [ zero ↦τ ε' ] τ)
+             → (τ₂-≡ : τ₂ ≡ [ zero ↦τ ε  ] τ)
+             → τ₁ ≡rβ' τ₂
+
+≡rβ-to-≡rβ' : τ₁ ≡rβ  τ₂
+            → τ₁ ≡rβ' τ₂
+≡rβ-to-≡rβ' (≡rβ-Subst ε ε' τ ε↝ε') = ≡rβ'-Subst ε ε' τ ε↝ε' refl refl
+
+≡rβ'-to-≡rβ : τ₁ ≡rβ' τ₂
+            → τ₁ ≡rβ  τ₂
+≡rβ'-to-≡rβ (≡rβ'-Subst ε ε' τ ε↝ε' refl refl) = ≡rβ-Subst ε ε' τ ε↝ε'
