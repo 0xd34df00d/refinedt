@@ -14,6 +14,8 @@ open import Surface.WellScoped.Substitution as S
 open import Surface.WellScoped.Substitution.Stable
 open import Surface.Derivations
 open import Surface.Operational
+open import Surface.Operational.BetaEquivalence
+open import Surface.Operational.Lemmas
 open import Surface.Theorems.SubstTyping
 open import Surface.Theorems.Subtyping
 
@@ -66,6 +68,7 @@ progress (T-Con _ εδ adtτ) with progress εδ
 ... | step ε↝ε' = step (E-ADT ε↝ε')
 ... | done is-value = done (IV-ADT is-value)
 progress (T-Sub εδ τδ τ<:τ') = progress εδ
+progress (T-RConv εδ τ↝τ') = progress εδ
 
 
 SLam-inv : Γ ⊢ SLam τ ε ⦂ τ₁ ⇒ τ₂
@@ -77,8 +80,9 @@ preservation : ε ↝ ε'
              → Γ ⊢ ε ⦂ τ
              → Γ ⊢ ε' ⦂ τ
 preservation ε↝ε' (T-Sub εδ Γ⊢τ' Γ⊢τ<:τ') = T-Sub (preservation ε↝ε' εδ) Γ⊢τ' Γ⊢τ<:τ'
+preservation ε↝ε' (T-RConv εδ τ↝τ') = T-RConv (preservation ε↝ε' εδ) τ↝τ'
 preservation (E-AppL ε↝ε') (T-App εδ₁ εδ₂) = T-App (preservation ε↝ε' εδ₁) εδ₂
-preservation (E-AppR x ε↝ε') (T-App εδ₁ εδ₂) = {! !}
+preservation (E-AppR x ε↝ε') (T-App εδ₁ εδ₂) = T-RConv (T-App εδ₁ (preservation ε↝ε' εδ₂)) (≡rβ-Subst _ _ _ ε↝ε')
 preservation (E-AppAbs ε₂-is-value) (T-App εδ₁ εδ₂) = sub-Γ⊢ε⦂τ-front εδ₂ (SLam-inv εδ₁)
 preservation (E-ADT ε↝ε') (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (preservation ε↝ε' εδ) adtτ
 preservation (E-CaseScrut ε↝ε') (T-Case resδ εδ branches) = T-Case resδ (preservation ε↝ε' εδ) branches
