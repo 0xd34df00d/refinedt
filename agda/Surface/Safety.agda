@@ -2,6 +2,7 @@
 
 module Surface.Safety where
 
+open import Data.Empty
 open import Data.Fin using (zero; suc)
 open import Data.Nat using (zero)
 open import Data.Vec.Base using (lookup)
@@ -31,6 +32,26 @@ canonical-<: : ⊘ ⊢ τ <: τ'
              → Canonical ε τ'
 canonical-<: (ST-Base oracle is-just) C-Unit rewrite Oracle.⇒-consistent oracle is-just = C-Unit
 canonical-<: (ST-Arr _ _) C-Lam = C-Lam
+
+canonical-↝ : ∀ τ'
+            → τ ≡rβ' τ'
+            → Canonical ε τ
+            → Canonical ε τ'
+canonical-↝ τ' ≡rβ C-Unit = {! !}
+canonical-↝ ⟨ b ∣ ρ ⟩ (≡rβ'-Subst ε ε' τ ε↝ε' τ₁-≡ τ₂-≡) C-Lam = ⊥-elim (contra τ τ₁-≡ τ₂-≡)
+  where
+    contra : ∀ τ
+           → (_ ⇒ _) ≡ [ zero ↦τ ε' ] τ
+           → ⟨ _ ∣ _ ⟩ ≡ [ zero ↦τ ε ] τ
+           → ⊥
+    contra ⟨ _ ∣ _ ⟩ ()
+    contra (_ ⇒ _) _ ()
+    contra (⊍ _) ()
+canonical-↝ (_ ⇒ _) ≡rβ C-Lam = C-Lam
+canonical-↝ (⊍ cons) (≡rβ'-Subst ε ε' τ ε↝ε' τ₁-≡ τ₂-≡) C-Lam = {! !}
+canonical-↝ ⟨ b ∣ ρ ⟩ ≡rβ (C-Con canonical) = {! !}
+canonical-↝ (_ ⇒ _) ≡rβ (C-Con canonical) = {! !}
+canonical-↝ (⊍ cons) ≡rβ (C-Con canonical) = {! !}
 
 canonical : ⊘ ⊢ ε ⦂ τ
           → IsValue ε
