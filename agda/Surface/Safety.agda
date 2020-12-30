@@ -97,6 +97,11 @@ SLam-inv : Γ ⊢ SLam τ ε ⦂ τ₁ ⇒ τ₂
 SLam-inv (T-Abs _ εδ) = εδ
 SLam-inv (T-Sub εδ (TWF-Arr τ₁-ok τ₂-ok₁) (ST-Arr <:₁ <:₂)) = T-Sub (Γ⊢ε⦂τ-narrowing ⊘ <:₁ τ₁-ok (SLam-inv εδ)) τ₂-ok₁ <:₂
 
+con-has-type : ∀ {cons cons' : ADTCons (Mkℕₐ (suc n)) ℓ} {idx}
+             → Γ ⊢ SCon idx ε cons ⦂ ⊍ cons'
+             → Γ ⊢ ε ⦂ lookup cons' idx
+con-has-type (T-Con refl conδ adtτ) = conδ
+
 preservation : ε ↝ ε'
              → Γ ⊢ ε ⦂ τ
              → Γ ⊢ ε' ⦂ τ
@@ -117,8 +122,3 @@ preservation (E-CaseMatch ε-is-value idx) (T-Case resδ εδ branches) =
                     → Γ , lookup cons idx ⊢ CaseBranch.body (lookup bs idx) ⦂ R.weaken-τ τ
     branch-has-type zero (OneMoreBranch εδ bht) = εδ
     branch-has-type (suc idx) (OneMoreBranch εδ bht) = branch-has-type idx bht
-
-    con-has-type : ∀ {cons cons' : ADTCons (Mkℕₐ (suc n)) ℓ} {idx}
-                 → Γ ⊢ SCon idx ε cons ⦂ ⊍ cons'
-                 → Γ ⊢ ε ⦂ lookup cons' idx
-    con-has-type (T-Con refl conδ adtτ) = conδ
