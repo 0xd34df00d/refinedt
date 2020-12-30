@@ -40,7 +40,9 @@ subst-preserves-↝ ι ε₀ (E-AppAbs {ϖ = ϖ} {ε = ε} is-value)
         = E-AppAbs (σ-preserves-values is-value)
 subst-preserves-↝ ι ε₀ (E-ADT ε↝ε') = E-ADT (subst-preserves-↝ ι ε₀ ε↝ε')
 subst-preserves-↝ ι ε₀ (E-CaseScrut ε↝ε') = E-CaseScrut (subst-preserves-↝ ι ε₀ ε↝ε')
-subst-preserves-↝ ι ε₀ (E-CaseMatch is-value idx) = {! !}
+subst-preserves-↝ ι ε₀ (E-CaseMatch {ϖ = ϖ} {bs = bs} is-value idx)
+  rewrite σ-↦ₘ-comm (replace-at ι ε₀) idx ϖ bs
+        = E-CaseMatch (σ-preserves-values is-value) idx
 
 ↦τ-preserves-≡rβ : ∀ ι ε₀
                  → τ₁ ≡rβ τ₂
