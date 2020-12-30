@@ -23,9 +23,9 @@ open import Surface.Theorems.Subtyping
 data Canonical : STerm ℓ → SType ℓ → Set where
   C-Unit : Canonical (SUnit {ℓ}) ⟨ BUnit ∣ Τ ⟩
   C-Lam  : Canonical (SLam τ ε) (τ₁ ⇒ τ₂)
-  C-Con  : ∀ {cons : ADTCons (Mkℕₐ (suc n)) zero}
+  C-Con  : ∀ {cons cons' : ADTCons (Mkℕₐ (suc n)) zero}
          → (scrut-canonical : Canonical ε τ)
-         → Canonical (SCon idx ε cons) (⊍ cons)
+         → Canonical (SCon idx ε cons) (⊍ cons')
 
 canonical-<: : ⊘ ⊢ τ <: τ'
              → Canonical ε τ
