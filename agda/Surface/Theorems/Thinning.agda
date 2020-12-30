@@ -15,6 +15,7 @@ open import Surface.WellScoped.Membership
 open import Surface.WellScoped.Renaming as R
 open import Surface.WellScoped.Substitution as S
 open import Surface.WellScoped.Substitution.Distributivity
+open import Surface.Operational.BetaEquivalence
 open import Surface.Derivations
 open import Surface.Derivations.WF
 open import Surface.Theorems.TCTX
@@ -132,6 +133,10 @@ private
           superδ' = twf-thinning-sized Γ⊂Γ' Γ'ok superδ rec₂
           <:δ' = st-thinning Γ⊂Γ' <:δ
        in T-Sub εδ' superδ' <:δ'
+  t-thinning-sized Γ⊂Γ' Γ'ok (T-RConv εδ ≡rβ) (acc rec)
+    = let rec' = rec (size-t εδ) (≤-reflexive refl)
+          εδ' = t-thinning-sized Γ⊂Γ' Γ'ok εδ rec'
+       in T-RConv εδ' (ρ-preserves-≡rβ (_⊂_.ρ-mono Γ⊂Γ') ≡rβ)
 
 abstract
   twf-thinning : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ : SType ℓ}

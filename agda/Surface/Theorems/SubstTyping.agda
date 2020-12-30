@@ -19,6 +19,7 @@ open import Surface.WellScoped.Substitution using ([_↦τ_]_; [_↦ε_]_; [_↦
 open import Surface.WellScoped.Substitution.Stable
 open import Surface.WellScoped.Substitution.Distributivity as S
 open import Surface.WellScoped.Substitution.Commutativity
+open import Surface.Operational.BetaEquivalence
 open import Surface.Derivations
 open import Surface.Theorems.Thinning
 
@@ -179,6 +180,9 @@ mutual
                                                     (sub-Γ⊢ε⦂τ εδ prefix σ-∈ ε₀δ)
                                                     (sub-Γ⊢τ εδ prefix σ-∈ superδ)
                                                     (sub-Γ⊢τ<:τ' εδ prefix σ-∈ <:δ)
+  sub-Γ⊢ε⦂τ {ε = ε} {k = k} εδ prefix σ-∈ (T-RConv εδ' τ~τ')
+    = let sub-τ~τ' = ↦τ-preserves-≡rβ (ctx-idx k) (R.act-ε (raise k) ε) τ~τ'
+       in T-RConv (sub-Γ⊢ε⦂τ εδ prefix σ-∈ εδ') sub-τ~τ'
 
   sub-Γ⊢τ<:τ' : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {τ τ' : SType (suc k + ℓ)}
               → Γ ⊢ ε ⦂ σ

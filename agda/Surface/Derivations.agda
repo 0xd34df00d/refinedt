@@ -14,6 +14,7 @@ open import Surface.WellScoped.CtxPrefix
 open import Surface.WellScoped.CtxSuffix
 open import Surface.WellScoped.Substitution using ([_↦τ_]_; [_↦Γ_]_)
 open import Surface.WellScoped.Membership
+open import Surface.Operational.BetaEquivalence
 import Surface.WellScoped.Renaming as R
 import Surface.WellScoped.Substitution as S
 
@@ -85,6 +86,9 @@ data _⊢_⦂_ where
   T-Sub       : (εδ : Γ ⊢ ε ⦂ τ)
               → (τ'δ : Γ ⊢ τ')
               → (<: : Γ ⊢ τ <: τ')
+              → Γ ⊢ ε ⦂ τ'
+  T-RConv     : (εδ : Γ ⊢ ε ⦂ τ)
+              → (τ~τ' : τ ≡rβ τ')
               → Γ ⊢ ε ⦂ τ'
 
 record Oracle where
