@@ -3,6 +3,7 @@
 module Surface.Operational.BetaEquivalence where
 
 open import Data.Fin using (zero; suc)
+open import Data.Vec.Base using (lookup; [_]; _∷_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Data.Fin.Extra
@@ -11,6 +12,7 @@ open import Surface.WellScoped.Renaming as R
 open import Surface.WellScoped.Substitution as S
 open import Surface.WellScoped.Substitution.Commutativity
 open import Surface.WellScoped.Substitution.Distributivity
+open import Surface.WellScoped.SyntaxInjectivity
 open import Surface.Operational
 open import Surface.Operational.Lemmas
 
@@ -52,6 +54,7 @@ subst-preserves-↝ ι ε₀ (E-CaseMatch {ϖ = ϖ} {bs = bs} is-value idx)
         | subst-commutes-τ ι ε₀ ε  τ
         = ≡rβ-Subst _ _ ([ suc ι ↦τ weaken-ε ε₀ ] τ) (subst-preserves-↝ ι ε₀ ε↝ε')
 
+-- The version of the restricted β-equivalence without the green slime, more useful in proofs
 infix 5 _≡rβ'_
 data _≡rβ'_ : SType ℓ → SType ℓ → Set where
   ≡rβ'-Subst : ∀ ε ε' (τ : SType (suc ℓ))
@@ -67,3 +70,33 @@ data _≡rβ'_ : SType ℓ → SType ℓ → Set where
 ≡rβ'-to-≡rβ : τ₁ ≡rβ' τ₂
             → τ₁ ≡rβ  τ₂
 ≡rβ'-to-≡rβ (≡rβ'-Subst ε ε' τ ε↝ε' refl refl) = ≡rβ-Subst ε ε' τ ε↝ε'
+
+≡rβ'-cons-same-length : ∀ {n₁ n₂}
+                      → {cons₁ : ADTCons (Mkℕₐ (suc n₁)) ℓ}
+                      → {cons₂ : ADTCons (Mkℕₐ (suc n₂)) ℓ}
+                      → (⊍ cons₁) ≡rβ' (⊍ cons₂)
+                      → n₁ ≡ n₂
+≡rβ'-cons-same-length (≡rβ'-Subst _ _ (⊍ cons) _ refl refl) = refl
+
+≡rβ-cons-same-length : ∀ {n₁ n₂}
+                     → {cons₁ : ADTCons (Mkℕₐ (suc n₁)) ℓ}
+                     → {cons₂ : ADTCons (Mkℕₐ (suc n₂)) ℓ}
+                     → (⊍ cons₁) ≡rβ (⊍ cons₂)
+                     → n₁ ≡ n₂
+≡rβ-cons-same-length ≡rβ = ≡rβ'-cons-same-length (≡rβ-to-≡rβ' ≡rβ)
+
+≡rβ'-lookup : (idx : Fin (suc n))
+            → (cons₁ : ADTCons (Mkℕₐ (suc n)) ℓ)
+            → (cons₂ : ADTCons (Mkℕₐ (suc n)) ℓ)
+            → (⊍ cons₁) ≡rβ' (⊍ cons₂)
+            → lookup cons₁ idx ≡rβ' lookup cons₂ idx
+≡rβ'-lookup             zero      (x₁ ∷ _)    (x₂ ∷ _)    (≡rβ'-Subst ε ε' (⊍ (x ∷ _)) ε↝ε' refl refl) = ≡rβ'-Subst ε ε' x ε↝ε' refl refl
+≡rβ'-lookup {n = suc n} (suc idx) (_ ∷ cons₁) (_ ∷ cons₂) (≡rβ'-Subst ε ε' (⊍ (_ ∷ cons)) ε↝ε' refl refl)
+  = ≡rβ'-lookup idx cons₁ cons₂ (≡rβ'-Subst ε ε' (⊍ cons) ε↝ε' refl refl)
+
+≡rβ-lookup : {cons₁ : ADTCons (Mkℕₐ (suc n)) ℓ}
+           → {cons₂ : ADTCons (Mkℕₐ (suc n)) ℓ}
+           → (idx : Fin (suc n))
+           → (⊍ cons₁) ≡rβ (⊍ cons₂)
+           → lookup cons₁ idx ≡rβ lookup cons₂ idx
+≡rβ-lookup idx ≡rβ = ≡rβ'-to-≡rβ (≡rβ'-lookup idx _ _ (≡rβ-to-≡rβ' ≡rβ))
