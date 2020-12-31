@@ -38,7 +38,10 @@ canonical-↝ : ∀ τ'
             → Canonical ε τ
             → Canonical ε τ'
 canonical-↝ τ' ≡rβ C-Unit = {! !}
-canonical-↝ ⟨ b ∣ ρ ⟩ (≡rβ'-Subst ε ε' τ ε↝ε' τ₁-≡ τ₂-≡) C-Lam = ⊥-elim (contra τ τ₁-≡ τ₂-≡)
+canonical-↝ (_ ⇒ _) ≡rβ C-Lam = C-Lam
+canonical-↝ (⊍ cons) ≡rβ (C-Con canonical) with ≡rβ'-cons-same-length ≡rβ
+... | refl = C-Con canonical
+canonical-↝ ⟨ _ ∣ _ ⟩ (≡rβ'-Subst ε ε' τ _ τ₁-≡ τ₂-≡) C-Lam = ⊥-elim (contra τ τ₁-≡ τ₂-≡)
   where
     contra : ∀ τ
            → (_ ⇒ _) ≡ [ zero ↦τ ε' ] τ
@@ -47,11 +50,33 @@ canonical-↝ ⟨ b ∣ ρ ⟩ (≡rβ'-Subst ε ε' τ ε↝ε' τ₁-≡ τ₂
     contra ⟨ _ ∣ _ ⟩ ()
     contra (_ ⇒ _) _ ()
     contra (⊍ _) ()
-canonical-↝ (_ ⇒ _) ≡rβ C-Lam = C-Lam
-canonical-↝ (⊍ cons) (≡rβ'-Subst ε ε' τ ε↝ε' τ₁-≡ τ₂-≡) C-Lam = {! !}
-canonical-↝ ⟨ b ∣ ρ ⟩ ≡rβ (C-Con canonical) = {! !}
-canonical-↝ (_ ⇒ _) ≡rβ (C-Con canonical) = {! !}
-canonical-↝ (⊍ cons) ≡rβ (C-Con canonical) = {! !}
+canonical-↝ (⊍ _) (≡rβ'-Subst ε ε' τ _ τ₁-≡ τ₂-≡) C-Lam = ⊥-elim (contra τ τ₁-≡ τ₂-≡)
+  where
+    contra : ∀ τ
+           → (_ ⇒ _) ≡ [ zero ↦τ ε' ] τ
+           → (⊍ _) ≡ [ zero ↦τ ε ] τ
+           → ⊥
+    contra ⟨ _ ∣ _ ⟩ ()
+    contra (_ ⇒ _) _ ()
+    contra (⊍ _) ()
+canonical-↝ ⟨ _ ∣ _ ⟩ (≡rβ'-Subst ε ε' τ _ τ₁-≡ τ₂-≡) (C-Con canonical) = ⊥-elim (contra τ τ₁-≡ τ₂-≡)
+  where
+    contra : ∀ τ
+           → (⊍ _) ≡ [ zero ↦τ ε' ] τ
+           → ⟨ _ ∣ _ ⟩ ≡ [ zero ↦τ ε ] τ
+           → ⊥
+    contra ⟨ _ ∣ _ ⟩ ()
+    contra (_ ⇒ _) ()
+    contra (⊍ _) _ ()
+canonical-↝ (_ ⇒ _) (≡rβ'-Subst ε ε' τ _ τ₁-≡ τ₂-≡) (C-Con canonical) = ⊥-elim (contra τ τ₁-≡ τ₂-≡)
+  where
+    contra : ∀ τ
+           → (⊍ _) ≡ [ zero ↦τ ε' ] τ
+           → (_ ⇒ _) ≡ [ zero ↦τ ε ] τ
+           → ⊥
+    contra ⟨ _ ∣ _ ⟩ ()
+    contra (_ ⇒ _) ()
+    contra (⊍ _) _ ()
 
 canonical : ⊘ ⊢ ε ⦂ τ
           → IsValue ε
@@ -63,6 +88,7 @@ canonical (T-Unit Γok) IV-Unit = C-Unit
 canonical (T-Abs arrδ εδ) IV-Abs = C-Lam
 canonical (T-Con _ εδ adtτ) (IV-ADT is-value) = C-Con (canonical εδ is-value)
 canonical (T-Sub εδ Γ⊢τ' <:) is-value = canonical-<: <: (canonical εδ is-value)
+canonical (T-RConv εδ τ↝τ') is-value = canonical-↝ _ (≡rβ-to-≡rβ' τ↝τ') (canonical εδ is-value)
 
 data Progress (ε : STerm ℓ) : Set where
   step : (ε↝ε' : ε ↝ ε')
