@@ -13,6 +13,7 @@ open import Surface.WellScoped.CtxSuffix
 open import Surface.WellScoped.Renaming as R
 open import Surface.WellScoped.Substitution as S
 open import Surface.WellScoped.Substitution.Stable
+open import Surface.WellScoped.Shape
 open import Surface.Derivations
 open import Surface.Operational
 open import Surface.Operational.BetaEquivalence
@@ -41,42 +42,10 @@ canonical-↝ τ' ≡rβ C-Unit = {! !}
 canonical-↝ (_ ⇒ _) ≡rβ C-Lam = C-Lam
 canonical-↝ (⊍ cons) ≡rβ (C-Con canonical) with ≡rβ'-cons-same-length ≡rβ
 ... | refl = C-Con canonical
-canonical-↝ ⟨ _ ∣ _ ⟩ (≡rβ'-Subst ε ε' τ _ τ₁-≡ τ₂-≡) C-Lam = ⊥-elim (contra τ τ₁-≡ τ₂-≡)
-  where
-    contra : ∀ τ
-           → (_ ⇒ _) ≡ [ zero ↦τ ε' ] τ
-           → ⟨ _ ∣ _ ⟩ ≡ [ zero ↦τ ε ] τ
-           → ⊥
-    contra ⟨ _ ∣ _ ⟩ ()
-    contra (_ ⇒ _) _ ()
-    contra (⊍ _) ()
-canonical-↝ (⊍ _) (≡rβ'-Subst ε ε' τ _ τ₁-≡ τ₂-≡) C-Lam = ⊥-elim (contra τ τ₁-≡ τ₂-≡)
-  where
-    contra : ∀ τ
-           → (_ ⇒ _) ≡ [ zero ↦τ ε' ] τ
-           → (⊍ _) ≡ [ zero ↦τ ε ] τ
-           → ⊥
-    contra ⟨ _ ∣ _ ⟩ ()
-    contra (_ ⇒ _) _ ()
-    contra (⊍ _) ()
-canonical-↝ ⟨ _ ∣ _ ⟩ (≡rβ'-Subst ε ε' τ _ τ₁-≡ τ₂-≡) (C-Con canonical) = ⊥-elim (contra τ τ₁-≡ τ₂-≡)
-  where
-    contra : ∀ τ
-           → (⊍ _) ≡ [ zero ↦τ ε' ] τ
-           → ⟨ _ ∣ _ ⟩ ≡ [ zero ↦τ ε ] τ
-           → ⊥
-    contra ⟨ _ ∣ _ ⟩ ()
-    contra (_ ⇒ _) ()
-    contra (⊍ _) _ ()
-canonical-↝ (_ ⇒ _) (≡rβ'-Subst ε ε' τ _ τ₁-≡ τ₂-≡) (C-Con canonical) = ⊥-elim (contra τ τ₁-≡ τ₂-≡)
-  where
-    contra : ∀ τ
-           → (⊍ _) ≡ [ zero ↦τ ε' ] τ
-           → (_ ⇒ _) ≡ [ zero ↦τ ε ] τ
-           → ⊥
-    contra ⟨ _ ∣ _ ⟩ ()
-    contra (_ ⇒ _) ()
-    contra (⊍ _) _ ()
+canonical-↝ ⟨ _ ∣ _ ⟩ ≡rβ-prf C-Lam = shape-⊥-elim ≡rβ'-preserves-shape ≡rβ-prf λ ()
+canonical-↝ (⊍ _)     ≡rβ-prf C-Lam = shape-⊥-elim ≡rβ'-preserves-shape ≡rβ-prf λ ()
+canonical-↝ ⟨ _ ∣ _ ⟩ ≡rβ-prf (C-Con _) = shape-⊥-elim ≡rβ'-preserves-shape ≡rβ-prf λ ()
+canonical-↝ (_ ⇒ _)   ≡rβ-prf (C-Con _) = shape-⊥-elim ≡rβ'-preserves-shape ≡rβ-prf λ ()
 
 canonical : ⊘ ⊢ ε ⦂ τ
           → IsValue ε
