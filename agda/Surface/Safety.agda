@@ -42,8 +42,8 @@ canonical-↝ τ' ≡rβ C-Unit = {! !}
 canonical-↝ (_ ⇒ _) ≡rβ C-Lam = C-Lam
 canonical-↝ (⊍ cons) ≡rβ (C-Con canonical) with ≡rβ'-cons-same-length ≡rβ
 ... | refl = C-Con canonical
-canonical-↝ ⟨ _ ∣ _ ⟩ ≡rβ-prf C-Lam = shape-⊥-elim ≡rβ'-preserves-shape ≡rβ-prf λ ()
-canonical-↝ (⊍ _)     ≡rβ-prf C-Lam = shape-⊥-elim ≡rβ'-preserves-shape ≡rβ-prf λ ()
+canonical-↝ ⟨ _ ∣ _ ⟩ ≡rβ-prf C-Lam     = shape-⊥-elim ≡rβ'-preserves-shape ≡rβ-prf λ ()
+canonical-↝ (⊍ _)     ≡rβ-prf C-Lam     = shape-⊥-elim ≡rβ'-preserves-shape ≡rβ-prf λ ()
 canonical-↝ ⟨ _ ∣ _ ⟩ ≡rβ-prf (C-Con _) = shape-⊥-elim ≡rβ'-preserves-shape ≡rβ-prf λ ()
 canonical-↝ (_ ⇒ _)   ≡rβ-prf (C-Con _) = shape-⊥-elim ≡rβ'-preserves-shape ≡rβ-prf λ ()
 
@@ -91,6 +91,9 @@ SLam-inv : Γ ⊢ SLam τ ε ⦂ τ₁ ⇒ τ₂
          → Γ , τ₁ ⊢ ε ⦂ τ₂
 SLam-inv (T-Abs _ εδ) = εδ
 SLam-inv (T-Sub εδ (TWF-Arr τ₁-ok τ₂-ok₁) (ST-Arr <:₁ <:₂)) = T-Sub (Γ⊢ε⦂τ-narrowing ⊘ <:₁ τ₁-ok (SLam-inv εδ)) τ₂-ok₁ <:₂
+SLam-inv (T-RConv {τ = τ₁' ⇒ τ₂'} εδ τ↝τ') = let rec = SLam-inv εδ in {! !}
+SLam-inv (T-RConv {τ = ⟨ _ ∣ _ ⟩} εδ τ↝τ') = shape-⊥-elim ≡rβ-preserves-shape τ↝τ' λ ()
+SLam-inv (T-RConv {τ = ⊍ _} εδ τ↝τ') = shape-⊥-elim ≡rβ-preserves-shape τ↝τ' λ ()
 
 con-has-type : ∀ {cons cons' : ADTCons (Mkℕₐ (suc n)) ℓ} {idx}
              → Γ ⊢ SCon idx ε cons ⦂ ⊍ cons'
