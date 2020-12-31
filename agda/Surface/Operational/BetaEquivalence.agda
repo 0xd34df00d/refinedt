@@ -12,7 +12,7 @@ open import Surface.WellScoped.Renaming as R
 open import Surface.WellScoped.Substitution as S
 open import Surface.WellScoped.Substitution.Commutativity
 open import Surface.WellScoped.Substitution.Distributivity
-open import Surface.WellScoped.SyntaxInjectivity
+open import Surface.WellScoped.Shape
 open import Surface.Operational
 open import Surface.Operational.Lemmas
 
@@ -70,6 +70,28 @@ data _≡rβ'_ : SType ℓ → SType ℓ → Set where
 ≡rβ'-to-≡rβ : τ₁ ≡rβ' τ₂
             → τ₁ ≡rβ  τ₂
 ≡rβ'-to-≡rβ (≡rβ'-Subst ε ε' τ ε↝ε' refl refl) = ≡rβ-Subst ε ε' τ ε↝ε'
+
+
+≡rβ'-preserves-shape : ShapePreserving {ℓ} _≡rβ'_
+≡rβ'-preserves-shape {τ₁ = ⟨ _ ∣ _ ⟩} {τ₂ = ⟨ _ ∣ _ ⟩} _ = refl
+≡rβ'-preserves-shape {τ₁ = _ ⇒ _} {τ₂ = _ ⇒ _} _ = refl
+≡rβ'-preserves-shape {τ₁ = ⊍ _} {τ₂ = ⊍ _} _ = refl
+≡rβ'-preserves-shape {τ₁ = ⟨ _ ∣ _ ⟩} {τ₂ = τ₂ ⇒ τ₃} (≡rβ'-Subst ε ε' τ ε↝ε' τ₁-≡ τ₂-≡)
+  = shape-contra₂ (↦τ-preserves-shape zero ε') (↦τ-preserves-shape zero ε) τ₁-≡ τ₂-≡ λ ()
+≡rβ'-preserves-shape {τ₁ = ⟨ _ ∣ _ ⟩} {τ₂ = ⊍ _} (≡rβ'-Subst ε ε' τ ε↝ε' τ₁-≡ τ₂-≡)
+  = shape-contra₂ (↦τ-preserves-shape zero ε') (↦τ-preserves-shape zero ε) τ₁-≡ τ₂-≡ λ ()
+≡rβ'-preserves-shape {τ₁ = _ ⇒ _} {τ₂ = ⟨ _ ∣ _ ⟩} (≡rβ'-Subst ε ε' τ ε↝ε' τ₁-≡ τ₂-≡)
+  = shape-contra₂ (↦τ-preserves-shape zero ε') (↦τ-preserves-shape zero ε) τ₁-≡ τ₂-≡ λ ()
+≡rβ'-preserves-shape {τ₁ = _ ⇒ _} {τ₂ = ⊍ _} (≡rβ'-Subst ε ε' τ ε↝ε' τ₁-≡ τ₂-≡)
+  = shape-contra₂ (↦τ-preserves-shape zero ε') (↦τ-preserves-shape zero ε) τ₁-≡ τ₂-≡ λ ()
+≡rβ'-preserves-shape {τ₁ = ⊍ _} {τ₂ = ⟨ _ ∣ _ ⟩} (≡rβ'-Subst ε ε' τ ε↝ε' τ₁-≡ τ₂-≡)
+  = shape-contra₂ (↦τ-preserves-shape zero ε') (↦τ-preserves-shape zero ε) τ₁-≡ τ₂-≡ λ ()
+≡rβ'-preserves-shape {τ₁ = ⊍ _} {τ₂ = _ ⇒ _} (≡rβ'-Subst ε ε' τ ε↝ε' τ₁-≡ τ₂-≡)
+  = shape-contra₂ (↦τ-preserves-shape zero ε') (↦τ-preserves-shape zero ε) τ₁-≡ τ₂-≡ λ ()
+
+≡rβ-preserves-shape : ShapePreserving {ℓ} _≡rβ_
+≡rβ-preserves-shape ≡rβ = ≡rβ'-preserves-shape (≡rβ-to-≡rβ' ≡rβ)
+
 
 ≡rβ'-cons-same-length : ∀ {n₁ n₂}
                       → {cons₁ : ADTCons (Mkℕₐ (suc n₁)) ℓ}
