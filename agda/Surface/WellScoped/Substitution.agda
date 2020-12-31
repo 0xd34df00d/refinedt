@@ -10,6 +10,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Data.Fin.Extra
 open import Surface.WellScoped
+open import Surface.WellScoped.Shape
 import Surface.WellScoped.Renaming as R
 open import Surface.WellScoped.Actions (record { Target = STerm
                                                ; var-action = λ σ idx → σ idx
@@ -48,6 +49,11 @@ infixr 6 [_↦τ_]_ [_↦ρ_]_ [_↦ε_]_ [_↦c_]_ [_↦bs_]_
 [_↦bs_]_ : SubstOn (CaseBranches nₐ)
 [_↦bs_]_ idx ε = act-branches (replace-at idx ε)
 
+↦τ-preserves-shape : ∀ ι (ε : STerm ℓ)
+                   → ShapePreserving (λ τ' τ → τ' ≡ [ ι ↦τ ε ] τ)
+↦τ-preserves-shape _ _ {τ₂ = ⟨ _ ∣ _ ⟩} refl = refl
+↦τ-preserves-shape _ _ {τ₂ = _ ⇒ _} refl = refl
+↦τ-preserves-shape _ _ {τ₂ = ⊍ _} refl = refl
 
 branch-lookup-comm : (σ : Fin (suc ℓ) → STerm ℓ)
                    → (ι : Fin n)
