@@ -4,6 +4,7 @@ module Surface.Operational.BetaEquivalence where
 
 open import Data.Fin using (zero; suc)
 open import Data.Vec.Base using (lookup; [_]; _∷_)
+open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Data.Fin.Extra
@@ -71,6 +72,10 @@ data _≡rβ'_ : SType ℓ → SType ℓ → Set where
             → τ₁ ≡rβ  τ₂
 ≡rβ'-to-≡rβ (≡rβ'-Subst ε ε' τ ε↝ε' refl refl) = ≡rβ-Subst ε ε' τ ε↝ε'
 
+≡rβ-⇔-≡rβ' : (τ₁ ≡rβ' τ₂ → τ₁' ≡rβ'  τ₂')
+           → (τ₁ ≡rβ  τ₂ → τ₁' ≡rβ   τ₂')
+≡rβ-⇔-≡rβ' f = ≡rβ'-to-≡rβ ∘ f ∘ ≡rβ-to-≡rβ'
+
 
 ≡rβ'-preserves-shape : ShapePreserving {ℓ} _≡rβ'_
 ≡rβ'-preserves-shape {τ₁ = ⟨ _ ∣ _ ⟩} {τ₂ = ⟨ _ ∣ _ ⟩} _ = refl
@@ -121,4 +126,4 @@ data _≡rβ'_ : SType ℓ → SType ℓ → Set where
            → (idx : Fin (suc n))
            → (⊍ cons₁) ≡rβ (⊍ cons₂)
            → lookup cons₁ idx ≡rβ lookup cons₂ idx
-≡rβ-lookup idx ≡rβ = ≡rβ'-to-≡rβ (≡rβ'-lookup idx _ _ (≡rβ-to-≡rβ' ≡rβ))
+≡rβ-lookup idx = ≡rβ-⇔-≡rβ' (≡rβ'-lookup idx _ _)
