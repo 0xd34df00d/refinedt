@@ -96,6 +96,10 @@ con-has-type : ∀ {cons cons' : ADTCons (Mkℕₐ (suc n)) ℓ} {idx}
              → Γ ⊢ SCon idx ε cons ⦂ ⊍ cons'
              → Γ ⊢ ε ⦂ lookup cons' idx
 con-has-type (T-Con refl conδ adtτ) = conδ
+con-has-type (T-RConv {τ = ⟨ _ ∣ _ ⟩} εδ τ↝τ') = shape-⊥-elim ≡rβ-preserves-shape τ↝τ' λ ()
+con-has-type (T-RConv {τ = _ ⇒ _} εδ τ↝τ') = shape-⊥-elim ≡rβ-preserves-shape τ↝τ' λ ()
+con-has-type (T-RConv {τ = ⊍ cons} εδ τ↝τ') with ≡rβ-cons-same-length τ↝τ'
+... | refl = T-RConv (con-has-type εδ) (≡rβ-lookup _ τ↝τ')
 
 preservation : ε ↝ ε'
              → Γ ⊢ ε ⦂ τ
