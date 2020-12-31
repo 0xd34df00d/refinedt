@@ -30,3 +30,14 @@ shape-⊥-elim : {A : Set}
              → ¬ (shape-of τ₁ ≡ shape-of τ₂)
              → A
 shape-⊥-elim pres rel neq = ⊥-elim (neq (pres rel))
+
+shape-contra₂ : {A : Set}
+              → {_rel₁_ : SType ℓ₁ → SType ℓ₂ → Set}
+              → {_rel₂_ : SType ℓ₁ → SType ℓ₂ → Set}
+              → ShapePreserving _rel₁_
+              → ShapePreserving _rel₂_
+              → τ₁ rel₁ τ₀
+              → τ₂ rel₂ τ₀
+              → ¬ (shape-of τ₁ ≡ shape-of τ₂)
+              → A
+shape-contra₂ pres₁ pres₂ rel₁ rel₂ ¬shape rewrite pres₁ rel₁ | pres₂ rel₂ = ⊥-elim (¬shape refl)
