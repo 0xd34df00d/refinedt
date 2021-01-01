@@ -127,7 +127,7 @@ Moreover, we do not consider the peculiarities of a specific algorithm performin
 introducing instead the abstraction of a \emph{subtyping oracle}.
 This allows plugging in not just SMT solvers but arbitrary decision procedures as long as they have certain properties we describe later.
 
-This translation to a core dependently typed language provides several nice metatheoretical properties:
+This translation to a core dependently typed language provides several nice metatheoretical properties, most importantly:
 \begin{itemize}
   \item Dependent types are a well-studied and well-understood subject,
     so taking them as the translation target automatically provides us with the existing array of metatheorems.
@@ -160,7 +160,7 @@ and no prior papers strived to mechanically verify the metatheoretical propertie
 
 \section{Motivation}
 
-Having refinement types and dependent types in a single language is useful in multiple ways.
+Having refinement types and dependent types in a single language is useful for many reasons.
 
 Firstly, refinement types indeed lower the cognitive load and the amount of (both keyboard and mathematical) typing the programmer has to do.
 As an example, consider a function taking two non-negative numbers $x, y$ and returning $x + y + x$ along with a proof that each summand is less than or equal to the sum.
