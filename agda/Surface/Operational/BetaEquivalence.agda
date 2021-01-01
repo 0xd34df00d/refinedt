@@ -127,3 +127,11 @@ prove-via-≡rβ' f = ≡rβ'-to-≡rβ ∘ f ∘ ≡rβ-to-≡rβ'
            → (⊍ cons₁) ≡rβ (⊍ cons₂)
            → lookup cons₁ idx ≡rβ lookup cons₂ idx
 ≡rβ-lookup idx = prove-via-≡rβ' (≡rβ'-lookup idx _ _)
+
+≡rβ'-⇒-dom : (τ₁' ⇒ τ₂') ≡rβ' (τ₁ ⇒ τ₂)
+           → τ₁' ≡rβ' τ₁
+≡rβ'-⇒-dom (≡rβ'-Subst ε ε' (τ₀₁ ⇒ τ₀₂) ε↝ε' refl refl) = ≡rβ'-Subst ε ε' τ₀₁ ε↝ε' refl refl
+
+≡rβ-⇒-dom : (τ₁' ⇒ τ₂') ≡rβ (τ₁ ⇒ τ₂)
+          → τ₁' ≡rβ τ₁
+≡rβ-⇒-dom = prove-via-≡rβ' ≡rβ'-⇒-dom
