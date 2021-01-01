@@ -72,9 +72,9 @@ data _≡rβ'_ : SType ℓ → SType ℓ → Set where
             → τ₁ ≡rβ  τ₂
 ≡rβ'-to-≡rβ (≡rβ'-Subst ε ε' τ ε↝ε' refl refl) = ≡rβ-Subst ε ε' τ ε↝ε'
 
-≡rβ-⇔-≡rβ' : (τ₁ ≡rβ' τ₂ → τ₁' ≡rβ'  τ₂')
-           → (τ₁ ≡rβ  τ₂ → τ₁' ≡rβ   τ₂')
-≡rβ-⇔-≡rβ' f = ≡rβ'-to-≡rβ ∘ f ∘ ≡rβ-to-≡rβ'
+prove-via-≡rβ' : (τ₁ ≡rβ' τ₂ → τ₁' ≡rβ'  τ₂')
+               → (τ₁ ≡rβ  τ₂ → τ₁' ≡rβ   τ₂')
+prove-via-≡rβ' f = ≡rβ'-to-≡rβ ∘ f ∘ ≡rβ-to-≡rβ'
 
 
 ≡rβ'-preserves-shape : ShapePreserving {ℓ} _≡rβ'_
@@ -126,4 +126,4 @@ data _≡rβ'_ : SType ℓ → SType ℓ → Set where
            → (idx : Fin (suc n))
            → (⊍ cons₁) ≡rβ (⊍ cons₂)
            → lookup cons₁ idx ≡rβ lookup cons₂ idx
-≡rβ-lookup idx = ≡rβ-⇔-≡rβ' (≡rβ'-lookup idx _ _)
+≡rβ-lookup idx = prove-via-≡rβ' (≡rβ'-lookup idx _ _)
