@@ -2,7 +2,7 @@
 
 module Surface.WellScoped.Substitution.Distributivity where
 
-open import Data.Fin using (Fin; suc; zero; raise; toℕ)
+open import Data.Fin using (Fin; suc; zero; raise; toℕ; fromℕ; inject₁)
 open import Data.Nat using (ℕ; suc; zero; _+_)
 open import Data.Vec
 open import Function using (_∘_)
@@ -229,6 +229,14 @@ ext-commuting : ∀ {ρ : Fin ℓ → Fin ℓ'} {ι}
 ext-commuting record { ρ-mono = ρ-mono ; ρ-id = ρ-id } = record { ρ-mono = R.ext-monotonic ρ-mono
                                                                 ; ρ-id = ext-identity ρ-id
                                                                 }
+
+ρ-ιth : (ρ : Fin ℓ → Fin ℓ')
+      → (ι : Fin (suc ℓ))
+      → (Fin (suc ℓ) → Fin (suc ℓ'))
+ρ-ιth ρ ι v with v <>? ι
+... | less v<ι = inject₁ (ρ (tighten v<ι))
+... | equal v≡ι = fromℕ _
+... | greater v>ι = suc (ρ (m<n-n-pred v>ι))
 
 ρ-SubstDistributivity : {Ty : ℕ → Set} → R.ActionOn Ty → SubstOn Ty → Set
 ρ-SubstDistributivity {Ty} ρ-act [_↦_]_ = ∀ {ℓ ℓ'}
