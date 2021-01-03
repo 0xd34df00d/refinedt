@@ -232,6 +232,14 @@ ext-commuting record { ρ-mono = ρ-mono ; ρ-id = ρ-id } = record { ρ-mono = 
                                                                 ; ρ-id = ext-identity ρ-id
                                                                 }
 
+monos-are-injective : (f : Fin ℓ → Fin ℓ')
+                    → Monotonic f
+                    → R.Injective f
+monos-are-injective f f-mono {x₁} {x₂} fx₁≡fx₂ with x₁ <>? x₂
+... | less m<n = ⊥-elim (m<n-not-m≡n (f-mono m<n) fx₁≡fx₂)
+... | equal refl = refl
+... | greater m>n = ⊥-elim (m<n-not-m≡n (f-mono m>n) (sym fx₁≡fx₂))
+
 ρ-ιth : (ρ : Fin ℓ → Fin ℓ')
       → (ι : Fin (suc ℓ))
       → (Fin (suc ℓ) → Fin (suc ℓ'))
