@@ -30,6 +30,14 @@ m<n⇒0<n {n = suc n} _ = <-zero n
 ¬n<0 : {n : Fin ℓ} → ¬ n < zero {ℓ'}
 ¬n<0 ()
 
+a≤b<c : {a b c : Fin ℓ}
+      → (a < suc b)
+      → (b < c)
+      → a < c
+a≤b<c (<-zero zero) (<-zero _) = <-zero _
+a≤b<c (<-zero (suc b)) (<-suc _) = <-zero _
+a≤b<c (<-suc a≤b) (<-suc b<c) = <-suc (a≤b<c a≤b b<c)
+
 <-weaken : m < n → m < suc n
 <-weaken (<-zero n) = <-zero (suc n)
 <-weaken (<-suc m<n) = <-suc (<-weaken m<n)
