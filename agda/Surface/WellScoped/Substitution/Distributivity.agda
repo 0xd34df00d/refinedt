@@ -236,8 +236,8 @@ ext-commuting record { ρ-mono = ρ-mono ; ρ-id = ρ-id } = record { ρ-mono = 
       → (ι : Fin (suc ℓ))
       → (Fin (suc ℓ) → Fin (suc ℓ'))
 ρ-ιth ρ ι v with v <>? ι
-... | less v<ι = inject₁ (ρ (tighten v<ι))
-... | equal v≡ι = fromℕ _
+... | less v<ι = suc (ρ (tighten v<ι))
+... | equal v≡ι = zero
 ... | greater v>ι = suc (ρ (m<n-n-pred v>ι))
 
 {-
