@@ -24,6 +24,9 @@ m<n-not-equal : m < n → ¬ m ≡ n
 m<n-not-equal (<-zero n) = λ ()
 m<n-not-equal (<-suc m<n) = λ suc-m≡suc-n → m<n-not-equal m<n (suc-injective suc-m≡suc-n)
 
+<-antireflexive : ∀ {m : Fin ℓ} → ¬ m < m
+<-antireflexive (<-suc m<m) = <-antireflexive m<m
+
 m<n⇒0<n : m < n → zero {ℓ} < n
 m<n⇒0<n {n = suc n} _ = <-zero n
 
