@@ -24,8 +24,11 @@ m<n-not-equal : m < n → ¬ m ≡ n
 m<n-not-equal (<-zero n) = λ ()
 m<n-not-equal (<-suc m<n) = λ suc-m≡suc-n → m<n-not-equal m<n (suc-injective suc-m≡suc-n)
 
-m<n⇒0<n : m < n → zero {n = ℓ} < n
+m<n⇒0<n : m < n → zero {ℓ} < n
 m<n⇒0<n {n = suc n} _ = <-zero n
+
+¬n<0 : {n : Fin ℓ} → ¬ n < zero {ℓ'}
+¬n<0 ()
 
 <-weaken : m < n → m < suc n
 <-weaken (<-zero n) = <-zero (suc n)
