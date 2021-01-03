@@ -38,6 +38,9 @@ m<n-not-m>n : m < n → ¬ m > n
 m<n-not-m>n (<-zero n) ()
 m<n-not-m>n (<-suc m<n) (<-suc m>n) = m<n-not-m>n m<n m>n
 
+m<n-not-m≡n : m < n → ¬ m ≡ n
+m<n-not-m≡n (<-suc m<n) refl = m<n-not-m≡n m<n refl
+
 m<n-n-pred : {m n : Fin (suc ℓ)} → m < n → Fin ℓ
 m<n-n-pred {n = suc n} _ = n
 
