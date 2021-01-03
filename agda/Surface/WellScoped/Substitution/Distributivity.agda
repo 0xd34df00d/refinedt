@@ -3,8 +3,8 @@
 module Surface.WellScoped.Substitution.Distributivity where
 
 open import Data.Empty using (⊥; ⊥-elim)
-open import Data.Fin using (Fin; suc; zero; raise; toℕ; fromℕ; inject₁)
-open import Data.Fin.Properties using (toℕ-fromℕ; toℕ-inject₁-≢; toℕ-inject₁)
+open import Data.Fin using (Fin; suc; zero; raise; toℕ; fromℕ)
+open import Data.Fin.Properties using (toℕ-injective; suc-injective)
 open import Data.Nat using (ℕ; suc; zero; _+_)
 open import Data.Vec
 open import Function using (_∘_)
@@ -232,10 +232,10 @@ ext-commuting record { ρ-mono = ρ-mono ; ρ-id = ρ-id } = record { ρ-mono = 
                                                                 ; ρ-id = ext-identity ρ-id
                                                                 }
 
-monos-are-injective : (f : Fin ℓ → Fin ℓ')
+monos-are-injective : {f : Fin ℓ → Fin ℓ'}
                     → Monotonic f
                     → R.Injective f
-monos-are-injective f f-mono {x₁} {x₂} fx₁≡fx₂ with x₁ <>? x₂
+monos-are-injective f-mono {x₁} {x₂} fx₁≡fx₂ with x₁ <>? x₂
 ... | less m<n = ⊥-elim (m<n-not-m≡n (f-mono m<n) fx₁≡fx₂)
 ... | equal refl = refl
 ... | greater m>n = ⊥-elim (m<n-not-m≡n (f-mono m>n) (sym fx₁≡fx₂))
@@ -248,7 +248,14 @@ monos-are-injective f f-mono {x₁} {x₂} fx₁≡fx₂ with x₁ <>? x₂
 ... | equal v≡ι = zero
 ... | greater v>ι = suc (ρ (m<n-n-pred v>ι))
 
-{-
+tighten-not-pred : {v₁ v₂ ι : Fin (suc ℓ)}
+                 → (v₁<ι : v₁ < ι)
+                 → (ι<v₂ : ι < v₂)
+                 → tighten v₁<ι ≡ m<n-n-pred ι<v₂
+                 → ⊥
+tighten-not-pred {ℓ = suc ℓ} (<-zero n) (<-suc ι<v₂) refl = ⊥-elim (¬n<0 ι<v₂)
+tighten-not-pred {ℓ = suc ℓ} (<-suc v₁<ι) (<-suc ι<v₂) refl = ⊥-elim (<-antireflexive (a≤b<c (suc-tighten v₁<ι) ι<v₂))
+
 ρ-ιth-injective : ∀ ℓ'
                 → (ρ : Fin ℓ → Fin ℓ')
                 → (ι : Fin (suc ℓ))
@@ -256,18 +263,22 @@ monos-are-injective f f-mono {x₁} {x₂} fx₁≡fx₂ with x₁ <>? x₂
                 → R.Injective (ρ-ιth ρ ι)
 ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf with v₁ <>? ι | v₂ <>? ι
 ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | less m<n | less m<n₁ = {! !}
-ρ-ιth-injective ℓ' ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | less m<n | equal refl with cong toℕ ≡-prf
-... | cong-prf rewrite toℕ-fromℕ ℓ' = ⊥-elim (toℕ-inject₁-≢ (ρ (tighten m<n)) (sym cong-prf))
-ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | less m<n | greater m>n with cong toℕ ≡-prf
-... | cong-prf rewrite toℕ-inject₁ (ρ (tighten m<n)) = {! !}
-ρ-ιth-injective ℓ' ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | equal refl | less m<n with cong toℕ ≡-prf
-... | cong-prf rewrite toℕ-fromℕ ℓ' = ⊥-elim (toℕ-inject₁-≢ (ρ (tighten m<n)) cong-prf)
+ρ-ιth-injective ℓ' ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | less m<n | equal refl with ≡-prf
+... | ()
+ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | less m<n | greater m>n
+  = let ρ-inj = monos-are-injective ρ-mono
+     in ⊥-elim (tighten-not-pred m<n m>n (ρ-inj (suc-injective ≡-prf)))
+ρ-ιth-injective ℓ' ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | equal refl | less m<n with ≡-prf
+... | ()
 ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | equal refl | equal refl = refl
-ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | equal refl | greater m>n = {! !}
-ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | greater m>n | less m<n = {! !}
-ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | greater m>n | equal refl = {! !}
+ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | equal refl | greater m>n with ≡-prf
+... | ()
+ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | greater m>n | less m<n
+  = let ρ-inj = monos-are-injective ρ-mono
+     in ⊥-elim (tighten-not-pred m<n m>n (ρ-inj (suc-injective (sym ≡-prf))))
+ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | greater m>n | equal refl with ≡-prf
+... | ()
 ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | greater m>n | greater m>n₁ = {! !}
--}
 
 ρ-SubstDistributivity : {Ty : ℕ → Set} → R.ActionOn Ty → SubstOn Ty → Set
 ρ-SubstDistributivity {Ty} ρ-act [_↦_]_ = ∀ {ℓ ℓ'}
