@@ -2,7 +2,9 @@
 
 module Surface.WellScoped.Substitution.Distributivity where
 
+open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Fin using (Fin; suc; zero; raise; toℕ; fromℕ; inject₁)
+open import Data.Fin.Properties using (toℕ-fromℕ; toℕ-inject₁-≢; toℕ-inject₁)
 open import Data.Nat using (ℕ; suc; zero; _+_)
 open import Data.Vec
 open import Function using (_∘_)
@@ -237,6 +239,27 @@ ext-commuting record { ρ-mono = ρ-mono ; ρ-id = ρ-id } = record { ρ-mono = 
 ... | less v<ι = inject₁ (ρ (tighten v<ι))
 ... | equal v≡ι = fromℕ _
 ... | greater v>ι = suc (ρ (m<n-n-pred v>ι))
+
+{-
+ρ-ιth-injective : ∀ ℓ'
+                → (ρ : Fin ℓ → Fin ℓ')
+                → (ι : Fin (suc ℓ))
+                → Monotonic ρ
+                → R.Injective (ρ-ιth ρ ι)
+ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf with v₁ <>? ι | v₂ <>? ι
+ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | less m<n | less m<n₁ = {! !}
+ρ-ιth-injective ℓ' ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | less m<n | equal refl with cong toℕ ≡-prf
+... | cong-prf rewrite toℕ-fromℕ ℓ' = ⊥-elim (toℕ-inject₁-≢ (ρ (tighten m<n)) (sym cong-prf))
+ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | less m<n | greater m>n with cong toℕ ≡-prf
+... | cong-prf rewrite toℕ-inject₁ (ρ (tighten m<n)) = {! !}
+ρ-ιth-injective ℓ' ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | equal refl | less m<n with cong toℕ ≡-prf
+... | cong-prf rewrite toℕ-fromℕ ℓ' = ⊥-elim (toℕ-inject₁-≢ (ρ (tighten m<n)) cong-prf)
+ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | equal refl | equal refl = refl
+ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | equal refl | greater m>n = {! !}
+ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | greater m>n | less m<n = {! !}
+ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | greater m>n | equal refl = {! !}
+ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | greater m>n | greater m>n₁ = {! !}
+-}
 
 ρ-SubstDistributivity : {Ty : ℕ → Set} → R.ActionOn Ty → SubstOn Ty → Set
 ρ-SubstDistributivity {Ty} ρ-act [_↦_]_ = ∀ {ℓ ℓ'}
