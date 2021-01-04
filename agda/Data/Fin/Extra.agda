@@ -6,7 +6,7 @@ open import Data.Nat using (ℕ; zero; suc)
 open import Data.Nat.Properties renaming (suc-injective to ℕ-suc-injective)
 open import Data.Fin using (Fin; zero; suc; toℕ)
 open import Data.Fin.Properties using (suc-injective)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 open import Relation.Nullary using (¬_)
 
 private
@@ -124,3 +124,23 @@ Fin0-elim ()
 lift-ℕ-≡ : toℕ m ≡ toℕ n → m ≡ n
 lift-ℕ-≡ {m = zero} {n = zero} ℕ-≡ = refl
 lift-ℕ-≡ {m = suc m} {n = suc n} ℕ-≡ rewrite lift-ℕ-≡ (ℕ-suc-injective ℕ-≡) = refl
+
+tighten-injective : {m₁ m₂ n : Fin (suc ℓ)}
+                  → {m₁<n : m₁ < n}
+                  → {m₂<n : m₂ < n}
+                  → tighten m₁<n ≡ tighten m₂<n
+                  → m₁ ≡ m₂
+tighten-injective {m₁<n = m₁<n} {m₂<n = m₂<n} ≡-prf with cong toℕ ≡-prf
+... | cong-prf rewrite tighten-is-same-ℕ m₁<n
+                     | tighten-is-same-ℕ m₂<n
+                     = lift-ℕ-≡ cong-prf
+
+m<n-n-pred-injective : {m₁ m₂ n : Fin (suc ℓ)}
+                     → {n<m₁ : n < m₁}
+                     → {n<m₂ : n < m₂}
+                     → m<n-n-pred n<m₁ ≡ m<n-n-pred n<m₂
+                     → m₁ ≡ m₂
+m<n-n-pred-injective {n<m₁ = n<m₁} {n<m₂ = n<m₂} ≡-prf with cong Fin.suc ≡-prf
+... | cong-prf rewrite m<n-n-pred-cancel n<m₁
+                     | m<n-n-pred-cancel n<m₂
+                     = cong-prf
