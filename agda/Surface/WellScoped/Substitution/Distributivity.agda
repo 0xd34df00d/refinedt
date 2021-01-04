@@ -216,16 +216,22 @@ act-branches-distr σ₁ σ₂ (MkCaseBranch ε ∷ bs) rewrite act-ε-distr (ex
 ... | equal v≡ι = zero
 ... | greater ι>v = suc (ρ (tighten ι>v))
 
-tighten-not-pred : {v₁ v₂ ι : Fin (suc ℓ)}
-                 → (v₁<ι : v₁ < ι)
-                 → (ι<v₂ : ι < v₂)
-                 → tighten v₁<ι ≡ m<n-n-pred ι<v₂
-                 → ⊥
-tighten-not-pred {ℓ = suc ℓ} (<-zero n) (<-suc ι<v₂) refl = ⊥-elim (¬n<0 ι<v₂)
-tighten-not-pred {ℓ = suc ℓ} (<-suc v₁<ι) (<-suc ι<v₂) refl = ⊥-elim (<-antireflexive (a≤b<c (suc-tighten v₁<ι) ι<v₂))
+ρ-0th-is-ext : (ρ : Fin ℓ → Fin ℓ')
+             → ∀ var → ρ-ιth ρ zero var ≡ R.ext ρ var
+ρ-0th-is-ext ρ zero = refl
+ρ-0th-is-ext ρ (suc var) = refl
+
 
 -- This is not used elsewhere, just a sanity check that ρ-ιth makes sense
 private
+  tighten-not-pred : {v₁ v₂ ι : Fin (suc ℓ)}
+                   → (v₁<ι : v₁ < ι)
+                   → (ι<v₂ : ι < v₂)
+                   → tighten v₁<ι ≡ m<n-n-pred ι<v₂
+                   → ⊥
+  tighten-not-pred {ℓ = suc ℓ} (<-zero n) (<-suc ι<v₂) refl = ⊥-elim (¬n<0 ι<v₂)
+  tighten-not-pred {ℓ = suc ℓ} (<-suc v₁<ι) (<-suc ι<v₂) refl = ⊥-elim (<-antireflexive (a≤b<c (suc-tighten v₁<ι) ι<v₂))
+
   ρ-ιth-injective : ∀ ℓ'
                   → (ρ : Fin ℓ → Fin ℓ')
                   → (ι : Fin (suc ℓ))

@@ -28,11 +28,6 @@ open import Surface.Operational
 σ-preserves-values IV-Unit = IV-Unit
 σ-preserves-values (IV-ADT is-value) = IV-ADT (σ-preserves-values is-value)
 
-ρ-0th-is-ext : (ρ : Fin ℓ → Fin ℓ')
-             → ∀ var → ρ-ιth ρ zero var ≡ R.ext ρ var
-ρ-0th-is-ext ρ zero = refl
-ρ-0th-is-ext ρ (suc var) = refl
-
 ρ-↦ₘ-comm : (ρ : Fin ℓ → Fin ℓ')
           → ∀ ι ε
           → (bs : CaseBranches (Mkℕₐ n) ℓ)
