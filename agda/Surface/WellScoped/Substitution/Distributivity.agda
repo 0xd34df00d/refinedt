@@ -208,14 +208,6 @@ act-branches-distr σ₁ σ₂ (MkCaseBranch ε ∷ bs) rewrite act-ε-distr (ex
                                                      = refl
 
 
-monos-are-injective : {f : Fin ℓ → Fin ℓ'}
-                    → Monotonic f
-                    → R.Injective f
-monos-are-injective f-mono {x₁} {x₂} fx₁≡fx₂ with x₁ <>? x₂
-... | less m<n = ⊥-elim (m<n-not-m≡n (f-mono m<n) fx₁≡fx₂)
-... | equal refl = refl
-... | greater m>n = ⊥-elim (m<n-not-m≡n (f-mono m>n) (sym fx₁≡fx₂))
-
 ρ-ιth : (ρ : Fin ℓ → Fin ℓ')
       → (ι : Fin (suc ℓ))
       → (Fin (suc ℓ) → Fin (suc ℓ'))
@@ -233,29 +225,26 @@ tighten-not-pred {ℓ = suc ℓ} (<-zero n) (<-suc ι<v₂) refl = ⊥-elim (¬n
 tighten-not-pred {ℓ = suc ℓ} (<-suc v₁<ι) (<-suc ι<v₂) refl = ⊥-elim (<-antireflexive (a≤b<c (suc-tighten v₁<ι) ι<v₂))
 
 -- This is not used elsewhere, just a sanity check that ρ-ιth makes sense
-ρ-ιth-injective : ∀ ℓ'
-                → (ρ : Fin ℓ → Fin ℓ')
-                → (ι : Fin (suc ℓ))
-                → Monotonic ρ
-                → R.Injective (ρ-ιth ρ ι)
-ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf with ι <>? v₁ | ι <>? v₂
-ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | greater m<n | greater m<n₁ = {! !}
-ρ-ιth-injective ℓ' ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | greater m<n | equal refl with ≡-prf
-... | ()
-ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | greater m<n | less m>n
-  = let ρ-inj = monos-are-injective ρ-mono
-     in ⊥-elim (tighten-not-pred m<n m>n (ρ-inj (suc-injective ≡-prf)))
-ρ-ιth-injective ℓ' ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | equal refl | greater m<n with ≡-prf
-... | ()
-ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | equal refl | equal refl = refl
-ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | equal refl | less m>n with ≡-prf
-... | ()
-ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | less m>n | greater m<n
-  = let ρ-inj = monos-are-injective ρ-mono
-     in ⊥-elim (tighten-not-pred m<n m>n (ρ-inj (suc-injective (sym ≡-prf))))
-ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | less m>n | equal refl with ≡-prf
-... | ()
-ρ-ιth-injective _  ρ ι ρ-mono {x₁ = v₁} {x₂ = v₂} ≡-prf | less m>n | less m>n₁ = {! !}
+private
+  ρ-ιth-injective : ∀ ℓ'
+                  → (ρ : Fin ℓ → Fin ℓ')
+                  → (ι : Fin (suc ℓ))
+                  → R.Injective ρ
+                  → R.Injective (ρ-ιth ρ ι)
+  ρ-ιth-injective _  ρ ι ρ-inj {x₁ = v₁} {x₂ = v₂} ≡-prf with ι <>? v₁ | ι <>? v₂
+  ρ-ιth-injective _  ρ ι ρ-inj {x₁ = v₁} {x₂ = v₂} ≡-prf | greater m<n | greater m<n₁ = tighten-injective (ρ-inj (suc-injective ≡-prf))
+  ρ-ιth-injective ℓ' ρ ι ρ-inj {x₁ = v₁} {x₂ = v₂} ≡-prf | greater m<n | equal refl with ≡-prf
+  ... | ()
+  ρ-ιth-injective _  ρ ι ρ-inj {x₁ = v₁} {x₂ = v₂} ≡-prf | greater m<n | less m>n = ⊥-elim (tighten-not-pred m<n m>n (ρ-inj (suc-injective ≡-prf)))
+  ρ-ιth-injective ℓ' ρ ι ρ-inj {x₁ = v₁} {x₂ = v₂} ≡-prf | equal refl | greater m<n with ≡-prf
+  ... | ()
+  ρ-ιth-injective _  ρ ι ρ-inj {x₁ = v₁} {x₂ = v₂} ≡-prf | equal refl | equal refl = refl
+  ρ-ιth-injective _  ρ ι ρ-inj {x₁ = v₁} {x₂ = v₂} ≡-prf | equal refl | less m>n with ≡-prf
+  ... | ()
+  ρ-ιth-injective _  ρ ι ρ-inj {x₁ = v₁} {x₂ = v₂} ≡-prf | less m>n | greater m<n = ⊥-elim (tighten-not-pred m<n m>n (ρ-inj (suc-injective (sym ≡-prf))))
+  ρ-ιth-injective _  ρ ι ρ-inj {x₁ = v₁} {x₂ = v₂} ≡-prf | less m>n | equal refl with ≡-prf
+  ... | ()
+  ρ-ιth-injective _  ρ ι ρ-inj {x₁ = v₁} {x₂ = v₂} ≡-prf | less m>n | less m>n₁ = m<n-n-pred-injective (ρ-inj (suc-injective ≡-prf))
 
 ρ-SubstDistributivity : {Ty : ℕ → Set} → R.ActionOn Ty → SubstOn Ty → Set
 ρ-SubstDistributivity {Ty} ρ-act [_↦_]_ = ∀ {ℓ ℓ'}
