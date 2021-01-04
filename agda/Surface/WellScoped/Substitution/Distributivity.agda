@@ -250,41 +250,37 @@ private
 ρ-SubstDistributivity {Ty} ρ-act [_↦_]_ = ∀ {ℓ ℓ'}
                                           → (ρ : Fin ℓ → Fin ℓ')
                                           → (ι : Fin (suc ℓ))
-                                          → (ρ-mono : Monotonic ρ)
                                           → (ε : STerm ℓ)
                                           → (v : Ty (suc ℓ))
                                           → ρ-act ρ ([ ι ↦ ε ] v) ≡ [ zero ↦ R.act-ε ρ ε ] (ρ-act (ρ-ιth ρ ι) v)
 
 ρ-replace-comm : ∀ (ρ : Fin ℓ → Fin ℓ') ι ε
-               → Monotonic ρ
                → ∀ var → R.act-ε ρ (replace-at ι ε var) ≡ replace-at zero (R.act-ε ρ ε) (ρ-ιth ρ ι var)
-ρ-replace-comm ρ ι ε ρ-mono var with ι <>? var
+ρ-replace-comm ρ ι ε var with ι <>? var
 ... | less ι<var = refl
 ... | equal refl = refl
 ... | greater ι>var = refl
 
 ρ-subst-distr-τ : ρ-SubstDistributivity R.act-τ [_↦τ_]_
-ρ-subst-distr-τ ρ ι ρ-comm ε τ rewrite ρ-σ-distr-τ ρ (replace-at ι ε) τ
-                                     | σ-ρ-distr-τ (replace-at zero (R.act-ε ρ ε)) (ρ-ιth ρ ι) τ
-                                     | S.act-τ-extensionality (ρ-replace-comm ρ ι ε ρ-comm) τ
-                                     = refl
+ρ-subst-distr-τ ρ ι ε τ rewrite ρ-σ-distr-τ ρ (replace-at ι ε) τ
+                              | σ-ρ-distr-τ (replace-at zero (R.act-ε ρ ε)) (ρ-ιth ρ ι) τ
+                              | S.act-τ-extensionality (ρ-replace-comm ρ ι ε) τ
+                              = refl
 
 ρ-subst-distr-ε : ρ-SubstDistributivity R.act-ε [_↦ε_]_
-ρ-subst-distr-ε ρ ι ρ-comm ε ε' rewrite ρ-σ-distr-ε ρ (replace-at ι ε) ε'
-                                      | σ-ρ-distr-ε (replace-at zero (R.act-ε ρ ε)) (ρ-ιth ρ ι) ε'
-                                      | S.act-ε-extensionality (ρ-replace-comm ρ ι ε ρ-comm) ε'
-                                      = refl
+ρ-subst-distr-ε ρ ι ε ε' rewrite ρ-σ-distr-ε ρ (replace-at ι ε) ε'
+                               | σ-ρ-distr-ε (replace-at zero (R.act-ε ρ ε)) (ρ-ιth ρ ι) ε'
+                               | S.act-ε-extensionality (ρ-replace-comm ρ ι ε) ε'
+                               = refl
 
 ρ-subst-distr-τ-0 : (ρ : Fin ℓ → Fin ℓ')
-                  → Monotonic ρ
                   → (ε : STerm ℓ)
                   → (τ : SType (suc ℓ))
                   → R.act-τ ρ ([ zero ↦τ ε ] τ) ≡ [ zero ↦τ R.act-ε ρ ε ] (R.act-τ (ρ-ιth ρ zero) τ)
-ρ-subst-distr-τ-0 ρ ρ-mono = ρ-subst-distr-τ ρ zero ρ-mono
+ρ-subst-distr-τ-0 ρ = ρ-subst-distr-τ ρ zero
 
 ρ-subst-distr-ε-0 : (ρ : Fin ℓ → Fin ℓ')
-                  → Monotonic ρ
                   → (ε : STerm ℓ)
                   → (ε' : STerm (suc ℓ))
                   → R.act-ε ρ ([ zero ↦ε ε ] ε') ≡ [ zero ↦ε R.act-ε ρ ε ] (R.act-ε (ρ-ιth ρ zero) ε')
-ρ-subst-distr-ε-0 ρ ρ-mono = ρ-subst-distr-ε ρ zero ρ-mono
+ρ-subst-distr-ε-0 ρ = ρ-subst-distr-ε ρ zero
