@@ -56,14 +56,13 @@ data _≡rβ_ : SType ℓ → SType ℓ → Set where
             → (ε↝ε' : ε ↝ ε')
             → [ zero ↦τ ε' ] τ ≡rβ [ zero ↦τ ε ] τ
 
-ρ-preserves-≡rβ : ∀ {ρ : Fin ℓ → Fin ℓ'}
-                → Monotonic ρ
+ρ-preserves-≡rβ : (ρ : Fin ℓ → Fin ℓ')
                 → τ₁ ≡rβ τ₂
                 → R.act-τ ρ τ₁ ≡rβ R.act-τ ρ τ₂
-ρ-preserves-≡rβ {ρ = ρ} ρ-mono (≡rβ-Subst ε ε' τ ε↝ε')
-  rewrite ρ-subst-distr-τ-0 ρ ρ-mono ε τ
-        | ρ-subst-distr-τ-0 ρ ρ-mono ε' τ
-        = ≡rβ-Subst (R.act-ε ρ ε) (R.act-ε ρ ε') (R.act-τ (R.ext ρ) τ) (ρ-preserves-↝ ρ-mono ε↝ε')
+ρ-preserves-≡rβ ρ (≡rβ-Subst ε ε' τ ε↝ε')
+  rewrite ρ-subst-distr-τ-0 ρ ε τ
+        | ρ-subst-distr-τ-0 ρ ε' τ
+        = ≡rβ-Subst (R.act-ε ρ ε) (R.act-ε ρ ε') (R.act-τ (ρ-ιth ρ zero) τ) (ρ-preserves-↝ ρ ε↝ε')
 
 subst-preserves-↝ : ∀ ι ε₀
                   → ε ↝ ε'

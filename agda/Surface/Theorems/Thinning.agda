@@ -94,10 +94,12 @@ private
           bodyδ'-ok = TCTX-Bind Γ'ok (arr-wf-dom arrδ')
           bodyδ' = t-thinning-sized (append-both Γ⊂Γ') bodyδ'-ok bodyδ rec₂
        in T-Abs arrδ' bodyδ'
-  t-thinning-sized Γ⊂Γ' Γ'ok (T-App {τ₂ = τ₂} {ε₂ = ε₂} δ₁ δ₂) (acc rec) rewrite ρ-subst-distr-τ-0 (_⊂_.ρ Γ⊂Γ') (_⊂_.ρ-mono Γ⊂Γ') ε₂ τ₂
-    = let rec₁ = rec _ (s≤s (m≤m<>n _ _))
-          rec₂ = rec _ (s≤s (n≤m<>n _ _))
-       in T-App (t-thinning-sized Γ⊂Γ' Γ'ok δ₁ rec₁) (t-thinning-sized Γ⊂Γ' Γ'ok δ₂ rec₂)
+  t-thinning-sized Γ⊂Γ' Γ'ok (T-App {τ₂ = τ₂} {ε₂ = ε₂} δ₁ δ₂) (acc rec)
+    rewrite ρ-subst-distr-τ-0 (_⊂_.ρ Γ⊂Γ') ε₂ τ₂
+          | R.act-τ-extensionality (ρ-0th-is-ext (_⊂_.ρ Γ⊂Γ')) τ₂
+          = let rec₁ = rec _ (s≤s (m≤m<>n _ _))
+                rec₂ = rec _ (s≤s (n≤m<>n _ _))
+             in T-App (t-thinning-sized Γ⊂Γ' Γ'ok δ₁ rec₁) (t-thinning-sized Γ⊂Γ' Γ'ok δ₂ rec₂)
   t-thinning-sized {ℓ} {_} {Γ} {Γ'} Γ⊂Γ' Γ'ok (T-Case resδ scrut branches) (acc rec)
     = let rec₁ = rec _ (s≤s (n≤m<>n<>k (size-t scrut) (size-twf resδ) (size-bs branches)))
           rec₂ = rec _ (s≤s (m≤m<>n<>k (size-t scrut) (size-twf resδ) (size-bs branches)))
@@ -136,7 +138,7 @@ private
   t-thinning-sized Γ⊂Γ' Γ'ok (T-RConv εδ ≡rβ) (acc rec)
     = let rec' = rec (size-t εδ) (≤-reflexive refl)
           εδ' = t-thinning-sized Γ⊂Γ' Γ'ok εδ rec'
-       in T-RConv εδ' (ρ-preserves-≡rβ (_⊂_.ρ-mono Γ⊂Γ') ≡rβ)
+       in T-RConv εδ' (ρ-preserves-≡rβ (_⊂_.ρ Γ⊂Γ') ≡rβ)
 
 abstract
   twf-thinning : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ : SType ℓ}
