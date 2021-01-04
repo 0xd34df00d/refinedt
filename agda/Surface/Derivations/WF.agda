@@ -56,7 +56,7 @@ size-t (T-App δ₁ δ₂) = suc (size-t δ₁ <> size-t δ₂)
 size-t (T-Case resδ scrutτδ branches) = suc (size-t scrutτδ <> size-twf resδ <> size-bs branches)
 size-t (T-Con _ conArg adtτ) = suc (size-t conArg <> size-twf adtτ)
 size-t (T-Sub δ superδ sub) = suc (size-t δ <> size-twf superδ <> size-st sub)
-size-t (T-RConv δ _) = suc (size-t δ)
+size-t (T-RConv εδ τ'δ _) = suc (size-t εδ <> size-twf τ'δ)
 
 size-st (ST-Base _ _) = 0
 size-st (ST-Arr sub₁ sub₂) = suc (size-st sub₁ <> size-st sub₂)

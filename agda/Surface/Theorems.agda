@@ -43,3 +43,4 @@ open import Surface.Theorems.SubstTyping
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Case resδ _ _) = resδ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Con _ _ adtτ) = adtτ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Sub δ superδ sub) = superδ
+Γ⊢ε⦂τ-⇒-Γ⊢τ (T-RConv _ τ'δ _) = τ'δ
