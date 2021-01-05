@@ -20,6 +20,8 @@ open import Surface.Operational.BetaEquivalence
 open import Surface.Operational.Lemmas
 open import Surface.Theorems.SubstTyping
 open import Surface.Theorems.Subtyping
+open import Surface.Theorems.Helpers
+open import Surface.Theorems
 
 data Canonical : STerm ℓ → SType ℓ → Set where
   C-Unit : Canonical (SUnit {ℓ}) ⟨ BUnit ∣ Τ ⟩
@@ -95,6 +97,19 @@ SLam-inv (T-RConv {τ = τ₁' ⇒ τ₂'} εδ _ τ↝τ') = let rec = SLam-inv
 SLam-inv (T-RConv {τ = ⟨ _ ∣ _ ⟩} εδ _ τ↝τ') = shape-⊥-elim ≡rβ-preserves-shape τ↝τ' λ ()
 SLam-inv (T-RConv {τ = ⊍ _}       εδ _ τ↝τ') = shape-⊥-elim ≡rβ-preserves-shape τ↝τ' λ ()
 
+lookup-preserves-Γ⊢τ : {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
+                     → (idx : Fin (suc n))
+                     → Γ ⊢ ⊍ cons
+                     → Γ ⊢ lookup cons idx
+lookup-preserves-Γ⊢τ idx (TWF-ADT consδs) = go idx consδs
+  where
+    go : (idx : Fin n)
+       → {cons : ADTCons (Mkℕₐ n) ℓ}
+       → All (Γ ⊢_) cons
+       → Γ ⊢ lookup cons idx
+    go zero (px ∷ _) = px
+    go (suc idx) (_ ∷ consδs) = go idx consδs
+
 con-has-type : ∀ {cons cons' : ADTCons (Mkℕₐ (suc n)) ℓ} {idx}
              → Γ ⊢ SCon idx ε cons ⦂ ⊍ cons'
              → Γ ⊢ ε ⦂ lookup cons' idx
@@ -102,7 +117,7 @@ con-has-type (T-Con refl conδ adtτ) = conδ
 con-has-type (T-RConv {τ = ⟨ _ ∣ _ ⟩} εδ _ τ↝τ') = shape-⊥-elim ≡rβ-preserves-shape τ↝τ' λ ()
 con-has-type (T-RConv {τ = _ ⇒ _}     εδ _ τ↝τ') = shape-⊥-elim ≡rβ-preserves-shape τ↝τ' λ ()
 con-has-type (T-RConv {τ = ⊍ cons}    εδ τ'δ τ↝τ') with ≡rβ-cons-same-length τ↝τ'
-... | refl = T-RConv (con-has-type εδ) {! !} (≡rβ-lookup _ τ↝τ')
+... | refl = T-RConv (con-has-type εδ) (lookup-preserves-Γ⊢τ _ τ'δ) (≡rβ-lookup _ τ↝τ')
 
 preservation : ε ↝ ε'
              → Γ ⊢ ε ⦂ τ
@@ -110,7 +125,10 @@ preservation : ε ↝ ε'
 preservation ε↝ε' (T-Sub εδ Γ⊢τ' Γ⊢τ<:τ') = T-Sub (preservation ε↝ε' εδ) Γ⊢τ' Γ⊢τ<:τ'
 preservation ε↝ε' (T-RConv εδ τ'δ τ↝τ') = T-RConv (preservation ε↝ε' εδ) τ'δ τ↝τ'
 preservation (E-AppL ε↝ε') (T-App ε₁δ ε₂δ) = T-App (preservation ε↝ε' ε₁δ) ε₂δ
-preservation (E-AppR x ε↝ε') (T-App εδ₁ εδ₂) = T-RConv (T-App εδ₁ (preservation ε↝ε' εδ₂)) {! !} (≡rβ-Subst _ _ _ ε↝ε')
+preservation (E-AppR x ε↝ε') (T-App ε₁δ ε₂δ)
+  = let τ₂δ = arr-wf-⇒-cod-wf (Γ⊢ε⦂τ-⇒-Γ⊢τ ε₁δ)
+        τ'δ = sub-Γ⊢τ-front ε₂δ τ₂δ
+     in T-RConv (T-App ε₁δ (preservation ε↝ε' ε₂δ)) τ'δ (≡rβ-Subst _ _ _ ε↝ε')
 preservation (E-AppAbs ε₂-is-value) (T-App ε₁δ ε₂δ) = sub-Γ⊢ε⦂τ-front ε₂δ (SLam-inv ε₁δ)
 preservation (E-ADT ε↝ε') (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (preservation ε↝ε' εδ) adtτ
 preservation (E-CaseScrut ε↝ε') (T-Case resδ εδ branches) = T-Case resδ (preservation ε↝ε' εδ) branches
