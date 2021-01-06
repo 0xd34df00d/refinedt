@@ -11,7 +11,7 @@ open import Relation.Nullary using (¬_)
 
 private
   variable
-    ℓ ℓ' : ℕ
+    ℓ ℓ' ℓ₁ ℓ₂ : ℕ
     m n : Fin ℓ
 
 data _<_ : Fin ℓ → Fin ℓ' → Set where
