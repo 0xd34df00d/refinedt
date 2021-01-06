@@ -64,21 +64,6 @@ data _≡rβ_ : SType ℓ → SType ℓ → Set where
         | ρ-subst-distr-τ-0 ρ ε' τ
         = ≡rβ-Subst (R.act-ε ρ ε) (R.act-ε ρ ε') (R.act-τ (ρ-ιth ρ zero) τ) (ρ-preserves-↝ ρ ε↝ε')
 
-subst-preserves-↝ : ∀ ι ε₀
-                  → ε ↝ ε'
-                  → ([ ι ↦ε ε₀ ] ε) ↝ ([ ι ↦ε ε₀ ] ε')
-subst-preserves-↝ ι ε₀ (E-AppL ε↝ε') = E-AppL (subst-preserves-↝ ι ε₀ ε↝ε')
-subst-preserves-↝ ι ε₀ (E-AppR is-value ε↝ε') = E-AppR (σ-preserves-values is-value) (subst-preserves-↝ ι ε₀ ε↝ε')
-subst-preserves-↝ ι ε₀ (E-AppAbs {ϖ = ϖ} {ε = ε} is-value)
-  rewrite subst-commutes-ε ι ε₀ ϖ ε
-        | S.act-ε-extensionality (ext-replace-comm ε₀ ι) ε
-        = E-AppAbs (σ-preserves-values is-value)
-subst-preserves-↝ ι ε₀ (E-ADT ε↝ε') = E-ADT (subst-preserves-↝ ι ε₀ ε↝ε')
-subst-preserves-↝ ι ε₀ (E-CaseScrut ε↝ε') = E-CaseScrut (subst-preserves-↝ ι ε₀ ε↝ε')
-subst-preserves-↝ ι ε₀ (E-CaseMatch {ϖ = ϖ} {bs = bs} is-value idx)
-  rewrite σ-↦ₘ-comm (replace-at ι ε₀) idx ϖ bs
-        = E-CaseMatch (σ-preserves-values is-value) idx
-
 ↦τ-preserves-≡rβ : ∀ ι ε₀
                  → τ₁ ≡rβ τ₂
                  → ([ ι ↦τ ε₀ ] τ₁) ≡rβ ([ ι ↦τ ε₀ ] τ₂)

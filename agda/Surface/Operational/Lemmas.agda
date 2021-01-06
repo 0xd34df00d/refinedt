@@ -10,6 +10,7 @@ open import Data.Fin.Extra
 open import Surface.WellScoped
 open import Surface.WellScoped.Renaming as R
 open import Surface.WellScoped.Substitution as S
+open import Surface.WellScoped.Substitution.Commutativity
 open import Surface.WellScoped.Substitution.Distributivity as S
 open import Surface.WellScoped.Substitution.Stable
 open import Surface.Operational
@@ -67,3 +68,18 @@ open import Surface.Operational
 ρ-preserves-↝ ρ (E-CaseMatch {ϖ = ϖ} {bs = bs} is-value idx)
   rewrite ρ-↦ₘ-comm ρ idx ϖ bs
         = E-CaseMatch (ρ-preserves-values is-value) idx
+
+subst-preserves-↝ : ∀ ι ε₀
+                  → ε ↝ ε'
+                  → ([ ι ↦ε ε₀ ] ε) ↝ ([ ι ↦ε ε₀ ] ε')
+subst-preserves-↝ ι ε₀ (E-AppL ε↝ε') = E-AppL (subst-preserves-↝ ι ε₀ ε↝ε')
+subst-preserves-↝ ι ε₀ (E-AppR is-value ε↝ε') = E-AppR (σ-preserves-values is-value) (subst-preserves-↝ ι ε₀ ε↝ε')
+subst-preserves-↝ ι ε₀ (E-AppAbs {ϖ = ϖ} {ε = ε} is-value)
+  rewrite subst-commutes-ε ι ε₀ ϖ ε
+        | S.act-ε-extensionality (ext-replace-comm ε₀ ι) ε
+        = E-AppAbs (σ-preserves-values is-value)
+subst-preserves-↝ ι ε₀ (E-ADT ε↝ε') = E-ADT (subst-preserves-↝ ι ε₀ ε↝ε')
+subst-preserves-↝ ι ε₀ (E-CaseScrut ε↝ε') = E-CaseScrut (subst-preserves-↝ ι ε₀ ε↝ε')
+subst-preserves-↝ ι ε₀ (E-CaseMatch {ϖ = ϖ} {bs = bs} is-value idx)
+  rewrite σ-↦ₘ-comm (replace-at ι ε₀) idx ϖ bs
+        = E-CaseMatch (σ-preserves-values is-value) idx
