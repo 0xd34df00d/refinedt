@@ -52,42 +52,44 @@ data _≡rβ_ : SType ℓ → SType ℓ → Set where
 
 infix 5 _≡rβ_
 data _≡rβ_ : SType ℓ → SType ℓ → Set where
-  ≡rβ-Subst : ∀ ε ε' (τ : SType (suc ℓ))
+  ≡rβ-Subst : ∀ ι ε ε' (τ : SType (suc ℓ))
             → (ε↝ε' : ε ↝ ε')
-            → [ zero ↦τ ε' ] τ ≡rβ [ zero ↦τ ε ] τ
+            → [ ι ↦τ ε' ] τ ≡rβ [ ι ↦τ ε ] τ
 
 ρ-preserves-≡rβ : (ρ : Fin ℓ → Fin ℓ')
                 → τ₁ ≡rβ τ₂
                 → R.act-τ ρ τ₁ ≡rβ R.act-τ ρ τ₂
-ρ-preserves-≡rβ ρ (≡rβ-Subst ε ε' τ ε↝ε')
-  rewrite ρ-subst-distr-τ-0 ρ ε τ
-        | ρ-subst-distr-τ-0 ρ ε' τ
-        = ≡rβ-Subst (R.act-ε ρ ε) (R.act-ε ρ ε') (R.act-τ (ρ-ιth ρ zero) τ) (ρ-preserves-↝ ρ ε↝ε')
+ρ-preserves-≡rβ ρ (≡rβ-Subst ι ε ε' τ ε↝ε')
+  rewrite ρ-subst-distr-τ ρ ι ε  τ
+        | ρ-subst-distr-τ ρ ι ε' τ
+        = ≡rβ-Subst zero (R.act-ε ρ ε) (R.act-ε ρ ε') (R.act-τ (ρ-ιth ρ ι) τ) (ρ-preserves-↝ ρ ε↝ε')
 
 ↦τ-preserves-≡rβ : ∀ ι ε₀
                  → τ₁ ≡rβ τ₂
                  → ([ ι ↦τ ε₀ ] τ₁) ≡rβ ([ ι ↦τ ε₀ ] τ₂)
-↦τ-preserves-≡rβ ι ε₀ (≡rβ-Subst ε ε' τ ε↝ε')
+↦τ-preserves-≡rβ ι ε₀ (≡rβ-Subst ιₛ ε ε' τ ε↝ε')
+{-
   rewrite subst-commutes-τ ι ε₀ ε' τ
         | subst-commutes-τ ι ε₀ ε  τ
-        = ≡rβ-Subst _ _ ([ suc ι ↦τ weaken-ε ε₀ ] τ) (subst-preserves-↝ ι ε₀ ε↝ε')
+        -}
+        = {! !} -- ≡rβ-Subst _ _ _ ([ suc ι ↦τ weaken-ε ε₀ ] τ) (subst-preserves-↝ ι ε₀ ε↝ε')
 
 -- The version of the restricted β-equivalence without the green slime, more useful in proofs
 infix 5 _≡rβ'_
 data _≡rβ'_ : SType ℓ → SType ℓ → Set where
-  ≡rβ'-Subst : ∀ ε ε' (τ : SType (suc ℓ))
+  ≡rβ'-Subst : ∀ ι ε ε' (τ : SType (suc ℓ))
              → (ε↝ε' : ε ↝ ε')
-             → (τ₁-≡ : τ₁ ≡ [ zero ↦τ ε' ] τ)
-             → (τ₂-≡ : τ₂ ≡ [ zero ↦τ ε  ] τ)
+             → (τ₁-≡ : τ₁ ≡ [ ι ↦τ ε' ] τ)
+             → (τ₂-≡ : τ₂ ≡ [ ι ↦τ ε  ] τ)
              → τ₁ ≡rβ' τ₂
 
 ≡rβ-to-≡rβ' : τ₁ ≡rβ  τ₂
             → τ₁ ≡rβ' τ₂
-≡rβ-to-≡rβ' (≡rβ-Subst ε ε' τ ε↝ε') = ≡rβ'-Subst ε ε' τ ε↝ε' refl refl
+≡rβ-to-≡rβ' (≡rβ-Subst ι ε ε' τ ε↝ε') = ≡rβ'-Subst ι ε ε' τ ε↝ε' refl refl
 
 ≡rβ'-to-≡rβ : τ₁ ≡rβ' τ₂
             → τ₁ ≡rβ  τ₂
-≡rβ'-to-≡rβ (≡rβ'-Subst ε ε' τ ε↝ε' refl refl) = ≡rβ-Subst ε ε' τ ε↝ε'
+≡rβ'-to-≡rβ (≡rβ'-Subst ι ε ε' τ ε↝ε' refl refl) = ≡rβ-Subst ι ε ε' τ ε↝ε'
 
 prove-via-≡rβ' : (τ₁ ≡rβ' τ₂ → τ₁' ≡rβ'  τ₂')
                → (τ₁ ≡rβ  τ₂ → τ₁' ≡rβ   τ₂')
@@ -147,7 +149,7 @@ prove-via-≡rβ' f = ≡rβ'-to-≡rβ ∘ f ∘ ≡rβ-to-≡rβ'
 
 ≡rβ'-⇒-dom : (τ₁' ⇒ τ₂') ≡rβ' (τ₁ ⇒ τ₂)
            → τ₁' ≡rβ' τ₁
-≡rβ'-⇒-dom (≡rβ'-Subst ε ε' (τ₀₁ ⇒ τ₀₂) ε↝ε' refl refl) = ≡rβ'-Subst ε ε' τ₀₁ ε↝ε' refl refl
+≡rβ'-⇒-dom (≡rβ'-Subst ι ε ε' (τ₀₁ ⇒ τ₀₂) ε↝ε' refl refl) = ≡rβ'-Subst ι ε ε' τ₀₁ ε↝ε' refl refl
 
 ≡rβ-⇒-dom : (τ₁' ⇒ τ₂') ≡rβ (τ₁ ⇒ τ₂)
           → τ₁' ≡rβ τ₁
