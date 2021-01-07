@@ -151,6 +151,17 @@ prove-via-≡rβ' f = ≡rβ'-to-≡rβ ∘ f ∘ ≡rβ-to-≡rβ'
            → τ₁' ≡rβ' τ₁
 ≡rβ'-⇒-dom (≡rβ'-Subst ι ε ε' (τ₀₁ ⇒ τ₀₂) ε↝ε' refl refl) = ≡rβ'-Subst ι ε ε' τ₀₁ ε↝ε' refl refl
 
+≡rβ'-⇒-cod : (τ₁' ⇒ τ₂') ≡rβ' (τ₁ ⇒ τ₂)
+           → τ₂' ≡rβ' τ₂
+≡rβ'-⇒-cod (≡rβ'-Subst ι ε ε' (τ₀₁ ⇒ τ₀₂) ε↝ε' refl refl)
+  rewrite S.act-τ-extensionality (ext-replace-comm ε' ι) τ₀₂
+        | S.act-τ-extensionality (ext-replace-comm ε  ι) τ₀₂
+        = ≡rβ'-Subst (suc ι) (R.weaken-ε ε) (R.weaken-ε ε') τ₀₂ (ρ-preserves-↝ suc ε↝ε') refl refl
+
 ≡rβ-⇒-dom : (τ₁' ⇒ τ₂') ≡rβ (τ₁ ⇒ τ₂)
           → τ₁' ≡rβ τ₁
 ≡rβ-⇒-dom = prove-via-≡rβ' ≡rβ'-⇒-dom
+
+≡rβ-⇒-cod : (τ₁' ⇒ τ₂') ≡rβ (τ₁ ⇒ τ₂)
+          → τ₂' ≡rβ τ₂
+≡rβ-⇒-cod = prove-via-≡rβ' ≡rβ'-⇒-cod
