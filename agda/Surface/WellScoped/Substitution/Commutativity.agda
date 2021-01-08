@@ -42,6 +42,30 @@ subst-commutes-ε ι ε ε₂ ε₀ rewrite act-ε-distr (replace-at zero ε₂)
                                  | act-ε-extensionality (subst-commutes-var ε ε₂ ι) ε₀
                                  = refl
 
+{-
+For the following two functions, it's easy to see with pen and paper that:
+  if ι₂ < ι₁ then ι₁' = suc ι₁
+  if ι₂ = ι₁ then ι₁' = suc ι₁
+  if ι₂ > ι₁ then ι₁' = ι₁
+or, equivalently,
+  if ι₁ ≥ ι₂ then ι₁' = suc ι₁
+  if ι₁ < ι₂ then ι₁' = ι₁
+or, equivalently,
+  if suc ι₁ > ι₂ then ι₁' = suc ι₁
+  if suc ι₁ ≤ ι₂ then ι₁' = ι₁
+
+Analogously:
+  if ι₁ < ι₂ then ι₂' = pred ι₂
+  if ι₁ = ι₂ then ι₂' = ι₂
+  if ι₁ > ι₂ then ι₂' = ι₂
+or, equivalently,
+  if ι₁ ≥ ι₂ then ι₂' = ι₂
+  if ι₁ < ι₂ then ι₂' = pred ι₂
+or, equivalently,
+  if suc ι₁ > ι₂ then ι₂' = ι₂
+  if suc ι₁ ≤ ι₂ then ι₂' = pred ι₂
+-}
+
 compute-ι'₁ : Fin (suc ℓ) → Fin (suc (suc ℓ)) → Fin (suc (suc ℓ))
 compute-ι'₁ ι₁ ι₂ with suc ι₁ <>? ι₂
 ... | less suc-ι₁<ι₂ = inject₁ ι₁
