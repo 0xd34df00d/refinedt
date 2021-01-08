@@ -43,13 +43,13 @@ subst-commutes-ε ι ε ε₂ ε₀ rewrite act-ε-distr (replace-at zero ε₂)
                                  = refl
 
 compute-ι'₁ : Fin (suc ℓ) → Fin (suc (suc ℓ)) → Fin (suc (suc ℓ))
-compute-ι'₁ ι₁ ι₂ with suc ι₁ <>? ι₂
+compute-ι'₁ ι₁ ι₂ with ι₁ <>'? ι₂
 ... | less ι₁<ι₂ = inject₁ ι₁
-... | equal ι₁≡ι₂ = suc ι₁
+... | equal = suc ι₁
 ... | greater ι₁>ι₂ = suc ι₁
 
 compute-ι'₂ : Fin (suc ℓ) → Fin (suc (suc ℓ)) → Fin (suc ℓ)
-compute-ι'₂ ι₁ ι₂ with suc ι₁ <>? ι₂
+compute-ι'₂ ι₁ ι₂ with suc ι₁ <>'? ι₂
 ... | less ι₁<ι₂ = {! !}
-... | equal ι₁≡ι₂ = {! !}
+... | equal = {! !}
 ... | greater ι₁>ι₂ = {! !}
