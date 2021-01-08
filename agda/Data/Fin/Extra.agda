@@ -144,18 +144,3 @@ m<n-n-pred-injective {n<m₁ = n<m₁} {n<m₂ = n<m₂} ≡-prf with cong Fin.s
 ... | cong-prf rewrite m<n-n-pred-cancel n<m₁
                      | m<n-n-pred-cancel n<m₂
                      = cong-prf
-
--- Polymorphic versions of comparisons
-data _<>'_ : Fin ℓ₁ → Fin ℓ₂ → Set where
-  less    : (m<n : m < n) → m <>' n
-  equal   :                 m <>' n
-  greater : (m>n : m > n) → m <>' n
-
-_<>'?_ : (m : Fin ℓ₁) → (n : Fin ℓ₂) → m <>' n
-zero <>'? zero = equal
-zero <>'? suc n = less (<-zero n)
-suc m <>'? zero = greater (<-zero m)
-suc m <>'? suc n with m <>'? n
-... | less m<n = less (<-suc m<n)
-... | equal = equal
-... | greater m>n = greater (<-suc m>n)
