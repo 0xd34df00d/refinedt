@@ -4,6 +4,7 @@ open import Surface.WellScoped
 
 module Surface.WellScoped.Actions (α : VarAction) where
 
+open import Data.Nat using (zero; suc; _+_)
 open import Data.Vec
 
 open VarAction α public
@@ -39,3 +40,10 @@ act-ε f (SLam τ ε) = SLam (act-τ f τ) (act-ε (ext f) ε)
 act-ε f (SApp ε₁ ε₂) = SApp (act-ε f ε₁) (act-ε f ε₂)
 act-ε f (SCase scrut branches) = SCase (act-ε f scrut) (act-branches f branches)
 act-ε f (SCon idx body adt-cons) = SCon idx (act-ε f body) (act-cons f adt-cons)
+
+
+ext-k : ∀ k
+      → (Fin ℓ → Target ℓ')
+      → (Fin (k + ℓ) → Target (k + ℓ'))
+ext-k zero ρ = ρ
+ext-k (suc k) ρ = ext (ext-k k ρ)
