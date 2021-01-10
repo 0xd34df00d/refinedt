@@ -89,7 +89,7 @@ prove-via-≡rβ' f = ≡rβ'-to-≡rβ ∘ f ∘ ≡rβ-to-≡rβ'
                       → {cons₂ : ADTCons (Mkℕₐ (suc n₂)) ℓ}
                       → (⊍ cons₁) ≡rβ' (⊍ cons₂)
                       → n₁ ≡ n₂
-≡rβ'-cons-same-length (≡rβ'-Subst _ _ (⊍ cons) _ refl refl) = refl
+≡rβ'-cons-same-length (≡rβ'-Subst _ _ _ (⊍ cons) _ refl refl) = refl
 
 ≡rβ-cons-same-length : ∀ {n₁ n₂}
                      → {cons₁ : ADTCons (Mkℕₐ (suc n₁)) ℓ}
