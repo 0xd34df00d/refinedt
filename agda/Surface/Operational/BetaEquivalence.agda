@@ -67,18 +67,18 @@ prove-via-≡rβ' f = ≡rβ'-to-≡rβ ∘ f ∘ ≡rβ-to-≡rβ'
 ≡rβ'-preserves-shape {τ₁ = ⟨ _ ∣ _ ⟩} {τ₂ = ⟨ _ ∣ _ ⟩} _ = refl
 ≡rβ'-preserves-shape {τ₁ = _ ⇒ _} {τ₂ = _ ⇒ _} _ = refl
 ≡rβ'-preserves-shape {τ₁ = ⊍ _} {τ₂ = ⊍ _} _ = refl
-≡rβ'-preserves-shape {τ₁ = ⟨ _ ∣ _ ⟩} {τ₂ = τ₂ ⇒ τ₃} (≡rβ'-Subst ε ε' τ ε↝ε' τ₁-≡ τ₂-≡)
-  = shape-contra₂ (↦τ-preserves-shape zero ε') (↦τ-preserves-shape zero ε) τ₁-≡ τ₂-≡ λ ()
-≡rβ'-preserves-shape {τ₁ = ⟨ _ ∣ _ ⟩} {τ₂ = ⊍ _} (≡rβ'-Subst ε ε' τ ε↝ε' τ₁-≡ τ₂-≡)
-  = shape-contra₂ (↦τ-preserves-shape zero ε') (↦τ-preserves-shape zero ε) τ₁-≡ τ₂-≡ λ ()
-≡rβ'-preserves-shape {τ₁ = _ ⇒ _} {τ₂ = ⟨ _ ∣ _ ⟩} (≡rβ'-Subst ε ε' τ ε↝ε' τ₁-≡ τ₂-≡)
-  = shape-contra₂ (↦τ-preserves-shape zero ε') (↦τ-preserves-shape zero ε) τ₁-≡ τ₂-≡ λ ()
-≡rβ'-preserves-shape {τ₁ = _ ⇒ _} {τ₂ = ⊍ _} (≡rβ'-Subst ε ε' τ ε↝ε' τ₁-≡ τ₂-≡)
-  = shape-contra₂ (↦τ-preserves-shape zero ε') (↦τ-preserves-shape zero ε) τ₁-≡ τ₂-≡ λ ()
-≡rβ'-preserves-shape {τ₁ = ⊍ _} {τ₂ = ⟨ _ ∣ _ ⟩} (≡rβ'-Subst ε ε' τ ε↝ε' τ₁-≡ τ₂-≡)
-  = shape-contra₂ (↦τ-preserves-shape zero ε') (↦τ-preserves-shape zero ε) τ₁-≡ τ₂-≡ λ ()
-≡rβ'-preserves-shape {τ₁ = ⊍ _} {τ₂ = _ ⇒ _} (≡rβ'-Subst ε ε' τ ε↝ε' τ₁-≡ τ₂-≡)
-  = shape-contra₂ (↦τ-preserves-shape zero ε') (↦τ-preserves-shape zero ε) τ₁-≡ τ₂-≡ λ ()
+≡rβ'-preserves-shape {τ₁ = ⟨ _ ∣ _ ⟩} {τ₂ = τ₂ ⇒ τ₃} (≡rβ'-Subst ι ε ε' τ ε↝ε' τ₁-≡ τ₂-≡)
+  = shape-contra₂ (↦τ-preserves-shape ι ε') (↦τ-preserves-shape ι ε) τ₁-≡ τ₂-≡ λ ()
+≡rβ'-preserves-shape {τ₁ = ⟨ _ ∣ _ ⟩} {τ₂ = ⊍ _} (≡rβ'-Subst ι ε ε' τ ε↝ε' τ₁-≡ τ₂-≡)
+  = shape-contra₂ (↦τ-preserves-shape ι ε') (↦τ-preserves-shape ι ε) τ₁-≡ τ₂-≡ λ ()
+≡rβ'-preserves-shape {τ₁ = _ ⇒ _} {τ₂ = ⟨ _ ∣ _ ⟩} (≡rβ'-Subst ι ε ε' τ ε↝ε' τ₁-≡ τ₂-≡)
+  = shape-contra₂ (↦τ-preserves-shape ι ε') (↦τ-preserves-shape ι ε) τ₁-≡ τ₂-≡ λ ()
+≡rβ'-preserves-shape {τ₁ = _ ⇒ _} {τ₂ = ⊍ _} (≡rβ'-Subst ι ε ε' τ ε↝ε' τ₁-≡ τ₂-≡)
+  = shape-contra₂ (↦τ-preserves-shape ι ε') (↦τ-preserves-shape ι ε) τ₁-≡ τ₂-≡ λ ()
+≡rβ'-preserves-shape {τ₁ = ⊍ _} {τ₂ = ⟨ _ ∣ _ ⟩} (≡rβ'-Subst ι ε ε' τ ε↝ε' τ₁-≡ τ₂-≡)
+  = shape-contra₂ (↦τ-preserves-shape ι ε') (↦τ-preserves-shape ι ε) τ₁-≡ τ₂-≡ λ ()
+≡rβ'-preserves-shape {τ₁ = ⊍ _} {τ₂ = _ ⇒ _} (≡rβ'-Subst ι ε ε' τ ε↝ε' τ₁-≡ τ₂-≡)
+  = shape-contra₂ (↦τ-preserves-shape ι ε') (↦τ-preserves-shape ι ε) τ₁-≡ τ₂-≡ λ ()
 
 ≡rβ-preserves-shape : ShapePreserving {ℓ} _≡rβ_
 ≡rβ-preserves-shape ≡rβ = ≡rβ'-preserves-shape (≡rβ-to-≡rβ' ≡rβ)
