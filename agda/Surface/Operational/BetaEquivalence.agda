@@ -103,9 +103,9 @@ prove-via-≡rβ' f = ≡rβ'-to-≡rβ ∘ f ∘ ≡rβ-to-≡rβ'
             → (cons₂ : ADTCons (Mkℕₐ (suc n)) ℓ)
             → (⊍ cons₁) ≡rβ' (⊍ cons₂)
             → lookup cons₁ idx ≡rβ' lookup cons₂ idx
-≡rβ'-lookup             zero      (x₁ ∷ _)    (x₂ ∷ _)    (≡rβ'-Subst ε ε' (⊍ (x ∷ _)) ε↝ε' refl refl) = ≡rβ'-Subst ε ε' x ε↝ε' refl refl
-≡rβ'-lookup {n = suc n} (suc idx) (_ ∷ cons₁) (_ ∷ cons₂) (≡rβ'-Subst ε ε' (⊍ (_ ∷ cons)) ε↝ε' refl refl)
-  = ≡rβ'-lookup idx cons₁ cons₂ (≡rβ'-Subst ε ε' (⊍ cons) ε↝ε' refl refl)
+≡rβ'-lookup             zero      (x₁ ∷ _)    (x₂ ∷ _)    (≡rβ'-Subst ι ε ε' (⊍ (x ∷ _)) ε↝ε' refl refl) = ≡rβ'-Subst ι ε ε' x ε↝ε' refl refl
+≡rβ'-lookup {n = suc n} (suc idx) (_ ∷ cons₁) (_ ∷ cons₂) (≡rβ'-Subst ι ε ε' (⊍ (_ ∷ cons)) ε↝ε' refl refl)
+  = ≡rβ'-lookup idx cons₁ cons₂ (≡rβ'-Subst ι ε ε' (⊍ cons) ε↝ε' refl refl)
 
 ≡rβ-lookup : {cons₁ : ADTCons (Mkℕₐ (suc n)) ℓ}
            → {cons₂ : ADTCons (Mkℕₐ (suc n)) ℓ}
