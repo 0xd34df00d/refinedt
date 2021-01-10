@@ -17,39 +17,6 @@ open import Surface.WellScoped.Shape
 open import Surface.Operational
 open import Surface.Operational.Lemmas
 
-{-
-data β-subst : (σ₁ σ₂ : Fin (suc ℓ) → STerm ℓ) → Set where
-  β-replace : (ε ε' : STerm ℓ)
-            → (ε↝ε' : ε ↝ ε')
-            → (σ₁-≡ : σ₁ ≡ replace-at zero ε')
-            → (σ₂-≡ : σ₂ ≡ replace-at zero ε)
-            → β-subst σ₁ σ₂
-  β-ext     : ∀ σ₁ σ₂
-            → β-subst σ₁ σ₂
-            → (σ₁'-≡ : σ₁' ≡ S.ext σ₁)
-            → (σ₂'-≡ : σ₂' ≡ S.ext σ₂)
-            → β-subst σ₁' σ₂'
-
-infix 5 _≡rβ_
-data _≡rβ_ : SType ℓ → SType ℓ → Set where
-  ≡rβ-Subst : ∀ τ
-            → (σ₁~σ₂ : β-subst σ₁ σ₂)
-            → S.act-τ σ₁ τ ≡rβ S.act-τ σ₂ τ
-
-ρ-preserves-≡rβ : ∀ {ρ : Fin ℓ → Fin ℓ'}
-                → Monotonic ρ
-                → τ₁ ≡rβ τ₂
-                → R.act-τ ρ τ₁ ≡rβ R.act-τ ρ τ₂
-ρ-preserves-≡rβ {ρ = ρ} ρ-mono (≡rβ-Subst τ (β-replace ε ε' ε↝ε' refl refl))
-  rewrite ρ-subst-distr-τ-0 ρ ρ-mono ε τ
-        | ρ-subst-distr-τ-0 ρ ρ-mono ε' τ
-        = ≡rβ-Subst (R.act-τ (R.ext ρ) τ) (β-replace (R.act-ε ρ ε) (R.act-ε ρ ε') (ρ-preserves-↝ ρ-mono ε↝ε') refl refl)
-ρ-preserves-≡rβ {ρ = ρ} ρ-mono (≡rβ-Subst τ (β-ext σ₁ σ₂ σ₁~σ₂ refl refl))
-  rewrite ρ-σ-distr-τ ρ (S.ext σ₁) τ
-        | ρ-σ-distr-τ ρ (S.ext σ₂) τ
-        = {! !}
-        -}
-
 infix 5 _≡rβ_
 data _≡rβ_ : SType ℓ → SType ℓ → Set where
   ≡rβ-Subst : ∀ ι ε ε' (τ : SType (suc ℓ))
