@@ -88,20 +88,6 @@ pred-always-same : ∀ {m₁ m₂ n : Fin (suc ℓ)}
                  → m<n-n-pred m₁<n ≡ m<n-n-pred m₂<n
 pred-always-same {n = suc n} _ _ = refl
 
-data _<>_ : Fin ℓ → Fin ℓ → Set where
-  less    : (m<n : m < n) → m <> n
-  equal   : (m≡n : m ≡ n) → m <> n
-  greater : (m>n : m > n) → m <> n
-
-_<>?_ : (m n : Fin ℓ) → m <> n
-zero <>? zero = equal refl
-zero <>? suc n = less (<-zero n)
-suc m <>? zero = greater (<-zero m)
-suc m <>? suc n with m <>? n
-... | less m<n = less (<-suc m<n)
-... | equal refl = equal refl
-... | greater m>n = greater (<-suc m>n)
-
 tighten : ∀ {m n : Fin (suc ℓ)} → m > n → Fin ℓ
 tighten {ℓ = suc ℓ} (<-zero _) = zero
 tighten {ℓ = suc ℓ} (<-suc m>n) = suc (tighten m>n)
@@ -121,6 +107,21 @@ suc-tighten : ∀ {m n : Fin (suc ℓ)} → (m<n : m < n) → suc (tighten m<n) 
 suc-tighten {ℓ = suc ℓ} (<-zero n) = <-suc (<-zero n)
 suc-tighten {ℓ = suc ℓ} (<-suc m<n) = <-suc (suc-tighten m<n)
 
+
+data _<>_ : Fin ℓ → Fin ℓ → Set where
+  less    : (m<n : m < n) → m <> n
+  equal   : (m≡n : m ≡ n) → m <> n
+  greater : (m>n : m > n) → m <> n
+
+_<>?_ : (m n : Fin ℓ) → m <> n
+zero <>? zero = equal refl
+zero <>? suc n = less (<-zero n)
+suc m <>? zero = greater (<-zero m)
+suc m <>? suc n with m <>? n
+... | less m<n = less (<-suc m<n)
+... | equal refl = equal refl
+... | greater m>n = greater (<-suc m>n)
+
 <>?-refl-equal : ∀ (n : Fin ℓ) → n <>? n ≡ equal refl
 <>?-refl-equal zero = refl
 <>?-refl-equal (suc n) rewrite <>?-refl-equal n = refl
@@ -132,6 +133,7 @@ suc-tighten {ℓ = suc ℓ} (<-suc m<n) = <-suc (suc-tighten m<n)
 <>?-> : (m>n : m > n) → m <>? n ≡ greater m>n
 <>?-> (<-zero n) = refl
 <>?-> (<-suc m>n) rewrite <>?-> m>n = refl
+
 
 Monotonic : (f : Fin ℓ → Fin ℓ') → Set
 Monotonic f = ∀ {x y} → x < y → f x < f y
