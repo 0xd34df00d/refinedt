@@ -3,7 +3,7 @@
 module Data.Fin.Extra where
 
 open import Data.Nat using (ℕ; zero; suc)
-open import Data.Nat.Properties renaming (suc-injective to ℕ-suc-injective)
+open import Data.Nat.Properties using () renaming (suc-injective to ℕ-suc-injective)
 open import Data.Fin using (Fin; zero; suc; toℕ)
 open import Data.Fin.Properties using (suc-injective)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
