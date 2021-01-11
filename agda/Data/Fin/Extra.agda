@@ -48,9 +48,15 @@ a≤b<c (<-zero zero) (<-zero _) = <-zero _
 a≤b<c (<-zero (suc b)) (<-suc _) = <-zero _
 a≤b<c (<-suc a≤b) (<-suc b<c) = <-suc (a≤b<c a≤b b<c)
 
-<-weaken : m < n → m < suc n
-<-weaken (<-zero n) = <-zero (suc n)
-<-weaken (<-suc m<n) = <-suc (<-weaken m<n)
+<-weakenₗ : suc m < n
+          → m < n
+<-weakenₗ {m = zero} (<-suc suc-m<n) = <-zero _
+<-weakenₗ {m = suc m} (<-suc suc-m<n) = <-suc (<-weakenₗ suc-m<n)
+
+<-weakenᵣ : m < n
+          → m < suc n
+<-weakenᵣ (<-zero n) = <-zero (suc n)
+<-weakenᵣ (<-suc m<n) = <-suc (<-weakenᵣ m<n)
 
 _>_ : Fin ℓ → Fin ℓ' → Set
 m > n = n < m
