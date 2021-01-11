@@ -81,13 +81,16 @@ compute-ι'₂ ι₁ ι₂ with suc ι₁ <>? ι₂
 ... | greater suc-ι₁>ι₂ = tighten suc-ι₁>ι₂
 
 {-
-if var < ι₂, we leave it alone
+if var < ι₂ (or, equivalently, suc var ≤ ι₂), we leave it alone
 otherwise, we increment it to make room for ι₂
 -}
 make-room-for : (ι : Fin (suc ℓ))
               → (var : Fin ℓ)
               → Fin (suc ℓ)
-push-apart-at ι₂ var = {! !}
+make-room-for ι var with ι <>? suc var
+... | less m<n = inject₁ var
+... | equal m≡n = inject₁ var
+... | greater m>n = suc var
 
 subst-commutes-var : (ε₁ : STerm ℓ)
                    → (ε₂ : STerm (suc ℓ))
