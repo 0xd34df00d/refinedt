@@ -4,7 +4,7 @@ module Data.Fin.Extra where
 
 open import Data.Nat using (ℕ; zero; suc)
 open import Data.Nat.Properties using () renaming (suc-injective to ℕ-suc-injective)
-open import Data.Fin using (Fin; zero; suc; toℕ)
+open import Data.Fin using (Fin; zero; suc; toℕ; inject₁)
 open import Data.Fin.Properties using (suc-injective)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 open import Relation.Nullary using (¬_)
@@ -47,6 +47,11 @@ a≤b<c : {a b c : Fin ℓ}
 a≤b<c (<-zero zero) (<-zero _) = <-zero _
 a≤b<c (<-zero (suc b)) (<-suc _) = <-zero _
 a≤b<c (<-suc a≤b) (<-suc b<c) = <-suc (a≤b<c a≤b b<c)
+
+<-injectₗ₁ : m < n
+           → inject₁ m < n
+<-injectₗ₁ (<-zero n) = <-zero n
+<-injectₗ₁ (<-suc m<n) = <-suc (<-injectₗ₁ m<n)
 
 <-weakenₗ : suc m < n
           → m < n
