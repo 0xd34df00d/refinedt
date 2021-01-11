@@ -13,6 +13,7 @@ open import Surface.WellScoped.Substitution
 open import Surface.WellScoped.Substitution.Distributivity
 open import Surface.WellScoped.Substitution.Stable
 
+{-
 subst-commutes-var : ∀ ε (ε₂ : STerm (suc ℓ)) ι
                    → ∀ var → [ ι ↦ε ε ] [ zero ↦ε ε₂ ] (SVar var) ≡ [ zero ↦ε [ ι ↦ε ε ] ε₂ ] [ suc ι ↦ε R.weaken-ε ε ] (SVar var)
 subst-commutes-var ε ε₂ zero zero = refl
@@ -41,6 +42,7 @@ subst-commutes-ε ι ε ε₂ ε₀ rewrite act-ε-distr (replace-at zero ε₂)
                                  | act-ε-distr (replace-at (suc ι) (R.weaken-ε ε)) (replace-at zero ([ ι ↦ε ε ] ε₂)) ε₀
                                  | act-ε-extensionality (subst-commutes-var ε ε₂ ι) ε₀
                                  = refl
+                                 -}
 
 {-
 For the following two functions, it's easy to see with pen and paper that:
@@ -77,3 +79,29 @@ compute-ι'₂ ι₁ ι₂ with suc ι₁ <>? ι₂
 ... | less suc-ι₁<ι₂ = m<n-n-pred suc-ι₁<ι₂
 ... | equal suc-ι₁≡ι₂ = ι₁ -- which is the predecessor of ι₂
 ... | greater suc-ι₁>ι₂ = tighten suc-ι₁>ι₂
+
+push-apart-at : (ι₂ : Fin (suc ℓ))
+              → (var : Fin ℓ)
+              → Fin (suc ℓ)
+push-apart-at ι₂ var = {! !}
+
+subst-commutes-var : (ε₁ : STerm ℓ)
+                   → (ε₂ : STerm (suc ℓ))
+                   → (ι₁ : Fin (suc ℓ))
+                   → (ι₂ : Fin (suc (suc ℓ)))
+                   → (var : Fin (suc (suc ℓ)))
+                   → (let ι'₁ = compute-ι'₁ ι₁ ι₂)
+                   → (let ι'₂ = compute-ι'₂ ι₁ ι₂)
+                   → [ ι₁ ↦ε ε₁ ] [ ι₂ ↦ε ε₂ ] (SVar var) ≡ [ ι'₂ ↦ε [ ι₁ ↦ε ε₁ ] ε₂ ] [ ι'₁ ↦ε R.act-ε (push-apart-at ι'₂) ε₁ ] (SVar var)
+subst-commutes-var ε₁ ε₂ ι₁ ι₂ var = {! !}
+
+subst-commutes-τ : ∀ ι₁ ι₂ ε₁ ε₂ (τ : SType (suc (suc ℓ)))
+                 → (let ι'₁ = compute-ι'₁ ι₁ ι₂)
+                 → (let ι'₂ = compute-ι'₂ ι₁ ι₂)
+                 → [ ι₁ ↦τ ε₁ ] [ ι₂ ↦τ ε₂ ] τ ≡ [ ι'₂ ↦τ [ ι₁ ↦ε ε₁ ] ε₂ ] [ ι'₁ ↦τ R.act-ε (push-apart-at ι'₂) ε₁ ] τ
+subst-commutes-τ ι₁ ι₂ ε₁ ε₂ τ rewrite act-τ-distr (replace-at ι₂ ε₂) (replace-at ι₁ ε₁) τ
+                                     | act-τ-distr
+                                           (replace-at (compute-ι'₁ ι₁ ι₂) (R.act-ε (push-apart-at (compute-ι'₂ ι₁ ι₂)) ε₁))
+                                           (replace-at (compute-ι'₂ ι₁ ι₂) ([ ι₁ ↦ε ε₁ ] ε₂)) τ
+                                     | act-τ-extensionality (subst-commutes-var ε₁ ε₂ ι₁ ι₂) τ
+                                     = refl
