@@ -80,7 +80,11 @@ compute-ι'₂ ι₁ ι₂ with suc ι₁ <>? ι₂
 ... | equal suc-ι₁≡ι₂ = ι₁ -- which is the predecessor of ι₂
 ... | greater suc-ι₁>ι₂ = tighten suc-ι₁>ι₂
 
-push-apart-at : (ι₂ : Fin (suc ℓ))
+{-
+if var < ι₂, we leave it alone
+otherwise, we increment it to make room for ι₂
+-}
+make-room-for : (ι : Fin (suc ℓ))
               → (var : Fin ℓ)
               → Fin (suc ℓ)
 push-apart-at ι₂ var = {! !}
@@ -92,16 +96,16 @@ subst-commutes-var : (ε₁ : STerm ℓ)
                    → (var : Fin (suc (suc ℓ)))
                    → (let ι'₁ = compute-ι'₁ ι₁ ι₂)
                    → (let ι'₂ = compute-ι'₂ ι₁ ι₂)
-                   → [ ι₁ ↦ε ε₁ ] [ ι₂ ↦ε ε₂ ] (SVar var) ≡ [ ι'₂ ↦ε [ ι₁ ↦ε ε₁ ] ε₂ ] [ ι'₁ ↦ε R.act-ε (push-apart-at ι'₂) ε₁ ] (SVar var)
+                   → [ ι₁ ↦ε ε₁ ] [ ι₂ ↦ε ε₂ ] (SVar var) ≡ [ ι'₂ ↦ε [ ι₁ ↦ε ε₁ ] ε₂ ] [ ι'₁ ↦ε R.act-ε (make-room-for ι'₂) ε₁ ] (SVar var)
 subst-commutes-var ε₁ ε₂ ι₁ ι₂ var = {! !}
 
 subst-commutes-τ : ∀ ι₁ ι₂ ε₁ ε₂ (τ : SType (suc (suc ℓ)))
                  → (let ι'₁ = compute-ι'₁ ι₁ ι₂)
                  → (let ι'₂ = compute-ι'₂ ι₁ ι₂)
-                 → [ ι₁ ↦τ ε₁ ] [ ι₂ ↦τ ε₂ ] τ ≡ [ ι'₂ ↦τ [ ι₁ ↦ε ε₁ ] ε₂ ] [ ι'₁ ↦τ R.act-ε (push-apart-at ι'₂) ε₁ ] τ
+                 → [ ι₁ ↦τ ε₁ ] [ ι₂ ↦τ ε₂ ] τ ≡ [ ι'₂ ↦τ [ ι₁ ↦ε ε₁ ] ε₂ ] [ ι'₁ ↦τ R.act-ε (make-room-for ι'₂) ε₁ ] τ
 subst-commutes-τ ι₁ ι₂ ε₁ ε₂ τ rewrite act-τ-distr (replace-at ι₂ ε₂) (replace-at ι₁ ε₁) τ
                                      | act-τ-distr
-                                           (replace-at (compute-ι'₁ ι₁ ι₂) (R.act-ε (push-apart-at (compute-ι'₂ ι₁ ι₂)) ε₁))
+                                           (replace-at (compute-ι'₁ ι₁ ι₂) (R.act-ε (make-room-for (compute-ι'₂ ι₁ ι₂)) ε₁))
                                            (replace-at (compute-ι'₂ ι₁ ι₂) ([ ι₁ ↦ε ε₁ ] ε₂)) τ
                                      | act-τ-extensionality (subst-commutes-var ε₁ ε₂ ι₁ ι₂) τ
                                      = refl
