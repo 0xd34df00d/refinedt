@@ -20,6 +20,11 @@ data _<_ : Fin ℓ → Fin ℓ' → Set where
   <-suc  : m < n
          → suc m < suc n
 
+<-suc-injective : {m<n m<n' : m < n}
+                → <-suc m<n ≡ <-suc m<n'
+                → m<n ≡ m<n'
+<-suc-injective refl = refl
+
 m<n-not-equal : m < n → ¬ m ≡ n
 m<n-not-equal (<-zero n) = λ ()
 m<n-not-equal (<-suc m<n) = λ suc-m≡suc-n → m<n-not-equal m<n (suc-injective suc-m≡suc-n)
@@ -112,6 +117,17 @@ data _<>_ : Fin ℓ → Fin ℓ → Set where
   less    : (m<n : m < n) → m <> n
   equal   : (m≡n : m ≡ n) → m <> n
   greater : (m>n : m > n) → m <> n
+
+less-injective : ∀ {m<n m<n' : m < n}
+               → less m<n ≡ less m<n'
+               → m<n ≡ m<n'
+less-injective refl = refl
+
+¬equal≡less : {m≡n : m ≡ n}
+            → {m<n : m < n}
+            → ¬ equal (m≡n) ≡ less (m<n)
+¬equal≡less ()
+
 
 _<>?_ : (m n : Fin ℓ) → m <> n
 zero <>? zero = equal refl
