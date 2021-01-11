@@ -27,6 +27,13 @@ m<n-not-equal (<-suc m<n) = λ suc-m≡suc-n → m<n-not-equal m<n (suc-injectiv
 <-antireflexive : ∀ {m : Fin ℓ} → ¬ m < m
 <-antireflexive (<-suc m<m) = <-antireflexive m<m
 
+<-trans : {a b c : Fin ℓ}
+        → a < b
+        → b < c
+        → a < c
+<-trans (<-zero n) (<-suc b<c) = <-zero _
+<-trans (<-suc a<b) (<-suc b<c) = <-suc (<-trans a<b b<c)
+
 m<n⇒0<n : m < n → zero {ℓ} < n
 m<n⇒0<n {n = suc n} _ = <-zero n
 
