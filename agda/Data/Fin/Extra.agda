@@ -142,6 +142,9 @@ suc m <>? suc n with m <>? n
 <>?-refl-equal zero = refl
 <>?-refl-equal (suc n) rewrite <>?-refl-equal n = refl
 
+<>?-≡ : (m≡n : m ≡ n) → m <>? n ≡ equal m≡n
+<>?-≡ refl = <>?-refl-equal _
+
 <>?-< : (m<n : m < n) → m <>? n ≡ less m<n
 <>?-< (<-zero n) = refl
 <>?-< (<-suc m<n) rewrite <>?-< m<n = refl
