@@ -105,21 +105,21 @@ pred-always-same : ∀ {m₁ m₂ n : Fin (suc ℓ)}
                  → m<n-n-pred m₁<n ≡ m<n-n-pred m₂<n
 pred-always-same {n = suc n} _ _ = refl
 
-tighten : ∀ {m n : Fin (suc ℓ)} → m > n → Fin ℓ
-tighten {ℓ = suc ℓ} (<-zero _) = zero
-tighten {ℓ = suc ℓ} (<-suc m>n) = suc (tighten m>n)
+tighten : ∀ {m n : Fin (suc ℓ)} → m < n → Fin ℓ
+tighten {suc ℓ} (<-zero _) = zero
+tighten {suc ℓ} (<-suc m<n) = suc (tighten m<n)
 
-tighten-is-same-ℕ : ∀ {m n : Fin (suc ℓ)} → (m>n : m > n) → toℕ (tighten m>n) ≡ toℕ n
-tighten-is-same-ℕ {ℓ = suc ℓ} (<-zero _) = refl
-tighten-is-same-ℕ {ℓ = suc ℓ} (<-suc m>n) rewrite tighten-is-same-ℕ m>n = refl
+tighten-is-same-ℕ : ∀ {m n : Fin (suc ℓ)} → (m<n : m < n) → toℕ (tighten m<n) ≡ toℕ m
+tighten-is-same-ℕ {suc ℓ} (<-zero _) = refl
+tighten-is-same-ℕ {suc ℓ} (<-suc m<n) rewrite tighten-is-same-ℕ m<n = refl
 
 tighten-zero : ∀ (n : Fin (suc ℓ)) → tighten (<-zero n) ≡ zero
 tighten-zero _ = refl
 
-tighten-preserves-<ₗ : (n>m : n > m)
-                     → tighten n>m < n
+tighten-preserves-<ₗ : (m<n : m < n)
+                     → tighten m<n < n
 tighten-preserves-<ₗ {suc ℓ} (<-zero n) = <-zero n
-tighten-preserves-<ₗ {suc ℓ} (<-suc n>m) = <-suc (tighten-preserves-<ₗ n>m)
+tighten-preserves-<ₗ {suc ℓ} (<-suc m<n) = <-suc (tighten-preserves-<ₗ m<n)
 
 tighten-preserves-<ᵣ : {a b c : Fin (suc ℓ)}
                      → (a<b : a < b)
