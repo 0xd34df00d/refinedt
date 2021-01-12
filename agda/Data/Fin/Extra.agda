@@ -116,9 +116,17 @@ tighten-is-same-ℕ {ℓ = suc ℓ} (<-suc m>n) rewrite tighten-is-same-ℕ m>n 
 tighten-zero : ∀ (n : Fin (suc ℓ)) → tighten (<-zero n) ≡ zero
 tighten-zero _ = refl
 
-tighten-preserves-< : (n>m : m < n) → tighten n>m < n
-tighten-preserves-< {ℓ = suc ℓ} (<-zero n) = <-zero n
-tighten-preserves-< {ℓ = suc ℓ} (<-suc n>m) = <-suc (tighten-preserves-< n>m)
+tighten-preserves-<ₗ : (n>m : n > m)
+                     → tighten n>m < n
+tighten-preserves-<ₗ {suc ℓ} (<-zero n) = <-zero n
+tighten-preserves-<ₗ {suc ℓ} (<-suc n>m) = <-suc (tighten-preserves-<ₗ n>m)
+
+tighten-preserves-<ᵣ : {a b c : Fin (suc ℓ)}
+                     → (a<b : a < b)
+                     → (b<c : b < c)
+                     → a < tighten b<c
+tighten-preserves-<ᵣ {suc ℓ} (<-zero _) (<-suc b<c) = <-zero (tighten b<c)
+tighten-preserves-<ᵣ {suc ℓ} (<-suc a<b) (<-suc b<c) = <-suc (tighten-preserves-<ᵣ a<b b<c)
 
 suc-tighten : ∀ {m n : Fin (suc ℓ)} → (m<n : m < n) → suc (tighten m<n) < suc n
 suc-tighten {ℓ = suc ℓ} (<-zero n) = <-suc (<-zero n)
