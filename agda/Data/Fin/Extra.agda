@@ -2,6 +2,7 @@
 
 module Data.Fin.Extra where
 
+open import Data.Empty using (⊥-elim)
 open import Data.Nat using (ℕ; zero; suc)
 open import Data.Nat.Properties using () renaming (suc-injective to ℕ-suc-injective)
 open import Data.Fin using (Fin; zero; suc; toℕ; inject₁)
@@ -156,6 +157,13 @@ suc m <>? suc n with m <>? n
 <>?-> : (m>n : m > n) → m <>? n ≡ greater m>n
 <>?-> (<-zero n) = refl
 <>?-> (<-suc m>n) rewrite <>?-> m>n = refl
+
+<>?-<-suc : (m<n : m < n)
+          → suc m <>? suc n ≡ less (<-suc m<n)
+          → m <>? n ≡ less m<n
+<>?-<-suc {m = m} {n = n} m<n ≡-prf with m <>? n
+... | less m<n' rewrite <-suc-injective (less-injective ≡-prf) = refl
+... | equal refl = ⊥-elim (¬equal≡less ≡-prf)
 
 
 Monotonic : (f : Fin ℓ → Fin ℓ') → Set
