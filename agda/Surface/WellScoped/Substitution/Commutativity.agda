@@ -128,7 +128,10 @@ subst-commutes-var ε₁ ε₂ ι₁ ι₂ var with suc ι₁ <>? ι₂ | ι₂ 
         | pred-always-same (<-injectₗ₁ (<-weakenₗ m<n)) m<n
         | <>?-< (lemma₂ m<n)
         = refl
-... | equal refl | equal refl = {! !}
+... | equal refl | equal refl
+  rewrite <>?-< (<-injectₗ₁ (n<suc-n ι₁))
+        | <>?-refl-equal ι₁
+        = refl
 ... | equal refl | greater m>n = {! !}
 ... | greater m>n | equal refl = {! !}
 ... | greater m>n | greater m>n₁ = {! !}
