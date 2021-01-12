@@ -92,6 +92,13 @@ make-room-for ι var with ι <>? suc var
 ... | equal m≡n = inject₁ var
 ... | greater m>n = suc var
 
+private
+  lemma₁ : ∀ {a : Fin ℓ} {b c : Fin (suc ℓ)}
+         → (suc-a<b : suc a < b)
+         → (b<c : b < c)
+         → inject₁ a < c
+  lemma₁ suc-a<b b<c = <-injectₗ₁ (<-weakenₗ (<-trans suc-a<b b<c))
+
 subst-commutes-var : (ε₁ : STerm ℓ)
                    → (ε₂ : STerm (suc ℓ))
                    → (ι₁ : Fin (suc ℓ))
@@ -100,7 +107,21 @@ subst-commutes-var : (ε₁ : STerm ℓ)
                    → (let ι'₁ = compute-ι'₁ ι₁ ι₂)
                    → (let ι'₂ = compute-ι'₂ ι₁ ι₂)
                    → [ ι₁ ↦ε ε₁ ] [ ι₂ ↦ε ε₂ ] (SVar var) ≡ [ ι'₂ ↦ε [ ι₁ ↦ε ε₁ ] ε₂ ] [ ι'₁ ↦ε R.act-ε (make-room-for ι'₂) ε₁ ] (SVar var)
-subst-commutes-var ε₁ ε₂ ι₁ ι₂ var = {! !}
+subst-commutes-var ε₁ ε₂ ι₁ ι₂ var with suc ι₁ <>? ι₂ | ι₂ <>? var
+... | less m<n@(<-suc m<n') | less m<n₁@(<-suc m<n₁')
+  rewrite <>?-< (lemma₁ m<n m<n₁)
+        | <>?-< (<-trans m<n' m<n₁')
+        | <>?-< m<n₁'
+        | pred-always-same (<-trans m<n' m<n₁') m<n₁'
+        = refl
+... | less m<n | equal refl = {! !}
+... | less m<n | greater m>n = {! !}
+... | equal refl | less m<n = {! !}
+... | equal refl | equal refl = {! !}
+... | equal refl | greater m>n = {! !}
+... | greater m>n | less m<n = {! !}
+... | greater m>n | equal refl = {! !}
+... | greater m>n | greater m>n₁ = {! !}
 
 subst-commutes-τ : ∀ ι₁ ι₂ ε₁ ε₂ (τ : SType (suc (suc ℓ)))
                  → (let ι'₁ = compute-ι'₁ ι₁ ι₂)
