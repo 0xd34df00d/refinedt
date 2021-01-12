@@ -133,7 +133,10 @@ subst-commutes-var ε₁ ε₂ ι₁ ι₂ var with suc ι₁ <>? ι₂ | ι₂ 
         | <>?-refl-equal ι₁
         = refl
 ... | equal refl | greater m>n = {! !}
-... | greater m>n | equal refl = {! !}
+... | greater m>n | equal refl
+  rewrite <>?-> m>n
+        | <>?-refl-equal (tighten m>n)
+        = refl
 ... | greater m>n | greater m>n₁ = {! !}
 
 ... | greater m>n | less m<n = {! !}
