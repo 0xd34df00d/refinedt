@@ -124,6 +124,13 @@ suc-tighten : ∀ {m n : Fin (suc ℓ)} → (m<n : m < n) → suc (tighten m<n) 
 suc-tighten {ℓ = suc ℓ} (<-zero n) = <-suc (<-zero n)
 suc-tighten {ℓ = suc ℓ} (<-suc m<n) = <-suc (suc-tighten m<n)
 
+tighten-same : ∀ {m n₁ n₂ : Fin (suc ℓ)}
+             → (m<n₁ : m < n₁)
+             → (m<n₂ : m < n₂)
+             → tighten m<n₁ ≡ tighten m<n₂
+tighten-same {suc ℓ} (<-zero n₁) (<-zero n₂) = refl
+tighten-same {suc ℓ} (<-suc m<n₁) (<-suc m<n₂) = cong suc (tighten-same m<n₁ m<n₂)
+
 
 data _<>_ : Fin ℓ → Fin ℓ → Set where
   less    : (m<n : m < n) → m <> n
