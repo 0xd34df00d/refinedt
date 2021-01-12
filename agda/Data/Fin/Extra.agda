@@ -76,6 +76,13 @@ a≤b<c (<-suc a≤b) (<-suc b<c) = <-suc (a≤b<c a≤b b<c)
 _>_ : Fin ℓ → Fin ℓ' → Set
 m > n = n < m
 
+>-trans : {a b c : Fin ℓ}
+        → a > b
+        → b > c
+        → a > c
+>-trans a>b b>c = <-trans b>c a>b
+
+
 m<n-not-m>n : m < n → ¬ m > n
 m<n-not-m>n (<-zero n) ()
 m<n-not-m>n (<-suc m<n) (<-suc m>n) = m<n-not-m>n m<n m>n
