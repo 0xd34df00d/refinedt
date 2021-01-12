@@ -99,6 +99,11 @@ private
          → inject₁ a < c
   lemma₁ suc-a<b b<c = <-injectₗ₁ (<-weakenₗ (<-trans suc-a<b b<c))
 
+  lemma₂ : ∀ {m : Fin ℓ} {n}
+         → (suc-m<n : suc m < n)
+         → m < m<n-n-pred suc-m<n
+  lemma₂ {n = suc n} (<-suc m<n) = m<n
+
 subst-commutes-var : (ε₁ : STerm ℓ)
                    → (ε₂ : STerm (suc ℓ))
                    → (ι₁ : Fin (suc ℓ))
@@ -118,13 +123,18 @@ subst-commutes-var ε₁ ε₂ ι₁ ι₂ var with suc ι₁ <>? ι₂ | ι₂ 
   rewrite <>?-< (<-injectₗ₁ (<-weakenₗ m<n))
         | <>?-≡ (pred-always-same m<n (<-injectₗ₁ (<-weakenₗ m<n)))
         = refl
-... | less m<n | greater m>n = {! !}
-... | equal refl | less m<n = {! !}
+... | equal refl | less m<n
+  rewrite <>?-< (<-injectₗ₁ (<-weakenₗ m<n))
+        | pred-always-same (<-injectₗ₁ (<-weakenₗ m<n)) m<n
+        | <>?-< (lemma₂ m<n)
+        = refl
 ... | equal refl | equal refl = {! !}
 ... | equal refl | greater m>n = {! !}
-... | greater m>n | less m<n = {! !}
 ... | greater m>n | equal refl = {! !}
 ... | greater m>n | greater m>n₁ = {! !}
+
+... | greater m>n | less m<n = {! !}
+... | less m<n | greater m>n = {! !}
 
 subst-commutes-τ : ∀ ι₁ ι₂ ε₁ ε₂ (τ : SType (suc (suc ℓ)))
                  → (let ι'₁ = compute-ι'₁ ι₁ ι₂)
