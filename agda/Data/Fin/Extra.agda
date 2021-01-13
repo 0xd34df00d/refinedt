@@ -65,7 +65,7 @@ a<b<c : ∀ {a : Fin ℓ₁} {b : Fin ℓ₂} {c : Fin ℓ₃}
 a<b<c (<-zero n) (<-suc b<c) = <-suc (m<n⇒0<n b<c)
 a<b<c (<-suc a<b) (<-suc b<c) = <-suc (a<b<c a<b b<c)
 
-a<b≤c : {a b c : Fin ℓ}
+a<b≤c : ∀ {a : Fin ℓ₁} {b : Fin ℓ₂} {c : Fin ℓ₃}
       → (a < b)
       → (b < suc c)
       → a < c
