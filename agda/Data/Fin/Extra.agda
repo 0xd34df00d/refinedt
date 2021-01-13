@@ -165,14 +165,6 @@ tighten-preserves-< : {a b c : Fin (suc ℓ)}
 tighten-preserves-< {suc ℓ} (<-zero n) (<-suc b<c) = <-zero (tighten b<c)
 tighten-preserves-< {suc ℓ} (<-suc a<b) (<-suc b<c) = <-suc (tighten-preserves-< a<b b<c)
 
-tighten-preserves-<-toℕ : {a b c : Fin (suc (suc ℓ))}
-                        → (a<b : a < b)
-                        → (b<c : b < c)
-                        → toℕ (tighten (tighten-preserves-< a<b b<c)) ≡ toℕ a
-tighten-preserves-<-toℕ {ℓ = zero} {c = suc zero} (<-zero zero) (<-suc ())
-tighten-preserves-<-toℕ {ℓ = suc ℓ} (<-zero n) (<-suc b<c) = refl
-tighten-preserves-<-toℕ {ℓ = suc ℓ} (<-suc a<b) (<-suc b<c) = cong suc (tighten-preserves-<-toℕ a<b b<c)
-
 suc-tighten : ∀ {m n : Fin (suc ℓ)} → (m<n : m < n) → suc (tighten m<n) < suc n
 suc-tighten {ℓ = suc ℓ} (<-zero n) = <-suc (<-zero n)
 suc-tighten {ℓ = suc ℓ} (<-suc m<n) = <-suc (suc-tighten m<n)
@@ -183,17 +175,6 @@ tighten-same : ∀ {m n₁ n₂ : Fin (suc ℓ)}
              → tighten m<n₁ ≡ tighten m<n₂
 tighten-same {suc ℓ} (<-zero n₁) (<-zero n₂) = refl
 tighten-same {suc ℓ} (<-suc m<n₁) (<-suc m<n₂) = cong suc (tighten-same m<n₁ m<n₂)
-
-tighten-<-unjectᵣ₁'-toℕ : ∀ {m : Fin (suc ℓ)} {n : Fin (suc ℓ)}
-                        → (m<n : m < inject₁ n)
-                        → toℕ (tighten (<-unjectᵣ₁' m<n refl)) ≡ toℕ m
-tighten-<-unjectᵣ₁'-toℕ {suc ℓ} {n = suc n} (<-zero .(inject₁ n)) = refl
-tighten-<-unjectᵣ₁'-toℕ {suc ℓ} {n = suc n} (<-suc m<n) = cong suc (tighten-<-unjectᵣ₁'-toℕ m<n)
-
-tighten-<-unjectᵣ₁-toℕ : ∀ {m : Fin (suc ℓ)} {n : Fin (suc ℓ)}
-                       → (m<n : m < inject₁ n)
-                       → toℕ (tighten (<-unjectᵣ₁ m<n)) ≡ toℕ m
-tighten-<-unjectᵣ₁-toℕ = tighten-<-unjectᵣ₁'-toℕ
 
 
 data _<>_ : Fin ℓ → Fin ℓ → Set where
