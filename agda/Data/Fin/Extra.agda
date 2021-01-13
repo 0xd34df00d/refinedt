@@ -77,6 +77,11 @@ a<b≤c (<-suc a<b) (<-suc b<c) = a<b<c a<b b<c
 <-injectₗ₁ (<-zero n) = <-zero n
 <-injectₗ₁ (<-suc m<n) = <-suc (<-injectₗ₁ m<n)
 
+<-injectᵣ₁ : m < n
+           → m < inject₁ n
+<-injectᵣ₁ (<-zero n) = <-zero (inject₁ n)
+<-injectᵣ₁ (<-suc m<n) = <-suc (<-injectᵣ₁ m<n)
+
 <-weakenₗ : suc m < n
           → m < n
 <-weakenₗ {m = zero} (<-suc suc-m<n) = <-zero _
