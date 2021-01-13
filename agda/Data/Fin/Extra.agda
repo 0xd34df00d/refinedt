@@ -12,7 +12,7 @@ open import Relation.Nullary using (¬_)
 
 private
   variable
-    ℓ ℓ' ℓ₁ ℓ₂ : ℕ
+    ℓ ℓ' ℓ₁ ℓ₂ ℓ₃ : ℕ
     m n : Fin ℓ
 
 data _<_ : Fin ℓ → Fin ℓ' → Set where
@@ -57,6 +57,20 @@ a≤b<c : {a b c : Fin ℓ}
 a≤b<c (<-zero zero) (<-zero _) = <-zero _
 a≤b<c (<-zero (suc b)) (<-suc _) = <-zero _
 a≤b<c (<-suc a≤b) (<-suc b<c) = <-suc (a≤b<c a≤b b<c)
+
+a<b<c : ∀ {a : Fin ℓ₁} {b : Fin ℓ₂} {c : Fin ℓ₃}
+      → a < b
+      → b < c
+      → suc a < c
+a<b<c (<-zero n) (<-suc b<c) = <-suc (m<n⇒0<n b<c)
+a<b<c (<-suc a<b) (<-suc b<c) = <-suc (a<b<c a<b b<c)
+
+a<b≤c : {a b c : Fin ℓ}
+      → (a < b)
+      → (b < suc c)
+      → a < c
+a<b≤c (<-zero n) (<-suc b≤c) = m<n⇒0<n b≤c
+a<b≤c (<-suc a<b) (<-suc b<c) = a<b<c a<b b<c
 
 <-injectₗ₁ : m < n
            → inject₁ m < n
