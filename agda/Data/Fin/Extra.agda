@@ -82,6 +82,17 @@ a<b≤c (<-suc a<b) (<-suc b<c) = a<b<c a<b b<c
 <-injectᵣ₁ (<-zero n) = <-zero (inject₁ n)
 <-injectᵣ₁ (<-suc m<n) = <-suc (<-injectᵣ₁ m<n)
 
+<-unjectᵣ₁ : m < inject₁ n
+           → m < n
+<-unjectᵣ₁ m<n = helper m<n refl
+  where
+    helper : ∀ {n'}
+           → m < n'
+           → n' ≡ inject₁ n
+           → m < n
+    helper {n = suc n} (<-zero _) _ = <-zero n
+    helper {n = suc n} (<-suc m<n') refl = <-suc (helper m<n' refl)
+
 <-weakenₗ : suc m < n
           → m < n
 <-weakenₗ {m = zero} (<-suc suc-m<n) = <-zero _
