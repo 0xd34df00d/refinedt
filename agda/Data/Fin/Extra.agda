@@ -82,16 +82,16 @@ a<b≤c (<-suc a<b) (<-suc b<c) = a<b<c a<b b<c
 <-injectᵣ₁ (<-zero n) = <-zero (inject₁ n)
 <-injectᵣ₁ (<-suc m<n) = <-suc (<-injectᵣ₁ m<n)
 
+<-unjectᵣ₁' : ∀ {n'}
+            → m < n'
+            → n' ≡ inject₁ n
+            → m < n
+<-unjectᵣ₁' {n = suc n} (<-zero _) _ = <-zero n
+<-unjectᵣ₁' {n = suc n} (<-suc m<n') refl = <-suc (<-unjectᵣ₁' m<n' refl)
+
 <-unjectᵣ₁ : m < inject₁ n
            → m < n
-<-unjectᵣ₁ m<n = helper m<n refl
-  where
-    helper : ∀ {n'}
-           → m < n'
-           → n' ≡ inject₁ n
-           → m < n
-    helper {n = suc n} (<-zero _) _ = <-zero n
-    helper {n = suc n} (<-suc m<n') refl = <-suc (helper m<n' refl)
+<-unjectᵣ₁ m<n = <-unjectᵣ₁' m<n refl
 
 <-weakenₗ : suc m < n
           → m < n
@@ -183,6 +183,17 @@ tighten-same : ∀ {m n₁ n₂ : Fin (suc ℓ)}
              → tighten m<n₁ ≡ tighten m<n₂
 tighten-same {suc ℓ} (<-zero n₁) (<-zero n₂) = refl
 tighten-same {suc ℓ} (<-suc m<n₁) (<-suc m<n₂) = cong suc (tighten-same m<n₁ m<n₂)
+
+tighten-<-unjectᵣ₁'-toℕ : ∀ {m : Fin (suc ℓ)} {n : Fin (suc ℓ)}
+                        → (m<n : m < inject₁ n)
+                        → toℕ (tighten (<-unjectᵣ₁' m<n refl)) ≡ toℕ m
+tighten-<-unjectᵣ₁'-toℕ {suc ℓ} {n = suc n} (<-zero .(inject₁ n)) = refl
+tighten-<-unjectᵣ₁'-toℕ {suc ℓ} {n = suc n} (<-suc m<n) = cong suc (tighten-<-unjectᵣ₁'-toℕ m<n)
+
+tighten-<-unjectᵣ₁-toℕ : ∀ {m : Fin (suc ℓ)} {n : Fin (suc ℓ)}
+                       → (m<n : m < inject₁ n)
+                       → toℕ (tighten (<-unjectᵣ₁ m<n)) ≡ toℕ m
+tighten-<-unjectᵣ₁-toℕ = tighten-<-unjectᵣ₁'-toℕ
 
 
 data _<>_ : Fin ℓ → Fin ℓ → Set where
