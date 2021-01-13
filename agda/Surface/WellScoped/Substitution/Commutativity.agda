@@ -3,8 +3,9 @@
 module Surface.WellScoped.Substitution.Commutativity where
 
 open import Data.Nat.Base using (zero; suc)
-open import Data.Fin.Base using (zero; suc; inject₁)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Data.Fin.Base using (zero; suc; inject₁; toℕ)
+open import Relation.Binary.PropositionalEquality as Eq using (_≡_; refl; sym)
+open Eq.≡-Reasoning
 
 open import Data.Fin.Extra
 open import Surface.WellScoped
@@ -104,6 +105,18 @@ private
          → m < m<n-n-pred suc-m<n
   lemma₂ {n = suc n} (<-suc m<n) = m<n
 
+  lemma₃ : ∀ {a₁ a₂ b : Fin ℓ}
+         → a₁ ≡ a₂
+         → a₂ < b
+         → a₁ < b
+  lemma₃ refl a<b = a<b
+
+  lemma₃-tighten-same : ∀ {a₁ a₂ b : Fin (suc ℓ)}
+                      → (a₁≡a₂ : a₁ ≡ a₂)
+                      → (a₂<b : a₂ < b)
+                      → tighten (lemma₃ a₁≡a₂ a₂<b) ≡ tighten a₂<b
+  lemma₃-tighten-same refl a<b = refl
+
 subst-commutes-var : (ε₁ : STerm ℓ)
                    → (ε₂ : STerm (suc ℓ))
                    → (ι₁ : Fin (suc ℓ))
@@ -137,7 +150,27 @@ subst-commutes-var ε₁ ε₂ ι₁ ι₂ var with suc ι₁ <>? ι₂ | ι₂ 
   rewrite <>?-> m>n
         | <>?-refl-equal (tighten m>n)
         = refl
-... | greater m>n | greater m>n₁ = {! !}
+... | greater m>n | greater m>n₁
+  rewrite <>?-> (>-trans m>n m>n₁)
+        | tighten-same (>-trans m>n m>n₁) m>n₁
+        | <>?-> (tighten-preserves-< m>n₁ m>n)
+        | <>?-> (lemma₃ (tighten-same m>n₁ (<-injectᵣ₁ (a<b≤c m>n₁ m>n))) (<-unjectᵣ₁ (tighten-preserves-<ₗ (<-injectᵣ₁ (a<b≤c m>n₁ m>n)))))
+        | lemma₃-tighten-same (tighten-same m>n₁ (<-injectᵣ₁ (a<b≤c m>n₁ m>n))) (<-unjectᵣ₁ (tighten-preserves-<ₗ (<-injectᵣ₁ (a<b≤c m>n₁ m>n))))
+        | lift-ℕ-≡
+          (
+          begin
+            toℕ (tighten (<-unjectᵣ₁ (tighten-preserves-<ₗ (<-injectᵣ₁ (a<b≤c m>n₁ m>n)))))
+          ≡⟨ tighten-is-same-ℕ (<-unjectᵣ₁ (tighten-preserves-<ₗ (<-injectᵣ₁ (a<b≤c m>n₁ m>n)))) ⟩
+            toℕ (tighten (<-injectᵣ₁ (a<b≤c m>n₁ m>n)))
+          ≡⟨ tighten-is-same-ℕ (<-injectᵣ₁ (a<b≤c m>n₁ m>n)) ⟩
+            toℕ var
+          ≡˘⟨ tighten-is-same-ℕ m>n₁ ⟩
+            toℕ (tighten m>n₁)
+          ≡˘⟨ tighten-is-same-ℕ (tighten-preserves-< m>n₁ m>n) ⟩
+            toℕ (tighten (tighten-preserves-< m>n₁ m>n))
+          ∎
+          )
+        = refl
 
 ... | greater m>n | less m<n = {! !}
 ... | less m<n | greater m>n = {! !}
