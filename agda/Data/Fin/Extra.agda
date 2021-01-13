@@ -165,6 +165,14 @@ tighten-preserves-< : {a b c : Fin (suc ℓ)}
 tighten-preserves-< {suc ℓ} (<-zero n) (<-suc b<c) = <-zero (tighten b<c)
 tighten-preserves-< {suc ℓ} (<-suc a<b) (<-suc b<c) = <-suc (tighten-preserves-< a<b b<c)
 
+tighten-preserves-<-toℕ : {a b c : Fin (suc (suc ℓ))}
+                        → (a<b : a < b)
+                        → (b<c : b < c)
+                        → toℕ (tighten (tighten-preserves-< a<b b<c)) ≡ toℕ a
+tighten-preserves-<-toℕ {ℓ = zero} {c = suc zero} (<-zero zero) (<-suc ())
+tighten-preserves-<-toℕ {ℓ = suc ℓ} (<-zero n) (<-suc b<c) = refl
+tighten-preserves-<-toℕ {ℓ = suc ℓ} (<-suc a<b) (<-suc b<c) = cong suc (tighten-preserves-<-toℕ a<b b<c)
+
 suc-tighten : ∀ {m n : Fin (suc ℓ)} → (m<n : m < n) → suc (tighten m<n) < suc n
 suc-tighten {ℓ = suc ℓ} (<-zero n) = <-suc (<-zero n)
 suc-tighten {ℓ = suc ℓ} (<-suc m<n) = <-suc (suc-tighten m<n)
