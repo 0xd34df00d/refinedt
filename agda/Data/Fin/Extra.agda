@@ -128,6 +128,13 @@ tighten-preserves-<ᵣ : {a b c : Fin (suc ℓ)}
 tighten-preserves-<ᵣ {suc ℓ} (<-zero _) (<-suc b<c) = <-zero (tighten b<c)
 tighten-preserves-<ᵣ {suc ℓ} (<-suc a<b) (<-suc b<c) = <-suc (tighten-preserves-<ᵣ a<b b<c)
 
+tighten-preserves-< : {a b c : Fin (suc ℓ)}
+                    → (a<b : a < b)
+                    → (b<c : b < c)
+                    → tighten a<b < tighten b<c
+tighten-preserves-< {suc ℓ} (<-zero n) (<-suc b<c) = <-zero (tighten b<c)
+tighten-preserves-< {suc ℓ} (<-suc a<b) (<-suc b<c) = <-suc (tighten-preserves-< a<b b<c)
+
 suc-tighten : ∀ {m n : Fin (suc ℓ)} → (m<n : m < n) → suc (tighten m<n) < suc n
 suc-tighten {ℓ = suc ℓ} (<-zero n) = <-suc (<-zero n)
 suc-tighten {ℓ = suc ℓ} (<-suc m<n) = <-suc (suc-tighten m<n)
