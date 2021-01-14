@@ -1160,6 +1160,8 @@ In other words, the translation and evaluation relations commute.
 
 Our formalization of the above languages is heavily inspired by \cite{plfa} and \cite{SystemFAgda}.
 
+In the subsequent text, we use notion of ``metatype'' when discussing the (Agda) types representing the various entities in our surface and core languages.
+
 \subsection{Formalizing surface language}
 
 Since our surface language has a limited form of dependent typing (namely, types contain refinements, which, in turn, contain terms), typing contexts become ``non-flat''.
@@ -1175,6 +1177,16 @@ In our work we choose to use de Bruijn indices, for the following reasons:
   \item Compared to locally nameless representation, this is largely a matter of preference.
     We estimate the amount of work required for both LN representation and just the de Bruijn indices to be roughly equivalent, so we choose the latter.
 \end{itemize}
+
+\paragraph{Syntax.} There are also several approaches to representing syntax, ranging from separate metatypes for raw terms and metatypes for typing judgements \cite{FindSomethingForExtrinsicallyTyped},
+to intrinsically-typed representations, where the term metatype is indexed by the metatype representing its type,
+the type metatype is indexed by the metatype representing its kind, and so on for other syntactic categories \cite{FindSomethingForIntrinsicallyTyped}.
+Intrinsically-typed representations effectively combine syntax and typing rules, and only well-typed terms are representable.
+
+Intrinsically-typed approach typically \cite{plfa} results in much shorter metatheoretical proofs, but it becomes non-trivial for languages where types may depend on terms.
+As such, we choose to use a hybrid approach, using an intrinsically well-scoped presentation \cite{FindSomethingForWellScoped}.
+Here, all the metatypes for language variables, terms, types and refinements are indexed by the \emph{length} of the typing context in which they reside.
+In fact, the bound \mintinline{Agda}{l} in the type \mintinline{Agda}{Fin l} for variables mentioned above is precisely the length of the context to which the variable belongs.
 
 
 \section{Future work}
