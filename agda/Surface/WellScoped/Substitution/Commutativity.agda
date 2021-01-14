@@ -88,10 +88,10 @@ otherwise, we increment it to make room for ι
 make-room-for : (ι : Fin (suc ℓ))
               → (var : Fin ℓ)
               → Fin (suc ℓ)
-make-room-for ι var with ι <>? suc var
-... | less m<n = inject₁ var
-... | equal m≡n = inject₁ var
-... | greater m>n = suc var
+make-room-for ι var with ι <>? inject₁ var
+... | less ι<var = suc var
+... | equal ι≡var = suc var
+... | greater ι>var = inject₁ var
 
 private
   lemma₁ : ∀ {a : Fin ℓ} {b c : Fin (suc ℓ)}
