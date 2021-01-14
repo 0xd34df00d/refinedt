@@ -1190,6 +1190,27 @@ Here, all the metatypes for language variables (\mintinline{agda}{Fin}), terms (
 are indexed by the \emph{length} of the typing context in which they reside.
 In fact, the bound \mintinline{agda}{ℓ} in the type \mintinline{agda}{Fin ℓ} for variables mentioned above is precisely the length of the context to which the variable belongs.
 
+\paragraph{Renamings and substitutions.} The formalization of substitution (and, subsequently, operational semantics and related theorems) relies on several concepts.
+
+First, let's introduce the notion of \emph{actions}.
+Note that any function \mintinline{agda}{f : Fin ℓ → Target ℓ'} from variables to some target type \mintinline{agda}{Target} (also indexed by the context length),
+combined with a function \mintinline{agda}{var-action : Target ℓ → STerm ℓ},
+gives rise to a family of \emph{actions} on terms, types and refinements, where the action on terms has the type \mintinline{agda}{STerm ℓ → STerm ℓ'}, and similarly for others.
+
+Having defined that, any function \mintinline{agda}{ρ : Fin ℓ → Fin ℓ'} mapping variables from a context of length $\ell$ to a context of length $\ell'$
+along with \mintinline{agda}{var-action idx = SVar idx} (where \mintinline{agda}{SVar} is the constructor of \mintinline{agda}{STerm} denoting variables),
+gives rise to a family of \emph{renaming actions}, mapping terms (or types, or refinements) from a context of length $\ell$ to a context of length $\ell'$.
+Renamings are used, for example, to define weakening: indeed, taking \mintinline{agda}{ρ} to be \mintinline{agda}{suc} gives the desired result.
+
+(Simultaneous) substitutions are defined analogously, considering any function \mintinline{agda}{σ : Fin ℓ → STerm ℓ'}.
+Single substitutions are then defined via a function
+\begin{minted}{agda}
+replace-at : (ι : Fin (suc ℓ)) → (ε : STerm ℓ) → (var : Fin (suc ℓ)) → STerm ℓ
+\end{minted}
+which takes an index \mintinline{agda}{ι} and a term \mintinline{agda}{ε} and substitutes \mintinline{agda}{var} for \mintinline{agda}{ε}
+if \mintinline{agda}{var} is equal to \mintinline{agda}{ι}, or adjusting \mintinline{agda}{var} otherwise.
+Note that the type of \mintinline{agda}{replace-at} implies that the variable being substituted vanishes from the context after substitution.
+
 \section{Future work}
 
 As we mentioned in the overview, our surface language lacks two components critical for any practically useful language:
