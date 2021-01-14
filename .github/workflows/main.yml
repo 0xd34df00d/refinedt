@@ -15,7 +15,7 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get dist-upgrade -y
-          sudo apt-get install -y texlive-full fonts-stix
+          sudo apt-get install -y texlive-full fonts-stix fonts-firacode
 
       - name: Install opam
         run: |
