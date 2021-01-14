@@ -1156,6 +1156,18 @@ In other words, the translation and evaluation relations commute.
   The rest is proven with induction on the derivation of $[[ empty |- es : ts ]]$ and $[[ es ~~> es']]$.
 \end{proof}
 
+\section{Formal proof overview}
+
+Our formalization of the above languages is heavily inspired by \cite{plfa} and \cite{SystemFAgda}.
+
+\subsection{Formalizing surface language}
+
+Since our surface language has a limited form of dependent typing (namely, types contain refinements, which, in turn, contain terms), typing contexts become ``non-flat''.
+This is the primary factor driving the decisions behind the design of our formalization.
+
+\paragraph{Representing variables.} The first decision to be made is about representing variables introduced by binders (both at term level and type level).
+There are multiple existing approaches, including using plain strings akin to informal human reasoning about lambda terms, or de Bruijn indices \cite{FindSomethingForDeBruijn}, or locally nameless presentations.
+
 \section{Future work}
 
 As we mentioned in the overview, our surface language lacks two components critical for any practically useful language:
