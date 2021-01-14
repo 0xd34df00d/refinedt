@@ -1165,8 +1165,17 @@ Our formalization of the above languages is heavily inspired by \cite{plfa} and 
 Since our surface language has a limited form of dependent typing (namely, types contain refinements, which, in turn, contain terms), typing contexts become ``non-flat''.
 This is the primary factor driving the decisions behind the design of our formalization.
 
-\paragraph{Representing variables.} The first decision to be made is about representing variables introduced by binders (both at term level and type level).
-There are multiple existing approaches, including using plain strings akin to informal human reasoning about lambda terms, or de Bruijn indices \cite{FindSomethingForDeBruijn}, or locally nameless presentations.
+\paragraph{Variables.} The first decision to be made is about representing variables introduced by binders (both at term level and type level).
+There are multiple existing approaches, including using plain strings akin to informal human reasoning about lambda terms, or de Bruijn indices \cite{FindSomethingForDeBruijn}, or locally nameless representation \cite{LocallyNameless}.
+In our work we choose to use de Bruijn indices, for the following reasons:
+\begin{itemize}
+  \item Compared to string-based approaches, there is no problem of variable shadowing.
+  \item Again, compared to string-based approaches, the types of the variables (which are essentially \mintinline{Agda}{Fin l} for some appropriate bound \mintinline{Agda}{l})
+    guide the development of the theorems and the proofs about the language.
+  \item Compared to locally nameless representation, this is largely a matter of preference.
+    We estimate the amount of work required for both LN representation and just the de Bruijn indices to be roughly equivalent, so we choose the latter.
+\end{itemize}
+
 
 \section{Future work}
 
