@@ -82,8 +82,8 @@ compute-ι'₂ ι₁ ι₂ with suc ι₁ <>? ι₂
 ... | greater suc-ι₁>ι₂ = tighten suc-ι₁>ι₂
 
 {-
-if var < ι₂ (or, equivalently, suc var ≤ ι₂), we leave it alone
-otherwise, we increment it to make room for ι₂
+if var < ι (or, equivalently, suc var ≤ ι), we leave it alone
+otherwise, we increment it to make room for ι
 -}
 make-room-for : (ι : Fin (suc ℓ))
               → (var : Fin ℓ)
