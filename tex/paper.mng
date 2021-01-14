@@ -8,8 +8,10 @@
 \usepackage{amsmath,amsfonts,amssymb,amsthm}
 
 \tracinglostchars=2
-\usepackage[utf8]{inputenc}
-\usepackage[T2A]{fontenc}
+%\usepackage[utf8x]{inputenc}
+%\usepackage[T2A]{fontenc}
+\usepackage{fontspec}
+\setmonofont{Fira Code}[Scale=MatchLowercase]
 \usepackage{hyperref,cleveref}
 \usepackage{mathtools}
 \usepackage{xcolor}
