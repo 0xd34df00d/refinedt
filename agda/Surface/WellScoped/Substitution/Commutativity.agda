@@ -2,6 +2,7 @@
 
 module Surface.WellScoped.Substitution.Commutativity where
 
+open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Nat.Base using (zero; suc)
 open import Data.Fin.Base using (zero; suc; inject₁; toℕ)
 open import Relation.Binary.PropositionalEquality as Eq using (_≡_; refl; sym)
@@ -117,6 +118,13 @@ private
                       → tighten (lemma₃ a₁≡a₂ a₂<b) ≡ tighten a₂<b
   lemma₃-tighten-same refl a<b = refl
 
+  lemma₄ : ∀ {a : Fin ℓ} {b : Fin (suc ℓ)}
+         → inject₁ a < b
+         → b < suc a
+         → ⊥
+  lemma₄ {a = zero} _ (<-suc ())
+  lemma₄ {a = suc a} {b = suc b} (<-suc a<b) (<-suc b<suc-a) = lemma₄ a<b b<suc-a
+
 subst-commutes-var : (ε₁ : STerm ℓ)
                    → (ε₂ : STerm (suc ℓ))
                    → (ι₁ : Fin (suc ℓ))
@@ -145,7 +153,6 @@ subst-commutes-var ε₁ ε₂ ι₁ ι₂ var with suc ι₁ <>? ι₂ | ι₂ 
   rewrite <>?-< (<-injectₗ₁ (n<suc-n ι₁))
         | <>?-refl-equal ι₁
         = refl
-... | equal refl | greater m>n = {! !}
 ... | greater m>n | equal refl
   rewrite <>?-> m>n
         | <>?-refl-equal (tighten m>n)
@@ -171,9 +178,12 @@ subst-commutes-var ε₁ ε₂ ι₁ ι₂ var with suc ι₁ <>? ι₂ | ι₂ 
           ∎
           )
         = refl
-
-... | greater m>n | less m<n = {! !}
-... | less m<n | greater m>n = {! !}
+... | equal refl | greater m>n with inject₁ ι₁ <>? var
+... | less m<n = ⊥-elim (lemma₄ m<n m>n)
+... | equal m≡n = {! !}
+... | greater m>n₁ = {! !}
+subst-commutes-var ε₁ ε₂ ι₁ ι₂ var | greater m>n | less m<n = {! !}
+subst-commutes-var ε₁ ε₂ ι₁ ι₂ var | less m<n | greater m>n = {! !}
 
 subst-commutes-τ : ∀ ι₁ ι₂ ε₁ ε₂ (τ : SType (suc (suc ℓ)))
                  → (let ι'₁ = compute-ι'₁ ι₁ ι₂)
