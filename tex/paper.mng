@@ -1194,6 +1194,10 @@ Here, all the metatypes for language variables (\mintinline{agda}{Fin}), terms (
 are indexed by the \emph{length} of the typing context in which they reside.
 In fact, the bound \mintinline{agda}{ℓ} in the type \mintinline{agda}{Fin ℓ} for variables mentioned above is precisely the length of the context to which the variable belongs.
 
+It is worth noting that such light-weight (meta-)verification as having context length at type level (especially compared to intrinsically-typed representations)
+is able to rule out a surprising share of incorrect (meta-)theorems before even trying to prove them.
+Moreover, it also turns out to be of helpful guidance in the development of the proofs.
+
 \paragraph{Renamings and substitutions.} The formalization of substitution (and, subsequently, operational semantics and related theorems) relies on several concepts.
 
 First, let's introduce the notion of \emph{actions}.
