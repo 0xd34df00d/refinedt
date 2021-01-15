@@ -258,6 +258,8 @@ On the other hand, certain things are not expressible with refinement types.
 In particular, we claim without proof that refinement types cannot affect run-time behaviour of the program
 (and the reader familiar with the notion of run-time irrelevance or Coq's \verb+Prop+ universe might find those concepts useful to build the intuitive agreement with our claim).
 For example, a type-safe variadic \verb+printf+ (whose arguments count, their \emph{types}, and run-time behaviour \emph{depend} on the formatting string argument \emph{value}) is not expressible with refinement types.
+Although, it is worth noting that it seems to be possible to recover the full expressive power of dependent types via a \verb+Top+ type with the corresponding subtyping relation, at the cost of moving the typing checks to run-time.
+\todo[inline]{Illustrate this via a Top-based printf.}
 
 Moreover, for fundamental reasons such as Rice's theorem, there is no algorithm that decides arbitrary non-trivial semantic properties of a program,
 so human assistance will always be needed for sufficiently complex programs, and this is where dependent types also come useful.
