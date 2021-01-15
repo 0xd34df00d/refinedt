@@ -1213,6 +1213,8 @@ which takes an index \mintinline{agda}{ι} and a term \mintinline{agda}{ε} and 
 if \mintinline{agda}{var} is equal to \mintinline{agda}{ι}, or adjusting \mintinline{agda}{var} otherwise.
 Note that the type of \mintinline{agda}{replace-at} implies that the variable being substituted vanishes from the context after substitution.
 
+\subsection{Formalizing core language}
+
 \section{Future work}
 
 As we mentioned in the overview, our surface language lacks two components critical for any practically useful language:
