@@ -139,6 +139,13 @@ private
   lemma₅-tighten-same {ι = suc ι} (<-zero _) (<-zero _) = refl
   lemma₅-tighten-same {ℓ = suc ℓ} {ι = suc ι} (<-suc m>n) (<-suc m>n₁) = cong suc (lemma₅-tighten-same m>n m>n₁)
 
+  lemma₆ : ∀ {a c : Fin (suc ℓ)} {b : Fin ℓ}
+         → a < b
+         → (a<c : a < c)
+         → tighten a<c < b
+  lemma₆ {ℓ = suc ℓ} (<-zero _) (<-zero _) = <-zero _
+  lemma₆ {ℓ = suc ℓ} (<-suc a<b) (<-suc a<c) = <-suc (lemma₆ a<b a<c)
+
 subst-commutes-var : (ε₁ : STerm ℓ)
                    → (ε₂ : STerm (suc ℓ))
                    → (ι₁ : Fin (suc ℓ))
@@ -199,7 +206,12 @@ subst-commutes-var ε₁ ε₂ ι₁ ι₂ var with suc ι₁ <>? ι₂ | ι₂ 
                          | <>?-> (lemma₅ m>n₁ m>n₁)
                          | lemma₅-tighten-same m>n m>n₁
                          = refl
-subst-commutes-var ε₁ ε₂ ι₁ ι₂ var | greater m>n | less m<n = {! !}
+subst-commutes-var ε₁ ε₂ ι₁ ι₂ (suc var) | greater m>n | less m<n with ι₁ <>? var
+... | less m<n₁ rewrite <>?-< (lemma₆ (a≤b<c m>n m<n₁) m>n)
+                      | pred-always-same (lemma₆ (a≤b<c m>n m<n₁) m>n) m<n₁
+                      = refl
+... | equal m≡n = {! !}
+... | greater m>n₁ = {! !}
 subst-commutes-var ε₁ ε₂ ι₁ ι₂ var | less m<n | greater m>n = {! !}
 
 subst-commutes-τ : ∀ ι₁ ι₂ ε₁ ε₂ (τ : SType (suc (suc ℓ)))
