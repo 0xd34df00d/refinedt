@@ -12,7 +12,7 @@ open import Relation.Nullary using (¬_)
 
 private
   variable
-    ℓ ℓ' ℓ₁ ℓ₂ ℓ₃ : ℕ
+    ℓ ℓ' ℓ₁ ℓ₂ ℓ₃ ℓ₄ : ℕ
     m n : Fin ℓ
 
 data _<_ : Fin ℓ → Fin ℓ' → Set where
@@ -235,7 +235,7 @@ lift-ℕ-≡ : toℕ m ≡ toℕ n → m ≡ n
 lift-ℕ-≡ {m = zero} {n = zero} ℕ-≡ = refl
 lift-ℕ-≡ {m = suc m} {n = suc n} ℕ-≡ rewrite lift-ℕ-≡ (ℕ-suc-injective ℕ-≡) = refl
 
-</toℕ : ∀ {m n : Fin ℓ} {m' n' : Fin ℓ'}
+</toℕ : ∀ {m : Fin ℓ₁} {n : Fin ℓ₂} {m' : Fin ℓ₃} {n' : Fin ℓ₄}
       → m < n
       → toℕ m' ≡ toℕ m
       → toℕ n' ≡ toℕ n
