@@ -146,6 +146,13 @@ private
   lemma₆ {ℓ = suc ℓ} (<-zero _) (<-zero _) = <-zero _
   lemma₆ {ℓ = suc ℓ} (<-suc a<b) (<-suc a<c) = <-suc (lemma₆ a<b a<c)
 
+  lemma₇ : ∀ {a : Fin ℓ} {b c : Fin (suc ℓ)}
+         → inject₁ a < b
+         → (b<c : b < c)
+         → a < tighten b<c
+  lemma₇ {a = zero} (<-zero _) (<-suc _) = <-zero _
+  lemma₇ {a = suc a} (<-suc a<b) (<-suc b<c) = <-suc (lemma₇ a<b b<c)
+
 subst-commutes-var : (ε₁ : STerm ℓ)
                    → (ε₂ : STerm (suc ℓ))
                    → (ι₁ : Fin (suc ℓ))
@@ -213,9 +220,10 @@ subst-commutes-var ε₁ ε₂ ι₁ ι₂ (suc var) | greater m>n | less m<n wi
 ...   | equal refl = {! !}
 ...   | greater m>n₁ rewrite <>?-< (</toℕ m<n (tighten-is-same-ℕ m>n) (cong suc (tighten-is-same-ℕ m>n₁))) = refl
 subst-commutes-var ε₁ ε₂ ι₁ (suc ι₂) var | less m<n | greater m>n with inject₁ ι₁ <>? var
-...   | less m<n₁ = {! !}
 ...   | equal m≡n = {! !}
 ...   | greater m>n₁ = {! !}
+...   | less m<n₁ rewrite <>?-< (lemma₇ m<n₁ m>n) with var | m>n
+...                                                  | suc var' | <-suc m>n' rewrite <>?-> m>n' = refl
 
 subst-commutes-τ : ∀ ι₁ ι₂ ε₁ ε₂ (τ : SType (suc (suc ℓ)))
                  → (let ι'₁ = compute-ι'₁ ι₁ ι₂)
