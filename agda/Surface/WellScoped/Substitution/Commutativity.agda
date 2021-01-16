@@ -5,7 +5,7 @@ module Surface.WellScoped.Substitution.Commutativity where
 open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Nat.Base using (zero; suc)
 open import Data.Fin.Base using (zero; suc; inject₁; toℕ)
-open import Relation.Binary.PropositionalEquality as Eq using (_≡_; refl; sym)
+open import Relation.Binary.PropositionalEquality as Eq using (_≡_; refl; sym; cong)
 open Eq.≡-Reasoning
 
 open import Data.Fin.Extra
@@ -125,6 +125,20 @@ private
   lemma₄ {a = zero} _ (<-suc ())
   lemma₄ {a = suc a} {b = suc b} (<-suc a<b) (<-suc b<suc-a) = lemma₄ a<b b<suc-a
 
+  lemma₅ : ∀ {a : Fin ℓ} {b c : Fin (suc ℓ)}
+         → inject₁ a > b
+         → (b<c : b < c)
+         → a > tighten b<c
+  lemma₅ {a = suc a} (<-zero _) (<-zero _) = <-zero a
+  lemma₅ {a = suc a} (<-suc a>b) (<-suc b<c) = <-suc (lemma₅ a>b b<c)
+
+  lemma₅-tighten-same : ∀ {ι : Fin (suc ℓ)} {var : Fin (suc (suc ℓ))}
+                      → (m>n : suc ι > var)
+                      → (m>n₁ : inject₁ ι > var)
+                      → tighten (lemma₅ m>n₁ m>n) ≡ tighten (lemma₅ m>n₁ m>n₁)
+  lemma₅-tighten-same {ι = suc ι} (<-zero _) (<-zero _) = refl
+  lemma₅-tighten-same {ℓ = suc ℓ} {ι = suc ι} (<-suc m>n) (<-suc m>n₁) = cong suc (lemma₅-tighten-same m>n m>n₁)
+
 subst-commutes-var : (ε₁ : STerm ℓ)
                    → (ε₂ : STerm (suc ℓ))
                    → (ι₁ : Fin (suc ℓ))
@@ -181,7 +195,10 @@ subst-commutes-var ε₁ ε₂ ι₁ ι₂ var with suc ι₁ <>? ι₂ | ι₂ 
 ... | equal refl | greater m>n with inject₁ ι₁ <>? var
 ... | less m<n = ⊥-elim (lemma₄ m<n m>n)
 ... | equal m≡n = {! !}
-... | greater m>n₁ = {! !}
+... | greater m>n₁ rewrite <>?-> (lemma₅ m>n₁ m>n)
+                         | <>?-> (lemma₅ m>n₁ m>n₁)
+                         | lemma₅-tighten-same m>n m>n₁
+                         = refl
 subst-commutes-var ε₁ ε₂ ι₁ ι₂ var | greater m>n | less m<n = {! !}
 subst-commutes-var ε₁ ε₂ ι₁ ι₂ var | less m<n | greater m>n = {! !}
 
