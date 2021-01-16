@@ -211,7 +211,7 @@ subst-commutes-var ε₁ ε₂ ι₁ ι₂ (suc var) | greater m>n | less m<n wi
                       | pred-always-same (lemma₆ (a≤b<c m>n m<n₁) m>n) m<n₁
                       = refl
 ... | equal m≡n = {! !}
-... | greater m>n₁ = {! !}
+... | greater m>n₁ rewrite <>?-< (</toℕ m<n (tighten-is-same-ℕ m>n) (cong suc (tighten-is-same-ℕ m>n₁))) = refl
 subst-commutes-var ε₁ ε₂ ι₁ ι₂ var | less m<n | greater m>n = {! !}
 
 subst-commutes-τ : ∀ ι₁ ι₂ ε₁ ε₂ (τ : SType (suc (suc ℓ)))
