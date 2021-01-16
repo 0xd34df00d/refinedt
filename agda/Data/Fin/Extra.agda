@@ -50,7 +50,7 @@ m<n⇒0<n {n = suc n} _ = <-zero n
 ¬n<0 : {n : Fin ℓ} → ¬ n < zero {ℓ'}
 ¬n<0 ()
 
-a≤b<c : {a b c : Fin ℓ}
+a≤b<c : ∀ {a : Fin ℓ₁} {b : Fin ℓ₂} {c : Fin ℓ₃}
       → (a < suc b)
       → (b < c)
       → a < c
