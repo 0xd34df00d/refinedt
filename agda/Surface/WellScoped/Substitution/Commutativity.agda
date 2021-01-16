@@ -5,6 +5,7 @@ module Surface.WellScoped.Substitution.Commutativity where
 open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Nat.Base using (zero; suc)
 open import Data.Fin.Base using (zero; suc; inject₁; toℕ)
+open import Data.Fin.Properties using (toℕ-inject₁)
 open import Relation.Binary.PropositionalEquality as Eq using (_≡_; refl; sym; cong)
 open Eq.≡-Reasoning
 
@@ -153,6 +154,19 @@ private
   lemma₇ {a = zero} (<-zero _) (<-suc _) = <-zero _
   lemma₇ {a = suc a} (<-suc a<b) (<-suc b<c) = <-suc (lemma₇ a<b b<c)
 
+  lemma₈ : ∀ {a : Fin ℓ} {b c : Fin (suc ℓ)}
+         → inject₁ a > b
+         → (b<c : b < c)
+         → a > tighten b<c
+  lemma₈ {a = suc a} {b = zero} (<-zero _) (<-zero _) = <-zero _
+  lemma₈ {a = suc a} {b = suc b} (<-suc a>b) (<-suc b<c) = <-suc (lemma₈ a>b b<c)
+
+  lemma₉ : ∀ {var : Fin (suc ℓ)} {a b : Fin ℓ}
+         → (var<a : var < inject₁ a)
+         → suc a < suc b
+         → tighten var<a < b
+  lemma₉ {a = a} var<a (<-suc a<b) = <-trans (</toℕ (tighten-preserves-<ₗ var<a) refl (sym (toℕ-inject₁ a))) a<b
+
 subst-commutes-var : (ε₁ : STerm ℓ)
                    → (ε₂ : STerm (suc ℓ))
                    → (ι₁ : Fin (suc ℓ))
@@ -221,7 +235,21 @@ subst-commutes-var ε₁ ε₂ ι₁ ι₂ (suc var) | greater m>n | less m<n wi
 ...   | greater m>n₁ rewrite <>?-< (</toℕ m<n (tighten-is-same-ℕ m>n) (cong suc (tighten-is-same-ℕ m>n₁))) = refl
 subst-commutes-var ε₁ ε₂ ι₁ (suc ι₂) var | less m<n | greater m>n with inject₁ ι₁ <>? var
 ...   | equal m≡n = {! !}
-...   | greater m>n₁ = {! !}
+...   | greater m>n₁ rewrite <>?-> (lemma₈ m>n₁ m>n)
+                           | <>?-> (lemma₉ m>n₁ m<n)
+                           | lift-ℕ-≡
+                             (
+                             begin
+                               toℕ (tighten (lemma₈ m>n₁ m>n))
+                             ≡⟨ tighten-is-same-ℕ (lemma₈ m>n₁ m>n) ⟩
+                               toℕ (tighten m>n)
+                             ≡⟨ cong toℕ (tighten-same m>n m>n₁) ⟩
+                               toℕ (tighten m>n₁)
+                             ≡˘⟨ tighten-is-same-ℕ (lemma₉ m>n₁ m<n) ⟩
+                               toℕ (tighten (lemma₉ m>n₁ m<n))
+                             ∎
+                             )
+                           = refl
 ...   | less m<n₁ rewrite <>?-< (lemma₇ m<n₁ m>n) with var | m>n
 ...                                                  | suc var' | <-suc m>n' rewrite <>?-> m>n' = refl
 
