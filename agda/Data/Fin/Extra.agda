@@ -235,6 +235,14 @@ lift-ℕ-≡ : toℕ m ≡ toℕ n → m ≡ n
 lift-ℕ-≡ {m = zero} {n = zero} ℕ-≡ = refl
 lift-ℕ-≡ {m = suc m} {n = suc n} ℕ-≡ rewrite lift-ℕ-≡ (ℕ-suc-injective ℕ-≡) = refl
 
+</toℕ : ∀ {m n : Fin ℓ} {m' n' : Fin ℓ'}
+      → m < n
+      → toℕ m' ≡ toℕ m
+      → toℕ n' ≡ toℕ n
+      → m' < n'
+</toℕ {m' = zero}   {n' = suc n'} (<-zero _)  _  ≡₂ = <-zero n'
+</toℕ {m' = suc m'} {n' = suc n'} (<-suc m<n) ≡₁ ≡₂ = <-suc (</toℕ m<n (ℕ-suc-injective ≡₁) (ℕ-suc-injective ≡₂))
+
 tighten-injective : {m₁ m₂ n : Fin (suc ℓ)}
                   → {m₁<n : m₁ < n}
                   → {m₂<n : m₂ < n}
