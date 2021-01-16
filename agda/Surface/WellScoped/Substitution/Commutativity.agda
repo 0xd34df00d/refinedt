@@ -199,20 +199,23 @@ subst-commutes-var ε₁ ε₂ ι₁ ι₂ var with suc ι₁ <>? ι₂ | ι₂ 
           ∎
           )
         = refl
-... | equal refl | greater m>n with inject₁ ι₁ <>? var
-... | less m<n = ⊥-elim (lemma₄ m<n m>n)
-... | equal m≡n = {! !}
-... | greater m>n₁ rewrite <>?-> (lemma₅ m>n₁ m>n)
-                         | <>?-> (lemma₅ m>n₁ m>n₁)
-                         | lemma₅-tighten-same m>n m>n₁
-                         = refl
+subst-commutes-var ε₁ ε₂ ι₁ ι₂ var | equal refl | greater m>n with inject₁ ι₁ <>? var
+...   | less m<n = ⊥-elim (lemma₄ m<n m>n)
+...   | equal m≡n = {! !}
+...   | greater m>n₁ rewrite <>?-> (lemma₅ m>n₁ m>n)
+                           | <>?-> (lemma₅ m>n₁ m>n₁)
+                           | lemma₅-tighten-same m>n m>n₁
+                           = refl
 subst-commutes-var ε₁ ε₂ ι₁ ι₂ (suc var) | greater m>n | less m<n with ι₁ <>? var
-... | less m<n₁ rewrite <>?-< (lemma₆ (a≤b<c m>n m<n₁) m>n)
-                      | pred-always-same (lemma₆ (a≤b<c m>n m<n₁) m>n) m<n₁
-                      = refl
-... | equal m≡n = {! !}
-... | greater m>n₁ rewrite <>?-< (</toℕ m<n (tighten-is-same-ℕ m>n) (cong suc (tighten-is-same-ℕ m>n₁))) = refl
-subst-commutes-var ε₁ ε₂ ι₁ ι₂ var | less m<n | greater m>n = {! !}
+...   | less m<n₁ rewrite <>?-< (lemma₆ (a≤b<c m>n m<n₁) m>n)
+                        | pred-always-same (lemma₆ (a≤b<c m>n m<n₁) m>n) m<n₁
+                        = refl
+...   | equal refl = {! !}
+...   | greater m>n₁ rewrite <>?-< (</toℕ m<n (tighten-is-same-ℕ m>n) (cong suc (tighten-is-same-ℕ m>n₁))) = refl
+subst-commutes-var ε₁ ε₂ ι₁ (suc ι₂) var | less m<n | greater m>n with inject₁ ι₁ <>? var
+...   | less m<n₁ = {! !}
+...   | equal m≡n = {! !}
+...   | greater m>n₁ = {! !}
 
 subst-commutes-τ : ∀ ι₁ ι₂ ε₁ ε₂ (τ : SType (suc (suc ℓ)))
                  → (let ι'₁ = compute-ι'₁ ι₁ ι₂)
