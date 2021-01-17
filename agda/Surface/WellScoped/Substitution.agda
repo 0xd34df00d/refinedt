@@ -69,8 +69,16 @@ branch-lookup-comm σ (suc ι) (_ ∷ bs) = branch-lookup-comm σ ι bs
 ≡-ext x-≡ zero = refl
 ≡-ext x-≡ (suc x) rewrite x-≡ x = refl
 
+ext-id : ∀ {f : Fin ℓ → STerm ℓ}
+       → (∀ x → var-action (f x) ≡ SVar x)
+       → (∀ x → var-action (ext f x) ≡ SVar x)
+ext-id f-≡ zero = refl
+ext-id f-≡ (suc x) rewrite f-≡ x = refl
+
 open import Surface.WellScoped.ActionsLemmas var-action-record
-                                             record { ≡-ext = ≡-ext }
+                                             record { ≡-ext = ≡-ext
+                                                    ; ext-id = ext-id
+                                                    }
                                              public
 
 infix 2 _f≡_

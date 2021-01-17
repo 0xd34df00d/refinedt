@@ -11,6 +11,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym)
 
 open import Data.Fin.Extra
 open import Surface.WellScoped
+open import Surface.WellScoped.SyntaxInjectivity
 open import Surface.WellScoped.Actions (record { Target = Fin
                                                ; var-action = λ ι → SVar ι
                                                ; ext = λ where _ zero → zero
@@ -52,57 +53,17 @@ ext-monotonic ρ-mono {x = suc x} {y = suc y} (<-suc x<y) = <-suc (ρ-mono x<y)
 ≡-ext _ zero = refl
 ≡-ext x-≡ (suc x) rewrite x-≡ x = refl
 
-open import Surface.WellScoped.ActionsLemmas var-action-record
-                                             record { ≡-ext = ≡-ext }
-                                             public
-
--- Renaming using an identity function is an identity
-ActIdentity : {Ty : ℕ → Set} → ActionOn Ty → Set
-ActIdentity {Ty} act = ∀ {ℓ} {f : Fin ℓ → Fin ℓ}
-                       → (∀ x → f x ≡ x)
-                       → (v : Ty ℓ)
-                       → act f v ≡ v
-
 ext-id : ∀ {f : Fin ℓ → Fin ℓ}
-       → (∀ x → f x ≡ x)
-       → (∀ x → ext f x ≡ x)
+       → (∀ x → var-action (f x) ≡ SVar x)
+       → (∀ x → var-action (ext f x) ≡ SVar x)
 ext-id f-≡ zero = refl
-ext-id f-≡ (suc x) rewrite f-≡ x = refl
+ext-id f-≡ (suc x) rewrite SVar-inj (f-≡ x) = refl
 
-act-τ-id : ActIdentity act-τ
-act-ρ-id : ActIdentity act-ρ
-act-ε-id : ActIdentity act-ε
-act-cons-id : ActIdentity {ADTCons nₐ} act-cons
-act-branches-id : ActIdentity {CaseBranches nₐ} act-branches
-
-act-τ-id f-id ⟨ b ∣ ρ ⟩ rewrite act-ρ-id (ext-id f-id) ρ = refl
-act-τ-id f-id (τ₁ ⇒ τ₂) rewrite act-τ-id f-id τ₁
-                              | act-τ-id (ext-id f-id) τ₂ = refl
-act-τ-id f-id (⊍ cons) rewrite act-cons-id f-id cons = refl
-
-act-ρ-id f-id (ε₁ ≈ ε₂) rewrite act-ε-id f-id ε₁
-                              | act-ε-id f-id ε₂ = refl
-act-ρ-id f-id (ρ₁ ∧ ρ₂) rewrite act-ρ-id f-id ρ₁
-                              | act-ρ-id f-id ρ₂ = refl
-
-act-ε-id f-id SUnit = refl
-act-ε-id f-id (SVar idx) rewrite f-id idx = refl
-act-ε-id f-id (SLam τ ε) rewrite act-τ-id f-id τ
-                               | act-ε-id (ext-id f-id) ε = refl
-act-ε-id f-id (SApp ε₁ ε₂) rewrite act-ε-id f-id ε₁
-                                 | act-ε-id f-id ε₂ = refl
-act-ε-id f-id (SCase ε branches) rewrite act-ε-id f-id ε
-                                       | act-branches-id f-id branches = refl
-act-ε-id f-id (SCon idx ε cons) rewrite act-ε-id f-id ε
-                                      | act-cons-id f-id cons = refl
-
-act-cons-id f-id [] = refl
-act-cons-id f-id (τ ∷ cons) rewrite act-τ-id f-id τ
-                                  | act-cons-id f-id cons = refl
-
-act-branches-id f-id [] = refl
-act-branches-id f-id (MkCaseBranch body ∷ bs) rewrite act-ε-id (ext-id f-id) body
-                                                    | act-branches-id f-id bs = refl
+open import Surface.WellScoped.ActionsLemmas var-action-record
+                                             record { ≡-ext = ≡-ext
+                                                    ; ext-id = ext-id
+                                                    }
+                                             public
 
 
 -- A composition of renamings is a renaming by the composition

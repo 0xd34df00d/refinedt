@@ -99,3 +99,6 @@ record VarActionProps (act : VarAction) : Set where
     ≡-ext : {f₁ f₂ : Fin ℓ → Target ℓ'}
           → (∀ x → f₁ x ≡ f₂ x)
           → (∀ x → ext f₁ x ≡ ext f₂ x)
+    ext-id : ∀ {f : Fin ℓ → Target ℓ}
+           → (∀ x → var-action (f x) ≡ SVar x)
+           → (∀ x → var-action (ext f x) ≡ SVar x)

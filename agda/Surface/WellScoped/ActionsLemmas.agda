@@ -60,3 +60,55 @@ act-cons-member : ∀ {act : Fin ℓ → Target ℓ'}
                 → act-τ act τ ≡ lookup (act-cons act cons) idx
 act-cons-member zero (conτ ∷ cons) refl = refl
 act-cons-member (suc idx) (conτ ∷ cons) ≡-prf = act-cons-member idx cons ≡-prf
+
+
+ActIdentity : {Ty : ℕ → Set} → ActionOn Ty → Set
+ActIdentity {Ty} act = ∀ {ℓ} {f : Fin ℓ → Target ℓ}
+                       → (∀ x → var-action (f x) ≡ SVar x)
+                       → (v : Ty ℓ)
+                       → act f v ≡ v
+
+act-τ-id : ActIdentity act-τ
+act-ρ-id : ActIdentity act-ρ
+act-ε-id : ActIdentity act-ε
+act-cons-id : ActIdentity {ADTCons nₐ} act-cons
+act-branches-id : ActIdentity {CaseBranches nₐ} act-branches
+
+act-τ-id f-id ⟨ b ∣ ρ ⟩ rewrite act-ρ-id (ext-id f-id) ρ = refl
+act-τ-id f-id (τ₁ ⇒ τ₂) rewrite act-τ-id f-id τ₁
+                              | act-τ-id (ext-id f-id) τ₂
+                              = refl
+act-τ-id f-id (⊍ cons) rewrite act-cons-id f-id cons = refl
+
+act-ρ-id f-id (ε₁ ≈ ε₂) rewrite act-ε-id f-id ε₁
+                              | act-ε-id f-id ε₂
+                              = refl
+act-ρ-id f-id (ρ₁ ∧ ρ₂) rewrite act-ρ-id f-id ρ₁
+                              | act-ρ-id f-id ρ₂
+                              = refl
+
+act-ε-id f-id SUnit = refl
+act-ε-id f-id (SVar idx) rewrite f-id idx = refl
+act-ε-id f-id (SLam τ ε) rewrite act-τ-id f-id τ
+                               | act-ε-id (ext-id f-id) ε
+                               = refl
+act-ε-id f-id (SApp ε₁ ε₂) rewrite act-ε-id f-id ε₁
+                                 | act-ε-id f-id ε₂
+                                 = refl
+act-ε-id f-id (SCase ε branches) rewrite act-ε-id f-id ε
+                                       | act-branches-id f-id branches
+                                       = refl
+act-ε-id f-id (SCon idx ε cons) rewrite act-ε-id f-id ε
+                                      | act-cons-id f-id cons
+                                      = refl
+
+act-cons-id f-id [] = refl
+act-cons-id f-id (τ ∷ cons) rewrite act-τ-id f-id τ
+                                  | act-cons-id f-id cons
+                                  = refl
+
+act-branches-id f-id [] = refl
+act-branches-id f-id (MkCaseBranch body ∷ bs)
+  rewrite act-ε-id (ext-id f-id) body
+        | act-branches-id f-id bs
+        = refl
