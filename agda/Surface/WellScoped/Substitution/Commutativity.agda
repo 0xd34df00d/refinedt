@@ -5,7 +5,7 @@ module Surface.WellScoped.Substitution.Commutativity where
 open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Nat.Base using (zero; suc)
 open import Data.Fin.Base using (zero; suc; inject₁; toℕ)
-open import Data.Fin.Properties using (toℕ-inject₁)
+open import Data.Fin.Properties using (toℕ-inject₁; suc-injective)
 open import Relation.Binary.PropositionalEquality as Eq using (_≡_; refl; sym; cong)
 open Eq.≡-Reasoning
 
@@ -166,6 +166,13 @@ private
          → suc a < suc b
          → tighten var<a < b
   lemma₉ {a = a} var<a (<-suc a<b) = <-trans (</toℕ (tighten-preserves-<ₗ var<a) refl (sym (toℕ-inject₁ a))) a<b
+
+  lemma₁₀ : ∀ {a : Fin ℓ} {b c : Fin (suc ℓ)}
+          → inject₁ a ≡ b
+          → (b<c : b < c)
+          → a ≡ tighten b<c
+  lemma₁₀ {suc ℓ} {a = zero} _ (<-zero n) = refl
+  lemma₁₀ {suc ℓ} {a = suc a} ≡-prf (<-suc b<c) = cong suc (lemma₁₀ (suc-injective ≡-prf) b<c)
 
 subst-commutes-var : (ε₁ : STerm ℓ)
                    → (ε₂ : STerm (suc ℓ))
