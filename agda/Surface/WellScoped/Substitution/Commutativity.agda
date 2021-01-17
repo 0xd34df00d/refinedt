@@ -265,3 +265,14 @@ subst-commutes-τ ι₁ ι₂ ε₁ ε₂ τ rewrite act-τ-distr (replace-at ι
                                            (replace-at (compute-ι'₂ ι₁ ι₂) ([ ι₁ ↦ε ε₁ ] ε₂)) τ
                                      | act-τ-extensionality (subst-commutes-var ε₁ ε₂ ι₁ ι₂) τ
                                      = refl
+
+subst-commutes-ε : ∀ ι₁ ι₂ ε₁ ε₂ (ε : STerm (suc (suc ℓ)))
+                 → (let ι'₁ = compute-ι'₁ ι₁ ι₂)
+                 → (let ι'₂ = compute-ι'₂ ι₁ ι₂)
+                 → [ ι₁ ↦ε ε₁ ] [ ι₂ ↦ε ε₂ ] ε ≡ [ ι'₂ ↦ε [ ι₁ ↦ε ε₁ ] ε₂ ] [ ι'₁ ↦ε R.act-ε (make-room-for ι'₂) ε₁ ] ε
+subst-commutes-ε ι₁ ι₂ ε₁ ε₂ ε rewrite act-ε-distr (replace-at ι₂ ε₂) (replace-at ι₁ ε₁) ε
+                                     | act-ε-distr
+                                           (replace-at (compute-ι'₁ ι₁ ι₂) (R.act-ε (make-room-for (compute-ι'₂ ι₁ ι₂)) ε₁))
+                                           (replace-at (compute-ι'₂ ι₁ ι₂) ([ ι₁ ↦ε ε₁ ] ε₂)) ε
+                                     | act-ε-extensionality (subst-commutes-var ε₁ ε₂ ι₁ ι₂) ε
+                                     = refl
