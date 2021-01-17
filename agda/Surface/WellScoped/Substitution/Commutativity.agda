@@ -64,14 +64,6 @@ make-room-for ι var with ι <>? inject₁ var
 ... | equal ι≡var = suc var
 ... | greater ι>var = inject₁ var
 
-make-room-ext-comm : (ι : Fin (suc ℓ))
-                   → R.ext (make-room-for ι) f≡ make-room-for (suc ι)
-make-room-ext-comm ι zero = refl
-make-room-ext-comm ι (suc var) with ι <>? inject₁ var
-... | less _ = refl
-... | equal refl = refl
-... | greater _ = refl
-
 private
   lemma₁ : ∀ {a : Fin ℓ} {b c : Fin (suc ℓ)}
          → (suc-a<b : suc a < b)
