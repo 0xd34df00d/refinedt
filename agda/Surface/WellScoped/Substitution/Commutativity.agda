@@ -263,7 +263,7 @@ subst-commutes-var ε₁ ε₂ ι₁ ι₂ var with suc ι₁ <>? ι₂ | ι₂ 
         = refl
 subst-commutes-var ε₁ ε₂ ι₁ ι₂ var | equal refl | greater m>n with inject₁ ι₁ <>? var
 ...   | less m<n = ⊥-elim (lemma₄ m<n m>n)
-...   | equal m≡n = {! !}
+...   | equal m≡n rewrite <>?-≡ (lemma₁₀ m≡n m>n) = sym (subst-make-room-id-ε ι₁ _ ε₁)
 ...   | greater m>n₁ rewrite <>?-> (lemma₅ m>n₁ m>n)
                            | <>?-> (lemma₅ m>n₁ m>n₁)
                            | lemma₅-tighten-same m>n m>n₁
@@ -272,10 +272,10 @@ subst-commutes-var ε₁ ε₂ ι₁ ι₂ (suc var) | greater m>n | less m<n wi
 ...   | less m<n₁ rewrite <>?-< (lemma₆ (a≤b<c m>n m<n₁) m>n)
                         | pred-always-same (lemma₆ (a≤b<c m>n m<n₁) m>n) m<n₁
                         = refl
-...   | equal refl = {! !}
+...   | equal refl = sym (subst-make-room-id-ε (tighten m>n) _ ε₁)
 ...   | greater m>n₁ rewrite <>?-< (</toℕ m<n (tighten-is-same-ℕ m>n) (cong suc (tighten-is-same-ℕ m>n₁))) = refl
 subst-commutes-var ε₁ ε₂ ι₁ (suc ι₂) var | less m<n | greater m>n with inject₁ ι₁ <>? var
-...   | equal m≡n = {! !}
+...   | equal m≡n rewrite <>?-≡ (lemma₁₀ m≡n m>n) = sym (subst-make-room-id-ε ι₂ _ ε₁)
 ...   | greater m>n₁ rewrite <>?-> (lemma₈ m>n₁ m>n)
                            | <>?-> (lemma₉ m>n₁ m<n)
                            | lift-ℕ-≡
