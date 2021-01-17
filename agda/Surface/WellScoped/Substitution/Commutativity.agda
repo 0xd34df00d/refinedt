@@ -182,34 +182,13 @@ private
   lemma₁₀ {suc ℓ} {a = zero} _ (<-zero n) = refl
   lemma₁₀ {suc ℓ} {a = suc a} ≡-prf (<-suc b<c) = cong suc (lemma₁₀ (suc-injective ≡-prf) b<c)
 
-  mutual
-    subst-make-room-id-τ : (ι : Fin (suc ℓ))
-                         → (ε' : STerm ℓ)
-                         → (τ : SType ℓ)
-                         → [ ι ↦τ ε' ] R.act-τ (make-room-for ι) τ ≡ τ
-    subst-make-room-id-τ ι ε' τ = {! !}
-
-    subst-make-room-id-ρ : (ι : Fin (suc ℓ))
-                         → (ε' : STerm ℓ)
-                         → (ρ : Refinement ℓ)
-                         → [ ι ↦ρ ε' ] R.act-ρ (make-room-for ι) ρ ≡ ρ
-    subst-make-room-id-ρ ι ε' (ε₁ ≈ ε₂)
-      rewrite subst-make-room-id-ε ι ε' ε₁
-            | subst-make-room-id-ε ι ε' ε₂
-            = refl
-    subst-make-room-id-ρ ι ε' (ρ₁ ∧ ρ₂)
-      rewrite subst-make-room-id-ρ ι ε' ρ₁
-            | subst-make-room-id-ρ ι ε' ρ₂
-            = refl
-
-    subst-make-room-id-ε : (ι : Fin (suc ℓ))
+  subst-make-room-id-var : (ι : Fin (suc ℓ))
                          → (ε' ε : STerm ℓ)
-                         → [ ι ↦ε ε' ] R.act-ε (make-room-for ι) ε ≡ ε
-    subst-make-room-id-ε ι ε' SUnit = refl
-    subst-make-room-id-ε ι ε' (SVar var) with ι <>? inject₁ var
-    ... | less ι<var rewrite <>?-< (<-trans ι<var (inject₁-n<suc-n var)) = refl
-    ... | equal refl rewrite <>?-< (inject₁-n<suc-n var) = refl
-    ... | greater ι>var rewrite <>?-> ι>var
+                         → ∀ var → replace-at ι ε' (make-room-for ι var) ≡ SVar var
+  subst-make-room-id-var ι ε' ε var with ι <>? inject₁ var
+  ... | less ι<var rewrite <>?-< (<-trans ι<var (inject₁-n<suc-n var)) = refl
+  ... | equal refl rewrite <>?-< (inject₁-n<suc-n var) = refl
+  ... | greater ι>var rewrite <>?-> ι>var
                               | lift-ℕ-≡
                                 (
                                 begin
@@ -221,18 +200,13 @@ private
                                 ∎
                                 )
                               = refl
-    subst-make-room-id-ε ι ε' (SLam τ ε)
-      rewrite subst-make-room-id-τ ι ε' τ
-            | act-ε-extensionality (ext-replace-comm ε' ι) (R.act-ε (R.ext (make-room-for ι)) ε)
-            | R.act-ε-extensionality (make-room-ext-comm ι) ε
-            | subst-make-room-id-ε (suc ι) (R.weaken-ε ε') ε
-            = refl
-    subst-make-room-id-ε ι ε' (SApp ε₁ ε₂)
-      rewrite subst-make-room-id-ε ι ε' ε₁
-            | subst-make-room-id-ε ι ε' ε₂
-            = refl
-    subst-make-room-id-ε ι ε' (SCase ε branches) = {! !}
-    subst-make-room-id-ε ι ε' (SCon idx ε adt-cons) = {! !}
+
+  subst-make-room-id-ε : (ι : Fin (suc ℓ))
+                       → (ε' ε : STerm ℓ)
+                       → [ ι ↦ε ε' ] R.act-ε (make-room-for ι) ε ≡ ε
+  subst-make-room-id-ε ι ε' ε
+    rewrite σ-ρ-distr-ε (replace-at ι ε') (make-room-for ι) ε
+          = act-ε-id (subst-make-room-id-var ι ε' ε) ε
 
 subst-commutes-var : (ε₁ : STerm ℓ)
                    → (ε₂ : STerm (suc ℓ))
