@@ -35,7 +35,7 @@ act-ρ-extensionality x-≡ (ρ₁ ∧ ρ₂) rewrite act-ρ-extensionality x-�
                                          | act-ρ-extensionality x-≡ ρ₂ = refl
 
 act-ε-extensionality x-≡ SUnit = refl
-act-ε-extensionality x-≡ (SVar idx) rewrite var-action-cong x-≡ idx = refl
+act-ε-extensionality x-≡ (SVar idx) rewrite x-≡ idx = refl
 act-ε-extensionality x-≡ (SLam τ ε) rewrite act-τ-extensionality x-≡ τ
                                           | act-ε-extensionality (≡-ext x-≡) ε = refl
 act-ε-extensionality x-≡ (SApp ε₁ ε₂) rewrite act-ε-extensionality x-≡ ε₁

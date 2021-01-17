@@ -12,7 +12,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym)
 open import Data.Fin.Extra
 open import Surface.WellScoped
 open import Surface.WellScoped.Actions (record { Target = Fin
-                                               ; var-action = λ r idx → SVar (r idx)
+                                               ; var-action = λ ι → SVar ι
                                                ; ext = λ where _ zero → zero
                                                                r (suc n) → suc (r n)
                                                }) public
@@ -52,15 +52,8 @@ ext-monotonic ρ-mono {x = suc x} {y = suc y} (<-suc x<y) = <-suc (ρ-mono x<y)
 ≡-ext _ zero = refl
 ≡-ext x-≡ (suc x) rewrite x-≡ x = refl
 
-var-action-cong : {f₁ f₂ : Fin ℓ → Fin ℓ'}
-                → (∀ x → f₁ x ≡ f₂ x)
-                → (∀ x → var-action f₁ x ≡ var-action f₂ x)
-var-action-cong x-≡ x rewrite x-≡ x = refl
-
 open import Surface.WellScoped.ActionsLemmas var-action-record
-                                             record { ≡-ext = ≡-ext
-                                                    ; var-action-cong = var-action-cong
-                                                    }
+                                             record { ≡-ext = ≡-ext }
                                              public
 
 -- Renaming using an identity function is an identity

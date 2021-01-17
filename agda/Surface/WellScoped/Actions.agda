@@ -35,7 +35,7 @@ act-branches _ [] = []
 act-branches f (MkCaseBranch body ∷ bs) = MkCaseBranch (act-ε (ext f) body) ∷ act-branches f bs
 
 act-ε f SUnit = SUnit
-act-ε f (SVar idx) = var-action f idx
+act-ε f (SVar idx) = var-action (f idx)
 act-ε f (SLam τ ε) = SLam (act-τ f τ) (act-ε (ext f) ε)
 act-ε f (SApp ε₁ ε₂) = SApp (act-ε f ε₁) (act-ε f ε₂)
 act-ε f (SCase scrut branches) = SCase (act-ε f scrut) (act-branches f branches)

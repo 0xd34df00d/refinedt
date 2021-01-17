@@ -89,8 +89,7 @@ variable
 record VarAction : Set₁ where
   field
     Target : ℕ → Set
-    var-action : (Fin ℓ → Target ℓ')
-               → (Fin ℓ → STerm ℓ')
+    var-action : Target ℓ → STerm ℓ
     ext : (Fin ℓ → Target ℓ')
         → (Fin (suc ℓ) → Target (suc ℓ'))
 
@@ -100,6 +99,3 @@ record VarActionProps (act : VarAction) : Set where
     ≡-ext : {f₁ f₂ : Fin ℓ → Target ℓ'}
           → (∀ x → f₁ x ≡ f₂ x)
           → (∀ x → ext f₁ x ≡ ext f₂ x)
-    var-action-cong : {f₁ f₂ : Fin ℓ → Target ℓ'}
-                    → (∀ x → f₁ x ≡ f₂ x)
-                    → (∀ x → var-action f₁ x ≡ var-action f₂ x)

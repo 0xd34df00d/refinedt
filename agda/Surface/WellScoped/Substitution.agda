@@ -13,7 +13,7 @@ open import Surface.WellScoped
 open import Surface.WellScoped.Shape
 import Surface.WellScoped.Renaming as R
 open import Surface.WellScoped.Actions (record { Target = STerm
-                                               ; var-action = λ σ idx → σ idx
+                                               ; var-action = λ ε → ε
                                                ; ext = λ where _ zero → SVar zero
                                                                σ (suc n) → R.weaken-ε (σ n)
                                                }
@@ -69,15 +69,8 @@ branch-lookup-comm σ (suc ι) (_ ∷ bs) = branch-lookup-comm σ ι bs
 ≡-ext x-≡ zero = refl
 ≡-ext x-≡ (suc x) rewrite x-≡ x = refl
 
-var-action-cong : {f₁ f₂ : Fin ℓ → STerm ℓ'}
-                → (∀ x → f₁ x ≡ f₂ x)
-                → (∀ x → var-action f₁ x ≡ var-action f₂ x)
-var-action-cong x-≡ x = x-≡ x
-
 open import Surface.WellScoped.ActionsLemmas var-action-record
-                                             record { ≡-ext = ≡-ext
-                                                    ; var-action-cong = var-action-cong
-                                                    }
+                                             record { ≡-ext = ≡-ext }
                                              public
 
 infix 2 _f≡_
