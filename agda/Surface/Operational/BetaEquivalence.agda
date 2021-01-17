@@ -36,13 +36,13 @@ data _≡rβ_ : SType ℓ → SType ℓ → Set where
                  → τ₁ ≡rβ τ₂
                  → ([ ι ↦τ ε₀ ] τ₁) ≡rβ ([ ι ↦τ ε₀ ] τ₂)
 ↦τ-preserves-≡rβ ι ε₀ (≡rβ-Subst ιₛ ε ε' τ ε↝ε')
-  rewrite subst-commutes-τ' ι ιₛ ε₀ ε' τ
-        | subst-commutes-τ' ι ιₛ ε₀ ε  τ
+  rewrite subst-commutes-τ ι ιₛ ε₀ ε' τ
+        | subst-commutes-τ ι ιₛ ε₀ ε  τ
         = ≡rβ-Subst
               (compute-ι'₂ ι ιₛ)
               ([ ι ↦ε ε₀ ] ε)
               ([ ι ↦ε ε₀ ] ε')
-              ([ compute-ι'₁ ι ιₛ ↦τ R.act-ε (push-apart-at (compute-ι'₂ ι ιₛ)) ε₀ ] τ)
+              ([ compute-ι'₁ ι ιₛ ↦τ R.act-ε (make-room-for (compute-ι'₂ ι ιₛ)) ε₀ ] τ)
               (subst-preserves-↝ ι ε₀ ε↝ε')
 
 -- The version of the restricted β-equivalence without the green slime, more useful in proofs
