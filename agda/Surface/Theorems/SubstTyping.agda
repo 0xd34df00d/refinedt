@@ -209,7 +209,7 @@ sub-Γ⊢ε⦂τ-front {ℓ = ℓ} {ϖ = ϖ} {ε = ε} {τ = τ} {Γ = Γ} ϖδ 
     prf : Γ ⊢ [ ℓ ↦ε< ϖ ] ε ⦂ ([ ℓ ↦τ< ϖ ] τ)
     prf = sub-Γ⊢ε⦂τ ϖδ (prefix-cons prefix-refl) (∈-zero refl) εδ
     prf' : Γ ⊢ [ zero ↦ε ϖ ] ε ⦂ [ zero ↦τ ϖ ] τ
-    prf' rewrite sym (act-ε-id (λ _ → refl) ϖ) = prf
+    prf' rewrite sym (R.act-ε-id (λ _ → refl) ϖ) = prf
 
 sub-Γ⊢τ-front : ∀ {Γ : Ctx ℓ}
               → Γ ⊢ ε ⦂ σ
