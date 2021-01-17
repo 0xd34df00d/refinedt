@@ -6,7 +6,7 @@ open import Data.Empty using (⊥-elim)
 open import Data.Nat using (ℕ; zero; suc)
 open import Data.Nat.Properties using () renaming (suc-injective to ℕ-suc-injective)
 open import Data.Fin using (Fin; zero; suc; toℕ; inject₁)
-open import Data.Fin.Properties using (suc-injective)
+open import Data.Fin.Properties using (suc-injective; toℕ-inject₁)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 open import Relation.Nullary using (¬_)
 
@@ -242,6 +242,9 @@ lift-ℕ-≡ {m = suc m} {n = suc n} ℕ-≡ rewrite lift-ℕ-≡ (ℕ-suc-injec
       → m' < n'
 </toℕ {m' = zero}   {n' = suc n'} (<-zero _)  _  ≡₂ = <-zero n'
 </toℕ {m' = suc m'} {n' = suc n'} (<-suc m<n) ≡₁ ≡₂ = <-suc (</toℕ m<n (ℕ-suc-injective ≡₁) (ℕ-suc-injective ≡₂))
+
+inject₁-n<suc-n : (n : Fin ℓ) → inject₁ n < suc n
+inject₁-n<suc-n n = </toℕ (n<suc-n n) (toℕ-inject₁ n) refl
 
 tighten-injective : {m₁ m₂ n : Fin (suc ℓ)}
                   → {m₁<n : m₁ < n}
