@@ -47,21 +47,11 @@ ext-monotonic ρ-mono {x = suc x} {y = zero} ()
 ext-monotonic ρ-mono {x = suc x} {y = suc y} (<-suc x<y) = <-suc (ρ-mono x<y)
 
 
-≡-ext : {f₁ f₂ : Fin ℓ → Fin ℓ'}
-      → (∀ x → f₁ x ≡ f₂ x)
-      → (∀ x → ext f₁ x ≡ ext f₂ x)
-≡-ext _ zero = refl
-≡-ext x-≡ (suc x) rewrite x-≡ x = refl
-
-ext-id : ∀ {f : Fin ℓ → Fin ℓ}
-       → (∀ x → var-action (f x) ≡ SVar x)
-       → (∀ x → var-action (ext f x) ≡ SVar x)
-ext-id f-≡ zero = refl
-ext-id f-≡ (suc x) rewrite SVar-inj (f-≡ x) = refl
-
 open import Surface.WellScoped.ActionsLemmas var-action-record
-                                             record { ≡-ext = ≡-ext
-                                                    ; ext-id = ext-id
+                                             record { ≡-ext = λ where x-≡ zero → refl
+                                                                      x-≡ (suc x) → cong suc (x-≡ x)
+                                                    ; ext-id = λ where f-≡ zero → refl
+                                                                       f-≡ (suc x) → cong (SVar ∘ suc) (SVar-inj (f-≡ x))
                                                     }
                                              public
 

@@ -6,7 +6,7 @@ open import Data.Nat using (ℕ; suc; zero; _+_)
 open import Data.Fin using (Fin; suc; zero; toℕ)
 open import Data.Vec
 open import Function using (_∘_)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 
 open import Data.Fin.Extra
 open import Surface.WellScoped
@@ -63,12 +63,6 @@ branch-lookup-comm σ zero (_ ∷ _) = refl
 branch-lookup-comm σ (suc ι) (_ ∷ bs) = branch-lookup-comm σ ι bs
 
 
-≡-ext : {f₁ f₂ : Fin ℓ → STerm ℓ'}
-      → (∀ x → f₁ x ≡ f₂ x)
-      → (∀ x → ext f₁ x ≡ ext f₂ x)
-≡-ext x-≡ zero = refl
-≡-ext x-≡ (suc x) rewrite x-≡ x = refl
-
 ext-id : ∀ {f : Fin ℓ → STerm ℓ}
        → (∀ x → var-action (f x) ≡ SVar x)
        → (∀ x → var-action (ext f x) ≡ SVar x)
@@ -76,7 +70,8 @@ ext-id f-≡ zero = refl
 ext-id f-≡ (suc x) rewrite f-≡ x = refl
 
 open import Surface.WellScoped.ActionsLemmas var-action-record
-                                             record { ≡-ext = ≡-ext
+                                             record { ≡-ext = λ where x-≡ zero → refl
+                                                                      x-≡ (suc x) → cong R.weaken-ε (x-≡ x)
                                                     ; ext-id = ext-id
                                                     }
                                              public
