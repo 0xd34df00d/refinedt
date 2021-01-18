@@ -75,7 +75,7 @@ subst-preserves-↝ : ∀ ι ε₀
 subst-preserves-↝ ι ε₀ (E-AppL ε↝ε') = E-AppL (subst-preserves-↝ ι ε₀ ε↝ε')
 subst-preserves-↝ ι ε₀ (E-AppR is-value ε↝ε') = E-AppR (σ-preserves-values is-value) (subst-preserves-↝ ι ε₀ ε↝ε')
 subst-preserves-↝ ι ε₀ (E-AppAbs {ϖ = ϖ} {ε = ε} is-value)
-  rewrite subst-commutes-ε ι ε₀ ϖ ε
+  rewrite subst-commutes-ε-zero ι ε₀ ϖ ε
         | S.act-ε-extensionality (ext-replace-comm ε₀ ι) ε
         = E-AppAbs (σ-preserves-values is-value)
 subst-preserves-↝ ι ε₀ (E-ADT ε↝ε') = E-ADT (subst-preserves-↝ ι ε₀ ε↝ε')

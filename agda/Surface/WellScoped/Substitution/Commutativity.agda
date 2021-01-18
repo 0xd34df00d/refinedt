@@ -6,6 +6,7 @@ open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Nat.Base using (zero; suc)
 open import Data.Fin.Base using (zero; suc; inject₁; toℕ)
 open import Data.Fin.Properties using (toℕ-inject₁; suc-injective)
+open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality as Eq using (_≡_; refl; sym; cong)
 open Eq.≡-Reasoning
 
@@ -63,6 +64,11 @@ make-room-for ι var with ι <>? inject₁ var
 ... | less ι<var = suc var
 ... | equal ι≡var = suc var
 ... | greater ι>var = inject₁ var
+
+make-room-for-zero : (var : Fin ℓ)
+                   → make-room-for zero var ≡ suc var
+make-room-for-zero zero = refl
+make-room-for-zero (suc var) = refl
 
 private
   lemma₁ : ∀ {a : Fin ℓ} {b c : Fin (suc ℓ)}
@@ -276,3 +282,11 @@ subst-commutes-ε ι₁ ι₂ ε₁ ε₂ ε rewrite act-ε-distr (replace-at ι
                                            (replace-at (compute-ι'₂ ι₁ ι₂) ([ ι₁ ↦ε ε₁ ] ε₂)) ε
                                      | act-ε-extensionality (subst-commutes-var ε₁ ε₂ ι₁ ι₂) ε
                                      = refl
+
+subst-commutes-τ-zero : ∀ ι ε₁ ε₂ (τ : SType (suc (suc ℓ)))
+                      → [ ι ↦τ ε₁ ] [ zero ↦τ ε₂ ] τ ≡ [ zero ↦τ [ ι ↦ε ε₁ ] ε₂ ] [ suc ι ↦τ R.weaken-ε ε₁ ] τ
+subst-commutes-τ-zero ι ε₁ ε₂ τ rewrite R.act-ε-extensionality (sym ∘ make-room-for-zero) ε₁ = subst-commutes-τ ι zero ε₁ ε₂ τ
+
+subst-commutes-ε-zero : ∀ ι ε₁ ε₂ (ε : STerm (suc (suc ℓ)))
+                      → [ ι ↦ε ε₁ ] [ zero ↦ε ε₂ ] ε ≡ [ zero ↦ε [ ι ↦ε ε₁ ] ε₂ ] [ suc ι ↦ε R.weaken-ε ε₁ ] ε
+subst-commutes-ε-zero ι ε₁ ε₂ ε rewrite R.act-ε-extensionality (sym ∘ make-room-for-zero) ε₁ = subst-commutes-ε ι zero ε₁ ε₂ ε
