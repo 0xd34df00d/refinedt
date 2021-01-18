@@ -13,7 +13,7 @@ open import Surface.Operational.BetaEquivalence
                → τ ≡rβ τ'
                → Γ , τ  ++ Δ ⊢ τ₁ <: τ₂
                → Γ , τ' ++ Δ ⊢ τ₁ <: τ₂
-<:-equivalence Δ τ-≡rβ (ST-Base oracle is-just) = ST-Base oracle {! !}
+<:-equivalence Δ τ-≡rβ (ST-Base oracle is-just) = ST-Base oracle (Oracle.stepping oracle τ-≡rβ is-just)
 <:-equivalence Δ τ-≡rβ (ST-Arr <:₁ <:₂) = ST-Arr (<:-equivalence Δ τ-≡rβ <:₁) (<:-equivalence (Δ , _) τ-≡rβ <:₂)
 
 mutual

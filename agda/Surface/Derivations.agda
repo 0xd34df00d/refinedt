@@ -121,6 +121,10 @@ record Oracle where
           -- TODO add this back when parametrizing everything by an oracle: → Γ ⊢ σ' <: σ
           : Is-just (decide (Γ , σ  ++ Δ) b ρ₁ ρ₂)
           → Is-just (decide (Γ , σ' ++ Δ) b ρ₁ ρ₂)
+    stepping
+          : τ ≡rβ τ'
+          → Is-just (decide (Γ , τ  ++ Δ) b ρ₁ ρ₂)
+          → Is-just (decide (Γ , τ' ++ Δ) b ρ₁ ρ₂)
 
 
 -- Purely technical requirement to avoid parametrizing all of the modules by the same oracle and making hole types ugly
