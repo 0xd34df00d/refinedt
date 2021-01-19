@@ -23,6 +23,13 @@ data _↝βτ_ : SType ℓ → SType ℓ → Set where
             → (ε↝ε' : ε ↝ ε')
             → [ ι ↦τ ε' ] τ ↝βτ [ ι ↦τ ε ] τ
 
+infix 5 _↭βτ_
+data _↭βτ_ : SType ℓ → SType ℓ → Set where
+  forward : (τ₁↝τ₂ : τ₁ ↝βτ τ₂)
+          → τ₁ ↭βτ τ₂
+  backward : (τ₂↝τ₁ : τ₂ ↝βτ τ₁)
+           → τ₁ ↭βτ τ₂
+
 _preserves_ : (SType ℓ → SType ℓ')
             → (∀ {ℓ} → SType ℓ → SType ℓ → Set)
             → Set
