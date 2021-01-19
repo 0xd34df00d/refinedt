@@ -5,7 +5,7 @@ module Surface.Operational.BetaEquivalence where
 open import Data.Fin using (zero; suc)
 open import Data.Vec.Base using (lookup; [_]; _∷_)
 open import Function using (_∘_)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 
 open import Data.Fin.Extra
 open import Surface.WellScoped
@@ -44,6 +44,16 @@ f preserves _R_ = ∀ {τ₁ τ₂}
         | ρ-subst-distr-τ ρ ι ε' τ
         = ↝βτ-Subst zero (R.act-ε ρ ε) (R.act-ε ρ ε') (R.act-τ (ρ-ιth ρ ι) τ) (ρ-preserves-↝ ρ ε↝ε')
 
+↭-via-↝ : {f : SType ℓ → SType ℓ'}
+        → f preserves _↝βτ_
+        → f preserves _↭βτ_
+↭-via-↝ f-↝βτ (forward  τ₁↝τ₂) = forward  (f-↝βτ τ₁↝τ₂)
+↭-via-↝ f-↝βτ (backward τ₂↝τ₁) = backward (f-↝βτ τ₂↝τ₁)
+
+ρ-preserves-↭βτ : (ρ : Fin ℓ → Fin ℓ')
+                → R.act-τ ρ preserves _↭βτ_
+ρ-preserves-↭βτ = ↭-via-↝ ∘ ρ-preserves-↝βτ
+
 ↦τ-preserves-↝βτ : ∀ ι (ε₀ : STerm ℓ)
                  → [ ι ↦τ ε₀ ]_ preserves _↝βτ_
 ↦τ-preserves-↝βτ ι ε₀ (↝βτ-Subst ιₛ ε ε' τ ε↝ε')
@@ -55,6 +65,10 @@ f preserves _R_ = ∀ {τ₁ τ₂}
               ([ ι ↦ε ε₀ ] ε')
               ([ compute-ι'₁ ι ιₛ ↦τ R.act-ε (make-room-for (compute-ι'₂ ι ιₛ)) ε₀ ] τ)
               (subst-preserves-↝ ι ε₀ ε↝ε')
+
+↦τ-preserves-↭βτ : ∀ ι (ε₀ : STerm ℓ)
+                 → [ ι ↦τ ε₀ ]_ preserves _↭βτ_
+↦τ-preserves-↭βτ ι ε₀ = ↭-via-↝ (↦τ-preserves-↝βτ ι ε₀)
 
 -- The version of the restricted β-equivalence without the green slime, more useful in proofs
 infix 5 _↝βτ'_
@@ -73,8 +87,8 @@ data _↝βτ'_ : SType ℓ → SType ℓ → Set where
             → τ₁ ↝βτ  τ₂
 ↝βτ'-to-↝βτ (↝βτ'-Subst ι ε ε' τ ε↝ε' refl refl) = ↝βτ-Subst ι ε ε' τ ε↝ε'
 
-prove-via-↝βτ' : (τ₁ ↝βτ' τ₂ → τ₁' ↝βτ'  τ₂')
-               → (τ₁ ↝βτ  τ₂ → τ₁' ↝βτ   τ₂')
+prove-via-↝βτ' : (τ₁ ↝βτ' τ₂ → τ₁' ↝βτ' τ₂')
+               → (τ₁ ↝βτ  τ₂ → τ₁' ↝βτ  τ₂')
 prove-via-↝βτ' f = ↝βτ'-to-↝βτ ∘ f ∘ ↝βτ-to-↝βτ'
 
 
@@ -98,6 +112,9 @@ prove-via-↝βτ' f = ↝βτ'-to-↝βτ ∘ f ∘ ↝βτ-to-↝βτ'
 ↝βτ-preserves-shape : ShapePreserving {ℓ} _↝βτ_
 ↝βτ-preserves-shape ↝βτ = ↝βτ'-preserves-shape (↝βτ-to-↝βτ' ↝βτ)
 
+↭βτ-preserves-shape : ShapePreserving {ℓ} _↭βτ_
+↭βτ-preserves-shape (forward τ₁↝τ₂) = ↝βτ-preserves-shape τ₁↝τ₂
+↭βτ-preserves-shape (backward τ₂↝τ₁) = sym (↝βτ-preserves-shape τ₂↝τ₁)
 
 ↝βτ'-cons-same-length : ∀ {n₁ n₂}
                       → {cons₁ : ADTCons (Mkℕₐ (suc n₁)) ℓ}
@@ -112,6 +129,14 @@ prove-via-↝βτ' f = ↝βτ'-to-↝βτ ∘ f ∘ ↝βτ-to-↝βτ'
                      → (⊍ cons₁) ↝βτ (⊍ cons₂)
                      → n₁ ≡ n₂
 ↝βτ-cons-same-length ↝βτ = ↝βτ'-cons-same-length (↝βτ-to-↝βτ' ↝βτ)
+
+↭βτ-cons-same-length : ∀ {n₁ n₂}
+                     → {cons₁ : ADTCons (Mkℕₐ (suc n₁)) ℓ}
+                     → {cons₂ : ADTCons (Mkℕₐ (suc n₂)) ℓ}
+                     → (⊍ cons₁) ↭βτ (⊍ cons₂)
+                     → n₁ ≡ n₂
+↭βτ-cons-same-length (forward τ₁↝τ₂) = ↝βτ-cons-same-length τ₁↝τ₂
+↭βτ-cons-same-length (backward τ₂↝τ₁) = sym (↝βτ-cons-same-length τ₂↝τ₁)
 
 ↝βτ'-lookup : (idx : Fin (suc n))
             → (cons₁ : ADTCons (Mkℕₐ (suc n)) ℓ)
@@ -128,6 +153,14 @@ prove-via-↝βτ' f = ↝βτ'-to-↝βτ ∘ f ∘ ↝βτ-to-↝βτ'
            → (⊍ cons₁) ↝βτ (⊍ cons₂)
            → lookup cons₁ idx ↝βτ lookup cons₂ idx
 ↝βτ-lookup idx = prove-via-↝βτ' (↝βτ'-lookup idx _ _)
+
+↭βτ-lookup : {cons₁ : ADTCons (Mkℕₐ (suc n)) ℓ}
+           → {cons₂ : ADTCons (Mkℕₐ (suc n)) ℓ}
+           → (idx : Fin (suc n))
+           → (⊍ cons₁) ↭βτ (⊍ cons₂)
+           → lookup cons₁ idx ↭βτ lookup cons₂ idx
+↭βτ-lookup idx (forward τ₁↝τ₂) = forward (↝βτ-lookup idx τ₁↝τ₂)
+↭βτ-lookup idx (backward τ₂↝τ₁) = backward (↝βτ-lookup idx τ₂↝τ₁)
 
 ↝βτ'-⇒-dom : (τ₁' ⇒ τ₂') ↝βτ' (τ₁ ⇒ τ₂)
            → τ₁' ↝βτ' τ₁
