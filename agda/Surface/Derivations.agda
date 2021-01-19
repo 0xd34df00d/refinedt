@@ -89,7 +89,7 @@ data _⊢_⦂_ where
               → Γ ⊢ ε ⦂ τ'
   T-RConv     : (εδ : Γ ⊢ ε ⦂ τ)
               → (τ'δ : Γ ⊢ τ')
-              → (τ~τ' : τ ≡rβ τ')
+              → (τ~τ' : τ ↝βτ τ')
               → Γ ⊢ ε ⦂ τ'
 
 record Oracle where
@@ -122,7 +122,7 @@ record Oracle where
           : Is-just (decide (Γ , σ  ++ Δ) b ρ₁ ρ₂)
           → Is-just (decide (Γ , σ' ++ Δ) b ρ₁ ρ₂)
     stepping
-          : τ ≡rβ τ'
+          : τ ↝βτ τ'
           → Is-just (decide (Γ , τ  ++ Δ) b ρ₁ ρ₂)
           → Is-just (decide (Γ , τ' ++ Δ) b ρ₁ ρ₂)
 

@@ -135,12 +135,12 @@ private
           superδ' = twf-thinning-sized Γ⊂Γ' Γ'ok superδ rec₂
           <:δ' = st-thinning Γ⊂Γ' <:δ
        in T-Sub εδ' superδ' <:δ'
-  t-thinning-sized Γ⊂Γ' Γ'ok (T-RConv εδ τ'δ ≡rβ) (acc rec)
+  t-thinning-sized Γ⊂Γ' Γ'ok (T-RConv εδ τ'δ ↝βτ) (acc rec)
     = let rec₁ = rec _ (s≤s (m≤m<>n _ _))
           rec₂ = rec _ (s≤s (n≤m<>n _ _))
           εδ' = t-thinning-sized Γ⊂Γ' Γ'ok εδ rec₁
           τ'δ' = twf-thinning-sized Γ⊂Γ' Γ'ok τ'δ rec₂
-       in T-RConv εδ' τ'δ' (ρ-preserves-≡rβ (_⊂_.ρ Γ⊂Γ') ≡rβ)
+       in T-RConv εδ' τ'δ' (ρ-preserves-↝βτ (_⊂_.ρ Γ⊂Γ') ↝βτ)
 
 abstract
   twf-thinning : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ : SType ℓ}
