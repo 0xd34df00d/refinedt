@@ -45,13 +45,23 @@ mutual
       equiv-cons Δ τ-≡rβ Γ⊢τ' [] = []
       equiv-cons Δ τ-≡rβ Γ⊢τ' (δ ∷ consδs) = Γ⊢τ-equivalence Δ τ-≡rβ Γ⊢τ' δ ∷ equiv-cons Δ τ-≡rβ Γ⊢τ' consδs
 
+  Var-equivalence : (Δ : CtxSuffix (suc ℓ) k)
+                  → τ₁ ≡rβ τ₁'
+                  → Γ ⊢ τ₁'
+                  → (Γ , τ₁ ++ Δ) ok
+                  → τ ∈ Γ , τ₁ ++ Δ at ι
+                  → Γ , τ₁' ++ Δ ⊢ SVar ι ⦂ τ
+  Var-equivalence ⊘ τ-≡rβ Γ⊢τ₁' (TCTX-Bind ctx-ok τδ) (∈-zero refl) = T-RConv {! !} {! !} {! !}
+  Var-equivalence ⊘ τ-≡rβ Γ⊢τ₁' (TCTX-Bind ctx-ok τδ) (∈-suc refl ∈) = T-Var (TCTX-Bind ctx-ok Γ⊢τ₁') (∈-suc refl ∈)
+  Var-equivalence (Δ , τ) τ-≡rβ Γ⊢τ₁' ctx-ok ∈ = {! !}
+
   Γ⊢ε⦂τ-equivalence : (Δ : CtxSuffix (suc ℓ) k)
                     → τ₁ ≡rβ τ₁'
                     → Γ ⊢ τ₁'
                     → Γ , τ₁  ++ Δ ⊢ ε ⦂ τ₂
                     → Γ , τ₁' ++ Δ ⊢ ε ⦂ τ₂
   Γ⊢ε⦂τ-equivalence Δ τ-≡rβ Γ⊢τ₁' (T-Unit Γok) = T-Unit (Γok-equivalence Δ τ-≡rβ Γ⊢τ₁' Γok)
-  Γ⊢ε⦂τ-equivalence Δ τ-≡rβ Γ⊢τ₁' (T-Var Γok ∈) = {! !}
+  Γ⊢ε⦂τ-equivalence Δ τ-≡rβ Γ⊢τ₁' (T-Var Γok ∈) = Var-equivalence Δ τ-≡rβ Γ⊢τ₁' Γok ∈
   Γ⊢ε⦂τ-equivalence Δ τ-≡rβ Γ⊢τ₁' (T-Abs arrδ εδ) = T-Abs (Γ⊢τ-equivalence Δ τ-≡rβ Γ⊢τ₁' arrδ) (Γ⊢ε⦂τ-equivalence (Δ , _) τ-≡rβ Γ⊢τ₁' εδ)
   Γ⊢ε⦂τ-equivalence Δ τ-≡rβ Γ⊢τ₁' (T-App ε₁δ ε₂δ) = T-App (Γ⊢ε⦂τ-equivalence Δ τ-≡rβ Γ⊢τ₁' ε₁δ) (Γ⊢ε⦂τ-equivalence Δ τ-≡rβ Γ⊢τ₁' ε₂δ)
   Γ⊢ε⦂τ-equivalence Δ τ-≡rβ Γ⊢τ₁' (T-Case resδ εδ branches-well-typed)
