@@ -140,7 +140,7 @@ private
           rec₂ = rec _ (s≤s (n≤m<>n _ _))
           εδ' = t-thinning-sized Γ⊂Γ' Γ'ok εδ rec₁
           τ'δ' = twf-thinning-sized Γ⊂Γ' Γ'ok τ'δ rec₂
-       in T-RConv εδ' τ'δ' (ρ-preserves-↝βτ (_⊂_.ρ Γ⊂Γ') ↝βτ)
+       in T-RConv εδ' τ'δ' (ρ-preserves-↭βτ (_⊂_.ρ Γ⊂Γ') ↝βτ)
 
 abstract
   twf-thinning : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ : SType ℓ}

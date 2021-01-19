@@ -36,18 +36,18 @@ canonical-<: : ⊘ ⊢ τ <: τ'
 canonical-<: (ST-Base oracle is-just) C-Unit rewrite Oracle.⇒-consistent oracle is-just = C-Unit
 canonical-<: (ST-Arr _ _) C-Lam = C-Lam
 
-canonical-↝ : ∀ τ'
-            → τ ↝βτ' τ'
+canonical-↭ : ∀ τ'
+            → τ ↭βτ τ'
             → Canonical ε τ
             → Canonical ε τ'
-canonical-↝ τ' ↝βτ C-Unit = {! !}
-canonical-↝ (_ ⇒ _) ↝βτ C-Lam = C-Lam
-canonical-↝ (⊍ cons) ↝βτ (C-Con canonical) with ↝βτ'-cons-same-length ↝βτ
+canonical-↭ τ' _ C-Unit = {! !}
+canonical-↭ (_ ⇒ _) _ C-Lam = C-Lam
+canonical-↭ (⊍ cons) ↭βτ (C-Con canonical) with ↭βτ-cons-same-length ↭βτ
 ... | refl = C-Con canonical
-canonical-↝ ⟨ _ ∣ _ ⟩ ↝βτ-prf C-Lam     = shape-⊥-elim ↝βτ'-preserves-shape ↝βτ-prf λ ()
-canonical-↝ (⊍ _)     ↝βτ-prf C-Lam     = shape-⊥-elim ↝βτ'-preserves-shape ↝βτ-prf λ ()
-canonical-↝ ⟨ _ ∣ _ ⟩ ↝βτ-prf (C-Con _) = shape-⊥-elim ↝βτ'-preserves-shape ↝βτ-prf λ ()
-canonical-↝ (_ ⇒ _)   ↝βτ-prf (C-Con _) = shape-⊥-elim ↝βτ'-preserves-shape ↝βτ-prf λ ()
+canonical-↭ ⟨ _ ∣ _ ⟩ ↭βτ-prf C-Lam     = shape-⊥-elim ↭βτ-preserves-shape ↭βτ-prf λ ()
+canonical-↭ (⊍ _)     ↭βτ-prf C-Lam     = shape-⊥-elim ↭βτ-preserves-shape ↭βτ-prf λ ()
+canonical-↭ ⟨ _ ∣ _ ⟩ ↭βτ-prf (C-Con _) = shape-⊥-elim ↭βτ-preserves-shape ↭βτ-prf λ ()
+canonical-↭ (_ ⇒ _)   ↭βτ-prf (C-Con _) = shape-⊥-elim ↭βτ-preserves-shape ↭βτ-prf λ ()
 
 canonical : ⊘ ⊢ ε ⦂ τ
           → IsValue ε
@@ -59,7 +59,7 @@ canonical (T-Unit Γok) IV-Unit = C-Unit
 canonical (T-Abs arrδ εδ) IV-Abs = C-Lam
 canonical (T-Con _ εδ adtτ) (IV-ADT is-value) = C-Con (canonical εδ is-value)
 canonical (T-Sub εδ Γ⊢τ' <:) is-value = canonical-<: <: (canonical εδ is-value)
-canonical (T-RConv εδ _ τ↝τ') is-value = canonical-↝ _ (↝βτ-to-↝βτ' τ↝τ') (canonical εδ is-value)
+canonical (T-RConv εδ _ τ~τ') is-value = canonical-↭ _ τ~τ' (canonical εδ is-value)
 
 data Progress (ε : STerm ℓ) : Set where
   step : (ε↝ε' : ε ↝ ε')
@@ -94,8 +94,8 @@ SLam-inv : Γ ⊢ SLam τ ε ⦂ τ₁ ⇒ τ₂
 SLam-inv (T-Abs _ εδ) = εδ
 SLam-inv (T-Sub εδ (TWF-Arr τ₁-ok τ₂-ok₁) (ST-Arr <:₁ <:₂)) = T-Sub (Γ⊢ε⦂τ-narrowing ⊘ <:₁ τ₁-ok (SLam-inv εδ)) τ₂-ok₁ <:₂
 SLam-inv (T-RConv {τ = τ₁' ⇒ τ₂'} εδ _ τ↝τ') = let rec = SLam-inv εδ in {! !}
-SLam-inv (T-RConv {τ = ⟨ _ ∣ _ ⟩} εδ _ τ↝τ') = shape-⊥-elim ↝βτ-preserves-shape τ↝τ' λ ()
-SLam-inv (T-RConv {τ = ⊍ _}       εδ _ τ↝τ') = shape-⊥-elim ↝βτ-preserves-shape τ↝τ' λ ()
+SLam-inv (T-RConv {τ = ⟨ _ ∣ _ ⟩} εδ _ τ↝τ') = shape-⊥-elim ↭βτ-preserves-shape τ↝τ' λ ()
+SLam-inv (T-RConv {τ = ⊍ _}       εδ _ τ↝τ') = shape-⊥-elim ↭βτ-preserves-shape τ↝τ' λ ()
 
 lookup-preserves-Γ⊢τ : {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
                      → (idx : Fin (suc n))
@@ -114,10 +114,10 @@ con-has-type : ∀ {cons cons' : ADTCons (Mkℕₐ (suc n)) ℓ} {idx}
              → Γ ⊢ SCon idx ε cons ⦂ ⊍ cons'
              → Γ ⊢ ε ⦂ lookup cons' idx
 con-has-type (T-Con refl conδ adtτ) = conδ
-con-has-type (T-RConv {τ = ⟨ _ ∣ _ ⟩} εδ _ τ↝τ') = shape-⊥-elim ↝βτ-preserves-shape τ↝τ' λ ()
-con-has-type (T-RConv {τ = _ ⇒ _}     εδ _ τ↝τ') = shape-⊥-elim ↝βτ-preserves-shape τ↝τ' λ ()
-con-has-type (T-RConv {τ = ⊍ cons}    εδ τ'δ τ↝τ') with ↝βτ-cons-same-length τ↝τ'
-... | refl = T-RConv (con-has-type εδ) (lookup-preserves-Γ⊢τ _ τ'δ) (↝βτ-lookup _ τ↝τ')
+con-has-type (T-RConv {τ = ⟨ _ ∣ _ ⟩} εδ _ τ↝τ') = shape-⊥-elim ↭βτ-preserves-shape τ↝τ' λ ()
+con-has-type (T-RConv {τ = _ ⇒ _}     εδ _ τ↝τ') = shape-⊥-elim ↭βτ-preserves-shape τ↝τ' λ ()
+con-has-type (T-RConv {τ = ⊍ cons}    εδ τ'δ τ↝τ') with ↭βτ-cons-same-length τ↝τ'
+... | refl = T-RConv (con-has-type εδ) (lookup-preserves-Γ⊢τ _ τ'δ) (↭βτ-lookup _ τ↝τ')
 
 preservation : ε ↝ ε'
              → Γ ⊢ ε ⦂ τ
@@ -128,7 +128,7 @@ preservation (E-AppL ε↝ε') (T-App ε₁δ ε₂δ) = T-App (preservation ε�
 preservation (E-AppR x ε↝ε') (T-App ε₁δ ε₂δ)
   = let τ₂δ = arr-wf-⇒-cod-wf (Γ⊢ε⦂τ-⇒-Γ⊢τ ε₁δ)
         τ'δ = sub-Γ⊢τ-front ε₂δ τ₂δ
-     in T-RConv (T-App ε₁δ (preservation ε↝ε' ε₂δ)) τ'δ (↝βτ-Subst _ _ _ _ ε↝ε')
+     in T-RConv (T-App ε₁δ (preservation ε↝ε' ε₂δ)) τ'δ (forward (↝βτ-Subst _ _ _ _ ε↝ε'))
 preservation (E-AppAbs ε₂-is-value) (T-App ε₁δ ε₂δ) = sub-Γ⊢ε⦂τ-front ε₂δ (SLam-inv ε₁δ)
 preservation (E-ADT ε↝ε') (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (preservation ε↝ε' εδ) adtτ
 preservation (E-CaseScrut ε↝ε') (T-Case resδ εδ branches) = T-Case resδ (preservation ε↝ε' εδ) branches

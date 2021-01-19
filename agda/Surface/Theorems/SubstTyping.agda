@@ -181,7 +181,7 @@ mutual
                                                     (sub-Γ⊢τ εδ prefix σ-∈ superδ)
                                                     (sub-Γ⊢τ<:τ' εδ prefix σ-∈ <:δ)
   sub-Γ⊢ε⦂τ {ε = ε} {k = k} εδ prefix σ-∈ (T-RConv εδ' τ'δ τ~τ')
-    = let sub-τ~τ' = ↦τ-preserves-↝βτ (ctx-idx k) (R.act-ε (raise k) ε) τ~τ'
+    = let sub-τ~τ' = ↦τ-preserves-↭βτ (ctx-idx k) (R.act-ε (raise k) ε) τ~τ'
        in T-RConv (sub-Γ⊢ε⦂τ εδ prefix σ-∈ εδ') (sub-Γ⊢τ εδ prefix σ-∈ τ'δ) sub-τ~τ'
 
   sub-Γ⊢τ<:τ' : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {τ τ' : SType (suc k + ℓ)}
