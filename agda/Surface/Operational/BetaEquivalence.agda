@@ -23,18 +23,22 @@ data _↝βτ_ : SType ℓ → SType ℓ → Set where
             → (ε↝ε' : ε ↝ ε')
             → [ ι ↦τ ε' ] τ ↝βτ [ ι ↦τ ε ] τ
 
+_preserves_ : (SType ℓ → SType ℓ')
+            → (∀ {ℓ} → SType ℓ → SType ℓ → Set)
+            → Set
+f preserves _R_ = ∀ {τ₁ τ₂}
+                → τ₁ R τ₂
+                → f τ₁ R f τ₂
+
 ρ-preserves-↝βτ : (ρ : Fin ℓ → Fin ℓ')
-                → τ₁ ↝βτ τ₂
-                → R.act-τ ρ τ₁ ↝βτ R.act-τ ρ τ₂
+                → R.act-τ ρ preserves _↝βτ_
 ρ-preserves-↝βτ ρ (↝βτ-Subst ι ε ε' τ ε↝ε')
   rewrite ρ-subst-distr-τ ρ ι ε  τ
         | ρ-subst-distr-τ ρ ι ε' τ
         = ↝βτ-Subst zero (R.act-ε ρ ε) (R.act-ε ρ ε') (R.act-τ (ρ-ιth ρ ι) τ) (ρ-preserves-↝ ρ ε↝ε')
 
-
-↦τ-preserves-↝βτ : ∀ ι ε₀
-                 → τ₁ ↝βτ τ₂
-                 → ([ ι ↦τ ε₀ ] τ₁) ↝βτ ([ ι ↦τ ε₀ ] τ₂)
+↦τ-preserves-↝βτ : ∀ ι (ε₀ : STerm ℓ)
+                 → [ ι ↦τ ε₀ ]_ preserves _↝βτ_
 ↦τ-preserves-↝βτ ι ε₀ (↝βτ-Subst ιₛ ε ε' τ ε↝ε')
   rewrite subst-commutes-τ ι ιₛ ε₀ ε' τ
         | subst-commutes-τ ι ιₛ ε₀ ε  τ
