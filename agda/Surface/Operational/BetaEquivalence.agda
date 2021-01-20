@@ -30,6 +30,11 @@ data _↭βτ_ : SType ℓ → SType ℓ → Set where
   backward : (τ₂↝τ₁ : τ₂ ↝βτ τ₁)
            → τ₁ ↭βτ τ₂
 
+↭βτ-is-symmetric : τ₁ ↭βτ τ₂
+                 → τ₂ ↭βτ τ₁
+↭βτ-is-symmetric (forward τ₁↝τ₂) = backward τ₁↝τ₂
+↭βτ-is-symmetric (backward τ₂↝τ₁) = forward τ₂↝τ₁
+
 _preserves_ : (SType ℓ → SType ℓ')
             → (∀ {ℓ} → SType ℓ → SType ℓ → Set)
             → Set
