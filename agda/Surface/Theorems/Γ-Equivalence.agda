@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Surface.Theorems.Γ-Equivalence where
 
 open import Data.Fin using (suc)
