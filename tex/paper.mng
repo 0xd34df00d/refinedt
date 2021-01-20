@@ -582,7 +582,7 @@ with the corresponding proof terms referred in lemmas names.
   Let $[[ empty |- es : ts ]]$ and $[[ es ]]$ be a value. In this case:
   \begin{itemize}
     \item if $[[ ts ]]$ is of the form $[[ (x : ts1) -> ts2 ]]$, then $[[ es ]]$ is of the form $[[ \ x : ts . es' ]]$,
-    \item if $[[ ts ]]$ is of the form $[[ < </ li : tsi // i /> > ]]$, then $[[ es ]]$ is of the form $[[ < l = es' > as < </ li : tsi // i /> > ]]$.
+    \item if $[[ ts ]]$ is of the form $[[ < </ li : tsi // i /> > ]]$, then $[[ es ]]$ is of the form $[[ < l = es' > as < </ li : tsi' // i /> > ]]$.
   \end{itemize}
 \end{lemma}
 \begin{proof}
