@@ -25,42 +25,33 @@ open import Surface.Theorems.Γ-Equivalence
 open import Surface.Theorems
 
 data Canonical : STerm ℓ → SType ℓ → Set where
-  C-Unit : Canonical (SUnit {ℓ}) ⟨ BUnit ∣ Τ ⟩
   C-Lam  : Canonical (SLam τ ε) (τ₁ ⇒ τ₂)
   C-Con  : ∀ {cons cons' : ADTCons (Mkℕₐ (suc n)) zero}
-         → (scrut-canonical : Canonical ε τ)
          → Canonical (SCon idx ε cons) (⊍ cons')
 
-canonical-<: : ⊘ ⊢ τ <: τ'
-             → Canonical ε τ
-             → Canonical ε τ'
-canonical-<: (ST-Base oracle is-just) C-Unit rewrite Oracle.⇒-consistent oracle is-just = C-Unit
-canonical-<: (ST-Arr _ _) C-Lam = C-Lam
-
-canonical-↭ : ∀ τ'
-            → τ ↭βτ τ'
+canonical-⇒ : ⊘ ⊢ ε ⦂ τ
+            → IsValue ε
+            → τ ≡ τ₁ ⇒ τ₂
             → Canonical ε τ
-            → Canonical ε τ'
-canonical-↭ τ' _ C-Unit = {! !}
-canonical-↭ (_ ⇒ _) _ C-Lam = C-Lam
-canonical-↭ (⊍ cons) ↭βτ (C-Con canonical) with ↭βτ-cons-same-length ↭βτ
-... | refl = C-Con canonical
-canonical-↭ ⟨ _ ∣ _ ⟩ ↭βτ-prf C-Lam     = shape-⊥-elim ↭βτ-preserves-shape ↭βτ-prf λ ()
-canonical-↭ (⊍ _)     ↭βτ-prf C-Lam     = shape-⊥-elim ↭βτ-preserves-shape ↭βτ-prf λ ()
-canonical-↭ ⟨ _ ∣ _ ⟩ ↭βτ-prf (C-Con _) = shape-⊥-elim ↭βτ-preserves-shape ↭βτ-prf λ ()
-canonical-↭ (_ ⇒ _)   ↭βτ-prf (C-Con _) = shape-⊥-elim ↭βτ-preserves-shape ↭βτ-prf λ ()
+canonical-⇒ (T-Abs arrδ εδ) is-value ≡-prf = C-Lam
+canonical-⇒ (T-Sub εδ τ'δ <:@(ST-Arr _ _)) is-value refl with canonical-⇒ εδ is-value refl
+... | C-Lam = C-Lam
+canonical-⇒ (T-RConv {τ = τ₁' ⇒ τ₂'} εδ τ'δ τ~τ') is-value refl with canonical-⇒ εδ is-value refl
+... | C-Lam = C-Lam
+canonical-⇒ (T-RConv {τ = ⟨ _ ∣ _ ⟩} εδ τ'δ τ~τ') is-value refl = shape-⊥-elim ↭βτ-preserves-shape τ~τ' (λ ())
+canonical-⇒ (T-RConv {τ = ⊍ _} εδ τ'δ τ~τ')       is-value refl = shape-⊥-elim ↭βτ-preserves-shape τ~τ' (λ ())
 
-canonical : ⊘ ⊢ ε ⦂ τ
-          → IsValue ε
-          → Canonical ε τ
-canonical (T-Var _ _) ()
-canonical (T-App _ _) ()
-canonical (T-Case _ _ _) ()
-canonical (T-Unit Γok) IV-Unit = C-Unit
-canonical (T-Abs arrδ εδ) IV-Abs = C-Lam
-canonical (T-Con _ εδ adtτ) (IV-ADT is-value) = C-Con (canonical εδ is-value)
-canonical (T-Sub εδ Γ⊢τ' <:) is-value = canonical-<: <: (canonical εδ is-value)
-canonical (T-RConv εδ _ τ~τ') is-value = canonical-↭ _ τ~τ' (canonical εδ is-value)
+canonical-⊍ : {cons : ADTCons (Mkℕₐ (suc n)) zero}
+            → ⊘ ⊢ ε ⦂ τ
+            → IsValue ε
+            → τ ≡ ⊍ cons
+            → Canonical ε τ
+canonical-⊍ (T-Con ≡-prf₁ εδ adtτ) (IV-ADT is-value) ≡-prf = C-Con
+canonical-⊍ (T-Sub εδ τ'δ ()) _ refl
+canonical-⊍ (T-RConv {τ = ⊍ cons} εδ τ'δ τ~τ') is-value refl with canonical-⊍ εδ is-value refl | ↭βτ-cons-same-length τ~τ'
+... | C-Con | refl = C-Con
+canonical-⊍ (T-RConv {τ = ⟨ _ ∣ _ ⟩} εδ τ'δ τ~τ') is-value refl = shape-⊥-elim ↭βτ-preserves-shape τ~τ' (λ ())
+canonical-⊍ (T-RConv {τ = _ ⇒ _} εδ τ'δ τ~τ')     is-value refl = shape-⊥-elim ↭βτ-preserves-shape τ~τ' (λ ())
 
 data Progress (ε : STerm ℓ) : Set where
   step : (ε↝ε' : ε ↝ ε')
@@ -76,12 +67,12 @@ progress (T-App {ε₂ = ε₂} ε₁δ ε₂δ) with progress ε₁δ
 ... | step ε↝ε' = step (E-AppL ε↝ε')
 ... | done is-value-ε₁ with progress ε₂δ
 ...   | step ε↝ε' = step (E-AppR is-value-ε₁ ε↝ε')
-...   | done is-value-ε₂ with canonical ε₁δ is-value-ε₁
+...   | done is-value-ε₂ with canonical-⇒ ε₁δ is-value-ε₁ refl
 ...     | C-Lam = step (E-AppAbs is-value-ε₂)
 progress (T-Case resδ εδ branches) with progress εδ
 ... | step ε↝ε' = step (E-CaseScrut ε↝ε')
-... | done is-value with canonical εδ is-value
-...   | C-Con scrut-canonical with is-value
+... | done is-value with canonical-⊍ εδ is-value refl
+...   | C-Con with is-value
 ...     | IV-ADT ε-value = step (E-CaseMatch ε-value _)
 progress (T-Con _ εδ adtτ) with progress εδ
 ... | step ε↝ε' = step (E-ADT ε↝ε')
