@@ -21,6 +21,7 @@ open import Surface.Operational.Lemmas
 open import Surface.Theorems.SubstTyping
 open import Surface.Theorems.Subtyping
 open import Surface.Theorems.Helpers
+open import Surface.Theorems.Γ-Equivalence
 open import Surface.Theorems
 
 data Canonical : STerm ℓ → SType ℓ → Set where
@@ -93,7 +94,9 @@ SLam-inv : Γ ⊢ SLam τ ε ⦂ τ₁ ⇒ τ₂
          → Γ , τ₁ ⊢ ε ⦂ τ₂
 SLam-inv (T-Abs _ εδ) = εδ
 SLam-inv (T-Sub εδ (TWF-Arr τ₁-ok τ₂-ok₁) (ST-Arr <:₁ <:₂)) = T-Sub (Γ⊢ε⦂τ-narrowing ⊘ <:₁ τ₁-ok (SLam-inv εδ)) τ₂-ok₁ <:₂
-SLam-inv (T-RConv {τ = τ₁' ⇒ τ₂'} εδ _ τ↝τ') = let rec = SLam-inv εδ in {! !}
+SLam-inv (T-RConv {τ = τ₁' ⇒ τ₂'} εδ (TWF-Arr τ₁δ τ₂δ) τ~τ')
+  = let Γ,τ₁⊢ε⦂τ₂' = Γ⊢ε⦂τ-equivalence ⊘ (↭βτ-⇒-dom τ~τ') τ₁δ (SLam-inv εδ)
+     in T-RConv Γ,τ₁⊢ε⦂τ₂' τ₂δ (↭βτ-⇒-cod τ~τ')
 SLam-inv (T-RConv {τ = ⟨ _ ∣ _ ⟩} εδ _ τ↝τ') = shape-⊥-elim ↭βτ-preserves-shape τ↝τ' λ ()
 SLam-inv (T-RConv {τ = ⊍ _}       εδ _ τ↝τ') = shape-⊥-elim ↭βτ-preserves-shape τ↝τ' λ ()
 
