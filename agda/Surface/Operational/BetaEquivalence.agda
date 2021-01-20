@@ -167,21 +167,21 @@ prove-via-↝βτ' f = ↝βτ'-to-↝βτ ∘ f ∘ ↝βτ-to-↝βτ'
 ↭βτ-lookup idx (forward τ₁↝τ₂) = forward (↝βτ-lookup idx τ₁↝τ₂)
 ↭βτ-lookup idx (backward τ₂↝τ₁) = backward (↝βτ-lookup idx τ₂↝τ₁)
 
-↝βτ'-⇒-dom : (τ₁' ⇒ τ₂') ↝βτ' (τ₁ ⇒ τ₂)
-           → τ₁' ↝βτ' τ₁
+↝βτ'-⇒-dom : (τ₁ ⇒ τ₂) ↝βτ' (τ₁' ⇒ τ₂')
+           → τ₁ ↝βτ' τ₁'
 ↝βτ'-⇒-dom (↝βτ'-Subst ι ε ε' (τ₀₁ ⇒ τ₀₂) ε↝ε' refl refl) = ↝βτ'-Subst ι ε ε' τ₀₁ ε↝ε' refl refl
 
-↝βτ'-⇒-cod : (τ₁' ⇒ τ₂') ↝βτ' (τ₁ ⇒ τ₂)
-           → τ₂' ↝βτ' τ₂
+↝βτ'-⇒-cod : (τ₁ ⇒ τ₂) ↝βτ' (τ₁' ⇒ τ₂')
+           → τ₂ ↝βτ' τ₂'
 ↝βτ'-⇒-cod (↝βτ'-Subst ι ε ε' (τ₀₁ ⇒ τ₀₂) ε↝ε' refl refl)
   rewrite S.act-τ-extensionality (ext-replace-comm ε' ι) τ₀₂
         | S.act-τ-extensionality (ext-replace-comm ε  ι) τ₀₂
         = ↝βτ'-Subst (suc ι) (R.weaken-ε ε) (R.weaken-ε ε') τ₀₂ (ρ-preserves-↝ suc ε↝ε') refl refl
 
-↝βτ-⇒-dom : (τ₁' ⇒ τ₂') ↝βτ (τ₁ ⇒ τ₂)
-          → τ₁' ↝βτ τ₁
+↝βτ-⇒-dom : (τ₁ ⇒ τ₂) ↝βτ (τ₁' ⇒ τ₂')
+          → τ₁ ↝βτ τ₁'
 ↝βτ-⇒-dom = prove-via-↝βτ' ↝βτ'-⇒-dom
 
-↝βτ-⇒-cod : (τ₁' ⇒ τ₂') ↝βτ (τ₁ ⇒ τ₂)
-          → τ₂' ↝βτ τ₂
+↝βτ-⇒-cod : (τ₁ ⇒ τ₂) ↝βτ (τ₁' ⇒ τ₂')
+          → τ₂ ↝βτ τ₂'
 ↝βτ-⇒-cod = prove-via-↝βτ' ↝βτ'-⇒-cod
