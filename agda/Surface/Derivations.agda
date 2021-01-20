@@ -122,7 +122,7 @@ record Oracle where
           : Is-just (decide (Γ , σ  ++ Δ) b ρ₁ ρ₂)
           → Is-just (decide (Γ , σ' ++ Δ) b ρ₁ ρ₂)
     stepping
-          : τ ↝βτ τ'
+          : τ ↭βτ τ'
           → Is-just (decide (Γ , τ  ++ Δ) b ρ₁ ρ₂)
           → Is-just (decide (Γ , τ' ++ Δ) b ρ₁ ρ₂)
 
