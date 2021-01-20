@@ -359,13 +359,10 @@ then the translation of $[[ es ]]$ to the core language evaluates into the trans
 \subsection{Surface language}
 
 The syntax of the surface language is presented in \figref{surface_syntax}.
-The typing rules for the surface language are laid out in \figref{surface_typing}.
-The (small-step) operational semantics for the surface language are presented in \figref{surface_opsem}.
+The (small-step) operational semantics for the surface language are laid out in \figref{surface_opsem}.
+The typing rules for the surface language are presented in \figref{surface_typing}.
 That is largely the usual call-by-value evaluation model
 with some extra rules for the ADTs and pattern matching.
-
-To simplify the exposition and avoid dealing with shadowing,
-all bindings in contexts are assumed to have different names.
 
 \begin{figure}[ht]
   \footnotesize
@@ -383,6 +380,13 @@ all bindings in contexts are assumed to have different names.
 
 \begin{figure}[ht]
   \footnotesize
+  \drules[E]{$[[ es1 ~~> es2 ]]$}{term evaluation}{AppL,AppR,AppAbs,ADT,CaseScrut,CaseMatch}
+  \caption{Surface language small-step operational semantics}
+  \label{fig:surface_opsem}
+\end{figure}
+
+\begin{figure}[ht]
+  \footnotesize
   \drules[TCTX]{$[[ G ok ]]$}{context well-formedness}{Empty,Bind}
   \drules[TWF]{$[[ G |- ts ]]$}{type well-formedness}{TrueRef,Base,Conj,Arr,ADT}
   \drules[T]{$[[ G |- es : ts ]]$}{term typing}{Unit,Var,Abs,App,Case,Con,Sub}
@@ -391,12 +395,8 @@ all bindings in contexts are assumed to have different names.
   \label{fig:surface_typing}
 \end{figure}
 
-\begin{figure}[ht]
-  \footnotesize
-  \drules[E]{$[[ es1 ~~> es2 ]]$}{term evaluation}{AppL,AppR,AppAbs,ADT,CaseScrut,CaseMatch}
-  \caption{Surface language small-step operational semantics}
-  \label{fig:surface_opsem}
-\end{figure}
+To simplify the exposition and avoid dealing with shadowing,
+all bindings in contexts are assumed to have different names.
 
 We introduce a shorthand notation $\top$ denoting some tautology
 which we use for trivial refinements that do not carry any extra information.
