@@ -1,5 +1,6 @@
 module Surface.Theorems.Γ-Equivalence where
 
+open import Data.Fin using (suc)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Surface.WellScoped
@@ -8,6 +9,7 @@ open import Surface.WellScoped.Membership
 open import Surface.Derivations
 open import Surface.Operational
 open import Surface.Operational.BetaEquivalence
+open import Surface.Theorems.Thinning
 
 <:-equivalence : (Δ : CtxSuffix (suc ℓ) k)
                → τ ↭βτ τ'
@@ -51,9 +53,18 @@ mutual
                   → (Γ , τ₁ ++ Δ) ok
                   → τ ∈ Γ , τ₁ ++ Δ at ι
                   → Γ , τ₁' ++ Δ ⊢ SVar ι ⦂ τ
-  Var-equivalence ⊘ τ-↭βτ Γ⊢τ₁' (TCTX-Bind ctx-ok τδ) (∈-zero refl) = T-RConv {! !} {! !} {! !}
+  Var-equivalence ⊘ τ-↭βτ Γ⊢τ₁' (TCTX-Bind ctx-ok τδ) (∈-zero refl)
+    = let var-δ = T-Var (TCTX-Bind ctx-ok Γ⊢τ₁') (∈-zero refl)
+          r-τδ = twf-weakening ctx-ok Γ⊢τ₁' τδ
+          ↭βτ = ρ-preserves-↭βτ suc (↭βτ-is-symmetric τ-↭βτ)
+       in T-RConv var-δ r-τδ ↭βτ
   Var-equivalence ⊘ τ-↭βτ Γ⊢τ₁' (TCTX-Bind ctx-ok τδ) (∈-suc refl ∈) = T-Var (TCTX-Bind ctx-ok Γ⊢τ₁') (∈-suc refl ∈)
-  Var-equivalence (Δ , τ) τ-↭βτ Γ⊢τ₁' ctx-ok ∈ = {! !}
+  Var-equivalence (Δ , τ) τ-↭βτ Γ⊢τ₁' ctx-ok (∈-zero refl) = T-Var (Γok-equivalence (Δ , _) τ-↭βτ Γ⊢τ₁' ctx-ok) (∈-zero refl)
+  Var-equivalence (Δ , τ) τ-↭βτ Γ⊢τ₁' (TCTX-Bind Γ,τ₁,Δ-ok τδ) (∈-suc refl ∈)
+    = let Γ,τ₁',Δ-ok = Γok-equivalence Δ τ-↭βτ Γ⊢τ₁' Γ,τ₁,Δ-ok
+          Γ,τ₁,Δ⊢τ = Γ⊢τ-equivalence Δ τ-↭βτ Γ⊢τ₁' τδ
+          SVar-ι = Var-equivalence Δ τ-↭βτ Γ⊢τ₁' Γ,τ₁,Δ-ok ∈
+       in t-weakening Γ,τ₁',Δ-ok Γ,τ₁,Δ⊢τ SVar-ι
 
   Γ⊢ε⦂τ-equivalence : (Δ : CtxSuffix (suc ℓ) k)
                     → τ₁ ↭βτ τ₁'
