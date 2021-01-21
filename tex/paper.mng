@@ -387,6 +387,13 @@ with some extra rules for the ADTs and pattern matching.
 
 \begin{figure}[ht]
   \footnotesize
+  \drules[RTEquiv]{$[[ ts1 =trb ts2 ]]$}{type equivalence}{Forward,Backward}
+  \caption{Surface language type equivalence}
+  \label{fig:surface_tyequiv}
+\end{figure}
+
+\begin{figure}[ht]
+  \footnotesize
   \drules[TCTX]{$[[ G ok ]]$}{context well-formedness}{Empty,Bind}
   \drules[TWF]{$[[ G |- ts ]]$}{type well-formedness}{TrueRef,Base,Conj,Arr,ADT}
   \drules[T]{$[[ G |- es : ts ]]$}{term typing}{Unit,Var,Abs,App,Case,Con,Sub}
