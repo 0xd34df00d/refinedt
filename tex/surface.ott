@@ -149,6 +149,12 @@ G |- ts <: ts'
 ------------ :: Sub
 G |- es : ts'
 
+G |- es : ts
+G |- ts'
+ts =trb ts'
+------------- :: RConv
+G |- es : ts'
+
 
 defn G |- ts1 <: ts2 :: :: subtyping :: ST_ {{ com subtyping }} by
 

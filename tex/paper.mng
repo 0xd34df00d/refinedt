@@ -396,7 +396,7 @@ with some extra rules for the ADTs and pattern matching.
   \footnotesize
   \drules[TCTX]{$[[ G ok ]]$}{context well-formedness}{Empty,Bind}
   \drules[TWF]{$[[ G |- ts ]]$}{type well-formedness}{TrueRef,Base,Conj,Arr,ADT}
-  \drules[T]{$[[ G |- es : ts ]]$}{term typing}{Unit,Var,Abs,App,Case,Con,Sub}
+  \drules[T]{$[[ G |- es : ts ]]$}{term typing}{Unit,Var,Abs,App,Case,Con,Sub,RConv}
   \drules[ST]{$[[ G |- ts1 <: ts2 ]]$}{subtyping}{Base,Arr}
   \caption{Surface language typing}
   \label{fig:surface_typing}
