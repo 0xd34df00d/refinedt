@@ -20,6 +20,7 @@ open import Surface.Theorems.Thinning
 <:-equivalence Δ τ-↭βτ (ST-Base oracle is-just) = ST-Base oracle (Oracle.stepping oracle τ-↭βτ is-just)
 <:-equivalence Δ τ-↭βτ (ST-Arr <:₁ <:₂) = ST-Arr (<:-equivalence Δ τ-↭βτ <:₁) (<:-equivalence (Δ , _) τ-↭βτ <:₂)
 
+-- Referred to as context-equivalence in the paper
 mutual
   Γok-equivalence : (Δ : CtxSuffix (suc ℓ) k)
                   → τ ↭βτ τ'
