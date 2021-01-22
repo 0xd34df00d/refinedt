@@ -613,6 +613,19 @@ with the corresponding proof terms referred in lemmas names.
   Straightforward induction on the derivation of $[[ empty |- es : ts ]]$, noting that some cases are ruled out by the requirement that $[[ es ]]$ is a value.
 \end{proof}
 
+\begin{lemma}[Lambda inversion, \prooftermname{SLam-inv}]\label{lma:lambda_inversion}
+  If $[[ G |- \ x : ts. es : (x : ts1) -> ts2 ]]$, then $[[ G, x : ts1 |- es : ts2 ]]$.
+\end{lemma}
+\begin{proof}
+  Induction on $[[ G |- \ x : ts. es : (x : ts1) -> ts2 ]]$.
+  The following cases are possible:
+  \begin{itemize}
+    \item \textsc{T-Abs}: immediate.
+    \item \textsc{T-Sub}: follows from applying lambda inversion to the corresponding premise of \textsc{T-Sub} and using the narrowing \cref{lma:narrowing}.
+    \item \textsc{T-RConv}: follows from applying lambda inversion to the corresponding premise of \textsc{T-RConv} and using context equivalence \cref{lma:ctx_equivalence}.
+  \end{itemize}
+\end{proof}
+
 \begin{theorem}[Progress, \prooftermname{progress}]\label{thm:surface_progress}
   If $[[ empty |- es : ts ]]$, then either $[[ es ]]$ is a value, or there exists $[[ es' ]]$ such that $[[ es ~~> es' ]]$.
 \end{theorem}
