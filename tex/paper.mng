@@ -360,9 +360,22 @@ then the translation of $[[ es ]]$ to the core language evaluates into the trans
 
 The syntax of the surface language is presented in \figref{surface_syntax}.
 The (small-step) operational semantics for the surface language are laid out in \figref{surface_opsem}.
-The typing rules for the surface language are presented in \figref{surface_typing}.
 That is largely the usual call-by-value evaluation model
 with some extra rules for the ADTs and pattern matching.
+The (restricted) type ``equivalence'' is presented in \figref{surface_tyequiv}.
+The typing rules for the surface language are presented in \figref{surface_typing}.
+
+Type equivalence, together with the \textsc{T-RConv} typing rule, deserves some special attention.
+Note that this relation is indeed restricted, and contains only a tiny subset of what the usual $\beta$-equivalence relates.
+\begin{remark}
+In fact, $[[ =trb ]]$ is neither transitive nor reflexive, so it is not really an \emph{equivalence}, but it becomes one combined with \textsc{T-RConv}.
+Indeed, transitivity is regained via consecutive applications of \textsc{T-RConv}, and reflexivity is achieved by not applying this rule at all.
+In a sense, the type system itself provides the reflexive-transitive closure of the $[[ =trb ]]$ relation.
+\end{remark}
+Why is such a strange type equivalence needed?
+In short, this is the smallest relation enabling the preservation \cref{thm:surface_preservation} in our non-lazy,
+call-by-value language that also has a form of dependent types (namely, the conclusion of \textsc{T-App} having the type of the form $[[ [ x |-> es ] ts ]]$).
+We also discuss this in the section on the metatheoretical properties of the language.
 
 \begin{figure}[ht]
   \footnotesize
