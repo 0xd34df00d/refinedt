@@ -31,9 +31,9 @@
 \newtheorem{corollary}{Corollary}
 \newtheorem{lemma}{Lemma}
 \newtheorem{remark}{Remark}
-\crefname{lemma}{Lemma}{Lemmas}
-\crefname{remark}{Remark}{Remarks}
-\crefname{theorem}{Theorem}{theorems}
+\crefname{lemma}{lemma}{lemmas}
+\crefname{remark}{remark}{remarks}
+\crefname{theorem}{theorem}{theorems}
 
 \newcommand{\unit}{\textbf{u}}
 \newcommand{\Unit}{\textbf{Unit}}
