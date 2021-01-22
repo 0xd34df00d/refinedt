@@ -33,6 +33,7 @@
 \newtheorem{remark}{Remark}
 \crefname{lemma}{Lemma}{Lemmas}
 \crefname{remark}{Remark}{Remarks}
+\crefname{theorem}{Theorem}{theorems}
 
 \newcommand{\unit}{\textbf{u}}
 \newcommand{\Unit}{\textbf{Unit}}
