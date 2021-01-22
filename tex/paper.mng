@@ -585,6 +585,23 @@ with the corresponding proof terms referred in lemmas names.
   Mutual induction on the derivations, using the subtyping narrowing \cref{lma:st_narrowing} in the \textsc{T-Sub} case.
 \end{proof}
 
+\begin{lemma}[Context equivalence, \prooftermname{typing-equivalence}]\label{lma:ctx_equivalence}
+  Assume that $[[ ts1 =trb ts1' ]]$ and $[[ G |- ts1' ]]$. Then:
+  \begin{itemize}
+    \item If $[[ G , x : ts1, GD ok ]]$, then $[[ G , x : ts1', GD ok ]]$.
+    \item If $[[ G , x : ts1, GD |- ts ]]$, then $[[ G , x : ts1', GD |- ts ]]$.
+    \item If $[[ G , x : ts1, GD |- es : ts ]]$, then $[[ G , x : ts1', GD |- es : ts ]]$.
+  \end{itemize}
+\end{lemma}
+\begin{proof}
+  Mutual induction on the derivations.
+
+  In the third bullet, the case of $[[ es ]]$ being the variable $[[ x ]]$ uses (and motivates the existence of) the \textsc{RTEquiv-Backward} rule.
+  Indeed, if $[[ G , x : ts1, GD |- x : ts1 ]]$, then $[[ G , x : ts1', GD |- x : ts1' ]]$ according to \textsc{T-Var},
+  and going back from $[[ ts1' ]]$ to $[[ ts1 ]]$ is only possible if $[[ =trb ]]$ is a symmetric relation.
+  \textsc{RTEquiv-Backward} symmetrizes the \textsc{RTEquiv-Forward} rule, which is needed in the preservation \cref{thm:surface_preservation}.
+\end{proof}
+
 \begin{lemma}[Canonical forms, \prooftermname{canonical}]\label{lma:canonical_forms}
   Let $[[ empty |- es : ts ]]$ and $[[ es ]]$ be a value. In this case:
   \begin{itemize}
