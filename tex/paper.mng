@@ -519,7 +519,7 @@ with the corresponding proof terms referred in lemmas names.
   and the other rules recurse on one of their premises.
 \end{proof}
 
-\begin{lemma}[Thinning of subtyping relation, \prooftermname{st-thinning}]\label{lma:thinning_st}
+\begin{lemma}[Subtyping relation thinning, \prooftermname{st-thinning}]\label{lma:thinning_st}
   Let $[[ G ]]$, $[[ G' ]]$ be contexts such that $[[ G ]] \subset [[ G' ]]$.
   Then, $[[ G |- ts1 <: ts2 ]]$ implies $[[ G' |- ts1 <: ts2 ]]$.
 \end{lemma}
@@ -549,7 +549,7 @@ with the corresponding proof terms referred in lemmas names.
       These rules require certain judgements about type well-formedness to hold, so these cases use thinning on terms.
   \end{itemize}
 
-  In addition to that, the \textsc{T-Sub} rule relies on \cref{lma:thinning_st}.
+  In addition to that, the \textsc{T-Sub} rule relies on the subtyping relation thinning \cref{lma:thinning_st}.
 \end{proof}
 
 \begin{lemma}[Substitution on types, \prooftermname{sub-TWF}]\label{lma:type_substitution}
@@ -566,8 +566,7 @@ with the corresponding proof terms referred in lemmas names.
 \end{lemma}
 \begin{proof}
   Straightforward induction on the derivation of $[[ G |- es : ts ]]$.
-  The interesting case is \textsc{T-App},
-  as it invokes the substitution lemma (\cref{lma:type_substitution}).
+  The interesting case is \textsc{T-App}, as it invokes the substitution \cref{lma:type_substitution}.
 \end{proof}
 
 \begin{lemma}[Subtyping narrowing, \prooftermname{<:-narrowing}]\label{lma:st_narrowing}
@@ -575,7 +574,7 @@ with the corresponding proof terms referred in lemmas names.
 \end{lemma}
 \begin{proof}
   Straightforward induction on the derivation of $[[ G, x : ts, GD |- ts1 <: ts2 ]]$.
-  The \textsc{SC-Base} case relies on the oracle narrowing property \ref{orprop:narrowing}.
+  The \textsc{SC-Base} case relies on the oracle narrowing property~\ref{orprop:narrowing}.
 \end{proof}
 
 \begin{lemma}[Subtyping transitivity, \prooftermname{<:-trans}]\label{lma:st_transitivity}
@@ -583,7 +582,7 @@ with the corresponding proof terms referred in lemmas names.
 \end{lemma}
 \begin{proof}
   Simultaneous induction on both subtyping derivations, noting that they must have the same ``shape''~--- if one is \textsc{ST-Base}, then so is the other, since the $[[ ts2 ]]$ type is ``shared'' between the two.
-  In particular, if both are \textsc{ST-Base}, then the oracle transitivity property is used \ref{orprop:trans}.
+  In particular, if both are \textsc{ST-Base}, then the oracle transitivity property~\ref{orprop:trans} is used.
   The \textsc{SC-Arr} case uses the subtyping narrowing \cref{lma:st_narrowing}.
 \end{proof}
 
@@ -1205,7 +1204,7 @@ In other words, the translation and evaluation relations commute.
   and the translation of $[[ es ]]$ evaluates to $[[ ec' ]]$ (perhaps, in several steps).
 \end{theorem}
 \begin{proof}
-  The existence of $[[ ec' ]]$ follows from the preservation theorem for the surface language \ref{thm:surface_preservation} and well-typedness preservation \ref{thm:tran_preservation}.
+  The existence of $[[ ec' ]]$ follows from the preservation \cref{thm:surface_preservation} for the surface language and well-typedness preservation \cref{thm:tran_preservation}.
   The rest is proven with induction on the derivation of $[[ empty |- es : ts ]]$ and $[[ es ~~> es']]$.
 \end{proof}
 
