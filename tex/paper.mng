@@ -651,6 +651,19 @@ with the corresponding proof terms referred in lemmas names.
   If $[[ G |- es : ts ]]$, and $[[ es ~~> es' ]]$, then $[[ G |- es' : ts ]]$.
 \end{theorem}
 \begin{proof}
+  Simultaneous induction on the derivations of $[[ G |- es : ts ]]$ and $[[ es ~~> es' ]]$.
+  The interesting cases are the ones related to the application:
+  \begin{itemize}
+    \item \textsc{E-AppR} and \textsc{T-App}.
+      Then, $[[ es ]]$ is $[[ vs1 es2 ]]$, $[[ es' ]]$ is $[[ vs1 es2' ]]$, and $[[ es2 ~~> es2' ]]$, for some $[[ vs1 ]], [[ es2 ]], [[ es2' ]]$.
+      Moreover, well-typedness implies that $[[ G |- vs1 : (x : ts1) -> ts2 ]]$ and $[[ G |- es2 : ts1 ]]$.
+      Then, \textsc{T-App} concludes that $[[ G |- vs1 es2 : [ x |-> es2 ] ts2 ]]$.
+      Inductive hypothesis claims that $[[ G |- es2' : ts1 ]]$, and then it is easy to see that $[[ G |- vs1 es2' : [ x |-> es2' ] ts2 ]]$.
+      But, the original type is $[[ [ x |-> es2 ] ts2 ]]$, so, for the preservation to hold, there needs to be a rule allowing converting $[[ [ x |-> es2' ] ts2 ]]$ to $[[ [ x |-> es2 ] ts2 ]]$,
+      and this is what justifies the existence of the \textsc{T-RConv} rule along with the form of the \textsc{RTEquiv-Forward} rule.
+    \item \textsc{E-AppAbs}.
+    \item \textsc{E-CaseMatch}.
+  \end{itemize}
 \end{proof}
 
 \subsection{Core language}
