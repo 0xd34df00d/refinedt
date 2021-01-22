@@ -574,11 +574,11 @@ with the corresponding proof terms referred in lemmas names.
 \end{proof}
 
 \begin{lemma}[Narrowing, \prooftermname{typing-narrowing}]\label{lma:narrowing}
-  Assume that $[[ G |- ts0' <: ts0 ]]$ and $[[ G |- ts0' ]]$. Then:
+  Assume that $[[ G |- ts1' <: ts1 ]]$ and $[[ G |- ts1' ]]$. Then:
   \begin{itemize}
-    \item If $[[ G , x : ts0, GD ok ]]$, then $[[ G , x : ts0', GD ok ]]$.
-    \item If $[[ G , x : ts0, GD |- ts ]]$, then $[[ G , x : ts0', GD |- ts ]]$.
-    \item If $[[ G , x : ts0, GD |- es : ts ]]$, then $[[ G , x : ts0', GD |- es : ts ]]$.
+    \item If $[[ G , x : ts1, GD ok ]]$, then $[[ G , x : ts1', GD ok ]]$.
+    \item If $[[ G , x : ts1, GD |- ts ]]$, then $[[ G , x : ts1', GD |- ts ]]$.
+    \item If $[[ G , x : ts1, GD |- es : ts ]]$, then $[[ G , x : ts1', GD |- es : ts ]]$.
   \end{itemize}
 \end{lemma}
 \begin{proof}
