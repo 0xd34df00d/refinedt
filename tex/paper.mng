@@ -656,7 +656,7 @@ with the corresponding proof terms referred in lemmas names.
 \end{theorem}
 \begin{proof}
   Simultaneous induction on the derivations of $[[ G |- es : ts ]]$ and $[[ es ~~> es' ]]$.
-  The non-trivial cases are the ones related to the application:
+  The non-trivial cases are the ones related to the eliminators:
   \begin{itemize}
     \item \textsc{E-AppR} and \textsc{T-App}.
       Then, $[[ es ]]$ is $[[ vs1 es2 ]]$, $[[ es' ]]$ is $[[ vs1 es2' ]]$, and $[[ es2 ~~> es2' ]]$, for some $[[ vs1 ]], [[ es2 ]], [[ es2' ]]$.
