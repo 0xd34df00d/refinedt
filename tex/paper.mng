@@ -669,8 +669,11 @@ with the corresponding proof terms referred in lemmas names.
       The substitution \cref{lma:typing_substitution} is used to ensure the new type is well-formed, as required by \textsc{T-RConv}.
     \item \textsc{E-AppAbs} and \textsc{T-App}.
       In this case $[[ es ]]$ is $[[ (\ x : ts. es1) vs2 ]]$, and well-typedness implies that $[[ G |- \ x : ts. es1 : (x : ts1) -> ts2 ]]$ and $[[ G |- vs2 : ts1 ]]$.
-      Then, the lambda inversion \cref{lma:lambda_inversion} is used to derive that $[[ G, x : ts1 |- es1 : ts2 ]]$, and the result follows by the substitution \cref{lma:typing_substitution}.
-    \item \textsc{E-CaseMatch}.
+      What needs to be shown is that $[[ G |- [ x |-> vs2 ] es1 : [ x |-> vs2 ] ts2 ]]$.
+      For this, the lambda inversion \cref{lma:lambda_inversion} is used to derive that $[[ G, x : ts1 |- es1 : ts2 ]]$, and the result follows by the substitution \cref{lma:typing_substitution}.
+    \item \textsc{E-CaseMatch} and \textsc{T-Case}.
+      Similarly to the previous cases, using substitution \cref{lma:typing_substitution} to show that $[[ [xj |-> vs] esj ]]$ has the expected type
+      after substituting the pattern match variable $[[ xj ]]$ in the branch term $[[ esj ]]$ for the scrutinee value $[[ vs ]]$.
   \end{itemize}
 \end{proof}
 
