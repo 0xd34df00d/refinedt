@@ -552,8 +552,12 @@ with the corresponding proof terms referred in lemmas names.
   In addition to that, the \textsc{T-Sub} rule relies on the subtyping relation thinning \cref{lma:thinning_st}.
 \end{proof}
 
-\begin{lemma}[Substitution on types, \prooftermname{sub-TWF}]\label{lma:type_substitution}
-  Assume $[[ G, x : ts, GD |- ts' ]]$ and $[[ G |- es : ts ]]$, then $[[ G, [ x |-> es ] GD |- [ x |-> es ] ts' ]] $.
+\begin{lemma}[Substitution, \prooftermname{typing-substitution}]\label{lma:typing_substitution}
+  Assume $[[ G |- es : ts ]]$. Given that:
+  \begin{itemize}
+    \item if $[[ G, x : ts, GD |- ts' ]]$, then $[[ G, [ x |-> es ] GD |- [ x |-> es ] ts' ]] $,
+    \item if $[[ G, x : ts, GD |- es' : ts' ]]$, then $[[ G, [ x |-> es ] GD |- [ x |-> es ] es' : [ x |-> es ] ts' ]] $.
+  \end{itemize}
 \end{lemma}
 \begin{proof}
   Due to the presence of a subset of dependent types the proof is a bit bulky,
@@ -566,7 +570,7 @@ with the corresponding proof terms referred in lemmas names.
 \end{lemma}
 \begin{proof}
   Straightforward induction on the derivation of $[[ G |- es : ts ]]$.
-  The interesting case is \textsc{T-App}, as it invokes the substitution \cref{lma:type_substitution}.
+  The interesting case is \textsc{T-App}, as it invokes the substitution \cref{lma:typing_substitution}.
 \end{proof}
 
 \begin{lemma}[Subtyping narrowing, \prooftermname{<:-narrowing}]\label{lma:st_narrowing}
