@@ -530,10 +530,10 @@ with the corresponding proof terms referred in lemmas names.
 
 \begin{lemma}[Thinning]\label{lma:thinning}
   Let $[[ G ]]$, $[[ G' ]]$ be contexts such that $[[ G ]] \subset [[ G' ]]$ and $[[ G' ok ]]$.
-  Then:
+  Given that:
   \begin{itemize}
-    \item If $[[ G |- ts ]]$, then $[[ G' |- ts ]]$ (\prooftermname{twf-thinning}).
-    \item If $[[ G |- es : ts ]]$, then $[[ G' |- es : ts ]]$ (\prooftermname{t-thinning}).
+    \item if $[[ G |- ts ]]$, then $[[ G' |- ts ]]$ (\prooftermname{twf-thinning}),
+    \item if $[[ G |- es : ts ]]$, then $[[ G' |- es : ts ]]$ (\prooftermname{t-thinning}).
   \end{itemize}
 \end{lemma}
 \begin{proof}
@@ -616,7 +616,7 @@ with the corresponding proof terms referred in lemmas names.
   In the third bullet, the case of $[[ es ]]$ being the variable $[[ x ]]$ uses (and motivates the existence of) the \textsc{RTEquiv-Backward} rule.
   Indeed, if $[[ G , x : ts1, GD |- x : ts1 ]]$, then $[[ G , x : ts1', GD |- x : ts1' ]]$ according to \textsc{T-Var},
   and going back from $[[ ts1' ]]$ to $[[ ts1 ]]$ is only possible if $[[ =trb ]]$ is a symmetric relation.
-  \textsc{RTEquiv-Backward} symmetrizes the \textsc{RTEquiv-Forward} rule, which is needed in the preservation \cref{thm:surface_preservation}.
+  \textsc{RTEquiv-Backward} symmetrizes the \textsc{RTEquiv-Forward} rule, which is needed for the preservation \cref{thm:surface_preservation}.
 \end{proof}
 
 \begin{lemma}[Canonical forms, \prooftermname{canonical}]\label{lma:canonical_forms}
@@ -669,7 +669,7 @@ with the corresponding proof terms referred in lemmas names.
       The substitution \cref{lma:typing_substitution} is used to ensure the new type is well-formed, as required by \textsc{T-RConv}.
     \item \textsc{E-AppAbs} and \textsc{T-App}.
       In this case $[[ es ]]$ is $[[ (\ x : ts. es1) vs2 ]]$, and well-typedness implies that $[[ G |- \ x : ts. es1 : (x : ts1) -> ts2 ]]$ and $[[ G |- vs2 : ts1 ]]$.
-      Then, lambda inversion \cref{lma:lambda_inversion} is used to derive that $[[ G, x : ts1 |- es1 : ts2 ]]$, and the result follows by the substitution \cref{lma:typing_substitution}.
+      Then, the lambda inversion \cref{lma:lambda_inversion} is used to derive that $[[ G, x : ts1 |- es1 : ts2 ]]$, and the result follows by the substitution \cref{lma:typing_substitution}.
     \item \textsc{E-CaseMatch}.
   \end{itemize}
 \end{proof}
