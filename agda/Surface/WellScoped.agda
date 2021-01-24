@@ -7,17 +7,13 @@ open import Data.Nat public using (ℕ; suc)
 open import Data.Vec using (Vec)
 open import Relation.Binary.PropositionalEquality using (_≡_)
 
+open import Common.Types public
+
 data BaseType : Set where
   BUnit : BaseType
 
-record ℕₐ : Set where
-  constructor Mkℕₐ
-  field
-    get-length : ℕ
-
 variable
   k n ℓ ℓ' ℓ₀ ℓ₁ ℓ₂ : ℕ
-  nₐ : ℕₐ
   b b' b₁ b₂ : BaseType
   idx ι ι₁ ι₂ : Fin ℓ
 
