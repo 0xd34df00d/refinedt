@@ -121,7 +121,7 @@ ctx-idx (suc k) = suc (ctx-idx k)
 
 -- Substitution on contexts: this is essentially replacing Γ, x ⦂ σ, Δ with Γ, [ x ↦ ε ] Δ
 -- Here, ℓ is the length of Γ (which ε must live in), and k is the length of Δ.
-[_↦Γ_]_ : ∀ {k} ℓ
+[_↦Γ_]_ : ∀ ℓ
         → (ε : STerm ℓ)
         → Ctx (suc k + ℓ)
         → Ctx (k + ℓ)

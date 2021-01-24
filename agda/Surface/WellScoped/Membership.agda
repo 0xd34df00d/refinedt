@@ -74,6 +74,6 @@ ignore-head {ℓ} {ℓ'} {Γ = Γ} {Γ' = Γ'} (MkTR ρ ρ-∈ ρ-mono) = MkTR �
 infix 4 _ℕ-idx_∈_
 data _ℕ-idx_∈_ : (k : ℕ) → SType ℓ → Ctx (suc k + ℓ) → Set where
   ∈-zero : zero ℕ-idx τ ∈ (Γ , τ)
-  ∈-suc  : ∀ {k} {Γ : Ctx (suc k + ℓ)} {τ' : SType (suc k + ℓ)}
+  ∈-suc  : ∀ {Γ : Ctx (suc k + ℓ)} {τ' : SType (suc k + ℓ)}
          → k ℕ-idx τ ∈ Γ
          → suc k ℕ-idx τ ∈ (Γ , τ')

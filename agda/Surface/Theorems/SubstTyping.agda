@@ -27,19 +27,19 @@ open import Surface.Theorems.Thinning
 
 -- Some local helpers
 
-[_↦τ<_]_ : ∀ {k} ℓ
+[_↦τ<_]_ : ∀ ℓ
          → (ε : STerm ℓ) → SType (suc k + ℓ) → SType (k + ℓ)
 [_↦τ<_]_ {k = k} _ ε τ = [ ctx-idx k ↦τ R.weaken-ε-k _ ε ] τ
 
-[_↦ε<_]_ : ∀ {k} ℓ
+[_↦ε<_]_ : ∀ ℓ
          → (ε : STerm ℓ) → STerm (suc k + ℓ) → STerm (k + ℓ)
 [_↦ε<_]_ {k = k} _ ε ε' = [ ctx-idx k ↦ε R.weaken-ε-k _ ε ] ε'
 
-[_↦c<_]_ : ∀ {k} ℓ
+[_↦c<_]_ : ∀ ℓ
          → (ε : STerm ℓ) → ADTCons nₐ (suc k + ℓ) → ADTCons nₐ (k + ℓ)
 [_↦c<_]_ {k = k} _ ε cons = [ ctx-idx k ↦c R.weaken-ε-k _ ε ] cons
 
-[_↦bs<_]_ : ∀ {k} ℓ
+[_↦bs<_]_ : ∀ ℓ
          → (ε : STerm ℓ) → CaseBranches nₐ (suc k + ℓ) → CaseBranches nₐ (k + ℓ)
 [_↦bs<_]_ {k = k} _ ε bs = [ ctx-idx k ↦bs R.weaken-ε-k _ ε ] bs
 
@@ -52,12 +52,12 @@ weaken-↦<-τ-comm ι ε τ rewrite ρ-σ-distr-τ suc (replace-at ι ε) τ
                              | S.act-τ-extensionality (weaken-replace-comm ε ι) τ
                              = refl
 
-∈-sucify : ∀ {k} {τ : SType ℓ} {Γ : Ctx (k + ℓ)} {τ' : SType (k + ℓ)} {ι : Fin (k + ℓ)}
+∈-sucify : ∀ {τ : SType ℓ} {Γ : Ctx (k + ℓ)} {τ' : SType (k + ℓ)} {ι : Fin (k + ℓ)}
          → R.weaken-τ-k (suc k) τ ∈ Γ , τ' at suc ι
          → R.weaken-τ (R.weaken-τ-k k τ) ∈ Γ , τ' at suc ι
 ∈-sucify {k = k} {τ = τ} {Γ = Γ} {τ' = τ'} {ι = ι} ∈ rewrite weaken-τ-suc-k k τ = ∈
 
-var-earlier-in-Γ-remains : ∀ {k} {Γ : Ctx (suc k + ℓ)} {τ : SType (suc k + ℓ)} {ι : Fin (suc k + ℓ)} ε
+var-earlier-in-Γ-remains : ∀ {Γ : Ctx (suc k + ℓ)} {τ : SType (suc k + ℓ)} {ι : Fin (suc k + ℓ)} ε
                          → τ ∈ Γ at ι
                          → (k<ι : ctx-idx k < ι)
                          → [ ctx-idx k ↦τ R.weaken-ε-k k ε ] τ ∈ [ ℓ ↦Γ ε ] Γ at m<n-n-pred k<ι
@@ -71,11 +71,11 @@ var-earlier-in-Γ-remains {k = suc k} ε (∈-suc {τ = τ} refl τ∈Γatι) (<
                 | weaken-ε-suc-k k ε
                 = refl
 
-var-later-in-Γ-remains : ∀ {k} {Γ : Ctx (suc k + ℓ)} {τ : SType (suc k + ℓ)} {ι : Fin (suc k + ℓ)} ε
+var-later-in-Γ-remains : ∀ {Γ : Ctx (suc k + ℓ)} {τ : SType (suc k + ℓ)} {ι : Fin (suc k + ℓ)} ε
                        → τ ∈ Γ at ι
                        → (k>ι : ctx-idx k > ι)
                        → [ ctx-idx k ↦τ R.weaken-ε-k k ε ] τ ∈ [ ℓ ↦Γ ε ] Γ at tighten k>ι
-var-later-in-Γ-remains {ℓ = ℓ} {k = suc k} {ι = zero} ε (∈-zero {τ = τ} refl) (<-zero _)
+var-later-in-Γ-remains {k = suc k} {ℓ = ℓ} {ι = zero} ε (∈-zero {τ = τ} refl) (<-zero _)
   rewrite tighten-zero (ctx-idx {ℓ} k) = ∈-zero ≡-prf
   where
     ≡-prf : [ suc (ctx-idx k) ↦τ weaken-ε-k (suc k) ε ] (weaken-τ τ) ≡ R.weaken-τ ([ ctx-idx k ↦τ weaken-ε-k k ε ] τ)
@@ -91,7 +91,7 @@ var-later-in-Γ-remains {k = suc k} {ι = suc ι} ε (∈-suc {τ = τ} refl τ�
 
 -- Referred to as typing-substitution in the paper
 mutual
-  sub-Γok : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)}
+  sub-Γok : ∀ {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)}
           → Γ ⊢ ε ⦂ σ
           → Γ prefix-at suc k of Γ,σ,Δ
           → R.weaken-τ-k (suc k) σ ∈ Γ,σ,Δ at ctx-idx k
@@ -101,14 +101,14 @@ mutual
   sub-Γok {k = suc _} εδ (prefix-cons Γ-prefix-Γ,σ,Δ) σ-∈ (TCTX-Bind Γ,σ,Δok τδ)
       = TCTX-Bind (sub-Γok εδ Γ-prefix-Γ,σ,Δ (∈-chop (∈-sucify σ-∈)) Γ,σ,Δok) (sub-Γ⊢τ εδ Γ-prefix-Γ,σ,Δ (∈-chop (∈-sucify σ-∈)) τδ)
 
-  sub-Γ⊢τ : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {τ : SType (suc k + ℓ)}
+  sub-Γ⊢τ : ∀ {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {τ : SType (suc k + ℓ)}
           → Γ ⊢ ε ⦂ σ
           → Γ prefix-at suc k of Γ,σ,Δ
           → R.weaken-τ-k (suc k) σ ∈ Γ,σ,Δ at ctx-idx k
           → Γ,σ,Δ ⊢ τ
           → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ℓ ↦τ< ε ] τ
   sub-Γ⊢τ εδ prefix σ-∈ (TWF-TrueRef Γok) = TWF-TrueRef (sub-Γok εδ prefix σ-∈ Γok)
-  sub-Γ⊢τ {ε = ε} {k = k} εδ prefix σ-∈ (TWF-Base {ε₁ = ε₁} {ε₂ = ε₂} ε₁δ ε₂δ)
+  sub-Γ⊢τ {k = k} {ε = ε} εδ prefix σ-∈ (TWF-Base {ε₁ = ε₁} {ε₂ = ε₂} ε₁δ ε₂δ)
     rewrite S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε₁
           | S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε₂
           | R.act-ε-distr (raise k) suc ε
@@ -117,11 +117,11 @@ mutual
                 ε₂δ' = sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) σ-∈' ε₂δ
              in TWF-Base ε₁δ' ε₂δ'
   sub-Γ⊢τ εδ prefix σ-∈ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (sub-Γ⊢τ εδ prefix σ-∈ ρ₁δ) (sub-Γ⊢τ εδ prefix σ-∈ ρ₂δ)
-  sub-Γ⊢τ {ε = ε} {k = k} εδ prefix σ-∈ (TWF-Arr {τ₂ = τ₂} arrδ resδ)
+  sub-Γ⊢τ {k = k} {ε = ε} εδ prefix σ-∈ (TWF-Arr {τ₂ = τ₂} arrδ resδ)
     rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
           | R.act-ε-distr (raise k) suc ε
           = TWF-Arr (sub-Γ⊢τ εδ prefix σ-∈ arrδ) (sub-Γ⊢τ εδ (prefix-cons prefix) (∈-suc (weaken-τ-suc-k _ _) σ-∈) resδ)
-  sub-Γ⊢τ {ℓ = ℓ} {ε = ε} {σ = σ} {k = k} {Γ = Γ} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (TWF-ADT consδs) = TWF-ADT (sub-cons consδs)
+  sub-Γ⊢τ {ℓ = ℓ} {k = k} {ε = ε} {σ = σ} {Γ = Γ} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (TWF-ADT consδs) = TWF-ADT (sub-cons consδs)
     where
       sub-cons : ∀ {cons : ADTCons nₐ _}
                → All (λ conτ → Γ,σ,Δ ⊢ conτ) cons
@@ -129,20 +129,20 @@ mutual
       sub-cons [] = []
       sub-cons (px ∷ pxs) = sub-Γ⊢τ εδ prefix σ-∈ px ∷ sub-cons pxs
 
-  sub-Γ⊢ε⦂τ : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {ε₀ : STerm (suc k + ℓ)} {τ : SType (suc k + ℓ)}
+  sub-Γ⊢ε⦂τ : ∀ {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {ε₀ : STerm (suc k + ℓ)} {τ : SType (suc k + ℓ)}
             → Γ ⊢ ε ⦂ σ
             → Γ prefix-at suc k of Γ,σ,Δ
             → R.weaken-τ-k (suc k) σ ∈ Γ,σ,Δ at ctx-idx k
             → Γ,σ,Δ ⊢ ε₀ ⦂ τ
             → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ℓ ↦ε< ε ] ε₀ ⦂ [ ℓ ↦τ< ε ] τ
   sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Unit Γok) = T-Unit (sub-Γok εδ prefix σ-∈ Γok)
-  sub-Γ⊢ε⦂τ {ε = ε} {σ = σ} {k = k} εδ prefix σ-∈ (T-Var {idx = idx} Γok τ-∈) with ctx-idx k <>? idx
+  sub-Γ⊢ε⦂τ {k = k} {ε = ε} {σ = σ} εδ prefix σ-∈ (T-Var {idx = idx} Γok τ-∈) with ctx-idx k <>? idx
   ... | less rep<var = T-Var (sub-Γok εδ prefix σ-∈ Γok) (var-earlier-in-Γ-remains ε τ-∈ rep<var)
   ... | equal refl rewrite ∈-injective τ-∈ σ-∈
                          | replace-weakened-τ k (weaken-ε-k k ε) σ
                          = t-weakening-prefix (prefix-subst prefix) (sub-Γok εδ prefix σ-∈ Γok) εδ
   ... | greater rep>var = T-Var (sub-Γok εδ prefix σ-∈ Γok) (var-later-in-Γ-remains ε τ-∈ rep>var)
-  sub-Γ⊢ε⦂τ {ℓ = ℓ} {ε = ε} {k = k} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (T-Abs {τ₁ = τ₁} {τ₂ = τ₂} {ε = ε'} arrδ bodyδ)
+  sub-Γ⊢ε⦂τ {ℓ = ℓ} {k = k} {ε = ε} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (T-Abs {τ₁ = τ₁} {τ₂ = τ₂} {ε = ε'} arrδ bodyδ)
     = T-Abs (sub-Γ⊢τ εδ prefix σ-∈ arrδ) bodyδ'
     where
       bodyδ' : [ ℓ ↦Γ ε ] (Γ,σ,Δ , τ₁) ⊢
@@ -152,14 +152,14 @@ mutual
                    | S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
                    | R.act-ε-distr (raise k) suc ε
                    = sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) (∈-suc (weaken-τ-suc-k _ _) σ-∈) bodyδ
-  sub-Γ⊢ε⦂τ {ℓ = ℓ} {ε = ε} {k = k} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (T-App {ε₁ = ε₁} {τ₁} {τ₂} {ε₂} ε₁δ ε₂δ)
+  sub-Γ⊢ε⦂τ {ℓ = ℓ} {k = k} {ε = ε} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (T-App {ε₁ = ε₁} {τ₁} {τ₂} {ε₂} ε₁δ ε₂δ)
     rewrite subst-commutes-τ-zero (ctx-idx k) (R.weaken-ε-k _ ε) ε₂ τ₂
           = T-App ε₁δ' (sub-Γ⊢ε⦂τ εδ prefix σ-∈ ε₂δ)
     where
       ε₁δ' : [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ctx-idx k ↦ε R.weaken-ε-k k ε ] ε₁ ⦂ ([ ctx-idx k ↦τ R.weaken-ε-k k ε ] τ₁) ⇒
                                                                        ([ ctx-idx (suc k) ↦τ R.weaken-ε (R.weaken-ε-k k ε) ] τ₂)
       ε₁δ' rewrite sym (S.act-τ-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂) = sub-Γ⊢ε⦂τ εδ prefix σ-∈ ε₁δ
-  sub-Γ⊢ε⦂τ {ℓ = ℓ} {ε = ε} {k = k} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (T-Case resδ ε₀δ branches)
+  sub-Γ⊢ε⦂τ {ℓ = ℓ} {k = k} {ε = ε} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (T-Case resδ ε₀δ branches)
     = T-Case (sub-Γ⊢τ εδ prefix σ-∈ resδ) (sub-Γ⊢ε⦂τ εδ prefix σ-∈ ε₀δ) (sub-branches branches)
     where
       sub-branches : ∀ {bs : CaseBranches nₐ (suc k + ℓ)} {cons : ADTCons nₐ (suc k + ℓ)}
@@ -180,18 +180,18 @@ mutual
                                                     (sub-Γ⊢ε⦂τ εδ prefix σ-∈ ε₀δ)
                                                     (sub-Γ⊢τ εδ prefix σ-∈ superδ)
                                                     (sub-Γ⊢τ<:τ' εδ prefix σ-∈ <:δ)
-  sub-Γ⊢ε⦂τ {ε = ε} {k = k} εδ prefix σ-∈ (T-RConv εδ' τ'δ τ~τ')
+  sub-Γ⊢ε⦂τ {k = k} {ε = ε} εδ prefix σ-∈ (T-RConv εδ' τ'δ τ~τ')
     = let sub-τ~τ' = ↦τ-preserves-↭βτ (ctx-idx k) (R.act-ε (raise k) ε) τ~τ'
        in T-RConv (sub-Γ⊢ε⦂τ εδ prefix σ-∈ εδ') (sub-Γ⊢τ εδ prefix σ-∈ τ'δ) sub-τ~τ'
 
-  sub-Γ⊢τ<:τ' : ∀ {k} {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {τ τ' : SType (suc k + ℓ)}
+  sub-Γ⊢τ<:τ' : ∀ {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {τ τ' : SType (suc k + ℓ)}
               → Γ ⊢ ε ⦂ σ
               → Γ prefix-at suc k of Γ,σ,Δ
               → R.weaken-τ-k (suc k) σ ∈ Γ,σ,Δ at ctx-idx k
               → Γ,σ,Δ ⊢ τ <: τ'
               → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ℓ ↦τ< ε ] τ <: [ ℓ ↦τ< ε ] τ'
   sub-Γ⊢τ<:τ' εδ prefix σ-∈ (ST-Base oracle x) = ST-Base oracle (Oracle.subst oracle prefix σ-∈ x)
-  sub-Γ⊢τ<:τ' {ℓ = ℓ} {ε = ε} {k = k} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (ST-Arr {τ₁' = τ₁'} {τ₂ = τ₂} {τ₂' = τ₂'} <:₁ <:₂)
+  sub-Γ⊢τ<:τ' {ℓ = ℓ} {k = k} {ε = ε} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (ST-Arr {τ₁' = τ₁'} {τ₂ = τ₂} {τ₂' = τ₂'} <:₁ <:₂)
     = ST-Arr (sub-Γ⊢τ<:τ' εδ prefix σ-∈ <:₁) <:₂'
     where
       <:₂' : [ ℓ ↦Γ ε ] (Γ,σ,Δ , τ₁') ⊢ S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂ <: S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂'

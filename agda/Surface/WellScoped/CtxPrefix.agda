@@ -22,35 +22,35 @@ open import Surface.WellScoped.Substitution using ([_↦τ_]_; [_↦ε_]_; [_↦
 infix 3 _prefix-at_of_
 data _prefix-at_of_ : (Γ : Ctx ℓ) → (k : ℕ) → (Γ' : Ctx (k + ℓ)) → Set where
   prefix-refl : Γ prefix-at zero of Γ
-  prefix-cons : ∀ {k} {Γ : Ctx ℓ} {Γ' : Ctx (k + ℓ)} {τ : SType (k + ℓ)}
+  prefix-cons : ∀ {Γ : Ctx ℓ} {Γ' : Ctx (k + ℓ)} {τ : SType (k + ℓ)}
               → Γ prefix-at k of Γ'
               → Γ prefix-at (suc k) of (Γ' , τ)
 
-prefix-subst : ∀ {k} {Γ : Ctx ℓ} {Γ' : Ctx (suc k + ℓ)}
+prefix-subst : ∀ {Γ : Ctx ℓ} {Γ' : Ctx (suc k + ℓ)}
              → Γ prefix-at suc k of Γ'
              → Γ prefix-at k of ([ ℓ ↦Γ ε ] Γ')
 prefix-subst {k = zero} (prefix-cons prefix) = prefix
 prefix-subst {k = suc k} (prefix-cons prefix) = prefix-cons (prefix-subst prefix)
 
-prefix-as-⊂ : ∀ {k} {Γ : Ctx ℓ} {Γ' : Ctx (k + ℓ)}
+prefix-as-⊂ : ∀ {Γ : Ctx ℓ} {Γ' : Ctx (k + ℓ)}
               → Γ prefix-at k of Γ'
               → Γ ⊂ Γ'
 prefix-as-⊂ prefix-refl = ⊂-refl
 prefix-as-⊂ (prefix-cons prefix) = ignore-head (prefix-as-⊂ prefix)
 
-prefix-is-raise : ∀ {k} {Γ : Ctx ℓ} {Γ' : Ctx (k + ℓ)}
+prefix-is-raise : ∀ {Γ : Ctx ℓ} {Γ' : Ctx (k + ℓ)}
                 → (prefix : Γ prefix-at k of Γ')
                 → (∀ n → raise k n ≡ _⊂_.ρ (prefix-as-⊂ prefix) n)
 prefix-is-raise prefix-refl n = refl
 prefix-is-raise (prefix-cons prefix) n rewrite prefix-is-raise prefix n = refl
 
-prefix-weakening-ε : ∀ {k} {Γ : Ctx ℓ} {Γ' : Ctx (k + ℓ)}
+prefix-weakening-ε : ∀ {Γ : Ctx ℓ} {Γ' : Ctx (k + ℓ)}
                    → (prefix : Γ prefix-at k of Γ')
                    → (ε : STerm ℓ)
                    → weaken-ε-k k ε ≡ R.act-ε (_⊂_.ρ (prefix-as-⊂ prefix)) ε
 prefix-weakening-ε prefix ε rewrite act-ε-extensionality (prefix-is-raise prefix) ε = refl
 
-prefix-weakening-τ : ∀ {k} {Γ : Ctx ℓ} {Γ' : Ctx (k + ℓ)}
+prefix-weakening-τ : ∀ {Γ : Ctx ℓ} {Γ' : Ctx (k + ℓ)}
                    → (prefix : Γ prefix-at k of Γ')
                    → (τ : SType ℓ)
                    → weaken-τ-k k τ ≡ R.act-τ (_⊂_.ρ (prefix-as-⊂ prefix)) τ

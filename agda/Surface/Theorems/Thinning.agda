@@ -176,7 +176,7 @@ abstract
               → (Γ , τ') ⊢ R.weaken-ε ε ⦂ R.weaken-τ τ
   t-weakening {Γ} Γok τ'δ εδ = t-thinning (ignore-head ⊂-refl) (TCTX-Bind Γok τ'δ) εδ
 
-  t-weakening-prefix : ∀ {k} {Γ : Ctx ℓ} {Γ' : Ctx (k + ℓ)}
+  t-weakening-prefix : ∀ {Γ : Ctx ℓ} {Γ' : Ctx (k + ℓ)}
                      → Γ prefix-at k of Γ'
                      → Γ' ok
                      → Γ ⊢ ε ⦂ τ
