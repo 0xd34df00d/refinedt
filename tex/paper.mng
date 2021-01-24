@@ -11,7 +11,7 @@
 %\usepackage[utf8x]{inputenc}
 %\usepackage[T2A]{fontenc}
 \usepackage{fontspec}
-\setmonofont{Fira Code}[Scale=MatchLowercase]
+\usepackage{unicode-math}
 \usepackage{hyperref,cleveref}
 \usepackage{mathtools}
 \usepackage{xcolor}
@@ -21,6 +21,13 @@
 \usepackage{todonotes}
 \usepackage{minted}
 \usepackage[english]{babel}
+\usepackage{newunicodechar}
+
+\newunicodechar{ℓ}{\ensuremath{\mathnormal\ell}}
+\newunicodechar{ρ}{\ensuremath{\mathnormal\rho}}
+\newunicodechar{σ}{\ensuremath{\mathnormal\sigma}}
+\newunicodechar{ε}{\ensuremath{\mathnormal\varepsilon}}
+\newunicodechar{ι}{\ensuremath{\mathnormal\iota}}
 
 \nonstopmode
 
