@@ -25,6 +25,9 @@ _++_ : Ctx ℓ → CtxSuffix ℓ k → Ctx (k + ℓ)
 variable
   Δ : CtxSuffix ℓ k
 
+-- We only ever need to substitute on whole context suffixes,
+-- so there's no point in making this operator ternary and passing the index explicilty:
+-- it is always equal to the length of the suffix.
 [↦Δ_]_ : (ε : STerm ℓ)
        → CtxSuffix (suc ℓ) k
        → CtxSuffix ℓ k
