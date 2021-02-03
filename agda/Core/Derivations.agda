@@ -2,9 +2,11 @@
 
 module Core.Derivations where
 
+{-
 open import Agda.Builtin.Equality
 open import Data.List.Membership.Propositional
 open import Data.List.Relation.Unary.Any
+-}
 
 open import Core.Syntax
 open import Core.Operational
@@ -18,7 +20,7 @@ data _=β_ : CExpr → CExpr → Set where
 data _⊢_⦂_ : Ctx → CExpr → CExpr → Set where
   CT-Sort : [] ⊢ CSort ⋆ ⦂ CSort □
   CT-Var : Γ ⊢ ε ⦂ CSort s
-         → Γ , x ⦂ ε ⊢ CVar x ⦂ ε
+         → Γ , ε ⊢ CVar zero ⦂ ε
   CT-Weaken : Γ ⊢ ε₁ ⦂ ε₂
             → Γ ⊢ ε₃ ⦂ CSort s
             → Γ , x ⦂ ε₃ ⊢ ε₁ ⦂ ε₂

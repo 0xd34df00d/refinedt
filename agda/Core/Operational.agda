@@ -5,7 +5,7 @@ module Core.Operational where
 open import Core.Syntax
 
 data IsValue : CExpr → Set where
-  IV-Abs  : IsValue (CLam x ε₁ ε₂)
+  IV-Abs  : IsValue (CLam ε₁ ε₂)
   IV-unit : IsValue Cunit
   IV-ADT  : ∀ {cons} {idx : Fin n}
           → IsValue ϖ
@@ -17,7 +17,7 @@ data _↝_ : CExpr → CExpr → Set where
   CE-AppR : IsValue ϖ
           → ε₂ ↝ ε₂'
           → CApp ϖ ε₂ ↝ CApp ϖ ε₂'
-  CE-AppAbs : CApp (CLam x ε₁ ε₂) ϖ ↝ [ x ↦ ϖ ] ε₂
+  CE-AppAbs : CApp (CLam ε₁ ε₂) ϖ ↝ [ x ↦ ϖ ] ε₂
   CE-ADT  : ∀ {cons} {idx : Fin n}
           → ε ↝ ε'
           → CCon idx ε cons ↝ CCon idx ε' cons
