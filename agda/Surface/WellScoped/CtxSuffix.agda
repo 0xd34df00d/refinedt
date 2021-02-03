@@ -3,9 +3,12 @@
 module Surface.WellScoped.CtxSuffix where
 
 open import Data.Nat public using (ℕ; suc; zero; _+_)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Data.Nat.Properties using (+-suc)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst)
 
 open import Surface.WellScoped
+open import Surface.WellScoped.Renaming as R
+open import Surface.WellScoped.Substitution as S
 
 infixl 5 _,_
 data CtxSuffix (ℓ : ℕ) : (k : ℕ) → Set where
@@ -21,3 +24,9 @@ _++_ : Ctx ℓ → CtxSuffix ℓ k → Ctx (k + ℓ)
 
 variable
   Δ : CtxSuffix ℓ k
+
+[↦Δ_]_ : (ε : STerm ℓ)
+       → CtxSuffix (suc ℓ) k
+       → CtxSuffix ℓ k
+[↦Δ ε ] ⊘ = ⊘
+[↦Δ_]_ {k = suc k} ε (Δ , τ) = let τ' = subst SType (+-suc _ _) τ in [↦Δ ε ] Δ , [ ctx-idx k ↦τ weaken-ε-k k ε ] τ'
