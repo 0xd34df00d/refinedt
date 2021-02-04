@@ -33,10 +33,10 @@ data ,-CtxSuffix (ℓ : ℕ) : (σ : SType ℓ) → (k : ℕ) → Set where
       → (τ : SType (suc k + ℓ))
       → ,-CtxSuffix ℓ σ (suc k)
 
-infixl 4 _,σ-++_
-_,σ-++_ : Ctx ℓ → ,-CtxSuffix ℓ σ k → Ctx (suc k + ℓ)
-Γ ,σ-++ [ σ ] = Γ , σ
-Γ ,σ-++ (Δ , τ) = (Γ ,σ-++ Δ) , τ
+infixl 4 _,σ,_
+_,σ,_ : Ctx ℓ → ,-CtxSuffix ℓ σ k → Ctx (suc k + ℓ)
+Γ ,σ, [ σ ] = Γ , σ
+Γ ,σ, (Δ , τ) = (Γ ,σ, Δ) , τ
 
 -- We only ever need to substitute on whole context suffixes,
 -- so there's no point in making this operator ternary and passing the index explicilty:
