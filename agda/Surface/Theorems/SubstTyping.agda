@@ -133,21 +133,6 @@ mutual
             → Γ ,σ, Δ ⊢ ε₀ ⦂ τ
             → Γ ++ [↦Δ ε ] Δ ⊢ [ ℓ ↦ε< ε ] ε₀ ⦂ [ ℓ ↦τ< ε ] τ
           {-
-  sub-Γ⊢τ {k = k} {ε = ε} εδ prefix σ-∈ (TWF-Base {ε₁ = ε₁} {ε₂ = ε₂} ε₁δ ε₂δ)
-    rewrite S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε₁
-          | S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε₂
-          | R.act-ε-distr (raise k) suc ε
-          = let σ-∈' = ∈-suc (weaken-τ-suc-k _ _) σ-∈
-                ε₁δ' = sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) σ-∈' ε₁δ
-                ε₂δ' = sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) σ-∈' ε₂δ
-             in TWF-Base ε₁δ' ε₂δ'
-
-  sub-Γ⊢ε⦂τ : ∀ {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {ε₀ : STerm (suc k + ℓ)} {τ : SType (suc k + ℓ)}
-            → Γ ⊢ ε ⦂ σ
-            → Γ prefix-at suc k of Γ,σ,Δ
-            → R.weaken-τ-k (suc k) σ ∈ Γ,σ,Δ at ctx-idx k
-            → Γ,σ,Δ ⊢ ε₀ ⦂ τ
-            → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ℓ ↦ε< ε ] ε₀ ⦂ [ ℓ ↦τ< ε ] τ
   sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Unit Γok) = T-Unit (sub-Γok εδ prefix σ-∈ Γok)
   sub-Γ⊢ε⦂τ {k = k} {ε = ε} {σ = σ} εδ prefix σ-∈ (T-Var {idx = idx} Γok τ-∈) with ctx-idx k <>? idx
   ... | less rep<var = T-Var (sub-Γok εδ prefix σ-∈ Γok) (var-earlier-in-Γ-remains ε τ-∈ rep<var)
