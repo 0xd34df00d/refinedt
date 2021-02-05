@@ -212,25 +212,18 @@ mutual
                  | S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂'
                  | R.act-ε-distr (raise k) suc ε
                  = sub-Γ⊢τ<:τ' εδ (prefix-cons prefix) (∈-suc (weaken-τ-suc-k _ _) σ-∈) <:₂
+    -}
 
-sub-Γ⊢ε⦂τ-front : ∀ {Γ : Ctx ℓ}
+sub-Γ⊢ε⦂τ-front : {Γ : Ctx ℓ}
                 → Γ ⊢ ϖ ⦂ σ
                 → Γ , σ ⊢ ε ⦂ τ
                 → Γ ⊢ [ zero ↦ε ϖ ] ε ⦂ [ zero ↦τ ϖ ] τ
-sub-Γ⊢ε⦂τ-front {ℓ = ℓ} {ϖ = ϖ} {ε = ε} {τ = τ} {Γ = Γ} ϖδ εδ = prf'
-  where
-    prf : Γ ⊢ [ ℓ ↦ε< ϖ ] ε ⦂ ([ ℓ ↦τ< ϖ ] τ)
-    prf = sub-Γ⊢ε⦂τ ϖδ (prefix-cons prefix-refl) (∈-zero refl) εδ
-    prf' : Γ ⊢ [ zero ↦ε ϖ ] ε ⦂ [ zero ↦τ ϖ ] τ
-    prf' rewrite sym (R.act-ε-id (λ _ → refl) ϖ) = prf
+sub-Γ⊢ε⦂τ-front {ϖ = ϖ} ϖδ εδ with sub-Γ⊢ε⦂τ [ _ ] ϖδ εδ
+... | full rewrite R.act-ε-id (λ _ → refl) ϖ = full
 
-sub-Γ⊢τ-front : ∀ {Γ : Ctx ℓ}
+sub-Γ⊢τ-front : {Γ : Ctx ℓ}
               → Γ ⊢ ε ⦂ σ
               → Γ , σ ⊢ τ
               → Γ ⊢ [ zero ↦τ ε ] τ
-sub-Γ⊢τ-front {ℓ = ℓ} {ε = ε} {τ = τ} {Γ = Γ} εδ τδ = prf'
-  where
-    prf : Γ ⊢ [ ℓ ↦τ< ε ] τ
-    prf = sub-Γ⊢τ εδ (prefix-cons prefix-refl) (∈-zero refl) τδ
-    prf' : Γ ⊢ [ zero ↦τ ε ] τ
-    prf' rewrite sym (R.act-ε-id (λ _ → refl) ε) = prf
+sub-Γ⊢τ-front {ε = ε} εδ τδ with sub-Γ⊢τ [ _ ] εδ τδ
+... | full rewrite R.act-ε-id (λ _ → refl) ε = full
