@@ -33,8 +33,8 @@ prefix-subst {k = zero} (prefix-cons prefix) = prefix
 prefix-subst {k = suc k} (prefix-cons prefix) = prefix-cons (prefix-subst prefix)
 
 prefix-as-⊂ : ∀ {Γ : Ctx ℓ} {Γ' : Ctx (k + ℓ)}
-              → Γ prefix-at k of Γ'
-              → Γ ⊂ Γ'
+            → Γ prefix-at k of Γ'
+            → Γ ⊂ Γ'
 prefix-as-⊂ prefix-refl = ⊂-refl
 prefix-as-⊂ (prefix-cons prefix) = ignore-head (prefix-as-⊂ prefix)
 

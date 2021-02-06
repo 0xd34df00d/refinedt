@@ -162,7 +162,7 @@ abstract
                → (Γ , τ') ⊢ R.weaken-τ τ₁ <: R.weaken-τ τ₂
   st-weakening Γok <: = st-thinning (ignore-head ⊂-refl) <:
 
-  twf-weakening : ∀ {Γ : Ctx ℓ}
+  twf-weakening : {Γ : Ctx ℓ}
                 → Γ ok
                 → Γ ⊢ τ'
                 → Γ ⊢ τ
