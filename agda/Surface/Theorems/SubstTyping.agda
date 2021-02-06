@@ -53,11 +53,6 @@ weaken-↦<-τ-comm ι ε τ rewrite ρ-σ-distr-τ suc (replace-at ι ε) τ
                              | S.act-τ-extensionality (weaken-replace-comm ε ι) τ
                              = refl
 
-∈-sucify : ∀ {τ : SType ℓ} {Γ : Ctx (k + ℓ)} {τ' : SType (k + ℓ)} {ι : Fin (k + ℓ)}
-         → R.weaken-τ-k (suc k) τ ∈ Γ , τ' at suc ι
-         → R.weaken-τ (R.weaken-τ-k k τ) ∈ Γ , τ' at suc ι
-∈-sucify {k = k} {τ = τ} {Γ = Γ} {τ' = τ'} {ι = ι} ∈ rewrite weaken-τ-suc-k k τ = ∈
-
 var-earlier-in-Γ-remains : ∀ {Γ : Ctx (suc k + ℓ)} {τ : SType (suc k + ℓ)} {ι : Fin (suc k + ℓ)} ε
                          → τ ∈ Γ at ι
                          → (k<ι : ctx-idx k < ι)
