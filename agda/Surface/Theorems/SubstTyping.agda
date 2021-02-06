@@ -53,16 +53,16 @@ weaken-↦<-τ-comm ι ε τ rewrite ρ-σ-distr-τ suc (replace-at ι ε) τ
                              | S.act-τ-extensionality (weaken-replace-comm ε ι) τ
                              = refl
 
-var-earlier-in-Γ-remains : ∀ {Γ : Ctx (suc k + ℓ)} {τ : SType (suc k + ℓ)} {ι : Fin (suc k + ℓ)} ε
-                         → τ ∈ Γ at ι
+var-earlier-in-Γ-remains : (Δ : ,-CtxSuffix ℓ σ k)
+                         → τ ∈ Γ ,σ, Δ at ι
                          → (k<ι : ctx-idx k < ι)
-                         → [ ctx-idx k ↦τ R.weaken-ε-k k ε ] τ ∈ [ ℓ ↦Γ ε ] Γ at m<n-n-pred k<ι
-var-earlier-in-Γ-remains {k = zero} ε (∈-suc {τ = τ} refl τ∈Γatι) (<-zero _) rewrite replace-weakened-τ-zero (R.weaken-ε-k zero ε) τ = τ∈Γatι
-var-earlier-in-Γ-remains {k = suc k} ε (∈-suc {τ = τ} refl τ∈Γatι) (<-suc k<ι)
-  rewrite sym (m<n-n-pred-cancel k<ι)
-        = ∈-suc suc-≡ (var-earlier-in-Γ-remains ε τ∈Γatι (m<n⇒n<suc-pred-n k<ι))
+                         → [ ℓ ↦τ< ε ] τ ∈ Γ ++ [↦Δ ε ] Δ at m<n-n-pred k<ι
+var-earlier-in-Γ-remains {ε = ε}
+                         [ _ ]   (∈-suc {τ = τ} refl ∈) (<-zero _) rewrite replace-weakened-τ-zero (R.weaken-ε-k zero ε) τ = ∈
+var-earlier-in-Γ-remains {ℓ = ℓ} {k = suc k} {ι = (suc (suc _))} {ε = ε}
+                         (Δ , _) (∈-suc {τ = τ} refl ∈) (<-suc k<ι) = ∈-suc suc-≡ (var-earlier-in-Γ-remains Δ ∈ k<ι)
   where
-    suc-≡ : [ suc (ctx-idx k) ↦τ weaken-ε-k (suc k) ε ] weaken-τ τ ≡ weaken-τ ([ ctx-idx k ↦τ weaken-ε-k k ε ] τ)
+    suc-≡ : [ ℓ ↦τ< ε ] weaken-τ τ ≡ weaken-τ ([ ℓ ↦τ< ε ] τ)
     suc-≡ rewrite weaken-↦<-τ-comm (ctx-idx k) (weaken-ε-k k ε) τ
                 | weaken-ε-suc-k k ε
                 = refl
