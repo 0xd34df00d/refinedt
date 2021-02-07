@@ -25,7 +25,7 @@ _++_ : Ctx ℓ → CtxSuffix ℓ k → Ctx (k + ℓ)
 variable
   Δ : CtxSuffix ℓ k
 
-suffix-as-⊂ : (Δ : CtxSuffix k ℓ)
+suffix-as-⊂ : (Δ : CtxSuffix ℓ k)
             → Γ ⊂ (Γ ++ Δ)
 suffix-as-⊂ ⊘ = ⊂-refl
 suffix-as-⊂ (Δ , _) = ignore-head (suffix-as-⊂ Δ)
