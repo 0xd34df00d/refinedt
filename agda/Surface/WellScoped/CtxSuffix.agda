@@ -2,9 +2,11 @@
 
 module Surface.WellScoped.CtxSuffix where
 
+open import Data.Fin.Base using (suc; raise)
 open import Data.Nat public using (ℕ; suc; zero; _+_)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 
+open import Common.Helpers
 open import Surface.WellScoped
 open import Surface.WellScoped.Renaming as R
 open import Surface.WellScoped.Substitution as S
@@ -25,10 +27,27 @@ _++_ : Ctx ℓ → CtxSuffix ℓ k → Ctx (k + ℓ)
 variable
   Δ : CtxSuffix ℓ k
 
+-- Green slime, so much green slime
+private
+  suffix-as-⊂' : (Δ : CtxSuffix ℓ k)
+               → Γ' ≡ (Γ ++ Δ)
+               → Γ ⊂ Γ'
+  suffix-as-⊂' ⊘ refl = ⊂-refl
+  suffix-as-⊂' (Δ , τ) refl = ignore-head (suffix-as-⊂' Δ refl)
+
+  suffix-is-raise' : (Δ : CtxSuffix ℓ k)
+                   → (eq-prf : Γ' ≡ (Γ ++ Δ))
+                   → raise k f≡ _⊂_.ρ (suffix-as-⊂' Δ eq-prf)
+  suffix-is-raise' ⊘ refl n = refl
+  suffix-is-raise' (Δ , τ) refl n = cong suc (suffix-is-raise' Δ refl n)
+
 suffix-as-⊂ : (Δ : CtxSuffix ℓ k)
             → Γ ⊂ (Γ ++ Δ)
-suffix-as-⊂ ⊘ = ⊂-refl
-suffix-as-⊂ (Δ , _) = ignore-head (suffix-as-⊂ Δ)
+suffix-as-⊂ Δ = suffix-as-⊂' Δ refl
+
+suffix-is-raise : (Δ : CtxSuffix ℓ k)
+                → raise k f≡ _⊂_.ρ (suffix-as-⊂ Δ)
+suffix-is-raise Δ = suffix-is-raise' Δ refl
 
 
 data ,-CtxSuffix (ℓ : ℕ) : (σ : SType ℓ) → (k : ℕ) → Set where
