@@ -8,6 +8,7 @@ open import Data.Vec
 open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 
+open import Common.Helpers
 open import Data.Fin.Extra
 open import Surface.WellScoped
 open import Surface.WellScoped.Shape
@@ -75,10 +76,6 @@ open import Surface.WellScoped.ActionsLemmas var-action-record
                                                     ; ext-id = ext-id
                                                     }
                                              public
-
-infix 2 _f≡_
-_f≡_ : ∀ {A B : Set} (f₁ f₂ : A → B) → Set
-f₁ f≡ f₂ = ∀ x → f₁ x ≡ f₂ x
 
 ext-replace-comm : ∀ ε (ι : Fin (suc ℓ))
                  → ext (replace-at ι ε) f≡ replace-at (suc ι) (R.act-ε suc ε)
