@@ -8,6 +8,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 open import Surface.WellScoped
 open import Surface.WellScoped.Renaming as R
 open import Surface.WellScoped.Substitution as S
+open import Surface.WellScoped.Membership
 
 infixl 5 _,_
 data CtxSuffix (ℓ : ℕ) : (k : ℕ) → Set where
@@ -46,3 +47,12 @@ _,σ,_ : Ctx ℓ → ,-CtxSuffix ℓ σ k → Ctx (suc k + ℓ)
        → CtxSuffix ℓ k
 [↦Δ ε ] [ σ ] = ⊘
 [↦Δ_]_ {k = .suc k} ε (Δ , τ) = [↦Δ ε ] Δ , [ ctx-idx k ↦τ weaken-ε-k _ ε ] τ
+
+∈-at-concat-point : (Δ : ,-CtxSuffix ℓ σ k)
+                  → τ ∈ Γ ,σ, Δ at ctx-idx k
+                  → τ ≡ R.weaken-τ-k (suc k) σ
+∈-at-concat-point [ _ ] (∈-zero ≡-prf) = ≡-prf
+∈-at-concat-point {σ = σ} {k = k} (Δ , τ) (∈-suc refl ∈)
+  rewrite ∈-at-concat-point Δ ∈
+        | weaken-τ-suc-k k σ
+        = refl
