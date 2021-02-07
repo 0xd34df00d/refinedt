@@ -11,6 +11,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 
 open import Surface.WellScoped
 open import Surface.WellScoped.CtxPrefix
+open import Surface.WellScoped.CtxSuffix
 open import Surface.WellScoped.Membership
 open import Surface.WellScoped.Renaming as R
 open import Surface.WellScoped.Substitution as S
@@ -169,7 +170,16 @@ abstract
                 → (Γ , τ') ⊢ R.weaken-τ τ
   twf-weakening {Γ} Γok τ'δ τδ = twf-thinning (ignore-head ⊂-refl) (TCTX-Bind Γok τ'δ) τδ
 
-  t-weakening : ∀ {Γ : Ctx ℓ}
+  t-weakening-suffix : {Δ : CtxSuffix ℓ k}
+                     → (Γ ++ Δ) ok
+                     → Γ ⊢ ε ⦂ τ
+                     → Γ ++ Δ ⊢ R.weaken-ε-k k ε ⦂ R.weaken-τ-k k τ
+  t-weakening-suffix {Γ = Γ} {ε = ε} {τ = τ} {Δ = Δ} Γok εδ
+    rewrite suffix-weakening-ε {Γ = Γ} Δ ε
+          | suffix-weakening-τ {Γ = Γ} Δ τ
+          = t-thinning (suffix-as-⊂ Δ) Γok εδ
+
+  t-weakening : {Γ : Ctx ℓ}
               → Γ ok
               → Γ ⊢ τ'
               → Γ ⊢ ε ⦂ τ
