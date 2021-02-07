@@ -49,7 +49,13 @@ suffix-is-raise : (Δ : CtxSuffix ℓ k)
                 → raise k f≡ _⊂_.ρ (suffix-as-⊂ Δ)
 suffix-is-raise Δ = suffix-is-raise' Δ refl
 
+suffix-weakening-ε : (Δ : CtxSuffix ℓ k)
+                   → weaken-ε-k k f≡  R.act-ε (_⊂_.ρ (suffix-as-⊂ Δ))
+suffix-weakening-ε Δ = R.act-ε-extensionality (suffix-is-raise Δ)
 
+suffix-weakening-τ : (Δ : CtxSuffix ℓ k)
+                   → weaken-τ-k k f≡  R.act-τ (_⊂_.ρ (suffix-as-⊂ Δ))
+suffix-weakening-τ Δ = R.act-τ-extensionality (suffix-is-raise Δ)
 data ,-CtxSuffix (ℓ : ℕ) : (σ : SType ℓ) → (k : ℕ) → Set where
   [_] : ∀ σ
       → ,-CtxSuffix ℓ σ zero
