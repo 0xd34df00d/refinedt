@@ -9,6 +9,7 @@ open import Data.Vec
 open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym)
 
+open import Common.Helpers
 open import Data.Fin.Extra
 open import Surface.WellScoped
 open import Surface.WellScoped.SyntaxInjectivity
@@ -61,13 +62,11 @@ ActDistributivity : {Ty : ℕ → Set} → ActionOn Ty → Set
 ActDistributivity {Ty} act = ∀ {ℓ₀ ℓ₁ ℓ₂}
                              → (r₁ : Fin ℓ₀ → Fin ℓ₁)
                              → (r₂ : Fin ℓ₁ → Fin ℓ₂)
-                             → (v : Ty ℓ₀)
-                             → act r₂ (act r₁ v) ≡ act (r₂ ∘ r₁) v
+                             → act r₂ ∘ act r₁ f≡ act (r₂ ∘ r₁)
 
 ext-distr : (r₁ : Fin ℓ₀ → Fin ℓ₁)
           → (r₂ : Fin ℓ₁ → Fin ℓ₂)
-          → ∀ x
-          → ext r₂ (ext r₁ x) ≡ ext (λ x → r₂ (r₁ x)) x
+          → ext r₂ ∘ ext r₁ f≡ ext (r₂ ∘ r₁)
 ext-distr _ _ zero = refl
 ext-distr _ _ (suc x) = refl
 
