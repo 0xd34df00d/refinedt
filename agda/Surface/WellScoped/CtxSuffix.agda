@@ -25,6 +25,10 @@ _++_ : Ctx ℓ → CtxSuffix ℓ k → Ctx (k + ℓ)
 variable
   Δ : CtxSuffix ℓ k
 
+suffix-as-⊂ : (Δ : CtxSuffix k ℓ)
+            → Γ ⊂ (Γ ++ Δ)
+suffix-as-⊂ ⊘ = ⊂-refl
+suffix-as-⊂ (Δ , _) = ignore-head (suffix-as-⊂ Δ)
 
 
 data ,-CtxSuffix (ℓ : ℕ) : (σ : SType ℓ) → (k : ℕ) → Set where
