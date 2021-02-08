@@ -128,31 +128,44 @@ mutual
             → Γ ⊢ ε ⦂ σ
             → Γ ,σ, Δ ⊢ ε₀ ⦂ τ
             → Γ ++ [↦Δ ε ] Δ ⊢ [ ℓ ↦ε< ε ] ε₀ ⦂ [ ℓ ↦τ< ε ] τ
+  sub-Γ⊢ε⦂τ Δ εδ (T-Unit Γok) = T-Unit (sub-Γok Δ εδ Γok)
+  sub-Γ⊢ε⦂τ {σ = σ} {k = k} {ε = ε}
+            Δ εδ (T-Var {idx = idx} Γok τ-∈) with ctx-idx k <>? idx
+  ... | less rep<var = T-Var (sub-Γok Δ εδ Γok) (var-earlier-in-Γ-remains Δ τ-∈ rep<var)
+  ... | equal refl rewrite ∈-at-concat-point Δ τ-∈
+                         | replace-weakened-τ k (weaken-ε-k k ε) σ
+                         = t-weakening-suffix (sub-Γok Δ εδ Γok) εδ
+  ... | greater rep>var = T-Var (sub-Γok Δ εδ Γok) {! !}
+  sub-Γ⊢ε⦂τ {k = k} {Γ = Γ} {ε = ε}
+            Δ εδ (T-Abs {τ₁ = τ₁} {τ₂ = τ₂} {ε = ε'} arrδ bodyδ) = T-Abs (sub-Γ⊢τ Δ εδ arrδ) bodyδ'
+    where
+      bodyδ' : Γ ++ [↦Δ ε ] (Δ , τ₁) ⊢
+               S.act-ε (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ε' ⦂
+               S.act-τ (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) τ₂
+      bodyδ' rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
+                   | S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
+                   | R.act-ε-distr (raise k) suc ε
+                   = sub-Γ⊢ε⦂τ ( Δ , _ ) εδ bodyδ
+  sub-Γ⊢ε⦂τ {ℓ = ℓ} {k = k} {Γ = Γ} {ε = ε}
+            Δ εδ (T-App {ε₁ = ε₁} {τ₁} {τ₂} {ε₂} ε₁δ ε₂δ)
+    rewrite subst-commutes-τ-zero (ctx-idx k) (R.weaken-ε-k _ ε) ε₂ τ₂
+          = T-App ε₁δ' (sub-Γ⊢ε⦂τ Δ εδ ε₂δ)
+    where
+      ε₁δ' : Γ ++ [↦Δ ε ] Δ ⊢
+             [ ℓ ↦ε< ε ] ε₁ ⦂
+             ([ ℓ ↦τ< ε ] τ₁) ⇒ ([ suc (ctx-idx k) ↦τ R.weaken-ε (R.weaken-ε-k k ε) ] τ₂)
+      ε₁δ' rewrite sym (S.act-τ-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂) = sub-Γ⊢ε⦂τ Δ εδ ε₁δ
+  sub-Γ⊢ε⦂τ Δ εδ (T-Case resδ εδ' branches-well-typed) = {! !}
+  sub-Γ⊢ε⦂τ Δ εδ (T-Con ≡-prf εδ' adtτ) = {! !}
+  sub-Γ⊢ε⦂τ Δ εδ (T-Sub εδ' τ'δ <:) = {! !}
+  sub-Γ⊢ε⦂τ Δ εδ (T-RConv εδ' τ'δ τ~τ') = {! !}
           {-
-  sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Unit Γok) = T-Unit (sub-Γok εδ prefix σ-∈ Γok)
   sub-Γ⊢ε⦂τ {k = k} {ε = ε} {σ = σ} εδ prefix σ-∈ (T-Var {idx = idx} Γok τ-∈) with ctx-idx k <>? idx
   ... | less rep<var = T-Var (sub-Γok εδ prefix σ-∈ Γok) (var-earlier-in-Γ-remains ε τ-∈ rep<var)
   ... | equal refl rewrite ∈-injective τ-∈ σ-∈
                          | replace-weakened-τ k (weaken-ε-k k ε) σ
                          = t-weakening-prefix (prefix-subst prefix) (sub-Γok εδ prefix σ-∈ Γok) εδ
   ... | greater rep>var = T-Var (sub-Γok εδ prefix σ-∈ Γok) (var-later-in-Γ-remains ε τ-∈ rep>var)
-  sub-Γ⊢ε⦂τ {ℓ = ℓ} {k = k} {ε = ε} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (T-Abs {τ₁ = τ₁} {τ₂ = τ₂} {ε = ε'} arrδ bodyδ)
-    = T-Abs (sub-Γ⊢τ εδ prefix σ-∈ arrδ) bodyδ'
-    where
-      bodyδ' : [ ℓ ↦Γ ε ] (Γ,σ,Δ , τ₁) ⊢
-               S.act-ε (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ε' ⦂
-               S.act-τ (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) τ₂
-      bodyδ' rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
-                   | S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
-                   | R.act-ε-distr (raise k) suc ε
-                   = sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) (∈-suc (weaken-τ-suc-k _ _) σ-∈) bodyδ
-  sub-Γ⊢ε⦂τ {ℓ = ℓ} {k = k} {ε = ε} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (T-App {ε₁ = ε₁} {τ₁} {τ₂} {ε₂} ε₁δ ε₂δ)
-    rewrite subst-commutes-τ-zero (ctx-idx k) (R.weaken-ε-k _ ε) ε₂ τ₂
-          = T-App ε₁δ' (sub-Γ⊢ε⦂τ εδ prefix σ-∈ ε₂δ)
-    where
-      ε₁δ' : [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ctx-idx k ↦ε R.weaken-ε-k k ε ] ε₁ ⦂ ([ ctx-idx k ↦τ R.weaken-ε-k k ε ] τ₁) ⇒
-                                                                       ([ ctx-idx (suc k) ↦τ R.weaken-ε (R.weaken-ε-k k ε) ] τ₂)
-      ε₁δ' rewrite sym (S.act-τ-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂) = sub-Γ⊢ε⦂τ εδ prefix σ-∈ ε₁δ
   sub-Γ⊢ε⦂τ {ℓ = ℓ} {k = k} {ε = ε} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (T-Case resδ ε₀δ branches)
     = T-Case (sub-Γ⊢τ εδ prefix σ-∈ resδ) (sub-Γ⊢ε⦂τ εδ prefix σ-∈ ε₀δ) (sub-branches branches)
     where
