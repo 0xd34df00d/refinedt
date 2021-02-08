@@ -67,20 +67,21 @@ var-earlier-in-Γ-remains {ℓ = ℓ} {k = suc k} {ι = (suc (suc _))} {ε = ε}
                 | weaken-ε-suc-k k ε
                 = refl
 
-var-later-in-Γ-remains : ∀ {Γ : Ctx (suc k + ℓ)} {τ : SType (suc k + ℓ)} {ι : Fin (suc k + ℓ)} ε
-                       → τ ∈ Γ at ι
+var-later-in-Γ-remains : (Δ : ,-CtxSuffix ℓ σ k)
+                       → τ ∈ Γ ,σ, Δ at ι
                        → (k>ι : ctx-idx k > ι)
-                       → [ ctx-idx k ↦τ R.weaken-ε-k k ε ] τ ∈ [ ℓ ↦Γ ε ] Γ at tighten k>ι
-var-later-in-Γ-remains {k = suc k} {ℓ = ℓ} {ι = zero} ε (∈-zero {τ = τ} refl) (<-zero _)
-  rewrite tighten-zero (ctx-idx {ℓ} k) = ∈-zero ≡-prf
+                       → [ ctx-idx k ↦τ R.weaken-ε-k k ε ] τ ∈ Γ ++ [↦Δ ε ] Δ at tighten k>ι
+var-later-in-Γ-remains {ℓ = ℓ} {k = suc k} {ε = ε}
+                       (Δ , τ) (∈-zero refl) (<-zero _) = ∈-zero ≡-prf
   where
-    ≡-prf : [ suc (ctx-idx k) ↦τ weaken-ε-k (suc k) ε ] (weaken-τ τ) ≡ R.weaken-τ ([ ctx-idx k ↦τ weaken-ε-k k ε ] τ)
+    ≡-prf : [ ℓ ↦τ< ε ] (weaken-τ τ) ≡ R.weaken-τ ([ ℓ ↦τ< ε ] τ)
     ≡-prf rewrite weaken-↦<-τ-comm (ctx-idx k) (weaken-ε-k k ε) τ
                 | weaken-ε-suc-k k ε
                 = refl
-var-later-in-Γ-remains {k = suc k} {ι = suc ι} ε (∈-suc {τ = τ} refl τ∈Γatι) (<-suc k>ι) = ∈-suc suc-≡ (var-later-in-Γ-remains ε τ∈Γatι k>ι)
+var-later-in-Γ-remains {ℓ = ℓ} {k = suc k} {ε = ε}
+                       (Δ , _) (∈-suc {τ = τ} refl ∈) (<-suc k>ι) = ∈-suc suc-≡ (var-later-in-Γ-remains Δ ∈ k>ι)
   where
-    suc-≡ : [ suc (ctx-idx k) ↦τ weaken-ε-k (suc k) ε ] weaken-τ τ ≡ weaken-τ ([ ctx-idx k ↦τ weaken-ε-k k ε ] τ)
+    suc-≡ : [ ℓ ↦τ< ε ] (weaken-τ τ) ≡ weaken-τ ([ ℓ ↦τ< ε ] τ)
     suc-≡ rewrite weaken-↦<-τ-comm (ctx-idx k) (weaken-ε-k k ε) τ
                 | weaken-ε-suc-k k ε
                 = refl
