@@ -53,38 +53,28 @@ weaken-↦<-τ-comm ι ε τ rewrite ρ-σ-distr-τ suc (replace-at ι ε) τ
                              | S.act-τ-extensionality (weaken-replace-comm ε ι) τ
                              = refl
 
+weaken-↦<-suc-comm-τ : ∀ {k ℓ} {τ : SType (suc k + ℓ)} (ε : STerm ℓ)
+                     → [ ℓ ↦τ< ε ] weaken-τ τ ≡ weaken-τ ([ ℓ ↦τ< ε ] τ)
+weaken-↦<-suc-comm-τ {k} {ℓ} {τ} ε
+  rewrite weaken-↦<-τ-comm (ctx-idx k) (weaken-ε-k k ε) τ
+        | weaken-ε-suc-k k ε
+        = refl
+
 var-earlier-in-Γ-remains : (Δ : ,-CtxSuffix ℓ σ k)
                          → τ ∈ Γ ,σ, Δ at ι
                          → (k<ι : ctx-idx k < ι)
                          → [ ℓ ↦τ< ε ] τ ∈ Γ ++ [↦Δ ε ] Δ at m<n-n-pred k<ι
 var-earlier-in-Γ-remains {ε = ε}
                          [ _ ]   (∈-suc {τ = τ} refl ∈) (<-zero _) rewrite replace-weakened-τ-zero (R.weaken-ε-k zero ε) τ = ∈
-var-earlier-in-Γ-remains {ℓ = ℓ} {k = suc k} {ι = (suc (suc _))} {ε = ε}
-                         (Δ , _) (∈-suc {τ = τ} refl ∈) (<-suc k<ι) = ∈-suc suc-≡ (var-earlier-in-Γ-remains Δ ∈ k<ι)
-  where
-    suc-≡ : [ ℓ ↦τ< ε ] weaken-τ τ ≡ weaken-τ ([ ℓ ↦τ< ε ] τ)
-    suc-≡ rewrite weaken-↦<-τ-comm (ctx-idx k) (weaken-ε-k k ε) τ
-                | weaken-ε-suc-k k ε
-                = refl
+var-earlier-in-Γ-remains {ι = (suc (suc _))} {ε = ε}
+                         (Δ , _) (∈-suc {τ = τ} refl ∈) (<-suc k<ι) = ∈-suc (weaken-↦<-suc-comm-τ ε) (var-earlier-in-Γ-remains Δ ∈ k<ι)
 
 var-later-in-Γ-remains : (Δ : ,-CtxSuffix ℓ σ k)
                        → τ ∈ Γ ,σ, Δ at ι
                        → (k>ι : ctx-idx k > ι)
                        → [ ctx-idx k ↦τ R.weaken-ε-k k ε ] τ ∈ Γ ++ [↦Δ ε ] Δ at tighten k>ι
-var-later-in-Γ-remains {ℓ = ℓ} {k = suc k} {ε = ε}
-                       (Δ , τ) (∈-zero refl) (<-zero _) = ∈-zero ≡-prf
-  where
-    ≡-prf : [ ℓ ↦τ< ε ] (weaken-τ τ) ≡ R.weaken-τ ([ ℓ ↦τ< ε ] τ)
-    ≡-prf rewrite weaken-↦<-τ-comm (ctx-idx k) (weaken-ε-k k ε) τ
-                | weaken-ε-suc-k k ε
-                = refl
-var-later-in-Γ-remains {ℓ = ℓ} {k = suc k} {ε = ε}
-                       (Δ , _) (∈-suc {τ = τ} refl ∈) (<-suc k>ι) = ∈-suc suc-≡ (var-later-in-Γ-remains Δ ∈ k>ι)
-  where
-    suc-≡ : [ ℓ ↦τ< ε ] (weaken-τ τ) ≡ weaken-τ ([ ℓ ↦τ< ε ] τ)
-    suc-≡ rewrite weaken-↦<-τ-comm (ctx-idx k) (weaken-ε-k k ε) τ
-                | weaken-ε-suc-k k ε
-                = refl
+var-later-in-Γ-remains {ε = ε} (Δ , τ) (∈-zero refl) (<-zero _) = ∈-zero (weaken-↦<-suc-comm-τ ε)
+var-later-in-Γ-remains {ε = ε} (Δ , _) (∈-suc {τ = τ} refl ∈) (<-suc k>ι) = ∈-suc (weaken-↦<-suc-comm-τ ε) (var-later-in-Γ-remains Δ ∈ k>ι)
 
 -- Referred to as typing-substitution in the paper
 mutual
