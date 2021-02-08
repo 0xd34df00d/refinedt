@@ -44,6 +44,10 @@ suffix-weakening-ε Δ = R.act-ε-extensionality (suffix-is-raise Δ)
 suffix-weakening-τ : (Δ : CtxSuffix ℓ k)
                    → weaken-τ-k k f≡ R.act-τ (_⊂_.ρ {Γ = Γ} (suffix-as-⊂ Δ))
 suffix-weakening-τ Δ = R.act-τ-extensionality (suffix-is-raise Δ)
+
+
+
+-- Non-empty suffix, useful for the substitution lemmas
 data ,-CtxSuffix (ℓ : ℕ) : (σ : SType ℓ) → (k : ℕ) → Set where
   [_] : ∀ σ
       → ,-CtxSuffix ℓ σ zero
