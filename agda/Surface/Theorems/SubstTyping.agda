@@ -138,32 +138,26 @@ mutual
              [ ℓ ↦ε< ε ] ε₁ ⦂
              ([ ℓ ↦τ< ε ] τ₁) ⇒ ([ suc (ctx-idx k) ↦τ R.weaken-ε (R.weaken-ε-k k ε) ] τ₂)
       ε₁δ' rewrite sym (S.act-τ-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂) = sub-Γ⊢ε⦂τ Δ εδ ε₁δ
-  sub-Γ⊢ε⦂τ Δ εδ (T-Case resδ εδ' branches-well-typed) = {! !}
+  sub-Γ⊢ε⦂τ {ℓ = ℓ} {k = k} {Γ = Γ} {ε = ε} Δ εδ (T-Case resδ ε₀δ branches)
+    = T-Case (sub-Γ⊢τ Δ εδ resδ) (sub-Γ⊢ε⦂τ Δ εδ ε₀δ) (sub-branches branches)
+    where
+      sub-branches : ∀ {bs : CaseBranches nₐ (suc k + ℓ)} {cons : ADTCons nₐ (suc k + ℓ)}
+                   → BranchesHaveType (Γ ,σ, Δ) cons bs τ
+                   → BranchesHaveType (Γ ++ [↦Δ ε ] Δ) ([ ℓ ↦c< ε ] cons) ([ ℓ ↦bs< ε ] bs) ([ ℓ ↦τ< ε ] τ)
+      sub-branches NoBranches = NoBranches
+      sub-branches {τ = τ} (OneMoreBranch {ε' = ε'} {conτ = conτ} branch-εδ bs) = OneMoreBranch branch-εδ' (sub-branches bs)
+        where
+          branch-εδ' : Γ ++ [↦Δ ε ] (Δ , conτ) ⊢
+                       S.act-ε (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ε' ⦂
+                       weaken-τ ([ ℓ ↦τ< ε ] τ)
+          branch-εδ' rewrite sym (weaken-↦<-suc-comm-τ {τ = τ} ε)
+                           | S.act-ε-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
+                           | R.act-ε-distr (raise k) suc ε
+                           = sub-Γ⊢ε⦂τ (Δ , conτ) εδ branch-εδ
   sub-Γ⊢ε⦂τ Δ εδ (T-Con ≡-prf εδ' adtτ) = {! !}
   sub-Γ⊢ε⦂τ Δ εδ (T-Sub εδ' τ'δ <:) = {! !}
   sub-Γ⊢ε⦂τ Δ εδ (T-RConv εδ' τ'δ τ~τ') = {! !}
           {-
-  sub-Γ⊢ε⦂τ {k = k} {ε = ε} {σ = σ} εδ prefix σ-∈ (T-Var {idx = idx} Γok τ-∈) with ctx-idx k <>? idx
-  ... | less rep<var = T-Var (sub-Γok εδ prefix σ-∈ Γok) (var-earlier-in-Γ-remains ε τ-∈ rep<var)
-  ... | equal refl rewrite ∈-injective τ-∈ σ-∈
-                         | replace-weakened-τ k (weaken-ε-k k ε) σ
-                         = t-weakening-prefix (prefix-subst prefix) (sub-Γok εδ prefix σ-∈ Γok) εδ
-  ... | greater rep>var = T-Var (sub-Γok εδ prefix σ-∈ Γok) (var-later-in-Γ-remains ε τ-∈ rep>var)
-  sub-Γ⊢ε⦂τ {ℓ = ℓ} {k = k} {ε = ε} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (T-Case resδ ε₀δ branches)
-    = T-Case (sub-Γ⊢τ εδ prefix σ-∈ resδ) (sub-Γ⊢ε⦂τ εδ prefix σ-∈ ε₀δ) (sub-branches branches)
-    where
-      sub-branches : ∀ {bs : CaseBranches nₐ (suc k + ℓ)} {cons : ADTCons nₐ (suc k + ℓ)}
-                   → BranchesHaveType Γ,σ,Δ cons bs τ
-                   → BranchesHaveType ([ ℓ ↦Γ ε ] Γ,σ,Δ) ([ ℓ ↦c< ε ] cons) ([ ℓ ↦bs< ε ] bs) ([ ℓ ↦τ< ε ] τ)
-      sub-branches NoBranches = NoBranches
-      sub-branches {τ = τ} (OneMoreBranch {ε' = ε'} {conτ = conτ} branch-εδ bs) = OneMoreBranch branch-εδ' (sub-branches bs)
-        where
-          branch-εδ' : [ ℓ ↦Γ ε ] (Γ,σ,Δ , conτ) ⊢ S.act-ε (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ε' ⦂ weaken-τ ([ ℓ ↦τ< ε ] τ)
-          branch-εδ' rewrite R.weaken-ε-suc-k k ε
-                           | weaken-↦<-τ-comm (ctx-idx k) (R.weaken-ε-k _ ε) τ
-                           | S.act-ε-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
-                           | R.act-ε-distr (raise k) suc ε
-                           = sub-Γ⊢ε⦂τ εδ (prefix-cons prefix) (∈-suc (weaken-τ-suc-k _ _) σ-∈) branch-εδ
   sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Con {cons = cons} ≡-prf conδ adtτ)
     = T-Con (S.act-cons-member _ cons ≡-prf) (sub-Γ⊢ε⦂τ εδ prefix σ-∈ conδ) (sub-Γ⊢τ εδ prefix σ-∈ adtτ)
   sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Sub ε₀δ superδ <:δ) = T-Sub
