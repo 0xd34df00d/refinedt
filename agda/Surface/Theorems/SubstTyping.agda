@@ -44,19 +44,12 @@ open import Surface.Theorems.Thinning
          → (ε : STerm ℓ) → CaseBranches nₐ (suc k + ℓ) → CaseBranches nₐ (k + ℓ)
 [_↦bs<_]_ {k = k} _ ε bs = [ ctx-idx k ↦bs R.weaken-ε-k _ ε ] bs
 
-weaken-↦<-τ-comm : (ι : Fin (suc ℓ))
-                 → (ε : STerm ℓ)
-                 → (τ : SType (suc ℓ))
-                 → R.weaken-τ ([ ι ↦τ ε ] τ) ≡ [ suc ι ↦τ R.weaken-ε ε ] (R.weaken-τ τ)
-weaken-↦<-τ-comm ι ε τ rewrite ρ-σ-distr-τ suc (replace-at ι ε) τ
-                             | σ-ρ-distr-τ (replace-at (suc ι) (R.weaken-ε ε)) suc τ
-                             | S.act-τ-extensionality (weaken-replace-comm ε ι) τ
-                             = refl
-
 weaken-↦<-suc-comm-τ : ∀ {k ℓ} {τ : SType (suc k + ℓ)} (ε : STerm ℓ)
                      → [ ℓ ↦τ< ε ] weaken-τ τ ≡ weaken-τ ([ ℓ ↦τ< ε ] τ)
 weaken-↦<-suc-comm-τ {k} {ℓ} {τ} ε
-  rewrite weaken-↦<-τ-comm (ctx-idx k) (weaken-ε-k k ε) τ
+  rewrite ρ-σ-distr-τ suc (replace-at (ctx-idx k) (weaken-ε-k k ε)) τ
+        | σ-ρ-distr-τ (replace-at (suc (ctx-idx k)) (weaken-ε-k (suc k) ε)) suc τ
+        | S.act-τ-extensionality (weaken-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ
         | weaken-ε-suc-k k ε
         = refl
 
