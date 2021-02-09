@@ -156,17 +156,11 @@ mutual
                            = sub-Γ⊢ε⦂τ (Δ , conτ) εδ branch-εδ
   sub-Γ⊢ε⦂τ Δ εδ (T-Con {cons = cons} ≡-prf conδ adtτ)
     = T-Con (S.act-cons-member _ cons ≡-prf) (sub-Γ⊢ε⦂τ Δ εδ conδ) (sub-Γ⊢τ Δ εδ adtτ)
-  sub-Γ⊢ε⦂τ Δ εδ (T-Sub εδ' τ'δ <:) = {! !}
-  sub-Γ⊢ε⦂τ Δ εδ (T-RConv εδ' τ'δ τ~τ') = {! !}
-          {-
-  sub-Γ⊢ε⦂τ εδ prefix σ-∈ (T-Sub ε₀δ superδ <:δ) = T-Sub
-                                                    (sub-Γ⊢ε⦂τ εδ prefix σ-∈ ε₀δ)
-                                                    (sub-Γ⊢τ εδ prefix σ-∈ superδ)
-                                                    (sub-Γ⊢τ<:τ' εδ prefix σ-∈ <:δ)
-  sub-Γ⊢ε⦂τ {k = k} {ε = ε} εδ prefix σ-∈ (T-RConv εδ' τ'δ τ~τ')
+  sub-Γ⊢ε⦂τ Δ εδ (T-Sub εδ' τ'δ <:) = T-Sub (sub-Γ⊢ε⦂τ Δ εδ εδ') (sub-Γ⊢τ Δ εδ τ'δ) (sub-Γ⊢τ<:τ' Δ εδ <:)
+  sub-Γ⊢ε⦂τ {k = k} {ε = ε} Δ εδ (T-RConv εδ' τ'δ τ~τ')
     = let sub-τ~τ' = ↦τ-preserves-↭βτ (ctx-idx k) (R.act-ε (raise k) ε) τ~τ'
-       in T-RConv (sub-Γ⊢ε⦂τ εδ prefix σ-∈ εδ') (sub-Γ⊢τ εδ prefix σ-∈ τ'δ) sub-τ~τ'
-
+       in T-RConv (sub-Γ⊢ε⦂τ Δ εδ εδ') (sub-Γ⊢τ Δ εδ τ'δ) sub-τ~τ'
+          {-
   sub-Γ⊢τ<:τ' : ∀ {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {τ τ' : SType (suc k + ℓ)}
               → Γ ⊢ ε ⦂ σ
               → Γ prefix-at suc k of Γ,σ,Δ
@@ -183,6 +177,11 @@ mutual
                  | R.act-ε-distr (raise k) suc ε
                  = sub-Γ⊢τ<:τ' εδ (prefix-cons prefix) (∈-suc (weaken-τ-suc-k _ _) σ-∈) <:₂
     -}
+
+  sub-Γ⊢τ<:τ' : (Δ : ,-CtxSuffix ℓ σ k)
+              → Γ ⊢ ε ⦂ σ
+              → Γ ,σ, Δ ⊢ τ <: τ'
+              → Γ ++ [↦Δ ε ] Δ ⊢ [ ℓ ↦τ< ε ] τ <: [ ℓ ↦τ< ε ] τ'
 
 sub-Γ⊢ε⦂τ-front : {Γ : Ctx ℓ}
                 → Γ ⊢ ϖ ⦂ σ
