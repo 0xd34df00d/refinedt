@@ -374,8 +374,9 @@ then you're concluding that type-checking is decidable under that assumption. Ex
 not really interesting, because you've assumed a falsehood. I think what you want here, instead, is a discussion of how, as long as the oracle terminates, type-checking will terminate too. This approach gives a nice partial correctness result.}
 For instance, an oracle might just treat all functions as uninterpreted constants,
 as is easily expressible in SMT solvers, and roughly as Idris type checker does \cite{Idris13}.
-\rae{Not quite: LH treats functions and uninterpreted constants, but also provides 
-equality
+\rae{Not quite: LH treats functions as uninterpreted constants, but also provides 
+equality relationships with other terms. Idris allows reduction in functions, as long
+as those functions are inferred to be total.}
 
 \paragraph{Combining refinement and dependent types.}
 After formulating our surface and core languages, we define a translation from the former to the latter.
