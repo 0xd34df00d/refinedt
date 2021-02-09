@@ -85,6 +85,8 @@
 
 \inputott{surface.ott}
 
+\newcommand{\rae}[1]{\textcolor{magenta}{RAE: #1}}
+
 \title{Compiling refinement types to dependent types}
 
 \maketitle
@@ -167,6 +169,9 @@ it seems important to have firm foundations and verify that the type systems the
 Thus, we also present mechanically verified proofs in Agda of all the key theorems about our surface language and its translation procedure.
 This is, as far as we are aware, also a new contribution,
 and no prior papers strived to mechanically verify the metatheoretical properties of refinement types to this extent.
+
+\rae{I was expecting to find contributions here. We need to write out the paper's
+contributions.}
 
 \section{Motivation}
 
@@ -302,18 +307,19 @@ only resorting to the full power of dependent types when refinements are not eno
 \paragraph{Surface language.}
 We define a surface language with refinement types inspired by \cite{LiquidTypes08,Reflection18}.
 Broadly speaking, it is a simply-typed lambda calculus with several extensions,
-refinements over the base types being the most important one.
+including refinement types.
 The other extensions are:
 \begin{itemize}
   \item dependent arrow types, to allow subsequent refinements refer preceding arguments,
-  \item a limited form of algebraic data types (ADTs) and dependent pattern matching inspired by \cite{TAPLVariants,Eisenberg16},
+  \item a limited form of algebraic data types (ADTs) and dependent pattern matching, inspired by \cite{TAPLVariants,Eisenberg16},
     to illustrate reasoning about these widely used constructs, as well as generalizing path sensitivity \cite{FindSomethingForPathSensitivity}.
 \end{itemize}
 
 We also formulate and prove certain usual metatheorems about our surface language,
 like the substitution lemmas on types and terms,
 agreement lemmas between term well-typedness, type well-formedness and context well-formedness,
-and some others.
+and some others. \rae{This paragraph is problematic: why only these lemmas? is there a
+main theorem?}
 
 One major difference between our surface language and the languages in \cite{LiquidTypes08,Reflection18} is that both parametric polymorphism as well as recursion are omitted.
 This simplifies the formal model of the surface language considerably, while still giving meaningful results.
@@ -324,7 +330,13 @@ Our core language is a fully dependently typed language $\lambda C$ \cite{TTFPLa
 extended with a unit type and a restricted form of ADTs.
 We conjecture these extensions do not break the usual metatheoretical properties of the system,
 and we explicitly prove progress and preservation theorems as a sanity check.
+\rae{If we prove progress and preservation (good), what are the other metatheoretical
+properties that we conjecture about? determinism? it would be good to either spell this
+out, or omit the vague reference to ``usual metatheoretical properties''}
 
+\rae{This para is out of place here. Instead, move to a discussion section about
+alternative approaches, or drop altogether. Just because something took time and energy
+does not mean it is valuable to readers, unfortunately.}
 One plausible way to avoid the doubt in type safety of our core language stemming from the presence of the ADTs is to
 encode them via the Boehm-Berarducci encoding \cite{Bohm85}.
 Unfortunately, this does not work in our case,
@@ -333,26 +345,38 @@ and it seemingly cannot be easily extended to account for this witness.
 
 \paragraph{Subtyping oracle.}
 The refinements in our surface language may contain arbitrary terms, including function application.
-In general, this makes the subtyping check undecidable.
-We sidestep this by abstracting the checker away and introducing a notion of an oracle.
+In general, this makes the subtyping check undecidable. \rae{Undecidability is a specific
+claim. It's believable here, but a very short proof would help---perhaps appealing to
+an example that is obviously impossible to decide.}
+We sidestep this by abstracting the checker \rae{not the type-checker in its entirety; just
+the algorithm for checking sub-type relationships} away and introducing a notion of an oracle.
 The interface of said oracle boils down to a single function:
-it takes a typing context and two refinements over a base type, and decides whether one is the subtype of the other.
+it takes a typing context and two refinements over a base type, and decides whether one is the subtype of the other. \rae{This would be a good place to present the notation for
+a call to the oracle.}
 
 Of course, the oracle can have false negatives, deciding that some refinements are not in the subtyping relationship, even if they are, in fact, related.
-This does not affect the type safety of the surface language; the only requirement is the lack of false positives.
+This does not affect the type safety of the surface language; the only requirement is the lack of false positives. \rae{Stating the requirement of no false positives is good, but the existence or lack of false negatives doesn't seem interesting. I'm hoping there is a specific, formal presentation of the oracle interface and this property somewhere.}
 
-We also require certain properties regarding the oracle's behavior for the aforementioned surface language theorems to hold.
+We also require certain properties regarding the oracle's behavior for the aforementioned surface language theorems \rae{what theorems? the metatheory ones?} to hold.
 As an example, if the oracle yields a ``positive'' decision in some typing context, then it also must yield a ``positive'' decision in any bigger context,
 extended with variable bindings irrelevant to the subtyping problem being considered.
-All the required properties are mentioned in each individual metatheorem directly relying on them.
+\rae{Aha. More properties. Collect them all in one figure.}
+All the required properties are mentioned in each individual metatheorem directly relying on them. \rae{Good! but we still need one place that defines the interface of the oracle, which
+includes its required properties.}
 
 It's worth noting that the work on liquid types usually assumes the subtyping checks are done via an SMT solver, which can be seen to fit our oracle abstraction.
 
-Moreover, although our surface language will turn out to be strongly normalizing, in practice most languages allow potentially non-terminating terms.
-The oracle abstraction allows keeping the type checking decidable even in the presence of such terms at type level,
-assuming the oracle runs in finite time.
+Moreover, although our surface language will turn out to be strongly normalizing \rae{really? is that proved?}, in practice most languages allow potentially non-terminating terms.
+The oracle abstraction allows keeping type-checking decidable even in the presence of such terms in refinements,
+assuming the oracle runs in finite time. \rae{I'm not quite sure what to think here. You're
+broadly claiming that the oracle does something we know is impossible (which is fine). But
+then you're concluding that type-checking is decidable under that assumption. Except: that's
+not really interesting, because you've assumed a falsehood. I think what you want here, instead, is a discussion of how, as long as the oracle terminates, type-checking will terminate too. This approach gives a nice partial correctness result.}
 For instance, an oracle might just treat all functions as uninterpreted constants,
 as is easily expressible in SMT solvers, and roughly as Idris type checker does \cite{Idris13}.
+\rae{Not quite: LH treats functions as uninterpreted constants, but also provides 
+equality relationships with other terms. Idris allows reduction in functions, as long
+as those functions are inferred to be total.}
 
 \paragraph{Combining refinement and dependent types.}
 After formulating our surface and core languages, we define a translation from the former to the latter.
