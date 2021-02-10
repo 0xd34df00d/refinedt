@@ -5,7 +5,7 @@ module Surface.Derivations where
 open import Data.Fin using (zero)
 open import Data.Maybe
 open import Data.Nat.Base using (_+_)
-open import Data.Vec
+open import Data.Vec using (lookup; _∷_; [])
 open import Data.Vec.Relation.Unary.All using (All; _∷_; []) public
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
