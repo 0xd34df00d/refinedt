@@ -102,12 +102,10 @@ record Oracle where
            → (Γ⊂Γ' : Γ ⊂ Γ')
            → Is-just (decide Γ b ρ₁ ρ₂)
            → Is-just (decide Γ' b (act-ρ (ext (_⊂_.ρ Γ⊂Γ')) ρ₁) (act-ρ (ext (_⊂_.ρ Γ⊂Γ')) ρ₂))
-    subst  : ∀ {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {ρ₁ ρ₂ : Refinement (suc (suc k + ℓ))}
+    subst  : ∀ {Δ : ,-CtxSuffix ℓ σ k} {ρ₁ ρ₂ : Refinement (suc (suc k + ℓ))}
            -- TODO add this back when parametrizing everything by an oracle: → Γ ⊢ ε ⦂ σ
-           → Γ prefix-at suc k of Γ,σ,Δ
-           → R.weaken-τ-k (suc k) σ ∈ Γ,σ,Δ at S.ctx-idx k
-           → Is-just (decide Γ,σ,Δ b ρ₁ ρ₂)
-           → Is-just (decide ([ ℓ ↦Γ ε ] Γ,σ,Δ) b
+           → Is-just (decide (Γ ,σ, Δ) b ρ₁ ρ₂)
+           → Is-just (decide (Γ ++ ([↦Δ ε ] Δ)) b
                         (S.act-ρ (S.ext (S.replace-at (S.ctx-idx k) (R.weaken-ε-k k ε))) ρ₁)
                         (S.act-ρ (S.ext (S.replace-at (S.ctx-idx k) (R.weaken-ε-k k ε))) ρ₂))
     trans : Is-just (decide Γ b ρ₁ ρ₂)

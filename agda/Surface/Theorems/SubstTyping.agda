@@ -160,28 +160,22 @@ mutual
   sub-Γ⊢ε⦂τ {k = k} {ε = ε} Δ εδ (T-RConv εδ' τ'δ τ~τ')
     = let sub-τ~τ' = ↦τ-preserves-↭βτ (ctx-idx k) (R.act-ε (raise k) ε) τ~τ'
        in T-RConv (sub-Γ⊢ε⦂τ Δ εδ εδ') (sub-Γ⊢τ Δ εδ τ'δ) sub-τ~τ'
-          {-
-  sub-Γ⊢τ<:τ' : ∀ {Γ : Ctx ℓ} {Γ,σ,Δ : Ctx (suc k + ℓ)} {τ τ' : SType (suc k + ℓ)}
-              → Γ ⊢ ε ⦂ σ
-              → Γ prefix-at suc k of Γ,σ,Δ
-              → R.weaken-τ-k (suc k) σ ∈ Γ,σ,Δ at ctx-idx k
-              → Γ,σ,Δ ⊢ τ <: τ'
-              → [ ℓ ↦Γ ε ] Γ,σ,Δ ⊢ [ ℓ ↦τ< ε ] τ <: [ ℓ ↦τ< ε ] τ'
-  sub-Γ⊢τ<:τ' εδ prefix σ-∈ (ST-Base oracle x) = ST-Base oracle (Oracle.subst oracle prefix σ-∈ x)
-  sub-Γ⊢τ<:τ' {ℓ = ℓ} {k = k} {ε = ε} {Γ,σ,Δ = Γ,σ,Δ} εδ prefix σ-∈ (ST-Arr {τ₁' = τ₁'} {τ₂ = τ₂} {τ₂' = τ₂'} <:₁ <:₂)
-    = ST-Arr (sub-Γ⊢τ<:τ' εδ prefix σ-∈ <:₁) <:₂'
-    where
-      <:₂' : [ ℓ ↦Γ ε ] (Γ,σ,Δ , τ₁') ⊢ S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂ <: S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂'
-      <:₂' rewrite S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂
-                 | S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂'
-                 | R.act-ε-distr (raise k) suc ε
-                 = sub-Γ⊢τ<:τ' εδ (prefix-cons prefix) (∈-suc (weaken-τ-suc-k _ _) σ-∈) <:₂
-    -}
 
   sub-Γ⊢τ<:τ' : (Δ : ,-CtxSuffix ℓ σ k)
               → Γ ⊢ ε ⦂ σ
               → Γ ,σ, Δ ⊢ τ <: τ'
               → Γ ++ [↦Δ ε ] Δ ⊢ [ ℓ ↦τ< ε ] τ <: [ ℓ ↦τ< ε ] τ'
+  sub-Γ⊢τ<:τ' Δ εδ (ST-Base oracle x) = ST-Base oracle (Oracle.subst oracle x)
+  sub-Γ⊢τ<:τ' {k = k} {Γ = Γ} {ε = ε} Δ εδ (ST-Arr {τ₂ = τ₂} {τ₂' = τ₂'} <:₁ <:₂)
+    = ST-Arr (sub-Γ⊢τ<:τ' Δ εδ <:₁) <:₂'
+    where
+      <:₂' : (Γ ++ ([↦Δ ε ] (Δ , _))) ⊢
+             S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂ <:
+             S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂'
+      <:₂' rewrite S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂
+                 | S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂'
+                 | R.act-ε-distr (raise k) suc ε
+                 = sub-Γ⊢τ<:τ' (Δ , _) εδ <:₂
 
 sub-Γ⊢ε⦂τ-front : {Γ : Ctx ℓ}
                 → Γ ⊢ ϖ ⦂ σ
