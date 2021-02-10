@@ -10,7 +10,6 @@ open import Data.Vec.Base using (lookup; _∷_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 
 open import Surface.WellScoped
-open import Surface.WellScoped.CtxPrefix
 open import Surface.WellScoped.CtxSuffix
 open import Surface.WellScoped.Membership
 open import Surface.WellScoped.Renaming as R

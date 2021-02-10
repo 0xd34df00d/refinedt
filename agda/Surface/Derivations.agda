@@ -10,7 +10,6 @@ open import Data.Vec.Relation.Unary.All using (All; _∷_; []) public
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Surface.WellScoped
-open import Surface.WellScoped.CtxPrefix
 open import Surface.WellScoped.CtxSuffix
 open import Surface.WellScoped.Substitution using ([_↦τ_]_; [_↦Γ_]_)
 open import Surface.WellScoped.Membership

@@ -11,7 +11,6 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 
 open import Data.Fin.Extra
 open import Surface.WellScoped
-open import Surface.WellScoped.CtxPrefix
 open import Surface.WellScoped.CtxSuffix
 open import Surface.WellScoped.Membership
 open import Surface.WellScoped.Renaming as R
