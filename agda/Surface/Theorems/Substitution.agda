@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Surface.Theorems.SubstTyping where
+module Surface.Theorems.Substitution where
 
 open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Fin.Base using (suc; zero; fromℕ<; raise)
