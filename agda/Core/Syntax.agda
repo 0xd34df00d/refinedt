@@ -58,3 +58,8 @@ infixl 5 _,_
 data Ctx : ℕ → Set where
   ⊘   : Ctx 0
   _,_ : Ctx ℓ → CExpr ℓ → Ctx (suc ℓ)
+
+record VarAction : Set₁ where
+  field
+    Target : ℕ → Set
+    var-action : Target ℓ → CExpr ℓ
