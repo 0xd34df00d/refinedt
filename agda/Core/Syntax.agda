@@ -63,3 +63,5 @@ record VarAction : Set₁ where
   field
     Target : ℕ → Set
     var-action : Target ℓ → CExpr ℓ
+    ext : (Fin ℓ → Target ℓ')
+        → (Fin (suc ℓ) → Target (suc ℓ'))
