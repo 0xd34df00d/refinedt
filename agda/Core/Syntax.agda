@@ -29,8 +29,8 @@ data CExpr ℓ where
         → CExpr ℓ
   CSort : (s : Sort)
         → CExpr ℓ
-  CΠ    : (τ₂ : CExpr ℓ)
-        → (τ₁ : CExpr (suc ℓ))
+  CΠ    : (τ₁ : CExpr ℓ)
+        → (τ₂ : CExpr (suc ℓ))
         → CExpr ℓ
   CLam  : (τ : CExpr ℓ)
         → (ε : CExpr (suc ℓ))
