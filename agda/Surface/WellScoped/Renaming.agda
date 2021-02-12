@@ -10,6 +10,7 @@ open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym)
 
 open import Common.Helpers
+open import Common.Types
 open import Data.Fin.Extra
 open import Surface.WellScoped
 open import Surface.WellScoped.SyntaxInjectivity
@@ -120,11 +121,6 @@ weaken-ε-comm : ∀ (ρ : Fin ℓ → Fin ℓ') (ε : STerm ℓ)
 weaken-ε-comm ρ ε rewrite act-ε-distr suc (ext ρ) ε
                         | act-ε-distr ρ suc ε = refl
 
-
-Injective : {A B : Set} → (A → B) → Set
-Injective f = ∀ {x₁ x₂}
-              → f x₁ ≡ f x₂
-              → x₁ ≡ x₂
 
 weaken-τ-suc-k : ∀ k (τ : SType ℓ)
                → weaken-τ-k (suc k) τ ≡ weaken-τ (weaken-τ-k k τ)
