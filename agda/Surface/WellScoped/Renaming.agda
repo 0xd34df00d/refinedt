@@ -13,7 +13,6 @@ open import Common.Helpers
 open import Common.Types
 open import Data.Fin.Extra
 open import Surface.WellScoped
-open import Surface.WellScoped.SyntaxInjectivity
 open import Surface.WellScoped.Actions (record { Target = Fin
                                                ; var-action = λ ι → SVar ι
                                                ; ext = λ where _ zero → zero
@@ -48,6 +47,9 @@ ext-monotonic ρ-mono {x = zero} {y = suc y} (<-zero .y) = <-zero _
 ext-monotonic ρ-mono {x = suc x} {y = zero} ()
 ext-monotonic ρ-mono {x = suc x} {y = suc y} (<-suc x<y) = <-suc (ρ-mono x<y)
 
+SVar-inj : SVar ι₁ ≡ SVar ι₂
+         → ι₁ ≡ ι₂
+SVar-inj refl = refl
 
 open import Surface.WellScoped.ActionsLemmas var-action-record
                                              record { ≡-ext = λ where x-≡ zero → refl
