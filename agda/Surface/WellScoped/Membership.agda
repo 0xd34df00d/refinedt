@@ -25,10 +25,6 @@ data _∈_at_ : SType ℓ → Ctx ℓ → Fin ℓ → Set where
 ∈-injective (∈-zero refl) (∈-zero refl) = refl
 ∈-injective (∈-suc refl ∈₁) (∈-suc refl ∈₂) rewrite ∈-injective ∈₁ ∈₂ = refl
 
-∈-chop : R.weaken-τ τ ∈ Γ , τ' at suc ι
-       → τ ∈ Γ at ι
-∈-chop (∈-suc ≡-prf ∈) rewrite weaken-τ-injective ≡-prf = ∈
-
 infix 4 _⊂_
 record _⊂_ {ℓ ℓ'} (Γ : Ctx ℓ) (Γ' : Ctx ℓ') : Set where
   constructor MkTR
