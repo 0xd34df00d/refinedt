@@ -10,6 +10,7 @@ open import Data.Vec
 open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; cong)
 
+open import Common.Types
 open import Data.Fin.Extra
 open import Surface.WellScoped
 open import Surface.WellScoped.Substitution as S
@@ -235,8 +236,8 @@ private
   ρ-ιth-injective : ∀ ℓ'
                   → (ρ : Fin ℓ → Fin ℓ')
                   → (ι : Fin (suc ℓ))
-                  → R.Injective ρ
-                  → R.Injective (ρ-ιth ρ ι)
+                  → Injective ρ
+                  → Injective (ρ-ιth ρ ι)
   ρ-ιth-injective _  ρ ι ρ-inj {x₁ = v₁} {x₂ = v₂} ≡-prf with ι <>? v₁ | ι <>? v₂
   ρ-ιth-injective _  ρ ι ρ-inj {x₁ = v₁} {x₂ = v₂} ≡-prf | greater m<n | greater m<n₁ = tighten-injective (ρ-inj (suc-injective ≡-prf))
   ρ-ιth-injective ℓ' ρ ι ρ-inj {x₁ = v₁} {x₂ = v₂} ≡-prf | greater m<n | equal refl with ≡-prf
