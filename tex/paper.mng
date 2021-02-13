@@ -330,7 +330,7 @@ Our core language is a fully dependently typed language $\lambda C$ \cite{TTFPLa
 (a pure type system \cite{Schmidt1994,Barendregt92} with two sorts)
 extended with a unit type and a restricted form of ADTs.
 We conjecture these extensions do not break the usual metatheoretical properties of the system,
-and we explicitly prove progress and preservation theorems as a sanity check.
+most importantly, progress, preservation and strong normalization.
 \rae{If we prove progress and preservation (good), what are the other metatheoretical
 properties that we conjecture about? determinism? it would be good to either spell this
 out, or omit the vague reference to ``usual metatheoretical properties''}
