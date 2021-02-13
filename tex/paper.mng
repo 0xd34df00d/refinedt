@@ -86,6 +86,7 @@
 \inputott{surface.ott}
 
 \newcommand{\rae}[1]{\textcolor{magenta}{RAE: #1}}
+\newcommand{\gr}[1]{\textcolor{green}{G: #1}}
 
 \title{Compiling refinement types to dependent types}
 
