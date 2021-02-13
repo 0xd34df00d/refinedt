@@ -497,8 +497,6 @@ It might be defined as follows:
 The last equation represents the assumption
 that the oracle knows how to translate the atomic refinements.
 
-%TODO define substitutions on the \nonterm r
-
 In the subsequent text we also assume the oracle can decide the resulting proposition
 (otherwise it might be left as a separate lemma to be filled out by the user in the core language, or rejected altogether).
 
