@@ -360,9 +360,8 @@ This does not affect the type safety of the surface language; the only requireme
 We also require the oracle to satisfy certain properties for the aforementioned surface language metatheorems to hold.
 As an example, if the oracle yields a ``positive'' decision in some typing context, then it also must yield a ``positive'' decision in any bigger context,
 extended with variable bindings irrelevant to the subtyping problem being considered.
-\rae{Aha. More properties. Collect them all in one figure.}
-All the required properties are mentioned in each individual metatheorem directly relying on them. \rae{Good! but we still need one place that defines the interface of the oracle, which
-includes its required properties.}
+All the required properties are mentioned in each individual metatheorem directly relying on them,
+and those properties are listed in \cref{sect:oracle_requirements}.
 
 It's worth noting that the work on liquid types usually assumes the subtyping checks are done via an SMT solver, which can be seen to fit our oracle abstraction.
 
@@ -500,7 +499,7 @@ that the oracle knows how to translate the atomic refinements.
 In the subsequent text we also assume the oracle can decide the resulting proposition
 (otherwise it might be left as a separate lemma to be filled out by the user in the core language, or rejected altogether).
 
-\subsubsection{Requirements on the oracle}
+\subsubsection{Requirements on the oracle}\label{sect:oracle_requirements}
 
 Since the surface language uses the subtyping oracle in its type system, the metatheoretical properties of the language depend on the oracle satisfying certain crucial requirements.
 \begin{enumerate}
