@@ -334,10 +334,15 @@ most importantly, progress, preservation and strong normalization.
 \rae{If we prove progress and preservation (good), what are the other metatheoretical
 properties that we conjecture about? determinism? it would be good to either spell this
 out, or omit the vague reference to ``usual metatheoretical properties''}
+\gr{I think it should be just the enumeration of the ones we depend upon,
+and we won't really prove any of them given the required amount of work. Reworded accordingly.}
 
 \rae{This para is out of place here. Instead, move to a discussion section about
 alternative approaches, or drop altogether. Just because something took time and energy
 does not mean it is valuable to readers, unfortunately.}
+\gr{I initially thought about dropping this, but this justifies the presence of the extensions in the first place.
+At least, if I was a reader of this paper, my natural question after the previous para would have been ``then why do you need those extensions at all''?
+I indeed agree that this looks out of place, but it's a small paragraph, so I'm not sure a forward reference would be justified.}
 One plausible way to avoid the doubt in type safety of our core language stemming from the presence of the ADTs is to
 encode them via the Boehm-Berarducci encoding \cite{Bohm85}.
 Unfortunately, this does not work in our case,
