@@ -351,9 +351,12 @@ and it seemingly cannot be easily extended to account for this witness.
 
 \paragraph{Subtyping oracle.}
 The refinements in our surface language may contain arbitrary terms, including function application.
-In general, this makes the subtyping check undecidable. \rae{Undecidability is a specific
+In general, this makes the subtyping check undecidable.
+\rae{Undecidability is a specific
 claim. It's believable here, but a very short proof would help---perhaps appealing to
 an example that is obviously impossible to decide.}
+\gr{I think it's sufficient to say that there might be non-terminating functions, so for such a function $f$ checking that, say, $f(0) = 1$ is non-terminating.
+But I'm saying that later, and I'm not sure how to combine that into a single coherent sequence of phrases without making it a mess.}
 We sidestep this by abstracting the subtyping checker away and introducing a notion of an oracle.
 The interface of said oracle boils down to a single function:
 it takes a typing context $[[ G ]]$ and two refinements $[[ r1 ]], [[ r2 ]]$ over some argument $ v $, and decides whether one is the subtype of the other.
