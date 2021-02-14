@@ -362,9 +362,6 @@ We denote the logical context arising from the typing context $[[ G ]]$ as $[| [
 a call to the oracle.}
 \gr{Done! Does the above look like a good informal notation definition, or is it worth expanding more?}
 
-Of course, the oracle can have false negatives, deciding that some refinements are not in the subtyping relationship, even if they are, in fact, related.
-This does not affect the type safety of the surface language; the only requirement is the lack of false positives. \rae{Stating the requirement of no false positives is good, but the existence or lack of false negatives doesn't seem interesting. I'm hoping there is a specific, formal presentation of the oracle interface and this property somewhere.}
-
 We also require the oracle to satisfy certain properties for the aforementioned surface language metatheorems to hold.
 As an example, if the oracle yields a ``positive'' decision in some typing context, then it also must yield a ``positive'' decision in any bigger context,
 extended with variable bindings irrelevant to the subtyping problem being considered.
@@ -375,16 +372,17 @@ It's worth noting that the work on liquid types usually assumes the subtyping ch
 
 Moreover, although our surface language will turn out to be strongly normalizing \rae{really? is that proved?} \gr{Yep! There's an embedding into a strongly normalizing language, or, at least, the one conjectured to be one}, in practice most languages allow potentially non-terminating terms.
 The oracle abstraction allows keeping type-checking decidable even in the presence of such terms in refinements,
-assuming the oracle runs in finite time. \rae{I'm not quite sure what to think here. You're
+assuming the oracle runs in finite time.
+Practically, this means that any implementation of an oracle that always completes in finite time will have either false negatives (deciding that some types are not in subtype relationship when, in fact, they are) or false positives.
+Clearly, false negatives may limit the expressive power of the language, but they do not break the type safety, and what matters is the lack of false positives.
+\rae{I'm not quite sure what to think here. You're
 broadly claiming that the oracle does something we know is impossible (which is fine). But
 then you're concluding that type-checking is decidable under that assumption. Except: that's
 not really interesting, because you've assumed a falsehood. I think what you want here, instead, is a discussion of how, as long as the oracle terminates, type-checking will terminate too. This approach gives a nice partial correctness result.}
-For instance, an oracle might just treat all functions as uninterpreted constants,
-as is easily expressible in SMT solvers, and roughly as Idris type checker does~\cite{Idris13} for partial functions.
-\rae{Not quite: LH treats functions as uninterpreted constants, but also provides 
-equality relationships with other terms. Idris allows reduction in functions, as long
-as those functions are inferred to be total.}
-\gr{Right, reworded to better reflect Idris behaviour. There's a deeper discussion about that towards the end, should there be a forward ref to that?}
+\gr{That's a great point! Changed this emphasis in this paragraph correspondingly (and now also combines nicely with the other paragraph I had about false negatives and false positives~--- I guess that's what I wanted to express there).
+Regarding termination of type checking, I just realized I don't really prove that, and it requires adding an algorithmic version of the typing rules and proving that the algorithmic version is ``equivalent'' to the one we currently have.
+Mechanizing that would be a separate endeavour too.
+Do you think it's worth adding that?}
 
 \paragraph{Combining refinement and dependent types.}
 After formulating our surface and core languages, we define a translation from the former to the latter.
