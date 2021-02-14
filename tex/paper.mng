@@ -356,8 +356,11 @@ claim. It's believable here, but a very short proof would help---perhaps appeali
 an example that is obviously impossible to decide.}
 We sidestep this by abstracting the subtyping checker away and introducing a notion of an oracle.
 The interface of said oracle boils down to a single function:
-it takes a typing context and two refinements over a base type, and decides whether one is the subtype of the other. \rae{This would be a good place to present the notation for
+it takes a typing context $[[ G ]]$ and two refinements $[[ r1 ]], [[ r2 ]]$ over some argument $ v $, and decides whether one is the subtype of the other.
+We denote the logical context arising from the typing context $[[ G ]]$ as $[| [[ G ]] |]$, so the oracle just decides whether $[[ [| G |] => A v. (r1 => r2) ]]$ holds.
+\rae{This would be a good place to present the notation for
 a call to the oracle.}
+\gr{Done! Does the above look like a good informal notation definition, or is it worth expanding more?}
 
 Of course, the oracle can have false negatives, deciding that some refinements are not in the subtyping relationship, even if they are, in fact, related.
 This does not affect the type safety of the surface language; the only requirement is the lack of false positives. \rae{Stating the requirement of no false positives is good, but the existence or lack of false negatives doesn't seem interesting. I'm hoping there is a specific, formal presentation of the oracle interface and this property somewhere.}
