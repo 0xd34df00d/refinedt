@@ -682,7 +682,7 @@ with the corresponding proof terms referred in lemmas names.
 \end{theorem}
 \begin{proof}
   Straightforward induction on the derivation of $[[ empty |- es : ts ]]$.
-  The canonical forms lemma \ref{lma:canonical_forms} is used in \textsc{T-App} case if both terms are values and in \textsc{T-Case} case if the scrutinee is a value.
+  The canonical forms lemma~\ref{lma:canonical_forms} is used in \textsc{T-App} case if both terms are values and in \textsc{T-Case} case if the scrutinee is a value.
 \end{proof}
 
 \begin{theorem}[Preservation, \prooftermname{preservation}]\label{thm:surface_preservation}
