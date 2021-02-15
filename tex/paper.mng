@@ -428,22 +428,19 @@ We also discuss this in the section on the metatheoretical properties of the lan
     \nonterms{G,r,B,ts}
     \caption{Type level}
   \end{subfigure}
-  \caption{Surface language syntax}
-  \label{fig:surface_syntax}
+  \caption{Surface language syntax}\label{fig:surface_syntax}
 \end{figure}
 
 \begin{figure}[ht]
   \footnotesize
   \drules[E]{$[[ es1 ~~> es2 ]]$}{term evaluation}{AppL,AppR,AppAbs,ADT,CaseScrut,CaseMatch}
-  \caption{Surface language small-step operational semantics}
-  \label{fig:surface_opsem}
+  \caption{Surface language small-step operational semantics}\label{fig:surface_opsem}
 \end{figure}
 
 \begin{figure}[ht]
   \footnotesize
   \drules[RTEquiv]{$[[ ts1 =trb ts2 ]]$}{type equivalence}{Forward,Backward}
-  \caption{Surface language type equivalence}
-  \label{fig:surface_tyequiv}
+  \caption{Surface language type equivalence}\label{fig:surface_tyequiv}
 \end{figure}
 
 \begin{figure}[ht]
@@ -452,8 +449,7 @@ We also discuss this in the section on the metatheoretical properties of the lan
   \drules[TWF]{$[[ G |- ts ]]$}{type well-formedness}{TrueRef,Base,Conj,Arr,ADT}
   \drules[T]{$[[ G |- es : ts ]]$}{term typing}{Unit,Var,Abs,App,Case,Con,Sub,RConv}
   \drules[ST]{$[[ G |- ts1 <: ts2 ]]$}{subtyping}{Base,Arr}
-  \caption{Surface language typing}
-  \label{fig:surface_typing}
+  \caption{Surface language typing}\label{fig:surface_typing}
 \end{figure}
 
 To simplify the exposition and avoid dealing with shadowing,
@@ -750,28 +746,24 @@ deserves some special attention.
 \begin{figure}[ht]
   \footnotesize
   \nonterms{ec,s,vc}
-  \caption{Core language syntax}
-  \label{fig:core_syntax}
+  \caption{Core language syntax}\label{fig:core_syntax}
 \end{figure}
 
 \begin{figure}[ht]
   \footnotesize
   \drules[CT]{$[[ GC |- ec1 : ec2 ]]$}{core typing}{Sort,Var,Weaken,Form,App,Abs,Conv}
-  \caption{$\lambda C$ typing rules}
-  \label{fig:core_typing}
+  \caption{$\lambda C$ typing rules}\label{fig:core_typing}
 \end{figure}
 \begin{figure}[ht]
   \footnotesize
   \drules[CT]{$[[ GC |- ec1 : ec2 ]]$}{core typing, extensions}{UnitType,UnitTerm,ADTForm,ADTCon,ADTCase}
-  \caption{Typing rules for our extensions to $\lambda C$}
-  \label{fig:core_typing_exts}
+  \caption{Typing rules for our extensions to $\lambda C$}\label{fig:core_typing_exts}
 \end{figure}
 
 \begin{figure}[ht]
   \footnotesize
   \drules[CE]{$[[ ec1 ~~> ec2 ]]$}{term evaluation}{AppL,AppR,AppAbs,ADT,CaseScrut,CaseMatch}
-  \caption{Core language small-step operational semantics}
-  \label{fig:core_opsem}
+  \caption{Core language small-step operational semantics}\label{fig:core_opsem}
 \end{figure}
 
 \newcommand{\dast}{\ **\ }
