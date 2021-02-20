@@ -2,30 +2,34 @@
 
 module Core.Operational where
 
-open import Core.Syntax
+open import Data.Fin using (zero)
 
-data IsValue : CExpr → Set where
+open import Core.Syntax
+open import Core.Syntax.Substitution
+
+data IsValue : CExpr ℓ → Set where
   IV-Abs  : IsValue (CLam ε₁ ε₂)
   IV-unit : IsValue Cunit
   IV-ADT  : ∀ {cons} {idx : Fin n}
           → IsValue ϖ
           → IsValue (CCon idx ϖ cons)
 
-data _↝_ : CExpr → CExpr → Set where
+infix 4 _↝_
+data _↝_ : CExpr ℓ → CExpr ℓ → Set where
   CE-AppL : ε₁ ↝ ε₂
           → CApp ε₁ ε₂ ↝ CApp ε₁' ε₂
   CE-AppR : IsValue ϖ
           → ε₂ ↝ ε₂'
           → CApp ϖ ε₂ ↝ CApp ϖ ε₂'
-  CE-AppAbs : CApp (CLam ε₁ ε₂) ϖ ↝ [ x ↦ ϖ ] ε₂
+  CE-AppAbs : CApp (CLam ε₁ ε₂) ϖ ↝ [ zero ↦ ϖ ] ε₂
   CE-ADT  : ∀ {cons} {idx : Fin n}
           → ε ↝ ε'
           → CCon idx ε cons ↝ CCon idx ε' cons
-  CE-CaseScrut : ∀ {bs : CaseBranches n}
+  CE-CaseScrut : ∀ {bs : CaseBranches nₐ ℓ}
                → ε ↝ ε'
                → CCase ε bs ↝ CCase ε' bs
 
-data _↝⋆_ : CExpr → CExpr → Set where
+data _↝⋆_ : CExpr ℓ → CExpr ℓ → Set where
   ↝-refl  : ε ↝⋆ ε
   ↝-trans : ε₁ ↝⋆ ε₂
           → ε₂ ↝ ε₃
