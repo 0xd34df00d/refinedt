@@ -21,15 +21,7 @@ open import Surface.WellScoped.Actions (record { Target = STerm
                                        ) public
 
 replace-at : Fin (suc ℓ) → STerm ℓ → Fin (suc ℓ) → STerm ℓ
-replace-at replace-idx ε var-idx with replace-idx <>? var-idx
--- replacement index is less than current variable index, so the variable points to a binder that just got closer to it,
--- so decrement the variable index:
-... | less rep<var = SVar (m<n-n-pred rep<var)
--- just replace the current variable with the term:
-... | equal m≡n = ε
--- replacement index is greater than current variable index, so the variable still refers to the same binder,
--- so leave the var index as-is, just shrinking the bound of Fin as the binders count just decremented:
-... | greater rep>var = SVar (tighten rep>var)
+replace-at = replace-at-generic SVar
 
 SubstOn : (ℕ → Set) → Set
 SubstOn Ty = ∀ {ℓ} → Fin (suc ℓ) → STerm ℓ → Ty (suc ℓ) → Ty ℓ
