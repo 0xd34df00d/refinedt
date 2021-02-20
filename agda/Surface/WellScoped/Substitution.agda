@@ -12,7 +12,7 @@ open import Common.Helpers
 open import Data.Fin.Extra
 open import Surface.WellScoped
 open import Surface.WellScoped.Shape
-import Surface.WellScoped.Renaming as R
+import      Surface.WellScoped.Renaming as R
 open import Surface.WellScoped.Actions (record { Target = STerm
                                                ; var-action = λ ε → ε
                                                ; ext = λ where _ zero → SVar zero

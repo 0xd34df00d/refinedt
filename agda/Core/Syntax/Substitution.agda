@@ -18,9 +18,9 @@ replace-at = replace-at-generic CVar
 SubstOn : (ℕ → Set) → Set
 SubstOn Ty = ∀ {ℓ} → Fin (suc ℓ) → CExpr ℓ → Ty (suc ℓ) → Ty ℓ
 
-infixr 6 [_↦ε_]_ [_↦c_]_ [_↦bs_]_
-[_↦ε_]_ : SubstOn CExpr
-[_↦ε_]_ idx ε = act-ε (replace-at idx ε)
+infixr 6 [_↦_]_ [_↦c_]_ [_↦bs_]_
+[_↦_]_ : SubstOn CExpr
+[_↦_]_ idx ε = act-ε (replace-at idx ε)
 
 [_↦c_]_ : SubstOn (ADTCons nₐ)
 [_↦c_]_ idx ε = act-cons (replace-at idx ε)
