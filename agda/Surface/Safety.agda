@@ -122,7 +122,7 @@ preservation (E-AppL ε↝ε') (T-App ε₁δ ε₂δ) = T-App (preservation ε�
 preservation (E-AppR x ε↝ε') (T-App ε₁δ ε₂δ)
   = let τ₂δ = arr-wf-⇒-cod-wf (Γ⊢ε⦂τ-⇒-Γ⊢τ ε₁δ)
         τ'δ = sub-Γ⊢τ-front ε₂δ τ₂δ
-     in T-RConv (T-App ε₁δ (preservation ε↝ε' ε₂δ)) τ'δ (forward (↝βτ-Subst _ _ _ _ ε↝ε'))
+     in T-RConv (T-App ε₁δ (preservation ε↝ε' ε₂δ)) τ'δ (forward (↝βτ-Subst zero _ _ _ ε↝ε'))
 preservation (E-AppAbs ε₂-is-value) (T-App ε₁δ ε₂δ) = sub-Γ⊢ε⦂τ-front ε₂δ (SLam-inv ε₁δ)
 preservation (E-ADT ε↝ε') (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (preservation ε↝ε' εδ) adtτ
 preservation (E-CaseScrut ε↝ε') (T-Case resδ εδ branches) = T-Case resδ (preservation ε↝ε' εδ) branches
