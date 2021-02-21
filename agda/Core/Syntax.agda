@@ -49,6 +49,12 @@ data CExpr ℓ where
         → (branches : CaseBranches nₐ ℓ)
         → CExpr ℓ
 
+⋆ₑ : CExpr ℓ
+⋆ₑ = CSort ⋆
+
+□ₑ : CExpr ℓ
+□ₑ = CSort □
+
 variable
   τ τ' τ₁ τ₂ τ₁' τ₂' τᵢ τⱼ σ : CExpr ℓ
   ε ε' ε₁ ε₂ ε₃ ε₁' ε₂' ϖ : CExpr ℓ
