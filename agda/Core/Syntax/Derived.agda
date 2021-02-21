@@ -5,6 +5,7 @@ module Core.Syntax.Derived where
 open import Core.Syntax
 open import Core.Syntax.Renaming
 
+infixr 3 _==>_
 _==>_ : CExpr ℓ → CExpr ℓ → CExpr ℓ
 τ₁ ==> τ₂ = CΠ τ₁ (weaken-ε τ₂)
 
