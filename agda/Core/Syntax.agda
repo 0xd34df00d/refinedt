@@ -55,6 +55,10 @@ data CExpr ℓ where
 □ₑ : CExpr ℓ
 □ₑ = CSort □
 
+infixl 5 _·_
+_·_ : CExpr ℓ → CExpr ℓ → CExpr ℓ
+_·_ = CApp
+
 variable
   τ τ' τ₁ τ₂ τ₁' τ₂' τᵢ τⱼ σ : CExpr ℓ
   ε ε' ε₁ ε₂ ε₃ ε₁' ε₂' ϖ : CExpr ℓ
