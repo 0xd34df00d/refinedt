@@ -26,4 +26,6 @@ _==>_ : CExpr ℓ → CExpr ℓ → CExpr ℓ
 ⟨ τ₁ , τ₂ ⟩ = ⟨ τ₁ ⋆⋆ weaken-ε τ₂ ⟩
 
 _≡̂_of_ : CExpr ℓ → CExpr ℓ → CExpr ℓ → CExpr ℓ
-ε₁ ≡̂ ε₂ of τ = CΠ (τ ==> ⋆ₑ) {! !}
+ε₁ ≡̂ ε₂ of τ = CΠ (τ ==> ⋆ₑ) ⟨ CVar zero · weaken-ε ε₁ ==> CVar zero · weaken-ε ε₂
+                             , CVar zero · weaken-ε ε₂ ==> CVar zero · weaken-ε ε₁
+                             ⟩
