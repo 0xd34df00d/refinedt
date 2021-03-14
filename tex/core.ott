@@ -161,4 +161,4 @@ case ec of </ li = xi proof pi -> eci // i /> ~~> case ec' of </ li = xi proof p
 
 ec0 def < </ li : eci // i /> >
 --------------------------------------------------------------------------------------------------------------- :: CaseMatch
-case < lj = vc > as ec0 of </ li = xi proof pi -> eci // i /> ~~> [xj |-> vc] [pj |-> eqrefl < lj = vc > as ec0] ecj
+case < lj = vc > as ec0 of </ li = xi proof pi -> eci // i /> ~~> [xj |-> vc] [pj |-> eqrefl ec0 < lj = vc > as ec0] ecj
