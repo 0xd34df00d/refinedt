@@ -23,6 +23,7 @@ ADTCons (Mkℕₐ n) ℓ = Vec (CExpr ℓ) n
 
 CaseBranches : ℕₐ → ℕ → Set
 CaseBranches (Mkℕₐ n) ℓ = Vec (CExpr (2 + ℓ)) n
+-- ^ By convention, the variable 0 is the scrutinee and the variable 1 is the proof of η-equality
 
 data CExpr ℓ where
   CVar  : (ι : Fin ℓ)
