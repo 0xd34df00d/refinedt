@@ -3,8 +3,11 @@
 module Core.Operational where
 
 open import Data.Fin using (zero)
+open import Data.Vec
 
 open import Core.Syntax
+open import Core.Syntax.Derived
+open import Core.Syntax.Renaming
 open import Core.Syntax.Substitution
 
 data IsValue : CExpr ℓ → Set where
@@ -28,6 +31,10 @@ data _↝_ : CExpr ℓ → CExpr ℓ → Set where
   CE-CaseScrut : ∀ {bs : CaseBranches nₐ ℓ}
                → ε ↝ ε'
                → CCase ε bs ↝ CCase ε' bs
+  CE-CaseMatch : ∀ {cons : ADTCons (Mkℕₐ (suc n)) ℓ} {bs : CaseBranches (Mkℕₐ (suc n)) ℓ}
+               → IsValue ϖ
+               → (ι : Fin (suc n))
+               → CCase (CCon ι ϖ cons) bs ↝ [ zero ↦ eq-refl (CADT cons) ϖ ] [ zero ↦ weaken-ε ϖ ] lookup bs ι
 
 data _↝⋆_ : CExpr ℓ → CExpr ℓ → Set where
   ↝-refl  : ε ↝⋆ ε
