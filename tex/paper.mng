@@ -373,11 +373,25 @@ That is largely the usual call-by-value evaluation model
 with some extra rules for the ADTs and pattern matching.
 The (restricted) type ``equivalence'' is presented in \figref{surface_tyequiv}.
 The typing rules for the surface language are presented in \figref{surface_typing}.
+\rae{I was surprised to see that all abstractions must be annotated. I guess that's
+OK: we're doing refinement types, not general type inference here.}
+\rae{We need to have another base type beyond Unit.}
+\rae{Why the funny symbol for values?}
+\rae{Why have only equality as a refinement? I think this can be left abstract.}
+\rae{This language cannot refine ADTs. That seems like a big omission. Maybe it isn't
+in practice? But it would be good to spell this out.}
+\rae{This language supports sums, but no products. This seems limiting.}
+\rae{TWF-Base is strange. How does this compare to other papers on refinement types?}
+\rae{TWF-ADT probably wants to assert that the labels are distinct.}
+\rae{ST-Base is degenerate, because Unit is the only base type.}
 
+
+\rae{I would describe other features first, and then return to these technical points.}
 Type equivalence, together with the \textsc{T-RConv} typing rule, deserves some special attention.
 Note that this relation is indeed restricted, and contains only a tiny subset of what the usual $\beta$-equivalence relates.
 \begin{remark}
-In fact, $[[ =trb ]]$ is neither transitive nor reflexive, so it is not really an \emph{equivalence}, but it becomes one combined with \textsc{T-RConv}.
+In fact, $[[ =trb ]]$ is neither transitive nor reflexive, so it is not really an \emph{equivalence}, but it becomes one \rae{I'm not sure what ``becomes one'' really means here.}
+combined with \textsc{T-RConv}.
 Indeed, transitivity is regained via consecutive applications of \textsc{T-RConv}, and reflexivity is achieved by not applying this rule at all.
 In a sense, the type system itself provides the reflexive-transitive closure of the $[[ =trb ]]$ relation.
 \end{remark}
@@ -396,6 +410,7 @@ We also discuss this in the section on the metatheoretical properties of the lan
     \nonterms{G,r,B,ts}
     \caption{Type level}
   \end{subfigure}
+  \rae{The text here is too small}
   \caption{Surface language syntax}\label{fig:surface_syntax}
 \end{figure}
 
@@ -434,6 +449,8 @@ $\top \triangleq \unit = \unit$.
   elements of syntax (like numbers and operations on them)
   as well as typing rules relating those,
   but we omit them for the sake of brevity.
+\rae{Brevity is good, but having only Unit makes the language trivial. Given that
+the proofs are done over the language defined here, we need to add at least Int.}
 \end{remark}
 
 We also have the following concessions:
@@ -444,14 +461,17 @@ We also have the following concessions:
     \[
       (x : \Int) \rightarrow \{ v : \Int \rightarrow \Int | v x = 0 \} \rightarrow \Int
     \]
-    might instead be expressed via a dummy parameter:
+    might instead be expressed via a dummy parameter: \rae{What if we want to refine
+a function or ADT that is returned?}
     \[
       (x : \Int) \rightarrow (f : \Int \rightarrow \Int) \rightarrow \{ \_ : \Unit | f x = 0 \} \rightarrow \Int.
     \]
   \item Our algebraic data types only allow a single ``field'' in each constructor.
     One way to alleviate this is to introduce tuples,
     but doing so would complicate the exposition
-    without any benefit for illustrating the main idea of this work.
+    without any benefit for illustrating the main idea of this work. \rae{But lacking
+tuples or refined ADTs, this means that we cannot return an ADT from a function
+that also asserts a condition on it.}
 \end{itemize}
 
 The translation function $[|\ |]$ maps the typing context $\nonterm G$ to some logic
@@ -468,9 +488,13 @@ It might be defined as follows:
 
 The last equation represents the assumption
 that the oracle knows how to translate the atomic refinements.
+\rae{This is a bit fishy. The right-hand side of these equations are written in
+some grammar. What? That grammar should have an $=$, and then you know how to write
+the last line.}
 
 In the subsequent text we also assume the oracle can decide the resulting proposition
-(otherwise it might be left as a separate lemma to be filled out by the user in the core language, or rejected altogether).
+(otherwise it might be left as a separate lemma to be filled out by the user in the core language, or rejected altogether). \rae{This is a key point and really needs to be expanded
+upon.} \rae{Ah -- I see the next section is this expansion.}
 
 \subsubsection{Requirements on the oracle}\label{sect:oracle_requirements}
 
