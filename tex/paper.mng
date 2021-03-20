@@ -382,6 +382,7 @@ OK: we're doing refinement types, not general type inference here.}
 in practice? But it would be good to spell this out.}
 \rae{This language supports sums, but no products. This seems limiting.}
 \rae{TWF-Base is strange. How does this compare to other papers on refinement types?}
+\gr{I think it is somewhat close to what, for example, refinement reflection paper does, modulo the notation and our refinements being equalities vs those refinements being boolean-typed terms.}
 \rae{TWF-ADT probably wants to assert that the labels are distinct.}
 \rae{ST-Base is degenerate, because Unit is the only base type.}
 
