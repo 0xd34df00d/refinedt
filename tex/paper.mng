@@ -491,6 +491,12 @@ that the oracle knows how to translate the atomic refinements.
 \rae{This is a bit fishy. The right-hand side of these equations are written in
 some grammar. What? That grammar should have an $=$, and then you know how to write
 the last line.}
+\gr{The goal here is to show how a typing context gets converted into a logical formula.
+The idea is that the translation of a context is the conjunction of the translations of the types of individual bindings,
+the translation of refinements in each individual binding is the conjunction of translations of atomic refinements,
+the translation of an atomic refinement is whatever the oracle seems fit,
+and we don't care about that last part~--- that's part of the oracle abstraction.
+I think introducing a formal grammar for that would complicate things, and maybe I should just replace this set of equations with some words close to what I wrote in the previous sentence.}
 
 In the subsequent text we also assume the oracle can decide the resulting proposition.
 In practical implementations, it might also be left as a separate lemma to be filled out by the user in the core language, or rejected altogether (thus being a false negative).
