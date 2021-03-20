@@ -401,33 +401,35 @@ call-by-value language that also has a form of dependent types (namely, the conc
 We also discuss this in the section on the metatheoretical properties of the language.
 
 \begin{figure}[ht]
-  \footnotesize
+  \centering
   \begin{subfigure}{.6\textwidth}
     \nonterms{es,l,vs}
     \caption{Term level}
   \end{subfigure}
+
   \begin{subfigure}{.5\textwidth}
     \nonterms{G,r,B,ts}
     \caption{Type level}
   \end{subfigure}
+
   \rae{The text here is too small}
+  \gr{Well, I removed footnotesize here (and everywhere else for consistency), and now half the figures moved to after the end of the paper.
+  I think I'll need an advice on laying this out.}
+
   \caption{Surface language syntax}\label{fig:surface_syntax}
 \end{figure}
 
 \begin{figure}[ht]
-  \footnotesize
   \drules[E]{$[[ es1 ~~> es2 ]]$}{term evaluation}{AppL,AppR,AppAbs,ADT,CaseScrut,CaseMatch}
   \caption{Surface language small-step operational semantics}\label{fig:surface_opsem}
 \end{figure}
 
 \begin{figure}[ht]
-  \footnotesize
   \drules[RTEquiv]{$[[ ts1 =trb ts2 ]]$}{type equivalence}{Forward,Backward}
   \caption{Surface language type equivalence}\label{fig:surface_tyequiv}
 \end{figure}
 
 \begin{figure}[ht]
-  \footnotesize
   \drules[TCTX]{$[[ G ok ]]$}{context well-formedness}{Empty,Bind}
   \drules[TWF]{$[[ G |- ts ]]$}{type well-formedness}{TrueRef,Base,Conj,Arr,ADT}
   \drules[T]{$[[ G |- es : ts ]]$}{term typing}{Unit,Var,Abs,App,Case,Con,Sub,RConv}
@@ -744,24 +746,20 @@ deserves some special attention.
 \todo[inline]{Pay said attention.}
 
 \begin{figure}[ht]
-  \footnotesize
   \nonterms{ec,s,vc}
   \caption{Core language syntax}\label{fig:core_syntax}
 \end{figure}
 
 \begin{figure}[ht]
-  \footnotesize
   \drules[CT]{$[[ GC |- ec1 : ec2 ]]$}{core typing}{Sort,Var,Weaken,Form,App,Abs,Conv}
   \caption{$\lambda C$ typing rules}\label{fig:core_typing}
 \end{figure}
 \begin{figure}[ht]
-  \footnotesize
   \drules[CT]{$[[ GC |- ec1 : ec2 ]]$}{core typing, extensions}{UnitType,UnitTerm,ADTForm,ADTCon,ADTCase}
   \caption{Typing rules for our extensions to $\lambda C$}\label{fig:core_typing_exts}
 \end{figure}
 
 \begin{figure}[ht]
-  \footnotesize
   \drules[CE]{$[[ ec1 ~~> ec2 ]]$}{term evaluation}{AppL,AppR,AppAbs,ADT,CaseScrut,CaseMatch}
   \caption{Core language small-step operational semantics}\label{fig:core_opsem}
 \end{figure}
