@@ -492,9 +492,11 @@ that the oracle knows how to translate the atomic refinements.
 some grammar. What? That grammar should have an $=$, and then you know how to write
 the last line.}
 
-In the subsequent text we also assume the oracle can decide the resulting proposition
-(otherwise it might be left as a separate lemma to be filled out by the user in the core language, or rejected altogether). \rae{This is a key point and really needs to be expanded
+In the subsequent text we also assume the oracle can decide the resulting proposition.
+In practical implementations, it might also be left as a separate lemma to be filled out by the user in the core language, or rejected altogether (thus being a false negative).
+\rae{This is a key point and really needs to be expanded
 upon.} \rae{Ah -- I see the next section is this expansion.}
+\gr{Yep, this might also blur the focus of the paper. I've reworded this to emphasize this being largely an implementation detail. Or we could just drop the para altogether, I'm not sure it adds that much.}
 
 \subsubsection{Requirements on the oracle}\label{sect:oracle_requirements}
 
