@@ -386,7 +386,7 @@ in practice? But it would be good to spell this out.}
 \rae{TWF-ADT probably wants to assert that the labels are distinct.}
 \rae{ST-Base is degenerate, because Unit is the only base type.}
 
-To simplify the exposition and avoid dealing with shadowing,
+As usual, to simplify the exposition and avoid dealing with shadowing,
 all bindings in contexts are assumed to have different names.
 
 We also introduce a shorthand notation $\top$ denoting some tautology
