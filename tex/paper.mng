@@ -386,8 +386,47 @@ in practice? But it would be good to spell this out.}
 \rae{TWF-ADT probably wants to assert that the labels are distinct.}
 \rae{ST-Base is degenerate, because Unit is the only base type.}
 
+To simplify the exposition and avoid dealing with shadowing,
+all bindings in contexts are assumed to have different names.
+
+We also introduce a shorthand notation $\top$ denoting some tautology
+which we use for trivial refinements that do not carry any extra information.
+In particular, one good way to define $\top$ is
+to state the equality of the sole inhabitant of $\Unit$ to itself:
+$\top \triangleq \unit = \unit$.
+
+We also have the following concessions:
+\begin{itemize}
+  \item The syntax only allows refinements on base types.
+    Note that this does not restrict the expressive power of the language.
+    For instance, a refinement on a function that we might otherwise wish to write as
+    \[
+      (x : \Int) \rightarrow \{ v : \Int \rightarrow \Int | v x = 0 \} \rightarrow \Int
+    \]
+    might instead be expressed via a dummy parameter:
+    \rae{What if we want to refine a function or ADT that is returned?}
+    \[
+      (x : \Int) \rightarrow (f : \Int \rightarrow \Int) \rightarrow \{ \_ : \Unit | f x = 0 \} \rightarrow \Int.
+    \]
+  \item Our algebraic data types only allow a single ``field'' in each constructor.
+    One way to alleviate this is to introduce tuples,
+    but doing so would complicate the exposition
+    without any benefit for illustrating the main idea of this work. \rae{But lacking
+tuples or refined ADTs, this means that we cannot return an ADT from a function
+that also asserts a condition on it.}
+\end{itemize}
+
+\begin{remark}\label{remark:surface_base_types}
+  The surface language might also have other base types (for example, $\Int$),
+  elements of syntax (like numbers and operations on them)
+  as well as typing rules relating those,
+  but we omit them for the sake of brevity.
+\rae{Brevity is good, but having only Unit makes the language trivial. Given that
+the proofs are done over the language defined here, we need to add at least Int.}
+\end{remark}
 
 \rae{I would describe other features first, and then return to these technical points.}
+\gr{Ordering is hard! I shuffled some paragraphs around, let's see if it makes it better.}
 Type equivalence, together with the \textsc{T-RConv} typing rule, deserves some special attention.
 Note that this relation is indeed restricted, and contains only a tiny subset of what the usual $\beta$-equivalence relates.
 \begin{remark}
@@ -437,45 +476,6 @@ We also discuss this in the section on the metatheoretical properties of the lan
   \drules[ST]{$[[ G |- ts1 <: ts2 ]]$}{subtyping}{Base,Arr}
   \caption{Surface language typing}\label{fig:surface_typing}
 \end{figure}
-
-To simplify the exposition and avoid dealing with shadowing,
-all bindings in contexts are assumed to have different names.
-
-We introduce a shorthand notation $\top$ denoting some tautology
-which we use for trivial refinements that do not carry any extra information.
-In particular, one good way to define $\top$ is
-to state the equality of the sole inhabitant of $\Unit$ to itself:
-$\top \triangleq \unit = \unit$.
-
-\begin{remark}\label{remark:surface_base_types}
-  The surface language might also have other base types (for example, $\Int$),
-  elements of syntax (like numbers and operations on them)
-  as well as typing rules relating those,
-  but we omit them for the sake of brevity.
-\rae{Brevity is good, but having only Unit makes the language trivial. Given that
-the proofs are done over the language defined here, we need to add at least Int.}
-\end{remark}
-
-We also have the following concessions:
-\begin{itemize}
-  \item The syntax only allows refinements on base types.
-    Note that this does not restrict the expressive power of the language.
-    For instance, a refinement on a function that we might otherwise wish to write as
-    \[
-      (x : \Int) \rightarrow \{ v : \Int \rightarrow \Int | v x = 0 \} \rightarrow \Int
-    \]
-    might instead be expressed via a dummy parameter: \rae{What if we want to refine
-a function or ADT that is returned?}
-    \[
-      (x : \Int) \rightarrow (f : \Int \rightarrow \Int) \rightarrow \{ \_ : \Unit | f x = 0 \} \rightarrow \Int.
-    \]
-  \item Our algebraic data types only allow a single ``field'' in each constructor.
-    One way to alleviate this is to introduce tuples,
-    but doing so would complicate the exposition
-    without any benefit for illustrating the main idea of this work. \rae{But lacking
-tuples or refined ADTs, this means that we cannot return an ADT from a function
-that also asserts a condition on it.}
-\end{itemize}
 
 The translation function $[|\ |]$ maps the typing context $\nonterm G$ to some logic
 that the oracle can handle.
