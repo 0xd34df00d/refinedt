@@ -376,15 +376,26 @@ The typing rules for the surface language are presented in \figref{surface_typin
 \rae{I was surprised to see that all abstractions must be annotated. I guess that's
 OK: we're doing refinement types, not general type inference here.}
 \rae{We need to have another base type beyond Unit.}
+\gr{Yep, I guess I'll add natural numbers to make the system more interesting. Or, maybe, we could make the ADTs inductive, thus giving Nats for free — this seems more useful, more interesting, and more investigation-worthy.}
 \rae{Why the funny symbol for values?}
+\gr{It kind of resembles $v$ for $v$alue, and $\nu$ is already taken for the variables being refined, while $v$ is too close to $\nu$.
+I didn't really put much thought into it, I agree this is a bit unconventional, and I'm very open to any other notation.}
 \rae{Why have only equality as a refinement? I think this can be left abstract.}
+\gr{What would be the base case for the refinements syntax then?}
 \rae{This language cannot refine ADTs. That seems like a big omission. Maybe it isn't
 in practice? But it would be good to spell this out.}
+\gr{I had some issues trying to formalize a good and concise syntax for refinements over non-base types, but I don't remember them specifically.
+Let's see if I'll be able to come up with something reasonable now.}
 \rae{This language supports sums, but no products. This seems limiting.}
 \rae{TWF-Base is strange. How does this compare to other papers on refinement types?}
 \gr{I think it is somewhat close to what, for example, refinement reflection paper does, modulo the notation and our refinements being equalities vs those refinements being boolean-typed terms.}
 \rae{TWF-ADT probably wants to assert that the labels are distinct.}
+\gr{This is interesting. In my formal proofs part, I represents ADTs as a vector of types.
+Labels are thus just appropriately bounded Fins and thus are distinct by construction \emph{within one ADT}.
+I don't assert global uniqueness of identifiers, though, and I don't think it really breaks anything.
+Do you think it might be problematic, or is it fine and I'm free to just add the assertion about ``local'' uniqueness of identifiers?}
 \rae{ST-Base is degenerate, because Unit is the only base type.}
+\gr{Yep, but the refinements might be non-trivial.}
 
 As usual, to simplify the exposition and avoid dealing with shadowing,
 all bindings in contexts are assumed to have different names.
