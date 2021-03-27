@@ -428,7 +428,7 @@ We also have the following concessions:
         \]
         Instead, we shift the refinement to the right, refining the last value and turning the arguments into antecedents of an implication:
         \[
-          (x : \Int) \rightarrow (y : \Int) \rightarrow \{ v : \Int | (y = (x + 1) \Rightarrow v = 0) \land (y = (x - 1) \Rightarrow v = 0) \}
+          (x : \Int) \rightarrow (y : \Int) \rightarrow \{ v : \Int | (y = x + 1 \Rightarrow v = 0) \land (y = x - 1 \Rightarrow v = 0) \}
         \]
     \end{itemize}
     \rae{What if we want to refine a function or ADT that is returned?}
