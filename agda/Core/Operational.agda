@@ -12,7 +12,7 @@ open import Core.Syntax.Substitution
 
 data IsValue : CExpr ℓ → Set where
   IV-Abs  : IsValue (CLam ε₁ ε₂)
-  IV-unit : IsValue Cunit
+  IV-unit : IsValue (Cunit {ℓ})
   IV-ADT  : ∀ {cons} {idx : Fin n}
           → IsValue ϖ
           → IsValue (CCon idx ϖ cons)
