@@ -439,8 +439,10 @@ We also have the following concessions:
         We push this refinement into the ADT, replacing each $[[ tsi ]]$ with $\{ v : [[ tsi ]] | [[ ri ]] \}$, recursively desugaring the refinement on $[[ tsi ]]$ as well.
     \end{itemize}
     \rae{What if we want to refine a function or ADT that is returned?}
-    \gr{Refining a returned function is non-trivial. One way to address that is to add implication to the refinements syntax, and then we could move the refinement to the rightmost position as above.
-    But, although our model oracles, SMT solvers, already have to support implication anyway, I'm not sure what can of worms does that open.}
+    \gr{That can be done, but is non-trivial.
+      Re functions, one way to address that is to add implication to the refinements syntax, and then we could move the refinement to the rightmost position as above.
+      But, although our model oracles, SMT solvers, already have to support implication anyway, I'm not sure what can of worms does that open.
+      Re ADTs, I'm afraid that $x$ might escape in the example above, and that it might be bad. On the other hand, the type above seems to be admissible according to type well-formedness rules, and I've proven lots of things about them, so I'm not sure what's the worst that can happen.}
   \item Our algebraic data types only allow a single ``field'' in each constructor.
     One way to alleviate this is to introduce tuples,
     but doing so would complicate the exposition
