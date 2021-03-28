@@ -430,6 +430,13 @@ We also have the following concessions:
         \[
           (x : \Int) \rightarrow (y : \Int) \rightarrow \{ v : \Int | (y = x + 1 \Rightarrow v = 0) \land (y = x - 1 \Rightarrow v = 0) \}
         \]
+      \item A refinement of an ADT that is returned. Suppose we now wish to write, for some function $f$, the following:
+        \[
+          (x : \Int) \rightarrow \{ v : [[ < </ li : tsi // i /> > ]] | f x v = 0 \}
+        \]
+        Informally, the only way $f$ can consume a value of type $[[ < </ li : tsi // i /> > ]]$ is by pattern-matching on it.
+        Thus, for each $[[ tsi ]]$ the function $f$ gives rise to a refinement $[[ ri ]]$, which is basically the right-hand side of the equation for $f$ corresponding to the constructor $[[ li ]]$.
+        We push this refinement into the ADT, replacing each $[[ tsi ]]$ with $\{ v : [[ tsi ]] | [[ ri ]] \}$, recursively desugaring the refinement on $[[ tsi ]]$ as well.
     \end{itemize}
     \rae{What if we want to refine a function or ADT that is returned?}
     \gr{Refining a returned function is non-trivial. One way to address that is to add implication to the refinements syntax, and then we could move the refinement to the rightmost position as above.
