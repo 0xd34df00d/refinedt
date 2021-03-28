@@ -34,7 +34,7 @@ data _↝_ : CExpr ℓ → CExpr ℓ → Set where
   CE-CaseMatch : ∀ {cons : ADTCons (Mkℕₐ (suc n)) ℓ} {bs : CaseBranches (Mkℕₐ (suc n)) ℓ}
                → IsValue ϖ
                → (ι : Fin (suc n))
-               → CCase (CCon ι ϖ cons) bs ↝ [ zero ↦ eq-refl (CADT cons) ϖ ] [ zero ↦ weaken-ε ϖ ] lookup bs ι
+               → CCase (CCon ι ϖ cons) bs ↝ [ zero ↦ eq-refl (CADT cons) (CCon ι ϖ cons) ] [ zero ↦ weaken-ε ϖ ] lookup bs ι
 
 data _↝⋆_ : CExpr ℓ → CExpr ℓ → Set where
   ↝-refl  : ε ↝⋆ ε
