@@ -60,15 +60,16 @@ infixl 5 _·_
 _·_ : CExpr ℓ → CExpr ℓ → CExpr ℓ
 _·_ = CApp
 
-variable
-  τ τ' τ₁ τ₂ τ₁' τ₂' τᵢ τⱼ σ : CExpr ℓ
-  ε ε' ε₁ ε₂ ε₃ ε₁' ε₂' ϖ : CExpr ℓ
-  s s₁ s₂ : Sort
-
 infixl 5 _,_
 data Ctx : ℕ → Set where
   ⊘   : Ctx 0
   _,_ : Ctx ℓ → CExpr ℓ → Ctx (suc ℓ)
+
+variable
+  τ τ' τ₁ τ₂ τ₁' τ₂' τᵢ τⱼ σ : CExpr ℓ
+  ε ε' ε₁ ε₂ ε₃ ε₁' ε₂' ϖ : CExpr ℓ
+  s s₁ s₂ : Sort
+  Γ Γ' : Ctx ℓ
 
 record VarAction : Set₁ where
   field
