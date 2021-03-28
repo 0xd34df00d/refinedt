@@ -11,7 +11,7 @@ open import Data.List.Relation.Unary.Any
 open import Core.Syntax
 open import Core.Operational
 
-data _=β_ : CExpr → CExpr → Set where
+data _=β_ : CExpr ℓ → CExpr ℓ → Set where
   =-witness : ∀ ε
             → ε₁ ↝⋆ ε
             → ε₂ ↝⋆ ε
