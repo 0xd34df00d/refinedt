@@ -17,6 +17,7 @@ data _=β_ : CExpr ℓ → CExpr ℓ → Set where
             → ε₂ ↝⋆ ε
             → ε₁ =β ε₂
 
+infix 2 _⊢_⦂_
 data _⊢_⦂_ : Ctx → CExpr → CExpr → Set where
   CT-Sort : [] ⊢ CSort ⋆ ⦂ CSort □
   CT-Var : Γ ⊢ ε ⦂ CSort s
