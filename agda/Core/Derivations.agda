@@ -2,13 +2,11 @@
 
 module Core.Derivations where
 
-{-
-open import Agda.Builtin.Equality
-open import Data.List.Membership.Propositional
-open import Data.List.Relation.Unary.Any
--}
+open import Data.Fin using (zero)
 
 open import Core.Syntax
+open import Core.Syntax.Renaming
+open import Core.Syntax.Substitution
 open import Core.Operational
 
 data _=β_ : CExpr ℓ → CExpr ℓ → Set where
@@ -18,23 +16,23 @@ data _=β_ : CExpr ℓ → CExpr ℓ → Set where
             → ε₁ =β ε₂
 
 infix 2 _⊢_⦂_
-data _⊢_⦂_ : Ctx → CExpr → CExpr → Set where
-  CT-Sort : [] ⊢ CSort ⋆ ⦂ CSort □
-  CT-Var : Γ ⊢ ε ⦂ CSort s
-         → Γ , ε ⊢ CVar zero ⦂ ε
-  CT-Weaken : Γ ⊢ ε₁ ⦂ ε₂
-            → Γ ⊢ ε₃ ⦂ CSort s
-            → Γ , x ⦂ ε₃ ⊢ ε₁ ⦂ ε₂
-  CT-Form : Γ ⊢ ε₁ ⦂ CSort s₁
-          → Γ , x ⦂ ε₁ ⊢ ε₂ ⦂ CSort s₂
-          → Γ ⊢ CPi x ε₁ ε₂ ⦂ CSort s₂
-  CT-App : Γ ⊢ ε₁' ⦂ CPi x ε₁ ε₂
-         → Γ ⊢ ε₂' ⦂ ε₁
-         → Γ ⊢ CApp ε₁' ε₂' ⦂ [ x ↦ ε₂' ] ε₂
-  CT-Abs : Γ , x ⦂ ε₁ ⊢ ε ⦂ ε₂
-         → Γ ⊢ CPi x ε₁ ε₂ ⦂ CSort s
-         → Γ ⊢ CLam x ε₁ ε ⦂ CPi x ε₁ ε₂
-  CT-Conv : Γ ⊢ ε ⦂ ε₁
-          → Γ ⊢ ε₂ ⦂ CSort s
-          → ε₁ =β ε₂
-          → Γ ⊢ ε ⦂ ε₂
+data _⊢_⦂_ : Ctx ℓ → CExpr ℓ → CExpr ℓ → Set where
+  CT-Sort : ⊘ ⊢ ⋆ₑ ⦂ □ₑ
+  CT-Var : Γ ⊢ τ ⦂ CSort s
+         → Γ , τ ⊢ CVar zero ⦂ weaken-ε τ
+  CT-Weaken : Γ ⊢ ε₁ ⦂ τ₁
+            → Γ ⊢ τ₂ ⦂ CSort s
+            → Γ , τ₂ ⊢ weaken-ε ε₁ ⦂ weaken-ε τ₁
+  CT-Form : Γ ⊢ τ₁ ⦂ CSort s₁
+          → Γ , τ₁ ⊢ τ₂ ⦂ CSort s₂
+          → Γ ⊢ CΠ τ₁ τ₂ ⦂ CSort s₂
+  CT-App : Γ ⊢ ε₁ ⦂ CΠ τ₁ τ₂
+         → Γ ⊢ ε₂ ⦂ τ₁
+         → Γ ⊢ CApp ε₁ ε₂ ⦂ [ zero ↦ ε₂ ] τ₂
+  CT-Abs : Γ , τ₁ ⊢ ε ⦂ τ₂
+         → Γ ⊢ CΠ τ₁ τ₂ ⦂ CSort s
+         → Γ ⊢ CLam τ₁ ε ⦂ CΠ τ₁ τ₂
+  CT-Conv : Γ ⊢ ε ⦂ τ₁
+          → Γ ⊢ τ₂ ⦂ CSort s
+          → τ₁ =β τ₂
+          → Γ ⊢ ε ⦂ τ₂
