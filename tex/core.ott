@@ -76,10 +76,10 @@ GC |- tc2 : s
 ------------------------- :: Weaken
 GC , x : tc2 |- ec1 : tc1
 
-GC |- ec1 : s1
-GC , x : ec1 |- ec2 : s2
+GC |- tc1 : s1
+GC , x : tc1 |- tc2 : s2
 --------------------------- :: Form
-GC |- Pi x : ec1 . ec2 : s2
+GC |- Pi x : tc1 . tc2 : s2
 
 GC |- ec1' : Pi x : ec1 . ec2
 GC |- ec2' : ec1
