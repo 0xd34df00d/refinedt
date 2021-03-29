@@ -761,7 +761,8 @@ As a general convention,
 core entities corresponding to the surface language will be denoted by the same symbol, but with a $\widehat{\text{hat}}$.
 For instance, core typing contexts are denoted as $[[ GC ]]$ and core expressions are denoted as $[[ ec ]]$.
 Although there is no separate syntactic notion of a type,
-$[[ tc ]]$ is used a a metavariable where a type (an inhabitant of $\star$) is expected.
+$[[ tc ]]$ is used as a metavariable where a type (an inhabitant of $\star$) or a sort ($\star$ itself or $\square$) is expected.
+$[[ ec ]]$ is used as usual, denoting any expression in the core language, be it a term, a type or a sort.
 The $\_$ placeholder is used where a binding name is expected but the binding is not used in the corresponding subterm,
 as in $[[ \ _ : ec. unitc ]]$ or, for a more general example, $[[ Pi _ : tc1. tc2 ]]$.
 
