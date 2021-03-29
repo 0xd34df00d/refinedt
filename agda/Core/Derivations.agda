@@ -17,6 +17,7 @@ data _=β_ : CExpr ℓ → CExpr ℓ → Set where
 
 infix 2 _⊢_⦂_
 data _⊢_⦂_ : Ctx ℓ → CExpr ℓ → CExpr ℓ → Set where
+  -- Base λC
   CT-Sort : ⊘ ⊢ ⋆ₑ ⦂ □ₑ
   CT-Var : Γ ⊢ τ ⦂ CSort s
          → Γ , τ ⊢ CVar zero ⦂ weaken-ε τ
@@ -36,3 +37,9 @@ data _⊢_⦂_ : Ctx ℓ → CExpr ℓ → CExpr ℓ → Set where
           → Γ ⊢ τ₂ ⦂ CSort s
           → τ₁ =β τ₂
           → Γ ⊢ ε ⦂ τ₂
+
+  -- Our extensions
+  CT-UnitType : Γ ⊢ ⋆ₑ ⦂ □ₑ
+              → Γ ⊢ CUnit ⦂ ⋆ₑ
+  CT-UnitTerm : Γ ⊢ ⋆ₑ ⦂ □ₑ
+              → Γ ⊢ Cunit ⦂ CUnit
