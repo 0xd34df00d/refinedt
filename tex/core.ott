@@ -91,11 +91,11 @@ GC |- Pi x : tc1 . tc2 : s
 ----------------------------- :: Abs
 GC |- \ x : tc1 . ec : Pi x : tc1 . tc2
 
-GC |- ec : ec1
-GC |- ec2 : s
-ec1 =b ec2
+GC |- ec : tc1
+GC |- tc2 : s
+tc1 =b tc2
 -------------- :: Conv
-GC |- ec : ec2
+GC |- ec : tc2
 
 GC |- sst : ssq
 ------------------- :: UnitTerm
