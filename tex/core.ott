@@ -71,10 +71,10 @@ GC |- ec : s
 --------------------- :: Var
 GC , x : ec |- x : ec
 
-GC |- ec1 : ec2
-GC |- ec3 : s
+GC |- ec1 : tc1
+GC |- tc2 : s
 ------------------------- :: Weaken
-GC , x : ec3 |- ec1 : ec2
+GC , x : tc2 |- ec1 : tc1
 
 GC |- ec1 : s1
 GC , x : ec1 |- ec2 : s2
