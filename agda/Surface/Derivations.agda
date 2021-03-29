@@ -31,7 +31,11 @@ infix 2 _⊢_⦂_
 infix 2 _⊢_<:_
 infix 1 _⊢_
 
-data BranchesHaveType (Γ : Ctx ℓ) : (cons : ADTCons nₐ ℓ) → (bs : CaseBranches nₐ ℓ) → (τ' : SType ℓ) → Set where
+data BranchesHaveType (Γ : Ctx ℓ) : (cons : ADTCons nₐ ℓ)
+                                  → (bs : CaseBranches nₐ ℓ)
+                                  → (τ' : SType ℓ)
+                                  → Set
+                                  where
   NoBranches    : BranchesHaveType Γ [] [] τ'
   OneMoreBranch : ∀ {conτ} {cons' : ADTCons nₐ ℓ} {bs' : CaseBranches nₐ ℓ}
                 → (εδ : (Γ , conτ) ⊢ ε' ⦂ R.weaken-τ τ')
