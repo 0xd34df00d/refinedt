@@ -81,10 +81,10 @@ GC , x : tc1 |- tc2 : s2
 --------------------------- :: Form
 GC |- Pi x : tc1 . tc2 : s2
 
-GC |- ec1' : Pi x : ec1 . ec2
-GC |- ec2' : ec1
+GC |- ec1 : Pi x : tc1 . tc2
+GC |- ec2 : tc1
 ----------------------------- :: App
-GC |- ec1' ec2' : [ x |-> ec2' ] ec2
+GC |- ec1 ec2 : [ x |-> ec2 ] tc2
 
 GC , x : ec1 |- ec : ec2
 GC |- Pi x : ec1 . ec2 : s
