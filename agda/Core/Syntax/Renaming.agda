@@ -2,7 +2,7 @@
 
 module Core.Syntax.Renaming where
 
-open import Data.Fin using (zero; suc)
+open import Data.Fin using (zero; suc; raise)
 
 open import Core.Syntax
 open import Core.Syntax.Actions (record { Target = Fin
@@ -13,3 +13,6 @@ open import Core.Syntax.Actions (record { Target = Fin
 
 weaken-ε : CExpr ℓ → CExpr (suc ℓ)
 weaken-ε = act-ε suc
+
+weaken-ε-k : ∀ k → CExpr ℓ → CExpr (k + ℓ)
+weaken-ε-k k = act-ε (raise k)
