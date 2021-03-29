@@ -86,10 +86,10 @@ GC |- ec2 : tc1
 ----------------------------- :: App
 GC |- ec1 ec2 : [ x |-> ec2 ] tc2
 
-GC , x : ec1 |- ec : ec2
-GC |- Pi x : ec1 . ec2 : s
+GC , x : tc1 |- ec : tc2
+GC |- Pi x : tc1 . tc2 : s
 ----------------------------- :: Abs
-GC |- \ x : ec1 . ec : Pi x : ec1 . ec2
+GC |- \ x : tc1 . ec : Pi x : tc1 . tc2
 
 GC |- ec : ec1
 GC |- ec2 : s
