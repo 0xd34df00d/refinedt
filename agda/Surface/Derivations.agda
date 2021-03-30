@@ -7,7 +7,7 @@ open import Data.Maybe
 open import Data.Nat.Base using (_+_)
 open import Data.Vec using (lookup; _∷_; [])
 open import Data.Vec.Relation.Unary.All using (All; _∷_; []) public
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Relation.Binary.PropositionalEquality using (_≡_)
 
 open import Surface.WellScoped
 open import Surface.WellScoped.CtxSuffix
@@ -139,8 +139,3 @@ data _⊢_<:_ where
   ST-Arr      : Γ ⊢ τ₁' <: τ₁
               → Γ , τ₁' ⊢ τ₂ <: τ₂'
               → Γ ⊢ τ₁ ⇒ τ₂ <: τ₁' ⇒ τ₂'
-
-subst-Γ⊢ε⦂τ-τ : τ₁ ≡ τ₂
-              → Γ ⊢ ε ⦂ τ₁
-              → Γ ⊢ ε ⦂ τ₂
-subst-Γ⊢ε⦂τ-τ refl εδ = εδ

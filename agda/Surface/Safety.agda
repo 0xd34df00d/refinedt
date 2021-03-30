@@ -113,6 +113,11 @@ con-has-type (T-RConv {τ = _ ⇒ _}     εδ _ τ↝τ') = shape-⊥-elim ↭β
 con-has-type (T-RConv {τ = ⊍ cons}    εδ τ'δ τ↝τ') with ↭βτ-cons-same-length τ↝τ'
 ... | refl = T-RConv (con-has-type εδ) (lookup-preserves-Γ⊢τ _ τ'δ) (↭βτ-lookup _ τ↝τ')
 
+subst-Γ⊢ε⦂τ-τ : τ₁ ≡ τ₂
+              → Γ ⊢ ε ⦂ τ₁
+              → Γ ⊢ ε ⦂ τ₂
+subst-Γ⊢ε⦂τ-τ refl εδ = εδ
+
 preservation : ε ↝ ε'
              → Γ ⊢ ε ⦂ τ
              → Γ ⊢ ε' ⦂ τ
