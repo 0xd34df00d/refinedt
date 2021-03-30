@@ -60,7 +60,7 @@ data _⊢_ where
   TWF-Arr     : (argδ : Γ ⊢ τ₁)
               → (resδ : Γ , τ₁ ⊢ τ₂)
               → Γ ⊢ τ₁ ⇒ τ₂
-  TWF-ADT     : ∀ {adtCons : ADTCons (Mkℕₐ (suc n)) ℓ}
+  TWF-ADT     : {adtCons : ADTCons (Mkℕₐ (suc n)) ℓ}
               → (consδs : All (Γ ⊢_) adtCons)
               → Γ ⊢ ⊍ adtCons
 
