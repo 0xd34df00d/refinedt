@@ -76,12 +76,14 @@ data _⊢_⦂_ where
   T-App       : (δ₁ : Γ ⊢ ε₁ ⦂ τ₁ ⇒ τ₂)
               → (δ₂ : Γ ⊢ ε₂ ⦂ τ₁)
               → Γ ⊢ SApp ε₁ ε₂ ⦂ [ zero ↦τ ε₂ ] τ₂
-  T-Case      : ∀ {cons : ADTCons (Mkℕₐ (suc n)) ℓ} {bs : CaseBranches (Mkℕₐ (suc n)) ℓ}
+  T-Case      : {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
+              → {bs : CaseBranches (Mkℕₐ (suc n)) ℓ}
               → (resδ : Γ ⊢ τ')
               → (scrutτδ : Γ ⊢ ε ⦂ ⊍ cons)
               → (branches-well-typed : BranchesHaveType Γ cons bs τ')
               → Γ ⊢ SCase ε bs ⦂ τ'
-  T-Con       : ∀ {idx} {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
+  T-Con       : ∀ {idx}
+              → {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
               → (≡-prf : τⱼ ≡ lookup cons idx)
               → (conArg : Γ ⊢ ε ⦂ τⱼ)
               → (adtτ : Γ ⊢ ⊍ cons)
