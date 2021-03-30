@@ -3,6 +3,8 @@
 module Core.Derivations where
 
 open import Data.Fin using (zero)
+open import Data.Vec using (lookup; _∷_; [])
+open import Data.Vec.Relation.Unary.All using (All; _∷_; []) public
 
 open import Core.Syntax
 open import Core.Syntax.Renaming
@@ -43,3 +45,6 @@ data _⊢_⦂_ : Ctx ℓ → CExpr ℓ → CExpr ℓ → Set where
               → Γ ⊢ CUnit ⦂ ⋆ₑ
   CT-UnitTerm : Γ ⊢ ⋆ₑ ⦂ □ₑ
               → Γ ⊢ Cunit ⦂ CUnit
+  CT-ADTForm : {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
+             → (consδs : All (Γ ⊢_⦂ ⋆ₑ) cons)
+             → Γ ⊢ CADT cons ⦂ ⋆ₑ
