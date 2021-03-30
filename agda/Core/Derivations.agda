@@ -32,7 +32,7 @@ data _⊢_⦂_ : Ctx ℓ → CExpr ℓ → CExpr ℓ → Set where
           → Γ ⊢ CΠ τ₁ τ₂ ⦂ CSort s₂
   CT-App : Γ ⊢ ε₁ ⦂ CΠ τ₁ τ₂
          → Γ ⊢ ε₂ ⦂ τ₁
-         → Γ ⊢ CApp ε₁ ε₂ ⦂ [ zero ↦ ε₂ ] τ₂
+         → Γ ⊢ ε₁ · ε₂ ⦂ [ zero ↦ ε₂ ] τ₂
   CT-Abs : Γ , τ₁ ⊢ ε ⦂ τ₂
          → Γ ⊢ CΠ τ₁ τ₂ ⦂ CSort s
          → Γ ⊢ CLam τ₁ ε ⦂ CΠ τ₁ τ₂
