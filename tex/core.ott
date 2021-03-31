@@ -109,11 +109,11 @@ GC |- Unitc : sst
 ---------------------------------- :: ADTForm
 GC |- < </ li : tci // i /> > : sst
 
-GC |- ec : ecj
+GC |- ec : tcj
 lj in </ li // i />
-GC |- < </ li : eci // i /> > : sst
+GC |- < </ li : tci // i /> > : sst
 --------------------------------------------------------------------- :: ADTCon
-GC |- < lj = ec> as < </ li : eci // i /> > : < </ li : eci // i /> >
+GC |- < lj = ec> as < </ li : tci // i /> > : < </ li : tci // i /> >
 
 ec0 def < </ li : eci // i /> >
 GC |- ec1 : sst
