@@ -105,9 +105,9 @@ GC |- sst : ssq
 ------------------ :: UnitType
 GC |- Unitc : sst
 
-</ GC |- eci : sst // i />
+</ GC |- tci : sst // i />
 ---------------------------------- :: ADTForm
-GC |- < </ li : eci // i /> > : sst
+GC |- < </ li : tci // i /> > : sst
 
 GC |- ec : ecj
 lj in </ li // i />
