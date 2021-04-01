@@ -476,29 +476,9 @@ We also discuss this in the section on the metatheoretical properties of the lan
   \caption{Surface language typing}\label{fig:surface_typing}
 \end{figure}
 
-The translation function $[|\ |]$ maps the typing context $\nonterm G$ to some logic
-that the oracle can handle.
-It might be defined as follows:
-\begin{equation}
-\begin{aligned}
-  & [|\ \emptyset\ |]                    && \triangleq && \top																			           \\
-  & [|\ [[ G , x : { v : B | r } ]] \ |] && \triangleq && [|\ [[ G ]] \ |] \land [|\ [[ [ v |-> x ] r ]] \ |]  \\
-  & [|\ [[ r1 /\ r2 ]] \ |]              && \triangleq && [|\ [[ r1 ]] \ |] \land [|\ [[ r2 ]] \ |]            \\
-  & [|\ [[ es_1 = es_2 ]] \ |]           && \triangleq && \text{oracle}([[ es_1 = es_2 ]])                     \\
-\end{aligned}
-\end{equation}
-
-The last equation represents the assumption
-that the oracle knows how to translate the atomic refinements.
-\rae{This is a bit fishy. The right-hand side of these equations are written in
-some grammar. What? That grammar should have an $=$, and then you know how to write
-the last line.}
-\gr{The goal here is to show how a typing context gets converted into a logical formula.
-The idea is that the translation of a context is the conjunction of the translations of the types of individual bindings,
-the translation of refinements in each individual binding is the conjunction of translations of atomic refinements,
-the translation of an atomic refinement is whatever the oracle seems fit,
-and we don't care about that last part~--- that's part of the oracle abstraction.
-I think introducing a formal grammar for that would complicate things, and maybe I should just replace this set of equations with some words close to what I wrote in the previous sentence.}
+The translation function $[|\ |]$ maps the typing context $\nonterm G$ to some logic that the oracle can handle, and that we leave abstract.
+Generally, the translation of a whole context is the conjunction of the translations of the types of the individual bindings,
+and, within each type, the translation of the conjunction of atomic refinements is the conjunction of the translations of the atomic refinements.
 
 In the subsequent text we also assume the oracle can decide the resulting proposition.
 In practical implementations, it might also be left as a separate lemma to be filled out by the user in the core language, or rejected altogether (thus being a false negative).
