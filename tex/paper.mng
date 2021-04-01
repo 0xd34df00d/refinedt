@@ -353,7 +353,7 @@ extended with variable bindings irrelevant to the subtyping problem being consid
 All the required properties are mentioned in each individual metatheorem directly relying on them,
 and those properties are listed in \cref{sect:oracle_requirements}.
 
-It's worth noting that the work on liquid types usually assumes the subtyping checks are done via an SMT solver, which can be seen to fit our oracle abstraction.
+It is worth noting that the work on liquid types usually assumes the subtyping checks are done via an SMT solver, which can be seen to fit our oracle abstraction.
 
 \paragraph{Combining refinement and dependent types.}
 After formulating our surface and core languages, we define a translation from the former to the latter.
