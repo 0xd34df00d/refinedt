@@ -373,14 +373,9 @@ That is largely the usual call-by-value evaluation model
 with some extra rules for the ADTs and pattern matching.
 The (restricted) type ``equivalence'' is presented in \figref{surface_tyequiv}.
 The typing rules for the surface language are presented in \figref{surface_typing}.
-\rae{TWF-ADT probably wants to assert that the labels are distinct.}
-\gr{This is interesting. In my formal proofs part, I represents ADTs as a vector of types.
-Labels are thus just appropriately bounded Fins and thus are distinct by construction \emph{within one ADT}.
-I don't assert global uniqueness of identifiers, though, and I don't think it really breaks anything.
-Do you think it might be problematic, or is it fine and I'm free to just add the assertion about ``local'' uniqueness of identifiers?}
 
-As usual, to simplify the exposition and avoid dealing with shadowing,
-all bindings in contexts are assumed to have different names.
+As usual, to simplify the exposition,
+all bindings in contexts are assumed to have different names, and all labels in each ADT are assumed to be different.
 
 We also introduce a shorthand notation $\top$ denoting some tautology
 which we use for trivial refinements that do not carry any extra information.
