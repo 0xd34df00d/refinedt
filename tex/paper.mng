@@ -373,29 +373,11 @@ That is largely the usual call-by-value evaluation model
 with some extra rules for the ADTs and pattern matching.
 The (restricted) type ``equivalence'' is presented in \figref{surface_tyequiv}.
 The typing rules for the surface language are presented in \figref{surface_typing}.
-\rae{I was surprised to see that all abstractions must be annotated. I guess that's
-OK: we're doing refinement types, not general type inference here.}
-\rae{We need to have another base type beyond Unit.}
-\gr{Yep, I guess I'll add natural numbers to make the system more interesting. Or, maybe, we could make the ADTs inductive, thus giving Nats for free — this seems more useful, more interesting, and more investigation-worthy.}
-\rae{Why the funny symbol for values?}
-\gr{It kind of resembles $v$ for $v$alue, and $\nu$ is already taken for the variables being refined, while $v$ is too close to $\nu$.
-I didn't really put much thought into it, I agree this is a bit unconventional, and I'm very open to any other notation.}
-\rae{Why have only equality as a refinement? I think this can be left abstract.}
-\gr{What would be the base case for the refinements syntax then?}
-\rae{This language cannot refine ADTs. That seems like a big omission. Maybe it isn't
-in practice? But it would be good to spell this out.}
-\gr{I had some issues trying to formalize a good and concise syntax for refinements over non-base types, but I don't remember them specifically.
-Let's see if I'll be able to come up with something reasonable now.}
-\rae{This language supports sums, but no products. This seems limiting.}
-\rae{TWF-Base is strange. How does this compare to other papers on refinement types?}
-\gr{I think it is somewhat close to what, for example, refinement reflection paper does, modulo the notation and our refinements being equalities vs those refinements being boolean-typed terms.}
 \rae{TWF-ADT probably wants to assert that the labels are distinct.}
 \gr{This is interesting. In my formal proofs part, I represents ADTs as a vector of types.
 Labels are thus just appropriately bounded Fins and thus are distinct by construction \emph{within one ADT}.
 I don't assert global uniqueness of identifiers, though, and I don't think it really breaks anything.
 Do you think it might be problematic, or is it fine and I'm free to just add the assertion about ``local'' uniqueness of identifiers?}
-\rae{ST-Base is degenerate, because Unit is the only base type.}
-\gr{Yep, but the refinements might be non-trivial.}
 
 As usual, to simplify the exposition and avoid dealing with shadowing,
 all bindings in contexts are assumed to have different names.
@@ -438,17 +420,10 @@ We also have the following concessions:
         Thus, for each $[[ tsi ]]$ the function $f$ gives rise to a refinement $[[ ri ]]$, which is basically the right-hand side of the equation for $f$ corresponding to the constructor $[[ li ]]$.
         We push this refinement into the ADT, replacing each $[[ tsi ]]$ with $\{ v : [[ tsi ]] | [[ ri ]] \}$, recursively desugaring the refinement on $[[ tsi ]]$ as well.
     \end{itemize}
-    \rae{What if we want to refine a function or ADT that is returned?}
-    \gr{That can be done, but is non-trivial.
-      Re functions, one way to address that is to add implication to the refinements syntax, and then we could move the refinement to the rightmost position as above.
-      But, although our model oracles, SMT solvers, already have to support implication anyway, I'm not sure what can of worms does that open.
-      Re ADTs, I'm afraid that $x$ might escape in the example above, and that it might be bad. On the other hand, the type above seems to be admissible according to type well-formedness rules, and I've proven lots of things about them, so I'm not sure what's the worst that can happen.}
   \item Our algebraic data types only allow a single ``field'' in each constructor.
     One way to alleviate this is to introduce tuples,
     but doing so would complicate the exposition
-    without any benefit for illustrating the main idea of this work. \rae{But lacking
-tuples or refined ADTs, this means that we cannot return an ADT from a function
-that also asserts a condition on it.}
+    without any benefit for illustrating the main idea of this work.
 \end{itemize}
 
 \begin{remark}\label{remark:surface_base_types}
@@ -460,8 +435,6 @@ that also asserts a condition on it.}
 the proofs are done over the language defined here, we need to add at least Int.}
 \end{remark}
 
-\rae{I would describe other features first, and then return to these technical points.}
-\gr{Ordering is hard! I shuffled some paragraphs around, let's see if it makes it better.}
 Type equivalence, together with the \textsc{T-RConv} typing rule, deserves some special attention.
 Note that this relation is indeed restricted, and contains only a tiny subset of what the usual $\beta$-equivalence relates.
 \begin{remark}
@@ -486,10 +459,6 @@ We also discuss this in the section on the metatheoretical properties of the lan
     \nonterms{G,r,B,ts}
     \caption{Type level}
   \end{subfigure}
-
-  \rae{The text here is too small}
-  \gr{Well, I removed footnotesize here (and everywhere else for consistency), and now half the figures moved to after the end of the paper.
-  I think I'll need an advice on laying this out.}
 
   \caption{Surface language syntax}\label{fig:surface_syntax}
 \end{figure}
