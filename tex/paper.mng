@@ -346,6 +346,7 @@ We denote the logical context arising from the typing context $[[ G ]]$ as $[| [
 The oracle abstraction allows keeping type-checking decidable even in the presence of non-terminating terms in refinements, assuming the oracle runs in finite time.
 Practically, this means that any implementation of an oracle (that always completes in finite time) will have either false negatives (deciding that some types are not in subtype relationship when, in fact, they are) or false positives.
 False negatives may limit the expressive power of the language, but they do not break its type safety, and what matters is the lack of false positives.
+It is also worth noting that if an implementation cannot decide a query (that is, it can neither prove nor disprove it), it might leave it as a lemma to be filled out by the user in the full dependently typed core language.
 
 We also require the oracle to satisfy certain properties for the aforementioned surface language metatheorems to hold.
 As an example, if the oracle yields a ``positive'' decision in some typing context, then it also must yield a ``positive'' decision in any bigger context,
@@ -479,12 +480,6 @@ We also discuss this in the section on the metatheoretical properties of the lan
 The translation function $[|\ |]$ maps the typing context $\nonterm G$ to some logic that the oracle can handle, and that we leave abstract.
 Generally, the translation of a whole context is the conjunction of the translations of the types of the individual bindings,
 and, within each type, the translation of the conjunction of atomic refinements is the conjunction of the translations of the atomic refinements.
-
-In the subsequent text we also assume the oracle can decide the resulting proposition.
-In practical implementations, it might also be left as a separate lemma to be filled out by the user in the core language, or rejected altogether (thus being a false negative).
-\rae{This is a key point and really needs to be expanded
-upon.} \rae{Ah -- I see the next section is this expansion.}
-\gr{Yep, this might also blur the focus of the paper. I've reworded this to emphasize this being largely an implementation detail. Or we could just drop the para altogether, I'm not sure it adds that much.}
 
 \subsubsection{Requirements on the oracle}\label{sect:oracle_requirements}
 
