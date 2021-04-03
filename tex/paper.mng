@@ -197,7 +197,7 @@ with different viable approaches taken in different works and ranging from
 a positional representation of strictly positive integers along with a three-constructor algebraic data type for the whole range of integers\cite{CoqBinNums}.
 to the Grothendieck group over the monoid of natural numbers.
 To avoid digressing into the pros and cons of each approach,
-let's give the dependently typed implementation a leg-up and assume plain natural numbers everywhere.
+let's give the dependently typed implementation a leg-up and assume Peano natural numbers everywhere.
 Even with this allowance, the task is non-trivial, with an example Idris solution:
 \begin{minted}{idris}
 ltePlusLeft : (x, y : Nat) -> x `LTE` y + x
