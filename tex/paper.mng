@@ -501,6 +501,13 @@ Since the surface language uses the subtyping oracle in its type system, the met
     To intuitively justify this requirement, note the analogy to the chained implication in logic, and, speaking in terms of logic, $[[ G |- ts' <: ts ]]$ means that the implication $\tau' \implies \tau$ holds in $[[ G ]]$.
     But this also means that, given the derivation of $[[ [| G, x : ts, GD |] => A v. (r1 => r2) ]]$ and a context $[[ G, x : ts', GD ]]$, we could first derive an object of type $[[ ts ]]$ using just the context $[[ G ]]$,
     and then use that object in place of $x$ in the derivation of $[[ [| G, x : ts, GD |] => A v. (r1 => r2) ]]$.
+
+  \item\label{orprop:subst}
+    \emph{Substitution}: if $[[ G |- es : ts ]]$ and the oracle concludes $[[ [| G, x : ts, GD |] => A v. (r1 => r2) ]]$, then it must also conclude $[[ [| G, [ x |-> es ] GD |] => A v. ( [ x |-> es ] r1 => [ x |-> es ] r2 ) ]]$.
+
+    To see why this is a natural requirement, consider $[[ es ]]$ to be a proof of the statement $[[ ts ]]$ in the context $[[ G ]]$.
+    Then the premise $[[ [| G, x : ts, GD |] => A v. (r1 => r2) ]]$ means that $[[ A v. (r1 => r2) ]]$ holds with $[[ ts ]]$ as the assumption (among others).
+    Substituting $[[ x ]]$ for $[[ es ]]$ then boils down to replacing that assumption with its proof.
 \end{enumerate}
 
 \subsubsection{Properties}
