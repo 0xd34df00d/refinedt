@@ -22,7 +22,8 @@ r {{ tex \nonterm r }} :: ref_ ::= {{ com refinements }}
   | top				:: M :: top {{ com top }}
   | es1 = es2		::   :: rexpr {{ com atomic refinement }}
   | r1 /\ r2		::   :: rconj {{ com conjunction }}
-  | [ v |-> es ] r	:: M :: subst {{ com subst }}
+  | [ v |-> es ] r	:: M :: vsubst {{ com subst }}
+  | [ x |-> es ] r	:: M :: xsubst {{ com subst }}
 
 B {{ tex \nonterm B }} :: tbasep_ ::= {{ com base types }}
   | Unit			::   :: unit
