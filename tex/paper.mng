@@ -192,7 +192,7 @@ Then, it's up to the SMT solver to verify that the function satisfies the refine
 
 What if we wanted to write a similar function with similar guarantees in a dependently typed language with explicit proofs?
 
-First of all, the basic question of representing integers in a proof-friendly way is non-obvious,
+First of all, the question of representing integers in a proof-friendly way is non-obvious,
 with different viable approaches taken in different works and ranging from
 a positional representation of strictly positive integers along with a three-constructor algebraic data type for the whole range of integers\cite{CoqBinNums}.
 to the Grothendieck group over the monoid of natural numbers.
