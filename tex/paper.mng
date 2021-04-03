@@ -503,8 +503,6 @@ Since the surface language uses the subtyping oracle in its type system, the met
     and then use that object in place of $x$ in the derivation of $[[ [| G, x : ts, GD |] => A v. (r1 => r2) ]]$.
 \end{enumerate}
 
-Note that each of these requirements codifies natural expectations from any logical system.
-
 \subsubsection{Properties}
 
 We prove some of the usual metatheoretical properties of the proposed language.
