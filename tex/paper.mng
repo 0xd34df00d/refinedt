@@ -508,6 +508,11 @@ Since the surface language uses the subtyping oracle in its type system, the met
     To see why this is a natural requirement, consider $[[ es ]]$ to be a proof of the statement $[[ ts ]]$ in the context $[[ G ]]$.
     Then the premise $[[ [| G, x : ts, GD |] => A v. (r1 => r2) ]]$ means that $[[ A v. (r1 => r2) ]]$ holds with $[[ ts ]]$ as the assumption (among others).
     Substituting $[[ x ]]$ for $[[ es ]]$ then boils down to replacing that assumption with its proof.
+
+  \item\label{orprop:stepping}
+    \emph{Stepping}: if $[[ ts =trb ts' ]]$ and the oracle concludes $[[ [| G, x : ts, GD |] => A v. (r1 => r2) ]]$, then it must also conclude $[[ [| G, x : ts', GD |] => A v. (r1 => r2) ]]$.
+
+    In other words, evaluation should not affect the logical interpretation of types.
 \end{enumerate}
 
 \subsubsection{Properties}
