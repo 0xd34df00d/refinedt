@@ -1,6 +1,6 @@
 % vim: set ft=tex:
 
-\documentclass{jfp}
+\documentclass[draft]{jfp}
 \usepackage{amsmath,amsfonts,amssymb}
 
 %\documentclass[a4paper]{article}
