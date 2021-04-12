@@ -5,4 +5,5 @@
 *.blg
 paper.tex
 *.out
+*.pdf
 _minted-paper/
