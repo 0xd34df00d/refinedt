@@ -1,11 +1,11 @@
 % vim: set ft=tex:
 
-%\documentclass{jfp}
-%\usepackage{amsmath,amsfonts,amssymb}
+\documentclass{jfp}
+\usepackage{amsmath,amsfonts,amssymb}
 
-\documentclass[a4paper]{article}
-\usepackage{a4wide}
-\usepackage{amsmath,amsfonts,amssymb,amsthm}
+%\documentclass[a4paper]{article}
+%\usepackage{a4wide}
+%\usepackage{amsmath,amsfonts,amssymb,amsthm}
 
 \tracinglostchars=2
 %\usepackage[utf8x]{inputenc}
