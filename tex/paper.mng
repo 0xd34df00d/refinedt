@@ -338,7 +338,7 @@ and it seemingly cannot be easily extended to account for this witness.
 The refinements in our surface language may contain arbitrary terms, including function application.
 In general, this makes the subtyping check undecidable: even though our surface language turns out to be strongly normalizing, in practice most languages allow potentially non-terminating terms.
 We sidestep this by abstracting the subtyping checker away and introducing a notion of an oracle.
-As a nice side effect, this way we also do not have to think about the specifics of the subtyping check and focus on compiling refinement types to dependent types instead.
+As a nice side effect, this way we also do not have to consider the specifics of the subtyping check and instead focus on compiling refinement types to dependent types.
 \todo[inline]{Reword this.}
 The interface of said oracle boils down to a single function:
 it takes a typing context $[[ G ]]$ and two refinements $[[ r1 ]], [[ r2 ]]$ over some argument $ v $, and decides whether one is the subtype of the other.
