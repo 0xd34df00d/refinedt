@@ -6,10 +6,10 @@
 
 \usepackage{amsmath,amsfonts,amssymb,amsthm}
 \tracinglostchars=2
-%\usepackage[utf8x]{inputenc}
-%\usepackage[T2A]{fontenc}
-\usepackage{fontspec}
-\usepackage{unicode-math}
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+%\usepackage{fontspec}
+%\usepackage{unicode-math}
 \usepackage{hyperref,cleveref}
 \usepackage{mathtools}
 \usepackage{xcolor}
