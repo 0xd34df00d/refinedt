@@ -1,12 +1,10 @@
 % vim: set ft=tex:
 
-\documentclass[draft]{jfp}
-\usepackage{amsmath,amsfonts,amssymb}
-
+\documentclass{jfp}
 %\documentclass[a4paper]{article}
 %\usepackage{a4wide}
-%\usepackage{amsmath,amsfonts,amssymb,amsthm}
 
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
 \tracinglostchars=2
 %\usepackage[utf8x]{inputenc}
 %\usepackage[T2A]{fontenc}
