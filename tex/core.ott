@@ -115,10 +115,10 @@ GC |- < </ li : tci // i /> > : sst
 --------------------------------------------------------------------- :: ADTCon
 GC |- < lj = ec> as < </ li : tci // i /> > : < </ li : tci // i /> >
 
-ec0 def < </ li : eci // i /> >
+ec0 def < </ li : tci // i /> >
 GC |- ec1 : sst
 GC |- ec : ec0
-</ GC , xi : eci , pi : ec equal < li = xi > as ec0 |- eci : ec1 // i />
+</ GC , xi : tci , pi : ec equal < li = xi > as ec0 |- eci : ec1 // i />
 ------------------------------------------------------------------------- :: ADTCase
 GC |- case ec of </ li = xi proof pi -> eci // i />  : ec1
 
