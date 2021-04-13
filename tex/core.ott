@@ -116,11 +116,11 @@ GC |- < </ li : tci // i /> > : sst
 GC |- < lj = ec> as < </ li : tci // i /> > : < </ li : tci // i /> >
 
 tc def < </ li : tci // i /> >
-GC |- ec1 : sst
+GC |- tc' : sst
 GC |- ec : tc
-</ GC , xi : tci , pi : ec equal < li = xi > as tc |- eci : ec1 // i />
+</ GC , xi : tci , pi : ec equal < li = xi > as tc |- eci : tc' // i />
 ------------------------------------------------------------------------- :: ADTCase
-GC |- case ec of </ li = xi proof pi -> eci // i />  : ec1
+GC |- case ec of </ li = xi proof pi -> eci // i />  : tc'
 
 %TODO something funny with indices above, figure out what to do with ec0/ec1
 
