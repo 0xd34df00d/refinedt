@@ -398,7 +398,6 @@ We also have the following concessions:
         \[
           (x : \Int) \rightarrow (f : \Int \rightarrow \Int) \rightarrow \{ \_ : \Unit | f x = 0 \} \rightarrow \Int.
         \]
-        ADT arguments are treated similarly.
       \item A refinement of an ADT argument is treated similarly.
       \item A refinement of a function that is returned. This time, suppose we wish to express
         \[
