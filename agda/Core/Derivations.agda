@@ -68,3 +68,9 @@ data _⊢_⦂_ where
             → (conArg : Γ ⊢ ε ⦂ τⱼ)
             → (adtτ : Γ ⊢ CADT cons ⦂ ⋆ₑ)
             → Γ ⊢ CCon ι ε cons ⦂ CADT cons
+  CT-ADTCase : {bs : CaseBranches (Mkℕₐ (suc n)) ℓ}
+             → {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
+             → (τ'δ : Γ ⊢ τ' ⦂ ⋆ₑ)
+             → (εδ : Γ ⊢ ε ⦂ CADT cons)
+             → (branches : BranchesHaveType Γ cons bs τ')
+             → Γ ⊢ CCase ε bs ⦂ τ'
