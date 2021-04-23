@@ -33,7 +33,8 @@ BranchesHaveType {n = n} Γ scrutinee cons bs τ'
     → (let τᵢ     = lookup cons ι)
     → (let branch = lookup bs ι)
     → (let constructed = CCon ι (CVar zero) (weaken-cons cons))
-    → Γ , τᵢ , (weaken-ε scrutinee ≡̂ constructed of CADT (weaken-cons cons)) ⊢ branch ⦂ weaken-ε-k 2 τ'
+    → (let eq-prf = weaken-ε scrutinee ≡̂ constructed of CADT (weaken-cons cons))
+    → Γ , τᵢ , eq-prf ⊢ branch ⦂ weaken-ε-k 2 τ'
 
 data _⊢_⦂_ where
   -- Base λC
