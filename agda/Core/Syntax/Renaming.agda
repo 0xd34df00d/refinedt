@@ -14,5 +14,8 @@ open import Core.Syntax.Actions (record { Target = Fin
 weaken-ε : CExpr ℓ → CExpr (suc ℓ)
 weaken-ε = act-ε suc
 
+weaken-cons : ADTCons nₐ ℓ → ADTCons nₐ (suc ℓ)
+weaken-cons = act-cons suc
+
 weaken-ε-k : ∀ k → CExpr ℓ → CExpr (k + ℓ)
 weaken-ε-k k = act-ε (raise k)
