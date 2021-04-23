@@ -8,6 +8,7 @@ open import Data.Vec.Relation.Unary.All using (All; _∷_; []) public
 open import Relation.Binary.PropositionalEquality using (_≡_)
 
 open import Core.Syntax
+open import Core.Syntax.Derived
 open import Core.Syntax.Renaming
 open import Core.Syntax.Substitution
 open import Core.Operational
