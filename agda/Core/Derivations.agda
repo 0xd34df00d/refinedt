@@ -21,16 +21,17 @@ data _=β_ : CExpr ℓ → CExpr ℓ → Set where
 infix 2 _⊢_⦂_
 data _⊢_⦂_ : Ctx ℓ → CExpr ℓ → CExpr ℓ → Set
 
-data BranchesHaveType (Γ : Ctx ℓ) : (cons : ADTCons nₐ ℓ)
-                                  → (bs : CaseBranches nₐ ℓ)
-                                  → (τ' : CExpr ℓ)
-                                  → Set
-                                  where
-  NoBranches : BranchesHaveType Γ [] [] τ'
+data BranchesHaveType (Γ : Ctx ℓ) (ε : CExpr ℓ)
+    : (cons : ADTCons nₐ ℓ)
+    → (bs : CaseBranches nₐ ℓ)
+    → (τ' : CExpr ℓ)
+    → Set
+    where
+  NoBranches : BranchesHaveType Γ ε [] [] τ'
   OneMoreBranch : ∀ {conτ} {cons' : ADTCons nₐ ℓ} {bs' : CaseBranches nₐ ℓ}
                 → (εδ : (Γ , conτ , {! !}) ⊢ ε' ⦂ weaken-ε-k 2 τ')
-                → (rest : BranchesHaveType Γ cons' bs' τ')
-                → BranchesHaveType Γ (conτ ∷ cons') (ε' ∷ bs') τ'
+                → (rest : BranchesHaveType Γ ε cons' bs' τ')
+                → BranchesHaveType Γ ε (conτ ∷ cons') (ε' ∷ bs') τ'
 
 data _⊢_⦂_ where
   -- Base λC
@@ -72,5 +73,5 @@ data _⊢_⦂_ where
              → {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
              → (τ'δ : Γ ⊢ τ' ⦂ ⋆ₑ)
              → (εδ : Γ ⊢ ε ⦂ CADT cons)
-             → (branches : BranchesHaveType Γ cons bs τ')
+             → (branches : BranchesHaveType Γ ε cons bs τ')
              → Γ ⊢ CCase ε bs ⦂ τ'
