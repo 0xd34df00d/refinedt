@@ -389,8 +389,8 @@ We also have the following concessions:
   \item The syntax only allows refinements on base types.
     Note that this does not severely restrict the expressive power of the language.
     To see that, consider the following examples:
-    \begin{itemize}
-      \item A refinement of a functional argument. Suppose we wish to write:
+    \begin{description}
+      \item[A functional argument.] Suppose we wish to write:
         \[
           (x : \Int) \rightarrow \{ v : \Int \rightarrow \Int | v x = 0 \} \rightarrow \Int
         \]
@@ -398,8 +398,8 @@ We also have the following concessions:
         \[
           (x : \Int) \rightarrow (f : \Int \rightarrow \Int) \rightarrow \{ \_ : \Unit | f x = 0 \} \rightarrow \Int.
         \]
-      \item A refinement of an ADT argument is treated similarly.
-      \item A refinement of a function that is returned. This time, suppose we wish to express
+      \item[An ADT argument] is treated similarly.
+      \item[A function that is returned.] This time, suppose we wish to express
         \[
           (x : \Int) \rightarrow \{ v : \Int \rightarrow \Int | v (x + 1) = 0 \land v (x - 1) = 0 \}
         \]
@@ -407,14 +407,14 @@ We also have the following concessions:
         \[
           (x : \Int) \rightarrow (y : \Int) \rightarrow \{ v : \Int | (y = x + 1 \Rightarrow v = 0) \land (y = x - 1 \Rightarrow v = 0) \}
         \]
-      \item A refinement of an ADT that is returned. Suppose we now wish to write, for some function $f$, the following:
+      \item[An ADT that is returned.] Suppose we now wish to write, for some function $f$, the following:
         \[
           (x : \Int) \rightarrow \{ v : [[ < </ li : tsi // i /> > ]] | f x v = 0 \}
         \]
         Informally, the only way $f$ can consume a value of type $[[ < </ li : tsi // i /> > ]]$ is by pattern-matching on it.
         Thus, for each $[[ tsi ]]$ the function $f$ gives rise to a refinement $[[ ri ]]$, which is basically the right-hand side of the equation for $f$ corresponding to the constructor $[[ li ]]$.
         We push this refinement into the ADT, replacing each $[[ tsi ]]$ with $\{ v : [[ tsi ]] | [[ ri ]] \}$, recursively desugaring the refinement on $[[ tsi ]]$ as well.
-    \end{itemize}
+    \end{description}
   \item Our algebraic data types only allow a single ``field'' in each constructor.
     One way to alleviate this is to introduce tuples,
     but doing so would complicate the exposition
