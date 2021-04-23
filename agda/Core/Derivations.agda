@@ -60,7 +60,7 @@ data _⊢_⦂_ where
   CT-UnitTerm : Γ ⊢ ⋆ₑ ⦂ □ₑ
               → Γ ⊢ Cunit ⦂ CUnit
   CT-ADTForm : {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
-             → (consδs : All (Γ ⊢_⦂ ⋆ₑ) cons)
+             → (consδs : All (λ con → Γ ⊢ con ⦂ ⋆ₑ) cons)
              → Γ ⊢ CADT cons ⦂ ⋆ₑ
   CT-ADTCon : ∀ {ι}
             → {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
