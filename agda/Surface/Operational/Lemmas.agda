@@ -7,12 +7,12 @@ open import Data.Vec using (lookup; _∷_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 
 open import Data.Fin.Extra
-open import Surface.WellScoped
-open import Surface.WellScoped.Renaming as R
-open import Surface.WellScoped.Substitution as S
-open import Surface.WellScoped.Substitution.Commutativity
-open import Surface.WellScoped.Substitution.Distributivity as S
-open import Surface.WellScoped.Substitution.Stable
+open import Surface.Syntax
+open import Surface.Syntax.Renaming as R
+open import Surface.Syntax.Substitution as S
+open import Surface.Syntax.Substitution.Commutativity
+open import Surface.Syntax.Substitution.Distributivity as S
+open import Surface.Syntax.Substitution.Stable
 open import Surface.Operational
 
 ρ-preserves-values : {ρ : Fin ℓ → Fin ℓ'}

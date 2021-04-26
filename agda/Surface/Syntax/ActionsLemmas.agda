@@ -1,14 +1,14 @@
 {-# OPTIONS --safe #-}
 
-open import Surface.WellScoped
+open import Surface.Syntax
 
-module Surface.WellScoped.ActionsLemmas (act : VarAction) (props : VarActionProps act) where
+module Surface.Syntax.ActionsLemmas (act : VarAction) (props : VarActionProps act) where
 
 open import Data.Fin using (zero; suc)
 open import Data.Vec
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-open import Surface.WellScoped.Actions act
+open import Surface.Syntax.Actions act
 open VarActionProps props
 
 ActExtensionality : {Ty : ℕ → Set} → ActionOn Ty → Set

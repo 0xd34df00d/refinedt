@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Surface.WellScoped.Substitution where
+module Surface.Syntax.Substitution where
 
 open import Data.Nat using (ℕ; suc; zero; _+_)
 open import Data.Fin using (Fin; suc; zero; toℕ)
@@ -10,15 +10,15 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 
 open import Common.Helpers
 open import Data.Fin.Extra
-open import Surface.WellScoped
-open import Surface.WellScoped.Shape
-import      Surface.WellScoped.Renaming as R
-open import Surface.WellScoped.Actions (record { Target = STerm
-                                               ; var-action = λ ε → ε
-                                               ; ext = λ where _ zero → SVar zero
-                                                               σ (suc n) → R.weaken-ε (σ n)
-                                               }
-                                       ) public
+open import Surface.Syntax
+open import Surface.Syntax.Shape
+import      Surface.Syntax.Renaming as R
+open import Surface.Syntax.Actions (record { Target = STerm
+                                           ; var-action = λ ε → ε
+                                           ; ext = λ where _ zero → SVar zero
+                                                           σ (suc n) → R.weaken-ε (σ n)
+                                           }
+                                   ) public
 
 replace-at : Fin (suc ℓ) → STerm ℓ → Fin (suc ℓ) → STerm ℓ
 replace-at = replace-at-generic SVar
@@ -62,12 +62,12 @@ ext-id : ∀ {f : Fin ℓ → STerm ℓ}
 ext-id f-≡ zero = refl
 ext-id f-≡ (suc x) rewrite f-≡ x = refl
 
-open import Surface.WellScoped.ActionsLemmas var-action-record
-                                             record { ≡-ext = λ where x-≡ zero → refl
-                                                                      x-≡ (suc x) → cong R.weaken-ε (x-≡ x)
-                                                    ; ext-id = ext-id
-                                                    }
-                                             public
+open import Surface.Syntax.ActionsLemmas var-action-record
+                                         record { ≡-ext = λ where x-≡ zero → refl
+                                                                  x-≡ (suc x) → cong R.weaken-ε (x-≡ x)
+                                                ; ext-id = ext-id
+                                                }
+                                         public
 
 ext-replace-comm : ∀ ε (ι : Fin (suc ℓ))
                  → ext (replace-at ι ε) f≡ replace-at (suc ι) (R.act-ε suc ε)

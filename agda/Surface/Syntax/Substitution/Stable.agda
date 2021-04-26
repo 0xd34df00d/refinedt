@@ -1,17 +1,17 @@
 {-# OPTIONS --safe #-}
 
-module Surface.WellScoped.Substitution.Stable where
+module Surface.Syntax.Substitution.Stable where
 
 open import Data.Fin using (Fin; suc; zero; raise)
 open import Data.Nat using (ℕ; suc; zero; _+_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Data.Fin.Extra
-open import Surface.WellScoped
-open import Surface.WellScoped.Substitution as S
-open import Surface.WellScoped.Substitution.FromRenaming
-open import Surface.WellScoped.Substitution.Distributivity
-import Surface.WellScoped.Renaming as R
+open import Surface.Syntax
+open import Surface.Syntax.Substitution as S
+open import Surface.Syntax.Substitution.FromRenaming
+open import Surface.Syntax.Substitution.Distributivity
+import Surface.Syntax.Renaming as R
 
 k-<-x+k : ∀ k (x : Fin ℓ)
         → ctx-idx {ℓ} k < raise (suc k) x

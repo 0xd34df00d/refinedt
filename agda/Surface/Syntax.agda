@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Surface.WellScoped where
+module Surface.Syntax where
 
 open import Data.Fin public using (Fin)
 open import Data.Nat public using (ℕ; suc)

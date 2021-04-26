@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Surface.WellScoped.Substitution.Commutativity where
+module Surface.Syntax.Substitution.Commutativity where
 
 open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Nat.Base using (zero; suc)
@@ -11,11 +11,11 @@ open import Relation.Binary.PropositionalEquality as Eq using (_≡_; refl; sym;
 open Eq.≡-Reasoning
 
 open import Data.Fin.Extra
-open import Surface.WellScoped
-import Surface.WellScoped.Renaming as R
-open import Surface.WellScoped.Substitution
-open import Surface.WellScoped.Substitution.Distributivity
-open import Surface.WellScoped.Substitution.Stable
+open import Surface.Syntax
+import Surface.Syntax.Renaming as R
+open import Surface.Syntax.Substitution
+open import Surface.Syntax.Substitution.Distributivity
+open import Surface.Syntax.Substitution.Stable
 
 {-
 For the following two functions, it's easy to see with pen and paper that:

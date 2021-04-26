@@ -10,15 +10,15 @@ open import Data.Product renaming (_,_ to _,'_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 
 open import Data.Fin.Extra
-open import Surface.WellScoped
-open import Surface.WellScoped.CtxSuffix
-open import Surface.WellScoped.Membership
-open import Surface.WellScoped.Renaming as R
-open import Surface.WellScoped.Substitution as S
-open import Surface.WellScoped.Substitution using ([_↦τ_]_; [_↦ε_]_; [_↦c_]_)
-open import Surface.WellScoped.Substitution.Stable
-open import Surface.WellScoped.Substitution.Distributivity as S
-open import Surface.WellScoped.Substitution.Commutativity
+open import Surface.Syntax
+open import Surface.Syntax.CtxSuffix
+open import Surface.Syntax.Membership
+open import Surface.Syntax.Renaming as R
+open import Surface.Syntax.Substitution as S
+open import Surface.Syntax.Substitution using ([_↦τ_]_; [_↦ε_]_; [_↦c_]_)
+open import Surface.Syntax.Substitution.Stable
+open import Surface.Syntax.Substitution.Distributivity as S
+open import Surface.Syntax.Substitution.Commutativity
 open import Surface.Operational.BetaEquivalence
 open import Surface.Derivations
 open import Surface.Theorems.Thinning

@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Surface.WellScoped.Substitution.Distributivity where
+module Surface.Syntax.Substitution.Distributivity where
 
 open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Fin using (Fin; suc; zero; raise; toℕ; fromℕ)
@@ -12,9 +12,9 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; cong)
 
 open import Common.Types
 open import Data.Fin.Extra
-open import Surface.WellScoped
-open import Surface.WellScoped.Substitution as S
-import Surface.WellScoped.Renaming as R
+open import Surface.Syntax
+open import Surface.Syntax.Substitution as S
+import Surface.Syntax.Renaming as R
 
 ρ-σ-Distributivity : {Ty : ℕ → Set} → R.ActionOn Ty → ActionOn Ty → Set
 ρ-σ-Distributivity {Ty} ρ-act σ-act = ∀ {ℓ₀ ℓ₁ ℓ₂}

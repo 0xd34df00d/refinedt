@@ -9,12 +9,12 @@ open import Data.Nat.Properties
 open import Data.Vec.Base using (lookup; _∷_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 
-open import Surface.WellScoped
-open import Surface.WellScoped.CtxSuffix
-open import Surface.WellScoped.Membership
-open import Surface.WellScoped.Renaming as R
-open import Surface.WellScoped.Substitution as S
-open import Surface.WellScoped.Substitution.Distributivity
+open import Surface.Syntax
+open import Surface.Syntax.CtxSuffix
+open import Surface.Syntax.Membership
+open import Surface.Syntax.Renaming as R
+open import Surface.Syntax.Substitution as S
+open import Surface.Syntax.Substitution.Distributivity
 open import Surface.Operational.BetaEquivalence
 open import Surface.Derivations
 open import Surface.Derivations.WF

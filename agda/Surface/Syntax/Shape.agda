@@ -1,12 +1,12 @@
 {-# OPTIONS --safe #-}
 
-module Surface.WellScoped.Shape where
+module Surface.Syntax.Shape where
 
 open import Data.Empty using (⊥; ⊥-elim)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 open import Relation.Nullary using (¬_)
 
-open import Surface.WellScoped
+open import Surface.Syntax
 
 data Shape : Set where
   Sh-⟨∣⟩ : Shape

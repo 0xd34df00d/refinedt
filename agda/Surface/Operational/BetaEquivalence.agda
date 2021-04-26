@@ -8,12 +8,12 @@ open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 
 open import Data.Fin.Extra
-open import Surface.WellScoped
-open import Surface.WellScoped.Renaming as R
-open import Surface.WellScoped.Substitution as S
-open import Surface.WellScoped.Substitution.Commutativity
-open import Surface.WellScoped.Substitution.Distributivity
-open import Surface.WellScoped.Shape
+open import Surface.Syntax
+open import Surface.Syntax.Renaming as R
+open import Surface.Syntax.Substitution as S
+open import Surface.Syntax.Substitution.Commutativity
+open import Surface.Syntax.Substitution.Distributivity
+open import Surface.Syntax.Shape
 open import Surface.Operational
 open import Surface.Operational.Lemmas
 

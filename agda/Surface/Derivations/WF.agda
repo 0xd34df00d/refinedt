@@ -6,7 +6,7 @@ open import Data.Nat.Base using (_⊔_; _≤_)
 open import Data.Nat.Properties
 
 open import Surface.Derivations
-open import Surface.WellScoped
+open import Surface.Syntax
 
 size-ok  : Γ ok         → ℕ
 size-twf : Γ ⊢ τ        → ℕ

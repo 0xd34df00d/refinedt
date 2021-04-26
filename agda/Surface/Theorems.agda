@@ -4,8 +4,8 @@ module Surface.Theorems where
 
 open import Relation.Binary.PropositionalEquality using (refl)
 
-open import Surface.WellScoped
-open import Surface.WellScoped.Membership
+open import Surface.Syntax
+open import Surface.Syntax.Membership
 open import Surface.Derivations
 open import Surface.Theorems.Helpers
 open import Surface.Theorems.Thinning

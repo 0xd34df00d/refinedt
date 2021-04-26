@@ -1,16 +1,16 @@
 {-# OPTIONS --safe #-}
 
-module Surface.WellScoped.CtxSuffix where
+module Surface.Syntax.CtxSuffix where
 
 open import Data.Fin.Base using (suc; raise)
 open import Data.Nat public using (ℕ; suc; zero; _+_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 
 open import Common.Helpers
-open import Surface.WellScoped
-open import Surface.WellScoped.Renaming as R
-open import Surface.WellScoped.Substitution as S
-open import Surface.WellScoped.Membership
+open import Surface.Syntax
+open import Surface.Syntax.Renaming as R
+open import Surface.Syntax.Substitution as S
+open import Surface.Syntax.Membership
 
 infixl 5 _,_
 data CtxSuffix (ℓ : ℕ) : (k : ℕ) → Set where

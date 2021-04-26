@@ -4,9 +4,9 @@ module Surface.Theorems.Subtyping where
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-open import Surface.WellScoped
-open import Surface.WellScoped.CtxSuffix
-open import Surface.WellScoped.Membership
+open import Surface.Syntax
+open import Surface.Syntax.CtxSuffix
+open import Surface.Syntax.Membership
 open import Surface.Derivations
 open import Surface.Theorems.Thinning
 

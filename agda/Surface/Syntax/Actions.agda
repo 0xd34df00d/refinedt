@@ -1,8 +1,8 @@
 {-# OPTIONS --safe #-}
 
-open import Surface.WellScoped
+open import Surface.Syntax
 
-module Surface.WellScoped.Actions (α : VarAction) where
+module Surface.Syntax.Actions (α : VarAction) where
 
 open import Data.Nat using (zero; suc; _+_)
 open import Data.Vec

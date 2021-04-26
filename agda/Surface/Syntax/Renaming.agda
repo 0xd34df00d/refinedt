@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Surface.WellScoped.Renaming where
+module Surface.Syntax.Renaming where
 
 open import Data.Fin using (zero; suc; raise)
 open import Data.Fin.Properties using (suc-injective)
@@ -12,12 +12,12 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym)
 open import Common.Helpers
 open import Common.Types
 open import Data.Fin.Extra
-open import Surface.WellScoped
-open import Surface.WellScoped.Actions (record { Target = Fin
-                                               ; var-action = λ ι → SVar ι
-                                               ; ext = λ where _ zero → zero
-                                                               r (suc n) → suc (r n)
-                                               }) public
+open import Surface.Syntax
+open import Surface.Syntax.Actions (record { Target = Fin
+                                           ; var-action = λ ι → SVar ι
+                                           ; ext = λ where _ zero → zero
+                                                           r (suc n) → suc (r n)
+                                           }) public
 
 weaken-τ : SType ℓ → SType (suc ℓ)
 weaken-τ = act-τ suc
@@ -51,13 +51,13 @@ SVar-inj : SVar ι₁ ≡ SVar ι₂
          → ι₁ ≡ ι₂
 SVar-inj refl = refl
 
-open import Surface.WellScoped.ActionsLemmas var-action-record
-                                             record { ≡-ext = λ where x-≡ zero → refl
-                                                                      x-≡ (suc x) → cong suc (x-≡ x)
-                                                    ; ext-id = λ where f-≡ zero → refl
-                                                                       f-≡ (suc x) → cong (SVar ∘ suc) (SVar-inj (f-≡ x))
-                                                    }
-                                             public
+open import Surface.Syntax.ActionsLemmas var-action-record
+                                         record { ≡-ext = λ where x-≡ zero → refl
+                                                                  x-≡ (suc x) → cong suc (x-≡ x)
+                                                ; ext-id = λ where f-≡ zero → refl
+                                                                   f-≡ (suc x) → cong (SVar ∘ suc) (SVar-inj (f-≡ x))
+                                                }
+                                         public
 
 
 -- A composition of renamings is a renaming by the composition

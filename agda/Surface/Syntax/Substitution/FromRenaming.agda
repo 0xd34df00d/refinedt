@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Surface.WellScoped.Substitution.FromRenaming where
+module Surface.Syntax.Substitution.FromRenaming where
 
 open import Data.Fin using (Fin; suc; zero; raise)
 open import Data.Nat using (ℕ; suc; zero; _+_)
@@ -8,9 +8,9 @@ open import Data.Vec
 open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-open import Surface.WellScoped
-open import Surface.WellScoped.Substitution as S
-import Surface.WellScoped.Renaming as R
+open import Surface.Syntax
+open import Surface.Syntax.Substitution as S
+import Surface.Syntax.Renaming as R
 
 RenamingAsSubst : {Ty : ℕ → Set} → R.ActionOn Ty → S.ActionOn Ty → Set
 RenamingAsSubst {Ty} ρ-act σ-act = ∀ {ℓ ℓ'}

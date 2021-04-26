@@ -5,8 +5,8 @@ module Surface.Operational where
 open import Data.Fin using (zero)
 open import Data.Vec
 
-open import Surface.WellScoped
-open import Surface.WellScoped.Substitution
+open import Surface.Syntax
+open import Surface.Syntax.Substitution
 
 data IsValue : STerm ℓ → Set where
   IV-Abs  : IsValue (SLam τ ε)

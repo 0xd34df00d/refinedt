@@ -1,15 +1,15 @@
 {-# OPTIONS --safe #-}
 
-module Surface.WellScoped.Membership where
+module Surface.Syntax.Membership where
 
 open import Data.Fin using (Fin; zero; suc)
 open import Data.Nat using (ℕ; zero; suc; _+_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 
 open import Data.Fin.Extra
-open import Surface.WellScoped
-open import Surface.WellScoped.Renaming as R
-open import Surface.WellScoped.Substitution as S
+open import Surface.Syntax
+open import Surface.Syntax.Renaming as R
+open import Surface.Syntax.Substitution as S
 
 infix 4 _∈_at_
 data _∈_at_ : SType ℓ → Ctx ℓ → Fin ℓ → Set where

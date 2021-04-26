@@ -9,13 +9,13 @@ open import Data.Vec using (lookup; _∷_; [])
 open import Data.Vec.Relation.Unary.All using (All; _∷_; []) public
 open import Relation.Binary.PropositionalEquality using (_≡_)
 
-open import Surface.WellScoped
-open import Surface.WellScoped.CtxSuffix
-open import Surface.WellScoped.Substitution using ([_↦τ_]_; [_↦Γ_]_)
-open import Surface.WellScoped.Membership
+open import Surface.Syntax
+open import Surface.Syntax.CtxSuffix
+open import Surface.Syntax.Substitution using ([_↦τ_]_; [_↦Γ_]_)
+open import Surface.Syntax.Membership
 open import Surface.Operational.BetaEquivalence
-import Surface.WellScoped.Renaming as R
-import Surface.WellScoped.Substitution as S
+import Surface.Syntax.Renaming as R
+import Surface.Syntax.Substitution as S
 
 record PositiveDecision : Set where
   constructor MkPD

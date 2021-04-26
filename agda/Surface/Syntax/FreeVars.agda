@@ -1,12 +1,12 @@
 {-# OPTIONS --safe #-}
 
-module Surface.WellScoped.FreeVars where
+module Surface.Syntax.FreeVars where
 
 open import Data.Fin public using (Fin; suc)
 open import Data.Sum using (_⊎_; inj₁; inj₂)
 open import Data.Vec using (_∷_)
 
-open import Surface.WellScoped
+open import Surface.Syntax
 
 data _free-in-τ_ (ι : Fin ℓ) : (τ : SType ℓ) → Set
 data _free-in-ρ_ (ι : Fin ℓ) : (τ : Refinement ℓ) → Set
