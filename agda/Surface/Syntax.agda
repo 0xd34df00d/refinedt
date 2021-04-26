@@ -13,9 +13,7 @@ data BaseType : Set where
   BUnit : BaseType
 
 variable
-  k n ℓ ℓ' ℓ₀ ℓ₁ ℓ₂ : ℕ
   b b' b₁ b₂ : BaseType
-  idx ι ι₁ ι₂ : Fin ℓ
 
 data SType (ℓ : ℕ) : Set
 data STerm (ℓ : ℕ) : Set

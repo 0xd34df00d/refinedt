@@ -8,10 +8,6 @@ open import Data.Vec using (Vec)
 
 open import Common.Types public
 
-variable
-  k n ℓ ℓ' ℓ₀ ℓ₁ ℓ₂ : ℕ
-  idx ι ι₁ ι₂ : Fin ℓ
-
 data Sort : Set where
   ⋆ : Sort
   □ : Sort
