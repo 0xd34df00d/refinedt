@@ -15,7 +15,7 @@
 \usepackage{xcolor}
 \usepackage[implicitLineBreakHack]{ottalt}
 \usepackage{subcaption}
-\usepackage{cite,url,babelbib}
+\usepackage{url,babelbib}
 \usepackage{todonotes}
 \usepackage{minted}
 \usepackage[english]{babel}
