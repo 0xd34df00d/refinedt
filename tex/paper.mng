@@ -27,7 +27,7 @@
 \newunicodechar{ε}{\ensuremath{\mathnormal\varepsilon}}
 \newunicodechar{ι}{\ensuremath{\mathnormal\iota}}
 
-\nonstopmode
+\nonstopmode{}
 
 %\addtolength{\topmargin}{-1.05in}
 %\addtolength{\textheight}{1.55in}
@@ -44,7 +44,7 @@
 \newcommand{\Unit}{\textbf{Unit}}
 \newcommand{\unitc}{\hat{\textbf{u}}}
 \newcommand{\Unitc}{\widehat{\textbf{Unit}}}
-\newcommand{\Basec}{\hat B}
+\newcommand{\Basec}{\hat{B}}
 \newcommand{\Int}{\textbf{Int}}
 \newcommand{\ctxok}{\text{~ok}}
 \newcommand{\fresh}{\text{~fresh name}}
@@ -52,32 +52,32 @@
 \newcommand{\eqrefl}{\text{eq-refl~}}
 \newcommand{\secondDP}{\text{second-dp~}}
 
-\newcommand\prooftermname[1]{\texttt{#1}}
+\newcommand{\prooftermname[1]}{\texttt{#1}}
 
 \begin{document}
 
 \newNTclass{nonterm}
-\newnonterm e \varepsilon
+\newnonterm{e}{\varepsilon}
 \newnonterm{es}{\varepsilon}
 \newnonterm{ec}{\hat\varepsilon}
-\newnonterm r \rho
+\newnonterm{r}{\rho}
 \newnonterm{ts}{\tau}
 \newnonterm{tc}{\hat\tau}
-\newnonterm s s
-\newnonterm l l
-\newnonterm B B
-\newnonterm G \Gamma
+\newnonterm{s}{s}
+\newnonterm{l}{l}
+\newnonterm{B}{B}
+\newnonterm{G}{\Gamma}
 \newnonterm{GC}{\hat\Gamma}
-\newnonterm{vs} \varpi
+\newnonterm{vs}{\varpi}
 \newnonterm{vc}{\hat\varpi}
-\newnonterm f f
-\newnonterm{gamma} \gamma
+\newnonterm{f}{f}
+\newnonterm{gamma}{\gamma}
 
 \newNTclass{gterm}
-\newgterm x x
-\newgterm v v
-\newgterm n n
-\newgterm p \pi
+\newgterm{x}{x}
+\newgterm{v}{v}
+\newgterm{n}{n}
+\newgterm{p}{\pi}
 
 \newcommand{\figref}[1]{Figure \ref{fig:#1}}
 
