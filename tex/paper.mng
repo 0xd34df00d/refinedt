@@ -29,9 +29,6 @@
 
 \nonstopmode{}
 
-%\addtolength{\topmargin}{-1.05in}
-%\addtolength{\textheight}{1.55in}
-
 \newtheorem{theorem}{Theorem}
 \newtheorem{corollary}{Corollary}
 \newtheorem{lemma}{Lemma}
