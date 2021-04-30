@@ -76,7 +76,7 @@
 \newgterm{n}{n}
 \newgterm{p}{\pi}
 
-\newcommand{\figref}[1]{Figure \ref{fig:#1}}
+\newcommand{\figref}[1]{Figure~\ref{fig:#1}}
 
 \inputott{surface.ott}
 
