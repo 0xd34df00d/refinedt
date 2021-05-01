@@ -4,6 +4,12 @@
 %\documentclass[a4paper]{article}
 %\usepackage{a4wide}
 
+%TODO verify
+\journaltitle{JFP}
+\jnlDoiYr{2021}
+\cpr{Cambridge University Press}
+\doival{10.1017/xxxxx}
+
 \usepackage{amsmath,amsfonts,amssymb,amsthm}
 \tracinglostchars=2
 \usepackage[utf8]{inputenc}
