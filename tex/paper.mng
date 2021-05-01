@@ -699,8 +699,6 @@ with the corresponding proof terms referred in lemmas names.
 The syntax of the core language is presented in \figref{core_syntax},
 the core $\lambda C$ typing rules are defined in \figref{core_typing}
 and the rules for our extensions are defined in \figref{core_typing_exts}.
-Note that the \textsc{CT-ADTCase} rule uses $\equiv$ denoting the equality
-which is a derived form defined later.
 
 As a general convention,
 core entities corresponding to the surface language will be denoted by the same symbol, but with a $\widehat{\text{hat}}$.
@@ -717,6 +715,9 @@ which exists for $\Unit$ ($\hat B$ then being $\Unitc$)
 and which we assume to exist for any other surface language base type
 mentioned in \cref{remark:surface_base_types}.
 We also assume that $\hat B$ has type $\star$ without any extra premises.
+
+Note that the \textsc{CT-ADTCase} rule uses $\equiv$ denoting the equality,
+which is a derived form defined later.
 
 Even though we believe that our core language enjoys the strong normalization property even with our extensions,
 we still explicitly define the evaluation rules (\figref{core_opsem}).
