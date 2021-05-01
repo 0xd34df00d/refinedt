@@ -10,6 +10,9 @@
 \cpr{Cambridge University Press}
 \doival{10.1017/xxxxx}
 
+\newcommand{\citeinline}{\cite}
+\newcommand{\citeparens}[1]{(\cite{#1})}
+
 \usepackage{amsmath,amsfonts,amssymb,amsthm}
 \tracinglostchars=2
 \usepackage[utf8]{inputenc}
@@ -100,8 +103,8 @@
 
 Type systems are a powerful tool for internal specification and verification of programs,
 ensuring that programs exhibit certain desirable properties and do not exhibit undesirable ones.
-In particular, dependent types~\cite{FindSomethingForDTs} are powerful enough to encode pretty much arbitrary specifications,
-going as far as encoding mathematics itself~\cite{FindSomethingForCurryHoward},
+In particular, dependent types~\citeparens{FindSomethingForDTs} are powerful enough to encode pretty much arbitrary specifications,
+going as far as encoding mathematics itself~\citeparens{FindSomethingForCurryHoward},
 but this power comes at a cost: term finding (or, equivalently, proof finding) for dependent types is undecidable,
 and so is type inference.
 Or, practically speaking, the programmer must care about the details of the proofs,
@@ -112,9 +115,9 @@ this is still something that the programmer has to pay attention to.
 Not only this consumes a part of human attention span (which is quite limited, compared to computers),
 but we believe it also prevents widespread adoption of dependent types for mainstream programming.
 
-A different point on the spectrum is represented by \emph{liquid types}~\cite{LiquidTypes08},
+A different point on the spectrum is represented by \emph{liquid types}~\citeparens{LiquidTypes08},
 where the expressive power is limited, and the type system only allows specifying properties that can be efficiently proven (or disproven) by an SMT solver.
-Liquid types are a special case of a more general concept of \emph{refinement types}~\cite{Constable87,Rushby98},
+Liquid types are a special case of a more general concept of \emph{refinement types}~\citeparens{Constable87,Rushby98},
 which are some base types endowed with a predicate, possibly dependent on other values, like \verb+{ v : Int | v >= 0 & v < len arr }+.
 The logical implication on predicates
 (or, equivalently, the set inclusion relation on the sets defined by predicates)
@@ -131,7 +134,7 @@ one for said integer being non-negative and another one for it being less than t
 Thus, refinement types are arguably more accessible and more usable in mainstream programming.
 
 The downside is that efficiently decidable refinement types are less expressive, limiting what can be specified and proven.
-Even though there are new developments pushing the envelope of what can be expressed with liquid types~\cite{Reflection18},
+Even though there are new developments pushing the envelope of what can be expressed with liquid types~\citeparens{Reflection18},
 the natural question is what would it take to combine full dependent types and refinement types in a single language.
 
 Our work lays the theoretical foundation for positively answering this question, which, to the best of our knowledge, is a new contribution.
@@ -154,13 +157,13 @@ This translation to a core dependently typed language provides several nice meta
     and, moreover, the core type checker has to be trusted anyway.
 \end{itemize}
 
-Of course, there are related developments. Perhaps the closest one is F* and, in particular, Meta-F*~\cite{MetaFStar} (which is also based on F* core).
+Of course, there are related developments. Perhaps the closest one is F* and, in particular, Meta-F*~\citeparens{MetaFStar} (which is also based on F* core).
 (Meta-)F* also supports dependent types, but they are rather used to manipulate the VCs to turn them into an SMT-decidable form,
 or discharge certain proof obligations not decidable via SMT\@.
 The main difference between (Meta-)F* and our approach is that F*'s core type checker still relies on an SMT solver,
 while our approach keeps the core type checker limited to a dependent type theory.
 
-Another example of a closely related work is Hammer~\cite{CoqHammer}, which brings some form of automation to Coq.
+Another example of a closely related work is Hammer~\citeparens{CoqHammer}, which brings some form of automation to Coq.
 Although it achieves a similar goal of producing proof terms that are then verified using the core Coq type checker,
 using either a decidable fragment of Coq's logic in case of the \verb+sauto+ tactic,
 or machine learning and external automated theorem provers in case of the \verb+hammer+ tactic,
@@ -182,7 +185,7 @@ Having refinement types and dependent types in a single language is useful for m
 Firstly, refinement types indeed lower the cognitive load and the amount of (both keyboard and mathematical) typing the programmer has to do.
 As an example, consider a function taking two non-negative numbers $x, y$ and returning $x + y + x$ along with a proof that each summand is less than or equal to the sum.
 In a language with refinement types writing such a function is at most\footnote{Some implementations can infer refinements automatically}
-%TODO good to \cite{LiquidTypes08} in the footnote, but I don't know how to do that in jfp style
+%TODO good to \citeparens{LiquidTypes08} in the footnote, but I don't know how to do that in jfp style
 a matter of decorating its type with the right refinements, along the lines of:
 \begin{minted}{idris}
 funnyAdd : (x : { v : Int | v >= 0 })
@@ -196,7 +199,7 @@ What if we wanted to write a similar function with similar guarantees in a depen
 
 First of all, the question of representing integers in a proof-friendly way is non-obvious,
 with different approaches taken in different works and ranging from
-a positional representation of strictly positive integers along with a three-constructor algebraic data type for the whole range of integers~\cite{CoqBinNums},
+a positional representation of strictly positive integers along with a three-constructor algebraic data type for the whole range of integers~\citeparens{CoqBinNums},
 to the Grothendieck group over the monoid of natural numbers.
 To avoid digressing into the pros and cons of each approach,
 let's give the dependently typed implementation a leg-up and assume Peano natural numbers everywhere.
@@ -269,7 +272,7 @@ max3 x y z =
                                              lteRefl))
 \end{minted}
 
-In general, refinement types are expressive enough to eliminate a fair share~\cite{LiquidTypes08} of run-time errors such as out-of-bounds array accesses or division by zero.
+In general, refinement types are expressive enough to eliminate a fair share~\citeparens{LiquidTypes08} of run-time errors such as out-of-bounds array accesses or division by zero.
 
 On the other hand, certain things are not expressible with refinement types.
 In particular, we claim without proof that refinement types cannot affect run-time behaviour of the program
@@ -309,29 +312,29 @@ only resorting to the full power of dependent types when refinements are not eno
 \section{Overview}
 
 \paragraph{Surface language}
-We define a surface language with refinement types inspired by~\cite{LiquidTypes08,Reflection18}.
+We define a surface language with refinement types inspired by~\citeinline{LiquidTypes08,Reflection18}.
 Broadly speaking, it is a simply-typed lambda calculus with several extensions,
 including refinement types.
 The other extensions are:
 \begin{itemize}
   \item dependent arrow types, to allow subsequent refinements refer preceding arguments,
-  \item a limited form of algebraic data types (ADTs) and dependent pattern matching, inspired by~\cite{TAPLVariants,Eisenberg16},
-    to illustrate reasoning about these widely used constructs, as well as generalizing path sensitivity~\cite{FindSomethingForPathSensitivity}.
+  \item a limited form of algebraic data types (ADTs) and dependent pattern matching, inspired by~\citeinline{TAPLVariants,Eisenberg16},
+    to illustrate reasoning about these widely used constructs, as well as generalizing path sensitivity~\citeparens{FindSomethingForPathSensitivity}.
 \end{itemize}
 
 We also formulate and prove type safety of our language via the usual progress and preservation theorems.
 
-One major difference between our surface language and the languages in~\cite{LiquidTypes08,Reflection18} is that both parametric polymorphism as well as recursion are omitted.
+One major difference between our surface language and the languages in~\citeinline{LiquidTypes08,Reflection18} is that both parametric polymorphism as well as recursion are omitted.
 This simplifies the formal model of the surface language considerably, while still giving meaningful results.
 
 \paragraph{Core language}
-Our core language is a fully dependently typed language $\lambda C$~\cite{TTFPLambdaC}~---
-a pure type system~\cite{Schmidt1994,Barendregt92} with two sorts~---
+Our core language is a fully dependently typed language $\lambda C$~\citeparens{TTFPLambdaC}~---
+a pure type system~\citeparens{Schmidt1994,Barendregt92} with two sorts~---
 extended with a unit type and a restricted form of ADTs.
 We conjecture these extensions do not break the type safety of the language. %TODO refer some existing theorems about λC
 
 One plausible way to avoid the doubt in type safety of our core language stemming from the presence of the ADTs is to
-encode them via the Boehm-Berarducci encoding~\cite{Bohm85}.
+encode them via the Boehm-Berarducci encoding~\citeparens{Bohm85}.
 Unfortunately, this does not work in our case,
 as this encoding does not allow expressing the equality witness between the scrutinee of a pattern match and the patterns in each branch,
 and it seemingly cannot be easily extended to account for this witness.
@@ -784,7 +787,7 @@ and state some straightforward facts that will be useful later:
     \[
       [[ (x : tc ** Pred x) ]] \triangleq [[ Pi alpha : sst. (Pi x : tc. Pred x -> alpha) -> alpha ]],
     \]
-    with the corresponding constructor (we overload the syntax here to resemble Idris~\cite{Idris13}):
+    with the corresponding constructor (we overload the syntax here to resemble Idris,~\citeinline{Idris13}):
     \[
 			[[ (x ** p) ]] \triangleq [[ \ alpha : sst. \ f : (Pi x' : tc. Pred x' -> alpha). f x p ]]
 		\]
@@ -828,7 +831,7 @@ and state some straightforward facts that will be useful later:
         \triangleq
         \Pi P : \nonterm{tc} \rightarrow \star. (P \nonterm{ec}_1 \rightarrow P \nonterm{ec}_2, P \nonterm{ec}_2 \rightarrow P \nonterm{ec}_1).
     \]
-    The reader might recognize this as the Leibniz equality~\cite{FindSomethingForLeibnizEq}.
+    The reader might recognize this as the Leibniz equality~\citeparens{FindSomethingForLeibnizEq}.
 
     The corresponding introduction rule $\eqrefl \nonterm{tc}~x$ of type $x \equiv x$
     stating that $x$ of type $\nonterm{tc}$ is equal to itself
@@ -1261,7 +1264,7 @@ In other words, the translation and evaluation relations commute.
 
 \section{Formal proof overview}
 
-Our formalization of the above languages is heavily inspired by~\cite{plfa} and~\cite{SystemFAgda}.
+Our formalization of the above languages is heavily inspired by~\citeinline{plfa} and~\citeinline{SystemFAgda}.
 
 In this section we briefly outline key design decisions of our formal proof.
 We use the notion of a \emph{metatype} when discussing the (Agda) types representing the various entities in our surface and core languages.
@@ -1272,7 +1275,7 @@ Since our surface language has a limited form of dependent typing (namely, types
 This is the primary factor driving the decisions behind the design of our formalization.
 
 \paragraph{Variables} The first decision to be made is about representing variables introduced by binders (both at term level and type level).
-There are multiple existing approaches, including using plain strings akin to informal human reasoning about lambda terms, or de Bruijn indices~\cite{FindSomethingForDeBruijn}, or locally nameless representation~\cite{LocallyNameless}.
+There are multiple existing approaches, including using plain strings akin to informal human reasoning about lambda terms, or de Bruijn indices~\citeparens{FindSomethingForDeBruijn}, or locally nameless representation~\citeparens{LocallyNameless}.
 In our work we choose to use de Bruijn indices, for the following reasons:
 \begin{itemize}
   \item Compared to string-based approaches, there is no problem of variable shadowing.
@@ -1282,13 +1285,13 @@ In our work we choose to use de Bruijn indices, for the following reasons:
     We estimate the amount of work required for both LN representation and just the de Bruijn indices to be roughly equivalent, so we choose the latter.
 \end{itemize}
 
-\paragraph{Syntax} There are also several approaches to representing syntax, ranging from separate metatypes for raw terms and metatypes for typing judgements~\cite{FindSomethingForExtrinsicallyTyped},
+\paragraph{Syntax} There are also several approaches to representing syntax, ranging from separate metatypes for raw terms and metatypes for typing judgements~\citeparens{FindSomethingForExtrinsicallyTyped},
 to intrinsically-typed representations, where the term metatype is indexed by the metatype representing its type,
-the type metatype is indexed by the metatype representing its kind, and so on for other syntactic categories~\cite{FindSomethingForIntrinsicallyTyped}.
+the type metatype is indexed by the metatype representing its kind, and so on for other syntactic categories~\citeparens{FindSomethingForIntrinsicallyTyped}.
 Intrinsically-typed representations effectively combine syntax and typing rules, and only well-typed terms are representable.
 
-Intrinsically-typed approach typically~\cite{plfa} results in much shorter metatheoretical proofs, but it becomes non-trivial for languages where types may depend on terms.
-Hence we choose to use a hybrid approach, using an intrinsically well-scoped presentation~\cite{FindSomethingForWellScoped} with separate typing judgements.
+Intrinsically-typed approach typically~\citeparens{plfa} results in much shorter metatheoretical proofs, but it becomes non-trivial for languages where types may depend on terms.
+Hence we choose to use a hybrid approach, using an intrinsically well-scoped presentation~\citeparens{FindSomethingForWellScoped} with separate typing judgements.
 Here, all the metatypes for language variables (\mintinline{agda}{Fin}), terms (\mintinline{agda}{STerm}), types (\mintinline{agda}{SType}) and refinements (\mintinline{agda}{Refinement})
 are indexed by the \emph{length} of the typing context in which they reside.
 In fact, the bound \mintinline{agda}{ℓ} in the type \mintinline{agda}{Fin ℓ} for variables mentioned above is precisely the length of the context to which the variable belongs.
@@ -1330,12 +1333,12 @@ Investigating this is an interesting and useful direction for future work,
 and one might think of the following approaches (or a combination thereof):
 \begin{itemize}
   \item Require the oracle to produce a proof of termination of each recursive function.
-    The oracle then can use approaches analogous to the termination checkers~\cite{abel1998foetus} in Idris or Agda,
-    or the heuristics outlined in the works on Liquid Haskell~\cite{Vazou16}, or any other algorithm.
+    The oracle then can use approaches analogous to the termination checkers~\citeparens{abel1998foetus} in Idris or Agda,
+    or the heuristics outlined in the works on Liquid Haskell~\citeparens{Vazou16}, or any other algorithm.
   \item Mark the recursive functions as non-terminating, propagate this property to the callers,
     and treat non-terminating functions as uninterpreted during type checking.
     It is worth noting that, in particular,
-    Idris allows functions that are not provably terminating and treats them in a similar way~\cite{Idris13}.
+    Idris allows functions that are not provably terminating and treats them in a similar way~\citeparens{Idris13}.
 
     Indeed, there are two reasons why termination is so desirable for a dependently typed language:
     \begin{itemize}
