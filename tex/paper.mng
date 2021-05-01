@@ -302,7 +302,7 @@ only resorting to the full power of dependent types when refinements are not eno
 
 \section{Overview}
 
-\paragraph{Surface language.}
+\paragraph{Surface language}
 We define a surface language with refinement types inspired by~\cite{LiquidTypes08,Reflection18}.
 Broadly speaking, it is a simply-typed lambda calculus with several extensions,
 including refinement types.
@@ -318,7 +318,7 @@ We also formulate and prove type safety of our language via the usual progress a
 One major difference between our surface language and the languages in~\cite{LiquidTypes08,Reflection18} is that both parametric polymorphism as well as recursion are omitted.
 This simplifies the formal model of the surface language considerably, while still giving meaningful results.
 
-\paragraph{Core language.}
+\paragraph{Core language}
 Our core language is a fully dependently typed language $\lambda C$~\cite{TTFPLambdaC}
 (a pure type system~\cite{Schmidt1994,Barendregt92} with two sorts)
 extended with a unit type and a restricted form of ADTs.
@@ -330,7 +330,7 @@ Unfortunately, this does not work in our case,
 as this encoding does not allow expressing the equality witness between the scrutinee of a pattern match and the patterns in each branch,
 and it seemingly cannot be easily extended to account for this witness.
 
-\paragraph{Subtyping oracle.}
+\paragraph{Subtyping oracle}
 The refinements in our surface language may contain arbitrary terms, including function application.
 In general, this makes the subtyping check undecidable: even though our surface language turns out to be strongly normalizing, in practice most languages allow potentially non-terminating terms.
 We sidestep this by abstracting the subtyping checker away and introducing a notion of an oracle.
@@ -353,7 +353,7 @@ and those properties are listed in \cref{sect:oracle_requirements}.
 
 It is worth noting that the work on liquid types usually assumes the subtyping checks are done via an SMT solver, which can be seen to fit our oracle abstraction.
 
-\paragraph{Combining refinement and dependent types.}
+\paragraph{Combining refinement and dependent types}
 After formulating our surface and core languages, we define a translation from the former to the latter.
 We also formulate two key theorems proving that the translation makes sense.
 First, we prove that any well-typed surface language term has a translation to a well-typed core language term.
@@ -748,7 +748,7 @@ deserves some special attention.
 
 \newcommand{\dast}{\ **\ }
 
-\paragraph{Derived forms.}
+\paragraph{Derived forms}
 We also establish some derived forms in the core language to simplify the subsequent exposition,
 and state some straightforward facts that will be useful later:
 \begin{itemize}
@@ -894,7 +894,7 @@ Analogously, \cref{lma:term_wf_implies_type_wf} and \cref{lma:term_wf_implies_ct
 allow us to use a derivation of $[[ G |- ts ]]$ and $[[ G ok ]]$ respectively
 whenever there is a derivation of $[[ G |- es : ts ]]$.
 
-\paragraph{Contexts.}
+\paragraph{Contexts}
 As a warm-up,
 we start with defining $\Tranctx$,
 which is the simplest of the three.
@@ -922,7 +922,7 @@ consider the last rule used in a derivation:
     which is also admissible due to the other premise.
 \end{itemize}
 
-\paragraph{Types.}
+\paragraph{Types}
 Next, we define $\Tranty$. In short:
 \begin{itemize}
   \item (dependent) arrow types are translated to the corresponding $\Pi$-types,
@@ -1005,7 +1005,7 @@ More formally, consider the last rule used in the derivation of $[[ G |- ts ]]$:
     by an argument similar to ones for the previous clauses.
 \end{itemize}
 
-\paragraph{Terms.}
+\paragraph{Terms}
 Finally we define $\Tranterm$.
 We consider the term typing rule at the root of the derivation tree for $[[ G |- es : ts ]]$.
 
@@ -1254,7 +1254,7 @@ We use the notion of a \emph{metatype} when discussing the (Agda) types represen
 Since our surface language has a limited form of dependent typing (namely, types contain refinements, which, in turn, contain terms), typing contexts become ``non-flat''.
 This is the primary factor driving the decisions behind the design of our formalization.
 
-\paragraph{Variables.} The first decision to be made is about representing variables introduced by binders (both at term level and type level).
+\paragraph{Variables} The first decision to be made is about representing variables introduced by binders (both at term level and type level).
 There are multiple existing approaches, including using plain strings akin to informal human reasoning about lambda terms, or de Bruijn indices~\cite{FindSomethingForDeBruijn}, or locally nameless representation~\cite{LocallyNameless}.
 In our work we choose to use de Bruijn indices, for the following reasons:
 \begin{itemize}
@@ -1265,7 +1265,7 @@ In our work we choose to use de Bruijn indices, for the following reasons:
     We estimate the amount of work required for both LN representation and just the de Bruijn indices to be roughly equivalent, so we choose the latter.
 \end{itemize}
 
-\paragraph{Syntax.} There are also several approaches to representing syntax, ranging from separate metatypes for raw terms and metatypes for typing judgements~\cite{FindSomethingForExtrinsicallyTyped},
+\paragraph{Syntax} There are also several approaches to representing syntax, ranging from separate metatypes for raw terms and metatypes for typing judgements~\cite{FindSomethingForExtrinsicallyTyped},
 to intrinsically-typed representations, where the term metatype is indexed by the metatype representing its type,
 the type metatype is indexed by the metatype representing its kind, and so on for other syntactic categories~\cite{FindSomethingForIntrinsicallyTyped}.
 Intrinsically-typed representations effectively combine syntax and typing rules, and only well-typed terms are representable.
@@ -1280,7 +1280,7 @@ It is worth noting that such light-weight (meta-)verification as having context 
 is able to rule out a surprising share of incorrect (meta-)theorems before even trying to prove them.
 Moreover, it also turns out to be of helpful guidance in the development of the proofs.
 
-\paragraph{Renamings and substitutions.} The formalization of substitution (and, subsequently, operational semantics and related theorems) relies on several concepts.
+\paragraph{Renamings and substitutions} The formalization of substitution (and, subsequently, operational semantics and related theorems) relies on several concepts.
 
 First, let's introduce the notion of \emph{actions}.
 Note that any function \mintinline{agda}{f : Fin ℓ → Target ℓ'} from variables to some target type \mintinline{agda}{Target} (also indexed by the context length),
