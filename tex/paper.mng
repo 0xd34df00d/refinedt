@@ -718,6 +718,15 @@ We also assume that $\hat B$ has type $\star$ without any extra premises.
 
 Note that the \textsc{CT-ADTCase} rule uses $\equiv$ denoting the equality,
 which is a derived form defined later.
+Moreover, unlike with the surface language,
+there is no separate rules for type or context well-formedness.
+Instead, when we say that a type $[[ tc ]]$ (with the above remark about what a ``type'' means) is well-formed,
+we just mean that $[[ GC |- tc : sst ]]$ or $[[ GC |- tc : ssq ]]$.
+To define the notion of context well-formedness,
+we say that a context $[[ GC ]]$ is wellformed iff it is possible to derive $[[ GC |- sst : ssq ]]$.
+Indeed, the only way to derive the latter is by starting from $[[ empty |- sst : ssq ]]$ and
+repeatedly adding bindings to the context via \textsc{CT-Weaken},
+thus ensuring that each binding in the context has a well-formed type.
 
 Even though we believe that our core language enjoys the strong normalization property even with our extensions,
 we still explicitly define the evaluation rules (\figref{core_opsem}).
