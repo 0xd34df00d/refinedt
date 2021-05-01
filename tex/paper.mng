@@ -100,8 +100,8 @@
 
 Type systems are a powerful tool for internal specification and verification of programs,
 ensuring that programs exhibit certain desirable properties and do not exhibit undesirable ones.
-In particular, dependent types~\cite{FindSomethingForDTs} are powerful enough to encode pretty much arbitrary specifications
-(going as far as encoding mathematics itself~\cite{FindSomethingForCurryHoward}),
+In particular, dependent types~\cite{FindSomethingForDTs} are powerful enough to encode pretty much arbitrary specifications,
+going as far as encoding mathematics itself~\cite{FindSomethingForCurryHoward},
 but this power comes at a cost: term finding (or, equivalently, proof finding) for dependent types is undecidable,
 and so is type inference.
 Or, practically speaking, the programmer must care about the details of the proofs,
@@ -325,8 +325,8 @@ One major difference between our surface language and the languages in~\cite{Liq
 This simplifies the formal model of the surface language considerably, while still giving meaningful results.
 
 \paragraph{Core language}
-Our core language is a fully dependently typed language $\lambda C$~\cite{TTFPLambdaC}
-(a pure type system~\cite{Schmidt1994,Barendregt92} with two sorts)
+Our core language is a fully dependently typed language $\lambda C$~\cite{TTFPLambdaC}~---
+a pure type system~\cite{Schmidt1994,Barendregt92} with two sorts~---
 extended with a unit type and a restricted form of ADTs.
 We conjecture these extensions do not break the type safety of the language. %TODO refer some existing theorems about λC
 
