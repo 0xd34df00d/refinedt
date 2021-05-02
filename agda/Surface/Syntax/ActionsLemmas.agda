@@ -35,15 +35,15 @@ act-ρ-extensionality x-≡ (ρ₁ ∧ ρ₂) rewrite act-ρ-extensionality x-�
                                          | act-ρ-extensionality x-≡ ρ₂ = refl
 
 act-ε-extensionality x-≡ SUnit = refl
-act-ε-extensionality x-≡ (SVar idx) rewrite x-≡ idx = refl
+act-ε-extensionality x-≡ (SVar ι) rewrite x-≡ ι = refl
 act-ε-extensionality x-≡ (SLam τ ε) rewrite act-τ-extensionality x-≡ τ
                                           | act-ε-extensionality (≡-ext x-≡) ε = refl
 act-ε-extensionality x-≡ (SApp ε₁ ε₂) rewrite act-ε-extensionality x-≡ ε₁
                                             | act-ε-extensionality x-≡ ε₂ = refl
 act-ε-extensionality x-≡ (SCase ε branches) rewrite act-ε-extensionality x-≡ ε
                                                   | act-branches-extensionality x-≡ branches = refl
-act-ε-extensionality x-≡ (SCon idx ε cons) rewrite act-ε-extensionality x-≡ ε
-                                                 | act-cons-extensionality x-≡ cons = refl
+act-ε-extensionality x-≡ (SCon ι ε cons) rewrite act-ε-extensionality x-≡ ε
+                                               | act-cons-extensionality x-≡ cons = refl
 
 act-cons-extensionality x-≡ [] = refl
 act-cons-extensionality x-≡ (τ ∷ τs) rewrite act-τ-extensionality x-≡ τ
@@ -54,12 +54,12 @@ act-branches-extensionality x-≡ (MkCaseBranch body ∷ bs) rewrite act-ε-exte
                                                                | act-branches-extensionality x-≡ bs = refl
 
 act-cons-member : ∀ {act : Fin ℓ → Target ℓ'}
-                → (idx : _)
+                → (ι : _)
                 → (cons : ADTCons (Mkℕₐ n) ℓ)
-                → τ ≡ lookup cons idx
-                → act-τ act τ ≡ lookup (act-cons act cons) idx
+                → τ ≡ lookup cons ι
+                → act-τ act τ ≡ lookup (act-cons act cons) ι
 act-cons-member zero (conτ ∷ cons) refl = refl
-act-cons-member (suc idx) (conτ ∷ cons) ≡-prf = act-cons-member idx cons ≡-prf
+act-cons-member (suc ι) (conτ ∷ cons) ≡-prf = act-cons-member ι cons ≡-prf
 
 
 ActIdentity : {Ty : ℕ → Set} → ActionOn Ty → Set
@@ -88,7 +88,7 @@ act-ρ-id f-id (ρ₁ ∧ ρ₂) rewrite act-ρ-id f-id ρ₁
                               = refl
 
 act-ε-id f-id SUnit = refl
-act-ε-id f-id (SVar idx) rewrite f-id idx = refl
+act-ε-id f-id (SVar ι) rewrite f-id ι = refl
 act-ε-id f-id (SLam τ ε) rewrite act-τ-id f-id τ
                                | act-ε-id (ext-id f-id) ε
                                = refl
@@ -98,9 +98,9 @@ act-ε-id f-id (SApp ε₁ ε₂) rewrite act-ε-id f-id ε₁
 act-ε-id f-id (SCase ε branches) rewrite act-ε-id f-id ε
                                        | act-branches-id f-id branches
                                        = refl
-act-ε-id f-id (SCon idx ε cons) rewrite act-ε-id f-id ε
-                                      | act-cons-id f-id cons
-                                      = refl
+act-ε-id f-id (SCon ι ε cons) rewrite act-ε-id f-id ε
+                                    | act-cons-id f-id cons
+                                    = refl
 
 act-cons-id f-id [] = refl
 act-cons-id f-id (τ ∷ cons) rewrite act-τ-id f-id τ

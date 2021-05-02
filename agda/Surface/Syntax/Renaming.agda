@@ -92,7 +92,7 @@ act-ρ-distr r₁ r₂ (ρ₁ ∧ ρ₂) rewrite act-ρ-distr r₁ r₂ ρ₁
                                   | act-ρ-distr r₁ r₂ ρ₂ = refl
 
 act-ε-distr r₁ r₂ SUnit = refl
-act-ε-distr r₁ r₂ (SVar idx) = refl
+act-ε-distr r₁ r₂ (SVar ι) = refl
 act-ε-distr r₁ r₂ (SLam τ ε) rewrite act-τ-distr r₁ r₂ τ
                                    | act-ε-distr (ext r₁) (ext r₂) ε
                                    | act-ε-extensionality (ext-distr r₁ r₂) ε = refl
@@ -100,8 +100,8 @@ act-ε-distr r₁ r₂ (SApp ε₁ ε₂) rewrite act-ε-distr r₁ r₂ ε₁
                                      | act-ε-distr r₁ r₂ ε₂ = refl
 act-ε-distr r₁ r₂ (SCase ε branches) rewrite act-ε-distr r₁ r₂ ε
                                            | act-branches-distr r₁ r₂ branches = refl
-act-ε-distr r₁ r₂ (SCon idx ε cons) rewrite act-ε-distr r₁ r₂ ε
-                                          | act-cons-distr r₁ r₂ cons = refl
+act-ε-distr r₁ r₂ (SCon ι ε cons) rewrite act-ε-distr r₁ r₂ ε
+                                        | act-cons-distr r₁ r₂ cons = refl
 
 act-cons-distr r₁ r₂ [] = refl
 act-cons-distr r₁ r₂ (τ ∷ τs) rewrite act-τ-distr r₁ r₂ τ

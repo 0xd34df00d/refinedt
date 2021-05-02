@@ -54,7 +54,7 @@ R-ext-ext-commutes-ε ρ σ (suc x) rewrite R.act-ε-distr suc (R.ext ρ) (σ x)
                                 = refl
 
 ρ-σ-distr-ε ρ σ SUnit = refl
-ρ-σ-distr-ε ρ σ (SVar idx) = refl
+ρ-σ-distr-ε ρ σ (SVar ι) = refl
 ρ-σ-distr-ε ρ σ (SLam τ ε) rewrite ρ-σ-distr-τ ρ σ τ
                                  | ρ-σ-distr-ε (R.ext ρ) (ext σ) ε
                                  | act-ε-extensionality (R-ext-ext-commutes-ε ρ σ) ε
@@ -65,9 +65,9 @@ R-ext-ext-commutes-ε ρ σ (suc x) rewrite R.act-ε-distr suc (R.ext ρ) (σ x)
 ρ-σ-distr-ε ρ σ (SCase ε branches) rewrite ρ-σ-distr-ε ρ σ ε
                                          | ρ-σ-distr-branches ρ σ branches
                                          = refl
-ρ-σ-distr-ε ρ σ (SCon idx ε cons) rewrite ρ-σ-distr-ε ρ σ ε
-                                        | ρ-σ-distr-cons ρ σ cons
-                                        = refl
+ρ-σ-distr-ε ρ σ (SCon ι ε cons) rewrite ρ-σ-distr-ε ρ σ ε
+                                      | ρ-σ-distr-cons ρ σ cons
+                                      = refl
 
 ρ-σ-distr-cons ρ σ [] = refl
 ρ-σ-distr-cons ρ σ (τ ∷ cons) rewrite ρ-σ-distr-τ ρ σ τ
@@ -116,7 +116,7 @@ ext-Rext-distr σ ρ (suc x) = refl
                                 = refl
 
 σ-ρ-distr-ε σ ρ SUnit = refl
-σ-ρ-distr-ε σ ρ (SVar idx) = refl
+σ-ρ-distr-ε σ ρ (SVar ι) = refl
 σ-ρ-distr-ε σ ρ (SLam τ ε) rewrite σ-ρ-distr-τ σ ρ τ
                                  | σ-ρ-distr-ε (ext σ) (R.ext ρ) ε
                                  | act-ε-extensionality (ext-Rext-distr σ ρ) ε
@@ -127,9 +127,9 @@ ext-Rext-distr σ ρ (suc x) = refl
 σ-ρ-distr-ε σ ρ (SCase ε branches) rewrite σ-ρ-distr-ε σ ρ ε
                                          | σ-ρ-distr-branches σ ρ branches
                                          = refl
-σ-ρ-distr-ε σ ρ (SCon idx ε cons) rewrite σ-ρ-distr-ε σ ρ ε
-                                        | σ-ρ-distr-cons σ ρ cons
-                                        = refl
+σ-ρ-distr-ε σ ρ (SCon ι ε cons) rewrite σ-ρ-distr-ε σ ρ ε
+                                      | σ-ρ-distr-cons σ ρ cons
+                                      = refl
 
 σ-ρ-distr-cons σ ρ [] = refl
 σ-ρ-distr-cons σ ρ (τ ∷ cons) rewrite σ-ρ-distr-τ σ ρ τ
@@ -182,7 +182,7 @@ act-ρ-distr σ₁ σ₂ (ρ₁ ∧ ρ₂) rewrite act-ρ-distr σ₁ σ₂ ρ�
                                   = refl
 
 act-ε-distr σ₁ σ₂ SUnit = refl
-act-ε-distr σ₁ σ₂ (SVar idx) = refl
+act-ε-distr σ₁ σ₂ (SVar ι) = refl
 act-ε-distr σ₁ σ₂ (SLam τ ε) rewrite act-τ-distr σ₁ σ₂ τ
                                    | act-ε-distr (ext σ₁) (ext σ₂) ε
                                    | act-ε-extensionality (act-ε-ext-distr σ₁ σ₂) ε
@@ -193,9 +193,9 @@ act-ε-distr σ₁ σ₂ (SApp ε₁ ε₂) rewrite act-ε-distr σ₁ σ₂ ε�
 act-ε-distr σ₁ σ₂ (SCase ε branches) rewrite act-ε-distr σ₁ σ₂ ε
                                            | act-branches-distr σ₁ σ₂ branches
                                            = refl
-act-ε-distr σ₁ σ₂ (SCon idx ε cons) rewrite act-ε-distr σ₁ σ₂ ε
-                                          | act-cons-distr σ₁ σ₂ cons
-                                          = refl
+act-ε-distr σ₁ σ₂ (SCon ι ε cons) rewrite act-ε-distr σ₁ σ₂ ε
+                                        | act-cons-distr σ₁ σ₂ cons
+                                        = refl
 
 act-cons-distr σ₁ σ₂ [] = refl
 act-cons-distr σ₁ σ₂ (τ ∷ cons) rewrite act-τ-distr σ₁ σ₂ τ

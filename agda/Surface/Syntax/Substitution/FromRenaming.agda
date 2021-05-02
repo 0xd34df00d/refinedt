@@ -42,7 +42,7 @@ var-ext-commutes ρ (suc x) = refl
                            | ρ-as-σ-ρ ρ ρ₂ = refl
 
 ρ-as-σ-ε ρ SUnit = refl
-ρ-as-σ-ε ρ (SVar idx) = refl
+ρ-as-σ-ε ρ (SVar ι) = refl
 ρ-as-σ-ε ρ (SLam τ ε) rewrite ρ-as-σ-τ ρ τ
                             | ρ-as-σ-ε (R.ext ρ) ε
                             | act-ε-extensionality (var-ext-commutes ρ) ε = refl
@@ -50,8 +50,8 @@ var-ext-commutes ρ (suc x) = refl
                               | ρ-as-σ-ε ρ ε₂ = refl
 ρ-as-σ-ε ρ (SCase ε branches) rewrite ρ-as-σ-ε ρ ε
                                     | ρ-as-σ-branches ρ branches = refl
-ρ-as-σ-ε ρ (SCon idx ε cons) rewrite ρ-as-σ-ε ρ ε
-                                   | ρ-as-σ-cons ρ cons = refl
+ρ-as-σ-ε ρ (SCon ι ε cons) rewrite ρ-as-σ-ε ρ ε
+                                 | ρ-as-σ-cons ρ cons = refl
 
 ρ-as-σ-cons ρ [] = refl
 ρ-as-σ-cons ρ (τ ∷ cons) rewrite ρ-as-σ-τ ρ τ

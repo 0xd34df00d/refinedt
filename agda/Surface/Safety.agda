@@ -27,7 +27,7 @@ open import Surface.Theorems
 data Canonical : STerm ℓ → SType ℓ → Set where
   C-Lam  : Canonical (SLam τ ε) (τ₁ ⇒ τ₂)
   C-Con  : ∀ {cons cons' : ADTCons (Mkℕₐ (suc n)) zero}
-         → Canonical (SCon idx ε cons) (⊍ cons')
+         → Canonical (SCon ι ε cons) (⊍ cons')
 
 canonical-⇒ : ⊘ ⊢ ε ⦂ τ
             → IsValue ε
@@ -92,21 +92,21 @@ SLam-inv (T-RConv {τ = ⟨ _ ∣ _ ⟩} εδ _ τ↝τ') = shape-⊥-elim ↭β
 SLam-inv (T-RConv {τ = ⊍ _}       εδ _ τ↝τ') = shape-⊥-elim ↭βτ-preserves-shape τ↝τ' λ ()
 
 lookup-preserves-Γ⊢τ : {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
-                     → (idx : Fin (suc n))
+                     → (ι : Fin (suc n))
                      → Γ ⊢ ⊍ cons
-                     → Γ ⊢ lookup cons idx
-lookup-preserves-Γ⊢τ idx (TWF-ADT consδs) = go idx consδs
+                     → Γ ⊢ lookup cons ι
+lookup-preserves-Γ⊢τ ι (TWF-ADT consδs) = go ι consδs
   where
-    go : (idx : Fin n)
+    go : (ι : Fin n)
        → {cons : ADTCons (Mkℕₐ n) ℓ}
        → All (Γ ⊢_) cons
-       → Γ ⊢ lookup cons idx
+       → Γ ⊢ lookup cons ι
     go zero (px ∷ _) = px
-    go (suc idx) (_ ∷ consδs) = go idx consδs
+    go (suc ι) (_ ∷ consδs) = go ι consδs
 
-con-has-type : ∀ {cons cons' : ADTCons (Mkℕₐ (suc n)) ℓ} {idx}
-             → Γ ⊢ SCon idx ε cons ⦂ ⊍ cons'
-             → Γ ⊢ ε ⦂ lookup cons' idx
+con-has-type : ∀ {cons cons' : ADTCons (Mkℕₐ (suc n)) ℓ} {ι}
+             → Γ ⊢ SCon ι ε cons ⦂ ⊍ cons'
+             → Γ ⊢ ε ⦂ lookup cons' ι
 con-has-type (T-Con refl conδ adtτ) = conδ
 con-has-type (T-RConv {τ = ⟨ _ ∣ _ ⟩} εδ _ τ↝τ') = shape-⊥-elim ↭βτ-preserves-shape τ↝τ' λ ()
 con-has-type (T-RConv {τ = _ ⇒ _}     εδ _ τ↝τ') = shape-⊥-elim ↭βτ-preserves-shape τ↝τ' λ ()
@@ -131,13 +131,13 @@ preservation (E-AppR x ε↝ε') (T-App ε₁δ ε₂δ)
 preservation (E-AppAbs ε₂-is-value) (T-App ε₁δ ε₂δ) = sub-Γ⊢ε⦂τ-front ε₂δ (SLam-inv ε₁δ)
 preservation (E-ADT ε↝ε') (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (preservation ε↝ε' εδ) adtτ
 preservation (E-CaseScrut ε↝ε') (T-Case resδ εδ branches) = T-Case resδ (preservation ε↝ε' εδ) branches
-preservation (E-CaseMatch ε-is-value idx) (T-Case resδ εδ branches)
-  = let branchδ = sub-Γ⊢ε⦂τ-front (con-has-type εδ) (branch-has-type idx branches)
+preservation (E-CaseMatch ε-is-value ι) (T-Case resδ εδ branches)
+  = let branchδ = sub-Γ⊢ε⦂τ-front (con-has-type εδ) (branch-has-type ι branches)
      in subst-Γ⊢ε⦂τ-τ (replace-weakened-τ-zero _ _) branchδ
   where
     branch-has-type : ∀ {cons : ADTCons (Mkℕₐ n) ℓ} {bs : CaseBranches (Mkℕₐ n) ℓ} {τ}
-                    → (idx : Fin n)
+                    → (ι : Fin n)
                     → BranchesHaveType Γ cons bs τ
-                    → Γ , lookup cons idx ⊢ CaseBranch.body (lookup bs idx) ⦂ R.weaken-τ τ
+                    → Γ , lookup cons ι ⊢ CaseBranch.body (lookup bs ι) ⦂ R.weaken-τ τ
     branch-has-type zero (OneMoreBranch εδ bht) = εδ
-    branch-has-type (suc idx) (OneMoreBranch εδ bht) = branch-has-type idx bht
+    branch-has-type (suc ι) (OneMoreBranch εδ bht) = branch-has-type ι bht

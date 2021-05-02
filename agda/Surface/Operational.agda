@@ -11,9 +11,9 @@ open import Surface.Syntax.Substitution
 data IsValue : STerm ℓ → Set where
   IV-Abs  : IsValue (SLam τ ε)
   IV-Unit : IsValue (SUnit {ℓ})
-  IV-ADT  : ∀ {cons} {idx : Fin n}
+  IV-ADT  : ∀ {cons} {ι : Fin n}
           → IsValue ϖ
-          → IsValue (SCon idx ϖ cons)
+          → IsValue (SCon ι ϖ cons)
 
 infix 6 [_↦ₘ_]_
 [_↦ₘ_]_ : Fin n → STerm ℓ → CaseBranches (Mkℕₐ n) ℓ → STerm ℓ
@@ -29,13 +29,13 @@ data _↝_ : STerm ℓ → STerm ℓ → Set where
               → SApp ϖ ε₂ ↝ SApp ϖ ε₂'
   E-AppAbs    : IsValue ϖ
               → SApp (SLam τ ε) ϖ ↝ [ zero ↦ε ϖ ] ε
-  E-ADT       : ∀ {cons} {idx : Fin n}
+  E-ADT       : ∀ {cons} {ι : Fin n}
               → ε ↝ ε'
-              → SCon idx ε cons ↝ SCon idx ε' cons
+              → SCon ι ε cons ↝ SCon ι ε' cons
   E-CaseScrut : ∀ {branches : CaseBranches nₐ ℓ}
               → ε ↝ ε'
               → SCase ε branches ↝ SCase ε' branches
   E-CaseMatch : ∀ {cons : ADTCons (Mkℕₐ n) ℓ} {bs : CaseBranches (Mkℕₐ n) ℓ}
               → IsValue ϖ
-              → (idx : Fin n)
-              → SCase (SCon idx ϖ cons) bs ↝ [ idx ↦ₘ ϖ ] bs
+              → (ι : Fin n)
+              → SCase (SCon ι ϖ cons) bs ↝ [ ι ↦ₘ ϖ ] bs

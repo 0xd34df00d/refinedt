@@ -143,29 +143,29 @@ prove-via-↝βτ' f = ↝βτ'-to-↝βτ ∘ f ∘ ↝βτ-to-↝βτ'
 ↭βτ-cons-same-length (forward τ₁↝τ₂) = ↝βτ-cons-same-length τ₁↝τ₂
 ↭βτ-cons-same-length (backward τ₂↝τ₁) = sym (↝βτ-cons-same-length τ₂↝τ₁)
 
-↝βτ'-lookup : (idx : Fin (suc n))
+↝βτ'-lookup : (ι : Fin (suc n))
             → (cons₁ : ADTCons (Mkℕₐ (suc n)) ℓ)
             → (cons₂ : ADTCons (Mkℕₐ (suc n)) ℓ)
             → (⊍ cons₁) ↝βτ' (⊍ cons₂)
-            → lookup cons₁ idx ↝βτ' lookup cons₂ idx
-↝βτ'-lookup             zero      (x₁ ∷ _)    (x₂ ∷ _)    (↝βτ'-Subst ι ε ε' (⊍ (x ∷ _)) ε↝ε' refl refl) = ↝βτ'-Subst ι ε ε' x ε↝ε' refl refl
-↝βτ'-lookup {n = suc n} (suc idx) (_ ∷ cons₁) (_ ∷ cons₂) (↝βτ'-Subst ι ε ε' (⊍ (_ ∷ cons)) ε↝ε' refl refl)
-  = ↝βτ'-lookup idx cons₁ cons₂ (↝βτ'-Subst ι ε ε' (⊍ cons) ε↝ε' refl refl)
+            → lookup cons₁ ι ↝βτ' lookup cons₂ ι
+↝βτ'-lookup             zero    (x₁ ∷ _)    (x₂ ∷ _)    (↝βτ'-Subst ι' ε ε' (⊍ (x ∷ _)) ε↝ε' refl refl) = ↝βτ'-Subst ι' ε ε' x ε↝ε' refl refl
+↝βτ'-lookup {n = suc n} (suc ι) (_ ∷ cons₁) (_ ∷ cons₂) (↝βτ'-Subst ι' ε ε' (⊍ (_ ∷ cons)) ε↝ε' refl refl)
+  = ↝βτ'-lookup ι cons₁ cons₂ (↝βτ'-Subst ι' ε ε' (⊍ cons) ε↝ε' refl refl)
 
 ↝βτ-lookup : {cons₁ : ADTCons (Mkℕₐ (suc n)) ℓ}
            → {cons₂ : ADTCons (Mkℕₐ (suc n)) ℓ}
-           → (idx : Fin (suc n))
+           → (ι : Fin (suc n))
            → (⊍ cons₁) ↝βτ (⊍ cons₂)
-           → lookup cons₁ idx ↝βτ lookup cons₂ idx
-↝βτ-lookup idx = prove-via-↝βτ' (↝βτ'-lookup idx _ _)
+           → lookup cons₁ ι ↝βτ lookup cons₂ ι
+↝βτ-lookup ι = prove-via-↝βτ' (↝βτ'-lookup ι _ _)
 
 ↭βτ-lookup : {cons₁ : ADTCons (Mkℕₐ (suc n)) ℓ}
            → {cons₂ : ADTCons (Mkℕₐ (suc n)) ℓ}
-           → (idx : Fin (suc n))
+           → (ι : Fin (suc n))
            → (⊍ cons₁) ↭βτ (⊍ cons₂)
-           → lookup cons₁ idx ↭βτ lookup cons₂ idx
-↭βτ-lookup idx (forward τ₁↝τ₂) = forward (↝βτ-lookup idx τ₁↝τ₂)
-↭βτ-lookup idx (backward τ₂↝τ₁) = backward (↝βτ-lookup idx τ₂↝τ₁)
+           → lookup cons₁ ι ↭βτ lookup cons₂ ι
+↭βτ-lookup ι (forward τ₁↝τ₂) = forward (↝βτ-lookup ι τ₁↝τ₂)
+↭βτ-lookup ι (backward τ₂↝τ₁) = backward (↝βτ-lookup ι τ₂↝τ₁)
 
 ↝βτ'-⇒-dom : (τ₁ ⇒ τ₂) ↝βτ' (τ₁' ⇒ τ₂')
            → τ₁ ↝βτ' τ₁'

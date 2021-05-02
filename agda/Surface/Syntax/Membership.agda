@@ -30,8 +30,8 @@ record _⊂_ {ℓ ℓ'} (Γ : Ctx ℓ) (Γ' : Ctx ℓ') : Set where
   constructor MkTR
   field
     ρ      : Fin ℓ → Fin ℓ'
-    ρ-∈    : τ ∈ Γ at idx
-           → R.act-τ ρ τ ∈ Γ' at ρ idx
+    ρ-∈    : τ ∈ Γ at ι
+           → R.act-τ ρ τ ∈ Γ' at ρ ι
     ρ-mono : Monotonic ρ
 
 append-both : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ₀ : SType ℓ}
@@ -39,8 +39,8 @@ append-both : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ₀ : SType ℓ}
             → Γ , τ₀ ⊂ Γ' , R.act-τ (_⊂_.ρ Γ⊂Γ') τ₀
 append-both {Γ = Γ} {Γ' = Γ'} (MkTR ρ ρ-∈ ρ-mono) = MkTR (R.ext ρ) ρ-∈' (R.ext-monotonic ρ-mono)
   where
-    ρ-∈' : τ ∈ Γ , τ' at idx
-         → R.act-τ (R.ext ρ) τ ∈ Γ' , R.act-τ ρ τ' at R.ext ρ idx
+    ρ-∈' : τ ∈ Γ , τ' at ι
+         → R.act-τ (R.ext ρ) τ ∈ Γ' , R.act-τ ρ τ' at R.ext ρ ι
     ρ-∈' {τ' = τ'} (∈-zero refl) rewrite R.weaken-τ-comm ρ τ' = ∈-zero refl
     ρ-∈' (∈-suc {τ = τ} refl there) rewrite R.weaken-τ-comm ρ τ = ∈-suc refl (ρ-∈ there)
 

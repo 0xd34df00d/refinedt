@@ -112,7 +112,7 @@ mutual
             → Γ ++ [↦Δ ε ] Δ ⊢ [ ℓ ↦ε< ε ] ε₀ ⦂ [ ℓ ↦τ< ε ] τ
   sub-Γ⊢ε⦂τ Δ εδ (T-Unit Γok) = T-Unit (sub-Γok Δ εδ Γok)
   sub-Γ⊢ε⦂τ {σ = σ} {k = k} {ε = ε}
-            Δ εδ (T-Var {idx = idx} Γok τ-∈) with ctx-idx k <>? idx
+            Δ εδ (T-Var {ι = ι} Γok τ-∈) with ctx-idx k <>? ι
   ... | less rep<var = T-Var (sub-Γok Δ εδ Γok) (var-earlier-in-Γ-remains Δ τ-∈ rep<var)
   ... | equal refl rewrite ∈-at-concat-point Δ τ-∈
                          | replace-weakened-τ k (weaken-ε-k k ε) σ

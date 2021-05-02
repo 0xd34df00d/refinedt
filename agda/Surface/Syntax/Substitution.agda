@@ -28,19 +28,19 @@ SubstOn Ty = ∀ {ℓ} → Fin (suc ℓ) → STerm ℓ → Ty (suc ℓ) → Ty �
 
 infixr 6 [_↦τ_]_ [_↦ρ_]_ [_↦ε_]_ [_↦c_]_ [_↦bs_]_
 [_↦τ_]_ : SubstOn SType
-[_↦τ_]_ idx ε = act-τ (replace-at idx ε)
+[_↦τ_]_ ι ε = act-τ (replace-at ι ε)
 
 [_↦ρ_]_ : SubstOn Refinement
-[_↦ρ_]_ idx ε = act-ρ (replace-at idx ε)
+[_↦ρ_]_ ι ε = act-ρ (replace-at ι ε)
 
 [_↦ε_]_ : SubstOn STerm
-[_↦ε_]_ idx ε = act-ε (replace-at idx ε)
+[_↦ε_]_ ι ε = act-ε (replace-at ι ε)
 
 [_↦c_]_ : SubstOn (ADTCons nₐ)
-[_↦c_]_ idx ε = act-cons (replace-at idx ε)
+[_↦c_]_ ι ε = act-cons (replace-at ι ε)
 
 [_↦bs_]_ : SubstOn (CaseBranches nₐ)
-[_↦bs_]_ idx ε = act-branches (replace-at idx ε)
+[_↦bs_]_ ι ε = act-branches (replace-at ι ε)
 
 ↦τ-preserves-shape : ∀ ι (ε : STerm ℓ)
                    → ShapePreserving (λ τ' τ → τ' ≡ [ ι ↦τ ε ] τ)

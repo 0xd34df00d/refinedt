@@ -65,9 +65,9 @@ open import Surface.Operational
         = E-AppAbs (ρ-preserves-values is-value)
 ρ-preserves-↝ ρ (E-ADT ε↝ε') = E-ADT (ρ-preserves-↝ ρ ε↝ε')
 ρ-preserves-↝ ρ (E-CaseScrut ε↝ε') = E-CaseScrut (ρ-preserves-↝ ρ ε↝ε')
-ρ-preserves-↝ ρ (E-CaseMatch {ϖ = ϖ} {bs = bs} is-value idx)
-  rewrite ρ-↦ₘ-comm ρ idx ϖ bs
-        = E-CaseMatch (ρ-preserves-values is-value) idx
+ρ-preserves-↝ ρ (E-CaseMatch {ϖ = ϖ} {bs = bs} is-value ι)
+  rewrite ρ-↦ₘ-comm ρ ι ϖ bs
+        = E-CaseMatch (ρ-preserves-values is-value) ι
 
 subst-preserves-↝ : ∀ ι ε₀
                   → ε ↝ ε'
@@ -80,6 +80,6 @@ subst-preserves-↝ ι ε₀ (E-AppAbs {ϖ = ϖ} {ε = ε} is-value)
         = E-AppAbs (σ-preserves-values is-value)
 subst-preserves-↝ ι ε₀ (E-ADT ε↝ε') = E-ADT (subst-preserves-↝ ι ε₀ ε↝ε')
 subst-preserves-↝ ι ε₀ (E-CaseScrut ε↝ε') = E-CaseScrut (subst-preserves-↝ ι ε₀ ε↝ε')
-subst-preserves-↝ ι ε₀ (E-CaseMatch {ϖ = ϖ} {bs = bs} is-value idx)
-  rewrite σ-↦ₘ-comm (replace-at ι ε₀) idx ϖ bs
-        = E-CaseMatch (σ-preserves-values is-value) idx
+subst-preserves-↝ ι ε₀ (E-CaseMatch {ϖ = ϖ} {bs = bs} is-value ι')
+  rewrite σ-↦ₘ-comm (replace-at ι ε₀) ι' ϖ bs
+        = E-CaseMatch (σ-preserves-values is-value) ι'

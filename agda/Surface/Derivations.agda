@@ -68,8 +68,8 @@ data _⊢_⦂_ where
   T-Unit      : (Γok : Γ ok)
               → Γ ⊢ SUnit ⦂ ⟨ BUnit ∣ Τ ⟩
   T-Var       : (Γok : Γ ok)
-              → τ ∈ Γ at idx
-              → Γ ⊢ SVar idx ⦂ τ
+              → τ ∈ Γ at ι
+              → Γ ⊢ SVar ι ⦂ τ
   T-Abs       : (arrδ : Γ ⊢ τ₁ ⇒ τ₂)
               → (bodyδ : Γ , τ₁ ⊢ ε ⦂ τ₂)
               → Γ ⊢ SLam τ₁ ε ⦂ τ₁ ⇒ τ₂
@@ -82,12 +82,12 @@ data _⊢_⦂_ where
               → (scrutτδ : Γ ⊢ ε ⦂ ⊍ cons)
               → (branches-well-typed : BranchesHaveType Γ cons bs τ')
               → Γ ⊢ SCase ε bs ⦂ τ'
-  T-Con       : ∀ {idx}
+  T-Con       : ∀ {ι}
               → {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
-              → (≡-prf : τⱼ ≡ lookup cons idx)
+              → (≡-prf : τⱼ ≡ lookup cons ι)
               → (conArg : Γ ⊢ ε ⦂ τⱼ)
               → (adtτ : Γ ⊢ ⊍ cons)
-              → Γ ⊢ SCon idx ε cons ⦂ ⊍ cons
+              → Γ ⊢ SCon ι ε cons ⦂ ⊍ cons
   T-Sub       : (εδ : Γ ⊢ ε ⦂ τ)
               → (τ'δ : Γ ⊢ τ')
               → (<: : Γ ⊢ τ <: τ')

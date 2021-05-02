@@ -46,7 +46,7 @@ data SType ℓ where
 -- but now I'm not sure if agreement holds for the type system in that paper.
 data STerm ℓ where
   SUnit : STerm ℓ
-  SVar  : (idx : Fin ℓ)
+  SVar  : (ι : Fin ℓ)
         → STerm ℓ
   SLam  : (τ : SType ℓ)
         → (ε : STerm (suc ℓ))
@@ -56,7 +56,7 @@ data STerm ℓ where
   SCase : (scrut : STerm ℓ)
         → (branches : CaseBranches nₐ ℓ)
         → STerm ℓ
-  SCon  : (idx : Fin n)
+  SCon  : (ι : Fin n)
         → (body : STerm ℓ)
         → (adt-cons : ADTCons (Mkℕₐ n) ℓ)
         → STerm ℓ
