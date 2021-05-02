@@ -1,63 +1,64 @@
 grammar
 ec {{ tex \nonterm{ec} }}, tc {{ tex \nonterm{tc} }} :: tmCore_ ::= {{ com expressions }}
-  | x					::   :: var {{ com variable }}
-  | s					::   :: sort {{ com sort }}
-  | Pi x : ec1 . ec2	::   :: piabs {{ com $\Pi$-type }}
-  | \ x : ec1 . ec2		::   :: lamabs {{ com abstraction }}
-  | ec1 ec2				::   :: app {{ com application }}
-  | unitc				::   :: unit {{ com unit value }}
-  | Unitc				::   :: Unit {{ com unit type }}
-  | < </ li : eci // i /> > ::   :: variant {{ com ADT }}
+  | x                   ::   :: var {{ com variable }}
+  | s                   ::   :: sort {{ com sort }}
+  | Pi x : ec1 . ec2    ::   :: piabs {{ com $\Pi$-type }}
+  | \ x : ec1 . ec2     ::   :: lamabs {{ com abstraction }}
+  | ec1 ec2             ::   :: app {{ com application }}
+  | unitc               ::   :: unit {{ com unit value }}
+  | Unitc               ::   :: Unit {{ com unit type }}
+  | < </ li : eci // i /> >
+                        ::   :: variant {{ com ADT }}
   | < l = ec > as < </ li : eci // i /> >
-						::   :: adt {{ com ADT construction }}
+                        ::   :: adt {{ com ADT construction }}
   | case ec of </ li = xi proof pi -> eci // i />
-						::   :: case {{ com ADT case }}
+                        ::   :: case {{ com ADT case }}
 
-  | [ x |-> ec1 ] ec2	:: M :: xsubst
-  | [ p |-> ec1 ] ec2	:: M :: psubst
-  | p					:: M :: proofterm
-  | ec1 -> ec2			:: M :: nondep_arrow
-  | ec1 equal ec2		:: M :: equality
+  | [ x |-> ec1 ] ec2   :: M :: xsubst
+  | [ p |-> ec1 ] ec2   :: M :: psubst
+  | p                   :: M :: proofterm
+  | ec1 -> ec2          :: M :: nondep_arrow
+  | ec1 equal ec2       :: M :: equality
   | < l = ec > as ec'   :: M :: adtcon_arb
-  | vc					:: M :: value
-  | ( ec )				:: M :: parens
-  | eqrefl				:: M :: eq_introduction
-  | BC					:: M :: base {{ tex \Basec }}
-  | ( ec1 , ec2 )		:: M :: pair
+  | vc                  :: M :: value
+  | ( ec )              :: M :: parens
+  | eqrefl              :: M :: eq_introduction
+  | BC                  :: M :: base {{ tex \Basec }}
+  | ( ec1 , ec2 )       :: M :: pair
   | ( v : ec1 ** ec2 )  :: M :: dvpair
   | ( x : ec1 ** ec2 )  :: M :: dxpair
-  | ( x ** ec )			:: M :: dxpaircon
+  | ( x ** ec )         :: M :: dxpaircon
   | ( _ : ec1 ** ec2 )  :: M :: dvpairIrrelevant
-  | Pred				:: M :: predicate
-  | v					:: M :: vvar
-  | f					:: M :: fvar
-  | \ bnds : ec1 . ec2	:: M :: lambndsabs
-  | \ _ : ec1 . ec2		:: M :: lamirrabs {{ com abstraction irrelevant }}
-  | Pi _ : ec1 . ec2	:: M :: piirr {{ com pi type irrelevant }}
-  | seconddp			:: M :: map_second_dp {{ tex \secondDP }}
-  | sigma				:: M :: oracle_sigma {{ tex \sigma }}
-  | alpha				:: M :: alpha_type {{ tex \alpha }}
-  | gamma				:: M :: subtyping_conversion
-  | Pi bnds : ec . ec'	:: M :: pibndsabs
+  | Pred                :: M :: predicate
+  | v                   :: M :: vvar
+  | f                   :: M :: fvar
+  | \ bnds : ec1 . ec2  :: M :: lambndsabs
+  | \ _ : ec1 . ec2     :: M :: lamirrabs {{ com abstraction irrelevant }}
+  | Pi _ : ec1 . ec2    :: M :: piirr {{ com pi type irrelevant }}
+  | seconddp            :: M :: map_second_dp {{ tex \secondDP }}
+  | sigma               :: M :: oracle_sigma {{ tex \sigma }}
+  | alpha               :: M :: alpha_type {{ tex \alpha }}
+  | gamma               :: M :: subtyping_conversion
+  | Pi bnds : ec . ec'  :: M :: pibndsabs
 
 bnds :: bnds_ ::=
-  | ec , bnds			:: :: pair
-  | ec					:: :: ec
+  | ec , bnds           :: :: pair
+  | ec                  :: :: ec
 
 s {{ tex \nonterm{s} }} :: s_ ::= {{ com sorts }}
-  | sst				::   :: type {{ com types }}
-  | ssq				::   :: kind {{ com kinds }}
+  | sst                 ::   :: type {{ com types }}
+  | ssq                 ::   :: kind {{ com kinds }}
 
 vc {{ tex \nonterm{vc} }} :: vc_ ::= {{ com values }}
-  | \ x : ec1 . ec2		::   :: abs {{ com abstraction value }}
-  | unitc				::   :: top {{ com unit value }}
+  | \ x : ec1 . ec2     ::   :: abs {{ com abstraction value }}
+  | unitc               ::   :: top {{ com unit value }}
   | < l = vc > as < </ li : eci // i /> >
-						::   :: adt {{ com ADT value }}
+                        ::   :: adt {{ com ADT value }}
 
 GC {{ tex \nonterm{GC} }} :: coreenv_ ::=
-  | empty			::   :: nil
-  | GC , x : ec		::   :: var
-  | GC , p : ec		:: M :: proofvar
+  | empty               ::   :: nil
+  | GC , x : ec         ::   :: var
+  | GC , p : ec         :: M :: proofvar
 
 defns Jctype :: '' ::=
 
