@@ -17,7 +17,6 @@ terminals :: terminals_ ::=
   | =>		:: :: implies {{ tex \implies }}
   | sst		:: :: starkind {{ tex \star }}
   | ssq		:: :: squarekind {{ tex \square }}
-  | tc		:: :: coretype {{ tex \nonterm{tc} }}
   | empty   :: :: empty {{ tex \emptyset }}
   | =b		:: :: beq {{ tex =_\beta }}
   | fresh	:: :: fresh {{ tex \fresh }}
@@ -47,7 +46,6 @@ metavar v {{ tex \gterm v }} ::= {{ com refinement variables }}
 metavar n {{ tex \gterm n }} ::= {{ com integers }}
 metavar p {{ tex \gterm p }} ::= {{ com proof terms }}
 metavar Pred {{ tex P }} ::= {{ com predicates }}
-metavar tc {{ tex \nonterm{tc} }} ::= {{ com predicates }}
 metavar gamma {{ tex \nonterm{gamma} }} ::= {{ com conversions }}
 metavar f {{ tex \nonterm{f} }} ::= {{ com functions }}
 indexvar i, j ::= {{ com indexes }}

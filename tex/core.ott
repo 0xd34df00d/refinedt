@@ -1,5 +1,5 @@
 grammar
-ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
+ec {{ tex \nonterm{ec} }}, tc {{ tex \nonterm{tc} }} :: tmCore_ ::= {{ com expressions }}
   | x					::   :: var {{ com variable }}
   | s					::   :: sort {{ com sort }}
   | Pi x : ec1 . ec2	::   :: piabs {{ com $\Pi$-type }}
@@ -22,7 +22,6 @@ ec {{ tex \nonterm{ec} }} :: tmCore_ ::= {{ com expressions }}
   | vc					:: M :: value
   | ( ec )				:: M :: parens
   | eqrefl				:: M :: eq_introduction
-  | tc					:: M :: type
   | BC					:: M :: base {{ tex \Basec }}
   | ( ec1 , ec2 )		:: M :: pair
   | ( v : ec1 ** ec2 )  :: M :: dvpair
