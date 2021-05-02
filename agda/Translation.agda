@@ -28,7 +28,8 @@ mutual
 
   μ-ρ-untyped : Refinement ℓ
               → CExpr ℓ
-  μ-ρ-untyped ρ = {! !}
+  μ-ρ-untyped (ε₁ ≈ ε₂) = {! !}
+  μ-ρ-untyped (ρ₁ ∧ ρ₂) = ⟨ μ-ρ-untyped ρ₁ , μ-ρ-untyped ρ₂ ⟩
 
   μ-ε-untyped : STerm ℓ
               → CExpr ℓ
