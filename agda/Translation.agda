@@ -2,10 +2,37 @@
 
 module Translation where
 
+open import Data.Vec using (Vec; _∷_; [])
+
 open import Core.Syntax as C
+open import Core.Syntax.Derived as C
 open import Core.Derivations as C
 open import Surface.Syntax as S
 open import Surface.Derivations as S
+
+μ-b-untyped : S.BaseType
+            → CExpr ℓ
+μ-b-untyped BUnit = CUnit
+
+mutual
+  μ-cons-untyped : S.ADTCons nₐ ℓ
+                 → C.ADTCons nₐ ℓ
+  μ-cons-untyped [] = []
+  μ-cons-untyped (τ ∷ cons) = μ-τ-untyped τ ∷ μ-cons-untyped cons
+
+  μ-τ-untyped : SType ℓ
+              → CExpr ℓ
+  μ-τ-untyped ⟨ b ∣ ρ ⟩ = ⟨ μ-b-untyped b ⋆⋆ μ-ρ-untyped ρ ⟩
+  μ-τ-untyped (τ₁ ⇒ τ₂) = CΠ (μ-τ-untyped τ₁) (μ-τ-untyped τ₂)
+  μ-τ-untyped (⊍ cons) = CADT (μ-cons-untyped cons)
+
+  μ-ρ-untyped : Refinement ℓ
+              → CExpr ℓ
+  μ-ρ-untyped ρ = {! !}
+
+  μ-ε-untyped : STerm ℓ
+              → CExpr ℓ
+  μ-ε-untyped ε = {! !}
 
 μ-Γ : {Γ : S.Ctx ℓ}
     → Γ ok
