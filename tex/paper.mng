@@ -833,9 +833,9 @@ and state some straightforward facts that will be useful later:
     \]
     The reader might recognize this as the Leibniz equality~\citeparens{FindSomethingForLeibnizEq}.
 
-    The corresponding introduction rule $\eqrefl \nonterm{tc}~x$ of type $x \equiv x$
+    The corresponding constructor $\eqrefl \nonterm{tc}~x$ of type $x \equiv x$
     stating that $x$ of type $\nonterm{tc}$ is equal to itself
-    is then
+    is then defined as follows:
     \[
       \eqrefl \nonterm{tc}~x \triangleq \lambda P : \nonterm{tc} \rightarrow \star. (\lambda p : P x. p, \lambda p : P x. p).
     \]
