@@ -827,7 +827,7 @@ and state some straightforward facts that will be useful later:
     \end{lemma}
   \item Equality of expressions $\nonterm{ec}_1, \nonterm{ec}_2$ of type $\nonterm{tc}$:
     \[
-      \nonterm{ec}_1 \equiv \nonterm{ec}_2
+      \nonterm{ec}_1 \equiv \nonterm{ec}_2\ \text{of}\ \nonterm{tc}
         \triangleq
         \Pi P : \nonterm{tc} \rightarrow \star. (P \nonterm{ec}_1 \rightarrow P \nonterm{ec}_2, P \nonterm{ec}_2 \rightarrow P \nonterm{ec}_1).
     \]
