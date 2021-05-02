@@ -15,11 +15,6 @@ open import Surface.Derivations as S
 μ-b-untyped BUnit = CUnit
 
 mutual
-  μ-cons-untyped : S.ADTCons nₐ ℓ
-                 → C.ADTCons nₐ ℓ
-  μ-cons-untyped [] = []
-  μ-cons-untyped (τ ∷ cons) = μ-τ-untyped τ ∷ μ-cons-untyped cons
-
   μ-τ-untyped : SType ℓ
               → CExpr ℓ
   μ-τ-untyped ⟨ b ∣ ρ ⟩ = ⟨ μ-b-untyped b ⋆⋆ μ-ρ-untyped ρ ⟩
@@ -34,6 +29,11 @@ mutual
   μ-ε-untyped : STerm ℓ
               → CExpr ℓ
   μ-ε-untyped ε = {! !}
+
+  μ-cons-untyped : S.ADTCons nₐ ℓ
+                 → C.ADTCons nₐ ℓ
+  μ-cons-untyped [] = []
+  μ-cons-untyped (τ ∷ cons) = μ-τ-untyped τ ∷ μ-cons-untyped cons
 
 μ-Γ : {Γ : S.Ctx ℓ}
     → Γ ok
