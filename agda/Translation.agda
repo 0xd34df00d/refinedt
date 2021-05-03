@@ -54,7 +54,7 @@ mutual
   μ-τ : {Γ : S.Ctx ℓ}
       → {τ : SType ℓ}
       → Γ ⊢ τ
-      → CExpr ℓ
+      → μ-Γ Γ C.⊢ μ-τ-untyped τ ⦂ ⋆ₑ
   μ-τ (TWF-TrueRef Γok) = {! !}
   μ-τ (TWF-Base ε₁δ ε₂δ) = {! !}
   μ-τ (TWF-Conj ρ₁δ ρ₂δ) = {! !}
