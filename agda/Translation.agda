@@ -57,6 +57,6 @@ mutual
       → μ-Γ Γ C.⊢ μ-τ-untyped τ ⦂ ⋆ₑ
   μ-τ (TWF-TrueRef Γok) = {! !}
   μ-τ (TWF-Base ε₁δ ε₂δ) = {! !}
-  μ-τ (TWF-Conj ρ₁δ ρ₂δ) = {! !}
-  μ-τ (TWF-Arr argδ resδ) = {! !}
+  μ-τ (TWF-Conj Γ⊢τ₁ Γ⊢τ₂) = {! !}
+  μ-τ (TWF-Arr Γ⊢τ₁ Γ⊢τ₂) = CT-Form (μ-τ Γ⊢τ₁) (μ-τ Γ⊢τ₂)
   μ-τ (TWF-ADT consδs) = {! !}
