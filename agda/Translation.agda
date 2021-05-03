@@ -28,12 +28,22 @@ mutual
 
   μ-ε-untyped : STerm ℓ
               → CExpr ℓ
-  μ-ε-untyped ε = {! !}
+  μ-ε-untyped SUnit = Cunit
+  μ-ε-untyped (SVar ι) = CVar ι
+  μ-ε-untyped (SLam τ ε) = CLam (μ-τ-untyped τ) (μ-ε-untyped ε)
+  μ-ε-untyped (SApp ε₁ ε₂) = μ-ε-untyped ε₁ · μ-ε-untyped ε₂
+  μ-ε-untyped (SCase ε branches) = CCase (μ-ε-untyped ε) (μ-branches-untyped branches)
+  μ-ε-untyped (SCon ι ε cons) = CCon ι (μ-ε-untyped ε) (μ-cons-untyped cons)
 
   μ-cons-untyped : S.ADTCons nₐ ℓ
                  → C.ADTCons nₐ ℓ
   μ-cons-untyped [] = []
   μ-cons-untyped (τ ∷ cons) = μ-τ-untyped τ ∷ μ-cons-untyped cons
+
+  μ-branches-untyped : S.CaseBranches nₐ ℓ
+                     → C.CaseBranches nₐ ℓ
+  μ-branches-untyped [] = []
+  μ-branches-untyped (MkCaseBranch ε ∷ bs) = {! !} ∷ μ-branches-untyped bs
 
 μ-Γ : {Γ : S.Ctx ℓ}
     → Γ ok
