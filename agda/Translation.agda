@@ -45,13 +45,12 @@ mutual
   μ-branches-untyped [] = []
   μ-branches-untyped (MkCaseBranch ε ∷ bs) = {! !} ∷ μ-branches-untyped bs
 
-mutual
-  μ-Γ : {Γ : S.Ctx ℓ}
-      → Γ ok
-      → C.Ctx ℓ
-  μ-Γ TCTX-Empty = ⊘
-  μ-Γ (TCTX-Bind {τ = τ} Γok _) = μ-Γ Γok , μ-τ-untyped τ
+μ-Γ : S.Ctx ℓ
+    → C.Ctx ℓ
+μ-Γ ⊘ = ⊘
+μ-Γ (Γ , τ) = μ-Γ Γ , μ-τ-untyped τ
 
+mutual
   μ-τ : {Γ : S.Ctx ℓ}
       → {τ : SType ℓ}
       → Γ ⊢ τ
