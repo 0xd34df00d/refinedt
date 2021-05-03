@@ -45,19 +45,19 @@ mutual
   μ-branches-untyped [] = []
   μ-branches-untyped (MkCaseBranch ε ∷ bs) = {! !} ∷ μ-branches-untyped bs
 
-μ-Γ : {Γ : S.Ctx ℓ}
-    → Γ ok
-    → C.Ctx ℓ
-μ-τ : {Γ : S.Ctx ℓ}
-    → {τ : SType ℓ}
-    → Γ ⊢ τ
-    → CExpr ℓ
+mutual
+  μ-Γ : {Γ : S.Ctx ℓ}
+      → Γ ok
+      → C.Ctx ℓ
+  μ-Γ TCTX-Empty = ⊘
+  μ-Γ (TCTX-Bind Γok τδ) = μ-Γ Γok , μ-τ τδ
 
-μ-Γ TCTX-Empty = ⊘
-μ-Γ (TCTX-Bind Γok τδ) = μ-Γ Γok , μ-τ τδ
-
-μ-τ (TWF-TrueRef Γok) = {! !}
-μ-τ (TWF-Base ε₁δ ε₂δ) = {! !}
-μ-τ (TWF-Conj ρ₁δ ρ₂δ) = {! !}
-μ-τ (TWF-Arr argδ resδ) = {! !}
-μ-τ (TWF-ADT consδs) = {! !}
+  μ-τ : {Γ : S.Ctx ℓ}
+      → {τ : SType ℓ}
+      → Γ ⊢ τ
+      → CExpr ℓ
+  μ-τ (TWF-TrueRef Γok) = {! !}
+  μ-τ (TWF-Base ε₁δ ε₂δ) = {! !}
+  μ-τ (TWF-Conj ρ₁δ ρ₂δ) = {! !}
+  μ-τ (TWF-Arr argδ resδ) = {! !}
+  μ-τ (TWF-ADT consδs) = {! !}
