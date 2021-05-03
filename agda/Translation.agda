@@ -43,7 +43,7 @@ mutual
   μ-branches-untyped : S.CaseBranches nₐ ℓ
                      → C.CaseBranches nₐ ℓ
   μ-branches-untyped [] = []
-  μ-branches-untyped (MkCaseBranch ε ∷ bs) = {! !} ∷ μ-branches-untyped bs
+  μ-branches-untyped (MkCaseBranch ε ∷ bs) = {! TODO proof? !} ∷ μ-branches-untyped bs
 
 μ-Γ : S.Ctx ℓ
     → C.Ctx ℓ
