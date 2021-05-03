@@ -50,7 +50,7 @@ mutual
       → Γ ok
       → C.Ctx ℓ
   μ-Γ TCTX-Empty = ⊘
-  μ-Γ (TCTX-Bind Γok τδ) = μ-Γ Γok , {! !}
+  μ-Γ (TCTX-Bind {τ = τ} Γok _) = μ-Γ Γok , μ-τ-untyped τ
 
   μ-τ : {Γ : S.Ctx ℓ}
       → {τ : SType ℓ}
