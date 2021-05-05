@@ -827,9 +827,9 @@ and state some straightforward facts that will be useful later:
     \end{lemma}
   \item Equality of expressions $\nonterm{ec}_1, \nonterm{ec}_2$ of type $\nonterm{tc}$:
     \[
-      \nonterm{ec}_1 \equiv \nonterm{ec}_2\ \text{of}\ \nonterm{tc}
+      [[ ec1 equal ec2 of tc ]]
         \triangleq
-        \Pi P : \nonterm{tc} \rightarrow \star. (P \nonterm{ec}_1 \rightarrow P \nonterm{ec}_2, P \nonterm{ec}_2 \rightarrow P \nonterm{ec}_1).
+        [[ Pi Pred : tc -> sst. ( Pred ec1 -> Pred ec2 , Pred ec2 -> Pred ec1 ) ]]
     \]
     The reader might recognize this as the Leibniz equality~\citeparens{FindSomethingForLeibnizEq}.
 
@@ -837,7 +837,7 @@ and state some straightforward facts that will be useful later:
     stating that $x$ of type $\nonterm{tc}$ is equal to itself
     is then defined as follows:
     \[
-      \eqrefl \nonterm{tc}~x \triangleq \lambda P : \nonterm{tc} \rightarrow \star. (\lambda p : P x. p, \lambda p : P x. p).
+      [[ eqrefl tc x ]] \triangleq [[ \ Pred : tc -> sst. (\ p : Pred x. p , \ p : Pred x. p) ]]
     \]
 
     Again, it can be seen that
