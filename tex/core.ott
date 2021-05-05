@@ -18,7 +18,7 @@ ec {{ tex \nonterm{ec} }}, tc {{ tex \nonterm{tc} }} :: tmCore_ ::= {{ com expre
   | [ p |-> ec1 ] ec2   :: M :: psubst
   | p                   :: M :: proofterm
   | ec1 -> ec2          :: M :: nondep_arrow
-  | ec1 equal ec2       :: M :: equality
+  | ec1 equal ec2 of ec :: M :: equality
   | < l = ec > as ec'   :: M :: adtcon_arb
   | vc                  :: M :: value
   | ( ec )              :: M :: parens
@@ -118,7 +118,7 @@ GC |- < lj = ec> as < </ li : tci // i /> > : < </ li : tci // i /> >
 tc def < </ li : tci // i /> >
 GC |- tc' : sst
 GC |- ec : tc
-</ GC , xi : tci , pi : ec equal < li = xi > as tc |- eci : tc' // i />
+</ GC , xi : tci , pi : ec equal ( < li = xi > as tc ) of tc |- eci : tc' // i />
 ------------------------------------------------------------------------- :: ADTCase
 GC |- case ec of </ li = xi proof pi -> eci // i />  : tc'
 

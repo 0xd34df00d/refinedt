@@ -961,22 +961,23 @@ More formally, consider the last rule used in the derivation of $[[ G |- ts ]]$:
     \end{align*}
 
     By \cref{lma:non_dep_pair_typing}
-    $[[ (BC, unitc equal unitc) ]]$ has type $\star$ in $[[ GC ]]$
-    if $[[ BC ]]$ and $[[ unitc equal unitc ]]$ are well-typed in $[[ GC ]]$,
+    $[[ (BC, unitc equal unitc of Unitc) ]]$ has type $\star$ in $[[ GC ]]$
+    if $[[ BC ]]$ and $[[ unitc equal unitc of Unitc ]]$ are well-typed in $[[ GC ]]$,
     which, in turn, is easily checked.
-    Thus, there exists a derivation of $[[ GC |- (BC, unitc equal unitc) : sst ]]$,
+    Thus, there exists a derivation of $[[ GC |- (BC, unitc equal unitc of Unitc) : sst ]]$,
     and it is effectively constructible, although omitted for brevity.
   \item \textsc{TWF-Base}.
     \begin{align*}
       & \ottdruleTWFXXBase{} \longmapsto \ottdruleTWFTargetXXBase{}, \\
       \text{where}~&[[ GC = mudG(G ok) ]], \\
                    &[[ ec_i = muE(G, v : { v_1 : B | top } |- es_i : { v2 : B' | r_i }) ]].
+                   %TODO add tc mentioned in the equal stuff
     \end{align*}
 
     To see that this is well-defined, first note that
     that $[[ BC ]]$ has type $\star$ by assumption on $[[ BC ]]$.
     Then, $[[ ec_1 ]]$ and $[[ ec_2 ]]$ are well-typed in the context $[[ mudG (G, v : { v_1 : B | top } ok) ]]$ according to the premises,
-    and this context coincides with the one used to type check $[[ \v : BC. ec_1 equal ec_2 ]]$.
+    and this context coincides with the one used to type check $[[ \v : BC. ec_1 equal ec_2 of tc ]]$.
     Hence both components of the dependent pair are well-typed, so by \cref{lma:dep_pair_typing} the dependent pair itself has type $\star$.
 
     \todo[inline]{
@@ -1108,7 +1109,7 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
                    &[[ tc' = muT(G |- ts') ]],       \\
                    &[[ ec = muE(G |- es : ts) ]],    \\
                    &[[ eci = muE(G |- esi : ts) ]],  \\
-                   &[[ tci' ]] = [[ (_ : Unitc ** ec equal < li = xi > as tc) ]].
+                   &[[ tci' ]] = [[ (_ : Unitc ** ec equal ( < li = xi > as tc ) of tc) ]].
     \end{align*}
 
     This part of the translation is perhaps one of the most involved,
@@ -1118,9 +1119,9 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
     has type $[[ { _ : Unit | es = < li = xi > as ts } ]]$.
     After $[[esi]]$ gets translated into the (core) term $[[eci]]$,
     the latter is type checked in the context where $\hat x$
-    has the dependent pair type $[[ (_ : Unitc ** ec equal < li = xi > as tc) ]]$.
+    has the dependent pair type $[[ (_ : Unitc ** ec equal ( < li = xi > as tc ) of tc) ]]$.
     On the other hand, the $\mathbf{proof} \pi_i$ part of the $\mathbf{case}$ branch
-    provides the proof $\pi_i$ typed as $[[ ec equal < li = xi > as tc ]]$,
+    provides the proof $\pi_i$ typed as $[[ ec equal ( < li = xi > as tc ) of tc ]]$,
     so it needs to be packed into the dependent pair type that $[[eci]]$ ``expects''.
 
     The lambda abstraction/application pair on the right-hand side of the translation
