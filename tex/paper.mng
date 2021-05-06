@@ -805,17 +805,6 @@ and state some straightforward facts that will be useful later:
       then $[[ GC |- (x : tc ** Pred x ) : sst ]]$.
     \end{lemma}
 
-    We also introduce a helper $[[seconddp]]$ that will be useful later.
-    It takes a function and uses it to map over the second component of a dependent pair,
-    or, in types:
-    \[
-      [[ empty |- seconddp : Pi ec , ec1 , ec2 : sst. (Pi x : ec . ec1 -> ec2) -> (x : ec ** ec1) -> (x : ec ** ec2) ]].
-    \]
-    It has an unsurprising but perhaps cumbersome definition:
-    \[
-      [[ \ ec , ec1 , ec2 : sst. \ f : (Pi x : ec . ec1 -> ec2). \ x' : (x : ec ** ec1). x' (x : ec ** ec2) (\ x0 : ec. \ x1 : ec1. (x0 ** f x0 x1)) ]].
-    \]
-
   \item Non-dependent pair type:
     \[
       (\nonterm{tc}_1, \nonterm{tc}_2) \triangleq \{ x : \nonterm{tc}_1\ **\ (\lambda \_ : \nonterm{tc}_1. \nonterm{tc}_2) x \}.
@@ -1189,7 +1178,8 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
         this $[[ sigma ]]$ witnesses the implication of the refinements $[[ A v. r1 => r2 ]]$,
         which is isomorphic to the function type $[[ Pi v : BC. tc1 -> tc2 ]]$.
 
-        Then, this $[[ sigma ]]$ can be combined with $[[ seconddp ]]$,
+        Then, this $[[ sigma ]]$ can be combined with a function $[[ seconddp ]]$
+        (which maps over the second component of a dependent pair, and whose definition is omitted here for brevity),
         producing a function mapping $[[ (v : BC ** tc1) ]]$ onto $[[ (v : BC ** tc2 ) ]]$~---
         precisely what is needed in case of \textsc{ST-Base}.
 
