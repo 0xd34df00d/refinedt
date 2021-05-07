@@ -783,7 +783,7 @@ and state some straightforward facts that will be useful later:
     \]
   \item Dependent pair type, or $\Sigma$-type,
     with the first component being a value $x$ of type $[[tc]]$
-    and the second component being of type $P x$, where $P$ is usually of type $[[tc]] \rightarrow \star$:
+    and the second component being of type $P x$, where $P$ is usually of type $[[ tc -> sst ]]$:
     \[
       [[ (x : tc ** Pred x) ]] \triangleq [[ Pi alpha : sst. (Pi x : tc. Pred x -> alpha) -> alpha ]],
     \]
@@ -807,14 +807,14 @@ and state some straightforward facts that will be useful later:
 
   \item Non-dependent pair type:
     \[
-      (\nonterm{tc}_1, \nonterm{tc}_2) \triangleq \{ x : \nonterm{tc}_1\ **\ (\lambda \_ : \nonterm{tc}_1. \nonterm{tc}_2) x \}.
+      [[ (tc1, tc2) ]] \triangleq [[ (x : tc1 ** (\ _ : tc1. tc2) x) ]].
     \]
     As a direct consequence of the previous lemma we obtain
     \begin{lemma}\label{lma:non_dep_pair_typing}
-      If $\nonterm{tc}_1, \nonterm{tc}_2$ are typeable in $\nonterm{GC}$,
-      then $(\nonterm{tc}_1, \nonterm{tc}_2)$ is typeable in $\nonterm{GC}$ and has type $\star$.
+      If $[[ tc1 ]], [[ tc2 ]]$ are typeable in $[[ GC ]]$,
+      then $[[ (tc1, tc2) ]]$ is typeable in $[[ GC ]]$ and has type $\star$.
     \end{lemma}
-  \item Equality of expressions $\nonterm{ec}_1, \nonterm{ec}_2$ of type $\nonterm{tc}$:
+  \item Equality of expressions $[[ ec1 ]], [[ ec2 ]]$ of type $[[ tc ]]$:
     \[
       [[ ec1 equal ec2 of tc ]]
         \triangleq
@@ -831,8 +831,8 @@ and state some straightforward facts that will be useful later:
 
     Again, it can be seen that
     \begin{lemma}\label{lma:equality_typing}
-      If $\nonterm{ec}_1, \nonterm{ec}_2$ are well-typed in a context $\nonterm{GC}$,
-      then $\nonterm{GC} \vdash \nonterm{ec}_1 \equiv \nonterm{ec}_2 : \star$.
+      If $[[ ec1 ]], [[ ec2 ]]$ have type $[[ tc ]]$ in a context $[[ GC ]]$,
+      then $[[ GC |- ec1 equal ec2 of tc : sst ]]$.
     \end{lemma}
 \end{itemize}
 
