@@ -29,8 +29,21 @@ CADT-injective-len refl = refl
 CADT-injective : Injective (CADT {n} {ℓ})
 CADT-injective refl = refl
 
+CCon-injective-len : {cons  : ADTCons (Mkℕₐ n)  ℓ}
+                   → {cons' : ADTCons (Mkℕₐ n') ℓ}
+                   → CCon ι ε cons ≡ CCon ι' ε' cons'
+                   → n ≡ n'
+CCon-injective-len refl = refl
+
 CCon-injective : Injective₃ (CCon {n} {ℓ})
 CCon-injective refl = ⟨ refl , ⟨ refl , refl ⟩ ⟩
+
+
+CCase-injective-len : {bs  : CaseBranches nₐ  ℓ}
+                    → {bs' : CaseBranches nₐ' ℓ}
+                    → CCase ε bs ≡ CCase ε' bs'
+                    → nₐ ≡ nₐ'
+CCase-injective-len refl = refl
 
 CCase-injective : Injective₂ (CCase {ℓ} {nₐ})
 CCase-injective refl = ⟨ refl , refl ⟩
