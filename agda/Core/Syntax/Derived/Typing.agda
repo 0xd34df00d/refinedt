@@ -6,6 +6,7 @@ open import Data.Product renaming (_,_ to ⟨_,_⟩)
 
 open import Core.Syntax
 open import Core.Syntax.Derived
+open import Core.Syntax.Membership
 open import Core.Derivations
 
 head-well-formed : Γ , τ ⊢ ε ⦂ τ'
@@ -21,6 +22,13 @@ head-well-formed (CT-UnitTerm δ) = head-well-formed δ
 head-well-formed (CT-ADTForm (δ ∷ _)) = head-well-formed δ
 head-well-formed (CT-ADTCon _ _ δ) = head-well-formed δ
 head-well-formed (CT-ADTCase _ δ _) = head-well-formed δ
+
+CT-VarW : Γ ⊢ τ ⦂ CSort s
+        → τ ∈ Γ at ι
+        → Γ ⊢ CVar ι ⦂ τ
+CT-VarW δ (∈-zero refl) with head-well-formed δ
+... | ⟨ _ , δ' ⟩ = CT-Var δ'
+CT-VarW δ (∈-suc refl ∈) = let r = CT-VarW {! !} ∈ in {! CT-Weaken !}
 
 ⇒'-well-typed : Γ ⊢ τ₁ ⦂ CSort s₁
               → Γ ⊢ τ₂ ⦂ CSort s₂
