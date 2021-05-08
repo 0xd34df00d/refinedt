@@ -26,3 +26,8 @@ Injective₂ : {A B C : Set} → (A → B → C) → Set
 Injective₂ f = ∀ {x₁ x₂ x₁' x₂'}
                → f x₁ x₂ ≡ f x₁' x₂'
                → x₁ ≡ x₁' × x₂ ≡ x₂'
+
+Injective₃ : {A B C D : Set} → (A → B → C → D) → Set
+Injective₃ f = ∀ {x₁ x₂ x₃ x₁' x₂' x₃'}
+               → f x₁ x₂ x₃ ≡ f x₁' x₂' x₃'
+               → x₁ ≡ x₁' × x₂ ≡ x₂' × x₃ ≡ x₃'
