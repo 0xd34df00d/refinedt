@@ -20,6 +20,12 @@ CLam-injective refl = ⟨ refl , refl ⟩
 CApp-injective : Injective₂ (CApp {ℓ})
 CApp-injective refl = ⟨ refl , refl ⟩
 
+CADT-injective-len : {cons  : ADTCons (Mkℕₐ (suc n))  ℓ}
+                   → {cons' : ADTCons (Mkℕₐ (suc n')) ℓ}
+                   → CADT cons ≡ CADT cons'
+                   → n ≡ n'
+CADT-injective-len refl = refl
+
 CADT-injective : Injective (CADT {n} {ℓ})
 CADT-injective refl = refl
 
