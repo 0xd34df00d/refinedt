@@ -13,8 +13,8 @@ record ℕₐ : Set where
     get-length : ℕ
 
 variable
-  nₐ : ℕₐ
-  k n ℓ ℓ' ℓ₀ ℓ₁ ℓ₂ : ℕ
+  nₐ nₐ' : ℕₐ
+  k n n' ℓ ℓ' ℓ₀ ℓ₁ ℓ₂ : ℕ
   idx ι ι₁ ι₂ : Fin ℓ
 
 Injective : {A B : Set} → (A → B) → Set
