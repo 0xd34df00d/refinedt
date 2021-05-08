@@ -15,7 +15,7 @@ record ℕₐ : Set where
 variable
   nₐ nₐ' : ℕₐ
   k n n' ℓ ℓ' ℓ₀ ℓ₁ ℓ₂ : ℕ
-  idx ι ι₁ ι₂ : Fin ℓ
+  idx ι ι₁ ι₂ ι' ι₁' ι₂' : Fin ℓ
 
 Injective : {A B : Set} → (A → B) → Set
 Injective f = ∀ {x₁ x₂}
