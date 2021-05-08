@@ -3,10 +3,12 @@
 module Core.Syntax.Derived.Typing where
 
 open import Data.Product renaming (_,_ to ⟨_,_⟩)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Core.Syntax
 open import Core.Syntax.Derived
 open import Core.Syntax.Membership
+open import Core.Syntax.Renaming
 open import Core.Derivations
 
 head-well-formed : Γ , τ ⊢ ε ⦂ τ'
@@ -22,6 +24,37 @@ head-well-formed (CT-UnitTerm δ) = head-well-formed δ
 head-well-formed (CT-ADTForm (δ ∷ _)) = head-well-formed δ
 head-well-formed (CT-ADTCon _ _ δ) = head-well-formed δ
 head-well-formed (CT-ADTCase _ δ _) = head-well-formed δ
+
+unweaken : ∀ {sort}
+         → Γ , τ₀ ⊢ τ' ⦂ sort
+         → τ' ≡ weaken-ε τ
+         → CSort s ≡ weaken-ε sort
+         → Γ ⊢ τ ⦂ CSort s
+unweaken {τ = CVar ι} (CT-Weaken δ δ₁) ≡₁ ≡₂ = {! !}
+unweaken {τ = CVar ι} (CT-Conv δ δ₁ x) ≡₁ ≡₂ = {! !}
+unweaken {τ = CSort s} (CT-Weaken δ δ₁) ≡₁ ≡₂ = {! !}
+unweaken {τ = CSort s} (CT-Conv δ δ₁ x) ≡₁ ≡₂ = {! !}
+unweaken {τ = CΠ τ τ₁} (CT-Weaken δ δ₁) ≡₁ ≡₂ = {! !}
+unweaken {τ = CΠ τ τ₁} (CT-Form δ δ₁) ≡₁ ≡₂ = {! !}
+unweaken {τ = CΠ τ τ₁} (CT-Conv δ δ₁ x) ≡₁ ≡₂ = {! !}
+unweaken {τ = CLam τ τ₁} (CT-Weaken δ δ₁) ≡₁ ≡₂ = {! !}
+unweaken {τ = CLam τ τ₁} (CT-Conv δ δ₁ x) ≡₁ ≡₂ = {! !}
+unweaken {τ = CApp τ τ₁} (CT-Weaken δ δ₁) ≡₁ ≡₂ = {! !}
+unweaken {τ = CApp τ τ₁} (CT-App δ δ₁) ≡₁ ≡₂ = {! !}
+unweaken {τ = CApp τ τ₁} (CT-Conv δ δ₁ x) ≡₁ ≡₂ = {! !}
+unweaken {τ = Cunit} (CT-Weaken δ δ₁) ≡₁ ≡₂ = {! !}
+unweaken {τ = Cunit} (CT-Conv δ δ₁ x) ≡₁ ≡₂ = {! !}
+unweaken {τ = CUnit} (CT-Weaken δ δ₁) ≡₁ ≡₂ = {! !}
+unweaken {τ = CUnit} (CT-Conv δ δ₁ x) ≡₁ ≡₂ = {! !}
+unweaken {τ = CUnit} (CT-UnitType δ) ≡₁ ≡₂ = {! !}
+unweaken {τ = CADT cons} (CT-Weaken δ δ₁) ≡₁ ≡₂ = {! !}
+unweaken {τ = CADT cons} (CT-Conv δ δ₁ x) ≡₁ ≡₂ = {! !}
+unweaken {τ = CADT cons} (CT-ADTForm consδs) ≡₁ ≡₂ = {! !}
+unweaken {τ = CCon ι τ cons} (CT-Weaken δ δ₁) ≡₁ ≡₂ = {! !}
+unweaken {τ = CCon ι τ cons} (CT-Conv δ δ₁ x) ≡₁ ≡₂ = {! !}
+unweaken {τ = CCase τ branches} (CT-Weaken δ δ₁) ≡₁ ≡₂ = {! !}
+unweaken {τ = CCase τ branches} (CT-Conv δ δ₁ x) ≡₁ ≡₂ = {! !}
+unweaken {τ = CCase τ branches} (CT-ADTCase δ δ₁ branches₁) ≡₁ ≡₂ = {! !}
 
 CT-VarW : Γ ⊢ τ ⦂ CSort s
         → τ ∈ Γ at ι
