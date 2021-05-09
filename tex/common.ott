@@ -1,45 +1,45 @@
 grammar
 terminals :: terminals_ ::=
-  | top		:: :: top {{ tex \top }}
-  | bot		:: :: bot {{ tex \bot }}
+  | top		  :: :: top {{ tex \top }}
+  | bot		  :: :: bot {{ tex \bot }}
   | /\      :: :: and {{ tex \land }}
   | ->      :: :: arr {{ tex \rightarrow }}
   | |->     :: :: subst {{ tex \mapsto }}
-  | GD		:: :: contextdelta {{ tex \Delta }}
-  | ~~>		:: :: evalsto {{ tex \evalsto }}
+  | GD		  :: :: contextdelta {{ tex \Delta }}
+  | ~~>		  :: :: evalsto {{ tex \evalsto }}
   | =trb    :: :: r_equiv {{ tex =_{\tau r\beta} }}
-  | in		:: :: in  {{ tex \in }}
-  | |-		:: :: proves {{ tex \vdash }}
+  | in		  :: :: in  {{ tex \in }}
+  | |-		  :: :: proves {{ tex \vdash }}
   | \       :: :: lambda {{ tex \lambda }}
-  | Pi		:: :: product {{ tex \Pi }}
-  | <:		:: :: subtype {{ tex \mathrel{<:} }}
-  | A		:: :: forall {{ tex \forall }}
-  | =>		:: :: implies {{ tex \implies }}
-  | sst		:: :: starkind {{ tex \star }}
-  | ssq		:: :: squarekind {{ tex \square }}
+  | Pi		  :: :: product {{ tex \Pi }}
+  | <:		  :: :: subtype {{ tex \mathrel{<:} }}
+  | A		    :: :: forall {{ tex \forall }}
+  | =>		  :: :: implies {{ tex \implies }}
+  | sst		  :: :: starkind {{ tex \star }}
+  | ssq		  :: :: squarekind {{ tex \square }}
   | empty   :: :: empty {{ tex \emptyset }}
-  | =b		:: :: beq {{ tex =_\beta }}
-  | fresh	:: :: fresh {{ tex \fresh }}
-  | <		:: :: langle {{ tex \langle }}
-  | >		:: :: rangle {{ tex \rangle }}
-  | unit	:: :: unit {{ tex \unit }}
-  | Unit	:: :: Unit {{ tex \Unit }}
-  | unitc	:: :: unitc {{ tex \unitc }}
-  | Unitc	:: :: Unitc {{ tex \Unitc }}
-  | def		:: :: def {{ tex \triangleq }}
-  | ok		:: :: ok {{ tex \ctxok }}
-  | equal	:: :: equal {{ tex \equiv }}
+  | =b		  :: :: beq {{ tex =_\beta }}
+  | fresh	  :: :: fresh {{ tex \fresh }}
+  | <		    :: :: langle {{ tex \langle }}
+  | >		    :: :: rangle {{ tex \rangle }}
+  | unit	  :: :: unit {{ tex \unit }}
+  | Unit	  :: :: Unit {{ tex \Unit }}
+  | unitc	  :: :: unitc {{ tex \unitc }}
+  | Unitc	  :: :: Unitc {{ tex \Unitc }}
+  | def		  :: :: def {{ tex \triangleq }}
+  | ok		  :: :: ok {{ tex \ctxok }}
+  | equal	  :: :: equal {{ tex \equiv }}
   | eqrefl	:: :: eqrefl {{ tex \eqrefl }}
 
-  | mudG	:: :: tranctx {{ tex \Tranctx }}
-  | mudT	:: :: trantyderiv {{ tex \Tranty }}
-  | muT 	:: :: tranty {{ tex \tranty }}
-  | mudE	:: :: trantermderiv {{ tex \Tranterm }}
-  | muE 	:: :: tranterm {{ tex \tranterm }}
-  | mudS	:: :: transubderiv {{ tex \Transub }}
-  | muS 	:: :: transub {{ tex \transub }}
+  | mudG	  :: :: tranctx {{ tex \Tranctx }}
+  | mudT	  :: :: trantyderiv {{ tex \Tranty }}
+  | muT 	  :: :: tranty {{ tex \tranty }}
+  | mudE	  :: :: trantermderiv {{ tex \Tranterm }}
+  | muE 	  :: :: tranterm {{ tex \tranterm }}
+  | mudS	  :: :: transubderiv {{ tex \Transub }}
+  | muS 	  :: :: transub {{ tex \transub }}
   | omitted :: :: omitted {{ tex \cdots }}
-  | **		:: :: dast {{ tex \dast }}
+  | **		  :: :: dast {{ tex \dast }}
 
 metavar x {{ tex \gterm x }} ::= {{ com variables }}
 metavar v {{ tex \gterm v }} ::= {{ com refinement variables }}
@@ -52,14 +52,14 @@ indexvar i, j ::= {{ com indexes }}
 
 grammar
 formula :: formula_ ::=
-  | judgement		:: :: judgement
+  | judgement		  :: :: judgement
   | x : ts in G		:: :: xinenvS
   | x : ec in GC	:: :: xinenvC
-  | es = T			:: :: eTrue
-  | es = F			:: :: eFalse
-  | C => L			:: :: implication
-  | ec =b ec2		:: :: betaconversion
-  | x fresh			:: :: freshness
+  | es = T			  :: :: eTrue
+  | es = F			  :: :: eFalse
+  | C => L			  :: :: implication
+  | ec =b ec2		  :: :: betaconversion
+  | x fresh			  :: :: freshness
   | l in </ li // i />
 					:: :: label_membership
   | formula1 .... formulai   ::  :: dots
@@ -67,11 +67,11 @@ formula :: formula_ ::=
   | ec0 def ec		:: :: cdefinition
   | formula \\\\	:: :: lbh {{ tex [[formula]] \ottlinebreakhack }}
 
-  | omitted			:: :: omitted
-  | mudG ( G ok )		:: :: ctx
-  | muT ( G |- ts )		:: :: ty
-  | mudT ( G |- ts )	:: :: tyDeriv
-  | muE ( G |- es : ts )	:: :: term
-  | mudE ( G |- es : ts )	:: :: termDeriv
-  | muS ( G |- ts1 <: ts2 )	:: :: tysub
+  | omitted			              :: :: omitted
+  | mudG ( G ok )		          :: :: ctx
+  | muT ( G |- ts )		        :: :: ty
+  | mudT ( G |- ts )	        :: :: tyDeriv
+  | muE ( G |- es : ts )	    :: :: term
+  | mudE ( G |- es : ts )	    :: :: termDeriv
+  | muS ( G |- ts1 <: ts2 )	  :: :: tysub
   | mudS ( G |- ts1 <: ts2 )	:: :: tysubDeriv
