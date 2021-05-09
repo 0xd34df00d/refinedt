@@ -62,15 +62,15 @@ C {{ tex \nonterm C }} :: logic_ctx_ ::= {{ com logical context }}
 
 defns Jtype :: '' ::=
 
-defn ts1 =trb ts2 :: :: type_r_equiv :: RTEquiv_ {{ com restricted type equivalence }} by
+defn ts1 requiv ts2 :: :: type_r_equiv :: RTEquiv_ {{ com restricted type equivalence }} by
 
 es ~~> es'
 ------------------------------------- :: Forward
-[ x |-> es' ] ts =trb [ x |-> es ] ts
+[ x |-> es' ] ts requiv [ x |-> es ] ts
 
 es ~~> es'
 ------------------------------------- :: Backward
-[ x |-> es ] ts =trb [ x |-> es' ] ts
+[ x |-> es ] ts requiv [ x |-> es' ] ts
 
 defn G ok :: :: ctx_wf :: TCTX_ {{ com context well-formedness }} by
 
@@ -152,7 +152,7 @@ G |- es : ts'
 
 G |- es : ts
 G |- ts'
-ts =trb ts'
+ts requiv ts'
 ------------- :: RConv
 G |- es : ts'
 

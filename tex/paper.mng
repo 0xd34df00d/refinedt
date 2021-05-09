@@ -439,7 +439,7 @@ the proofs are done over the language defined here, we need to add at least Int.
 Type equivalence, together with the \textsc{T-RConv} typing rule, deserves some special attention.
 Note that this relation is indeed restricted, and contains only a tiny subset of what the usual $\beta$-equivalence relates.
 \begin{remark}
-In fact, $[[ =trb ]]$ is neither transitive nor reflexive, so it is not really an \emph{equivalence}, but \textsc{T-RConv} can be seen as the transitive-reflexive closure of $[[ =trb ]]$.
+In fact, $[[ requiv ]]$ is neither transitive nor reflexive, so it is not really an \emph{equivalence}, but \textsc{T-RConv} can be seen as the transitive-reflexive closure of $[[ requiv ]]$.
 \rae{I'm not sure what ``becomes one'' really means here.}
 \gr{Ah, that's really poor wording on my side. Hopefully fixed that.}
 Indeed, transitivity is regained via consecutive applications of \textsc{T-RConv}, and reflexivity is achieved by not applying this rule at all.
@@ -470,7 +470,7 @@ We also discuss this in the section on the metatheoretical properties of the lan
 \end{figure}
 
 \begin{figure}[ht]
-  \drules[RTEquiv]{$[[ ts1 =trb ts2 ]]$}{type equivalence}{Forward,Backward}
+  \drules[RTEquiv]{$[[ ts1 requiv ts2 ]]$}{type equivalence}{Forward,Backward}
   \caption{Surface language type equivalence}\label{fig:surface_tyequiv}
 \end{figure}
 
@@ -515,7 +515,7 @@ Since the surface language uses the subtyping oracle in its type system, the met
     Substituting $[[ x ]]$ for $[[ es ]]$ then boils down to replacing that assumption with its proof.
 
   \item\label{orprop:stepping}
-    \emph{Stepping}: if $[[ ts =trb ts' ]]$ and the oracle concludes $[[ [| G, x : ts, GD |] => A v. (r1 => r2) ]]$, then it must also conclude $[[ [| G, x : ts', GD |] => A v. (r1 => r2) ]]$.
+    \emph{Stepping}: if $[[ ts requiv ts' ]]$ and the oracle concludes $[[ [| G, x : ts, GD |] => A v. (r1 => r2) ]]$, then it must also conclude $[[ [| G, x : ts', GD |] => A v. (r1 => r2) ]]$.
 
     In other words, evaluation should not affect the logical interpretation of types.
 \end{enumerate}
@@ -1311,7 +1311,7 @@ Investigating how to do this in a sound and feasible way seems important to make
 \end{proof}
 
 \begin{lemma}[Context equivalence, \prooftermname{typing-equivalence}]\label{lma:ctx_equivalence}
-  Assume that $[[ ts1 =trb ts1' ]]$ and $[[ G |- ts1' ]]$. Then:
+  Assume that $[[ ts1 requiv ts1' ]]$ and $[[ G |- ts1' ]]$. Then:
   \begin{itemize}
     \item If $[[ G , x : ts1, GD ok ]]$, then $[[ G , x : ts1', GD ok ]]$.
     \item If $[[ G , x : ts1, GD |- ts ]]$, then $[[ G , x : ts1', GD |- ts ]]$.
@@ -1323,7 +1323,7 @@ Investigating how to do this in a sound and feasible way seems important to make
 
   In the third bullet, the case of $[[ es ]]$ being the variable $[[ x ]]$ uses (and motivates the existence of) the \textsc{RTEquiv-Backward} rule.
   Indeed, if $[[ G , x : ts1, GD |- x : ts1 ]]$, then $[[ G , x : ts1', GD |- x : ts1' ]]$ according to \textsc{T-Var},
-  and going back from $[[ ts1' ]]$ to $[[ ts1 ]]$ is only possible if $[[ =trb ]]$ is a symmetric relation.
+  and going back from $[[ ts1' ]]$ to $[[ ts1 ]]$ is only possible if $[[ requiv ]]$ is a symmetric relation.
   \textsc{RTEquiv-Backward} symmetrizes the \textsc{RTEquiv-Forward} rule, which is needed for the preservation \cref{thm:surface_preservation}.
 \end{proof}
 
