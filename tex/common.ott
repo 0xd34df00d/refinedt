@@ -7,7 +7,7 @@ terminals :: terminals_ ::=
   | |->     :: :: subst {{ tex \mapsto }}
   | GD		  :: :: contextdelta {{ tex \Delta }}
   | ~~>		  :: :: evalsto {{ tex \evalsto }}
-  | requiv  :: :: restricted_equivalence {{ tex =_{\tau r\beta} }}
+  | requiv  :: :: restricted_equivalence {{ tex \sim_{\tau} }}
   | in		  :: :: in  {{ tex \in }}
   | |-		  :: :: proves {{ tex \vdash }}
   | \       :: :: lambda {{ tex \lambda }}
