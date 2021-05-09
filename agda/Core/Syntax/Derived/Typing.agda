@@ -56,12 +56,17 @@ unweaken {τ = CCase τ branches} (CT-Weaken δ δ₁) ≡₁ ≡₂ = {! !}
 unweaken {τ = CCase τ branches} (CT-Conv δ δ₁ x) ≡₁ ≡₂ = {! !}
 unweaken {τ = CCase τ branches} (CT-ADTCase δ δ₁ branches₁) ≡₁ ≡₂ = {! !}
 
+unweaken' : Γ , τ₀ ⊢ weaken-ε τ ⦂ CSort s
+          → Γ ⊢ τ ⦂ CSort s
+unweaken' δ = unweaken δ refl refl
+
 CT-VarW : Γ ⊢ τ ⦂ CSort s
         → τ ∈ Γ at ι
         → Γ ⊢ CVar ι ⦂ τ
 CT-VarW δ (∈-zero refl) with head-well-formed δ
 ... | ⟨ _ , δ' ⟩ = CT-Var δ'
-CT-VarW δ (∈-suc refl ∈) = let r = CT-VarW {! !} ∈ in {! CT-Weaken !}
+CT-VarW δ (∈-suc refl ∈) with head-well-formed δ
+... | ⟨ _ , δ' ⟩ = CT-Weaken (CT-VarW (unweaken' δ) ∈) δ'
 
 ⇒'-well-typed : Γ ⊢ τ₁ ⦂ CSort s₁
               → Γ ⊢ τ₂ ⦂ CSort s₂
