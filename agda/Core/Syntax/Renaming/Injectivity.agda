@@ -74,3 +74,8 @@ mutual
           rewrite act-ε-injective f-inj {ε} {ε'} (proj₁ (CCase-injective ≡))
                 | act-bs-injective f-inj (proj₂ (CCase-injective ≡))
                 = refl
+
+weaken-ε-injective : (ε ε' : CExpr ℓ)
+                   → weaken-ε ε ≡ weaken-ε ε'
+                   → ε ≡ ε'
+weaken-ε-injective ε ε' ≡ = act-ε-injective suc-injective ≡
