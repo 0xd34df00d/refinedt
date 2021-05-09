@@ -522,186 +522,32 @@ Since the surface language uses the subtyping oracle in its type system, the met
 
 \subsubsection{Properties}
 
-We prove some of the usual metatheoretical properties of the proposed language.
+We prove the usual metatheoretical properties of the proposed language.
+Some of the lemmas directly used in the subsequent exposition as well as progress and preservation theorems are formulated below.
+The full list of the proven lemmas can be found in \cref{appendix:surface_props}.
+
 We also provide machine-verified proofs of these theorems in the supplemental code,
 with the corresponding proof terms referred in lemmas names.
 
 \begin{lemma}[Agreement I, \prooftermname{T-implies-TCTX}]\label{lma:term_wf_implies_ctx_wf}
   If $[[ G |- es : ts ]]$, then $[[ G ok ]]$.
 \end{lemma}
-\begin{proof}
-  Straightforward induction on the derivation of $[[ G |- es : ts ]]$.
-  \textsc{T-Unit} and \textsc{T-Var} carry the witness explicitly,
-  and the other rules recurse on one of their premises.
-\end{proof}
 
 \begin{lemma}[Agreement II, \prooftermname{TWF-implies-TCTX}]\label{lma:type_wf_implies_ctx_wf}
   If $[[ G |- ts ]]$, then $[[G ok]]$.
 \end{lemma}
-\begin{proof}
-  Straightforward induction on the derivation of $[[ G |- ts ]]$.
-  \textsc{TWF-TrueRef} carries the witness explicitly,
-  the case for \textsc{TWF-Base} uses \cref{lma:term_wf_implies_ctx_wf} on either of its premises,
-  and the other rules recurse on one of their premises.
-\end{proof}
-
-\begin{lemma}[Subtyping relation thinning, \prooftermname{st-thinning}]\label{lma:thinning_st}
-  Let $[[ G ]]$, $[[ G' ]]$ be contexts such that $[[ G ]] \subset [[ G' ]]$.
-  Then, $[[ G |- ts1 <: ts2 ]]$ implies $[[ G' |- ts1 <: ts2 ]]$.
-\end{lemma}
-\begin{proof}
-  Straightforward induction on the derivation of $[[ G |- ts1 <: ts2 ]]$.
-  The \textsc{ST-Base} case depends the oracle thinning property~\ref{orprop:thinning}.
-\end{proof}
-
-\begin{lemma}[Thinning]\label{lma:thinning}
-  Let $[[ G ]]$, $[[ G' ]]$ be contexts such that $[[ G ]] \subset [[ G' ]]$ and $[[ G' ok ]]$.
-  Given that:
-  \begin{itemize}
-    \item if $[[ G |- ts ]]$, then $[[ G' |- ts ]]$ (\prooftermname{twf-thinning}),
-    \item if $[[ G |- es : ts ]]$, then $[[ G' |- es : ts ]]$ (\prooftermname{t-thinning}).
-  \end{itemize}
-\end{lemma}
-\begin{proof}
-  Mutual induction on the derivations of type well-formedness and term well-typedness.
-  Since each clause uses the other one (and, of course, itself) only on smaller derivation trees,
-  this is a well-founded proof.
-
-  In particular, the need for mutual induction appears in the following cases:
-  \begin{itemize}
-    \item \textsc{TWF-Base}. Unlike other type well-formedness rules,
-      its premises contain judgements about certain terms being well-typed, so this case uses thinning on types.
-    \item \textsc{T-Abs}, \textsc{T-Case}, \textsc{T-Con}.
-      These rules require certain judgements about type well-formedness to hold, so these cases use thinning on terms.
-  \end{itemize}
-
-  In addition to that, the \textsc{T-Sub} rule relies on the subtyping relation thinning \cref{lma:thinning_st}.
-\end{proof}
-
-\begin{lemma}[Substitution, \prooftermname{typing-substitution}]\label{lma:typing_substitution}
-  Assume $[[ G |- es : ts ]]$. Given that:
-  \begin{itemize}
-    \item if $[[ G, x : ts, GD |- ts' ]]$, then $[[ G, [ x |-> es ] GD |- [ x |-> es ] ts' ]] $,
-    \item if $[[ G, x : ts, GD |- es' : ts' ]]$, then $[[ G, [ x |-> es ] GD |- [ x |-> es ] es' : [ x |-> es ] ts' ]] $.
-  \end{itemize}
-\end{lemma}
-\begin{proof}
-  Due to the presence of a subset of dependent types the proof is a bit bulky,
-  using simultaneous induction on $\Delta$ and the derivation of $[[ G, x : ts, GD |- ts' ]]$.
-  We refer the interested reader to the formal proof of theorem in the supplemental code for the specific details.
-\end{proof}
 
 \begin{lemma}[Agreement III, \prooftermname{T-implies-TWF}]\label{lma:term_wf_implies_type_wf}
   If $[[ G |- es : ts ]]$, then $[[ G |- ts ]]$.
 \end{lemma}
-\begin{proof}
-  Straightforward induction on the derivation of $[[ G |- es : ts ]]$.
-  The interesting case is \textsc{T-App}, as it invokes the substitution \cref{lma:typing_substitution}.
-\end{proof}
-
-\begin{lemma}[Subtyping narrowing, \prooftermname{<:-narrowing}]\label{lma:st_narrowing}
-  If $[[ G |- ts' <: ts ]]$ and $[[ G, x : ts, GD |- ts1 <: ts2 ]]$, then $[[ G, x : ts', GD |- ts1 <: ts2 ]]$.
-\end{lemma}
-\begin{proof}
-  Straightforward induction on the derivation of $[[ G, x : ts, GD |- ts1 <: ts2 ]]$.
-  The \textsc{SC-Base} case relies on the oracle narrowing property~\ref{orprop:narrowing}.
-\end{proof}
-
-\begin{lemma}[Subtyping transitivity, \prooftermname{<:-trans}]\label{lma:st_transitivity}
-  If $[[ G |- ts1 <: ts2 ]]$ and $[[ G |- ts2 <: ts3 ]]$, then $[[ G |- ts1 <: ts3 ]]$.
-\end{lemma}
-\begin{proof}
-  Simultaneous induction on both subtyping derivations, noting that they must have the same ``shape''~--- if one is \textsc{ST-Base}, then so is the other, since the $[[ ts2 ]]$ type is ``shared'' between the two.
-  In particular, if both are \textsc{ST-Base}, then the oracle transitivity property~\ref{orprop:trans} is used.
-  The \textsc{SC-Arr} case uses the subtyping narrowing \cref{lma:st_narrowing}.
-\end{proof}
-
-\begin{lemma}[Narrowing, \prooftermname{typing-narrowing}]\label{lma:narrowing}
-  Assume that $[[ G |- ts1' <: ts1 ]]$ and $[[ G |- ts1' ]]$. Then:
-  \begin{itemize}
-    \item If $[[ G , x : ts1, GD ok ]]$, then $[[ G , x : ts1', GD ok ]]$.
-    \item If $[[ G , x : ts1, GD |- ts ]]$, then $[[ G , x : ts1', GD |- ts ]]$.
-    \item If $[[ G , x : ts1, GD |- es : ts ]]$, then $[[ G , x : ts1', GD |- es : ts ]]$.
-  \end{itemize}
-\end{lemma}
-\begin{proof}
-  Mutual induction on the derivations, using the subtyping narrowing \cref{lma:st_narrowing} in the \textsc{T-Sub} case.
-\end{proof}
-
-\begin{lemma}[Context equivalence, \prooftermname{typing-equivalence}]\label{lma:ctx_equivalence}
-  Assume that $[[ ts1 =trb ts1' ]]$ and $[[ G |- ts1' ]]$. Then:
-  \begin{itemize}
-    \item If $[[ G , x : ts1, GD ok ]]$, then $[[ G , x : ts1', GD ok ]]$.
-    \item If $[[ G , x : ts1, GD |- ts ]]$, then $[[ G , x : ts1', GD |- ts ]]$.
-    \item If $[[ G , x : ts1, GD |- es : ts ]]$, then $[[ G , x : ts1', GD |- es : ts ]]$.
-  \end{itemize}
-\end{lemma}
-\begin{proof}
-  Mutual induction on the derivations.
-
-  In the third bullet, the case of $[[ es ]]$ being the variable $[[ x ]]$ uses (and motivates the existence of) the \textsc{RTEquiv-Backward} rule.
-  Indeed, if $[[ G , x : ts1, GD |- x : ts1 ]]$, then $[[ G , x : ts1', GD |- x : ts1' ]]$ according to \textsc{T-Var},
-  and going back from $[[ ts1' ]]$ to $[[ ts1 ]]$ is only possible if $[[ =trb ]]$ is a symmetric relation.
-  \textsc{RTEquiv-Backward} symmetrizes the \textsc{RTEquiv-Forward} rule, which is needed for the preservation \cref{thm:surface_preservation}.
-\end{proof}
-
-\begin{lemma}[Canonical forms, \prooftermname{canonical}]\label{lma:canonical_forms}
-  Let $[[ empty |- es : ts ]]$ and $[[ es ]]$ be a value. In this case:
-  \begin{itemize}
-    \item if $[[ ts ]]$ is of the form $[[ (x : ts1) -> ts2 ]]$, then $[[ es ]]$ is of the form $[[ \ x : ts . es' ]]$,
-    \item if $[[ ts ]]$ is of the form $[[ < </ li : tsi // i /> > ]]$, then $[[ es ]]$ is of the form $[[ < l = es' > as < </ li : tsi' // i /> > ]]$.
-  \end{itemize}
-\end{lemma}
-\begin{proof}
-  Straightforward induction on the derivation of $[[ empty |- es : ts ]]$, noting that some cases are ruled out by the requirement that $[[ es ]]$ is a value.
-\end{proof}
-
-\begin{lemma}[Lambda inversion, \prooftermname{SLam-inv}]\label{lma:lambda_inversion}
-  If $[[ G |- \ x : ts. es : (x : ts1) -> ts2 ]]$, then $[[ G, x : ts1 |- es : ts2 ]]$.
-\end{lemma}
-\begin{proof}
-  Induction on $[[ G |- \ x : ts. es : (x : ts1) -> ts2 ]]$.
-  The following cases are possible:
-  \begin{itemize}
-    \item \textsc{T-Abs}: immediate.
-    \item \textsc{T-Sub}: follows from applying lambda inversion to the corresponding premise of \textsc{T-Sub} and using the narrowing \cref{lma:narrowing}.
-    \item \textsc{T-RConv}: follows from applying lambda inversion to the corresponding premise of \textsc{T-RConv} and using context equivalence \cref{lma:ctx_equivalence}.
-  \end{itemize}
-\end{proof}
 
 \begin{theorem}[Progress, \prooftermname{progress}]\label{thm:surface_progress}
   If $[[ empty |- es : ts ]]$, then either $[[ es ]]$ is a value, or there exists $[[ es' ]]$ such that $[[ es ~~> es' ]]$.
 \end{theorem}
-\begin{proof}
-  Straightforward induction on the derivation of $[[ empty |- es : ts ]]$.
-  The canonical forms lemma~\ref{lma:canonical_forms} is used in \textsc{T-App} case if both terms are values and in \textsc{T-Case} case if the scrutinee is a value.
-\end{proof}
 
 \begin{theorem}[Preservation, \prooftermname{preservation}]\label{thm:surface_preservation}
   If $[[ G |- es : ts ]]$, and $[[ es ~~> es' ]]$, then $[[ G |- es' : ts ]]$.
 \end{theorem}
-\begin{proof}
-  Simultaneous induction on the derivations of $[[ G |- es : ts ]]$ and $[[ es ~~> es' ]]$.
-  The non-trivial cases are the ones related to the eliminators:
-  \begin{itemize}
-    \item \textsc{E-AppR} and \textsc{T-App}.
-      Then, $[[ es ]]$ is $[[ vs1 es2 ]]$, $[[ es' ]]$ is $[[ vs1 es2' ]]$, and $[[ es2 ~~> es2' ]]$, for some $[[ vs1 ]], [[ es2 ]], [[ es2' ]]$.
-      Moreover, well-typedness implies that $[[ G |- vs1 : (x : ts1) -> ts2 ]]$ and $[[ G |- es2 : ts1 ]]$.
-      Then, \textsc{T-App} concludes that $[[ G |- vs1 es2 : [ x |-> es2 ] ts2 ]]$.
-      Inductive hypothesis claims that $[[ G |- es2' : ts1 ]]$, and then it is easy to see that $[[ G |- vs1 es2' : [ x |-> es2' ] ts2 ]]$.
-      But, the original type is $[[ [ x |-> es2 ] ts2 ]]$, so, for the preservation to hold, there needs to be a rule allowing converting $[[ [ x |-> es2' ] ts2 ]]$ to $[[ [ x |-> es2 ] ts2 ]]$,
-      and this is what justifies the existence of the \textsc{T-RConv} rule along with the form of the \textsc{RTEquiv-Forward} rule.
-
-      The substitution \cref{lma:typing_substitution} is used to ensure the new type is well-formed, as required by \textsc{T-RConv}.
-    \item \textsc{E-AppAbs} and \textsc{T-App}.
-      In this case $[[ es ]]$ is $[[ (\ x : ts. es1) vs2 ]]$, and well-typedness implies that $[[ G |- \ x : ts. es1 : (x : ts1) -> ts2 ]]$ and $[[ G |- vs2 : ts1 ]]$.
-      What needs to be shown is that $[[ G |- [ x |-> vs2 ] es1 : [ x |-> vs2 ] ts2 ]]$.
-      For this, the lambda inversion \cref{lma:lambda_inversion} is used to derive that $[[ G, x : ts1 |- es1 : ts2 ]]$, and the result follows by the substitution \cref{lma:typing_substitution}.
-    \item \textsc{E-CaseMatch} and \textsc{T-Case}.
-      Similarly to the previous cases, using substitution \cref{lma:typing_substitution} to show that $[[ [xj |-> vs] esj ]]$ has the expected type
-      after substituting the pattern match variable $[[ xj ]]$ in the branch term $[[ esj ]]$ for the scrutinee value $[[ vs ]]$.
-  \end{itemize}
-\end{proof}
 
 \subsection{Core language}
 
@@ -1355,5 +1201,162 @@ Investigating how to do this in a sound and feasible way seems important to make
 
 \bibliographystyle{jfplike}
 \bibliography{biblio}
+
+\appendix
+
+%TODO the name of the appendix super-section
+
+\section{Properties of the surface language.}\label{appendix:surface_props}
+
+\begin{lemma}[Agreement I, \prooftermname{T-implies-TCTX}]\label{lma:term_wf_implies_ctx_wf}
+  If $[[ G |- es : ts ]]$, then $[[ G ok ]]$.
+\end{lemma}
+\begin{proof}
+  Straightforward induction on the derivation of $[[ G |- es : ts ]]$.
+  \textsc{T-Unit} and \textsc{T-Var} carry the witness explicitly,
+  and the other rules recurse on one of their premises.
+\end{proof}
+
+\begin{lemma}[Agreement II, \prooftermname{TWF-implies-TCTX}]\label{lma:type_wf_implies_ctx_wf}
+  If $[[ G |- ts ]]$, then $[[G ok]]$.
+\end{lemma}
+\begin{proof}
+  Straightforward induction on the derivation of $[[ G |- ts ]]$.
+  \textsc{TWF-TrueRef} carries the witness explicitly,
+  the case for \textsc{TWF-Base} uses \cref{lma:term_wf_implies_ctx_wf} on either of its premises,
+  and the other rules recurse on one of their premises.
+\end{proof}
+
+\begin{lemma}[Subtyping relation thinning, \prooftermname{st-thinning}]\label{lma:thinning_st}
+  Let $[[ G ]]$, $[[ G' ]]$ be contexts such that $[[ G ]] \subset [[ G' ]]$.
+  Then, $[[ G |- ts1 <: ts2 ]]$ implies $[[ G' |- ts1 <: ts2 ]]$.
+\end{lemma}
+\begin{proof}
+  Straightforward induction on the derivation of $[[ G |- ts1 <: ts2 ]]$.
+  The \textsc{ST-Base} case depends the oracle thinning property~\ref{orprop:thinning}.
+\end{proof}
+
+\begin{lemma}[Thinning]\label{lma:thinning}
+  Let $[[ G ]]$, $[[ G' ]]$ be contexts such that $[[ G ]] \subset [[ G' ]]$ and $[[ G' ok ]]$.
+  Given that:
+  \begin{itemize}
+    \item if $[[ G |- ts ]]$, then $[[ G' |- ts ]]$ (\prooftermname{twf-thinning}),
+    \item if $[[ G |- es : ts ]]$, then $[[ G' |- es : ts ]]$ (\prooftermname{t-thinning}).
+  \end{itemize}
+\end{lemma}
+\begin{proof}
+  Mutual induction on the derivations of type well-formedness and term well-typedness.
+  Since each clause uses the other one (and, of course, itself) only on smaller derivation trees,
+  this is a well-founded proof.
+
+  In particular, the need for mutual induction appears in the following cases:
+  \begin{itemize}
+    \item \textsc{TWF-Base}. Unlike other type well-formedness rules,
+      its premises contain judgements about certain terms being well-typed, so this case uses thinning on types.
+    \item \textsc{T-Abs}, \textsc{T-Case}, \textsc{T-Con}.
+      These rules require certain judgements about type well-formedness to hold, so these cases use thinning on terms.
+  \end{itemize}
+
+  In addition to that, the \textsc{T-Sub} rule relies on the subtyping relation thinning \cref{lma:thinning_st}.
+\end{proof}
+
+\begin{lemma}[Substitution, \prooftermname{typing-substitution}]\label{lma:typing_substitution}
+  Assume $[[ G |- es : ts ]]$. Given that:
+  \begin{itemize}
+    \item if $[[ G, x : ts, GD |- ts' ]]$, then $[[ G, [ x |-> es ] GD |- [ x |-> es ] ts' ]] $,
+    \item if $[[ G, x : ts, GD |- es' : ts' ]]$, then $[[ G, [ x |-> es ] GD |- [ x |-> es ] es' : [ x |-> es ] ts' ]] $.
+  \end{itemize}
+\end{lemma}
+\begin{proof}
+  Due to the presence of a subset of dependent types the proof is a bit bulky,
+  using simultaneous induction on $\Delta$ and the derivation of $[[ G, x : ts, GD |- ts' ]]$.
+  We refer the interested reader to the formal proof of theorem in the supplemental code for the specific details.
+\end{proof}
+
+\begin{lemma}[Agreement III, \prooftermname{T-implies-TWF}]\label{lma:term_wf_implies_type_wf}
+  If $[[ G |- es : ts ]]$, then $[[ G |- ts ]]$.
+\end{lemma}
+\begin{proof}
+  Straightforward induction on the derivation of $[[ G |- es : ts ]]$.
+  The interesting case is \textsc{T-App}, as it invokes the substitution \cref{lma:typing_substitution}.
+\end{proof}
+
+\begin{lemma}[Subtyping narrowing, \prooftermname{<:-narrowing}]\label{lma:st_narrowing}
+  If $[[ G |- ts' <: ts ]]$ and $[[ G, x : ts, GD |- ts1 <: ts2 ]]$, then $[[ G, x : ts', GD |- ts1 <: ts2 ]]$.
+\end{lemma}
+\begin{proof}
+  Straightforward induction on the derivation of $[[ G, x : ts, GD |- ts1 <: ts2 ]]$.
+  The \textsc{SC-Base} case relies on the oracle narrowing property~\ref{orprop:narrowing}.
+\end{proof}
+
+\begin{lemma}[Subtyping transitivity, \prooftermname{<:-trans}]\label{lma:st_transitivity}
+  If $[[ G |- ts1 <: ts2 ]]$ and $[[ G |- ts2 <: ts3 ]]$, then $[[ G |- ts1 <: ts3 ]]$.
+\end{lemma}
+\begin{proof}
+  Simultaneous induction on both subtyping derivations, noting that they must have the same ``shape''~--- if one is \textsc{ST-Base}, then so is the other, since the $[[ ts2 ]]$ type is ``shared'' between the two.
+  In particular, if both are \textsc{ST-Base}, then the oracle transitivity property~\ref{orprop:trans} is used.
+  The \textsc{SC-Arr} case uses the subtyping narrowing \cref{lma:st_narrowing}.
+\end{proof}
+
+\begin{lemma}[Narrowing, \prooftermname{typing-narrowing}]\label{lma:narrowing}
+  Assume that $[[ G |- ts1' <: ts1 ]]$ and $[[ G |- ts1' ]]$. Then:
+  \begin{itemize}
+    \item If $[[ G , x : ts1, GD ok ]]$, then $[[ G , x : ts1', GD ok ]]$.
+    \item If $[[ G , x : ts1, GD |- ts ]]$, then $[[ G , x : ts1', GD |- ts ]]$.
+    \item If $[[ G , x : ts1, GD |- es : ts ]]$, then $[[ G , x : ts1', GD |- es : ts ]]$.
+  \end{itemize}
+\end{lemma}
+\begin{proof}
+  Mutual induction on the derivations, using the subtyping narrowing \cref{lma:st_narrowing} in the \textsc{T-Sub} case.
+\end{proof}
+
+\begin{lemma}[Context equivalence, \prooftermname{typing-equivalence}]\label{lma:ctx_equivalence}
+  Assume that $[[ ts1 =trb ts1' ]]$ and $[[ G |- ts1' ]]$. Then:
+  \begin{itemize}
+    \item If $[[ G , x : ts1, GD ok ]]$, then $[[ G , x : ts1', GD ok ]]$.
+    \item If $[[ G , x : ts1, GD |- ts ]]$, then $[[ G , x : ts1', GD |- ts ]]$.
+    \item If $[[ G , x : ts1, GD |- es : ts ]]$, then $[[ G , x : ts1', GD |- es : ts ]]$.
+  \end{itemize}
+\end{lemma}
+\begin{proof}
+  Mutual induction on the derivations.
+
+  In the third bullet, the case of $[[ es ]]$ being the variable $[[ x ]]$ uses (and motivates the existence of) the \textsc{RTEquiv-Backward} rule.
+  Indeed, if $[[ G , x : ts1, GD |- x : ts1 ]]$, then $[[ G , x : ts1', GD |- x : ts1' ]]$ according to \textsc{T-Var},
+  and going back from $[[ ts1' ]]$ to $[[ ts1 ]]$ is only possible if $[[ =trb ]]$ is a symmetric relation.
+  \textsc{RTEquiv-Backward} symmetrizes the \textsc{RTEquiv-Forward} rule, which is needed for the preservation \cref{thm:surface_preservation}.
+\end{proof}
+
+\begin{lemma}[Canonical forms, \prooftermname{canonical}]\label{lma:canonical_forms}
+  Let $[[ empty |- es : ts ]]$ and $[[ es ]]$ be a value. In this case:
+  \begin{itemize}
+    \item if $[[ ts ]]$ is of the form $[[ (x : ts1) -> ts2 ]]$, then $[[ es ]]$ is of the form $[[ \ x : ts . es' ]]$,
+    \item if $[[ ts ]]$ is of the form $[[ < </ li : tsi // i /> > ]]$, then $[[ es ]]$ is of the form $[[ < l = es' > as < </ li : tsi' // i /> > ]]$.
+  \end{itemize}
+\end{lemma}
+\begin{proof}
+  Straightforward induction on the derivation of $[[ empty |- es : ts ]]$, noting that some cases are ruled out by the requirement that $[[ es ]]$ is a value.
+\end{proof}
+
+\begin{lemma}[Lambda inversion, \prooftermname{SLam-inv}]\label{lma:lambda_inversion}
+  If $[[ G |- \ x : ts. es : (x : ts1) -> ts2 ]]$, then $[[ G, x : ts1 |- es : ts2 ]]$.
+\end{lemma}
+\begin{proof}
+  Induction on $[[ G |- \ x : ts. es : (x : ts1) -> ts2 ]]$.
+  The following cases are possible:
+  \begin{itemize}
+    \item \textsc{T-Abs}: immediate.
+    \item \textsc{T-Sub}: follows from applying lambda inversion to the corresponding premise of \textsc{T-Sub} and using the narrowing \cref{lma:narrowing}.
+    \item \textsc{T-RConv}: follows from applying lambda inversion to the corresponding premise of \textsc{T-RConv} and using context equivalence \cref{lma:ctx_equivalence}.
+  \end{itemize}
+\end{proof}
+
+\begin{theorem}[Progress, \prooftermname{progress}]\label{thm:surface_progress}
+  If $[[ empty |- es : ts ]]$, then either $[[ es ]]$ is a value, or there exists $[[ es' ]]$ such that $[[ es ~~> es' ]]$.
+\end{theorem}
+\begin{proof}
+  Straightforward induction on the derivation of $[[ empty |- es : ts ]]$.
+  The canonical forms lemma~\ref{lma:canonical_forms} is used in \textsc{T-App} case if both terms are values and in \textsc{T-Case} case if the scrutinee is a value.
+\end{proof}
 
 \end{document}
