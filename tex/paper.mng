@@ -58,7 +58,7 @@
 \newcommand{\eqrefl}{\text{eq-refl~}}
 \newcommand{\secondDP}{\text{second-dp~}}
 
-\newcommand{\prooftermname[1]}{\texttt{#1}}
+\newcommand{\prooftermname}[1]{\texttt{#1}}
 
 \begin{document}
 
