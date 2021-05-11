@@ -4,7 +4,6 @@
 %\documentclass[a4paper]{article}
 %\usepackage{a4wide}
 
-%TODO verify
 \journaltitle{JFP}
 \jnlDoiYr{2021}
 \cpr{Cambridge University Press}
