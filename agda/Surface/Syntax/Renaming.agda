@@ -79,49 +79,73 @@ act-ε-distr : ActDistributivity act-ε
 act-cons-distr : ActDistributivity {ADTCons nₐ} act-cons
 act-branches-distr : ActDistributivity {CaseBranches nₐ} act-branches
 
-act-τ-distr r₁ r₂ ⟨ b ∣ ρ ⟩ rewrite act-ρ-distr (ext r₁) (ext r₂) ρ
-                                  | act-ρ-extensionality (ext-distr r₁ r₂) ρ = refl
-act-τ-distr r₁ r₂ (τ₁ ⇒ τ₂) rewrite act-τ-distr r₁ r₂ τ₁
-                                  | act-τ-distr (ext r₁) (ext r₂) τ₂
-                                  | act-τ-extensionality (ext-distr r₁ r₂) τ₂ = refl
+act-τ-distr r₁ r₂ ⟨ b ∣ ρ ⟩
+  rewrite act-ρ-distr (ext r₁) (ext r₂) ρ
+        | act-ρ-extensionality (ext-distr r₁ r₂) ρ
+        = refl
+act-τ-distr r₁ r₂ (τ₁ ⇒ τ₂)
+  rewrite act-τ-distr r₁ r₂ τ₁
+        | act-τ-distr (ext r₁) (ext r₂) τ₂
+        | act-τ-extensionality (ext-distr r₁ r₂) τ₂
+        = refl
 act-τ-distr r₁ r₂ (⊍ cons) rewrite act-cons-distr r₁ r₂ cons = refl
 
-act-ρ-distr r₁ r₂ (ε₁ ≈ ε₂) rewrite act-ε-distr r₁ r₂ ε₁
-                                  | act-ε-distr r₁ r₂ ε₂ = refl
-act-ρ-distr r₁ r₂ (ρ₁ ∧ ρ₂) rewrite act-ρ-distr r₁ r₂ ρ₁
-                                  | act-ρ-distr r₁ r₂ ρ₂ = refl
+act-ρ-distr r₁ r₂ (ε₁ ≈ ε₂)
+  rewrite act-ε-distr r₁ r₂ ε₁
+        | act-ε-distr r₁ r₂ ε₂
+        = refl
+act-ρ-distr r₁ r₂ (ρ₁ ∧ ρ₂)
+  rewrite act-ρ-distr r₁ r₂ ρ₁
+        | act-ρ-distr r₁ r₂ ρ₂
+        = refl
 
 act-ε-distr r₁ r₂ SUnit = refl
 act-ε-distr r₁ r₂ (SVar ι) = refl
-act-ε-distr r₁ r₂ (SLam τ ε) rewrite act-τ-distr r₁ r₂ τ
-                                   | act-ε-distr (ext r₁) (ext r₂) ε
-                                   | act-ε-extensionality (ext-distr r₁ r₂) ε = refl
-act-ε-distr r₁ r₂ (SApp ε₁ ε₂) rewrite act-ε-distr r₁ r₂ ε₁
-                                     | act-ε-distr r₁ r₂ ε₂ = refl
-act-ε-distr r₁ r₂ (SCase ε branches) rewrite act-ε-distr r₁ r₂ ε
-                                           | act-branches-distr r₁ r₂ branches = refl
-act-ε-distr r₁ r₂ (SCon ι ε cons) rewrite act-ε-distr r₁ r₂ ε
-                                        | act-cons-distr r₁ r₂ cons = refl
+act-ε-distr r₁ r₂ (SLam τ ε)
+  rewrite act-τ-distr r₁ r₂ τ
+        | act-ε-distr (ext r₁) (ext r₂) ε
+        | act-ε-extensionality (ext-distr r₁ r₂) ε
+        = refl
+act-ε-distr r₁ r₂ (SApp ε₁ ε₂)
+  rewrite act-ε-distr r₁ r₂ ε₁
+        | act-ε-distr r₁ r₂ ε₂
+        = refl
+act-ε-distr r₁ r₂ (SCase ε branches)
+  rewrite act-ε-distr r₁ r₂ ε
+        | act-branches-distr r₁ r₂ branches
+        = refl
+act-ε-distr r₁ r₂ (SCon ι ε cons)
+  rewrite act-ε-distr r₁ r₂ ε
+        | act-cons-distr r₁ r₂ cons
+        = refl
 
 act-cons-distr r₁ r₂ [] = refl
-act-cons-distr r₁ r₂ (τ ∷ τs) rewrite act-τ-distr r₁ r₂ τ
-                                    | act-cons-distr r₁ r₂ τs = refl
+act-cons-distr r₁ r₂ (τ ∷ τs)
+  rewrite act-τ-distr r₁ r₂ τ
+        | act-cons-distr r₁ r₂ τs
+        = refl
 
 act-branches-distr r₁ r₂ [] = refl
-act-branches-distr r₁ r₂ (MkCaseBranch body ∷ bs) rewrite act-ε-distr (ext r₁) (ext r₂) body
-                                                        | act-branches-distr r₁ r₂ bs
-                                                        | act-ε-extensionality (ext-distr r₁ r₂) body = refl
+act-branches-distr r₁ r₂ (MkCaseBranch body ∷ bs)
+  rewrite act-ε-distr (ext r₁) (ext r₂) body
+        | act-branches-distr r₁ r₂ bs
+        | act-ε-extensionality (ext-distr r₁ r₂) body
+        = refl
 
 
 weaken-τ-comm : ∀ (ρ : Fin ℓ → Fin ℓ') (τ : SType ℓ)
               → act-τ (ext ρ) (weaken-τ τ) ≡ weaken-τ (act-τ ρ τ)
-weaken-τ-comm ρ τ rewrite act-τ-distr suc (ext ρ) τ
-                        | act-τ-distr ρ suc τ = refl
+weaken-τ-comm ρ τ
+  rewrite act-τ-distr suc (ext ρ) τ
+        | act-τ-distr ρ suc τ
+        = refl
 
 weaken-ε-comm : ∀ (ρ : Fin ℓ → Fin ℓ') (ε : STerm ℓ)
               → act-ε (ext ρ) (weaken-ε ε) ≡ weaken-ε (act-ε ρ ε)
-weaken-ε-comm ρ ε rewrite act-ε-distr suc (ext ρ) ε
-                        | act-ε-distr ρ suc ε = refl
+weaken-ε-comm ρ ε
+  rewrite act-ε-distr suc (ext ρ) ε
+        | act-ε-distr ρ suc ε
+        = refl
 
 
 weaken-τ-suc-k : ∀ k (τ : SType ℓ)
