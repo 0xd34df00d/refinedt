@@ -31,16 +31,14 @@ act-τ-extensionality x-≡ (τ₁ ⇒ τ₂)
         = refl
 act-τ-extensionality x-≡ (⊍ cons) rewrite act-cons-extensionality x-≡ cons = refl
 
-act-ρ-extensionality x-≡ (ε₁ ≈ ε₂ of τ)
+act-ρ-extensionality x-≡ (ε₁ ≈ ε₂ of _)
   rewrite act-ε-extensionality x-≡ ε₁
         | act-ε-extensionality x-≡ ε₂
-        | act-τ-extensionality x-≡ τ
         = refl
 act-ρ-extensionality x-≡ (ρ₁ ∧ ρ₂)
   rewrite act-ρ-extensionality x-≡ ρ₁
         | act-ρ-extensionality x-≡ ρ₂
         = refl
-act-ρ-extensionality _ Τ = refl
 
 act-ε-extensionality x-≡ SUnit = refl
 act-ε-extensionality x-≡ (SVar ι) rewrite x-≡ ι = refl
@@ -101,16 +99,14 @@ act-τ-id f-id (τ₁ ⇒ τ₂)
         = refl
 act-τ-id f-id (⊍ cons) rewrite act-cons-id f-id cons = refl
 
-act-ρ-id f-id (ε₁ ≈ ε₂ of τ)
+act-ρ-id f-id (ε₁ ≈ ε₂ of _)
   rewrite act-ε-id f-id ε₁
         | act-ε-id f-id ε₂
-        | act-τ-id f-id τ
         = refl
 act-ρ-id f-id (ρ₁ ∧ ρ₂)
   rewrite act-ρ-id f-id ρ₁
         | act-ρ-id f-id ρ₂
         = refl
-act-ρ-id _ Τ = refl
 
 act-ε-id f-id SUnit = refl
 act-ε-id f-id (SVar ι) rewrite f-id ι = refl

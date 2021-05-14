@@ -90,16 +90,14 @@ act-τ-distr r₁ r₂ (τ₁ ⇒ τ₂)
         = refl
 act-τ-distr r₁ r₂ (⊍ cons) rewrite act-cons-distr r₁ r₂ cons = refl
 
-act-ρ-distr r₁ r₂ (ε₁ ≈ ε₂ of τ)
+act-ρ-distr r₁ r₂ (ε₁ ≈ ε₂ of _)
   rewrite act-ε-distr r₁ r₂ ε₁
         | act-ε-distr r₁ r₂ ε₂
-        | act-τ-distr r₁ r₂ τ
         = refl
 act-ρ-distr r₁ r₂ (ρ₁ ∧ ρ₂)
   rewrite act-ρ-distr r₁ r₂ ρ₁
         | act-ρ-distr r₁ r₂ ρ₂
         = refl
-act-ρ-distr _ _ Τ = refl
 
 act-ε-distr r₁ r₂ SUnit = refl
 act-ε-distr r₁ r₂ (SVar ι) = refl

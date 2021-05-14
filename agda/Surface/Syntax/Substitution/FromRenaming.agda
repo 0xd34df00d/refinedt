@@ -40,16 +40,14 @@ var-ext-commutes ρ (suc x) = refl
         = refl
 ρ-as-σ-τ ρ (⊍ cons) rewrite ρ-as-σ-cons ρ cons = refl
 
-ρ-as-σ-ρ ρ (ε₁ ≈ ε₂ of τ)
+ρ-as-σ-ρ ρ (ε₁ ≈ ε₂ of _)
   rewrite ρ-as-σ-ε ρ ε₁
         | ρ-as-σ-ε ρ ε₂
-        | ρ-as-σ-τ ρ τ
         = refl
 ρ-as-σ-ρ ρ (ρ₁ ∧ ρ₂)
   rewrite ρ-as-σ-ρ ρ ρ₁
         | ρ-as-σ-ρ ρ ρ₂
         = refl
-ρ-as-σ-ρ _ Τ = refl
 
 ρ-as-σ-ε ρ SUnit = refl
 ρ-as-σ-ε ρ (SVar ι) = refl
