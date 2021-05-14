@@ -49,14 +49,16 @@ R-ext-ext-commutes-ε ρ σ (suc x)
         = refl
 ρ-σ-distr-τ ρ σ (⊍ cons) rewrite ρ-σ-distr-cons ρ σ cons = refl
 
-ρ-σ-distr-ρ ρ σ (ε₁ ≈ ε₂)
+ρ-σ-distr-ρ ρ σ (ε₁ ≈ ε₂ of τ)
   rewrite ρ-σ-distr-ε ρ σ ε₁
         | ρ-σ-distr-ε ρ σ ε₂
+        | ρ-σ-distr-τ ρ σ τ
         = refl
 ρ-σ-distr-ρ ρ σ (ρ₁ ∧ ρ₂)
   rewrite ρ-σ-distr-ρ ρ σ ρ₁
         | ρ-σ-distr-ρ ρ σ ρ₂
         = refl
+ρ-σ-distr-ρ _ _ Τ = refl
 
 ρ-σ-distr-ε ρ σ SUnit = refl
 ρ-σ-distr-ε ρ σ (SVar ι) = refl
@@ -121,14 +123,16 @@ ext-Rext-distr σ ρ (suc x) = refl
         = refl
 σ-ρ-distr-τ σ ρ (⊍ cons) rewrite σ-ρ-distr-cons σ ρ cons = refl
 
-σ-ρ-distr-ρ σ ρ (ε₁ ≈ ε₂)
+σ-ρ-distr-ρ σ ρ (ε₁ ≈ ε₂ of τ)
   rewrite σ-ρ-distr-ε σ ρ ε₁
         | σ-ρ-distr-ε σ ρ ε₂
+        | σ-ρ-distr-τ σ ρ τ
         = refl
 σ-ρ-distr-ρ σ ρ (ρ₁ ∧ ρ₂)
   rewrite σ-ρ-distr-ρ σ ρ ρ₁
         | σ-ρ-distr-ρ σ ρ ρ₂
         = refl
+σ-ρ-distr-ρ _ _ Τ = refl
 
 σ-ρ-distr-ε σ ρ SUnit = refl
 σ-ρ-distr-ε σ ρ (SVar ι) = refl
@@ -198,14 +202,16 @@ act-τ-distr σ₁ σ₂ (τ₁ ⇒ τ₂)
         = refl
 act-τ-distr σ₁ σ₂ (⊍ cons) rewrite act-cons-distr σ₁ σ₂ cons = refl
 
-act-ρ-distr σ₁ σ₂ (ε₁ ≈ ε₂)
+act-ρ-distr σ₁ σ₂ (ε₁ ≈ ε₂ of τ)
   rewrite act-ε-distr σ₁ σ₂ ε₁
         | act-ε-distr σ₁ σ₂ ε₂
+        | act-τ-distr σ₁ σ₂ τ
         = refl
 act-ρ-distr σ₁ σ₂ (ρ₁ ∧ ρ₂)
   rewrite act-ρ-distr σ₁ σ₂ ρ₁
         | act-ρ-distr σ₁ σ₂ ρ₂
         = refl
+act-ρ-distr _ _ Τ = refl
 
 act-ε-distr σ₁ σ₂ SUnit = refl
 act-ε-distr σ₁ σ₂ (SVar ι) = refl

@@ -62,8 +62,9 @@ data STerm ℓ where
         → STerm ℓ
 
 data Refinement ℓ where
-  _≈_ : (ε₁ ε₂ : STerm ℓ) → Refinement ℓ
-  _∧_ : (ρ₁ ρ₂ : Refinement ℓ) → Refinement ℓ
+  _≈_of_ : (ε₁ ε₂ : STerm ℓ) → (τ : SType ℓ) → Refinement ℓ
+  _∧_    : (ρ₁ ρ₂ : Refinement ℓ) → Refinement ℓ
+  Τ      : Refinement ℓ
 
 
 infixl 5 _,_
@@ -76,9 +77,6 @@ variable
   τ τ' τ₀ τ₀' τ₁ τ₂ τ₁' τ₂' τ₃ τ₃' τᵢ τⱼ σ σ' : SType ℓ
   ε ε' ε₀ ε₁ ε₁' ε₂ ε₂' ϖ : STerm ℓ
   ρ₁ ρ₂ ρ₃ : Refinement ℓ
-
-Τ : Refinement ℓ
-Τ = SUnit ≈ SUnit
 
 record VarAction : Set₁ where
   field

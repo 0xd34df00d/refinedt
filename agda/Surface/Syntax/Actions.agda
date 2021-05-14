@@ -21,8 +21,9 @@ act-ε : ActionOn STerm
 act-cons : ActionOn (ADTCons nₐ)
 act-branches : ActionOn (CaseBranches nₐ)
 
-act-ρ f (ε₁ ≈ ε₂) = act-ε f ε₁ ≈ act-ε f ε₂
+act-ρ f (ε₁ ≈ ε₂ of τ) = act-ε f ε₁ ≈ act-ε f ε₂ of act-τ f τ
 act-ρ f (ρ₁ ∧ ρ₂) = act-ρ f ρ₁ ∧ act-ρ f ρ₂
+act-ρ f Τ = Τ
 
 act-τ f ⟨ b ∣ ρ ⟩ = ⟨ b ∣ act-ρ (ext f) ρ ⟩
 act-τ f (τ₁ ⇒ τ₂) = act-τ f τ₁ ⇒ act-τ (ext f) τ₂
