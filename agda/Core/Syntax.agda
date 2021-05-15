@@ -63,8 +63,8 @@ data Ctx : ℕ → Set where
   _,_ : Ctx ℓ → CExpr ℓ → Ctx (suc ℓ)
 
 variable
-  τ τ' τ₀ τ₁ τ₂ τ₀' τ₁' τ₂' τᵢ τⱼ σ τ↑ : CExpr ℓ
-  ε ε' ε₁ ε₂ ε₃ ε₁' ε₂' ϖ ε↑ : CExpr ℓ
+  τ τ' τ₀ τ₁ τ₂ τ₀' τ₁' τ₂' τᵢ τⱼ σ τ↑ τ₁↑ τ₂↑ : CExpr ℓ
+  ε ε' ε₁ ε₂ ε₃ ε₁' ε₂' ϖ ε↑ ε₁↑ ε₂↑ : CExpr ℓ
   s s₁ s₂ : Sort
   Γ Γ' : Ctx ℓ
 
