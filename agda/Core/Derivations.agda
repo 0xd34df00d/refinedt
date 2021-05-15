@@ -13,12 +13,6 @@ open import Core.Syntax.Renaming
 open import Core.Syntax.Substitution
 open import Core.Operational
 
-data _=β_ : CExpr ℓ → CExpr ℓ → Set where
-  =-witness : ∀ ε
-            → ε₁ ↝⋆ ε
-            → ε₂ ↝⋆ ε
-            → ε₁ =β ε₂
-
 infix 2 _⊢_⦂_
 data _⊢_⦂_ : Ctx ℓ → CExpr ℓ → CExpr ℓ → Set
 

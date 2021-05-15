@@ -41,3 +41,9 @@ data _↝⋆_ : CExpr ℓ → CExpr ℓ → Set where
   ↝-trans : ε₁ ↝⋆ ε₂
           → ε₂ ↝ ε₃
           → ε₁ ↝⋆ ε₃
+
+data _=β_ : CExpr ℓ → CExpr ℓ → Set where
+  =-witness : ∀ ε
+            → ε₁ ↝⋆ ε
+            → ε₂ ↝⋆ ε
+            → ε₁ =β ε₂
