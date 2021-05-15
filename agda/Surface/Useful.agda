@@ -5,7 +5,6 @@
 module Surface.Useful where
 
 open import Data.Fin using (Fin; zero; suc)
-open import Data.Product renaming (_,_ to ⟨_,_⟩)
 open import Data.Vec using (_∷_; [])
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
@@ -16,9 +15,6 @@ open import Surface.Derivations
 open import Surface.Operational
 open import Surface.Operational.BetaEquivalence
 open import Surface.Theorems.Thinning
-
-Typeable : STerm 0 → Set
-Typeable ε = Σ (SType 0) (λ τ → ⊘ ⊢ ε ⦂ τ)
 
 unit : SType 0
 unit = ⟨ BUnit ∣ SUnit ≈ SUnit of BUnit ⟩
