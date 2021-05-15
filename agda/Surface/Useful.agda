@@ -21,6 +21,7 @@ unit = ⟨ BUnit ∣ SUnit ≈ SUnit of BUnit ⟩
 unit-typeable : ⊘ ⊢ SUnit ⦂ unit
 unit-typeable = T-Unit TCTX-Empty
 
+
 bool-cons : ADTCons (Mkℕₐ 2) 0
 bool-cons = unit ∷ unit ∷ []
 
@@ -41,3 +42,10 @@ false-typeable = T-Con refl unit-typeable bool-wf
 
 true-typeable : ⊘ ⊢ true ⦂ bool
 true-typeable = T-Con refl unit-typeable bool-wf
+
+
+not : STerm 0
+not = SLam bool (SCase (SVar zero)
+        (MkCaseBranch (weaken-ε-k 2 true)
+       ∷ MkCaseBranch (weaken-ε-k 2 false)
+       ∷ []))
