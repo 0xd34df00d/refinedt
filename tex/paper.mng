@@ -526,7 +526,8 @@ Since the surface language uses the subtyping oracle in its type system, the met
 
 We prove the usual metatheoretical properties of the proposed language.
 Some of the lemmas directly used in the subsequent exposition as well as progress and preservation theorems are formulated below.
-The full list of the proven lemmas can be found in \cref{appendix:surface_props}.
+The full (numbered and topologically sorted) list of the proven lemmas can be found in \cref{appendix:surface_props}.
+The numbers of these lemmas in that list are given here in parenthesis.
 
 We also provide machine-verified proofs of these theorems in the supplemental code,
 with the corresponding proof terms referred in lemmas names.
