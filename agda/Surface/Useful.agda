@@ -5,6 +5,7 @@
 module Surface.Useful where
 
 open import Data.Fin using (Fin; zero; suc)
+open import Data.Sum using (_⊎_; inj₁; inj₂)
 open import Data.Vec using (_∷_; [])
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
@@ -94,3 +95,12 @@ not-typeable =
         )
       )
     )
+
+
+bool-inhabitants : ⊘ ⊢ ε ⦂ τ
+                 → τ ≡ bool
+                 → IsValue ε
+                 → ε ≡ false ⊎ ε ≡ true
+bool-inhabitants (T-Con ≡-prf Γ adtτ) τ-≡ iv = {! !}
+bool-inhabitants (T-Sub Γ τ'δ <:) τ-≡ iv = {! !}
+bool-inhabitants (T-RConv Γ τ'δ τ~τ') refl iv = {! τ~τ'!}
