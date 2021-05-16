@@ -1,64 +1,64 @@
 grammar
 es {{ tex \nonterm{es} }} :: tmS_ ::= {{ com terms }}
-  | x					::   :: var {{ com variable }}
-  | \ x : ts . es		::   :: abs {{ com abstraction }}
-  | es1 es2				::   :: app {{ com application }}
-  | unit				::   :: top {{ com unit value }}
+  | x                   ::   :: var {{ com variable }}
+  | \ x : ts . es       ::   :: abs {{ com abstraction }}
+  | es1 es2             ::   :: app {{ com application }}
+  | unit                ::   :: top {{ com unit value }}
   | case es of </ li = xi -> esi // i />
-						::   :: case {{ com ADT case }}
+                        ::   :: case {{ com ADT case }}
   | < l = es > as < </ li : tsi // i /> >
-						::   :: adt {{ com ADT construction }}
-  | < l = es > as ts	:: M :: adt_ts
-  | v					:: M :: refvar
-  | [ v |-> es' ] es	:: M :: evsubst
-  | [ x |-> es' ] es	:: M :: varsubst
-  | vs					:: M :: value
-  | ( es )				:: M :: parens
+                        ::   :: adt {{ com ADT construction }}
+  | < l = es > as ts    :: M :: adt_ts
+  | v                   :: M :: refvar
+  | [ v |-> es' ] es    :: M :: evsubst
+  | [ x |-> es' ] es    :: M :: varsubst
+  | vs                  :: M :: value
+  | ( es )              :: M :: parens
 
 l {{ tex \nonterm l }} :: labels_ ::= {{ com ADT labels }}
-  | <token>			::   :: str {{ com token }}
+  | <token>             ::   :: str {{ com token }}
 
 r {{ tex \nonterm r }} :: ref_ ::= {{ com refinements }}
-  | top				:: M :: top {{ com top }}
-  | es1 = es2		::   :: rexpr {{ com atomic refinement }}
-  | r1 /\ r2		::   :: rconj {{ com conjunction }}
-  | [ v |-> es ] r	:: M :: vsubst {{ com subst }}
-  | [ x |-> es ] r	:: M :: xsubst {{ com subst }}
+  | top                 :: M :: top {{ com top }}
+  | es1 = es2           ::   :: rexpr {{ com atomic refinement }}
+  | r1 /\ r2            ::   :: rconj {{ com conjunction }}
+  | [ v |-> es ] r      :: M :: vsubst {{ com subst }}
+  | [ x |-> es ] r      :: M :: xsubst {{ com subst }}
 
 B {{ tex \nonterm B }} :: tbasep_ ::= {{ com base types }}
-  | Unit			::   :: unit
+  | Unit                ::   :: unit
 
 ts {{ tex \nonterm{ts} }} :: ts_ ::= {{ com types }}
-  | { v : B | r }		::   :: tybase {{ com refined base type }}
-  | { _ : B | r }		:: M :: irrelevant {{ com var-irrelevant refined base type }}
-  | ( x : ts1 ) -> ts2	::   :: tyarr  {{ com arrow type }}
-  | [ x |-> es ] ts		:: M :: txsubst
+  | { v : B | r }           ::   :: tybase {{ com refined base type }}
+  | { _ : B | r }           :: M :: irrelevant {{ com var-irrelevant refined base type }}
+  | ( x : ts1 ) -> ts2      ::   :: tyarr  {{ com arrow type }}
+  | [ x |-> es ] ts         :: M :: txsubst
   | < </ li : tsi // i /> > ::   :: variant {{ com ADT }}
 
 vs {{ tex \nonterm{vs} }} :: vs_ ::= {{ com values }}
-  | \ x : ts . es		::   :: abs {{ com abstraction value }}
-  | unit				::   :: top {{ com unit value }}
+  | \ x : ts . es       ::   :: abs {{ com abstraction value }}
+  | unit                ::   :: top {{ com unit value }}
   | < l = vs > as < </ li : tsi // i /> >
-						::   :: adt {{ com ADT value }}
+                        ::   :: adt {{ com ADT value }}
 
 G {{ tex \nonterm G }} :: env_ ::= {{ com typing contexts }}
-  | empty			::   :: nil {{ com empty }}
-  | G , x : ts		::   :: var {{ com variable }}
-  | G , v : ts		:: M :: refvar {{ com refvar }}
-  | GD				:: M :: otherctx {{ com otherctx }}
-  | G , G'			:: M :: concat {{ com contexts concatenation }}
-  | [ x |-> es ] G	:: M :: subst {{ com substition }}
+  | empty               ::   :: nil {{ com empty }}
+  | G , x : ts          ::   :: var {{ com variable }}
+  | G , v : ts          :: M :: refvar {{ com refvar }}
+  | GD                  :: M :: otherctx {{ com otherctx }}
+  | G , G'              :: M :: concat {{ com contexts concatenation }}
+  | [ x |-> es ] G      :: M :: subst {{ com substition }}
 
 L {{ tex \nonterm L }} :: logic_pred_ ::= {{ com logical predicate }}
-  | es1 = es2		::   :: termEq {{ com term equality }}
-  | A v . L			::   :: forall {{ com $\forall$ }}
-  | ( L )			:: M :: parens {{ com parenthesizing }}
-  | r1 => r2		::   :: impl   {{ com implication }}
+  | es1 = es2           ::   :: termEq {{ com term equality }}
+  | A v . L             ::   :: forall {{ com $\forall$ }}
+  | ( L )               :: M :: parens {{ com parenthesizing }}
+  | r1 => r2            ::   :: impl   {{ com implication }}
 
 C {{ tex \nonterm C }} :: logic_ctx_ ::= {{ com logical context }}
-  | empty			::   :: nil
-  | C, L			::   :: pred
-  | '[|' G '|]'		:: M :: ctx
+  | empty               ::   :: nil
+  | C, L                ::   :: pred
+  | '[|' G '|]'         :: M :: ctx
 
 defns Jtype :: '' ::=
 
