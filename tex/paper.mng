@@ -1358,4 +1358,30 @@ Investigating how to do this in a sound and feasible way seems important to make
   The canonical forms lemma~\ref{lma:canonical_forms} is used in \textsc{T-App} case if both terms are values and in \textsc{T-Case} case if the scrutinee is a value.
 \end{proof}
 
+\begin{theorem}[Preservation, \prooftermname{preservation}]\label{thm:surface_preservation}
+  If $[[ G |- es : ts ]]$, and $[[ es ~~> es' ]]$, then $[[ G |- es' : ts ]]$.
+\end{theorem}
+\begin{proof}
+  Simultaneous induction on the derivations of $[[ G |- es : ts ]]$ and $[[ es ~~> es' ]]$.
+  The non-trivial cases are the ones related to the eliminators:
+  \begin{itemize}
+    \item \textsc{E-AppR} and \textsc{T-App}.
+      Then, $[[ es ]]$ is $[[ vs1 es2 ]]$, $[[ es' ]]$ is $[[ vs1 es2' ]]$, and $[[ es2 ~~> es2' ]]$, for some $[[ vs1 ]], [[ es2 ]], [[ es2' ]]$.
+      Moreover, well-typedness implies that $[[ G |- vs1 : (x : ts1) -> ts2 ]]$ and $[[ G |- es2 : ts1 ]]$.
+      Then, \textsc{T-App} concludes that $[[ G |- vs1 es2 : [ x |-> es2 ] ts2 ]]$.
+      Inductive hypothesis claims that $[[ G |- es2' : ts1 ]]$, and then it is easy to see that $[[ G |- vs1 es2' : [ x |-> es2' ] ts2 ]]$.
+      But, the original type is $[[ [ x |-> es2 ] ts2 ]]$, so, for the preservation to hold, there needs to be a rule allowing converting $[[ [ x |-> es2' ] ts2 ]]$ to $[[ [ x |-> es2 ] ts2 ]]$,
+      and this is what justifies the existence of the \textsc{T-RConv} rule along with the form of the \textsc{RTEquiv-Forward} rule.
+
+      The substitution \cref{lma:typing_substitution} is used to ensure the new type is well-formed, as required by \textsc{T-RConv}.
+    \item \textsc{E-AppAbs} and \textsc{T-App}.
+      In this case $[[ es ]]$ is $[[ (\ x : ts. es1) vs2 ]]$, and well-typedness implies that $[[ G |- \ x : ts. es1 : (x : ts1) -> ts2 ]]$ and $[[ G |- vs2 : ts1 ]]$.
+      What needs to be shown is that $[[ G |- [ x |-> vs2 ] es1 : [ x |-> vs2 ] ts2 ]]$.
+      For this, the lambda inversion \cref{lma:lambda_inversion} is used to derive that $[[ G, x : ts1 |- es1 : ts2 ]]$, and the result follows by the substitution \cref{lma:typing_substitution}.
+    \item \textsc{E-CaseMatch} and \textsc{T-Case}.
+      Similarly to the previous cases, using substitution \cref{lma:typing_substitution} to show that $[[ [xj |-> vs] esj ]]$ has the expected type
+      after substituting the pattern match variable $[[ xj ]]$ in the branch term $[[ esj ]]$ for the scrutinee value $[[ vs ]]$.
+  \end{itemize}
+\end{proof}
+
 \end{document}
