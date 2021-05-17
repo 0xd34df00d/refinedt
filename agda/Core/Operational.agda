@@ -24,7 +24,7 @@ data _↝_ : CExpr ℓ → CExpr ℓ → Set where
   CE-AppR : IsValue ϖ
           → (ε₂↝ε₂' : ε₂ ↝ ε₂')
           → CApp ϖ ε₂ ↝ CApp ϖ ε₂'
-  CE-AppAbs : CApp (CLam ε₁ ε₂) ϖ ↝ [ zero ↦ ϖ ] ε₂
+  CE-AppAbs : CApp (CLam τ ε) ϖ ↝ [ zero ↦ ϖ ] ε
   CE-ADT  : ∀ {cons} {idx : Fin n}
           → ε ↝ ε'
           → CCon idx ε cons ↝ CCon idx ε' cons
