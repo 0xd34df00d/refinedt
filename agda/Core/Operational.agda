@@ -19,10 +19,10 @@ data IsValue : CExpr ℓ → Set where
 
 infix 4 _↝_
 data _↝_ : CExpr ℓ → CExpr ℓ → Set where
-  CE-AppL : ε₁ ↝ ε₁'
+  CE-AppL : (ε₁↝ε₁' : ε₁ ↝ ε₁')
           → CApp ε₁ ε₂ ↝ CApp ε₁' ε₂
   CE-AppR : IsValue ϖ
-          → ε₂ ↝ ε₂'
+          → (ε₂↝ε₂' : ε₂ ↝ ε₂')
           → CApp ϖ ε₂ ↝ CApp ϖ ε₂'
   CE-AppAbs : CApp (CLam ε₁ ε₂) ϖ ↝ [ zero ↦ ϖ ] ε₂
   CE-ADT  : ∀ {cons} {idx : Fin n}
