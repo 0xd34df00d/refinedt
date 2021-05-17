@@ -14,10 +14,11 @@ open import Core.Operational
            → ε₁↑ ↝ ε₂↑
            → ε₂↑ ≡ weaken-ε ε₂
            → ∃[ ε' ] (ε₁↑ ≡ weaken-ε ε')
-↝-weakened (CApp ε₁' ε₂') (CE-AppL ε₁↝ε₂'↑) refl with ↝-weakened ε₁' ε₁↝ε₂'↑ refl
+↝-weakened (CApp ε₁' ε₂') (CE-AppL ε₁↝ε₁'↑) refl with ↝-weakened ε₁' ε₁↝ε₁'↑ refl
 ... | ⟨ ε' , refl ⟩ = ⟨ CApp ε' ε₂' , refl ⟩
-↝-weakened ε₂ (CE-AppR x ε₁↑↝ε₂↑) ≡-prf = {! !}
-↝-weakened ε₂ CE-AppAbs ≡-prf = {! !}
+↝-weakened (CApp ϖ ε₂') (CE-AppR x ε₂↝ε₂'↑) refl with ↝-weakened ε₂' ε₂↝ε₂'↑ refl
+... | ⟨ ε' , refl ⟩ = ⟨ CApp ϖ ε' , refl ⟩
+↝-weakened ε₂ CE-AppAbs ≡-prf = {!  !}
 ↝-weakened ε₂ (CE-ADT ε₁↑↝ε₂↑) ≡-prf = {! !}
 ↝-weakened ε₂ (CE-CaseScrut ε₁↑↝ε₂↑) ≡-prf = {! !}
 ↝-weakened ε₂ (CE-CaseMatch x ι) ≡-prf = {! !}
