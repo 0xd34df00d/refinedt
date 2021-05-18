@@ -65,7 +65,7 @@ data Ctx : ℕ → Set where
 variable
   τ τ' τ₀ τ₁ τ₂ τ₀' τ₁' τ₂' τᵢ τⱼ σ τ↑ τ₁↑ τ₂↑ : CExpr ℓ
   ε ε' ε₁ ε₂ ε₃ ε₁' ε₂' ϖ ε↑ ε₁↑ ε₂↑ : CExpr ℓ
-  s s₁ s₂ : Sort
+  s s₁ s₂ s' s₁' s₂' : Sort
   Γ Γ' : Ctx ℓ
 
 record VarAction : Set₁ where
