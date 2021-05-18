@@ -12,7 +12,7 @@ open import Core.Syntax.Renaming
 open import Core.Derivations
 
 head-well-formed : Γ , τ ⊢ ε ⦂ τ'
-                 → Σ Sort (λ s → Γ ⊢ τ ⦂ CSort s)
+                 → ∃[ s ] (Γ ⊢ τ ⦂ CSort s)
 head-well-formed (CT-Var δ) = ⟨ _ , δ ⟩
 head-well-formed (CT-Weaken _ δ) = ⟨ _ , δ ⟩
 head-well-formed (CT-Form δ _) = head-well-formed δ
