@@ -640,22 +640,11 @@ and state some straightforward facts that will be useful later:
     \[
 			[[ (x ** p) ]] \triangleq [[ \ alpha : sst. \ f : (Pi x' : tc. Pred x' -> alpha). f x p ]]
 		\]
-    It is easy to see from the formation rule that
-    \begin{lemma}\label{lma:dep_pair_typing}
-      If $[[ tc ]]$ is typeable in $[[ GC ]]$
-      and $[[ Pred x ]]$ is typeable in $[[ GC, x : tc ]]$,
-      then $[[ GC |- (x : tc ** Pred x ) : sst ]]$.
-    \end{lemma}
 
   \item Non-dependent pair type:
     \[
       [[ (tc1, tc2) ]] \triangleq [[ (x : tc1 ** (\ _ : tc1. tc2) x) ]].
     \]
-    As a direct consequence of the previous lemma we obtain
-    \begin{lemma}\label{lma:non_dep_pair_typing}
-      If $[[ tc1 ]], [[ tc2 ]]$ are typeable in $[[ GC ]]$,
-      then $[[ (tc1, tc2) ]]$ is typeable in $[[ GC ]]$ and has type $\star$.
-    \end{lemma}
   \item Equality of expressions $[[ ec1 ]], [[ ec2 ]]$ of type $[[ tc ]]$:
     \[
       [[ ec1 equal ec2 of tc ]]
@@ -670,12 +659,6 @@ and state some straightforward facts that will be useful later:
     \[
       [[ eqrefl tc x ]] \triangleq [[ \ Pred : tc -> sst. (\ p : Pred x. p , \ p : Pred x. p) ]]
     \]
-
-    Again, it can be seen that
-    \begin{lemma}\label{lma:equality_typing}
-      If $[[ ec1 ]], [[ ec2 ]]$ have type $[[ tc ]]$ in a context $[[ GC ]]$,
-      then $[[ GC |- ec1 equal ec2 of tc : sst ]]$.
-    \end{lemma}
 \end{itemize}
 
 \section{Translation}
