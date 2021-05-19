@@ -12,11 +12,11 @@ _⇒'_ : CExpr ℓ → CExpr ℓ → CExpr ℓ
 τ₁ ⇒' τ₂ = CΠ τ₁ (weaken-ε τ₂)
 
 ⟨_⋆⋆_⟩ : CExpr ℓ → CExpr (suc ℓ) → CExpr ℓ
-⟨ τ ⋆⋆ P ⟩ = CΠ
+⟨ τ ⋆⋆ Px ⟩ = CΠ
                ⋆ₑ {- α -}
                (CΠ
                   (weaken-ε τ) {- x -}
-                  (weaken-ε P · CVar zero {- x -}
+                  (weaken-ε Px · CVar zero {- x -}
                    ⇒'
                    CVar (suc zero) {- α -})
                 ⇒'
