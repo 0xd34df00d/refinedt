@@ -640,13 +640,6 @@ and state some straightforward facts that will be useful later:
     \[
 			[[ (x ** p) ]] \triangleq [[ \ alpha : sst. \ f : (Pi x' : tc. Pred x' -> alpha). f x p ]]
 		\]
-    and projections
-    \[
-      \text{fst} \triangleq [[ \ sigma : (x : tc ** Pred x). sigma tc (\ x' : tc. \ _ : Pred x'. x') ]],
-    \]
-    \[
-      \text{snd} \triangleq [[ \ sigma : (x : tc ** Pred x). sigma tc (\ x' : tc. \ p : Pred x'. p) ]].
-    \]
     It is easy to see from the formation rule that
     \begin{lemma}\label{lma:dep_pair_typing}
       If $[[ tc ]]$ is typeable in $[[ GC ]]$
