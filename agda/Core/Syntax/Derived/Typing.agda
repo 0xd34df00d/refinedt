@@ -25,38 +25,6 @@ head-well-formed (CT-ADTForm (δ ∷ _)) = head-well-formed δ
 head-well-formed (CT-ADTCon _ _ δ) = head-well-formed δ
 head-well-formed (CT-ADTCase _ δ _) = head-well-formed δ
 
-unweaken : Γ , τ₀ ⊢ ε↑ ⦂ τ↑
-         → ε↑ ≡ weaken-ε ε
-         → τ↑ ≡ weaken-ε τ
-         → Γ ⊢ ε ⦂ τ
-unweaken (CT-Conv δ₁ δ₂ x) ≡₁ ≡₂
-  = CT-Conv (unweaken {! !} refl refl) {! !} {! !} -- unweaken {! !} refl refl -- unweaken δ₁ ≡₁ {! !}
-         {-
-unweaken {τ = CVar ι} (CT-Conv δ δ₁ x) ≡₁ ≡₂ = {! !}
-unweaken {τ = CSort s} (CT-Conv δ δ₁ x) ≡₁ ≡₂ = {! !}
-unweaken {τ = CΠ τ τ₁} (CT-Form δ δ₁) ≡₁ ≡₂ = {! !}
-unweaken {τ = CΠ τ τ₁} (CT-Conv δ δ₁ x) ≡₁ ≡₂ = {! !}
-unweaken {τ = CLam τ τ₁} (CT-Conv δ δ₁ x) ≡₁ ≡₂ = {! !}
-unweaken {τ = CApp τ τ₁} (CT-App δ δ₁) ≡₁ ≡₂ = {! !}
-unweaken {τ = CApp τ τ₁} (CT-Conv δ δ₁ x) ≡₁ ≡₂ = {! !}
-unweaken {τ = Cunit} (CT-Conv δ δ₁ x) ≡₁ ≡₂ = {! !}
-unweaken {τ = CUnit} (CT-Conv δ δ₁ x) ≡₁ ≡₂ = {! !}
-unweaken {τ = CUnit} (CT-UnitType δ) ≡₁ ≡₂ = {! !}
-unweaken {τ = CADT cons} (CT-Conv δ δ₁ x) ≡₁ ≡₂ = {! !}
-unweaken {τ = CADT cons} (CT-ADTForm consδs) ≡₁ ≡₂ = {! !}
-unweaken {τ = CCon ι τ cons} (CT-Conv δ δ₁ x) ≡₁ ≡₂ = {! !}
-unweaken {τ = CCase τ branches} (CT-Conv δ δ₁ x) ≡₁ ≡₂ = {! !}
-unweaken {τ = CCase τ branches} (CT-ADTCase δ δ₁ branches₁) ≡₁ ≡₂ = {! !}
-unweaken {τ = τ} {s = s} (CT-Weaken {ε₁ = ε₁} {τ₁ = τ₁} δ _) ≡₁ ≡₂
-  rewrite weaken-ε-injective ε₁ τ ≡₁
-        | weaken-ε-injective (CSort s) τ₁ (weaken-ε-injective (CSort s) (weaken-ε τ₁) ≡₂)
-        = δ
--}
-
-unweaken' : Γ , τ₀ ⊢ weaken-ε ε ⦂ weaken-ε τ
-          → Γ ⊢ ε ⦂ τ
-unweaken' δ = unweaken δ refl refl
-
 τ∈Γ-wf : Γ ⊢ τ' ⦂ CSort s'
        → τ ∈ Γ at ι
        → ∃[ s ] (Γ ⊢ τ ⦂ CSort s)
