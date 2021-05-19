@@ -72,7 +72,8 @@ CT-VarW : Γ ⊢ τ ⦂ CSort s
 CT-VarW δ (∈-zero refl) with head-well-formed δ
 ... | ⟨ _ , δ' ⟩ = CT-Var δ'
 CT-VarW δ (∈-suc refl ∈) with head-well-formed δ
-... | ⟨ _ , δ' ⟩ = CT-Weaken (CT-VarW (unweaken' δ) ∈) δ'
+... | ⟨ _ , δ' ⟩ with τ∈Γ-wf δ' ∈
+...   | ⟨ _ , δ'' ⟩ = CT-Weaken (CT-VarW δ'' ∈) δ'
 
 ⇒'-well-typed : Γ ⊢ τ₁ ⦂ CSort s₁
               → Γ ⊢ τ₂ ⦂ CSort s₂
