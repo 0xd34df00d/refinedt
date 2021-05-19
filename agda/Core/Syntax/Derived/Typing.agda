@@ -57,6 +57,15 @@ unweaken' : Γ , τ₀ ⊢ weaken-ε ε ⦂ weaken-ε τ
           → Γ ⊢ ε ⦂ τ
 unweaken' δ = unweaken δ refl refl
 
+τ∈Γ-wf : Γ ⊢ τ' ⦂ CSort s'
+       → τ ∈ Γ at ι
+       → ∃[ s ] (Γ ⊢ τ ⦂ CSort s)
+τ∈Γ-wf δ (∈-zero refl) with head-well-formed δ
+... | ⟨ s , δ' ⟩ = ⟨ s , CT-Weaken δ' δ' ⟩
+τ∈Γ-wf δ (∈-suc refl ∈) with head-well-formed δ
+... | ⟨ s' , δ' ⟩ with τ∈Γ-wf δ' ∈
+...   | ⟨ s , δ₀ ⟩ = ⟨ s , CT-Weaken δ₀ δ' ⟩
+
 CT-VarW : Γ ⊢ τ ⦂ CSort s
         → τ ∈ Γ at ι
         → Γ ⊢ CVar ι ⦂ τ
