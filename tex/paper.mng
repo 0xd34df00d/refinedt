@@ -630,7 +630,7 @@ and state some straightforward facts that will be useful later:
     \[
       [[ tc1 -> tc2 ]] \triangleq [[ Pi _ : tc1. tc2 ]].
     \]
-  \item Dependent pair type, or $\Sigma$-type,
+  \item Dependent pair type, or the $\Sigma$-type,
     with the first component being a value $x$ of type $[[tc]]$
     and the second component being of type $P x$, where $P$ is usually of type $[[ tc -> sst ]]$:
     \[
