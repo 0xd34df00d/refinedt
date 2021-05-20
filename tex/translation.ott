@@ -26,12 +26,12 @@ mudE ( G , v : { v1 : B | top } |- es1 : { v2 : B' | top } )
 mudE ( G , v : { v1 : B | top } |- es2 : { v2 : B' | top } )
 omitted
 ---------------------------------------------------- :: Base
-GC |- (v : BC ** \ v : BC . ec1 equal ec2 of tc) : sst
+GC |- Sigma BC (\ v : BC . ec1 equal ec2 of tc) : sst
 
 mudT ( G |- { v : B | r1 } )
 mudT ( G |- { v : B | r2 } )
 -------------------------------------------------- :: Conj
-GC |- (v : BC ** \ v : BC . (Pred1 v , Pred2 v)) : sst
+GC |- Sigma BC (\ v : BC . (Pred1 v , Pred2 v)) : sst
 
 mudT ( G |- ts1 )
 mudT ( G , x : ts1 |- ts2 )
@@ -66,7 +66,7 @@ mudE (G |- es : ts)
 omitted
 x fresh
 ----------------------------------------------------------------------------------------- :: Case
-GC |- case ec of </ li = xi proof pi -> ( \x : tci' . eci ) ( _ : Unitc ** pi ) // i /> : tc'
+GC |- case ec of </ li = xi proof pi -> ( \x : tci' . eci ) ( Sigma Unitc pi ) // i /> : tc'
 
 % TODO either add a lambda in the dpair or change the definition of dpair, replacing Px with *
 
@@ -88,7 +88,7 @@ defn GC |- ec1 : ec2 :: :: sttarget :: STTarget_ by
 GC |- sigma : Pi v : BC . tc1 -> tc2
 omitted
 ------------------------------------------------------- :: Base
-GC |- seconddp sigma : (v : BC ** tc1) -> (v : BC ** tc2)
+GC |- seconddp sigma : (Sigma BC tc1) -> (Sigma BC tc2)
 
 mudS (G |- ts1' <: ts1)
 mudS (G , x : ts1' |- ts2 <: ts2')

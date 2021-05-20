@@ -30,6 +30,7 @@ terminals :: terminals_ ::=
   | ok		  :: :: ok {{ tex \ctxok }}
   | equal	  :: :: equal {{ tex \equiv }}
   | eqrefl	:: :: eqrefl {{ tex \eqrefl }}
+  | Sigma   :: :: Sigma {{ tex \Sigma }}
 
   | mudG	  :: :: tranctx {{ tex \Tranctx }}
   | mudT	  :: :: trantyderiv {{ tex \Tranty }}

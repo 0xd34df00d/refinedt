@@ -25,10 +25,8 @@ ec {{ tex \nonterm{ec} }}, tc {{ tex \nonterm{tc} }} :: tmCore_ ::= {{ com expre
   | eqrefl              :: M :: eq_introduction
   | BC                  :: M :: base {{ tex \Basec }}
   | ( ec1 , ec2 )       :: M :: pair
-  | ( v : ec1 ** ec2 )  :: M :: dvpair
-  | ( x : ec1 ** ec2 )  :: M :: dxpair
-  | ( x ** ec )         :: M :: dxpaircon
-  | ( _ : ec1 ** ec2 )  :: M :: dvpairIrrelevant
+  | Sigma tc ec         :: M :: dvpair
+  | < ec1 , ec2 >       :: M :: dxpaircon
   | Pred                :: M :: predicate
   | v                   :: M :: vvar
   | f                   :: M :: fvar

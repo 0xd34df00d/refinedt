@@ -631,19 +631,19 @@ and state some straightforward facts that will be useful later:
       [[ tc1 -> tc2 ]] \triangleq [[ Pi _ : tc1. tc2 ]].
     \]
   \item Dependent pair type, or the $\Sigma$-type,
-    with the first component being a value $x$ of type $[[tc]]$
-    and the second component being of type $P x$, where $P$ is usually of type $[[ tc -> sst ]]$:
+    with the first component being a value $x$ of type $[[ tc ]]$
+    and the second component being a value of type $[[ Pred x ]]$, where $[[ Pred ]]$ is of type $[[ tc -> sst ]]$:
     \[
-      [[ (x : tc ** Pred x) ]] \triangleq [[ Pi alpha : sst. (Pi x : tc. Pred x -> alpha) -> alpha ]],
+      [[ Sigma tc Pred ]] \triangleq [[ Pi alpha : sst. (Pi x : tc. Pred x -> alpha) -> alpha ]],
     \]
-    with the corresponding constructor (we overload the syntax here to resemble Idris,~\citeinline{Idris13}):
+    with the corresponding constructor:
     \[
-			[[ (x ** p) ]] \triangleq [[ \ alpha : sst. \ f : (Pi x' : tc. Pred x' -> alpha). f x p ]]
-		\]
+      [[ < x , p > ]] \triangleq [[ \ alpha : sst. \ f : (Pi x' : tc. Pred x' -> alpha). f x p ]]
+    \]
 
   \item Non-dependent pair type:
     \[
-      [[ (tc1, tc2) ]] \triangleq [[ (x : tc1 ** (\ _ : tc1. tc2) x) ]].
+      [[ (tc1, tc2) ]] \triangleq [[ Sigma tc1 (\ _ : tc1. tc2) ]].
     \]
   \item Equality of expressions $[[ ec1 ]], [[ ec2 ]]$ of type $[[ tc ]]$:
     \[
@@ -805,8 +805,8 @@ More formally, consider the last rule used in the derivation of $[[ G |- ts ]]$:
     \begin{align*}
       & \ottdruleTWFXXConj{} \longmapsto \ottdruleTWFTargetXXConj{}, \\
       \text{where}~&[[ GC = mudG(G ok)]],                                         \\
-                   &P_1 \text{~s.t.~} [[ ( v : BC ** \ v : BC . Pred1 v) = muT ( G |- { v : B | r1 }) ]],  \\
-                   &P_2 \text{~s.t.~} [[ ( v : BC ** \ v : BC . Pred2 v) = muT ( G |- { v : B | r2 }) ]].
+                   &P_1 \text{~s.t.~} [[ Sigma BC (\ v : BC . Pred1 v) = muT ( G |- { v : B | r1 }) ]],  \\
+                   &P_2 \text{~s.t.~} [[ Sigma BC (\ v : BC . Pred2 v) = muT ( G |- { v : B | r2 }) ]].
     \end{align*}
 
     The proof of the right-hand side being well-defined goes similarly to the cases considered previously,
@@ -923,7 +923,7 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
                    &[[ tc' = muT(G |- ts') ]],       \\
                    &[[ ec = muE(G |- es : ts) ]],    \\
                    &[[ eci = muE(G |- esi : ts) ]],  \\
-                   &[[ tci' ]] = [[ (_ : Unitc ** ec equal ( < li = xi > as tc ) of tc) ]].
+                   &[[ tci' ]] = [[ Sigma Unitc (\ _ : Unitc. ec equal ( < li = xi > as tc ) of tc) ]].
     \end{align*}
 
     This part of the translation is perhaps one of the most involved,
@@ -933,7 +933,7 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
     has type $[[ { _ : Unit | es = < li = xi > as ts } ]]$.
     After $[[esi]]$ gets translated into the (core) term $[[eci]]$,
     the latter is type checked in the context where $\hat x$
-    has the dependent pair type $[[ (_ : Unitc ** ec equal ( < li = xi > as tc ) of tc) ]]$.
+    has the dependent pair type $[[ Sigma Unitc (\_ : Unitc. ec equal ( < li = xi > as tc ) of tc) ]]$.
     On the other hand, the $\mathbf{proof} \pi_i$ part of the $\mathbf{case}$ branch
     provides the proof $\pi_i$ typed as $[[ ec equal ( < li = xi > as tc ) of tc ]]$,
     so it needs to be packed into the dependent pair type that $[[eci]]$ ``expects''.
@@ -987,8 +987,8 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
         \begin{align*}
           & \ottdruleSTXXBase{} \longmapsto \ottdruleSTTargetXXBase{}, \\
           \text{where}~&[[ GC = mudG(G ok) ]],       \\
-                       &[[ tc1 ]] \text{~s.t.~} [[ ( v : BC ** tc1) = muT ( G |- { v : B | r1 }) ]],  \\
-                       &[[ tc2 ]] \text{~s.t.~} [[ ( v : BC ** tc2) = muT ( G |- { v : B | r2 }) ]],  \\
+                       &[[ tc1 ]] \text{~s.t.~} [[ (Sigma BC tc1) = muT ( G |- { v : B | r1 }) ]],  \\
+                       &[[ tc2 ]] \text{~s.t.~} [[ (Sigma BC tc2) = muT ( G |- { v : B | r2 }) ]],  \\
                        &[[ ec = muE(G |- es : ts) ]].
         \end{align*}
 
@@ -1005,7 +1005,7 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
 
         Then, this $[[ sigma ]]$ can be combined with a function $[[ seconddp ]]$
         (which maps over the second component of a dependent pair, and whose definition is omitted here for brevity),
-        producing a function mapping $[[ (v : BC ** tc1) ]]$ onto $[[ (v : BC ** tc2 ) ]]$~---
+        producing a function mapping $[[ Sigma BC tc1 ]]$ onto $[[ Sigma BC tc2 ]]$~---
         precisely what is needed in case of \textsc{ST-Base}.
 
       \item \textsc{ST-Arr}.
