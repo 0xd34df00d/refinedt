@@ -16,7 +16,7 @@ _⇒'_ : CExpr ℓ → CExpr ℓ → CExpr ℓ
               ⋆ₑ {- α -}
               (CΠ
                 (weaken-ε τ) {- x -}
-                (weaken-ε-k 2 P · CVar zero {- P x -}
+                (weaken-ε (weaken-ε P) · CVar zero {- P x -}
                     ⇒'
                   CVar (suc zero) {- α -}
                 )
