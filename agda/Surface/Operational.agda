@@ -39,3 +39,9 @@ data _↝_ : STerm ℓ → STerm ℓ → Set where
               → IsValue ϖ
               → (ι : Fin n)
               → SCase (SCon ι ϖ cons) bs ↝ [ ι ↦ₘ ϖ ] bs
+
+data _↝⋆_ : STerm ℓ → STerm ℓ → Set where
+  ↝-refl  : ε ↝⋆ ε
+  ↝-trans : ε₁ ↝ ε₂
+          → ε₂ ↝⋆ ε₃
+          → ε₁ ↝⋆ ε₃
