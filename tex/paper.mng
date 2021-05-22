@@ -618,8 +618,7 @@ deserves some special attention.
 \newcommand{\dast}{\ **\ }
 
 \paragraph{Derived forms}
-We also establish some derived forms in the core language to simplify the subsequent exposition,
-and state some straightforward facts that will be useful later:
+We also establish some derived forms in the core language to simplify the subsequent exposition:
 \begin{itemize}
   \item Simplified variable typing rule which we call \textsc{CT-VarW}:
     \[ \ottdruleCTXXVarW{} \]
