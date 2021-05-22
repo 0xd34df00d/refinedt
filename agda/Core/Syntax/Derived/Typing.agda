@@ -2,6 +2,7 @@
 
 module Core.Syntax.Derived.Typing where
 
+open import Data.Fin using (zero; suc)
 open import Data.Product renaming (_,_ to ⟨_,_⟩)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
@@ -53,3 +54,33 @@ CT-VarW δ (∈-suc refl ∈) with head-well-formed δ
 Γ⊢⋆⦂□ {Γ = ⊘} _ = CT-Sort
 Γ⊢⋆⦂□ {Γ = Γ , τ} δ with head-well-formed δ
 ... | ⟨ _ , δ' ⟩ = CT-Weaken (Γ⊢⋆⦂□ δ') δ'
+
+Σ-well-typed : ∀ {Γ : Ctx ℓ} {P : CExpr ℓ}
+             → Γ ⊢ τ ⦂ CSort s
+             → Γ ⊢ P ⦂ τ ⇒' ⋆ₑ
+             → Γ ⊢ Σ[ τ ] P ⦂ ⋆ₑ
+Σ-well-typed {τ = τ} {s = s} {Γ = Γ} {P = P} δ₁ δ₂ =
+  CT-Form
+    (Γ⊢⋆⦂□ δ₁)
+    (CT-Form
+      body
+      (CT-Weaken (CT-Var (Γ⊢⋆⦂□ δ₁)) body)
+    )
+  where
+  Γ,⋆⊢τ : Γ , ⋆ₑ ⊢ weaken-ε τ ⦂ CSort s
+  Γ,⋆⊢τ = CT-Weaken δ₁ (Γ⊢⋆⦂□ δ₁)
+
+  body : Γ , ⋆ₑ ⊢ CΠ (weaken-ε τ) (CApp (weaken-ε (weaken-ε P)) (CVar zero) ⇒' CVar (suc zero)) ⦂ ⋆ₑ
+  body =
+    CT-Form
+      Γ,⋆⊢τ
+      (⇒'-well-typed
+        (CT-App
+          (CT-Weaken
+            (CT-Weaken δ₂ (Γ⊢⋆⦂□ δ₁))
+            Γ,⋆⊢τ
+          )
+          (CT-Var Γ,⋆⊢τ)
+        )
+        (CT-Weaken (CT-Var (Γ⊢⋆⦂□ δ₁)) Γ,⋆⊢τ)
+      )
