@@ -11,19 +11,21 @@ infixr 3 _⇒'_
 _⇒'_ : CExpr ℓ → CExpr ℓ → CExpr ℓ
 τ₁ ⇒' τ₂ = CΠ τ₁ (weaken-ε τ₂)
 
-⟨_⋆⋆_⟩ : CExpr ℓ → CExpr (suc ℓ) → CExpr ℓ
-⟨ τ ⋆⋆ Px ⟩ = CΠ
-               ⋆ₑ {- α -}
-               (CΠ
-                  (weaken-ε τ) {- x -}
-                  (weaken-ε Px · CVar zero {- x -}
-                   ⇒'
-                   CVar (suc zero) {- α -})
-                ⇒'
-                CVar zero {- α -})
+Σ[_]_ : CExpr ℓ → CExpr ℓ → CExpr ℓ
+Σ[ τ ] P = CΠ
+              ⋆ₑ {- α -}
+              (CΠ
+                (weaken-ε τ) {- x -}
+                (weaken-ε-k 2 P · CVar zero {- P x -}
+                    ⇒'
+                  CVar (suc zero) {- α -}
+                )
+              ⇒'
+              CVar zero {- α -}
+              )
 
 ⟨_×_⟩ : CExpr ℓ → CExpr ℓ → CExpr ℓ
-⟨ τ₁ × τ₂ ⟩ = ⟨ τ₁ ⋆⋆ weaken-ε τ₂ ⟩
+⟨ τ₁ × τ₂ ⟩ = Σ[ τ₁ ] (CLam τ₁ (weaken-ε τ₂))
 
 _≡̂_of_ : CExpr ℓ → CExpr ℓ → CExpr ℓ → CExpr ℓ
 ε₁ ≡̂ ε₂ of τ = CΠ (τ ⇒' ⋆ₑ) ⟨ CVar zero · weaken-ε ε₁ ⇒' CVar zero · weaken-ε ε₂
