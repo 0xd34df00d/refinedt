@@ -581,7 +581,8 @@ there is no separate rules for type or context well-formedness.
 Instead, when we say that a type $[[ tc ]]$ (with the above remark about what a ``type'' means) is well-formed,
 we just mean that $[[ GC |- tc : sst ]]$ or $[[ GC |- tc : ssq ]]$.
 To define the notion of context well-formedness,
-we say that a context $[[ GC ]]$ is wellformed iff it is possible to derive $[[ GC |- sst : ssq ]]$.
+we say that a context $[[ GC ]]$ is wellformed iff it is possible to derive $[[ GC |- ec1 : ec2 ]]$
+for some $[[ ec1 ]], [[ ec2 ]]$.
 Indeed, the only way to derive the latter is by starting from $[[ empty |- sst : ssq ]]$ and
 repeatedly adding bindings to the context via \textsc{CT-Weaken},
 thus ensuring that each binding in the context has a well-formed type.
