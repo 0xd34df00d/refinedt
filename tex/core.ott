@@ -22,7 +22,7 @@ ec {{ tex \nonterm{ec} }}, tc {{ tex \nonterm{tc} }} :: tmCore_ ::= {{ com expre
   | < l = ec > as ec'   :: M :: adtcon_arb
   | vc                  :: M :: value
   | ( ec )              :: M :: parens
-  | eqrefl              :: M :: eq_introduction
+  | eqrefl tc ec        :: M :: eq_introduction
   | BC                  :: M :: base {{ tex \Basec }}
   | ( ec1 , ec2 )       :: M :: pair
   | Sigma tc ec         :: M :: dvpair
