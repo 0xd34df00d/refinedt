@@ -652,11 +652,11 @@ We also establish some derived forms in the core language to simplify the subseq
     \]
     The reader might recognize this as the Leibniz equality~\citeparens{FindSomethingForLeibnizEq}.
 
-    The corresponding constructor $\eqrefl \nonterm{tc}~x$ of type $x \equiv x$
-    stating that $x$ of type $\nonterm{tc}$ is equal to itself
+    The corresponding constructor $[[ eqrefl tc ec ]]$ of type $[[ ec equal ec of tc ]]$
+    stating that $[[ ec ]]$ of type $[[ tc ]]$ is equal to itself
     is then defined as follows:
     \[
-      [[ eqrefl tc x ]] \triangleq [[ \ Pred : tc -> sst. (\ p : Pred x. p , \ p : Pred x. p) ]]
+      [[ eqrefl tc ec ]] \triangleq [[ \ Pred : tc -> sst. (\ p : Pred x. p , \ p : Pred x. p) ]]
     \]
 \end{itemize}
 
