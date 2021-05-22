@@ -47,10 +47,12 @@ true-typeable = T-Con refl unit-typeable bool-wf
 
 
 not : STerm 0
-not = SLam bool (SCase (SVar zero)
-        (MkCaseBranch (weaken-ε-k 2 true)
-       ∷ MkCaseBranch (weaken-ε-k 2 false)
-       ∷ []))
+not = SLam
+        bool
+        (SCase (SVar zero)
+            (MkCaseBranch (weaken-ε-k 2 true)
+           ∷ MkCaseBranch (weaken-ε-k 2 false)
+           ∷ []))
 
 bool-fun : SType 0
 bool-fun = bool ⇒ weaken-τ bool
@@ -94,6 +96,15 @@ not-typeable =
           NoBranches
         )
       )
+    )
+
+not-true-is-false : SApp not true ↝⋆ false
+not-true-is-false =
+  ↝-trans
+    (E-AppAbs (IV-ADT IV-Unit))
+    (↝-trans
+      (E-CaseMatch IV-Unit (suc zero))
+      ↝-refl
     )
 
 
