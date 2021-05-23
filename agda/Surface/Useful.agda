@@ -18,7 +18,7 @@ open import Surface.Operational.BetaEquivalence
 open import Surface.Theorems.Thinning
 
 unit : SType 0
-unit = ⟨ BUnit ∣ SUnit ≈ SUnit of BUnit ⟩
+unit = ⟨ BUnit ∣ Τ ⟩
 
 unit-typeable : ⊘ ⊢ SUnit ⦂ unit
 unit-typeable = T-Unit TCTX-Empty
