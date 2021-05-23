@@ -95,3 +95,25 @@ CT-VarW δ (∈-suc refl ∈) with head-well-formed δ
       (CT-Weaken δ₂ δ₁)
       (CT-Form δ₁ (CT-Weaken (Γ⊢⋆⦂□ δ₁) δ₁))
     )
+
+≡̂-well-typed : Γ ⊢ ε₁ ⦂ τ
+             → Γ ⊢ ε₂ ⦂ τ
+             → Γ ⊢ τ ⦂ ⋆ₑ
+             → Γ ⊢ ε₁ ≡̂ ε₂ of τ ⦂ ⋆ₑ
+≡̂-well-typed {_} {Γ} {ε₁} {τ} {ε₂} ε₁δ ε₂δ τδ =
+  CT-Form
+    Γ⊢τ⇒'⋆ₑ
+    (×-well-typed ε₁⇒ε₂ ε₂⇒ε₁)
+  where
+  Γ⊢τ⇒'⋆ₑ : Γ ⊢ τ ⇒' ⋆ₑ ⦂ □ₑ
+  Γ⊢τ⇒'⋆ₑ = ⇒'-well-typed τδ (Γ⊢⋆⦂□ τδ)
+
+  ε₁⇒ε₂ : Γ , (τ ⇒' ⋆ₑ) ⊢ (CVar zero · weaken-ε ε₁) ⇒' (CVar zero · weaken-ε ε₂) ⦂ ⋆ₑ
+  ε₁⇒ε₂ = ⇒'-well-typed
+            (CT-App (CT-Var Γ⊢τ⇒'⋆ₑ) (CT-Weaken ε₁δ Γ⊢τ⇒'⋆ₑ))
+            (CT-App (CT-Var Γ⊢τ⇒'⋆ₑ) (CT-Weaken ε₂δ Γ⊢τ⇒'⋆ₑ))
+
+  ε₂⇒ε₁ : Γ , (τ ⇒' ⋆ₑ) ⊢ (CVar zero · weaken-ε ε₂) ⇒' (CVar zero · weaken-ε ε₁) ⦂ ⋆ₑ
+  ε₂⇒ε₁ = ⇒'-well-typed
+            (CT-App (CT-Var Γ⊢τ⇒'⋆ₑ) (CT-Weaken ε₂δ Γ⊢τ⇒'⋆ₑ))
+            (CT-App (CT-Var Γ⊢τ⇒'⋆ₑ) (CT-Weaken ε₁δ Γ⊢τ⇒'⋆ₑ))
