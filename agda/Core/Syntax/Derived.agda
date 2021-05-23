@@ -13,16 +13,16 @@ _⇒'_ : CExpr ℓ → CExpr ℓ → CExpr ℓ
 
 Σ[_]_ : CExpr ℓ → CExpr ℓ → CExpr ℓ
 Σ[ τ ] P = CΠ
-              ⋆ₑ {- α -}
-              (CΠ
-                (weaken-ε τ) {- x -}
-                (weaken-ε (weaken-ε P) · CVar zero {- P x -}
-                    ⇒'
-                  CVar (suc zero) {- α -}
-                )
-              ⇒'
-              CVar zero {- α -}
+            ⋆ₑ {- α -}
+            (CΠ
+              (weaken-ε τ) {- x -}
+              (weaken-ε-k 2 P · CVar zero {- P x -}
+                  ⇒'
+                CVar (suc zero) {- α -}
               )
+            ⇒'
+            CVar zero {- α -}
+            )
 
 ⟨_×_⟩ : CExpr ℓ → CExpr ℓ → CExpr ℓ
 ⟨ τ₁ × τ₂ ⟩ = Σ[ τ₁ ] (CLam τ₁ (weaken-ε τ₂))
