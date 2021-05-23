@@ -84,3 +84,14 @@ CT-VarW δ (∈-suc refl ∈) with head-well-formed δ
         )
         (CT-Weaken (CT-Var (Γ⊢⋆⦂□ δ₁)) Γ,⋆⊢τ)
       )
+
+×-well-typed : Γ ⊢ τ₁ ⦂ ⋆ₑ
+             → Γ ⊢ τ₂ ⦂ ⋆ₑ
+             → Γ ⊢ ⟨ τ₁ × τ₂ ⟩ ⦂ ⋆ₑ
+×-well-typed δ₁ δ₂ =
+  Σ-well-typed
+    δ₁
+    (CT-Abs
+      (CT-Weaken δ₂ δ₁)
+      (CT-Form δ₁ (CT-Weaken (Γ⊢⋆⦂□ δ₁) δ₁))
+    )
