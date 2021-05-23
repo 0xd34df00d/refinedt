@@ -583,10 +583,8 @@ we just mean that $[[ GC |- tc : sst ]]$ or $[[ GC |- tc : ssq ]]$.
 To define the notion of context well-formedness,
 we say that a context $[[ GC ]]$ is wellformed iff it is possible to derive $[[ GC |- ec1 : ec2 ]]$
 for some $[[ ec1 ]], [[ ec2 ]]$.
-Indeed, the only way to derive the latter is by starting from $[[ empty |- sst : ssq ]]$ and
-repeatedly adding bindings to the context via \textsc{CT-Weaken},
-thus ensuring that each binding in the context has a well-formed type.
-In particular, this can be seen in action in the \textsc{CT-UnitType} and \textsc{CT-UnitTerm} rules.
+Derivability of $[[ GC |- ec1 : ec2 ]]$, in turn, can be shown to imply the derivability of $[[ GC |- sst : ssq ]]$,
+which can be seen as a premise of the \textsc{CT-UnitType} and \textsc{CT-UnitTerm} rules.
 
 Even though we believe that our core language enjoys the strong normalization property even with our extensions,
 we still explicitly define the evaluation rules (\figref{core_opsem}).
