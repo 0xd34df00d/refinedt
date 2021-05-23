@@ -24,6 +24,20 @@ _⇒'_ : CExpr ℓ → CExpr ℓ → CExpr ℓ
             CVar zero {- α -}
             )
 
+[_⦂_∣_of_] : CExpr ℓ → CExpr ℓ → CExpr ℓ → CExpr ℓ → CExpr ℓ
+[ ε ⦂ τ ∣ π of P ] =
+  CLam
+    ⋆ₑ {- α -}
+    (CLam
+      (CΠ
+        (weaken-ε τ) {- x -}
+        (weaken-ε-k 2 P · CVar zero {- P x -}
+            ⇒'
+          CVar (suc zero)) {- α -}
+      )
+      (CVar zero · weaken-ε-k 2 ε · weaken-ε-k 2 π)
+    )
+
 ⟨_×_⟩ : CExpr ℓ → CExpr ℓ → CExpr ℓ
 ⟨ τ₁ × τ₂ ⟩ = Σ[ τ₁ ] (CLam τ₁ (weaken-ε τ₂))
 
