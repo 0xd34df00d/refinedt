@@ -55,35 +55,36 @@ CT-VarW δ (∈-suc refl ∈) with head-well-formed δ
 Γ⊢⋆⦂□ {Γ = Γ , τ} δ with head-well-formed δ
 ... | ⟨ _ , δ' ⟩ = CT-Weaken (Γ⊢⋆⦂□ δ') δ'
 
-Σ-well-typed : ∀ {Γ : Ctx ℓ} {P : CExpr ℓ}
+Σ-cont-well-typed : ∀ {Γ : Ctx ℓ} {P}
+                  → Γ ⊢ τ ⦂ CSort s
+                  → Γ ⊢ P ⦂ τ ⇒' ⋆ₑ
+                  → Γ , ⋆ₑ ⊢ CΠ (weaken-ε τ) (CApp (weaken-ε (weaken-ε P)) (CVar zero) ⇒' CVar (suc zero)) ⦂ ⋆ₑ
+Σ-cont-well-typed δτ δP =
+  let Γ,⋆⊢τ = CT-Weaken δτ (Γ⊢⋆⦂□ δτ)
+   in CT-Form
+        Γ,⋆⊢τ
+        (⇒'-well-typed
+          (CT-App
+            (CT-Weaken
+              (CT-Weaken δP (Γ⊢⋆⦂□ δτ))
+              Γ,⋆⊢τ
+            )
+            (CT-Var Γ,⋆⊢τ)
+          )
+          (CT-Weaken (CT-Var (Γ⊢⋆⦂□ δτ)) Γ,⋆⊢τ)
+        )
+
+Σ-well-typed : ∀ {Γ : Ctx ℓ} {P}
              → Γ ⊢ τ ⦂ CSort s
              → Γ ⊢ P ⦂ τ ⇒' ⋆ₑ
              → Γ ⊢ Σ[ τ ] P ⦂ ⋆ₑ
-Σ-well-typed {τ = τ} {s = s} {Γ = Γ} {P = P} δ₁ δ₂ =
+Σ-well-typed δ₁ δ₂ =
   CT-Form
     (Γ⊢⋆⦂□ δ₁)
     (CT-Form
-      body
-      (CT-Weaken (CT-Var (Γ⊢⋆⦂□ δ₁)) body)
+      (Σ-cont-well-typed δ₁ δ₂)
+      (CT-Weaken (CT-Var (Γ⊢⋆⦂□ δ₁)) (Σ-cont-well-typed δ₁ δ₂))
     )
-  where
-  Γ,⋆⊢τ : Γ , ⋆ₑ ⊢ weaken-ε τ ⦂ CSort s
-  Γ,⋆⊢τ = CT-Weaken δ₁ (Γ⊢⋆⦂□ δ₁)
-
-  body : Γ , ⋆ₑ ⊢ CΠ (weaken-ε τ) (CApp (weaken-ε (weaken-ε P)) (CVar zero) ⇒' CVar (suc zero)) ⦂ ⋆ₑ
-  body =
-    CT-Form
-      Γ,⋆⊢τ
-      (⇒'-well-typed
-        (CT-App
-          (CT-Weaken
-            (CT-Weaken δ₂ (Γ⊢⋆⦂□ δ₁))
-            Γ,⋆⊢τ
-          )
-          (CT-Var Γ,⋆⊢τ)
-        )
-        (CT-Weaken (CT-Var (Γ⊢⋆⦂□ δ₁)) Γ,⋆⊢τ)
-      )
 
 ×-well-typed : Γ ⊢ τ₁ ⦂ ⋆ₑ
              → Γ ⊢ τ₂ ⦂ ⋆ₑ

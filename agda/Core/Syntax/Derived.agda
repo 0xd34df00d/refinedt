@@ -11,30 +11,30 @@ infixr 3 _⇒'_
 _⇒'_ : CExpr ℓ → CExpr ℓ → CExpr ℓ
 τ₁ ⇒' τ₂ = CΠ τ₁ (weaken-ε τ₂)
 
+-- This is the continuation type in the Σ type and constructor:
+-- Π x : τ . P x → α
+-- It's assumed to be within a context of α, the return type.
+Σ-cont : CExpr ℓ → CExpr ℓ → CExpr (suc ℓ)
+Σ-cont τ P =
+  CΠ
+    (weaken-ε τ) {- x -}
+    (weaken-ε-k 2 P · CVar zero {- P x -}
+        ⇒'
+      CVar (suc zero) {- α -}
+    )
+
 Σ[_]_ : CExpr ℓ → CExpr ℓ → CExpr ℓ
-Σ[ τ ] P = CΠ
-            ⋆ₑ {- α -}
-            (CΠ
-              (weaken-ε τ) {- x -}
-              (weaken-ε-k 2 P · CVar zero {- P x -}
-                  ⇒'
-                CVar (suc zero) {- α -}
-              )
-            ⇒'
-            CVar zero {- α -}
-            )
+Σ[ τ ] P =
+  CΠ
+    ⋆ₑ {- α -}
+    (Σ-cont τ P ⇒' CVar zero)
 
 [_⦂_∣_of_] : CExpr ℓ → CExpr ℓ → CExpr ℓ → CExpr ℓ → CExpr ℓ
 [ ε ⦂ τ ∣ π of P ] =
   CLam
     ⋆ₑ {- α -}
     (CLam
-      (CΠ
-        (weaken-ε τ) {- x -}
-        (weaken-ε-k 2 P · CVar zero {- P x -}
-            ⇒'
-          CVar (suc zero)) {- α -}
-      )
+      (Σ-cont τ P)
       (CVar zero · weaken-ε-k 2 ε · weaken-ε-k 2 π)
     )
 
