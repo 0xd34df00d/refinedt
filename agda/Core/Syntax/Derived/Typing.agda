@@ -58,7 +58,7 @@ CT-VarW δ (∈-suc refl ∈) with head-well-formed δ
 Σ-cont-well-typed : ∀ {Γ : Ctx ℓ} {P}
                   → Γ ⊢ τ ⦂ CSort s
                   → Γ ⊢ P ⦂ τ ⇒' ⋆ₑ
-                  → Γ , ⋆ₑ ⊢ CΠ (weaken-ε τ) (CApp (weaken-ε (weaken-ε P)) (CVar zero) ⇒' CVar (suc zero)) ⦂ ⋆ₑ
+                  → Γ , ⋆ₑ ⊢ Σ-cont τ P ⦂ ⋆ₑ
 Σ-cont-well-typed δτ δP =
   let Γ,⋆⊢τ = CT-Weaken δτ (Γ⊢⋆⦂□ δτ)
    in CT-Form
