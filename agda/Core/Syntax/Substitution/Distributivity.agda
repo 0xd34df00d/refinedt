@@ -14,6 +14,80 @@ open import Core.Syntax.Substitution.FromRenaming
 import Core.Syntax.Renaming as R
 import Core.Syntax.Renaming.Distributivity as R
 
+ρ-σ-Distributivity : {Ty : ℕ → Set} → R.ActionOn Ty → ActionOn Ty → Set
+ρ-σ-Distributivity {Ty} ρ-act σ-act = ∀ {ℓ₀ ℓ₁ ℓ₂}
+                                      → (ρ : Fin ℓ₁ → Fin ℓ₂)
+                                      → (σ : Fin ℓ₀ → CExpr ℓ₁)
+                                      → (v : Ty ℓ₀)
+                                      → ρ-act ρ (σ-act σ v) ≡ σ-act (R.act-ε ρ ∘ σ) v
+
+ρ-σ-distr-ε : ρ-σ-Distributivity R.act-ε act-ε
+ρ-σ-distr-cons : ρ-σ-Distributivity {ADTCons nₐ} R.act-cons act-cons
+ρ-σ-distr-branches : ρ-σ-Distributivity {CaseBranches nₐ} R.act-branches act-branches
+
+Rext-ext-commutes : (ρ : Fin ℓ₁ → Fin ℓ₂)
+                  → (σ : Fin ℓ₀ → CExpr ℓ₁)
+                  → R.act-ε (R.ext ρ) ∘ ext σ f≡ ext (R.act-ε ρ ∘ σ)
+Rext-ext-commutes ρ σ zero = refl
+Rext-ext-commutes ρ σ (suc ι)
+  rewrite R.act-ε-distr suc (R.ext ρ) (σ ι)
+        | R.act-ε-distr ρ suc (σ ι)
+        = refl
+
+ρ-σ-distr-ε ρ σ (CVar ι) = refl
+ρ-σ-distr-ε ρ σ (CSort s) = refl
+ρ-σ-distr-ε ρ σ (CΠ τ ε)
+  rewrite ρ-σ-distr-ε ρ σ τ
+        | ρ-σ-distr-ε (R.ext ρ) (ext σ) ε
+        | act-ε-extensionality (Rext-ext-commutes ρ σ) ε
+        = refl
+ρ-σ-distr-ε ρ σ (CLam τ ε)
+  rewrite ρ-σ-distr-ε ρ σ τ
+        | ρ-σ-distr-ε (R.ext ρ) (ext σ) ε
+        | act-ε-extensionality (Rext-ext-commutes ρ σ) ε
+        = refl
+ρ-σ-distr-ε ρ σ (CApp ε₁ ε₂)
+  rewrite ρ-σ-distr-ε ρ σ ε₁
+        | ρ-σ-distr-ε ρ σ ε₂
+        = refl
+ρ-σ-distr-ε ρ σ Cunit = refl
+ρ-σ-distr-ε ρ σ CUnit = refl
+ρ-σ-distr-ε ρ σ (CADT cons) rewrite ρ-σ-distr-cons ρ σ cons = refl
+ρ-σ-distr-ε ρ σ (CCon ι ε cons)
+  rewrite ρ-σ-distr-ε ρ σ ε
+        | ρ-σ-distr-cons ρ σ cons
+        = refl
+ρ-σ-distr-ε ρ σ (CCase ε branches)
+  rewrite ρ-σ-distr-ε ρ σ ε
+        | ρ-σ-distr-branches ρ σ branches
+        = refl
+
+ρ-σ-distr-cons ρ σ [] = refl
+ρ-σ-distr-cons ρ σ (τ ∷ cons)
+  rewrite ρ-σ-distr-ε ρ σ τ
+        | ρ-σ-distr-cons ρ σ cons
+        = refl
+
+Rext²-ext²-commutes : (ρ : Fin ℓ₁ → Fin ℓ₂)
+                    → (σ : Fin ℓ₀ → CExpr ℓ₁)
+                    → R.act-ε (R.ext (R.ext ρ)) ∘ ext (ext σ) f≡ ext (ext (R.act-ε ρ ∘ σ))
+Rext²-ext²-commutes ρ σ zero = refl
+Rext²-ext²-commutes ρ σ (suc zero) = refl
+Rext²-ext²-commutes ρ σ (suc (suc ι))
+  rewrite R.act-ε-distr suc suc (σ ι)
+        | R.act-ε-distr (λ x → suc (suc x)) (R.ext (R.ext ρ)) (σ ι)
+        | R.act-ε-distr suc suc (R.act-ε ρ (σ ι))
+        | R.act-ε-distr ρ (λ x → suc (suc x)) (σ ι)
+        = refl
+
+ρ-σ-distr-branches ρ σ [] = refl
+ρ-σ-distr-branches ρ σ (ε ∷ branches)
+  rewrite ρ-σ-distr-ε (R.ext (R.ext ρ)) (ext (ext σ)) ε
+        | ρ-σ-distr-branches ρ σ branches
+        | act-ε-extensionality (Rext²-ext²-commutes ρ σ) ε
+        = refl
+
+
 ActDistributivity : {Ty : ℕ → Set} → ActionOn Ty → Set
 ActDistributivity {Ty} act = ∀ {ℓ₀ ℓ₁ ℓ₂}
                              → (σ₁ : Fin ℓ₀ → CExpr ℓ₁)
