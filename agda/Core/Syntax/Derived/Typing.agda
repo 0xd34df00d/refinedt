@@ -9,7 +9,8 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 open import Core.Syntax
 open import Core.Syntax.Derived
 open import Core.Syntax.Membership
-open import Core.Syntax.Renaming
+open import Core.Syntax.Renaming as R
+open import Core.Syntax.Substitution as S
 open import Core.Derivations
 
 head-well-formed : Γ , τ ⊢ ε ⦂ τ'
@@ -85,6 +86,33 @@ CT-VarW δ (∈-suc refl ∈) with head-well-formed δ
       (Σ-cont-well-typed δτ δP)
       (CT-Weaken (CT-Var (Γ⊢⋆⦂□ δτ)) (Σ-cont-well-typed δτ δP))
     )
+
+Σ-ctor-well-typed : ∀ {Γ : Ctx ℓ} {P} {π}
+                  → Γ ⊢ τ ⦂ CSort s
+                  → Γ ⊢ P ⦂ τ ⇒' ⋆ₑ
+                  → Γ ⊢ ε ⦂ τ
+                  → Γ ⊢ π ⦂ P · ε
+                  → Γ ⊢ [ ε ⦂ τ ∣ π of P ] ⦂ Σ[ τ ] P
+Σ-ctor-well-typed {ℓ} {τ} {s} {ε} {Γ} {P} {π} δτ δP δε δπ =
+  CT-Abs
+    (CT-Abs
+      app₂
+      (⇒'-well-typed
+        (Σ-cont-well-typed δτ δP)
+        (CT-Var (Γ⊢⋆⦂□ δτ))
+      )
+    )
+    (Σ-well-typed δτ δP)
+  where
+  δ↑↑ : Γ ⊢ ε' ⦂ τ'
+      → Γ , ⋆ₑ , Σ-cont τ P ⊢ weaken-ε-k 2 ε' ⦂ weaken-ε-k 2 τ'
+  δ↑↑ δ = CT-Weaken (CT-Weaken δ (Γ⊢⋆⦂□ δ)) (Σ-cont-well-typed δτ δP)
+
+  app₁ : Γ , ⋆ₑ , Σ-cont τ P ⊢ CVar zero · weaken-ε-k 2 ε ⦂ {! !}
+  app₁ = let r = CT-App (CT-Var (Σ-cont-well-typed δτ δP)) (δ↑↑ δε) in {! !}
+
+  app₂ : Γ , ⋆ₑ , Σ-cont τ P ⊢ CVar zero · weaken-ε-k 2 ε · weaken-ε-k 2 π ⦂ CVar (suc zero)
+  app₂ = let r = CT-App app₁ (δ↑↑ δπ) in {! !}
 
 ×-well-typed : Γ ⊢ τ₁ ⦂ ⋆ₑ
              → Γ ⊢ τ₂ ⦂ ⋆ₑ
