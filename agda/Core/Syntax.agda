@@ -5,6 +5,7 @@ module Core.Syntax where
 open import Data.Fin public using (Fin)
 open import Data.Nat public using (ℕ; suc; _+_)
 open import Data.Vec using (Vec)
+open import Relation.Binary.PropositionalEquality using (_≡_)
 
 open import Common.Types public
 
@@ -74,3 +75,10 @@ record VarAction : Set₁ where
     var-action : Target ℓ → CExpr ℓ
     ext : (Fin ℓ → Target ℓ')
         → (Fin (suc ℓ) → Target (suc ℓ'))
+
+record VarActionProps (act : VarAction) : Set where
+  open VarAction act
+  field
+    ≡-ext : {f₁ f₂ : Fin ℓ → Target ℓ'}
+          → (∀ x → f₁ x ≡ f₂ x)
+          → (∀ x → ext f₁ x ≡ ext f₂ x)
