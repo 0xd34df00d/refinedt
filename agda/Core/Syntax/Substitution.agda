@@ -1,7 +1,9 @@
 {-# OPTIONS --safe #-}
 
 module Core.Syntax.Substitution where
+
 open import Data.Fin using (suc; zero)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 
 open import Common.Helpers
 open import Core.Syntax
@@ -11,6 +13,10 @@ open import Core.Syntax.Actions (record { Target = CExpr
                                         ; ext = λ where _ zero → CVar zero
                                                         σ (suc n) → R.weaken-ε (σ n)
                                         }) public
+
+open import Core.Syntax.Actions.Lemmas var-action-record (record { ≡-ext = λ where x-≡ zero → refl
+                                                                                   x-≡ (suc ι) → cong R.weaken-ε (x-≡ ι)
+                                                                 }) public
 
 replace-at : Fin (suc ℓ) → CExpr ℓ → Fin (suc ℓ) → CExpr ℓ
 replace-at = replace-at-generic CVar

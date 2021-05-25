@@ -4,6 +4,7 @@ module Core.Syntax.Renaming where
 
 open import Data.Nat using (zero; suc)
 open import Data.Fin using (zero; suc)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 
 open import Core.Syntax
 open import Core.Syntax.Actions (record { Target = Fin
@@ -11,6 +12,10 @@ open import Core.Syntax.Actions (record { Target = Fin
                                         ; ext = λ where _ zero → zero
                                                         ρ (suc n) → suc (ρ n)
                                         }) public
+
+open import Core.Syntax.Actions.Lemmas var-action-record (record { ≡-ext = λ where x-≡ zero → refl
+                                                                                   x-≡ (suc ι) → cong suc (x-≡ ι)
+                                                                 }) public
 
 weaken-ε : CExpr ℓ → CExpr (suc ℓ)
 weaken-ε = act-ε suc
