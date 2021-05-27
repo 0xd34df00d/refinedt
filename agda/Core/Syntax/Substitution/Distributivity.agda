@@ -10,7 +10,6 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 open import Common.Helpers
 open import Core.Syntax
 open import Core.Syntax.Substitution as S
-open import Core.Syntax.Substitution.FromRenaming
 import Core.Syntax.Renaming as R
 import Core.Syntax.Renaming.Distributivity as R
 
