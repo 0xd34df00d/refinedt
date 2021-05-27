@@ -14,8 +14,15 @@ open import Core.Syntax.Actions (record { Target = CExpr
                                                         σ (suc n) → R.weaken-ε (σ n)
                                         }) public
 
+ext-id-lemma : ∀ {f : Fin ℓ → Target ℓ}
+             → (f f≡ CVar)
+             → (ext f f≡ CVar)
+ext-id-lemma f-id zero = refl
+ext-id-lemma f-id (suc ι) rewrite f-id ι = refl
+
 open import Core.Syntax.Actions.Lemmas var-action-record (record { ≡-ext = λ where x-≡ zero → refl
                                                                                    x-≡ (suc ι) → cong R.weaken-ε (x-≡ ι)
+                                                                 ; ext-id = ext-id-lemma
                                                                  }) public
 
 replace-at : Fin (suc ℓ) → CExpr ℓ → Fin (suc ℓ) → CExpr ℓ
