@@ -10,9 +10,9 @@ open import Core.Syntax.Renaming as R
 open import Core.Syntax.Substitution as S
 open import Core.Syntax.Substitution.Distributivity
 
-replace-weakened-ε-zero : (ε' ε : CExpr ℓ)
-                        → [ zero ↦ ε' ] (weaken-ε ε) ≡ ε
-replace-weakened-ε-zero ε' ε
-  rewrite σ-ρ-distr-ε (replace-at zero ε') suc ε
-        | S.act-ε-id (λ _ → refl) ε
+replace-weakened-ε-zero : (ε ε₀ : CExpr ℓ)
+                        → [ zero ↦ ε ] (weaken-ε ε₀) ≡ ε₀
+replace-weakened-ε-zero ε ε₀
+  rewrite σ-ρ-distr-ε (replace-at zero ε) suc ε₀
+        | S.act-ε-id (λ _ → refl) ε₀
         = refl
