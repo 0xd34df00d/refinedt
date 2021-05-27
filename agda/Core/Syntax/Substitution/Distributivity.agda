@@ -88,6 +88,72 @@ Rext²-ext²-commutes ρ σ (suc (suc ι))
         = refl
 
 
+σ-ρ-Distributivity : {Ty : ℕ → Set} → ActionOn Ty → R.ActionOn Ty → Set
+σ-ρ-Distributivity {Ty} σ-act ρ-act = ∀ {ℓ₀ ℓ₁ ℓ₂}
+                                      → (σ : Fin ℓ₁ → CExpr ℓ₂)
+                                      → (ρ : Fin ℓ₀ → Fin ℓ₁)
+                                      → (v : Ty ℓ₀)
+                                      → σ-act σ (ρ-act ρ v) ≡ σ-act (σ ∘ ρ) v
+
+σ-ρ-distr-ε : σ-ρ-Distributivity act-ε R.act-ε
+σ-ρ-distr-cons : σ-ρ-Distributivity {ADTCons nₐ} act-cons R.act-cons
+σ-ρ-distr-branches : σ-ρ-Distributivity {CaseBranches nₐ} act-branches R.act-branches
+
+ext-Rext-distr : (σ : Fin ℓ₁ → CExpr ℓ₂)
+               → (ρ : Fin ℓ₀ → Fin ℓ₁)
+               → ext σ ∘ R.ext ρ f≡ ext (σ ∘ ρ)
+ext-Rext-distr σ ρ zero = refl
+ext-Rext-distr σ ρ (suc ι) = refl
+
+σ-ρ-distr-ε σ ρ (CVar ι) = refl
+σ-ρ-distr-ε σ ρ (CSort s) = refl
+σ-ρ-distr-ε σ ρ (CΠ τ ε)
+  rewrite σ-ρ-distr-ε σ ρ τ
+        | σ-ρ-distr-ε (ext σ) (R.ext ρ) ε
+        | act-ε-extensionality (ext-Rext-distr σ ρ) ε
+        = refl
+σ-ρ-distr-ε σ ρ (CLam τ ε)
+  rewrite σ-ρ-distr-ε σ ρ τ
+        | σ-ρ-distr-ε (ext σ) (R.ext ρ) ε
+        | act-ε-extensionality (ext-Rext-distr σ ρ) ε
+        = refl
+σ-ρ-distr-ε σ ρ (CApp ε₁ ε₂)
+  rewrite σ-ρ-distr-ε σ ρ ε₁
+        | σ-ρ-distr-ε σ ρ ε₂
+        = refl
+σ-ρ-distr-ε σ ρ Cunit = refl
+σ-ρ-distr-ε σ ρ CUnit = refl
+σ-ρ-distr-ε σ ρ (CADT cons) rewrite σ-ρ-distr-cons σ ρ cons = refl
+σ-ρ-distr-ε σ ρ (CCon ι ε cons)
+  rewrite σ-ρ-distr-ε σ ρ ε
+        | σ-ρ-distr-cons σ ρ cons
+        = refl
+σ-ρ-distr-ε σ ρ (CCase ε branches)
+  rewrite σ-ρ-distr-ε σ ρ ε
+        | σ-ρ-distr-branches σ ρ branches
+        = refl
+
+σ-ρ-distr-cons σ ρ [] = refl
+σ-ρ-distr-cons σ ρ (τ ∷ cons)
+  rewrite σ-ρ-distr-ε σ ρ τ
+        | σ-ρ-distr-cons σ ρ cons
+        = refl
+
+ext²-Rext²-distr : (σ : Fin ℓ₁ → CExpr ℓ₂)
+               → (ρ : Fin ℓ₀ → Fin ℓ₁)
+               → ext (ext σ) ∘ R.ext (R.ext ρ) f≡ ext (ext (σ ∘ ρ))
+ext²-Rext²-distr σ ρ zero = refl
+ext²-Rext²-distr σ ρ (suc zero) = refl
+ext²-Rext²-distr σ ρ (suc (suc ι)) = refl
+
+σ-ρ-distr-branches σ ρ [] = refl
+σ-ρ-distr-branches σ ρ (ε ∷ branches)
+  rewrite σ-ρ-distr-ε (ext (ext σ)) (R.ext (R.ext ρ)) ε
+        | act-ε-extensionality (ext²-Rext²-distr σ ρ) ε
+        | σ-ρ-distr-branches σ ρ branches
+        = refl
+
+
 ActDistributivity : {Ty : ℕ → Set} → ActionOn Ty → Set
 ActDistributivity {Ty} act = ∀ {ℓ₀ ℓ₁ ℓ₂}
                              → (σ₁ : Fin ℓ₀ → CExpr ℓ₁)
