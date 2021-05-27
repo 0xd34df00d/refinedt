@@ -1,4 +1,4 @@
--- {-# OPTIONS --safe #-}
+{-# OPTIONS --safe #-}
 
 module Core.Syntax.Substitution.Distributivity where
 
@@ -170,11 +170,9 @@ act-ε-ext-distr : (σ₁ : Fin ℓ₀ → CExpr ℓ₁)
                 → act-ε (ext σ₂) ∘ ext σ₁ f≡ ext (act-ε σ₂ ∘ σ₁)
 act-ε-ext-distr σ₁ σ₂ zero = refl
 act-ε-ext-distr σ₁ σ₂ (suc ι)
-  rewrite ρ-as-σ-ε suc (σ₁ ι)
-        | ρ-as-σ-ε suc (act-ε σ₂ (σ₁ ι))
-        | act-ε-distr (λ x → CVar (suc x)) (ext σ₂) (σ₁ ι)
-        | act-ε-distr σ₂ (CVar ∘ suc) (σ₁ ι)
-        = {! !}
+  rewrite ρ-σ-distr-ε suc σ₂ (σ₁ ι)
+        | σ-ρ-distr-ε (ext σ₂) suc (σ₁ ι)
+        = refl
 
 act-ε-distr σ₁ σ₂ (CVar ι) = refl
 act-ε-distr σ₁ σ₂ (CSort s) = refl
@@ -210,14 +208,6 @@ act-cons-distr σ₁ σ₂ (τ ∷ cons)
         | act-cons-distr σ₁ σ₂ cons
         = refl
 
-suc²-distr : (σ₁ : Fin ℓ₀ → CExpr ℓ₁)
-      → (σ₂ : Fin ℓ₁ → CExpr ℓ₂)
-      → R.act-ε suc ∘ R.act-ε suc ∘ σ₂ f≡ act-ε (λ x → CVar (suc (suc x))) ∘ σ₂
-suc²-distr σ₁ σ₂ ι
-  rewrite R.act-ε-distr suc suc (σ₂ ι)
-        | ρ-as-σ-ε (λ x → suc (suc x)) (σ₂ ι)
-        = refl
-
 act-ε-ext²-distr : (σ₁ : Fin ℓ₀ → CExpr ℓ₁)
                  → (σ₂ : Fin ℓ₁ → CExpr ℓ₂)
                  → act-ε (ext (ext σ₂)) ∘ ext (ext σ₁) f≡ ext (ext (act-ε σ₂ ∘ σ₁))
@@ -226,11 +216,9 @@ act-ε-ext²-distr σ₁ σ₂ (suc zero) = refl
 act-ε-ext²-distr σ₁ σ₂ (suc (suc ι))
   rewrite R.act-ε-distr suc suc (σ₁ ι)
         | R.act-ε-distr suc suc (act-ε σ₂ (σ₁ ι))
-        | ρ-as-σ-ε (λ x → suc (suc x)) (σ₁ ι)
-        | ρ-as-σ-ε (λ x → suc (suc x)) (act-ε σ₂ (σ₁ ι))
-        | act-ε-distr (λ x → CVar (suc (suc x))) (ext (ext σ₂)) (σ₁ ι)
-        | act-ε-distr σ₂ (λ x → CVar (suc (suc x))) (σ₁ ι)
-        | act-ε-extensionality (suc²-distr σ₁ σ₂) (σ₁ ι)
+        | ρ-σ-distr-ε (λ x → suc (suc x)) σ₂ (σ₁ ι)
+        | σ-ρ-distr-ε (ext (ext σ₂)) (λ x → suc (suc x)) (σ₁ ι)
+        | act-ε-extensionality (λ x → R.act-ε-distr suc suc (σ₂ x)) (σ₁ ι)
         = refl
 
 act-branches-distr σ₁ σ₂ [] = refl
