@@ -10,6 +10,7 @@ open import Core.Syntax
 open import Core.Syntax.Derived
 open import Core.Syntax.Membership
 open import Core.Syntax.Renaming as R
+open import Core.Syntax.Renaming.Distributivity as R
 open import Core.Syntax.Substitution as S
 open import Core.Syntax.Substitution.Stable
 open import Core.Derivations
@@ -88,6 +89,13 @@ CT-VarW δ (∈-suc refl ∈) with head-well-formed δ
       (CT-Weaken (CT-Var (Γ⊢⋆⦂□ δτ)) (Σ-cont-well-typed δτ δP))
     )
 
+ext-suc-suc-is-suc² : (ε : CExpr ℓ)
+                    → R.act-ε (R.ext suc) (weaken-ε ε) ≡ weaken-ε-k 2 ε
+ext-suc-suc-is-suc² ε
+  rewrite R.act-ε-distr suc (R.ext suc) ε
+        | R.act-ε-distr suc suc ε
+        = refl
+
 Σ-ctor-well-typed : ∀ {Γ : Ctx ℓ} {P} {π}
                   → Γ ⊢ τ ⦂ CSort s
                   → Γ ⊢ P ⦂ τ ⇒' ⋆ₑ
@@ -114,10 +122,18 @@ CT-VarW δ (∈-suc refl ∈) with head-well-formed δ
          [ zero ↦ weaken-ε-k 2 ε ] (R.act-ε (R.ext suc) (weaken-ε-k 2 P · CVar zero ⇒' CVar (suc zero)))
   app₁ = CT-App (CT-Var (Σ-cont-well-typed δτ δP)) (δ↑↑ δε)
 
+  app₁-lemma : (weaken-ε-k 2 P · weaken-ε-k 2 ε ⇒' CVar (suc zero))
+               ≡
+               [ zero ↦ weaken-ε-k 2 ε ] (R.act-ε (R.ext suc) (weaken-ε-k 2 P · CVar zero ⇒' CVar (suc zero)))
+  app₁-lemma
+    rewrite ext-suc-suc-is-suc² (weaken-ε P)
+          | replace-weakened-ε-zero (weaken-ε-k 2 ε) (weaken-ε-k 2 P)
+          = refl
+
   app₁' : Γ , ⋆ₑ , Σ-cont τ P ⊢
           CVar zero · weaken-ε-k 2 ε ⦂
           weaken-ε-k 2 P · weaken-ε-k 2 ε ⇒' CVar (suc zero)
-  app₁' = {! !}
+  app₁' rewrite app₁-lemma = app₁
 
   app₂ : Γ , ⋆ₑ , Σ-cont τ P ⊢ CVar zero · weaken-ε-k 2 ε · weaken-ε-k 2 π ⦂ CVar (suc zero)
   app₂ rewrite replace-weakened-ε-zero (weaken-ε-k 2 π) (CVar (suc zero)) = CT-App app₁' (δ↑↑ δπ)
