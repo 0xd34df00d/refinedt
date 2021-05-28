@@ -11,6 +11,7 @@ open import Core.Syntax.Derived
 open import Core.Syntax.Membership
 open import Core.Syntax.Renaming as R
 open import Core.Syntax.Substitution as S
+open import Core.Syntax.Substitution.Stable
 open import Core.Derivations
 
 head-well-formed : Γ , τ ⊢ ε ⦂ τ'
@@ -108,11 +109,18 @@ CT-VarW δ (∈-suc refl ∈) with head-well-formed δ
       → Γ , ⋆ₑ , Σ-cont τ P ⊢ weaken-ε-k 2 ε' ⦂ weaken-ε-k 2 τ'
   δ↑↑ δ = CT-Weaken (CT-Weaken δ (Γ⊢⋆⦂□ δ)) (Σ-cont-well-typed δτ δP)
 
-  app₁ : Γ , ⋆ₑ , Σ-cont τ P ⊢ CVar zero · weaken-ε-k 2 ε ⦂ {! !}
-  app₁ = let r = CT-App (CT-Var (Σ-cont-well-typed δτ δP)) (δ↑↑ δε) in {! !}
+  app₁ : Γ , ⋆ₑ , Σ-cont τ P ⊢
+         CVar zero · weaken-ε-k 2 ε ⦂
+         [ zero ↦ weaken-ε-k 2 ε ] (R.act-ε (R.ext suc) (weaken-ε-k 2 P · CVar zero ⇒' CVar (suc zero)))
+  app₁ = CT-App (CT-Var (Σ-cont-well-typed δτ δP)) (δ↑↑ δε)
+
+  app₁' : Γ , ⋆ₑ , Σ-cont τ P ⊢
+          CVar zero · weaken-ε-k 2 ε ⦂
+          weaken-ε-k 2 P · weaken-ε-k 2 ε ⇒' CVar (suc zero)
+  app₁' = {! !}
 
   app₂ : Γ , ⋆ₑ , Σ-cont τ P ⊢ CVar zero · weaken-ε-k 2 ε · weaken-ε-k 2 π ⦂ CVar (suc zero)
-  app₂ = let r = CT-App app₁ (δ↑↑ δπ) in {! !}
+  app₂ rewrite replace-weakened-ε-zero (weaken-ε-k 2 π) (CVar (suc zero)) = CT-App app₁' (δ↑↑ δπ)
 
 ×-well-typed : Γ ⊢ τ₁ ⦂ ⋆ₑ
              → Γ ⊢ τ₂ ⦂ ⋆ₑ
