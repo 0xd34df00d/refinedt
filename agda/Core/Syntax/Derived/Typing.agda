@@ -149,6 +149,18 @@ ext-suc-suc-is-suc² ε
       (CT-Form δ₁ (CT-Weaken (Γ⊢⋆⦂□ δ₁) δ₁))
     )
 
+×-ctor-well-typed : Γ ⊢ τ₁ ⦂ ⋆ₑ
+                  → Γ ⊢ τ₂ ⦂ ⋆ₑ
+                  → Γ ⊢ ε₁ ⦂ τ₁
+                  → Γ ⊢ ε₂ ⦂ τ₂
+                  → Γ ⊢ ⟨ ε₁ ⦂ τ₁ × ε₂ ⦂ τ₂ ⟩ ⦂ ⟨ τ₁ × τ₂ ⟩
+×-ctor-well-typed {ε₂ = ε₂} δτ₁ δτ₂ δε₁ δε₂ =
+  Σ-ctor-well-typed {π = ε₂}
+    δτ₁
+    (CT-Abs (CT-Weaken δτ₂ δτ₁) (⇒'-well-typed δτ₁ (Γ⊢⋆⦂□ δτ₂)))
+    δε₁
+    {! !}
+
 ≡̂-well-typed : Γ ⊢ ε₁ ⦂ τ
              → Γ ⊢ ε₂ ⦂ τ
              → Γ ⊢ τ ⦂ ⋆ₑ
