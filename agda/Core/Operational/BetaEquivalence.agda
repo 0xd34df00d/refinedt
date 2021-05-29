@@ -24,3 +24,7 @@ data _↭β_ : CExpr ℓ → CExpr ℓ → Set where
 ↝-as-↭β : ε ↝ ε'
         → ε ↭β ε'
 ↝-as-↭β ε↝ε' = backward (↝βτ-Subst zero _ _ (CVar zero) ε↝ε')
+
+↜-as-↭β : ε ↝ ε'
+        → ε' ↭β ε
+↜-as-↭β ε↝ε' = forward (↝βτ-Subst zero _ _ (CVar zero) ε↝ε')
