@@ -2,6 +2,8 @@
 
 module Core.Operational.BetaEquivalence where
 
+open import Data.Fin using (zero)
+
 open import Core.Syntax
 open import Core.Syntax.Substitution
 open import Core.Operational
@@ -11,6 +13,10 @@ data _↝β_ : CExpr ℓ → CExpr ℓ → Set where
   ↝βτ-Subst : ∀ ι ε ε' (ε₀ : CExpr (suc ℓ))
             → (ε↝ε' : ε ↝ ε')
             → [ ι ↦ ε ] ε₀ ↝β [ ι ↦ ε' ] ε₀
+
+↝-as-↝β : ε ↝ ε'
+        → ε' ↝β ε
+↝-as-↝β ε↝ε' = ↝βτ-Subst zero _ _ (CVar zero) ε↝ε'
 
 infix 4 _↭β_
 data _↭β_ : CExpr ℓ → CExpr ℓ → Set where
