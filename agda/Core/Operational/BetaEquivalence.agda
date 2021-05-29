@@ -10,7 +10,7 @@ infix 4 _↝β_
 data _↝β_ : CExpr ℓ → CExpr ℓ → Set where
   ↝βτ-Subst : ∀ ι ε ε' (ε₀ : CExpr (suc ℓ))
             → (ε↝ε' : ε ↝ ε')
-            → [ ι ↦ ε' ] ε₀ ↝β [ ι ↦ ε ] ε₀
+            → [ ι ↦ ε ] ε₀ ↝β [ ι ↦ ε' ] ε₀
 
 infix 4 _↭β_
 data _↭β_ : CExpr ℓ → CExpr ℓ → Set where
