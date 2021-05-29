@@ -12,6 +12,7 @@ open import Core.Syntax.Derived
 open import Core.Syntax.Renaming
 open import Core.Syntax.Substitution
 open import Core.Operational
+open import Core.Operational.BetaEquivalence
 
 infix 2 _⊢_⦂_
 data _⊢_⦂_ : Ctx ℓ → CExpr ℓ → CExpr ℓ → Set
@@ -49,7 +50,7 @@ data _⊢_⦂_ where
          → Γ ⊢ CLam τ₁ ε ⦂ CΠ τ₁ τ₂
   CT-Conv : Γ ⊢ ε ⦂ τ₁
           → Γ ⊢ τ₂ ⦂ CSort s
-          → τ₁ =β τ₂
+          → τ₁ ↭β τ₂
           → Γ ⊢ ε ⦂ τ₂
 
   -- Our extensions
