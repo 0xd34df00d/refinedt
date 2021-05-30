@@ -23,6 +23,7 @@ mutual
 
   μ-ρ-untyped : Refinement ℓ
               → CExpr ℓ
+  μ-ρ-untyped Τ = Cunit ≡̂ Cunit of CUnit
   μ-ρ-untyped (ε₁ ≈ ε₂ of τ) = μ-ε-untyped ε₁ ≡̂ μ-ε-untyped ε₂ of μ-τ-untyped τ
   μ-ρ-untyped (ρ₁ ∧ ρ₂) = ⟨ μ-ρ-untyped ρ₁ × μ-ρ-untyped ρ₂ ⟩
 
