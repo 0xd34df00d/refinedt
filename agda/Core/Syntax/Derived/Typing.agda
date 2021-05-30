@@ -156,8 +156,8 @@ ext-suc-suc-is-suc² ε
                   → Γ ⊢ ε₁ ⦂ τ₁
                   → Γ ⊢ ε₂ ⦂ τ₂
                   → Γ ⊢ ⟨ ε₁ ⦂ τ₁ × ε₂ ⦂ τ₂ ⟩ ⦂ ⟨ τ₁ × τ₂ ⟩
-×-ctor-well-typed {ε₂ = ε₂} δτ₁ δτ₂ δε₁ δε₂ =
-  Σ-ctor-well-typed {π = ε₂}
+×-ctor-well-typed δτ₁ δτ₂ δε₁ δε₂ =
+  Σ-ctor-well-typed
     δτ₁
     (CT-Abs (CT-Weaken δτ₂ δτ₁) (⇒'-well-typed δτ₁ (Γ⊢⋆⦂□ δτ₂)))
     δε₁
