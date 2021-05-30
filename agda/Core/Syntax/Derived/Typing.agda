@@ -4,7 +4,7 @@ module Core.Syntax.Derived.Typing where
 
 open import Data.Fin using (zero; suc)
 open import Data.Product renaming (_,_ to ⟨_,_⟩)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst)
 
 open import Core.Syntax
 open import Core.Syntax.Derived
@@ -14,6 +14,8 @@ open import Core.Syntax.Renaming.Distributivity as R
 open import Core.Syntax.Substitution as S
 open import Core.Syntax.Substitution.Stable
 open import Core.Derivations
+open import Core.Operational
+open import Core.Operational.BetaEquivalence
 
 head-well-formed : Γ , τ ⊢ ε ⦂ τ'
                  → ∃[ s ] (Γ ⊢ τ ⦂ CSort s)
@@ -159,7 +161,30 @@ ext-suc-suc-is-suc² ε
     δτ₁
     (CT-Abs (CT-Weaken δτ₂ δτ₁) (⇒'-well-typed δτ₁ (Γ⊢⋆⦂□ δτ₂)))
     δε₁
-    {! !}
+    (CT-Conv
+      δε₂
+      (CT-App
+        (CT-Abs
+          (CT-Weaken
+            δτ₂
+            δτ₁
+          )
+          (CT-Form
+            δτ₁
+            (CT-Weaken (Γ⊢⋆⦂□ δτ₁) δτ₁)
+          )
+        )
+        δε₁
+      )
+      (ε-↭β _ _ _)
+    )
+  where
+  ε-↭β : (τ ε ε' : CExpr ℓ)
+        → ε ↭β CLam τ (weaken-ε ε) · ε'
+  ε-↭β τ ε ε' = subst
+                  (_↭β CLam τ (weaken-ε ε) · ε')
+                  (replace-weakened-ε-zero ε' ε)
+                  (↜-as-↭β CE-AppAbs)
 
 ≡̂-well-typed : Γ ⊢ ε₁ ⦂ τ
              → Γ ⊢ ε₂ ⦂ τ
