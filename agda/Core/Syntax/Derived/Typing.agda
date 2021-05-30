@@ -190,7 +190,7 @@ ext-suc-suc-is-suc² ε
              → Γ ⊢ ε₂ ⦂ τ
              → Γ ⊢ τ ⦂ ⋆ₑ
              → Γ ⊢ ε₁ ≡̂ ε₂ of τ ⦂ ⋆ₑ
-≡̂-well-typed {_} {Γ} {ε₁} {τ} {ε₂} ε₁δ ε₂δ τδ =
+≡̂-well-typed {Γ = Γ} {τ = τ} ε₁δ ε₂δ τδ =
   CT-Form
     Γ⊢τ⇒'⋆ₑ
     (×-well-typed ε₁⇒ε₂ ε₂⇒ε₁)
@@ -198,10 +198,9 @@ ext-suc-suc-is-suc² ε
   Γ⊢τ⇒'⋆ₑ : Γ ⊢ τ ⇒' ⋆ₑ ⦂ □ₑ
   Γ⊢τ⇒'⋆ₑ = ⇒'-well-typed τδ (Γ⊢⋆⦂□ τδ)
 
-  ε₁⇒ε₂ = ⇒'-well-typed
-            (CT-App (CT-Var Γ⊢τ⇒'⋆ₑ) (CT-Weaken ε₁δ Γ⊢τ⇒'⋆ₑ))
-            (CT-App (CT-Var Γ⊢τ⇒'⋆ₑ) (CT-Weaken ε₂δ Γ⊢τ⇒'⋆ₑ))
+  0·ε-wf : Γ ⊢ ε ⦂ τ
+         → Γ , (τ ⇒' ⋆ₑ) ⊢ CVar zero · weaken-ε ε ⦂ ⋆ₑ
+  0·ε-wf εδ = CT-App (CT-Var Γ⊢τ⇒'⋆ₑ) (CT-Weaken εδ Γ⊢τ⇒'⋆ₑ)
 
-  ε₂⇒ε₁ = ⇒'-well-typed
-            (CT-App (CT-Var Γ⊢τ⇒'⋆ₑ) (CT-Weaken ε₂δ Γ⊢τ⇒'⋆ₑ))
-            (CT-App (CT-Var Γ⊢τ⇒'⋆ₑ) (CT-Weaken ε₁δ Γ⊢τ⇒'⋆ₑ))
+  ε₁⇒ε₂ = ⇒'-well-typed (0·ε-wf ε₁δ) (0·ε-wf ε₂δ)
+  ε₂⇒ε₁ = ⇒'-well-typed (0·ε-wf ε₂δ) (0·ε-wf ε₁δ)
