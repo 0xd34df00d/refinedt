@@ -230,8 +230,6 @@ eq-refl-well-typed {Γ = Γ} {τ} {ε} δτ δε =
   type-wf = ×-well-typed id-fun-type-wf id-fun-type-wf
 
   body-wt : Γ , (τ ⇒' ⋆ₑ) ⊢
-            ⟨ id-fun ⦂ id-fun-type
-            × id-fun ⦂ id-fun-type
-            ⟩ ⦂
+            ⟨ id-fun ⦂ id-fun-type × id-fun ⦂ id-fun-type ⟩ ⦂
             ⟨ id-fun-type × id-fun-type ⟩
   body-wt = ×-ctor-well-typed id-fun-type-wf id-fun-type-wf id-fun-wf id-fun-wf

@@ -51,8 +51,8 @@ _≡̂_of_ : CExpr ℓ → CExpr ℓ → CExpr ℓ → CExpr ℓ
 
 eq-refl : CExpr ℓ → CExpr ℓ → CExpr ℓ
 eq-refl τ ε =
-  let id-fun      = CLam (CVar zero · weaken-ε ε) (CVar zero)
-      id-fun-type = CVar zero · weaken-ε ε ⇒' CVar zero · weaken-ε ε
-   in CLam (τ ⇒' ⋆ₑ) ⟨ id-fun ⦂ id-fun-type
-                     × id-fun ⦂ id-fun-type
-                     ⟩
+  CLam (τ ⇒' ⋆ₑ) ⟨ id-fun ⦂ id-fun-type × id-fun ⦂ id-fun-type ⟩
+  where
+  Pε          = CVar zero · weaken-ε ε
+  id-fun      = CLam Pε (CVar zero)
+  id-fun-type = Pε ⇒' Pε
