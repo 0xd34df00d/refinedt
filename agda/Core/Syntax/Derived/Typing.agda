@@ -198,12 +198,10 @@ ext-suc-suc-is-suc² ε
   Γ⊢τ⇒'⋆ₑ : Γ ⊢ τ ⇒' ⋆ₑ ⦂ □ₑ
   Γ⊢τ⇒'⋆ₑ = ⇒'-well-typed τδ (Γ⊢⋆⦂□ τδ)
 
-  ε₁⇒ε₂ : Γ , (τ ⇒' ⋆ₑ) ⊢ (CVar zero · weaken-ε ε₁) ⇒' (CVar zero · weaken-ε ε₂) ⦂ ⋆ₑ
   ε₁⇒ε₂ = ⇒'-well-typed
             (CT-App (CT-Var Γ⊢τ⇒'⋆ₑ) (CT-Weaken ε₁δ Γ⊢τ⇒'⋆ₑ))
             (CT-App (CT-Var Γ⊢τ⇒'⋆ₑ) (CT-Weaken ε₂δ Γ⊢τ⇒'⋆ₑ))
 
-  ε₂⇒ε₁ : Γ , (τ ⇒' ⋆ₑ) ⊢ (CVar zero · weaken-ε ε₂) ⇒' (CVar zero · weaken-ε ε₁) ⦂ ⋆ₑ
   ε₂⇒ε₁ = ⇒'-well-typed
             (CT-App (CT-Var Γ⊢τ⇒'⋆ₑ) (CT-Weaken ε₂δ Γ⊢τ⇒'⋆ₑ))
             (CT-App (CT-Var Γ⊢τ⇒'⋆ₑ) (CT-Weaken ε₁δ Γ⊢τ⇒'⋆ₑ))
