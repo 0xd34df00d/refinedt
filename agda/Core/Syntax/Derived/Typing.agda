@@ -204,3 +204,34 @@ ext-suc-suc-is-suc² ε
 
   ε₁⇒ε₂ = ⇒'-well-typed (0·ε-wf ε₁δ) (0·ε-wf ε₂δ)
   ε₂⇒ε₁ = ⇒'-well-typed (0·ε-wf ε₂δ) (0·ε-wf ε₁δ)
+
+eq-refl-well-typed : Γ ⊢ τ ⦂ ⋆ₑ
+                   → Γ ⊢ ε ⦂ τ
+                   → Γ ⊢ eq-refl τ ε ⦂ ε ≡̂ ε of τ
+eq-refl-well-typed {Γ = Γ} {τ} {ε} δτ δε =
+  CT-Abs
+    body-wt
+    (CT-Form
+      ⇒'-wf
+      type-wf
+    )
+  where
+  id-fun = CLam (CVar zero · weaken-ε ε) (CVar zero)
+  id-fun-type = CVar zero · weaken-ε ε ⇒' CVar zero · weaken-ε ε
+
+  ⇒'-wf = ⇒'-well-typed δτ (Γ⊢⋆⦂□ δτ)
+  0·ε-wf = CT-App
+            (CT-Var ⇒'-wf)
+            (CT-Weaken δε ⇒'-wf)
+  id-fun-type-wf = ⇒'-well-typed 0·ε-wf 0·ε-wf
+  id-fun-wf = CT-Abs (CT-Var 0·ε-wf) id-fun-type-wf
+
+  type-wf : Γ , (τ ⇒' ⋆ₑ) ⊢ ⟨ id-fun-type × id-fun-type ⟩ ⦂ ⋆ₑ
+  type-wf = ×-well-typed id-fun-type-wf id-fun-type-wf
+
+  body-wt : Γ , (τ ⇒' ⋆ₑ) ⊢
+            ⟨ id-fun ⦂ id-fun-type
+            × id-fun ⦂ id-fun-type
+            ⟩ ⦂
+            ⟨ id-fun-type × id-fun-type ⟩
+  body-wt = ×-ctor-well-typed id-fun-type-wf id-fun-type-wf id-fun-wf id-fun-wf
