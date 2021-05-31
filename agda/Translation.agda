@@ -42,19 +42,7 @@ mutual
 
   μ-τ : Γˢ ⊢ τˢ
       → μ-Γ Γˢ ⊢ᶜ μ-τ-untyped τˢ ⦂ ⋆ₑ
-  μ-τ {Γˢ = Γˢ} (TWF-TrueRef {b = b} Γok) =
-    Σ-well-typed
-      (μ-b Γok b)
-      (CT-Abs
-        (≡̂-well-typed (CT-UnitTerm Γ̂,b-wf) (CT-UnitTerm Γ̂,b-wf) (CT-UnitType Γ̂,b-wf))
-        (CT-Form
-          (μ-b Γok b)
-          Γ̂,b-wf
-        )
-      )
-    where
-    Γ̂,b-wf : μ-Γ Γˢ , μ-b-untyped b ⊢ᶜ ⋆ₑ ⦂ □ₑ
-    Γ̂,b-wf = CT-Weaken (μ-Γ-well-formed Γok) (μ-b Γok b)
+  μ-τ (TWF-TrueRef Γok) = μ-b Γok _
   μ-τ (TWF-Base ε₁δ ε₂δ) = {! !}
   μ-τ (TWF-Conj Γ⊢τ₁ Γ⊢τ₂) = {! !}
   μ-τ (TWF-Arr Γ⊢τ₁ Γ⊢τ₂) = CT-Form (μ-τ Γ⊢τ₁) (μ-τ Γ⊢τ₂)
