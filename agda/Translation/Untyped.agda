@@ -10,12 +10,12 @@ open import Core.Derivations as C
 open import Surface.Syntax as S
 open import Surface.Derivations as S
 
-μ-b-untyped : S.BaseType
-            → CExpr ℓ
-μ-b-untyped BUnit = CUnit
-
 μ-Τ : CExpr ℓ
 μ-Τ = Cunit ≡̂ Cunit of CUnit
+
+μ-b-untyped : S.BaseType
+            → CExpr ℓ
+μ-b-untyped BUnit = Σ[ CUnit ] μ-Τ
 
 mutual
   μ-τ-untyped : SType ℓ
