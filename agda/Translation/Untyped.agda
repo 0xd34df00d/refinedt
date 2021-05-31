@@ -15,7 +15,7 @@ open import Surface.Derivations as S
 
 μ-b-untyped : S.BaseType
             → CExpr ℓ
-μ-b-untyped BUnit = Σ[ CUnit ] μ-Τ
+μ-b-untyped BUnit = Σ[ CUnit ] CLam CUnit μ-Τ
 
 mutual
   μ-τ-untyped : SType ℓ
