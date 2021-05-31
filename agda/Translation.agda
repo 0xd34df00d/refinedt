@@ -4,10 +4,10 @@ module Translation where
 
 open import Data.Vec using (Vec; _∷_; [])
 
-open import Core.Syntax as C
+open import Core.Syntax as C renaming (Γ to Γᶜ)
 open import Core.Syntax.Derived as C
-open import Core.Derivations as C
-open import Surface.Syntax as S
+open import Core.Derivations as C renaming (_⊢_⦂_ to _⊢ᶜ_⦂_)
+open import Surface.Syntax as S renaming (Γ to Γˢ; τ to τˢ; ε to εˢ)
 open import Surface.Derivations as S
 
 μ-b-untyped : S.BaseType
@@ -52,10 +52,8 @@ mutual
 μ-Γ (Γ , τ) = μ-Γ Γ , μ-τ-untyped τ
 
 mutual
-  μ-τ : {Γ : S.Ctx ℓ}
-      → {τ : SType ℓ}
-      → Γ ⊢ τ
-      → μ-Γ Γ C.⊢ μ-τ-untyped τ ⦂ ⋆ₑ
+  μ-τ : Γˢ ⊢ τˢ
+      → μ-Γ Γˢ ⊢ᶜ μ-τ-untyped τˢ ⦂ ⋆ₑ
   μ-τ (TWF-TrueRef Γok) = {! !}
   μ-τ (TWF-Base ε₁δ ε₂δ) = {! !}
   μ-τ (TWF-Conj Γ⊢τ₁ Γ⊢τ₂) = {! !}
