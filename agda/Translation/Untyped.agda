@@ -20,6 +20,7 @@ open import Surface.Derivations as S
 mutual
   μ-τ-untyped : SType ℓ
               → CExpr ℓ
+  μ-τ-untyped ⟨ b ∣ Τ ⟩ = μ-b-untyped b
   μ-τ-untyped ⟨ b ∣ ρ ⟩ = Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) (μ-ρ-untyped ρ)
   μ-τ-untyped (τ₁ ⇒ τ₂) = CΠ (μ-τ-untyped τ₁) (μ-τ-untyped τ₂)
   μ-τ-untyped (⊍ cons) = CADT (μ-cons-untyped cons)
