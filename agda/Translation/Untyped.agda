@@ -14,6 +14,9 @@ open import Surface.Derivations as S
             → CExpr ℓ
 μ-b-untyped BUnit = CUnit
 
+μ-Τ : CExpr ℓ
+μ-Τ = Cunit ≡̂ Cunit of CUnit
+
 mutual
   μ-τ-untyped : SType ℓ
               → CExpr ℓ
@@ -23,7 +26,7 @@ mutual
 
   μ-ρ-untyped : Refinement ℓ
               → CExpr ℓ
-  μ-ρ-untyped Τ = Cunit ≡̂ Cunit of CUnit
+  μ-ρ-untyped Τ = μ-Τ
   μ-ρ-untyped (ε₁ ≈ ε₂ of τ) = μ-ε-untyped ε₁ ≡̂ μ-ε-untyped ε₂ of μ-τ-untyped τ
   μ-ρ-untyped (ρ₁ ∧ ρ₂) = ⟨ μ-ρ-untyped ρ₁ × μ-ρ-untyped ρ₂ ⟩
 
