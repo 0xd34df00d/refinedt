@@ -10,7 +10,7 @@ open import Core.Syntax.Derived.Typing as C
 open import Core.Derivations as C renaming (_⊢_⦂_ to _⊢ᶜ_⦂_)
 open import Core.Derivations.Lemmas
 open import Surface.Syntax as S renaming (Γ to Γˢ; τ to τˢ; ε to εˢ)
-open import Surface.Derivations as S
+open import Surface.Derivations as S renaming (_⊢_⦂_ to _⊢ˢ_⦂_)
 open import Surface.Theorems.TCTX
 
 open import Translation.Untyped
