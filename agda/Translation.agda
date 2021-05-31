@@ -52,6 +52,11 @@ mutual
 μ-Γ (Γ , τ) = μ-Γ Γ , μ-τ-untyped τ
 
 mutual
+  μ-Γ-well-formed : Γˢ ok
+                  → μ-Γ Γˢ ⊢ᶜ ⋆ₑ ⦂ □ₑ
+  μ-Γ-well-formed TCTX-Empty = CT-Sort
+  μ-Γ-well-formed (TCTX-Bind Γok τδ) = CT-Weaken (μ-Γ-well-formed Γok) (μ-τ τδ)
+
   μ-τ : Γˢ ⊢ τˢ
       → μ-Γ Γˢ ⊢ᶜ μ-τ-untyped τˢ ⦂ ⋆ₑ
   μ-τ (TWF-TrueRef Γok) = {! !}
