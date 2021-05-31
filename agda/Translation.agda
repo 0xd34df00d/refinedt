@@ -57,6 +57,11 @@ mutual
   μ-Γ-well-formed TCTX-Empty = CT-Sort
   μ-Γ-well-formed (TCTX-Bind Γok τδ) = CT-Weaken (μ-Γ-well-formed Γok) (μ-τ τδ)
 
+  μ-b : Γˢ ok
+      → ∀ b
+      → μ-Γ Γˢ ⊢ᶜ μ-b-untyped b ⦂ ⋆ₑ
+  μ-b Γok BUnit = CT-UnitType (μ-Γ-well-formed Γok)
+
   μ-τ : Γˢ ⊢ τˢ
       → μ-Γ Γˢ ⊢ᶜ μ-τ-untyped τˢ ⦂ ⋆ₑ
   μ-τ (TWF-TrueRef Γok) = {! !}
