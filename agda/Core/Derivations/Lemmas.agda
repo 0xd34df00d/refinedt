@@ -37,3 +37,7 @@ head-well-formed (CT-ADTCase _ δ _) = head-well-formed δ
 Γ⊢⋆⦂□ {Γ = ⊘} _ = CT-Sort
 Γ⊢⋆⦂□ {Γ = Γ , τ} δ with head-well-formed δ
 ... | ⟨ _ , δ' ⟩ = CT-Weaken (Γ⊢⋆⦂□ δ') δ'
+
+Γ⊢τ-⇒-Γ,τ-ok : Γ ⊢ τ ⦂ CSort s
+             → Γ , τ ⊢ ⋆ₑ ⦂ □ₑ
+Γ⊢τ-⇒-Γ,τ-ok δτ = CT-Weaken (Γ⊢⋆⦂□ δτ) δτ
