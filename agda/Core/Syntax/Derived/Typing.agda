@@ -18,7 +18,7 @@ open import Core.Derivations.Lemmas
 open import Core.Operational
 open import Core.Operational.BetaEquivalence
 
-CT-VarW : Γ ⊢ τ ⦂ CSort s
+CT-VarW : Γ ⊢ τ' ⦂ CSort s
         → τ ∈ Γ at ι
         → Γ ⊢ CVar ι ⦂ τ
 CT-VarW δ (∈-zero refl) with head-well-formed δ
