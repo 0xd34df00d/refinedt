@@ -33,7 +33,7 @@ mutual
 
   μ-ε-untyped : STerm ℓ
               → CExpr ℓ
-  μ-ε-untyped SUnit = Cunit
+  μ-ε-untyped SUnit = [ Cunit ⦂ CUnit ∣ μ-Τ of (CLam CUnit μ-Τ) ]
   μ-ε-untyped (SVar ι) = CVar ι
   μ-ε-untyped (SLam τ ε) = CLam (μ-τ-untyped τ) (μ-ε-untyped ε)
   μ-ε-untyped (SApp ε₁ ε₂) = μ-ε-untyped ε₁ · μ-ε-untyped ε₂
