@@ -44,6 +44,12 @@ mutual
     Γˢ⊢CUnit = CT-UnitType Γok
     Γ,CUnit-ok = Γ⊢τ-⇒-Γ,τ-ok Γˢ⊢CUnit
 
+  μ-b-P : μ-Γ Γˢ ⊢ᶜ ⋆ₑ ⦂ □ₑ
+        → μ-Γ Γˢ ⊢ᶜ CΠ (μ-b-untyped b) ⋆ₑ ⦂ □ₑ
+  μ-b-P Γok = CT-Form
+                (μ-b Γok _)
+                (Γ⊢τ-⇒-Γ,τ-ok (μ-b Γok _))
+
   μ-τ : Γˢ ⊢ τˢ
       → μ-Γ Γˢ ⊢ᶜ μ-τ-untyped τˢ ⦂ ⋆ₑ
   μ-τ (TWF-TrueRef Γok) = μ-b (μ-Γ-well-formed Γok) _
@@ -53,14 +59,11 @@ mutual
         sub-Γok = μ-Γ-well-formed-ε δε₁
         Γok = Γ,τ-ok-⇒-Γ-ok sub-Γok
      in Σ-well-typed
-            (μ-b Γok _)
-            (CT-Abs
-              (≡̂-well-typed δε̂₁ δε̂₂ (μ-b sub-Γok _))
-              (CT-Form
-                (μ-b Γok _)
-                (CT-Weaken Γok (μ-b Γok _))
-              )
-            )
+          (μ-b Γok _)
+          (CT-Abs
+            (≡̂-well-typed δε̂₁ δε̂₂ (μ-b sub-Γok _))
+            (μ-b-P Γok)
+          )
   μ-τ (TWF-Conj Γ⊢τ₁ Γ⊢τ₂) = {! !}
   μ-τ (TWF-Arr Γ⊢τ₁ Γ⊢τ₂) = CT-Form (μ-τ Γ⊢τ₁) (μ-τ Γ⊢τ₂)
   μ-τ (TWF-ADT consδs) = {! !}
