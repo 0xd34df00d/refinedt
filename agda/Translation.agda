@@ -54,6 +54,13 @@ mutual
                 (μ-b Γok _)
                 (Γ⊢τ-⇒-Γ,τ-ok (μ-b Γok _))
 
+  μ-ρ : ∀ {ρ}
+      → Γˢ ⊢ ⟨ b ∣ ρ ⟩
+      → μ-Γ Γˢ , μ-b-untyped b ⊢ᶜ μ-ρ-untyped ρ ⦂ ⋆ₑ
+  μ-ρ (TWF-TrueRef Γok) = μ-Τ-well-formed (Γ⊢τ-⇒-Γ,τ-ok (μ-b (μ-Γ-well-formed Γok) _))
+  μ-ρ (TWF-Base δε₁ δε₂) = ≡̂-well-typed (μ-ε δε₁) (μ-ε δε₂) (μ-b (Γ⊢⋆⦂□ (μ-ε δε₁)) _)
+  μ-ρ (TWF-Conj δρ₁ δρ₂) = ×-well-typed (μ-ρ δρ₁) (μ-ρ δρ₂)
+
   μ-τ : Γˢ ⊢ τˢ
       → μ-Γ Γˢ ⊢ᶜ μ-τ-untyped τˢ ⦂ ⋆ₑ
   μ-τ (TWF-TrueRef Γok) = μ-b (μ-Γ-well-formed Γok) _
