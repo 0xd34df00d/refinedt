@@ -26,35 +26,39 @@ mutual
   μ-Γ-well-formed TCTX-Empty = CT-Sort
   μ-Γ-well-formed (TCTX-Bind Γok τδ) = CT-Weaken (μ-Γ-well-formed Γok) (μ-τ τδ)
 
-  μ-b : Γˢ ok
+  μ-Γ-well-formed-ε : Γˢ ⊢ˢ εˢ ⦂ τˢ
+                    → μ-Γ Γˢ ⊢ᶜ ⋆ₑ ⦂ □ₑ
+  μ-Γ-well-formed-ε δε = Γ⊢⋆⦂□ (μ-ε δε)
+
+  μ-b : μ-Γ Γˢ ⊢ᶜ ⋆ₑ ⦂ □ₑ
       → ∀ b
       → μ-Γ Γˢ ⊢ᶜ μ-b-untyped b ⦂ ⋆ₑ
   μ-b Γok BUnit =
     Σ-well-typed
-      (CT-UnitType (μ-Γ-well-formed Γok))
+      (CT-UnitType Γok)
       (CT-Abs
         (≡̂-well-typed (CT-UnitTerm Γ,CUnit-ok) (CT-UnitTerm Γ,CUnit-ok) (CT-UnitType Γ,CUnit-ok))
         (CT-Form Γˢ⊢CUnit Γ,CUnit-ok)
       )
     where
-    Γˢ⊢CUnit = CT-UnitType (μ-Γ-well-formed Γok)
+    Γˢ⊢CUnit = CT-UnitType Γok
     Γ,CUnit-ok = Γ⊢τ-⇒-Γ,τ-ok Γˢ⊢CUnit
 
   μ-τ : Γˢ ⊢ τˢ
       → μ-Γ Γˢ ⊢ᶜ μ-τ-untyped τˢ ⦂ ⋆ₑ
-  μ-τ (TWF-TrueRef Γok) = μ-b Γok _
+  μ-τ (TWF-TrueRef Γok) = μ-b (μ-Γ-well-formed Γok) _
   μ-τ Γ⊢τ@(TWF-Base δε₁ δε₂) =
     let r₁ = μ-ε δε₁
         r₂ = μ-ε δε₂
-        w = ≡̂-well-typed r₁ r₂ (μ-b (Γ⊢ε⦂τ-⇒-Γok δε₁) _)
-        Γok = Γ⊢τ-⇒-Γok Γ⊢τ
+        sub-Γok = μ-Γ-well-formed-ε δε₁
+        Γok = Γ,τ-ok-⇒-Γ-ok sub-Γok
      in Σ-well-typed
             (μ-b Γok _)
             (CT-Abs
-              w
+              (≡̂-well-typed r₁ r₂ (μ-b sub-Γok _))
               (CT-Form
                 (μ-b Γok _)
-                (CT-Weaken (μ-Γ-well-formed Γok) (μ-b Γok _))
+                (CT-Weaken Γok (μ-b Γok _))
               )
             )
   μ-τ (TWF-Conj Γ⊢τ₁ Γ⊢τ₂) = {! !}
