@@ -75,7 +75,13 @@ mutual
             (≡̂-well-typed δε̂₁ δε̂₂ (μ-b sub-Γok _))
             (μ-b-P Γok)
           )
-  μ-τ (TWF-Conj Γ⊢τ₁ Γ⊢τ₂) = {! !}
+  μ-τ (TWF-Conj δρ₁ δρ₂) =
+    let Γok = Γ,τ-ok-⇒-Γ-ok (Γ⊢τ-⇒-Γ,τ-ok (μ-τ δρ₁))
+     in Σ-well-typed
+          (μ-b Γok _)
+          (CT-Abs
+            (×-well-typed (μ-ρ δρ₁) (μ-ρ δρ₂))
+            (μ-b-P Γok)
   μ-τ (TWF-Arr Γ⊢τ₁ Γ⊢τ₂) = CT-Form (μ-τ Γ⊢τ₁) (μ-τ Γ⊢τ₂)
   μ-τ (TWF-ADT consδs) = {! !}
 
