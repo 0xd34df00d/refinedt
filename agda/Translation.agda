@@ -20,6 +20,10 @@ open import Translation.Untyped
 μ-Γ ⊘ = ⊘
 μ-Γ (Γ , τ) = μ-Γ Γ , μ-τ-untyped τ
 
+μ-Τ-well-formed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
+                → Γᶜ ⊢ᶜ μ-Τ ⦂ ⋆ₑ
+μ-Τ-well-formed δ = ≡̂-well-typed (CT-UnitTerm δ) (CT-UnitTerm δ) (CT-UnitType δ)
+
 mutual
   μ-Γ-well-formed : Γˢ ok
                   → μ-Γ Γˢ ⊢ᶜ ⋆ₑ ⦂ □ₑ
@@ -37,7 +41,7 @@ mutual
     Σ-well-typed
       (CT-UnitType Γok)
       (CT-Abs
-        (≡̂-well-typed (CT-UnitTerm Γ,CUnit-ok) (CT-UnitTerm Γ,CUnit-ok) (CT-UnitType Γ,CUnit-ok))
+        (μ-Τ-well-formed Γ,CUnit-ok)
         (CT-Form Γˢ⊢CUnit Γ,CUnit-ok)
       )
     where
