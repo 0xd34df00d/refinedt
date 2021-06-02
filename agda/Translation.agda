@@ -82,6 +82,7 @@ mutual
           (CT-Abs
             (×-well-typed (μ-ρ δρ₁) (μ-ρ δρ₂))
             (μ-b-P Γok)
+          )
   μ-τ (TWF-Arr Γ⊢τ₁ Γ⊢τ₂) = CT-Form (μ-τ Γ⊢τ₁) (μ-τ Γ⊢τ₂)
   μ-τ (TWF-ADT consδs) = {! !}
 
