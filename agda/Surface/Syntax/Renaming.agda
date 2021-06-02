@@ -25,6 +25,9 @@ weaken-τ = act-τ suc
 weaken-ε : STerm ℓ → STerm (suc ℓ)
 weaken-ε = act-ε suc
 
+weaken-ρ : Refinement ℓ → Refinement (suc ℓ)
+weaken-ρ = act-ρ suc
+
 weaken-τ-k : ∀ k → SType ℓ → SType (k + ℓ)
 weaken-τ-k k = act-τ (raise k)
 
