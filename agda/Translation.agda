@@ -88,4 +88,21 @@ mutual
 
   μ-ε : Γˢ ⊢ˢ εˢ ⦂ τˢ
       → μ-Γ Γˢ ⊢ᶜ μ-ε-untyped εˢ ⦂ μ-τ-untyped τˢ
-  μ-ε = {! !}
+  μ-ε (T-Unit Γok) =
+    let Γ̂ok = μ-Γ-well-formed Γok
+        Γ̂⊢CUnit = CT-UnitType Γ̂ok
+     in Σ-ctor-well-typed {P = CLam CUnit μ-Τ} {π = eq-refl Cunit CUnit}
+         Γ̂⊢CUnit
+         (CT-Abs
+           (μ-Τ-well-formed (Γ⊢τ-⇒-Γ,τ-ok Γ̂⊢CUnit))
+           (CT-Form Γ̂⊢CUnit (Γ⊢τ-⇒-Γ,τ-ok Γ̂⊢CUnit))
+         )
+         (CT-UnitTerm Γ̂ok)
+         {! !}
+  μ-ε (T-Var Γok ∈) = CT-VarW (μ-Γ-well-formed Γok) {! !}
+  μ-ε (T-Abs arrδ δε) = CT-Abs (μ-ε δε) (μ-τ arrδ)
+  μ-ε (T-App δε₁ δε₂) = {! !} -- CT-App {! μ-ε δε₁ !} (μ-ε δε₂)
+  μ-ε (T-Case resδ δε branches-well-typed) = {! !}
+  μ-ε (T-Con ≡-prf δε adtτ) = {! !}
+  μ-ε (T-Sub δε τ'δ <:) = {! !}
+  μ-ε (T-RConv δε τ'δ τ~τ') = {! !}
