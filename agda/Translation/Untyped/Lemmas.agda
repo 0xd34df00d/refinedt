@@ -3,7 +3,7 @@
 module Translation.Untyped.Lemmas where
 
 open import Data.Fin using (zero; suc)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 
 open import Common.Helpers
 open import Core.Syntax as C renaming (Γ to Γᶜ)
@@ -35,82 +35,41 @@ mutual
   μ-ρ-weaken-commute : (f : Fin ℓ → Fin ℓ')
                      → (ρ : Refinement ℓ)
                      → μ-ρ-untyped (SR.act-ρ f ρ) ≡ CR.act-ε f (μ-ρ-untyped ρ)
+  μ-ρ-weaken-commute f Τ = refl
+  μ-ρ-weaken-commute f (ε₁ ≈ ε₂ of τ) = {! !}
+  μ-ρ-weaken-commute f (ρ₁ ∧ ρ₂) = {! !}
+
+  common-ρ-steps : ∀ (f : Fin ℓ → Fin ℓ') b ρ
+                 → Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) (μ-ρ-untyped (SR.act-ρ (SR.ext f) ρ))
+                   ≡
+                   CR.act-ε f (Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) (μ-ρ-untyped ρ))
+  common-ρ-steps f b ρ = step₁ then step₂ then step₃
+    where
+    step₁ : Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) (μ-ρ-untyped (SR.act-ρ (SR.ext f) ρ))
+            ≡
+            Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) (CR.act-ε (CR.ext f) (μ-ρ-untyped ρ))
+    step₁ = cong        -- rewrite fails for some reason beyond my Agda understanding, so let's do `cong` instead
+              (λ ε → Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) ε)
+              (μ-ρ-weaken-commute (SR.ext f) ρ
+          then CR.act-ε-extensionality (exts-agree f) (μ-ρ-untyped ρ))
+
+    step₂ : Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) (CR.act-ε (CR.ext f) (μ-ρ-untyped ρ))
+            ≡
+            Σ[ CR.act-ε f (μ-b-untyped b) ] CLam (CR.act-ε f (μ-b-untyped b)) (CR.act-ε (CR.ext f) (μ-ρ-untyped ρ))
+    step₂ rewrite act-id-on-μ-b-untyped f b = refl
+
+    step₃ : Σ[ CR.act-ε f (μ-b-untyped b) ] CLam (CR.act-ε f (μ-b-untyped b)) (CR.act-ε (CR.ext f) (μ-ρ-untyped ρ))
+            ≡
+            CR.act-ε f (Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) (μ-ρ-untyped ρ))
+    step₃ rewrite act-Σ-commutes f (μ-b-untyped b) (CLam (μ-b-untyped b) (μ-ρ-untyped ρ)) = refl
 
   μ-τ-weaken-commute : (f : Fin ℓ → Fin ℓ')
                      → (τˢ : SType ℓ)
                      → μ-τ-untyped (SR.act-τ f τˢ) ≡ CR.act-ε f (μ-τ-untyped τˢ)
-  μ-τ-weaken-commute f ⟨ b ∣ ε₁ ≈ ε₂ of τ ⟩ = {! !}
-  μ-τ-weaken-commute f ⟨ b ∣ ρ₁ ∧ ρ₂ ⟩ = lemma₁
-                                    then lemma₂
-                                    then lemma₃
-                                    then lemma₄
-                                    then lemma₅
-    where
-    lemma₁ : μ-τ-untyped (SR.act-τ f ⟨ b ∣ ρ₁ ∧ ρ₂ ⟩)
-             ≡
-             Σ[ μ-b-untyped b ]
-                 CLam (μ-b-untyped b)
-                      ⟨ CR.act-ε (CR.ext f) (μ-ρ-untyped ρ₁)
-                      × CR.act-ε (CR.ext f) (μ-ρ-untyped ρ₂)
-                      ⟩
-    lemma₁ rewrite μ-ρ-weaken-commute (SR.ext f) ρ₁
-                 | μ-ρ-weaken-commute (SR.ext f) ρ₂
-                 | CR.act-ε-extensionality (exts-agree f) (μ-ρ-untyped ρ₁)
-                 | CR.act-ε-extensionality (exts-agree f) (μ-ρ-untyped ρ₂)
-                 = refl
-
-    lemma₂ : Σ[ μ-b-untyped b ]
-                 CLam (μ-b-untyped b)
-                      ⟨ CR.act-ε (CR.ext f) (μ-ρ-untyped ρ₁)
-                      × CR.act-ε (CR.ext f) (μ-ρ-untyped ρ₂)
-                      ⟩
-             ≡
-             Σ[ CR.act-ε f (μ-b-untyped b) ]
-                 CLam (CR.act-ε f (μ-b-untyped b))
-                      ⟨ CR.act-ε (CR.ext f) (μ-ρ-untyped ρ₁)
-                      × CR.act-ε (CR.ext f) (μ-ρ-untyped ρ₂)
-                      ⟩
-    lemma₂ rewrite act-id-on-μ-b-untyped f b = refl
-
-    lemma₃ : Σ[ CR.act-ε f (μ-b-untyped b) ]
-                 CLam (CR.act-ε f (μ-b-untyped b))
-                      ⟨ CR.act-ε (CR.ext f) (μ-ρ-untyped ρ₁)
-                      × CR.act-ε (CR.ext f) (μ-ρ-untyped ρ₂)
-                      ⟩
-             ≡
-             Σ[ CR.act-ε f (μ-b-untyped b) ]
-                 CR.act-ε f (CLam (μ-b-untyped b)
-                                  ⟨ μ-ρ-untyped ρ₁
-                                  × μ-ρ-untyped ρ₂
-                                  ⟩)
-    lemma₃ = {! !}
-
-    lemma₄ : Σ[ CR.act-ε f (μ-b-untyped b) ]
-                 CR.act-ε f (CLam (μ-b-untyped b)
-                                  ⟨ μ-ρ-untyped ρ₁
-                                  × μ-ρ-untyped ρ₂
-                                  ⟩)
-             ≡
-             CR.act-ε f (Σ[ μ-b-untyped b ]
-                 CLam (μ-b-untyped b)
-                      ⟨ μ-ρ-untyped ρ₁
-                      × μ-ρ-untyped ρ₂
-                      ⟩)
-    lemma₄ rewrite act-Σ-commutes
-                    f
-                    (μ-b-untyped b)
-                    (CLam (μ-b-untyped b) ⟨ μ-ρ-untyped ρ₁
-                                          × μ-ρ-untyped ρ₂
-                                          ⟩)
-                 = refl
-
-    lemma₅ : CR.act-ε f (Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) ⟨ μ-ρ-untyped ρ₁
-                                                                 × μ-ρ-untyped ρ₂
-                                                                 ⟩)
-             ≡
-             CR.act-ε f (μ-τ-untyped ⟨ b ∣ ρ₁ ∧ ρ₂ ⟩)
-    lemma₅ = refl
   μ-τ-weaken-commute f ⟨ BUnit ∣ Τ ⟩ = refl
+  μ-τ-weaken-commute f ⟨ b ∣ ρ@(_ ∧ _) ⟩ = common-ρ-steps f b ρ
+  μ-τ-weaken-commute f ⟨ b ∣ ρ@(_ ≈ _ of _) ⟩ = common-ρ-steps f b ρ
+
   μ-τ-weaken-commute f (τˢ₁ ⇒ τˢ₂)
     rewrite μ-τ-weaken-commute f τˢ₁
           | μ-τ-weaken-commute (SR.ext f) τˢ₂
