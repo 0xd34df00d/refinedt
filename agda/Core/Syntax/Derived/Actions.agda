@@ -12,12 +12,17 @@ open import Core.Syntax.Renaming
 open import Core.Syntax.Renaming.Distributivity
 open import Core.Syntax.Derived
 
-act-Σ-commutes : (f : Fin ℓ → Fin ℓ')
-               → ∀ τ P
+ext-f∘suc-≡-suc∘f : ∀ (f : Fin ℓ → Fin ℓ')
+                  → act-ε (ext f) ∘ act-ε suc f≡ act-ε suc ∘ act-ε f
+ext-f∘suc-≡-suc∘f f ε
+  rewrite act-ε-distr suc (ext f) ε
+        | act-ε-distr f suc ε
+        = refl
+
+act-Σ-commutes : ∀ (f : Fin ℓ → Fin ℓ') τ P
                → act-ε f (Σ[ τ ] P) ≡ Σ[ act-ε f τ ] (act-ε f P)
 act-Σ-commutes f τ P
-  rewrite act-ε-distr suc (ext f) τ
-        | act-ε-distr f suc τ
+  rewrite ext-f∘suc-≡-suc∘f f τ
         | act-ε-distr suc suc P
         | act-ε-distr (λ x → suc (suc x)) (ext (ext f)) P
         | act-ε-distr f suc P
