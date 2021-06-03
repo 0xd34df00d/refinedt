@@ -78,7 +78,6 @@ mutual
   μ-τ-weaken-commute f ⟨ BUnit ∣ Τ ⟩ = refl
   μ-τ-weaken-commute f ⟨ b ∣ ρ@(_ ∧ _) ⟩ = common-ρ-steps f b ρ
   μ-τ-weaken-commute f ⟨ b ∣ ρ@(_ ≈ _ of _) ⟩ = common-ρ-steps f b ρ
-
   μ-τ-weaken-commute f (τˢ₁ ⇒ τˢ₂)
     rewrite μ-τ-weaken-commute f τˢ₁
           | μ-τ-weaken-commute (SR.ext f) τˢ₂
@@ -89,4 +88,9 @@ mutual
   μ-ε-weaken-commute : (f : Fin ℓ → Fin ℓ')
                      → (εˢ : STerm ℓ)
                      → μ-ε-untyped (SR.act-ε f εˢ) ≡ CR.act-ε f (μ-ε-untyped εˢ)
-  μ-ε-weaken-commute f ε = {! !}
+  μ-ε-weaken-commute f SUnit = refl
+  μ-ε-weaken-commute f (SVar ι) = refl
+  μ-ε-weaken-commute f (SLam τ ε) = {! !}
+  μ-ε-weaken-commute f (SApp ε₁ ε₂) = {! !}
+  μ-ε-weaken-commute f (SCase ε branches) = {! !}
+  μ-ε-weaken-commute f (SCon ι ε adt-cons) = {! !}
