@@ -80,3 +80,8 @@ mutual
           | CR.act-ε-extensionality (exts-agree f) (μ-τ-untyped τˢ₂)
           = refl
   μ-τ-weaken-commute f (⊍ cons) = {! !}
+
+  μ-ε-weaken-commute : (f : Fin ℓ → Fin ℓ')
+                     → (εˢ : STerm ℓ)
+                     → μ-ε-untyped (SR.act-ε f εˢ) ≡ CR.act-ε f (μ-ε-untyped εˢ)
+  μ-ε-weaken-commute f ε = {! !}
