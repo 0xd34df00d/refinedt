@@ -16,7 +16,7 @@ import Surface.Syntax.Renaming as SR
 open import Translation.Untyped
 
 exts-agree : (f : Fin ℓ → Fin ℓ')
-           → CR.ext f f≡ SR.ext f
+           → SR.ext f f≡ CR.ext f
 exts-agree f zero = refl
 exts-agree f (suc x) = refl
 
