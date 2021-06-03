@@ -36,7 +36,12 @@ mutual
                      → (ρ : Refinement ℓ)
                      → μ-ρ-untyped (SR.act-ρ f ρ) ≡ CR.act-ε f (μ-ρ-untyped ρ)
   μ-ρ-weaken-commute f Τ = refl
-  μ-ρ-weaken-commute f (ε₁ ≈ ε₂ of τ) = {! !}
+  μ-ρ-weaken-commute f (ε₁ ≈ ε₂ of τ)
+    rewrite act-≡̂-commutes f (μ-ε-untyped ε₁) (μ-ε-untyped ε₂) (μ-τ-untyped τ)
+          | μ-ε-weaken-commute f ε₁
+          | μ-ε-weaken-commute f ε₂
+          | μ-τ-weaken-commute f τ
+          = refl
   μ-ρ-weaken-commute f (ρ₁ ∧ ρ₂)
     rewrite act-×-commutes f (μ-ρ-untyped ρ₁) (μ-ρ-untyped ρ₂)
           | μ-ρ-weaken-commute f ρ₁
