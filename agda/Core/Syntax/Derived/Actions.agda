@@ -19,14 +19,18 @@ ext-f∘suc-≡-suc∘f f ε
         | act-ε-distr f suc ε
         = refl
 
+ext²-f∘suc²-≡-suc²∘f : ∀ (f : Fin ℓ → Fin ℓ')
+                     → act-ε (ext (ext f)) ∘ act-ε suc ∘ act-ε suc f≡ act-ε suc ∘ act-ε suc ∘ act-ε f
+ext²-f∘suc²-≡-suc²∘f f ε
+  rewrite ext-f∘suc-≡-suc∘f (ext f) (act-ε suc ε)
+        | ext-f∘suc-≡-suc∘f f ε
+        = refl
+
 act-Σ-commutes : ∀ (f : Fin ℓ → Fin ℓ') τ P
                → act-ε f (Σ[ τ ] P) ≡ Σ[ act-ε f τ ] (act-ε f P)
 act-Σ-commutes f τ P
   rewrite ext-f∘suc-≡-suc∘f f τ
-        | act-ε-distr suc suc P
-        | act-ε-distr (λ x → suc (suc x)) (ext (ext f)) P
-        | act-ε-distr f suc P
-        | act-ε-distr (λ x → suc (f x)) suc P
+        | ext²-f∘suc²-≡-suc²∘f f P
         = refl
 
 act-×-commutes : ∀ (f : Fin ℓ → Fin ℓ') τ₁ τ₂
