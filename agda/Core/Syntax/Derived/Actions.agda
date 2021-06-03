@@ -39,3 +39,7 @@ act-×-commutes f τ₁ τ₂
   rewrite act-Σ-commutes f τ₁ (CLam τ₁ (weaken-ε τ₂))
         | ext-f∘suc-≡-suc∘f f τ₂
         = refl
+
+act-⇒'-commutes : ∀ (f : Fin ℓ → Fin ℓ') τ₁ τ₂
+                → act-ε f (τ₁ ⇒' τ₂) ≡ (act-ε f τ₁ ⇒' act-ε f τ₂)
+act-⇒'-commutes f τ₁ τ₂ rewrite ext-f∘suc-≡-suc∘f f τ₂ = refl
