@@ -37,7 +37,11 @@ mutual
                      → μ-ρ-untyped (SR.act-ρ f ρ) ≡ CR.act-ε f (μ-ρ-untyped ρ)
   μ-ρ-weaken-commute f Τ = refl
   μ-ρ-weaken-commute f (ε₁ ≈ ε₂ of τ) = {! !}
-  μ-ρ-weaken-commute f (ρ₁ ∧ ρ₂) = {! !}
+  μ-ρ-weaken-commute f (ρ₁ ∧ ρ₂)
+    rewrite act-×-commutes f (μ-ρ-untyped ρ₁) (μ-ρ-untyped ρ₂)
+          | μ-ρ-weaken-commute f ρ₁
+          | μ-ρ-weaken-commute f ρ₂
+          = refl
 
   common-ρ-steps : ∀ (f : Fin ℓ → Fin ℓ') b ρ
                  → Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) (μ-ρ-untyped (SR.act-ρ (SR.ext f) ρ))
