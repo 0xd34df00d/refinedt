@@ -15,11 +15,6 @@ open import Surface.Theorems.TCTX
 
 open import Translation.Untyped
 
-μ-Γ : S.Ctx ℓ
-    → C.Ctx ℓ
-μ-Γ ⊘ = ⊘
-μ-Γ (Γ , τ) = μ-Γ Γ , μ-τ-untyped τ
-
 μ-Τ-well-formed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
                 → Γᶜ ⊢ᶜ μ-Τ ⦂ ⋆ₑ
 μ-Τ-well-formed δ = ≡̂-well-typed (CT-UnitTerm δ) (CT-UnitTerm δ) (CT-UnitType δ)

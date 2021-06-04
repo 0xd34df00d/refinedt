@@ -49,3 +49,8 @@ mutual
                      → C.CaseBranches nₐ ℓ
   μ-branches-untyped [] = []
   μ-branches-untyped (MkCaseBranch ε ∷ bs) = {- TODO this is a placeholder proper proof -} Cunit ∷ μ-branches-untyped bs
+
+μ-Γ : S.Ctx ℓ
+    → C.Ctx ℓ
+μ-Γ ⊘ = ⊘
+μ-Γ (Γ , τ) = μ-Γ Γ , μ-τ-untyped τ
