@@ -33,20 +33,20 @@ _then_ : ∀ {S : Set} {a b c : S}
 refl then refl = refl
 
 mutual
-  μ-ρ-weaken-commute : (f : Fin ℓ → Fin ℓ')
-                     → (ρ : Refinement ℓ)
-                     → μ-ρ-untyped (SR.act-ρ f ρ) ≡ CR.act-ε f (μ-ρ-untyped ρ)
-  μ-ρ-weaken-commute f Τ = refl
-  μ-ρ-weaken-commute f (ε₁ ≈ ε₂ of τ)
+  μ-ρ-act-commute : (f : Fin ℓ → Fin ℓ')
+                  → (ρ : Refinement ℓ)
+                  → μ-ρ-untyped (SR.act-ρ f ρ) ≡ CR.act-ε f (μ-ρ-untyped ρ)
+  μ-ρ-act-commute f Τ = refl
+  μ-ρ-act-commute f (ε₁ ≈ ε₂ of τ)
     rewrite act-≡̂-commutes f (μ-ε-untyped ε₁) (μ-ε-untyped ε₂) (μ-τ-untyped τ)
-          | μ-ε-weaken-commute f ε₁
-          | μ-ε-weaken-commute f ε₂
-          | μ-τ-weaken-commute f τ
+          | μ-ε-act-commute f ε₁
+          | μ-ε-act-commute f ε₂
+          | μ-τ-act-commute f τ
           = refl
-  μ-ρ-weaken-commute f (ρ₁ ∧ ρ₂)
+  μ-ρ-act-commute f (ρ₁ ∧ ρ₂)
     rewrite act-×-commutes f (μ-ρ-untyped ρ₁) (μ-ρ-untyped ρ₂)
-          | μ-ρ-weaken-commute f ρ₁
-          | μ-ρ-weaken-commute f ρ₂
+          | μ-ρ-act-commute f ρ₁
+          | μ-ρ-act-commute f ρ₂
           = refl
 
   common-ρ-steps : ∀ (f : Fin ℓ → Fin ℓ') b ρ
@@ -60,7 +60,7 @@ mutual
             Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) (CR.act-ε (CR.ext f) (μ-ρ-untyped ρ))
     step₁ = cong        -- rewrite fails for some reason beyond my Agda understanding, so let's do `cong` instead
               (λ ε → Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) ε)
-              (μ-ρ-weaken-commute (SR.ext f) ρ
+              (μ-ρ-act-commute (SR.ext f) ρ
           then CR.act-ε-extensionality (exts-agree f) (μ-ρ-untyped ρ))
 
     step₂ : Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) (CR.act-ε (CR.ext f) (μ-ρ-untyped ρ))
@@ -73,56 +73,56 @@ mutual
             CR.act-ε f (Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) (μ-ρ-untyped ρ))
     step₃ rewrite act-Σ-commutes f (μ-b-untyped b) (CLam (μ-b-untyped b) (μ-ρ-untyped ρ)) = refl
 
-  μ-τ-weaken-commute : (f : Fin ℓ → Fin ℓ')
-                     → (τˢ : SType ℓ)
-                     → μ-τ-untyped (SR.act-τ f τˢ) ≡ CR.act-ε f (μ-τ-untyped τˢ)
-  μ-τ-weaken-commute f ⟨ BUnit ∣ Τ ⟩ = refl
-  μ-τ-weaken-commute f ⟨ b ∣ ρ@(_ ∧ _) ⟩ = common-ρ-steps f b ρ
-  μ-τ-weaken-commute f ⟨ b ∣ ρ@(_ ≈ _ of _) ⟩ = common-ρ-steps f b ρ
-  μ-τ-weaken-commute f (τˢ₁ ⇒ τˢ₂)
-    rewrite μ-τ-weaken-commute f τˢ₁
-          | μ-τ-weaken-commute (SR.ext f) τˢ₂
+  μ-τ-act-commute : (f : Fin ℓ → Fin ℓ')
+                  → (τˢ : SType ℓ)
+                  → μ-τ-untyped (SR.act-τ f τˢ) ≡ CR.act-ε f (μ-τ-untyped τˢ)
+  μ-τ-act-commute f ⟨ BUnit ∣ Τ ⟩ = refl
+  μ-τ-act-commute f ⟨ b ∣ ρ@(_ ∧ _) ⟩ = common-ρ-steps f b ρ
+  μ-τ-act-commute f ⟨ b ∣ ρ@(_ ≈ _ of _) ⟩ = common-ρ-steps f b ρ
+  μ-τ-act-commute f (τˢ₁ ⇒ τˢ₂)
+    rewrite μ-τ-act-commute f τˢ₁
+          | μ-τ-act-commute (SR.ext f) τˢ₂
           | CR.act-ε-extensionality (exts-agree f) (μ-τ-untyped τˢ₂)
           = refl
-  μ-τ-weaken-commute f (⊍ cons) rewrite μ-cons-weaken-commute f cons = refl
+  μ-τ-act-commute f (⊍ cons) rewrite μ-cons-act-commute f cons = refl
 
-  μ-ε-weaken-commute : (f : Fin ℓ → Fin ℓ')
-                     → (εˢ : STerm ℓ)
-                     → μ-ε-untyped (SR.act-ε f εˢ) ≡ CR.act-ε f (μ-ε-untyped εˢ)
-  μ-ε-weaken-commute f SUnit = refl
-  μ-ε-weaken-commute f (SVar ι) = refl
-  μ-ε-weaken-commute f (SLam τ ε)
-    rewrite μ-τ-weaken-commute f τ
-          | μ-ε-weaken-commute (SR.ext f) ε
+  μ-ε-act-commute : (f : Fin ℓ → Fin ℓ')
+                  → (εˢ : STerm ℓ)
+                  → μ-ε-untyped (SR.act-ε f εˢ) ≡ CR.act-ε f (μ-ε-untyped εˢ)
+  μ-ε-act-commute f SUnit = refl
+  μ-ε-act-commute f (SVar ι) = refl
+  μ-ε-act-commute f (SLam τ ε)
+    rewrite μ-τ-act-commute f τ
+          | μ-ε-act-commute (SR.ext f) ε
           | CR.act-ε-extensionality (exts-agree f) (μ-ε-untyped ε)
           = refl
-  μ-ε-weaken-commute f (SApp ε₁ ε₂)
-    rewrite μ-ε-weaken-commute f ε₁
-          | μ-ε-weaken-commute f ε₂
+  μ-ε-act-commute f (SApp ε₁ ε₂)
+    rewrite μ-ε-act-commute f ε₁
+          | μ-ε-act-commute f ε₂
           = refl
-  μ-ε-weaken-commute f (SCase ε branches)
-    rewrite μ-ε-weaken-commute f ε
-          | μ-branches-weaken-commute f branches
+  μ-ε-act-commute f (SCase ε branches)
+    rewrite μ-ε-act-commute f ε
+          | μ-branches-act-commute f branches
           = refl
-  μ-ε-weaken-commute f (SCon ι ε cons)
-    rewrite μ-ε-weaken-commute f ε
-          | μ-cons-weaken-commute f cons
-          = refl
-
-  μ-cons-weaken-commute : (f : Fin ℓ → Fin ℓ')
-                        → (cons : S.ADTCons nₐ ℓ)
-                        → μ-cons-untyped (SR.act-cons f cons) ≡ CR.act-cons f (μ-cons-untyped cons)
-  μ-cons-weaken-commute f [] = refl
-  μ-cons-weaken-commute f (τ ∷ cons)
-    rewrite μ-τ-weaken-commute f τ
-          | μ-cons-weaken-commute f cons
+  μ-ε-act-commute f (SCon ι ε cons)
+    rewrite μ-ε-act-commute f ε
+          | μ-cons-act-commute f cons
           = refl
 
-  μ-branches-weaken-commute : (f : Fin ℓ → Fin ℓ')
-                            → (bs : S.CaseBranches nₐ ℓ)
-                            → μ-branches-untyped (SR.act-branches f bs) ≡ CR.act-branches f (μ-branches-untyped bs)
-  μ-branches-weaken-commute f [] = refl
-  μ-branches-weaken-commute f (MkCaseBranch ε ∷ bs)
-    rewrite μ-branches-weaken-commute f bs
+  μ-cons-act-commute : (f : Fin ℓ → Fin ℓ')
+                     → (cons : S.ADTCons nₐ ℓ)
+                     → μ-cons-untyped (SR.act-cons f cons) ≡ CR.act-cons f (μ-cons-untyped cons)
+  μ-cons-act-commute f [] = refl
+  μ-cons-act-commute f (τ ∷ cons)
+    rewrite μ-τ-act-commute f τ
+          | μ-cons-act-commute f cons
+          = refl
+
+  μ-branches-act-commute : (f : Fin ℓ → Fin ℓ')
+                         → (bs : S.CaseBranches nₐ ℓ)
+                         → μ-branches-untyped (SR.act-branches f bs) ≡ CR.act-branches f (μ-branches-untyped bs)
+  μ-branches-act-commute f [] = refl
+  μ-branches-act-commute f (MkCaseBranch ε ∷ bs)
+    rewrite μ-branches-act-commute f bs
           = refl
   -- TODO this will break once we fix the translation of ε
