@@ -121,4 +121,8 @@ mutual
   μ-branches-weaken-commute : (f : Fin ℓ → Fin ℓ')
                             → (bs : S.CaseBranches nₐ ℓ)
                             → μ-branches-untyped (SR.act-branches f bs) ≡ CR.act-branches f (μ-branches-untyped bs)
-  μ-branches-weaken-commute f bs = {! !}
+  μ-branches-weaken-commute f [] = refl
+  μ-branches-weaken-commute f (MkCaseBranch ε ∷ bs)
+    rewrite μ-branches-weaken-commute f bs
+          = refl
+  -- TODO this will break once we fix the translation of ε
