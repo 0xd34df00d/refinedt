@@ -90,7 +90,11 @@ mutual
                      → μ-ε-untyped (SR.act-ε f εˢ) ≡ CR.act-ε f (μ-ε-untyped εˢ)
   μ-ε-weaken-commute f SUnit = refl
   μ-ε-weaken-commute f (SVar ι) = refl
-  μ-ε-weaken-commute f (SLam τ ε) = {! !}
+  μ-ε-weaken-commute f (SLam τ ε)
+    rewrite μ-τ-weaken-commute f τ
+          | μ-ε-weaken-commute (SR.ext f) ε
+          | CR.act-ε-extensionality (exts-agree f) (μ-ε-untyped ε)
+          = refl
   μ-ε-weaken-commute f (SApp ε₁ ε₂) = {! !}
   μ-ε-weaken-commute f (SCase ε branches) = {! !}
   μ-ε-weaken-commute f (SCon ι ε adt-cons) = {! !}
