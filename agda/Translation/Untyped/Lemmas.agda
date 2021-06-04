@@ -84,7 +84,7 @@ mutual
           | μ-τ-weaken-commute (SR.ext f) τˢ₂
           | CR.act-ε-extensionality (exts-agree f) (μ-τ-untyped τˢ₂)
           = refl
-  μ-τ-weaken-commute f (⊍ cons) = {! !}
+  μ-τ-weaken-commute f (⊍ cons) rewrite μ-cons-weaken-commute f cons = refl
 
   μ-ε-weaken-commute : (f : Fin ℓ → Fin ℓ')
                      → (εˢ : STerm ℓ)
@@ -101,7 +101,10 @@ mutual
           | μ-ε-weaken-commute f ε₂
           = refl
   μ-ε-weaken-commute f (SCase ε branches) = {! !}
-  μ-ε-weaken-commute f (SCon ι ε adt-cons) = {! !}
+  μ-ε-weaken-commute f (SCon ι ε cons)
+    rewrite μ-ε-weaken-commute f ε
+          | μ-cons-weaken-commute f cons
+          = refl
 
   μ-cons-weaken-commute : (f : Fin ℓ → Fin ℓ')
                         → (cons : S.ADTCons nₐ ℓ)
