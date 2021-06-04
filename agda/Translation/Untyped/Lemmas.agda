@@ -2,6 +2,7 @@
 
 module Translation.Untyped.Lemmas where
 
+open import Data.Vec using (_∷_; [])
 open import Data.Fin using (zero; suc)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 
@@ -101,3 +102,12 @@ mutual
           = refl
   μ-ε-weaken-commute f (SCase ε branches) = {! !}
   μ-ε-weaken-commute f (SCon ι ε adt-cons) = {! !}
+
+  μ-cons-weaken-commute : (f : Fin ℓ → Fin ℓ')
+                        → (cons : S.ADTCons nₐ ℓ)
+                        → μ-cons-untyped (SR.act-cons f cons) ≡ CR.act-cons f (μ-cons-untyped cons)
+  μ-cons-weaken-commute f [] = refl
+  μ-cons-weaken-commute f (τ ∷ cons)
+    rewrite μ-τ-weaken-commute f τ
+          | μ-cons-weaken-commute f cons
+          = refl
