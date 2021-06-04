@@ -100,7 +100,10 @@ mutual
     rewrite μ-ε-weaken-commute f ε₁
           | μ-ε-weaken-commute f ε₂
           = refl
-  μ-ε-weaken-commute f (SCase ε branches) = {! !}
+  μ-ε-weaken-commute f (SCase ε branches)
+    rewrite μ-ε-weaken-commute f ε
+          | μ-branches-weaken-commute f branches
+          = refl
   μ-ε-weaken-commute f (SCon ι ε cons)
     rewrite μ-ε-weaken-commute f ε
           | μ-cons-weaken-commute f cons
@@ -114,3 +117,8 @@ mutual
     rewrite μ-τ-weaken-commute f τ
           | μ-cons-weaken-commute f cons
           = refl
+
+  μ-branches-weaken-commute : (f : Fin ℓ → Fin ℓ')
+                            → (bs : S.CaseBranches nₐ ℓ)
+                            → μ-branches-untyped (SR.act-branches f bs) ≡ CR.act-branches f (μ-branches-untyped bs)
+  μ-branches-weaken-commute f bs = {! !}
