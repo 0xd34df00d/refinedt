@@ -109,6 +109,6 @@ mutual
   μ-ε (T-Abs arrδ δε) = CT-Abs (μ-ε δε) (μ-τ arrδ)
   μ-ε (T-App δε₁ δε₂) = {! !} -- CT-App {! μ-ε δε₁ !} (μ-ε δε₂)
   μ-ε (T-Case resδ δε branches-well-typed) = {! !}
-  μ-ε (T-Con ≡-prf δε adtτ) = {! !}
+  μ-ε (T-Con {ι = ι} {cons = cons} refl δε adtτ) = CT-ADTCon (μ-lookup-commute cons ι) (μ-ε δε) (μ-τ adtτ)
   μ-ε (T-Sub δε τ'δ <:) = {! !}
   μ-ε (T-RConv δε τ'δ τ~τ') = {! !}
