@@ -41,7 +41,7 @@ canonical-⇒ (T-RConv {τ = τ₁' ⇒ τ₂'} εδ τ'δ τ~τ') is-value refl
 canonical-⇒ (T-RConv {τ = ⟨ _ ∣ _ ⟩} εδ τ'δ τ~τ') is-value refl = shape-⊥-elim ↭βτ-preserves-shape τ~τ' (λ ())
 canonical-⇒ (T-RConv {τ = ⊍ _} εδ τ'δ τ~τ')       is-value refl = shape-⊥-elim ↭βτ-preserves-shape τ~τ' (λ ())
 
-canonical-⊍ : {cons : ADTCons (Mkℕₐ (suc n)) zero}
+canonical-⊍ : {cons : ADTCons (Mkℕₐ n) zero}
             → ⊘ ⊢ ε ⦂ τ
             → IsValue ε
             → τ ≡ ⊍ cons

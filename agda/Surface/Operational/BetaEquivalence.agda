@@ -122,46 +122,46 @@ prove-via-↝βτ' f = ↝βτ'-to-↝βτ ∘ f ∘ ↝βτ-to-↝βτ'
 ↭βτ-preserves-shape (backward τ₂↝τ₁) = sym (↝βτ-preserves-shape τ₂↝τ₁)
 
 ↝βτ'-cons-same-length : ∀ {n₁ n₂}
-                      → {cons₁ : ADTCons (Mkℕₐ (suc n₁)) ℓ}
-                      → {cons₂ : ADTCons (Mkℕₐ (suc n₂)) ℓ}
+                      → {cons₁ : ADTCons (Mkℕₐ n₁) ℓ}
+                      → {cons₂ : ADTCons (Mkℕₐ n₂) ℓ}
                       → (⊍ cons₁) ↝βτ' (⊍ cons₂)
                       → n₁ ≡ n₂
 ↝βτ'-cons-same-length (↝βτ'-Subst _ _ _ (⊍ cons) _ refl refl) = refl
 
 ↝βτ-cons-same-length : ∀ {n₁ n₂}
-                     → {cons₁ : ADTCons (Mkℕₐ (suc n₁)) ℓ}
-                     → {cons₂ : ADTCons (Mkℕₐ (suc n₂)) ℓ}
+                     → {cons₁ : ADTCons (Mkℕₐ n₁) ℓ}
+                     → {cons₂ : ADTCons (Mkℕₐ n₂) ℓ}
                      → (⊍ cons₁) ↝βτ (⊍ cons₂)
                      → n₁ ≡ n₂
 ↝βτ-cons-same-length ↝βτ = ↝βτ'-cons-same-length (↝βτ-to-↝βτ' ↝βτ)
 
 ↭βτ-cons-same-length : ∀ {n₁ n₂}
-                     → {cons₁ : ADTCons (Mkℕₐ (suc n₁)) ℓ}
-                     → {cons₂ : ADTCons (Mkℕₐ (suc n₂)) ℓ}
+                     → {cons₁ : ADTCons (Mkℕₐ n₁) ℓ}
+                     → {cons₂ : ADTCons (Mkℕₐ n₂) ℓ}
                      → (⊍ cons₁) ↭βτ (⊍ cons₂)
                      → n₁ ≡ n₂
 ↭βτ-cons-same-length (forward τ₁↝τ₂) = ↝βτ-cons-same-length τ₁↝τ₂
 ↭βτ-cons-same-length (backward τ₂↝τ₁) = sym (↝βτ-cons-same-length τ₂↝τ₁)
 
-↝βτ'-lookup : (ι : Fin (suc n))
-            → (cons₁ : ADTCons (Mkℕₐ (suc n)) ℓ)
-            → (cons₂ : ADTCons (Mkℕₐ (suc n)) ℓ)
+↝βτ'-lookup : (ι : Fin n)
+            → (cons₁ : ADTCons (Mkℕₐ n) ℓ)
+            → (cons₂ : ADTCons (Mkℕₐ n) ℓ)
             → (⊍ cons₁) ↝βτ' (⊍ cons₂)
             → lookup cons₁ ι ↝βτ' lookup cons₂ ι
 ↝βτ'-lookup             zero    (x₁ ∷ _)    (x₂ ∷ _)    (↝βτ'-Subst ι' ε ε' (⊍ (x ∷ _)) ε↝ε' refl refl) = ↝βτ'-Subst ι' ε ε' x ε↝ε' refl refl
 ↝βτ'-lookup {n = suc n} (suc ι) (_ ∷ cons₁) (_ ∷ cons₂) (↝βτ'-Subst ι' ε ε' (⊍ (_ ∷ cons)) ε↝ε' refl refl)
   = ↝βτ'-lookup ι cons₁ cons₂ (↝βτ'-Subst ι' ε ε' (⊍ cons) ε↝ε' refl refl)
 
-↝βτ-lookup : {cons₁ : ADTCons (Mkℕₐ (suc n)) ℓ}
-           → {cons₂ : ADTCons (Mkℕₐ (suc n)) ℓ}
-           → (ι : Fin (suc n))
+↝βτ-lookup : {cons₁ : ADTCons (Mkℕₐ n) ℓ}
+           → {cons₂ : ADTCons (Mkℕₐ n) ℓ}
+           → (ι : Fin n)
            → (⊍ cons₁) ↝βτ (⊍ cons₂)
            → lookup cons₁ ι ↝βτ lookup cons₂ ι
 ↝βτ-lookup ι = prove-via-↝βτ' (↝βτ'-lookup ι _ _)
 
-↭βτ-lookup : {cons₁ : ADTCons (Mkℕₐ (suc n)) ℓ}
-           → {cons₂ : ADTCons (Mkℕₐ (suc n)) ℓ}
-           → (ι : Fin (suc n))
+↭βτ-lookup : {cons₁ : ADTCons (Mkℕₐ n) ℓ}
+           → {cons₂ : ADTCons (Mkℕₐ n) ℓ}
+           → (ι : Fin n)
            → (⊍ cons₁) ↭βτ (⊍ cons₂)
            → lookup cons₁ ι ↭βτ lookup cons₂ ι
 ↭βτ-lookup ι (forward τ₁↝τ₂) = forward (↝βτ-lookup ι τ₁↝τ₂)

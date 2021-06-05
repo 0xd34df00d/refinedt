@@ -38,7 +38,7 @@ data SType ℓ where
   _⇒_   : (τ₁ : SType ℓ)
         → (τ₂ : SType (suc ℓ))
         → SType ℓ
-  ⊍_    : (cons : ADTCons (Mkℕₐ (suc n)) ℓ)
+  ⊍_    : (cons : ADTCons (Mkℕₐ n) ℓ)
         → SType ℓ
 
 -- NOTE having `SType ℓ` instead of `SType (suc ℓ)` in SLam's type prevents the type from referring the argument itself,
