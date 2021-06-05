@@ -14,6 +14,7 @@ open import Surface.Derivations as S renaming (_⊢_⦂_ to _⊢ˢ_⦂_)
 open import Surface.Theorems.TCTX
 
 open import Translation.Untyped
+open import Translation.Untyped.Lemmas
 
 μ-Τ-well-formed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
                 → Γᶜ ⊢ᶜ μ-Τ ⦂ ⋆ₑ
@@ -94,7 +95,7 @@ mutual
          )
          (CT-UnitTerm Γ̂ok)
          {! !}
-  μ-ε (T-Var Γok ∈) = CT-VarW (μ-Γ-well-formed Γok) {! !}
+  μ-ε (T-Var Γok ∈) = CT-VarW (μ-Γ-well-formed Γok) (μ-Γ-preserves-∈ ∈)
   μ-ε (T-Abs arrδ δε) = CT-Abs (μ-ε δε) (μ-τ arrδ)
   μ-ε (T-App δε₁ δε₂) = {! !} -- CT-App {! μ-ε δε₁ !} (μ-ε δε₂)
   μ-ε (T-Case resδ δε branches-well-typed) = {! !}
