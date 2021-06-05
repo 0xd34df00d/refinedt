@@ -19,12 +19,12 @@ data _⊢_⦂_ : Ctx ℓ → CExpr ℓ → CExpr ℓ → Set
 
 BranchesHaveType : (Γ : Ctx ℓ)
                  → (scrutinee : CExpr ℓ)
-                 → (cons : ADTCons (Mkℕₐ (suc n)) ℓ)
-                 → (bs : CaseBranches (Mkℕₐ (suc n)) ℓ)
+                 → (cons : ADTCons nₐ ℓ)
+                 → (bs : CaseBranches nₐ ℓ)
                  → (τ' : CExpr ℓ)
                  → Set
-BranchesHaveType {n = n} Γ scrutinee cons bs τ'
-  = ∀ (ι : Fin (suc n))
+BranchesHaveType {nₐ = nₐ} Γ scrutinee cons bs τ'
+  = ∀ (ι : Fin (ℕₐ.get-length nₐ))
     → (let τᵢ     = lookup cons ι)
     → (let branch = lookup bs ι)
     → (let constructed = CCon ι (CVar zero) (weaken-cons cons))

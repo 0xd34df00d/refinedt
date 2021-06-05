@@ -38,7 +38,7 @@ data CExpr ℓ where
         → CExpr ℓ
   Cunit : CExpr ℓ
   CUnit : CExpr ℓ
-  CADT  : (cons : ADTCons (Mkℕₐ (suc n)) ℓ)
+  CADT  : (cons : ADTCons nₐ ℓ)
         → CExpr ℓ
   CCon  : (ι : Fin n)
         → (ε : CExpr ℓ)

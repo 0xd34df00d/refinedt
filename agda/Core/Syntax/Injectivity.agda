@@ -26,7 +26,7 @@ CADT-injective-len : {cons  : ADTCons (Mkℕₐ (suc n))  ℓ}
                    → n ≡ n'
 CADT-injective-len refl = refl
 
-CADT-injective : Injective (CADT {n} {ℓ})
+CADT-injective : Injective (CADT {ℓ} {nₐ})
 CADT-injective refl = refl
 
 CCon-injective-len : {cons  : ADTCons (Mkℕₐ n)  ℓ}
