@@ -9,6 +9,8 @@ open import Core.Syntax.Derived as C
 open import Core.Syntax.Derived.Typing as C
 open import Core.Derivations as C renaming (_⊢_⦂_ to _⊢ᶜ_⦂_)
 open import Core.Derivations.Lemmas
+open import Core.Operational as C
+open import Core.Operational.BetaEquivalence as C
 open import Surface.Syntax as S renaming (Γ to Γˢ; τ to τˢ; ε to εˢ)
 open import Surface.Derivations as S renaming (_⊢_⦂_ to _⊢ˢ_⦂_)
 open import Surface.Theorems.TCTX
@@ -87,14 +89,22 @@ mutual
   μ-ε (T-Unit Γok) =
     let Γ̂ok = μ-Γ-well-formed Γok
         Γ̂⊢CUnit = CT-UnitType Γ̂ok
-     in Σ-ctor-well-typed {P = CLam CUnit μ-Τ} {π = eq-refl CUnit Cunit}
+        eq-refl-wt = eq-refl-well-typed (CT-UnitType Γ̂ok) (CT-UnitTerm Γ̂ok)
+        λ:CUnit[μ-Τ] = CT-Abs
+                          (μ-Τ-well-formed (Γ⊢τ-⇒-Γ,τ-ok Γ̂⊢CUnit))
+                          (CT-Form Γ̂⊢CUnit (Γ⊢τ-⇒-Γ,τ-ok Γ̂⊢CUnit))
+     in Σ-ctor-well-typed
          Γ̂⊢CUnit
-         (CT-Abs
-           (μ-Τ-well-formed (Γ⊢τ-⇒-Γ,τ-ok Γ̂⊢CUnit))
-           (CT-Form Γ̂⊢CUnit (Γ⊢τ-⇒-Γ,τ-ok Γ̂⊢CUnit))
-         )
+         λ:CUnit[μ-Τ]
          (CT-UnitTerm Γ̂ok)
-         {! !}
+         (CT-Conv
+           eq-refl-wt
+           (CT-App
+             λ:CUnit[μ-Τ]
+             (CT-UnitTerm Γ̂ok)
+           )
+           (↜-as-↭β CE-AppAbs)
+         )
   μ-ε (T-Var Γok ∈) = CT-VarW (μ-Γ-well-formed Γok) (μ-Γ-preserves-∈ ∈)
   μ-ε (T-Abs arrδ δε) = CT-Abs (μ-ε δε) (μ-τ arrδ)
   μ-ε (T-App δε₁ δε₂) = {! !} -- CT-App {! μ-ε δε₁ !} (μ-ε δε₂)
