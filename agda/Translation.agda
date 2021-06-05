@@ -87,7 +87,7 @@ mutual
   μ-ε (T-Unit Γok) =
     let Γ̂ok = μ-Γ-well-formed Γok
         Γ̂⊢CUnit = CT-UnitType Γ̂ok
-     in Σ-ctor-well-typed {P = CLam CUnit μ-Τ} {π = eq-refl Cunit CUnit}
+     in Σ-ctor-well-typed {P = CLam CUnit μ-Τ} {π = eq-refl CUnit Cunit}
          Γ̂⊢CUnit
          (CT-Abs
            (μ-Τ-well-formed (Γ⊢τ-⇒-Γ,τ-ok Γ̂⊢CUnit))
