@@ -10,8 +10,10 @@ open import Common.Helpers
 open import Core.Syntax as C renaming (Γ to Γᶜ)
 open import Core.Syntax.Derived as C
 open import Core.Syntax.Derived.Actions as C
+open import Core.Syntax.Membership as C renaming (_∈_at_ to _∈ᶜ_at_)
 import Core.Syntax.Renaming as CR
 open import Surface.Syntax as S renaming (Γ to Γˢ; τ to τˢ; ε to εˢ)
+open import Surface.Syntax.Membership as S renaming (_∈_at_ to _∈ˢ_at_)
 import Surface.Syntax.Renaming as SR
 
 open import Translation.Untyped
@@ -126,3 +128,9 @@ mutual
     rewrite μ-branches-act-commute f bs
           = refl
   -- TODO this will break once we fix the translation of ε
+
+
+μ-Γ-preserves-∈ : τˢ ∈ˢ Γˢ at ι
+                → μ-τ-untyped τˢ ∈ᶜ μ-Γ Γˢ at ι
+μ-Γ-preserves-∈ (∈-zero {τ = τ} refl) rewrite μ-τ-act-commute suc τ = ∈-zero refl
+μ-Γ-preserves-∈ (∈-suc {τ = τ} refl ∈) rewrite μ-τ-act-commute suc τ = ∈-suc refl (μ-Γ-preserves-∈ ∈)
