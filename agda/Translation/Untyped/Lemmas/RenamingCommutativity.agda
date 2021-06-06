@@ -9,7 +9,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 open import Common.Helpers
 open import Core.Syntax as C renaming (Γ to Γᶜ)
 open import Core.Syntax.Derived as C
-open import Core.Syntax.Derived.Actions as C
+open import Core.Syntax.Derived.Renaming as CR
 open import Core.Syntax.Membership as C renaming (_∈_at_ to _∈ᶜ_at_)
 import Core.Syntax.Renaming as CR
 open import Surface.Syntax as S renaming (Γ to Γˢ; τ to τˢ; ε to εˢ)

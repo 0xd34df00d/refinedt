@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Core.Syntax.Derived.Actions where
+module Core.Syntax.Derived.Renaming where
 
 open import Data.Fin using (zero; suc)
 open import Function using (_∘_)
