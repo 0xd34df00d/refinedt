@@ -82,7 +82,7 @@ mutual
             (μ-b-P Γok)
           )
   μ-τ (TWF-Arr Γ⊢τ₁ Γ⊢τ₂) = CT-Form (μ-τ Γ⊢τ₁) (μ-τ Γ⊢τ₂)
-  μ-τ (TWF-ADT consδs) = {! !}
+  μ-τ (TWF-ADT consδs) = CT-ADTForm (μ-cons consδs)
 
   μ-ε : Γˢ ⊢ˢ εˢ ⦂ τˢ
       → μ-Γ Γˢ ⊢ᶜ μ-ε-untyped εˢ ⦂ μ-τ-untyped τˢ
@@ -112,3 +112,9 @@ mutual
   μ-ε (T-Con {ι = ι} {cons = cons} refl δε adtτ) = CT-ADTCon (μ-lookup-commute cons ι) (μ-ε δε) (μ-τ adtτ)
   μ-ε (T-Sub δε τ'δ <:) = {! !}
   μ-ε (T-RConv δε τ'δ τ~τ') = {! !}
+
+  μ-cons : {cons : S.ADTCons nₐ ℓ}
+         → All (Γˢ ⊢_) cons
+         → All (λ con → μ-Γ Γˢ ⊢ᶜ con ⦂ ⋆ₑ) (μ-cons-untyped cons)
+  μ-cons [] = []
+  μ-cons (δτ ∷ consδs) = μ-τ δτ ∷ μ-cons consδs
