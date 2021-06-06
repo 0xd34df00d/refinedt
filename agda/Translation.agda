@@ -3,6 +3,7 @@
 module Translation where
 
 open import Data.Vec using (Vec; _∷_; [])
+open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Core.Syntax as C renaming (Γ to Γᶜ)
 open import Core.Syntax.Derived as C
