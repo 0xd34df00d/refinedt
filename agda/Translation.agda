@@ -108,7 +108,7 @@ mutual
   μ-ε (T-Var Γok ∈) = CT-VarW (μ-Γ-well-formed Γok) (μ-Γ-preserves-∈ ∈)
   μ-ε (T-Abs arrδ δε) = CT-Abs (μ-ε δε) (μ-τ arrδ)
   μ-ε (T-App δε₁ δε₂) = {! !} -- CT-App {! μ-ε δε₁ !} (μ-ε δε₂)
-  μ-ε (T-Case resδ δε branches-well-typed) = {! !}
+  μ-ε (T-Case resδ δε δbranches) = CT-ADTCase (μ-τ resδ) (μ-ε δε) (μ-branches δε δbranches)
   μ-ε (T-Con {ι = ι} {cons = cons} refl δε adtτ) = CT-ADTCon (μ-lookup-commute cons ι) (μ-ε δε) (μ-τ adtτ)
   μ-ε (T-Sub δε τ'δ <:) = {! !}
   μ-ε (T-RConv δε τ'δ τ~τ') = {! !}
@@ -118,3 +118,15 @@ mutual
          → All (λ con → μ-Γ Γˢ ⊢ᶜ con ⦂ ⋆ₑ) (μ-cons-untyped cons)
   μ-cons [] = []
   μ-cons (δτ ∷ consδs) = μ-τ δτ ∷ μ-cons consδs
+
+  μ-branches : {cons : S.ADTCons nₐ ℓ}
+             → {bs : S.CaseBranches nₐ ℓ}
+             → Γˢ ⊢ˢ εˢ ⦂ (⊍ cons)
+             → S.BranchesHaveType Γˢ cons bs τˢ
+             → C.BranchesHaveType
+                   (μ-Γ Γˢ)
+                   (μ-ε-untyped εˢ)
+                   (μ-cons-untyped cons)
+                   (μ-branches-untyped bs)
+                   (μ-τ-untyped τˢ)
+  μ-branches δε bht ι = {! !}
