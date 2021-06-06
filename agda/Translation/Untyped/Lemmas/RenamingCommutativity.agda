@@ -11,10 +11,10 @@ open import Core.Syntax as C renaming (Γ to Γᶜ)
 open import Core.Syntax.Derived as C
 open import Core.Syntax.Derived.Renaming as CR
 open import Core.Syntax.Membership as C renaming (_∈_at_ to _∈ᶜ_at_)
-import Core.Syntax.Renaming as CR
+import      Core.Syntax.Renaming as CR
 open import Surface.Syntax as S renaming (Γ to Γˢ; τ to τˢ; ε to εˢ)
 open import Surface.Syntax.Membership as S renaming (_∈_at_ to _∈ˢ_at_)
-import Surface.Syntax.Renaming as SR
+import      Surface.Syntax.Renaming as SR
 
 open import Translation.Untyped
 open import Translation.Untyped.Lemmas.Misc
