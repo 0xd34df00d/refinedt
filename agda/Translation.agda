@@ -2,6 +2,7 @@
 
 module Translation where
 
+open import Data.Fin using (zero)
 open import Data.Vec using (Vec; _∷_; [])
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
@@ -19,6 +20,7 @@ open import Surface.Theorems.TCTX
 open import Translation.Untyped
 open import Translation.Untyped.Lemmas.Misc using (μ-lookup-commute)
 open import Translation.Untyped.Lemmas.RenamingCommutativity using (μ-Γ-preserves-∈)
+open import Translation.Untyped.Lemmas.SubstCommutativity using (μ-τ-preserves-↦)
 
 μ-Τ-well-formed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
                 → Γᶜ ⊢ᶜ μ-Τ ⦂ ⋆ₑ
@@ -109,7 +111,9 @@ mutual
          )
   μ-ε (T-Var Γok ∈) = CT-VarW (μ-Γ-well-formed Γok) (μ-Γ-preserves-∈ ∈)
   μ-ε (T-Abs arrδ δε) = CT-Abs (μ-ε δε) (μ-τ arrδ)
-  μ-ε (T-App δε₁ δε₂) = {! !} -- CT-App {! μ-ε δε₁ !} (μ-ε δε₂)
+  μ-ε (T-App {τ₂ = τ₂} {ε₂ = ε₂} δε₁ δε₂)
+    rewrite μ-τ-preserves-↦ zero ε₂ τ₂
+          = CT-App (μ-ε δε₁) (μ-ε δε₂)
   μ-ε (T-Case resδ δε δbranches) = CT-ADTCase (μ-τ resδ) (μ-ε δε) (μ-branches δε δbranches)
   μ-ε (T-Con {ι = ι} {cons = cons} refl δε adtτ) = CT-ADTCon (μ-lookup-commute cons ι) (μ-ε δε) (μ-τ adtτ)
   μ-ε (T-Sub δε τ'δ <:) = {! !}
