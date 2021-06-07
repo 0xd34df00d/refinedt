@@ -7,6 +7,8 @@ open import Data.Fin using (zero; suc)
 open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 
+open import Data.Fin.Extra
+
 open import Common.Helpers
 open import Core.Syntax as C renaming (Γ to Γᶜ)
 open import Core.Syntax.Derived as C
@@ -126,3 +128,16 @@ mutual
     rewrite μ-branches-commute f bs
           = refl
   -- TODO once again address this once branches translation is fixed
+
+replace-at-agree : ∀ ι (ε : STerm ℓ)
+                 → CS.replace-at ι (μ-ε-untyped ε) f≡ μ-ε-untyped ∘ SS.replace-at ι ε
+replace-at-agree ι ε ι' with ι <>? ι'
+... | less m<n = refl
+... | equal m≡n = refl
+... | greater m>n = refl
+
+μ-τ-preserves-↦ : ∀ ι ε (τ : SType (suc ℓ))
+                → μ-τ-untyped ([ ι ↦τ ε ] τ) ≡ ([ ι ↦ μ-ε-untyped ε ] μ-τ-untyped τ)
+μ-τ-preserves-↦ ι ε τ
+  rewrite CS.act-ε-extensionality (replace-at-agree ι ε) (μ-τ-untyped τ)
+        = μ-τ-commute (SS.replace-at ι ε) τ
