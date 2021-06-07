@@ -53,9 +53,18 @@ mutual
           | μ-τ-commute (SS.ext f) τ₂
           | CS.act-ε-extensionality (μ-ε-untyped-ext-commute f) (μ-τ-untyped τ₂)
           = refl
-  μ-τ-commute f (⊍ cons) = {! !}
+  μ-τ-commute f (⊍ cons) rewrite μ-cons-commute f cons = refl
 
   μ-ε-commute : (f : Fin ℓ → STerm ℓ')
               → (εˢ : STerm ℓ)
               → μ-ε-untyped (SS.act-ε f εˢ) ≡ CS.act-ε (μ-ε-untyped ∘ f) (μ-ε-untyped εˢ)
   μ-ε-commute ε = {! !}
+
+  μ-cons-commute : (f : Fin ℓ → STerm ℓ')
+                 → (cons : S.ADTCons nₐ ℓ)
+                 → μ-cons-untyped (SS.act-cons f cons) ≡ CS.act-cons (μ-ε-untyped ∘ f) (μ-cons-untyped cons)
+  μ-cons-commute f [] = refl
+  μ-cons-commute f (τ ∷ cons)
+    rewrite μ-τ-commute f τ
+          | μ-cons-commute f cons
+          = refl
