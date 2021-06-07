@@ -89,7 +89,25 @@ mutual
   μ-ε-commute : (f : Fin ℓ → STerm ℓ')
               → (εˢ : STerm ℓ)
               → μ-ε-untyped (SS.act-ε f εˢ) ≡ CS.act-ε (μ-ε-untyped ∘ f) (μ-ε-untyped εˢ)
-  μ-ε-commute ε = {! !}
+  μ-ε-commute f SUnit = refl
+  μ-ε-commute f (SVar ι) = refl
+  μ-ε-commute f (SLam τ ε)
+    rewrite μ-τ-commute f τ
+          | μ-ε-commute (SS.ext f) ε
+          | CS.act-ε-extensionality (exts-agree f) (μ-ε-untyped ε)
+          = refl
+  μ-ε-commute f (SApp ε₁ ε₂)
+    rewrite μ-ε-commute f ε₁
+          | μ-ε-commute f ε₂
+          = refl
+  μ-ε-commute f (SCase ε branches)
+    rewrite μ-ε-commute f ε
+          | μ-branches-commute f branches
+          = refl
+  μ-ε-commute f (SCon ι ε cons)
+    rewrite μ-ε-commute f ε
+          | μ-cons-commute f cons
+          = refl
 
   μ-cons-commute : (f : Fin ℓ → STerm ℓ')
                  → (cons : S.ADTCons nₐ ℓ)
@@ -99,3 +117,12 @@ mutual
     rewrite μ-τ-commute f τ
           | μ-cons-commute f cons
           = refl
+
+  μ-branches-commute : (f : Fin ℓ → STerm ℓ')
+                     → (bs : S.CaseBranches nₐ ℓ)
+                     → μ-branches-untyped (SS.act-branches f bs) ≡ CS.act-branches (μ-ε-untyped ∘ f) (μ-branches-untyped bs)
+  μ-branches-commute f [] = refl
+  μ-branches-commute f (MkCaseBranch ε ∷ bs)
+    rewrite μ-branches-commute f bs
+          = refl
+  -- TODO once again address this once branches translation is fixed
