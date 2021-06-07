@@ -18,13 +18,13 @@ import      Surface.Syntax.Renaming as SR
 open import Surface.Syntax.Substitution as SS
 
 open import Translation.Untyped
-open import Translation.Untyped.Lemmas.Misc
+open import Translation.Untyped.Lemmas.Misc hiding (exts-agree)
 import      Translation.Untyped.Lemmas.RenamingCommutativity as TURC
 
-μ-ε-untyped-ext-commute : (f : Fin ℓ → STerm ℓ')
-                        → μ-ε-untyped ∘ SS.ext f f≡ CS.ext (μ-ε-untyped ∘ f)
-μ-ε-untyped-ext-commute f zero = refl
-μ-ε-untyped-ext-commute f (suc ι) = TURC.μ-ε-act-commute suc (f ι)
+exts-agree : (f : Fin ℓ → STerm ℓ')
+           → μ-ε-untyped ∘ SS.ext f f≡ CS.ext (μ-ε-untyped ∘ f)
+exts-agree f zero = refl
+exts-agree f (suc ι) = TURC.μ-ε-act-commute suc (f ι)
 
 act-id-on-μ-b-untyped : ∀ (f : Fin ℓ → CExpr ℓ') b
                       → CS.act-ε f (μ-b-untyped b) ≡ μ-b-untyped b
@@ -61,7 +61,7 @@ mutual
     step₁ = cong
               (λ ε → Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) ε)
               (μ-ρ-commute (SS.ext f) ρ
-          then CS.act-ε-extensionality (μ-ε-untyped-ext-commute f) (μ-ρ-untyped ρ))
+          then CS.act-ε-extensionality (exts-agree f) (μ-ρ-untyped ρ))
 
     step₂ : Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) (CS.act-ε (CS.ext fᶜ) (μ-ρ-untyped ρ))
             ≡
@@ -82,7 +82,7 @@ mutual
   μ-τ-commute f (τ₁ ⇒ τ₂)
     rewrite μ-τ-commute f τ₁
           | μ-τ-commute (SS.ext f) τ₂
-          | CS.act-ε-extensionality (μ-ε-untyped-ext-commute f) (μ-τ-untyped τ₂)
+          | CS.act-ε-extensionality (exts-agree f) (μ-τ-untyped τ₂)
           = refl
   μ-τ-commute f (⊍ cons) rewrite μ-cons-commute f cons = refl
 
