@@ -18,12 +18,12 @@ import      Surface.Syntax.Renaming as SR
 open import Surface.Syntax.Substitution as SS
 
 open import Translation.Untyped
-open import Translation.Untyped.Lemmas.RenamingCommutativity
+import      Translation.Untyped.Lemmas.RenamingCommutativity as TURC
 
 μ-ε-untyped-ext-commute : (f : Fin ℓ → STerm ℓ')
                         → μ-ε-untyped ∘ SS.ext f f≡ CS.ext (μ-ε-untyped ∘ f)
 μ-ε-untyped-ext-commute f zero = refl
-μ-ε-untyped-ext-commute f (suc ι) = μ-ε-act-commute suc (f ι)
+μ-ε-untyped-ext-commute f (suc ι) = TURC.μ-ε-act-commute suc (f ι)
 
 mutual
   μ-ρ-commute : (f : Fin ℓ → STerm ℓ')
