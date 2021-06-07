@@ -18,12 +18,17 @@ import      Surface.Syntax.Renaming as SR
 open import Surface.Syntax.Substitution as SS
 
 open import Translation.Untyped
+open import Translation.Untyped.Lemmas.Misc
 import      Translation.Untyped.Lemmas.RenamingCommutativity as TURC
 
 μ-ε-untyped-ext-commute : (f : Fin ℓ → STerm ℓ')
                         → μ-ε-untyped ∘ SS.ext f f≡ CS.ext (μ-ε-untyped ∘ f)
 μ-ε-untyped-ext-commute f zero = refl
 μ-ε-untyped-ext-commute f (suc ι) = TURC.μ-ε-act-commute suc (f ι)
+
+act-id-on-μ-b-untyped : ∀ (f : Fin ℓ → CExpr ℓ') b
+                      → CS.act-ε f (μ-b-untyped b) ≡ μ-b-untyped b
+act-id-on-μ-b-untyped _ BUnit = refl
 
 mutual
   μ-ρ-commute : (f : Fin ℓ → STerm ℓ')
@@ -42,12 +47,38 @@ mutual
           = refl
   μ-ρ-commute f Τ = refl
 
+  common-ρ-steps : ∀ (f : Fin ℓ → STerm ℓ') b ρ
+                 → Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) (μ-ρ-untyped (SS.act-ρ (SS.ext f) ρ))
+                   ≡
+                   CS.act-ε (μ-ε-untyped ∘ f) (Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) (μ-ρ-untyped ρ))
+  common-ρ-steps f b ρ = step₁ then step₂ then step₃
+    where
+    fᶜ = μ-ε-untyped ∘ f
+
+    step₁ : Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) (μ-ρ-untyped (SS.act-ρ (SS.ext f) ρ))
+            ≡
+            Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) (CS.act-ε (CS.ext fᶜ) (μ-ρ-untyped ρ))
+    step₁ = cong
+              (λ ε → Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) ε)
+              (μ-ρ-commute (SS.ext f) ρ
+          then CS.act-ε-extensionality (μ-ε-untyped-ext-commute f) (μ-ρ-untyped ρ))
+
+    step₂ : Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) (CS.act-ε (CS.ext fᶜ) (μ-ρ-untyped ρ))
+            ≡
+            Σ[ CS.act-ε fᶜ (μ-b-untyped b) ] CLam (CS.act-ε fᶜ (μ-b-untyped b)) (CS.act-ε (CS.ext fᶜ) (μ-ρ-untyped ρ))
+    step₂ rewrite act-id-on-μ-b-untyped fᶜ b = refl
+
+    step₃ : Σ[ CS.act-ε fᶜ (μ-b-untyped b) ] CLam (CS.act-ε fᶜ (μ-b-untyped b)) (CS.act-ε (CS.ext fᶜ) (μ-ρ-untyped ρ))
+            ≡
+            CS.act-ε fᶜ (Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) (μ-ρ-untyped ρ))
+    step₃ rewrite act-Σ-commutes fᶜ (μ-b-untyped b) (CLam (μ-b-untyped b) (μ-ρ-untyped ρ)) = refl
+
   μ-τ-commute : (f : Fin ℓ → STerm ℓ')
               → (τˢ : SType ℓ)
               → μ-τ-untyped (SS.act-τ f τˢ) ≡ CS.act-ε (μ-ε-untyped ∘ f) (μ-τ-untyped τˢ)
   μ-τ-commute f ⟨ BUnit ∣ Τ ⟩ = refl
-  μ-τ-commute f ⟨ b ∣ ρ@(_ ≈ _ of _) ⟩ = {! !}
-  μ-τ-commute f ⟨ b ∣ ρ@(_ ∧ _) ⟩ = {! !}
+  μ-τ-commute f ⟨ b ∣ ρ@(_ ≈ _ of _) ⟩ = common-ρ-steps f b ρ
+  μ-τ-commute f ⟨ b ∣ ρ@(_ ∧ _) ⟩ = common-ρ-steps f b ρ
   μ-τ-commute f (τ₁ ⇒ τ₂)
     rewrite μ-τ-commute f τ₁
           | μ-τ-commute (SS.ext f) τ₂
