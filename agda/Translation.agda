@@ -17,7 +17,8 @@ open import Surface.Derivations as S renaming (_⊢_⦂_ to _⊢ˢ_⦂_)
 open import Surface.Theorems.TCTX
 
 open import Translation.Untyped
-open import Translation.Untyped.Lemmas
+open import Translation.Untyped.Lemmas.Misc using (μ-lookup-commute)
+open import Translation.Untyped.Lemmas.RenamingCommutativity using (μ-Γ-preserves-∈)
 
 μ-Τ-well-formed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
                 → Γᶜ ⊢ᶜ μ-Τ ⦂ ⋆ₑ
