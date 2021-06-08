@@ -141,3 +141,9 @@ replace-at-agree ι ε ι' with ι <>? ι'
 μ-τ-preserves-↦ ι ε τ
   rewrite CS.act-ε-extensionality (replace-at-agree ι ε) (μ-τ-untyped τ)
         = μ-τ-commute (SS.replace-at ι ε) τ
+
+μ-ε-preserves-↦ : ∀ ι ε₀ (ε : STerm (suc ℓ))
+                → μ-ε-untyped ([ ι ↦ε ε₀ ] ε) ≡ ([ ι ↦ μ-ε-untyped ε₀ ] μ-ε-untyped ε)
+μ-ε-preserves-↦ ι ε₀ ε
+  rewrite CS.act-ε-extensionality (replace-at-agree ι ε₀) (μ-ε-untyped ε)
+        = μ-ε-commute (SS.replace-at ι ε₀) ε
