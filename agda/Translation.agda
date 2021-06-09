@@ -107,7 +107,7 @@ mutual
              λ:CUnit[μ-Τ]
              (CT-UnitTerm Γ̂ok)
            )
-           (↜-as-↭β CE-AppAbs)
+           (↜-as-↭β (CE-AppAbs IV-unit))
          )
   μ-ε (T-Var Γok ∈) = CT-VarW (μ-Γ-well-formed Γok) (μ-Γ-preserves-∈ ∈)
   μ-ε (T-Abs arrδ δε) = CT-Abs (μ-ε δε) (μ-τ arrδ)

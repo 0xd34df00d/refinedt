@@ -30,7 +30,7 @@ open import Translation.Untyped.Lemmas.SubstCommutativity
 μ-ε-preserves-↝ (E-AppR iv ε↝ε') = CE-AppR (μ-ε-preserves-values iv) (μ-ε-preserves-↝ ε↝ε')
 μ-ε-preserves-↝ (E-AppAbs {ϖ = ϖ} {ε = ε} iv)
   rewrite μ-ε-preserves-↦ zero ϖ ε
-        = CE-AppAbs
+        = CE-AppAbs (μ-ε-preserves-values iv)
 μ-ε-preserves-↝ (E-ADT ε↝ε') = CE-ADT (μ-ε-preserves-↝ ε↝ε')
 μ-ε-preserves-↝ (E-CaseScrut ε↝ε') = CE-CaseScrut (μ-ε-preserves-↝ ε↝ε')
 μ-ε-preserves-↝ (E-CaseMatch x ι) = {! !}
