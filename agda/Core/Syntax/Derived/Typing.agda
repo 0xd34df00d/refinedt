@@ -112,6 +112,9 @@ ext-suc-suc-is-suc² ε
   app₂ : Γ , ⋆ₑ , Σ-cont τ P ⊢ CVar zero · weaken-ε-k 2 ε · weaken-ε-k 2 π ⦂ CVar (suc zero)
   app₂ rewrite replace-weakened-ε-zero (weaken-ε-k 2 π) (CVar (suc zero)) = CT-App app₁' (δ↑↑ δπ)
 
+{- TODO use these typings when expressing non-dependent pairs as derived forms
+   (well, second-order derived forms? :)) of dependent pairs,
+   and when normalization is proven.
 ×-well-typed : Γ ⊢ τ₁ ⦂ ⋆ₑ
              → Γ ⊢ τ₂ ⦂ ⋆ₑ
              → Γ ⊢ ⟨ τ₁ × τ₂ ⟩ ⦂ ⋆ₑ
@@ -148,7 +151,7 @@ ext-suc-suc-is-suc² ε
         )
         δε₁
       )
-      (ε-↭β _ _ _)
+      {! !} -- (ε-↭β _ _ _)
     )
   where
   ε-↭β : (τ ε ε' : CExpr ℓ)
@@ -156,7 +159,8 @@ ext-suc-suc-is-suc² ε
   ε-↭β τ ε ε' = subst
                   (_↭β CLam τ (weaken-ε ε) · ε')
                   (replace-weakened-ε-zero ε' ε)
-                  (↜-as-↭β CE-AppAbs)
+                  (↜-as-↭β (CE-AppAbs {! !}))
+                  -}
 
 ≡̂-well-typed : Γ ⊢ ε₁ ⦂ τ
              → Γ ⊢ ε₂ ⦂ τ

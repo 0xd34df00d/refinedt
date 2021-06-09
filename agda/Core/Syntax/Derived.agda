@@ -39,10 +39,26 @@ _⇒'_ : CExpr ℓ → CExpr ℓ → CExpr ℓ
     )
 
 ⟨_×_⟩ : CExpr ℓ → CExpr ℓ → CExpr ℓ
-⟨ τ₁ × τ₂ ⟩ = Σ[ τ₁ ] (CLam τ₁ (weaken-ε τ₂))
+⟨ τ₁ × τ₂ ⟩ = CΠ
+                ⋆ₑ
+                ((weaken-ε τ₁ ⇒' weaken-ε τ₂ ⇒' CVar zero) ⇒' CVar zero)
 
 ⟨_⦂_×_⦂_⟩ : (ε₁ τ₁ ε₂ τ₂ : CExpr ℓ) → CExpr ℓ
-⟨ ε₁ ⦂ τ₁ × ε₂ ⦂ τ₂ ⟩ = [ ε₁ ⦂ τ₁ ∣ ε₂ of CLam τ₁ (weaken-ε τ₂) ]
+⟨ ε₁ ⦂ τ₁ × ε₂ ⦂ τ₂ ⟩ = CLam
+                          ⋆ₑ
+                          (CLam
+                            (weaken-ε τ₁ ⇒' weaken-ε τ₂ ⇒' CVar zero)
+                            (CVar zero · weaken-ε-k 2 ε₁ · weaken-ε-k 2 ε₂)
+                          )
+
+-- TODO ideally we'd like to use the following,
+-- but proving its well-typedness requires proving that our operational semantics are normalizing,
+-- which is something I don't really want to do yet.
+⟨'_×_⟩ : CExpr ℓ → CExpr ℓ → CExpr ℓ
+⟨' τ₁ × τ₂ ⟩ = Σ[ τ₁ ] (CLam τ₁ (weaken-ε τ₂))
+
+⟨'_⦂_×_⦂_⟩ : (ε₁ τ₁ ε₂ τ₂ : CExpr ℓ) → CExpr ℓ
+⟨' ε₁ ⦂ τ₁ × ε₂ ⦂ τ₂ ⟩ = [ ε₁ ⦂ τ₁ ∣ ε₂ of CLam τ₁ (weaken-ε τ₂) ]
 
 _≡̂_of_ : CExpr ℓ → CExpr ℓ → CExpr ℓ → CExpr ℓ
 ε₁ ≡̂ ε₂ of τ = CΠ (τ ⇒' ⋆ₑ) ⟨ CVar zero · weaken-ε ε₁ ⇒' CVar zero · weaken-ε ε₂
