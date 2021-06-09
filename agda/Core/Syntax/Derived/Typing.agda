@@ -4,7 +4,7 @@ module Core.Syntax.Derived.Typing where
 
 open import Data.Fin using (zero; suc)
 open import Data.Product renaming (_,_ to ⟨_,_⟩)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst; sym)
 
 open import Core.Syntax
 open import Core.Syntax.Derived
@@ -143,6 +143,47 @@ ext-suc-suc-is-suc² ε
     )
   where
   Γ̂ok = Γ⊢⋆⦂□ δτ₁
+
+×-ctor-well-typed : Γ ⊢ τ₁ ⦂ ⋆ₑ
+                  → Γ ⊢ τ₂ ⦂ ⋆ₑ
+                  → Γ ⊢ ε₁ ⦂ τ₁
+                  → Γ ⊢ ε₂ ⦂ τ₂
+                  → Γ ⊢ ⟨ ε₁ ⦂ τ₁ × ε₂ ⦂ τ₂ ⟩ ⦂ ⟨ τ₁ × τ₂ ⟩
+×-ctor-well-typed {_} {Γ} {τ₁} {τ₂} {ε₁} {ε₂} δτ₁ δτ₂ δε₁ δε₂ =
+  CT-Abs
+    (CT-Abs
+      app₂
+      (⇒'-well-typed
+        (×-cont-well-typed δτ₁ δτ₂)
+        (CT-Var (Γ⊢⋆⦂□ δτ₁))
+      )
+    )
+    (×-well-typed δτ₁ δτ₂)
+  where
+  δ↑↑ : Γ ⊢ ε' ⦂ τ'
+      → Γ , ⋆ₑ , ×-cont τ₁ τ₂ ⊢ weaken-ε-k 2 ε' ⦂ weaken-ε-k 2 τ'
+  δ↑↑ δ = CT-Weaken (CT-Weaken δ (Γ⊢⋆⦂□ δ)) (×-cont-well-typed δτ₁ δτ₂)
+
+  app₁ : Γ , ⋆ₑ , ×-cont τ₁ τ₂ ⊢
+         CVar zero · weaken-ε-k 2 ε₁ ⦂
+         [ zero ↦ weaken-ε-k 2 ε₁ ] R.act-ε (R.ext suc) (weaken-ε (weaken-ε τ₂ ⇒' CVar zero))
+  app₁ = CT-App (CT-Var (×-cont-well-typed δτ₁ δτ₂)) (δ↑↑ δε₁)
+
+  app₁-lemma : [ zero ↦ weaken-ε-k 2 ε₁ ] R.act-ε (R.ext suc) (weaken-ε (weaken-ε τ₂ ⇒' CVar zero))
+               ≡
+               (weaken-ε-k 2 τ₂ ⇒' CVar (suc zero))
+  app₁-lemma = subst
+                (λ τ → [ zero ↦ weaken-ε-k 2 ε₁ ] τ ≡ weaken-ε (weaken-ε τ₂ ⇒' CVar zero))
+                (sym (ext-suc-suc-is-suc² (weaken-ε τ₂ ⇒' CVar zero)))
+                (replace-weakened-ε-zero (weaken-ε-k 2 ε₁) (weaken-ε (weaken-ε τ₂ ⇒' CVar zero)))
+
+  app₁' : Γ , ⋆ₑ , ×-cont τ₁ τ₂ ⊢
+          CVar zero · weaken-ε-k 2 ε₁ ⦂
+          weaken-ε-k 2 τ₂ ⇒' CVar (suc zero)
+  app₁' = subst (λ τ → Γ , ⋆ₑ , ×-cont τ₁ τ₂ ⊢ CVar zero · weaken-ε-k 2 ε₁ ⦂ τ) app₁-lemma app₁
+
+  app₂ : Γ , ⋆ₑ , ×-cont τ₁ τ₂ ⊢ CVar zero · weaken-ε-k 2 ε₁ · weaken-ε-k 2 ε₂ ⦂ CVar (suc zero)
+  app₂ = CT-App app₁' (δ↑↑ δε₂)
 
 {- TODO use these typings when expressing non-dependent pairs as derived forms
    (well, second-order derived forms? :)) of dependent pairs,
