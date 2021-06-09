@@ -112,6 +112,32 @@ ext-suc-suc-is-suc² ε
   app₂ : Γ , ⋆ₑ , Σ-cont τ P ⊢ CVar zero · weaken-ε-k 2 ε · weaken-ε-k 2 π ⦂ CVar (suc zero)
   app₂ rewrite replace-weakened-ε-zero (weaken-ε-k 2 π) (CVar (suc zero)) = CT-App app₁' (δ↑↑ δπ)
 
+×-well-typed : Γ ⊢ τ₁ ⦂ ⋆ₑ
+             → Γ ⊢ τ₂ ⦂ ⋆ₑ
+             → Γ ⊢ ⟨ τ₁ × τ₂ ⟩ ⦂ ⋆ₑ
+×-well-typed δ₁ δ₂ =
+  CT-Form
+    Γ̂ok
+    (CT-Form
+      cont-well-typed
+      (CT-Weaken
+        (CT-Var Γ̂ok)
+        cont-well-typed
+      )
+    )
+  where
+  Γ̂ok = Γ⊢⋆⦂□ δ₁
+  cont-well-typed =
+    ⇒'-well-typed
+      (CT-Weaken δ₁ Γ̂ok)
+      (⇒'-well-typed
+        (CT-Weaken
+          δ₂
+          Γ̂ok
+        )
+        (CT-Var Γ̂ok)
+      )
+
 {- TODO use these typings when expressing non-dependent pairs as derived forms
    (well, second-order derived forms? :)) of dependent pairs,
    and when normalization is proven.
