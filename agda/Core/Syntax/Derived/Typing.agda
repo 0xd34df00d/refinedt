@@ -110,7 +110,7 @@ ext-suc-suc-is-suc² ε
   app₁' rewrite app₁-lemma = app₁
 
   app₂ : Γ , ⋆ₑ , Σ-cont τ P ⊢ CVar zero · weaken-ε-k 2 ε · weaken-ε-k 2 π ⦂ CVar (suc zero)
-  app₂ rewrite replace-weakened-ε-zero (weaken-ε-k 2 π) (CVar (suc zero)) = CT-App app₁' (δ↑↑ δπ)
+  app₂ = CT-App app₁' (δ↑↑ δπ)
 
 ×-cont-well-typed : Γ ⊢ τ₁ ⦂ ⋆ₑ
                   → Γ ⊢ τ₂ ⦂ ⋆ₑ
