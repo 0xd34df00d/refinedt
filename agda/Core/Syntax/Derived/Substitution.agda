@@ -37,8 +37,8 @@ act-Σ-commutes f τ P
 act-×-commutes : ∀ (f : Fin ℓ → CExpr ℓ') τ₁ τ₂
                → S.act-ε f ⟨ τ₁ × τ₂ ⟩ ≡ ⟨ S.act-ε f τ₁ × S.act-ε f τ₂ ⟩
 act-×-commutes f τ₁ τ₂
-  rewrite act-Σ-commutes f τ₁ (CLam τ₁ (weaken-ε τ₂))
-        | ext-f∘suc-≡-suc∘f f τ₂
+  rewrite ext-f∘suc-≡-suc∘f f τ₁
+        | ext²-f∘suc²-≡-suc²∘f f τ₂
         = refl
 
 act-⇒'-commutes : ∀ (f : Fin ℓ → CExpr ℓ') τ₁ τ₂
