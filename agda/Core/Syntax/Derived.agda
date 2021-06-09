@@ -38,16 +38,19 @@ _⇒'_ : CExpr ℓ → CExpr ℓ → CExpr ℓ
       (CVar zero · weaken-ε-k 2 ε · weaken-ε-k 2 π)
     )
 
+×-cont : CExpr ℓ → CExpr ℓ → CExpr (suc ℓ)
+×-cont τ₁ τ₂ = weaken-ε τ₁ ⇒' weaken-ε τ₂ ⇒' CVar zero
+
 ⟨_×_⟩ : CExpr ℓ → CExpr ℓ → CExpr ℓ
 ⟨ τ₁ × τ₂ ⟩ = CΠ
                 ⋆ₑ
-                ((weaken-ε τ₁ ⇒' weaken-ε τ₂ ⇒' CVar zero) ⇒' CVar zero)
+                (×-cont τ₁ τ₂ ⇒' CVar zero)
 
 ⟨_⦂_×_⦂_⟩ : (ε₁ τ₁ ε₂ τ₂ : CExpr ℓ) → CExpr ℓ
 ⟨ ε₁ ⦂ τ₁ × ε₂ ⦂ τ₂ ⟩ = CLam
                           ⋆ₑ
                           (CLam
-                            (weaken-ε τ₁ ⇒' weaken-ε τ₂ ⇒' CVar zero)
+                            (×-cont τ₁ τ₂)
                             (CVar zero · weaken-ε-k 2 ε₁ · weaken-ε-k 2 ε₂)
                           )
 
