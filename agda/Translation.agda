@@ -18,27 +18,27 @@ open import Surface.Derivations as S renaming (_⊢_⦂_ to _⊢ˢ_⦂_)
 open import Surface.Theorems.TCTX
 
 open import Translation.Untyped
-open import Translation.Untyped.Lemmas.Misc using (μ-lookup-commute)
-open import Translation.Untyped.Lemmas.RenamingCommutativity using (μ-Γ-preserves-∈)
-open import Translation.Untyped.Lemmas.SubstCommutativity using (μ-τ-preserves-↦)
+open import Translation.Untyped.Lemmas.Misc using (⌊μ⌋-lookup-commute)
+open import Translation.Untyped.Lemmas.RenamingCommutativity using (⌊μ⌋-Γ-preserves-∈)
+open import Translation.Untyped.Lemmas.SubstCommutativity using (⌊μ⌋-τ-preserves-↦)
 
 μ-Τ-well-formed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
-                → Γᶜ ⊢ᶜ μ-Τ ⦂ ⋆ₑ
+                → Γᶜ ⊢ᶜ ⌊μ⌋-Τ ⦂ ⋆ₑ
 μ-Τ-well-formed δ = ≡̂-well-typed (CT-UnitTerm δ) (CT-UnitTerm δ) (CT-UnitType δ)
 
 mutual
   μ-Γ-well-formed : Γˢ ok
-                  → μ-Γ Γˢ ⊢ᶜ ⋆ₑ ⦂ □ₑ
+                  → ⌊μ⌋-Γ Γˢ ⊢ᶜ ⋆ₑ ⦂ □ₑ
   μ-Γ-well-formed TCTX-Empty = CT-Sort
   μ-Γ-well-formed (TCTX-Bind Γok τδ) = CT-Weaken (μ-Γ-well-formed Γok) (μ-τ τδ)
 
   μ-Γ-well-formed-ε : Γˢ ⊢ˢ εˢ ⦂ τˢ
-                    → μ-Γ Γˢ ⊢ᶜ ⋆ₑ ⦂ □ₑ
+                    → ⌊μ⌋-Γ Γˢ ⊢ᶜ ⋆ₑ ⦂ □ₑ
   μ-Γ-well-formed-ε δε = Γ⊢⋆⦂□ (μ-ε δε)
 
-  μ-b : μ-Γ Γˢ ⊢ᶜ ⋆ₑ ⦂ □ₑ
+  μ-b : ⌊μ⌋-Γ Γˢ ⊢ᶜ ⋆ₑ ⦂ □ₑ
       → ∀ b
-      → μ-Γ Γˢ ⊢ᶜ μ-b-untyped b ⦂ ⋆ₑ
+      → ⌊μ⌋-Γ Γˢ ⊢ᶜ ⌊μ⌋-b b ⦂ ⋆ₑ
   μ-b Γok BUnit =
     Σ-well-typed
       (CT-UnitType Γok)
@@ -50,21 +50,21 @@ mutual
     Γˢ⊢CUnit = CT-UnitType Γok
     Γ,CUnit-ok = Γ⊢τ-⇒-Γ,τ-ok Γˢ⊢CUnit
 
-  μ-b-P : μ-Γ Γˢ ⊢ᶜ ⋆ₑ ⦂ □ₑ
-        → μ-Γ Γˢ ⊢ᶜ CΠ (μ-b-untyped b) ⋆ₑ ⦂ □ₑ
+  μ-b-P : ⌊μ⌋-Γ Γˢ ⊢ᶜ ⋆ₑ ⦂ □ₑ
+        → ⌊μ⌋-Γ Γˢ ⊢ᶜ CΠ (⌊μ⌋-b b) ⋆ₑ ⦂ □ₑ
   μ-b-P Γok = CT-Form
                 (μ-b Γok _)
                 (Γ⊢τ-⇒-Γ,τ-ok (μ-b Γok _))
 
   μ-ρ : ∀ {ρ}
       → Γˢ ⊢ ⟨ b ∣ ρ ⟩
-      → μ-Γ Γˢ , μ-b-untyped b ⊢ᶜ μ-ρ-untyped ρ ⦂ ⋆ₑ
+      → ⌊μ⌋-Γ Γˢ , ⌊μ⌋-b b ⊢ᶜ ⌊μ⌋-ρ ρ ⦂ ⋆ₑ
   μ-ρ (TWF-TrueRef Γok) = μ-Τ-well-formed (Γ⊢τ-⇒-Γ,τ-ok (μ-b (μ-Γ-well-formed Γok) _))
   μ-ρ (TWF-Base δε₁ δε₂) = ≡̂-well-typed (μ-ε δε₁) (μ-ε δε₂) (μ-b (Γ⊢⋆⦂□ (μ-ε δε₁)) _)
   μ-ρ (TWF-Conj δρ₁ δρ₂) = ×-well-typed (μ-ρ δρ₁) (μ-ρ δρ₂)
 
   μ-τ : Γˢ ⊢ τˢ
-      → μ-Γ Γˢ ⊢ᶜ μ-τ-untyped τˢ ⦂ ⋆ₑ
+      → ⌊μ⌋-Γ Γˢ ⊢ᶜ ⌊μ⌋-τ τˢ ⦂ ⋆ₑ
   μ-τ (TWF-TrueRef Γok) = μ-b (μ-Γ-well-formed Γok) _
   μ-τ Γ⊢τ@(TWF-Base δε₁ δε₂) =
     let δε̂₁ = μ-ε δε₁
@@ -89,7 +89,7 @@ mutual
   μ-τ (TWF-ADT consδs) = CT-ADTForm (μ-cons consδs)
 
   μ-ε : Γˢ ⊢ˢ εˢ ⦂ τˢ
-      → μ-Γ Γˢ ⊢ᶜ μ-ε-untyped εˢ ⦂ μ-τ-untyped τˢ
+      → ⌊μ⌋-Γ Γˢ ⊢ᶜ ⌊μ⌋-ε εˢ ⦂ ⌊μ⌋-τ τˢ
   μ-ε (T-Unit Γok) =
     let Γ̂ok = μ-Γ-well-formed Γok
         Γ̂⊢CUnit = CT-UnitType Γ̂ok
@@ -109,19 +109,19 @@ mutual
            )
            (↜-as-↭β (CE-AppAbs IV-unit))
          )
-  μ-ε (T-Var Γok ∈) = CT-VarW (μ-Γ-well-formed Γok) (μ-Γ-preserves-∈ ∈)
+  μ-ε (T-Var Γok ∈) = CT-VarW (μ-Γ-well-formed Γok) (⌊μ⌋-Γ-preserves-∈ ∈)
   μ-ε (T-Abs arrδ δε) = CT-Abs (μ-ε δε) (μ-τ arrδ)
   μ-ε (T-App {τ₂ = τ₂} {ε₂ = ε₂} δε₁ δε₂)
-    rewrite μ-τ-preserves-↦ zero ε₂ τ₂
+    rewrite ⌊μ⌋-τ-preserves-↦ zero ε₂ τ₂
           = CT-App (μ-ε δε₁) (μ-ε δε₂)
   μ-ε (T-Case resδ δε δbranches) = CT-ADTCase (μ-τ resδ) (μ-ε δε) (μ-branches δε δbranches)
-  μ-ε (T-Con {ι = ι} {cons = cons} refl δε adtτ) = CT-ADTCon (μ-lookup-commute cons ι) (μ-ε δε) (μ-τ adtτ)
+  μ-ε (T-Con {ι = ι} {cons = cons} refl δε adtτ) = CT-ADTCon (⌊μ⌋-lookup-commute cons ι) (μ-ε δε) (μ-τ adtτ)
   μ-ε (T-Sub δε τ'δ <:) = {! !}
-  μ-ε (T-RConv δε τ'δ τ~τ') = {! !}
+  μ-ε (T-RConv δε τ'δ τ~τ') = CT-Conv (μ-ε δε) (μ-τ τ'δ) {! !}
 
   μ-cons : {cons : S.ADTCons nₐ ℓ}
          → All (Γˢ ⊢_) cons
-         → All (λ con → μ-Γ Γˢ ⊢ᶜ con ⦂ ⋆ₑ) (μ-cons-untyped cons)
+         → All (λ con → ⌊μ⌋-Γ Γˢ ⊢ᶜ con ⦂ ⋆ₑ) (⌊μ⌋-cons cons)
   μ-cons [] = []
   μ-cons (δτ ∷ consδs) = μ-τ δτ ∷ μ-cons consδs
 
@@ -130,9 +130,9 @@ mutual
              → Γˢ ⊢ˢ εˢ ⦂ (⊍ cons)
              → S.BranchesHaveType Γˢ cons bs τˢ
              → C.BranchesHaveType
-                   (μ-Γ Γˢ)
-                   (μ-ε-untyped εˢ)
-                   (μ-cons-untyped cons)
-                   (μ-branches-untyped bs)
-                   (μ-τ-untyped τˢ)
+                   (⌊μ⌋-Γ Γˢ)
+                   (⌊μ⌋-ε εˢ)
+                   (⌊μ⌋-cons cons)
+                   (⌊μ⌋-branches bs)
+                   (⌊μ⌋-τ τˢ)
   μ-branches δε bht ι = {! !}

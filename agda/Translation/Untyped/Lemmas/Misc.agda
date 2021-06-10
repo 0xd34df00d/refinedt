@@ -26,7 +26,7 @@ _then_ : ∀ {S : Set} {a b c : S}
        → a ≡ c
 refl then refl = refl
 
-μ-lookup-commute : ∀ (cons : S.ADTCons nₐ ℓ) ι
-                 → μ-τ-untyped (lookup cons ι) ≡ lookup (μ-cons-untyped cons) ι
-μ-lookup-commute (τ ∷ _) zero = refl
-μ-lookup-commute (_ ∷ cons) (suc ι) = μ-lookup-commute cons ι
+⌊μ⌋-lookup-commute : ∀ (cons : S.ADTCons nₐ ℓ) ι
+                   → ⌊μ⌋-τ (lookup cons ι) ≡ lookup (⌊μ⌋-cons cons) ι
+⌊μ⌋-lookup-commute (τ ∷ _) zero = refl
+⌊μ⌋-lookup-commute (_ ∷ cons) (suc ι) = ⌊μ⌋-lookup-commute cons ι

@@ -10,47 +10,47 @@ open import Core.Derivations as C
 open import Surface.Syntax as S
 open import Surface.Derivations as S
 
-μ-Τ : CExpr ℓ
-μ-Τ = Cunit ≡̂ Cunit of CUnit
+⌊μ⌋-Τ : CExpr ℓ
+⌊μ⌋-Τ = Cunit ≡̂ Cunit of CUnit
 
-μ-b-untyped : S.BaseType
-            → CExpr ℓ
-μ-b-untyped BUnit = Σ[ CUnit ] CLam CUnit μ-Τ
+⌊μ⌋-b : S.BaseType
+    → CExpr ℓ
+⌊μ⌋-b BUnit = Σ[ CUnit ] CLam CUnit ⌊μ⌋-Τ
 
 mutual
-  μ-τ-untyped : SType ℓ
-              → CExpr ℓ
-  μ-τ-untyped ⟨ b ∣ Τ ⟩ = μ-b-untyped b
-  μ-τ-untyped ⟨ b ∣ ρ ⟩ = Σ[ μ-b-untyped b ] CLam (μ-b-untyped b) (μ-ρ-untyped ρ)
-  μ-τ-untyped (τ₁ ⇒ τ₂) = CΠ (μ-τ-untyped τ₁) (μ-τ-untyped τ₂)
-  μ-τ-untyped (⊍ cons) = CADT (μ-cons-untyped cons)
+  ⌊μ⌋-τ : SType ℓ
+        → CExpr ℓ
+  ⌊μ⌋-τ ⟨ b ∣ Τ ⟩ = ⌊μ⌋-b b
+  ⌊μ⌋-τ ⟨ b ∣ ρ ⟩ = Σ[ ⌊μ⌋-b b ] CLam (⌊μ⌋-b b) (⌊μ⌋-ρ ρ)
+  ⌊μ⌋-τ (τ₁ ⇒ τ₂) = CΠ (⌊μ⌋-τ τ₁) (⌊μ⌋-τ τ₂)
+  ⌊μ⌋-τ (⊍ cons) = CADT (⌊μ⌋-cons cons)
 
-  μ-ρ-untyped : Refinement ℓ
-              → CExpr ℓ
-  μ-ρ-untyped Τ = μ-Τ
-  μ-ρ-untyped (ε₁ ≈ ε₂ of τ) = μ-ε-untyped ε₁ ≡̂ μ-ε-untyped ε₂ of μ-τ-untyped τ
-  μ-ρ-untyped (ρ₁ ∧ ρ₂) = ⟨ μ-ρ-untyped ρ₁ × μ-ρ-untyped ρ₂ ⟩
+  ⌊μ⌋-ρ : Refinement ℓ
+        → CExpr ℓ
+  ⌊μ⌋-ρ Τ = ⌊μ⌋-Τ
+  ⌊μ⌋-ρ (ε₁ ≈ ε₂ of τ) = ⌊μ⌋-ε ε₁ ≡̂ ⌊μ⌋-ε ε₂ of ⌊μ⌋-τ τ
+  ⌊μ⌋-ρ (ρ₁ ∧ ρ₂) = ⟨ ⌊μ⌋-ρ ρ₁ × ⌊μ⌋-ρ ρ₂ ⟩
 
-  μ-ε-untyped : STerm ℓ
-              → CExpr ℓ
-  μ-ε-untyped SUnit = [ Cunit ⦂ CUnit ∣ eq-refl CUnit Cunit of (CLam CUnit μ-Τ) ]
-  μ-ε-untyped (SVar ι) = CVar ι
-  μ-ε-untyped (SLam τ ε) = CLam (μ-τ-untyped τ) (μ-ε-untyped ε)
-  μ-ε-untyped (SApp ε₁ ε₂) = μ-ε-untyped ε₁ · μ-ε-untyped ε₂
-  μ-ε-untyped (SCase ε branches) = CCase (μ-ε-untyped ε) (μ-branches-untyped branches)
-  μ-ε-untyped (SCon ι ε cons) = CCon ι (μ-ε-untyped ε) (μ-cons-untyped cons)
+  ⌊μ⌋-ε : STerm ℓ
+        → CExpr ℓ
+  ⌊μ⌋-ε SUnit = [ Cunit ⦂ CUnit ∣ eq-refl CUnit Cunit of (CLam CUnit ⌊μ⌋-Τ) ]
+  ⌊μ⌋-ε (SVar ι) = CVar ι
+  ⌊μ⌋-ε (SLam τ ε) = CLam (⌊μ⌋-τ τ) (⌊μ⌋-ε ε)
+  ⌊μ⌋-ε (SApp ε₁ ε₂) = ⌊μ⌋-ε ε₁ · ⌊μ⌋-ε ε₂
+  ⌊μ⌋-ε (SCase ε branches) = CCase (⌊μ⌋-ε ε) (⌊μ⌋-branches branches)
+  ⌊μ⌋-ε (SCon ι ε cons) = CCon ι (⌊μ⌋-ε ε) (⌊μ⌋-cons cons)
 
-  μ-cons-untyped : S.ADTCons nₐ ℓ
-                 → C.ADTCons nₐ ℓ
-  μ-cons-untyped [] = []
-  μ-cons-untyped (τ ∷ cons) = μ-τ-untyped τ ∷ μ-cons-untyped cons
+  ⌊μ⌋-cons : S.ADTCons nₐ ℓ
+           → C.ADTCons nₐ ℓ
+  ⌊μ⌋-cons [] = []
+  ⌊μ⌋-cons (τ ∷ cons) = ⌊μ⌋-τ τ ∷ ⌊μ⌋-cons cons
 
-  μ-branches-untyped : S.CaseBranches nₐ ℓ
-                     → C.CaseBranches nₐ ℓ
-  μ-branches-untyped [] = []
-  μ-branches-untyped (MkCaseBranch ε ∷ bs) = {- TODO this is a placeholder proper proof -} Cunit ∷ μ-branches-untyped bs
+  ⌊μ⌋-branches : S.CaseBranches nₐ ℓ
+               → C.CaseBranches nₐ ℓ
+  ⌊μ⌋-branches [] = []
+  ⌊μ⌋-branches (MkCaseBranch ε ∷ bs) = {- TODO this is a placeholder proper proof -} Cunit ∷ ⌊μ⌋-branches bs
 
-μ-Γ : S.Ctx ℓ
-    → C.Ctx ℓ
-μ-Γ ⊘ = ⊘
-μ-Γ (Γ , τ) = μ-Γ Γ , μ-τ-untyped τ
+⌊μ⌋-Γ : S.Ctx ℓ
+      → C.Ctx ℓ
+⌊μ⌋-Γ ⊘ = ⊘
+⌊μ⌋-Γ (Γ , τ) = ⌊μ⌋-Γ Γ , ⌊μ⌋-τ τ
