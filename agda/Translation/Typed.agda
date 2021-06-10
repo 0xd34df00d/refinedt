@@ -25,10 +25,24 @@ mutual
   μ-ε : ∀ {ε : STerm ℓ} {τ}
       → Γˢ ⊢ˢ ε ⦂ τ
       → CExpr ℓ
-  μ-ε δε = {! δε !}
+  μ-ε (T-Unit Γok) = [ Cunit ⦂ CUnit ∣ eq-refl CUnit Cunit of CLam CUnit ⌊μ⌋-Τ ]
+  μ-ε (T-Var {ι = ι} _ _) = CVar ι
+  μ-ε (T-Abs δarr δε) = CLam (μ-τ δarr) (μ-ε δε)
+  μ-ε (T-App δε₁ δε₂) = μ-ε δε₁ · μ-ε δε₂
+  μ-ε (T-Case resδ δε branches) = CCase (μ-ε δε) (μ-branches branches)
+  μ-ε (T-Con {ι = ι} _ δε (TWF-ADT consδs)) = CCon ι (μ-ε δε) (μ-cons consδs)
+  μ-ε (T-Sub δε τ'δ <:) = {! !}
+  μ-ε (T-RConv δε _ _) = μ-ε δε
 
   μ-cons : {cons : S.ADTCons nₐ ℓ}
          → All (Γˢ ⊢_) cons
          → C.ADTCons nₐ ℓ
   μ-cons [] = []
   μ-cons (τ ∷ cons) = μ-τ τ ∷ μ-cons cons
+
+  μ-branches : {branches : S.CaseBranches nₐ ℓ}
+             → {cons : S.ADTCons nₐ ℓ}
+             → S.BranchesHaveType Γˢ cons branches τˢ
+             → C.CaseBranches nₐ ℓ
+  μ-branches NoBranches = []
+  μ-branches (OneMoreBranch εδ bs) = {- TODO -} Cunit ∷ μ-branches bs
