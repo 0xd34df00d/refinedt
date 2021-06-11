@@ -17,8 +17,7 @@ open import Surface.Operational.BetaEquivalence
 import Surface.Syntax.Renaming as R
 import Surface.Syntax.Substitution as S
 
-record PositiveDecision (Γ : Ctx ℓ) (b : BaseType) (ρ₁ ρ₂ : Refinement (suc ℓ)) : Set where
-  constructor MkPD
+record PositiveDecision (Γ : Ctx ℓ) (b : BaseType) (ρ₁ ρ₂ : Refinement (suc ℓ)) : Set
 
 record Oracle : Set
 
@@ -96,6 +95,12 @@ data _⊢_⦂_ where
               → (τ'δ : Γ ⊢ τ')
               → (τ~τ' : τ ↭βτ τ')
               → Γ ⊢ ε ⦂ τ'
+
+record PositiveDecision Γ b ρ₁ ρ₂ where
+  constructor MkPD
+  field
+    witness : STerm ℓ
+    witness-well-typed : Γ ⊢ witness ⦂ ⟨ b ∣ ρ₁ ⟩ ⇒ ⟨ b ∣ R.weaken-ρ ρ₂ ⟩
 
 record Oracle where
   inductive
