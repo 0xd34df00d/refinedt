@@ -2,7 +2,7 @@
 
 module Surface.Theorems.TCTX where
 
-open import Agda.Builtin.Equality
+open import Relation.Binary.PropositionalEquality using (refl)
 open import Data.Nat.Base
 open import Data.Nat.Properties
 
