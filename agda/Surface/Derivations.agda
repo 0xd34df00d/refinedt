@@ -17,8 +17,12 @@ open import Surface.Operational.BetaEquivalence
 import Surface.Syntax.Renaming as R
 import Surface.Syntax.Substitution as S
 
-record PositiveDecision : Set where
+open import Core.Syntax using (CExpr)
+
+record PositiveDecision (ℓ : ℕ) : Set where
   constructor MkPD
+  field
+    <:-ε : CExpr ℓ
 
 record Oracle : Set
 
@@ -102,7 +106,10 @@ record Oracle where
   constructor MkOracle
   open R
   field
-    decide : (Γ : Ctx ℓ) → (b : BaseType) → (ρ₁ ρ₂ : Refinement (suc ℓ)) → Maybe PositiveDecision
+    decide : (Γ : Ctx ℓ)
+           → (b : BaseType)
+           → (ρ₁ ρ₂ : Refinement (suc ℓ))
+           → Maybe (PositiveDecision ℓ)
     thin   : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'}
            → (Γ⊂Γ' : Γ ⊂ Γ')
            → Is-just (decide Γ b ρ₁ ρ₂)
