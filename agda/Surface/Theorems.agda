@@ -11,7 +11,9 @@ open import Surface.Theorems.Helpers
 open import Surface.Theorems.Thinning
 open import Surface.Theorems.Substitution
 
-τ∈Γ-⇒-Γ⊢τ : Γ ok → τ ∈ Γ at ι → Γ ⊢ τ
+τ∈Γ-⇒-Γ⊢τ : Γ ok
+          → τ ∈ Γ at ι
+          → Γ ⊢ τ
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (∈-zero refl) = twf-weakening δ τδ τδ
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (∈-suc refl ∈) = twf-weakening δ τδ (τ∈Γ-⇒-Γ⊢τ δ ∈)
 

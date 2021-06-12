@@ -8,13 +8,12 @@ open import Core.Syntax as C
 open import Core.Syntax.Derived as C
 open import Core.Derivations as C
 open import Surface.Syntax as S
-open import Surface.Derivations as S
 
 ⌊μ⌋-Τ : CExpr ℓ
 ⌊μ⌋-Τ = Cunit ≡̂ Cunit of CUnit
 
 ⌊μ⌋-b : S.BaseType
-    → CExpr ℓ
+      → CExpr ℓ
 ⌊μ⌋-b BUnit = Σ[ CUnit ] CLam CUnit ⌊μ⌋-Τ
 
 mutual
