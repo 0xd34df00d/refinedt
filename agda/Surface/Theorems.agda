@@ -2,11 +2,14 @@
 
 module Surface.Theorems where
 
+open import Data.Nat.Base
+open import Data.Nat.Properties
 open import Relation.Binary.PropositionalEquality using (refl)
 
 open import Surface.Syntax
 open import Surface.Syntax.Membership
 open import Surface.Derivations
+open import Surface.Derivations.WF
 open import Surface.Theorems.Helpers
 open import Surface.Theorems.Thinning
 open import Surface.Theorems.Substitution
@@ -28,3 +31,15 @@ open import Surface.Theorems.Substitution
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Con _ _ adtτ) = adtτ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Sub _ superδ _) = superδ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-RConv _ τ'δ _) = τ'δ
+
+Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller : (δ : Γ ⊢ ε ⦂ τ)
+                    → size-twf (Γ⊢ε⦂τ-⇒-Γ⊢τ δ) < size-t δ
+Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Unit Γok) = {! !}
+Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Var Γok ∈-prf) = {! !}
+Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Abs _ _) = s≤s (m≤m<>n _ _)
+Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-App δ₁ δ₂) = {! !}
+Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Case resδ scrutτδ branches) =
+  s≤s (n≤m<>n<>k (size-t scrutτδ) (size-twf resδ) (size-bs branches))
+Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Con _ _ _) = s≤s (n≤m<>n _ _)
+Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Sub δ τ'δ <:) = s≤s (n≤m<>n<>k (size-t δ) (size-twf τ'δ) (size-st <:))
+Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-RConv _ _ _) = s≤s (n≤m<>n _ _)
