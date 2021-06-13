@@ -34,7 +34,7 @@ open import Surface.Theorems.Substitution
 
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller : (δ : Γ ⊢ ε ⦂ τ)
                     → size-twf (Γ⊢ε⦂τ-⇒-Γ⊢τ δ) < size-t δ
-Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Unit Γok) = {! !}
+Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Unit Γok) = s≤s ≤-refl
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Var Γok ∈-prf) = {! !}
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Abs _ _) = s≤s (m≤m<>n _ _)
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-App δ₁ δ₂) = {! !}
