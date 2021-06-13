@@ -113,3 +113,39 @@ mutual
         {- ₑ -} → Γ ⊢ₑ τ₁ ⇒ τ₂
         {- ₑ -} → Γ ⊢ₑ τ₁' ⇒ τ₂'
                 → Γ ⊢ₑ τ₁ ⇒ τ₂ <: τ₁' ⇒ τ₂'
+
+open import Surface.Derivations
+open import Surface.Theorems
+open import Surface.Theorems.TCTX
+
+mutual
+  from-ok : Γ ok
+          → Γ okₑ
+  from-ok TCTX-Empty = TCTX-Empty
+  from-ok (TCTX-Bind Γok τδ) = TCTX-Bind (from-ok Γok) (from-⊢ τδ)
+
+  from-⊢ : Γ ⊢ τ
+         → Γ ⊢ₑ τ
+  from-⊢ (TWF-TrueRef Γok) = TWF-TrueRef (from-ok Γok)
+  from-⊢ (TWF-Base ε₁δ ε₂δ) = TWF-Base (from-⊢⦂ ε₁δ) (from-⊢⦂ ε₂δ) (from-⊢ (Γ⊢ε⦂τ-⇒-Γ⊢τ ε₁δ)) (from-ok (Γ⊢ε⦂τ-⇒-Γok ε₁δ))
+  from-⊢ (TWF-Conj δ δ₁) = TWF-Conj {! !} {! !} {! !}
+  from-⊢ (TWF-Arr δ δ₁) = TWF-Arr {! !} {! !} {! !}
+  from-⊢ (TWF-ADT consδs) = TWF-ADT {! !} {! !}
+
+  from-⊢⦂ : Γ ⊢ ε ⦂ τ
+          → Γ ⊢ₑ ε ⦂ τ
+  from-⊢⦂ (T-Unit Γok) = {! !}
+  from-⊢⦂ (T-Var Γok x) = {! !}
+  from-⊢⦂ (T-Abs arrδ δ) = {! !}
+  from-⊢⦂ (T-App δ δ₁) = {! !}
+  from-⊢⦂ (T-Case resδ δ branches-well-typed) = {! !}
+  from-⊢⦂ (T-Con ≡-prf δ adtτ) = {! !}
+  from-⊢⦂ (T-Sub δ τ'δ <:) = T-Sub (from-⊢⦂ δ) (from-⊢ τ'δ) (from-<: (from-⊢ {! Γ⊢ε⦂τ-⇒-Γ⊢τ!}) (from-⊢ τ'δ) <:) {! !}
+  from-⊢⦂ (T-RConv δ τ'δ τ~τ') = {! !}
+
+  from-<: : Γ ⊢ₑ τ
+          → Γ ⊢ₑ τ'
+          → Γ ⊢ τ <: τ'
+          → Γ ⊢ₑ τ <: τ'
+  from-<: δτ δτ' (ST-Base oracle is-just) = ST-Base oracle is-just δτ δτ'
+  from-<: δτ@(TWF-Arr δτ₁ δτ₂ _) δτ'@(TWF-Arr δτ₁' δτ₂' _) (ST-Arr <:₁ <:₂) = ST-Arr (from-<: {! !} {! !} <:₁) (from-<: {! !} {! !} <:₂) δτ δτ'
