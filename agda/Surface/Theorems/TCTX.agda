@@ -44,7 +44,7 @@ abstract
   Γ⊢ε⦂τ-⇒-Γok-smaller : (δ : Γ ⊢ ε ⦂ τ)
                       → size-ok (Γ⊢ε⦂τ-⇒-Γok δ) < size-t δ
   Γ⊢ε⦂τ-⇒-Γok-smaller (T-Unit _) = s≤s (≤-step ≤-refl)
-  Γ⊢ε⦂τ-⇒-Γok-smaller (T-Var _ _) = s≤s (≤-reflexive refl)
+  Γ⊢ε⦂τ-⇒-Γok-smaller (T-Var _ _) = s≤s ≤-refl
   Γ⊢ε⦂τ-⇒-Γok-smaller (T-Abs _ bodyδ) = a<c-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-tail-smaller bodyδ)
   Γ⊢ε⦂τ-⇒-Γok-smaller (T-App _ δ₂) = a<c-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-smaller δ₂)
   Γ⊢ε⦂τ-⇒-Γok-smaller (T-Case _ scrutδ _) = a<b-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-smaller scrutδ)
@@ -56,7 +56,7 @@ abstract
 
   Γ⊢τ-⇒-Γok-smaller : (δ : Γ ⊢ τ)
                     → size-ok (Γ⊢τ-⇒-Γok δ) < size-twf δ
-  Γ⊢τ-⇒-Γok-smaller (TWF-TrueRef _) = s≤s (≤-reflexive refl)
+  Γ⊢τ-⇒-Γok-smaller (TWF-TrueRef _) = s≤s ≤-refl
   Γ⊢τ-⇒-Γok-smaller (TWF-Base ε₁δ _) = a<b-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-tail-smaller ε₁δ)
   Γ⊢τ-⇒-Γok-smaller (TWF-Conj ρ₁δ _) = a<b-⇒-a<b<>c (Γ⊢τ-⇒-Γok-smaller ρ₁δ)
   Γ⊢τ-⇒-Γok-smaller (TWF-Arr argδ _) = a<b-⇒-a<b<>c (Γ⊢τ-⇒-Γok-smaller argδ)
