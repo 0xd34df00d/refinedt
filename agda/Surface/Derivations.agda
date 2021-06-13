@@ -28,7 +28,7 @@ record Oracle : Set
 
 data _ok : (Γ : Ctx ℓ) → Set
 data _⊢_⦂_ : (Γ : Ctx ℓ) → (ε : STerm ℓ) → (τ : SType ℓ) → Set
-data _⊢_<:_ : (Γ : Ctx ℓ) → (τ₁ τ₂ : SType ℓ) → Set
+data _⊢_<:_ : (Γ : Ctx ℓ) → (τ τ' : SType ℓ) → Set
 data _⊢_ : (Γ : Ctx ℓ) → (τ : SType ℓ) → Set
 
 infix 2 _⊢_⦂_
