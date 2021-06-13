@@ -43,7 +43,7 @@ abstract
 
   Γ⊢ε⦂τ-⇒-Γok-smaller : (δ : Γ ⊢ ε ⦂ τ)
                       → size-ok (Γ⊢ε⦂τ-⇒-Γok δ) < size-t δ
-  Γ⊢ε⦂τ-⇒-Γok-smaller (T-Unit _) = s≤s (≤-reflexive refl)
+  Γ⊢ε⦂τ-⇒-Γok-smaller (T-Unit _) = s≤s (≤-step ≤-refl)
   Γ⊢ε⦂τ-⇒-Γok-smaller (T-Var _ _) = s≤s (≤-reflexive refl)
   Γ⊢ε⦂τ-⇒-Γok-smaller (T-Abs _ bodyδ) = a<c-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-tail-smaller bodyδ)
   Γ⊢ε⦂τ-⇒-Γok-smaller (T-App _ δ₂) = a<c-⇒-a<b<>c (Γ⊢ε⦂τ-⇒-Γok-smaller δ₂)
