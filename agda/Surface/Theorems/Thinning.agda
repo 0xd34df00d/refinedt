@@ -21,39 +21,30 @@ open import Surface.Derivations.WF
 open import Surface.Theorems.TCTX
 open import Surface.Theorems.Helpers
 
-private
-  arr-wf-dom : Γ ⊢ τ₁ ⇒ τ₂
-             → Γ ⊢ τ₁
-  arr-wf-dom (TWF-Arr domδ _) = domδ
+arr-wf-dom : Γ ⊢ τ₁ ⇒ τ₂
+           → Γ ⊢ τ₁
+arr-wf-dom (TWF-Arr domδ _) = domδ
 
-  size-lemma₁ : (n : ℕ) → (δ : (Γ , τ') ⊢ ε ⦂ τ) → size-twf (Γok-head (Γ⊢ε⦂τ-⇒-Γok δ)) < suc (size-t δ <> n)
-  size-lemma₁ n δ = let r1 = Γok-head-smaller (Γ⊢ε⦂τ-⇒-Γok δ)
-                        r2 = Γ⊢ε⦂τ-⇒-Γok-smaller δ
-                        r3 = <-trans r1 r2
-                     in <-trans r3 (s≤s (m≤m<>n (size-t δ) n))
+size-lemma₁ : (n : ℕ) → (δ : (Γ , τ') ⊢ ε ⦂ τ) → size-twf (Γok-head (Γ⊢ε⦂τ-⇒-Γok δ)) < suc (size-t δ <> n)
+size-lemma₁ n δ = let r1 = Γok-head-smaller (Γ⊢ε⦂τ-⇒-Γok δ)
+                      r2 = Γ⊢ε⦂τ-⇒-Γok-smaller δ
+                      r3 = <-trans r1 r2
+                   in <-trans r3 (s≤s (m≤m<>n (size-t δ) n))
 
-abstract
-  st-thinning : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ₁ τ₂ : SType ℓ}
-              → (Γ⊂Γ' : Γ ⊂ Γ')
-              → (Γ ⊢ τ₁ <: τ₂)
-              → (Γ' ⊢ R.act-τ (_⊂_.ρ Γ⊂Γ') τ₁ <: R.act-τ (_⊂_.ρ Γ⊂Γ') τ₂)
-  st-thinning Γ⊂Γ' (ST-Base oracle just-prf) = ST-Base oracle (Oracle.thin oracle Γ⊂Γ' just-prf)
-  st-thinning Γ⊂Γ' (ST-Arr δ₁ δ₂) = ST-Arr (st-thinning Γ⊂Γ' δ₁) (st-thinning (append-both Γ⊂Γ') δ₂)
+st-thinning : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ₁ τ₂ : SType ℓ}
+            → (Γ⊂Γ' : Γ ⊂ Γ')
+            → (Γ ⊢ τ₁ <: τ₂)
+            → (Γ' ⊢ R.act-τ (_⊂_.ρ Γ⊂Γ') τ₁ <: R.act-τ (_⊂_.ρ Γ⊂Γ') τ₂)
+st-thinning Γ⊂Γ' (ST-Base oracle just-prf) = ST-Base oracle (Oracle.thin oracle Γ⊂Γ' just-prf)
+st-thinning Γ⊂Γ' (ST-Arr δ₁ δ₂) = ST-Arr (st-thinning Γ⊂Γ' δ₁) (st-thinning (append-both Γ⊂Γ') δ₂)
 
-private
+mutual
   twf-thinning-sized : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ : SType ℓ}
                      → (Γ⊂Γ' : Γ ⊂ Γ')
                      → Γ' ok
                      → (δ : Γ ⊢ τ)
                      → Acc _<_ (size-twf δ)
                      → (Γ' ⊢ R.act-τ (_⊂_.ρ Γ⊂Γ') τ)
-  t-thinning-sized   : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ : SType ℓ} {ε : STerm ℓ}
-                     → (Γ⊂Γ' : Γ ⊂ Γ')
-                     → Γ' ok
-                     → (δ : Γ ⊢ ε ⦂ τ)
-                     → Acc _<_ (size-t δ)
-                     → (Γ' ⊢ R.act-ε (_⊂_.ρ Γ⊂Γ') ε ⦂ R.act-τ (_⊂_.ρ Γ⊂Γ') τ)
-
   twf-thinning-sized Γ⊂Γ' Γ'ok (TWF-TrueRef _) _ = TWF-TrueRef Γ'ok
   twf-thinning-sized Γ⊂Γ' Γ'ok (TWF-Base ε₁δ ε₂δ) (acc rec)
     = let expCtxOk = TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)
@@ -85,6 +76,12 @@ private
                                            rec₂ = rec' _ (s≤s (n≤m<>n _ _))
                                         in twf-thinning-sized Γ⊂Γ' Γ'ok px rec₁ ∷ map-cons pxs rec₂
 
+  t-thinning-sized : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ : SType ℓ} {ε : STerm ℓ}
+                   → (Γ⊂Γ' : Γ ⊂ Γ')
+                   → Γ' ok
+                   → (δ : Γ ⊢ ε ⦂ τ)
+                   → Acc _<_ (size-t δ)
+                   → (Γ' ⊢ R.act-ε (_⊂_.ρ Γ⊂Γ') ε ⦂ R.act-τ (_⊂_.ρ Γ⊂Γ') τ)
   t-thinning-sized Γ⊂Γ' Γ'ok (T-Unit gok) _ = T-Unit Γ'ok
   t-thinning-sized Γ⊂Γ' Γ'ok (T-Var gok x) _ = T-Var Γ'ok (_⊂_.ρ-∈ Γ⊂Γ' x)
   t-thinning-sized Γ⊂Γ' Γ'ok (T-Abs arrδ bodyδ) (acc rec)
@@ -142,45 +139,44 @@ private
           τ'δ' = twf-thinning-sized Γ⊂Γ' Γ'ok τ'δ rec₂
        in T-RConv εδ' τ'δ' (ρ-preserves-↭βτ (_⊂_.ρ Γ⊂Γ') ↝βτ)
 
-abstract
-  twf-thinning : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ : SType ℓ}
-               → (Γ⊂Γ' : Γ ⊂ Γ')
-               → Γ' ok
-               → Γ ⊢ τ
-               → Γ' ⊢ R.act-τ (_⊂_.ρ Γ⊂Γ') τ
-  twf-thinning Γ⊂Γ' Γ'ok δ = twf-thinning-sized Γ⊂Γ' Γ'ok δ (<-wellFounded _)
+twf-thinning : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ : SType ℓ}
+             → (Γ⊂Γ' : Γ ⊂ Γ')
+             → Γ' ok
+             → Γ ⊢ τ
+             → Γ' ⊢ R.act-τ (_⊂_.ρ Γ⊂Γ') τ
+twf-thinning Γ⊂Γ' Γ'ok δ = twf-thinning-sized Γ⊂Γ' Γ'ok δ (<-wellFounded _)
 
-  t-thinning   : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ : SType ℓ}
-               → (Γ⊂Γ' : Γ ⊂ Γ')
-               → Γ' ok
-               → Γ ⊢ ε ⦂ τ
-               → Γ' ⊢ R.act-ε (_⊂_.ρ Γ⊂Γ') ε ⦂ R.act-τ (_⊂_.ρ Γ⊂Γ') τ
-  t-thinning Γ⊂Γ' Γ'ok δ = t-thinning-sized Γ⊂Γ' Γ'ok δ (<-wellFounded _)
+t-thinning   : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ : SType ℓ}
+             → (Γ⊂Γ' : Γ ⊂ Γ')
+             → Γ' ok
+             → Γ ⊢ ε ⦂ τ
+             → Γ' ⊢ R.act-ε (_⊂_.ρ Γ⊂Γ') ε ⦂ R.act-τ (_⊂_.ρ Γ⊂Γ') τ
+t-thinning Γ⊂Γ' Γ'ok δ = t-thinning-sized Γ⊂Γ' Γ'ok δ (<-wellFounded _)
 
-  st-weakening : Γ ok
-               → Γ ⊢ τ₁ <: τ₂
-               → (Γ , τ') ⊢ R.weaken-τ τ₁ <: R.weaken-τ τ₂
-  st-weakening Γok <: = st-thinning (ignore-head ⊂-refl) <:
+st-weakening : Γ ok
+             → Γ ⊢ τ₁ <: τ₂
+             → (Γ , τ') ⊢ R.weaken-τ τ₁ <: R.weaken-τ τ₂
+st-weakening Γok <: = st-thinning (ignore-head ⊂-refl) <:
 
-  twf-weakening : {Γ : Ctx ℓ}
-                → Γ ok
-                → Γ ⊢ τ'
-                → Γ ⊢ τ
-                → (Γ , τ') ⊢ R.weaken-τ τ
-  twf-weakening {Γ} Γok τ'δ τδ = twf-thinning (ignore-head ⊂-refl) (TCTX-Bind Γok τ'δ) τδ
-
-  t-weakening-suffix : {Δ : CtxSuffix ℓ k}
-                     → (Γ ++ Δ) ok
-                     → Γ ⊢ ε ⦂ τ
-                     → Γ ++ Δ ⊢ R.weaken-ε-k k ε ⦂ R.weaken-τ-k k τ
-  t-weakening-suffix {Γ = Γ} {ε = ε} {τ = τ} {Δ = Δ} Γok εδ
-    rewrite suffix-weakening-ε {Γ = Γ} Δ ε
-          | suffix-weakening-τ {Γ = Γ} Δ τ
-          = t-thinning (suffix-as-⊂ Δ) Γok εδ
-
-  t-weakening : {Γ : Ctx ℓ}
+twf-weakening : {Γ : Ctx ℓ}
               → Γ ok
               → Γ ⊢ τ'
-              → Γ ⊢ ε ⦂ τ
-              → (Γ , τ') ⊢ R.weaken-ε ε ⦂ R.weaken-τ τ
-  t-weakening {Γ} Γok τ'δ εδ = t-thinning (ignore-head ⊂-refl) (TCTX-Bind Γok τ'δ) εδ
+              → Γ ⊢ τ
+              → (Γ , τ') ⊢ R.weaken-τ τ
+twf-weakening {Γ} Γok τ'δ τδ = twf-thinning (ignore-head ⊂-refl) (TCTX-Bind Γok τ'δ) τδ
+
+t-weakening-suffix : {Δ : CtxSuffix ℓ k}
+                   → (Γ ++ Δ) ok
+                   → Γ ⊢ ε ⦂ τ
+                   → Γ ++ Δ ⊢ R.weaken-ε-k k ε ⦂ R.weaken-τ-k k τ
+t-weakening-suffix {Γ = Γ} {ε = ε} {τ = τ} {Δ = Δ} Γok εδ
+  rewrite suffix-weakening-ε {Γ = Γ} Δ ε
+        | suffix-weakening-τ {Γ = Γ} Δ τ
+        = t-thinning (suffix-as-⊂ Δ) Γok εδ
+
+t-weakening : {Γ : Ctx ℓ}
+            → Γ ok
+            → Γ ⊢ τ'
+            → Γ ⊢ ε ⦂ τ
+            → (Γ , τ') ⊢ R.weaken-ε ε ⦂ R.weaken-τ τ
+t-weakening {Γ} Γok τ'δ εδ = t-thinning (ignore-head ⊂-refl) (TCTX-Bind Γok τ'δ) εδ
