@@ -20,6 +20,12 @@ open import Surface.Theorems.Substitution
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (∈-zero refl) = twf-weakening δ τδ τδ
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (∈-suc refl ∈) = twf-weakening δ τδ (τ∈Γ-⇒-Γ⊢τ δ ∈)
 
+τ∈Γ-⇒-Γ⊢τ-leq : (Γok : Γ ok)
+              → (∈-prf : τ ∈ Γ at ι)
+              → size-twf (τ∈Γ-⇒-Γ⊢τ Γok ∈-prf) ≤ size-ok Γok
+τ∈Γ-⇒-Γ⊢τ-leq (TCTX-Bind Γok τδ) (∈-zero refl) = {! !}
+τ∈Γ-⇒-Γ⊢τ-leq (TCTX-Bind Γok τδ) (∈-suc refl ∈-prf) = {! !}
+
 -- Referred to as T-implies-TWF in the paper
 Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢ ε ⦂ τ
             → Γ ⊢ τ
@@ -35,7 +41,7 @@ open import Surface.Theorems.Substitution
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller : (δ : Γ ⊢ ε ⦂ τ)
                     → size-twf (Γ⊢ε⦂τ-⇒-Γ⊢τ δ) < size-t δ
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Unit Γok) = s≤s ≤-refl
-Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Var Γok ∈-prf) = {! !}
+Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Var Γok ∈-prf) = s≤s (τ∈Γ-⇒-Γ⊢τ-leq Γok ∈-prf)
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Abs _ _) = s≤s (m≤m<>n _ _)
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-App δ₁ δ₂) = {! !}
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Case resδ scrutτδ branches) =
