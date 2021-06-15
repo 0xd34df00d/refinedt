@@ -11,6 +11,9 @@ open import Surface.Derivations
 open import Surface.Derivations.WF
 open import Surface.Theorems.Helpers
 
+Γok-tail-smaller : (δ : (Γ , τ) ok) → size-ok (Γok-tail δ) < size-ok δ
+Γok-tail-smaller (TCTX-Bind prevOk τδ) = s≤s (m≤m<>n (size-ok prevOk) (size-twf τδ))
+
 abstract
   -- Referred to as T-implies-TCTX in the paper
   Γ⊢ε⦂τ-⇒-Γok : Γ ⊢ ε ⦂ τ → Γ ok

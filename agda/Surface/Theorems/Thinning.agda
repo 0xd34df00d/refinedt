@@ -25,6 +25,9 @@ arr-wf-dom : Γ ⊢ τ₁ ⇒ τ₂
            → Γ ⊢ τ₁
 arr-wf-dom (TWF-Arr domδ _) = domδ
 
+Γok-head-smaller : (δ : (Γ , τ) ok) → size-twf (Γok-head δ) < size-ok δ
+Γok-head-smaller (TCTX-Bind prevOk τδ) = s≤s (n≤m<>n (size-ok prevOk) (size-twf τδ))
+
 size-lemma₁ : (n : ℕ) → (δ : (Γ , τ') ⊢ ε ⦂ τ) → size-twf (Γok-head (Γ⊢ε⦂τ-⇒-Γok δ)) < suc (size-t δ <> n)
 size-lemma₁ n δ = let r1 = Γok-head-smaller (Γ⊢ε⦂τ-⇒-Γok δ)
                       r2 = Γ⊢ε⦂τ-⇒-Γok-smaller δ
