@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Surface.Theorems.TCTX where
+module Surface.Theorems.Agreement.Γok where
 
 open import Relation.Binary.PropositionalEquality using (refl)
 open import Data.Nat.Base

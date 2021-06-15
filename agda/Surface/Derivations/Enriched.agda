@@ -116,7 +116,7 @@ mutual
 
 open import Surface.Derivations
 open import Surface.Theorems
-open import Surface.Theorems.TCTX
+open import Surface.Theorems.Agreement.Γok
 
 mutual
   from-ok : Γ ok

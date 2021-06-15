@@ -15,7 +15,7 @@ open import Core.Operational as C
 open import Core.Operational.BetaEquivalence as C
 open import Surface.Syntax as S renaming (Γ to Γˢ; τ to τˢ; ε to εˢ)
 open import Surface.Derivations as S renaming (_⊢_⦂_ to _⊢ˢ_⦂_)
-open import Surface.Theorems.TCTX
+open import Surface.Theorems.Agreement.Γok
 
 open import Translation.Untyped
 open import Translation.Untyped.Lemmas.Misc using (⌊μ⌋-lookup-commute)

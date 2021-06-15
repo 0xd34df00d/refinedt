@@ -18,7 +18,7 @@ open import Surface.Syntax.Substitution.Distributivity
 open import Surface.Operational.BetaEquivalence
 open import Surface.Derivations
 open import Surface.Derivations.WF
-open import Surface.Theorems.TCTX
+open import Surface.Theorems.Agreement.Γok
 open import Surface.Theorems.Helpers
 
 arr-wf-dom : Γ ⊢ τ₁ ⇒ τ₂
