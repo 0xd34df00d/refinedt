@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Surface.Theorems where
+module Surface.Theorems.Agreement.TypeWellFormedness where
 
 open import Data.Nat.Base
 open import Data.Nat.Properties
@@ -37,7 +37,7 @@ open import Surface.Theorems.Substitution
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Unit Γok) = s≤s ≤-refl
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Var Γok ∈-prf) = s≤s {! !}
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Abs _ _) = s≤s (m≤m<>n _ _)
-Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-App δ₁ δ₂) = {! !}
+Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-App δ₁ δ₂) = let rec = Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller δ₁ in {! !}
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Case resδ scrutτδ branches) =
   s≤s (n≤m<>n<>k (size-t scrutτδ) (size-twf resδ) (size-bs branches))
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Con _ _ _) = s≤s (n≤m<>n _ _)

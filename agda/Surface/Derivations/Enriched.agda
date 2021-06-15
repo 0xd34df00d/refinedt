@@ -115,8 +115,7 @@ mutual
                 → Γ ⊢ₑ τ₁ ⇒ τ₂ <: τ₁' ⇒ τ₂'
 
 open import Surface.Derivations
-open import Surface.Theorems
-open import Surface.Theorems.Agreement.Γok
+open import Surface.Theorems.Agreement
 
 mutual
   from-ok : Γ ok

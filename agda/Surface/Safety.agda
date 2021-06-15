@@ -18,11 +18,11 @@ open import Surface.Derivations
 open import Surface.Operational
 open import Surface.Operational.BetaEquivalence
 open import Surface.Operational.Lemmas
+open import Surface.Theorems.Agreement
 open import Surface.Theorems.Substitution
 open import Surface.Theorems.Subtyping
 open import Surface.Theorems.Helpers
 open import Surface.Theorems.Γ-Equivalence
-open import Surface.Theorems
 
 data Canonical : STerm ℓ → SType ℓ → Set where
   C-Lam  : Canonical (SLam τ ε) (τ₁ ⇒ τ₂)
