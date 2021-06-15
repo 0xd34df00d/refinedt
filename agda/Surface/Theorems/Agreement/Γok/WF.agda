@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Surface.Derivations.WF where
+module Surface.Theorems.Agreement.Γok.WF where
 
 open import Data.Nat.Base using (_⊔_; _≤_)
 open import Data.Nat.Properties

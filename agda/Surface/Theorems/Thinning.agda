@@ -17,8 +17,8 @@ open import Surface.Syntax.Substitution as S
 open import Surface.Syntax.Substitution.Distributivity
 open import Surface.Operational.BetaEquivalence
 open import Surface.Derivations
-open import Surface.Derivations.WF
 open import Surface.Theorems.Agreement.Γok
+open import Surface.Theorems.Agreement.Γok.WF
 open import Surface.Theorems.Helpers
 
 Γok-head-smaller : (δ : (Γ , τ) ok) → size-twf (Γok-head δ) < size-ok δ

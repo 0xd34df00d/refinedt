@@ -8,8 +8,8 @@ open import Data.Nat.Properties
 
 open import Surface.Syntax
 open import Surface.Derivations
-open import Surface.Derivations.WF
 open import Surface.Theorems.Helpers
+open import Surface.Theorems.Agreement.Γok.WF
 
 Γok-tail-smaller : (δ : (Γ , τ) ok) → size-ok (Γok-tail δ) < size-ok δ
 Γok-tail-smaller (TCTX-Bind prevOk τδ) = s≤s (m≤m⊕n (size-ok prevOk) (size-twf τδ))

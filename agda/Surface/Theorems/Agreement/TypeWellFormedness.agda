@@ -9,7 +9,6 @@ open import Relation.Binary.PropositionalEquality using (refl)
 open import Surface.Syntax
 open import Surface.Syntax.Membership
 open import Surface.Derivations
-open import Surface.Derivations.WF
 open import Surface.Theorems.Helpers
 open import Surface.Theorems.Thinning
 open import Surface.Theorems.Substitution
