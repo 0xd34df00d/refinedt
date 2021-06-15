@@ -14,3 +14,7 @@ open import Surface.Derivations
 arr-wf-⇒-cod-wf : Γ ⊢ τ₁ ⇒ τ₂
                 → Γ , τ₁ ⊢ τ₂
 arr-wf-⇒-cod-wf (TWF-Arr _ δ) = δ
+
+arr-wf-⇒-dom-wf : Γ ⊢ τ₁ ⇒ τ₂
+                → Γ ⊢ τ₁
+arr-wf-⇒-dom-wf (TWF-Arr δ _) = δ

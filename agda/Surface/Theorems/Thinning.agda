@@ -21,10 +21,6 @@ open import Surface.Derivations.WF
 open import Surface.Theorems.Agreement.Γok
 open import Surface.Theorems.Helpers
 
-arr-wf-dom : Γ ⊢ τ₁ ⇒ τ₂
-           → Γ ⊢ τ₁
-arr-wf-dom (TWF-Arr domδ _) = domδ
-
 Γok-head-smaller : (δ : (Γ , τ) ok) → size-twf (Γok-head δ) < size-ok δ
 Γok-head-smaller (TCTX-Bind prevOk τδ) = s≤s (n≤m<>n (size-ok prevOk) (size-twf τδ))
 
@@ -91,7 +87,7 @@ mutual
     = let rec₁ = rec _ (s≤s (m≤m<>n _ _))
           rec₂ = rec _ (s≤s (n≤m<>n _ _))
           arrδ' = twf-thinning-sized Γ⊂Γ' Γ'ok arrδ rec₁
-          bodyδ'-ok = TCTX-Bind Γ'ok (arr-wf-dom arrδ')
+          bodyδ'-ok = TCTX-Bind Γ'ok (arr-wf-⇒-dom-wf arrδ')
           bodyδ' = t-thinning-sized (append-both Γ⊂Γ') bodyδ'-ok bodyδ rec₂
        in T-Abs arrδ' bodyδ'
   t-thinning-sized Γ⊂Γ' Γ'ok (T-App {τ₂ = τ₂} {ε₂ = ε₂} δ₁ δ₂) (acc rec)
