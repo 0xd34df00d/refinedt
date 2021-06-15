@@ -1,5 +1,11 @@
 {-# OPTIONS --safe #-}
 
+{-
+This module defines a notion of the size of a derivation that is
+strong enough to prove agreement lemmas yielding a witness of `Γ ok`,
+but not strong enough to prove the lemma `Γ ⊢ ε ⦂ τ → Γ ⊢ τ`.
+-}
+
 module Surface.Theorems.Agreement.Γok.WF where
 
 open import Data.Nat.Base using (_⊔_; _≤_)
