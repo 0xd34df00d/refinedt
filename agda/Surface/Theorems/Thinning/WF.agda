@@ -19,8 +19,7 @@ open import Surface.Syntax.CtxSuffix
 open import Surface.Syntax.Membership
 open import Surface.Syntax.Renaming as R
 
-lemma : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'}
-      → (Γ⊂Γ' : Γ ⊂' Γ')
+lemma : (Γ⊂Γ' : Γ ⊂' Γ')
       → (Γok : Γ ok)
       → (∈ : τ ∈ Γ at ι)
       → (Γ'ok : Γ' ok)
