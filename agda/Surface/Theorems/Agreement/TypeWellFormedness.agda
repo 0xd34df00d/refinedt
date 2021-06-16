@@ -35,10 +35,9 @@ open import Surface.Theorems.Substitution
                     → size-twf (Γ⊢ε⦂τ-⇒-Γ⊢τ δ) < size-t δ
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Unit Γok) = s≤s ≤-refl
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Var Γok ∈-prf) = s≤s {! !}
-Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Abs _ _) = s≤s (m≤m<>n _ _)
+Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Abs _ _) = s≤s (m≤m⊕n _ _)
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-App δ₁ δ₂) = let rec = Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller δ₁ in {! !}
-Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Case resδ scrutτδ branches) =
-  s≤s (n≤m<>n<>k (size-t scrutτδ) (size-twf resδ) (size-bs branches))
-Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Con _ _ _) = s≤s (n≤m<>n _ _)
-Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Sub δ τ'δ <:) = s≤s (n≤m<>n<>k (size-t δ) (size-twf τ'δ) (size-st <:))
-Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-RConv _ _ _) = s≤s (n≤m<>n _ _)
+Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Case resδ scrutτδ branches) = s≤s (n≤m⊕n⊕k (size-t scrutτδ) (size-twf resδ) (size-bs branches))
+Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Con _ _ _) = s≤s (n≤m⊕n _ _)
+Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Sub δ τ'δ <:) = s≤s (n≤m⊕n⊕k (size-t δ) (size-twf τ'δ) (size-st <:))
+Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-RConv _ _ _) = s≤s (n≤m⊕n _ _)
