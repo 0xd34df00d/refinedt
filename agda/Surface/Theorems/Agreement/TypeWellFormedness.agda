@@ -16,8 +16,8 @@ open import Surface.Theorems.Substitution
 τ∈Γ-⇒-Γ⊢τ : Γ ok
           → τ ∈ Γ at ι
           → Γ ⊢ τ
-τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (∈-zero refl) = twf-weakening δ τδ τδ
-τ∈Γ-⇒-Γ⊢τ (TCTX-Bind δ τδ) (∈-suc refl ∈) = twf-weakening δ τδ (τ∈Γ-⇒-Γ⊢τ δ ∈)
+τ∈Γ-⇒-Γ⊢τ (TCTX-Bind Γok τδ) (∈-zero refl) = twf-weakening Γok τδ τδ
+τ∈Γ-⇒-Γ⊢τ (TCTX-Bind Γok τδ) (∈-suc refl ∈) = twf-weakening Γok τδ (τ∈Γ-⇒-Γ⊢τ Γok ∈)
 
 -- Referred to as T-implies-TWF in the paper
 Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢ ε ⦂ τ
