@@ -1,5 +1,4 @@
--- {-# OPTIONS --safe #-}
-{-# OPTIONS --allow-unsolved-metas #-}
+{-# OPTIONS --safe #-}
 
 module Surface.Theorems.Agreement.TypeWellFormedness.WF where
 
