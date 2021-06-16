@@ -6,6 +6,8 @@ module Surface.Theorems.Thinning.WF where
 open import Data.Nat.Base
 open import Data.Nat.Induction
 open import Data.Nat.Properties
+open import Data.Fin.Base using (zero; suc)
+open import Data.Fin.Properties
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 
 open import Surface.Syntax
@@ -15,6 +17,23 @@ open import Surface.Theorems.Agreement.TypeWellFormedness.WF
 open import Surface.Theorems.Thinning
 open import Surface.Syntax.CtxSuffix
 open import Surface.Syntax.Membership
+open import Surface.Syntax.Renaming as R
+
+lemma : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'}
+      → (Γ⊂Γ' : Γ ⊂' Γ')
+      → (Γok : Γ ok)
+      → (∈ : τ ∈ Γ at ι)
+      → (Γ'ok : Γ' ok)
+      → (τ'-≡ : τ' ≡ act-τ (_⊂'_.ρ Γ⊂Γ') τ)
+      → (ι'-≡ : ι' ≡ _⊂'_.ρ Γ⊂Γ' ι)
+      → (let ∈' = _⊂'_.ρ-∈ Γ⊂Γ' ∈ τ'-≡ ι'-≡)
+      → size-∈ Γ'ok ∈' ≤ size-∈ Γok ∈ + size-ok Γ'ok
+lemma (MkTR ρ ρ-∈ ρ-mono) (TCTX-Bind Γok τδ) ∈₀@(∈-zero refl) (TCTX-Bind Γ'ok τδ₁) τ'-≡ ι'-≡ with ρ-∈ ∈₀ τ'-≡ ι'-≡
+... | ∈-zero refl = {! !}
+... | ∈-suc refl ∈' = {! !}
+lemma (MkTR ρ ρ-∈ ρ-mono) (TCTX-Bind Γok τδ) ∈₀@(∈-suc refl ∈) (TCTX-Bind Γ'ok τδ₁) τ'-≡ ι'-≡ with ρ-∈ ∈₀ τ'-≡ ι'-≡
+... | ∈-zero refl = {! !}
+... | ∈-suc refl ∈' = {! !}
 
 mutual
   twf-thinning-sized-size : (Γ⊂Γ' : Γ ⊂ Γ')
