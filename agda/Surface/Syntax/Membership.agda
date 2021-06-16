@@ -73,3 +73,21 @@ data _ℕ-idx_∈_ : (k : ℕ) → SType ℓ → Ctx (suc k + ℓ) → Set where
   ∈-suc  : ∀ {Γ : Ctx (suc k + ℓ)} {τ' : SType (suc k + ℓ)}
          → k ℕ-idx τ ∈ Γ
          → suc k ℕ-idx τ ∈ (Γ , τ')
+
+
+infix 4 _⊂'_
+record _⊂'_ {ℓ ℓ'} (Γ : Ctx ℓ) (Γ' : Ctx ℓ') : Set where
+  constructor MkTR
+  field
+    ρ      : Fin ℓ → Fin ℓ'
+    ρ-∈    : τ ∈ Γ at ι
+           → τ' ≡ R.act-τ ρ τ
+           → ι' ≡ ρ ι
+           → τ' ∈ Γ' at ι'
+    ρ-mono : Monotonic ρ
+
+⊂'⇒⊂ : Γ ⊂' Γ' → Γ ⊂ Γ'
+⊂'⇒⊂ (MkTR ρ ρ-∈ ρ-mono) = MkTR ρ (λ z → ρ-∈ z refl refl) ρ-mono
+
+⊂⇒⊂' : Γ ⊂ Γ' → Γ ⊂' Γ'
+⊂⇒⊂' (MkTR ρ ρ-∈ ρ-mono) = MkTR ρ (λ where z refl refl → ρ-∈ z) ρ-mono
