@@ -22,7 +22,7 @@ mutual
                           → (acc : Acc _<_ (B.size-twf δ))
                           → size-twf (twf-thinning-sized Γ⊂Γ' Γ'ok δ acc)
                             ≤
-                            size-ok Γ'ok + size-twf δ
+                            size-twf δ + size-ok Γ'ok
   twf-thinning-sized-size Γ⊂Γ' Γ'ok (TWF-TrueRef Γok') _ = {! !} -- s≤s (m≤m⊕n _ _)
   twf-thinning-sized-size Γ⊂Γ' Γ'ok (TWF-Base ε₁δ ε₂δ) (acc rec) = {! !}
   twf-thinning-sized-size Γ⊂Γ' Γ'ok (TWF-Conj ρ₁ ρ₂) (acc rec)
@@ -51,7 +51,7 @@ mutual
 twf-thinning-size : (Γ⊂Γ' : Γ ⊂ Γ')
                   → (Γ'ok : Γ' ok)
                   → (δ : Γ ⊢ τ)
-                  → size-twf (twf-thinning Γ⊂Γ' Γ'ok δ) ≤ size-ok Γ'ok + size-twf δ
+                  → size-twf (twf-thinning Γ⊂Γ' Γ'ok δ) ≤ size-twf δ + size-ok Γ'ok
 twf-thinning-size Γ⊂Γ' Γ'ok δ = twf-thinning-sized-size Γ⊂Γ' Γ'ok δ (<-wellFounded _)
 
 twf-weakening-size : (Γok : Γ ok)
@@ -59,5 +59,5 @@ twf-weakening-size : (Γok : Γ ok)
                    → (Γ⊢τ : Γ ⊢ τ)
                    → size-twf (twf-weakening Γok Γ⊢τ' Γ⊢τ)
                      ≤
-                     suc (size-ok Γok ⊕ size-twf Γ⊢τ') + size-twf Γ⊢τ
+                     size-twf Γ⊢τ + suc (size-ok Γok ⊕ size-twf Γ⊢τ')
 twf-weakening-size Γok Γ⊢τ' Γ⊢τ = twf-thinning-size (ignore-head ⊂-refl) (TCTX-Bind Γok Γ⊢τ') Γ⊢τ
