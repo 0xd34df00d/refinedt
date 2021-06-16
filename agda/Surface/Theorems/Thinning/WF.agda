@@ -28,10 +28,10 @@ lemma : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'}
       → (ι'-≡ : ι' ≡ _⊂'_.ρ Γ⊂Γ' ι)
       → (let ∈' = _⊂'_.ρ-∈ Γ⊂Γ' ∈ τ'-≡ ι'-≡)
       → size-∈ Γ'ok ∈' ≤ size-∈ Γok ∈ + size-ok Γ'ok
-lemma (MkTR ρ ρ-∈ ρ-mono) (TCTX-Bind Γok τδ) ∈₀@(∈-zero refl) (TCTX-Bind Γ'ok τδ₁) τ'-≡ ι'-≡ with ρ-∈ ∈₀ τ'-≡ ι'-≡
+lemma (MkTR ρ ρ-∈ ρ-mono) (TCTX-Bind Γok τδ) (∈-zero refl) (TCTX-Bind Γ'ok τδ₁) τ'-≡ ι'-≡ with ρ-∈ (∈-zero refl) τ'-≡ ι'-≡
 ... | ∈-zero refl = {! !}
 ... | ∈-suc refl ∈' = {! !}
-lemma (MkTR ρ ρ-∈ ρ-mono) (TCTX-Bind Γok τδ) ∈₀@(∈-suc refl ∈) (TCTX-Bind Γ'ok τδ₁) τ'-≡ ι'-≡ with ρ-∈ ∈₀ τ'-≡ ι'-≡
+lemma (MkTR ρ ρ-∈ ρ-mono) (TCTX-Bind Γok τδ) (∈-suc refl ∈) (TCTX-Bind Γ'ok τδ₁) τ'-≡ ι'-≡ with ρ-∈ (∈-suc refl ∈) τ'-≡ ι'-≡
 ... | ∈-zero refl = {! !}
 ... | ∈-suc refl ∈' = {! !}
 
