@@ -5,6 +5,7 @@ module Surface.Theorems.Thinning.WF where
 
 open import Data.Nat.Base
 open import Data.Nat.Induction
+open import Data.Nat.Properties
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 
 open import Surface.Syntax
@@ -23,7 +24,7 @@ mutual
                           → size-twf (twf-thinning-sized Γ⊂Γ' Γ'ok δ acc)
                             ≤
                             size-twf δ + size-ok Γ'ok
-  twf-thinning-sized-size Γ⊂Γ' Γ'ok (TWF-TrueRef Γok') _ = {! !} -- s≤s (m≤m⊕n _ _)
+  twf-thinning-sized-size Γ⊂Γ' Γ'ok (TWF-TrueRef Γok') _ = s≤s (m≤n+m _ _)
   twf-thinning-sized-size Γ⊂Γ' Γ'ok (TWF-Base ε₁δ ε₂δ) (acc rec) = {! !}
   twf-thinning-sized-size Γ⊂Γ' Γ'ok (TWF-Conj ρ₁ ρ₂) (acc rec)
     = let rec₁ = rec _ (s≤s (m≤m⊕n _ _))
@@ -39,7 +40,7 @@ mutual
                         → (δ : Γ ⊢ ε ⦂ τ)
                         → (acc : Acc _<_ (B.size-t δ))
                         → size-t (t-thinning-sized Γ⊂Γ' Γ'ok δ acc) ≤ size-t δ + size-ok Γ'ok
-  t-thinning-sized-size Γ⊂Γ' Γ'ok (T-Unit Γok) _ = {! !}
+  t-thinning-sized-size Γ⊂Γ' Γ'ok (T-Unit Γok) _ = s≤s (s≤s (m≤n+m _ _))
   t-thinning-sized-size Γ⊂Γ' Γ'ok (T-Var Γok x) _ = {! !}
   t-thinning-sized-size Γ⊂Γ' Γ'ok (T-Abs arrδ δ) (acc rec) = {! !}
   t-thinning-sized-size Γ⊂Γ' Γ'ok (T-App δ δ₁) (acc rec) = {! !}
