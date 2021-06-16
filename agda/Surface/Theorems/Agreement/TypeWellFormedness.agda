@@ -1,4 +1,4 @@
-{-# OPTIONS --safe #-}
+-- {-# OPTIONS --safe #-}
 
 module Surface.Theorems.Agreement.TypeWellFormedness where
 
@@ -11,6 +11,8 @@ open import Surface.Syntax.Membership
 open import Surface.Derivations
 open import Surface.Theorems.Helpers
 open import Surface.Theorems.Thinning
+open import Surface.Theorems.Thinning.WF
+open import Surface.Theorems.Agreement.TypeWellFormedness.WF
 open import Surface.Theorems.Substitution
 
 τ∈Γ-⇒-Γ⊢τ : Γ ok
@@ -31,10 +33,19 @@ open import Surface.Theorems.Substitution
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Sub _ superδ _) = superδ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-RConv _ τ'δ _) = τ'δ
 
+τ∈Γ-⇒-Γ⊢τ-smaller : (Γok : Γ ok)
+                  → (∈ : τ ∈ Γ at ι)
+                  → size-twf (τ∈Γ-⇒-Γ⊢τ Γok ∈) ≤ size-∈ Γok ∈
+τ∈Γ-⇒-Γ⊢τ-smaller (TCTX-Bind Γok τδ) (∈-zero refl) = twf-weakening-size Γok τδ τδ
+τ∈Γ-⇒-Γ⊢τ-smaller (TCTX-Bind Γok τδ) (∈-suc refl ∈) =
+  let r₁ = twf-weakening-size Γok τδ (τ∈Γ-⇒-Γ⊢τ Γok ∈)
+      r₂ = τ∈Γ-⇒-Γ⊢τ-smaller Γok ∈
+   in {! !}
+
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller : (δ : Γ ⊢ ε ⦂ τ)
                     → size-twf (Γ⊢ε⦂τ-⇒-Γ⊢τ δ) < size-t δ
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Unit Γok) = s≤s ≤-refl
-Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Var Γok ∈-prf) = s≤s {! !}
+Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Var Γok ∈-prf) = s≤s (≤-trans (τ∈Γ-⇒-Γ⊢τ-smaller Γok ∈-prf) (n≤m⊕n _ _))
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Abs _ _) = s≤s (m≤m⊕n _ _)
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-App δ₁ δ₂) = let rec = Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller δ₁ in {! !}
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Case resδ scrutτδ branches) = s≤s (n≤m⊕n⊕k (size-t scrutτδ) (size-twf resδ) (size-bs branches))
