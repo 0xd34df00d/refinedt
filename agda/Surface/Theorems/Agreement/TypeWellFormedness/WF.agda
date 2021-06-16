@@ -76,3 +76,9 @@ mutual
   size-bs NoBranches = 0
   size-bs (OneMoreBranch εδ rest) = suc (size-t εδ ⊕ size-bs rest)
 
+-- Properties
+size-ok-≤-size-∈ : (Γok : Γ ok)
+                 → (∈ : τ ∈ Γ at ι)
+                 → size-ok Γok ≤ size-∈ Γok ∈
+size-ok-≤-size-∈ (TCTX-Bind Γok τδ) (∈-zero refl) = s≤s (m≤m+n _ _)
+size-ok-≤-size-∈ (TCTX-Bind Γok τδ) (∈-suc refl ∈) = s≤s (m≤m+n _ _)
