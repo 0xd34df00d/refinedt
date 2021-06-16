@@ -38,7 +38,7 @@ mutual
                         → (Γ'ok : Γ' ok)
                         → (δ : Γ ⊢ ε ⦂ τ)
                         → (acc : Acc _<_ (B.size-t δ))
-                        → size-t (t-thinning-sized Γ⊂Γ' Γ'ok δ acc) ≤ {! !}
+                        → size-t (t-thinning-sized Γ⊂Γ' Γ'ok δ acc) ≤ size-t δ + size-ok Γ'ok
   t-thinning-sized-size Γ⊂Γ' Γ'ok (T-Unit Γok) _ = {! !}
   t-thinning-sized-size Γ⊂Γ' Γ'ok (T-Var Γok x) _ = {! !}
   t-thinning-sized-size Γ⊂Γ' Γ'ok (T-Abs arrδ δ) (acc rec) = {! !}
