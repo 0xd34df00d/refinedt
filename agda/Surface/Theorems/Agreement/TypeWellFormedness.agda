@@ -11,8 +11,6 @@ open import Surface.Syntax.Membership
 open import Surface.Derivations
 open import Surface.Theorems.Helpers
 open import Surface.Theorems.Thinning
-open import Surface.Theorems.Thinning.WF
-open import Surface.Theorems.Agreement.TypeWellFormedness.WF
 open import Surface.Theorems.Substitution
 
 τ∈Γ-⇒-Γ⊢τ : Γ ok
@@ -32,6 +30,9 @@ open import Surface.Theorems.Substitution
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Con _ _ adtτ) = adtτ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Sub _ superδ _) = superδ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-RConv _ τ'δ _) = τ'δ
+
+open import Surface.Theorems.Thinning.WF
+open import Surface.Theorems.Agreement.TypeWellFormedness.WF
 
 τ∈Γ-⇒-Γ⊢τ-smaller : (Γok : Γ ok)
                   → (∈ : τ ∈ Γ at ι)
