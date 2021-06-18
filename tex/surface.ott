@@ -20,7 +20,7 @@ l {{ tex \nonterm l }} :: labels_ ::= {{ com ADT labels }}
 
 r {{ tex \nonterm r }} :: ref_ ::= {{ com refinements }}
   | top                 :: M :: top {{ com top }}
-  | es1 = es2           ::   :: rexpr {{ com atomic refinement }}
+  | es1 = es2 of ts     ::   :: rexpr {{ com atomic refinement }}
   | r1 /\ r2            ::   :: rconj {{ com conjunction }}
   | [ v |-> es ] r      :: M :: vsubst {{ com subst }}
   | [ x |-> es ] r      :: M :: xsubst {{ com subst }}
@@ -92,7 +92,7 @@ G |- { v : B | top }
 G , v : { v1 : B | top } |- es1 : { v2 : B' | top }
 G , v : { v1 : B | top } |- es2 : { v2 : B' | top }
 -------------------------------------------------- :: Base
-G |- { v : B | es1 = es2 }
+G |- { v : B | es1 = es2 of { v2 : B' | top } }
 
 G |- { v : B | r1 }
 G |- { v : B | r2 }
@@ -133,7 +133,7 @@ G |- \x : ts1. es : ( x : ts1 ) -> ts2
 ts def < </ li : tsi // i /> >
 G |- ts'
 G |- es : ts
-</ G , xi : tsi , x : { _ : Unit | es = < li = xi > as ts } |- esi : ts' // i />
+</ G , xi : tsi , x : { _ : Unit | es = < li = xi > as ts of ts } |- esi : ts' // i />
 x fresh
 -------------------------------------------------------------------------- :: Case
 G |- case es of </ li = xi -> esi // i />  : ts'
