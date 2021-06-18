@@ -439,17 +439,11 @@ the proofs are done over the language defined here, we need to add at least Int.
 \end{remark}
 
 Type equivalence, together with the \textsc{T-RConv} typing rule, deserves some special attention.
-Note that this relation is indeed restricted, and contains only a tiny subset of what the usual $\beta$-equivalence relates.
-\begin{remark}
-In fact, $[[ requiv ]]$ is neither transitive nor reflexive, so it is not really an \emph{equivalence}, but \textsc{T-RConv} can be seen as the transitive-reflexive closure of $[[ requiv ]]$.
-\rae{I'm not sure what ``becomes one'' really means here.}
-\gr{Ah, that's really poor wording on my side. Hopefully fixed that.}
-Indeed, transitivity is regained via consecutive applications of \textsc{T-RConv}, and reflexivity is achieved by not applying this rule at all.
-\end{remark}
-Why is such a strange type equivalence needed?
-In short, this is the smallest relation enabling the preservation \cref{thm:surface_preservation} in our non-lazy,
-call-by-value language that also has a form of dependent types (namely, the conclusion of \textsc{T-App} having the type of the form $[[ [ x |-> es ] ts ]]$).
-We also discuss this in the section on the metatheoretical properties of the language.
+Note that $[[ requiv ]]$ alone is neither transitive nor reflexive,
+but those properties are regained by applying \textsc{T-RConv}, the only rule relying on $[[ requiv ]]$, enough times:
+zero for reflexivity and multiple times for transitivity.
+Delegating reflexivity and transitivity to the typing derivations, while perhaps being non-canonical,
+simplifies the proofs of the metatheoretical properties of the language.
 
 \begin{figure}[ht]
   \centering
