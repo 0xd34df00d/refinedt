@@ -126,7 +126,7 @@ mutual
        in T-Con (R.act-cons-member _ cons ≡-prf) (t-thinning-sized Γ⊂Γ' Γ'ok conArg rec₁) (twf-thinning-sized Γ⊂Γ' Γ'ok adtτ rec₂)
   t-thinning-sized Γ⊂Γ' Γ'ok (T-Sub εδ superδ <:δ) (acc rec)
     = let rec₁ = rec _ (s≤s (m≤m⊕n _ _))
-          rec₂ = rec _ (s≤s (n≤m⊕n⊕k (size-t εδ) (size-twf superδ) (size-st <:δ)))
+          rec₂ = rec _ (s≤s (n≤m⊕n⊕k (size-t εδ) (size-twf superδ) (size-<: <:δ)))
           εδ' = t-thinning-sized Γ⊂Γ' Γ'ok εδ rec₁
           superδ' = twf-thinning-sized Γ⊂Γ' Γ'ok superδ rec₂
           <:δ' = st-thinning Γ⊂Γ' <:δ

@@ -17,7 +17,7 @@ open import Surface.Syntax
 size-ok  : Γ ok         → ℕ
 size-twf : Γ ⊢ τ        → ℕ
 size-t   : Γ ⊢ ε ⦂ τ    → ℕ
-size-st  : Γ ⊢ τ₁ <: τ₂ → ℕ
+size-<:  : Γ ⊢ τ₁ <: τ₂ → ℕ
 size-bs  : ∀ {τ cons} {bs : CaseBranches nₐ ℓ}
          → BranchesHaveType Γ cons bs τ
          → ℕ
@@ -61,11 +61,11 @@ size-t (T-Abs arrδ bodyδ) = suc (size-twf arrδ ⊕ size-t bodyδ)
 size-t (T-App δ₁ δ₂) = suc (size-t δ₁ ⊕ size-t δ₂)
 size-t (T-Case resδ scrutτδ branches) = suc (size-t scrutτδ ⊕ size-twf resδ ⊕ size-bs branches)
 size-t (T-Con _ conArg adtτ) = suc (size-t conArg ⊕ size-twf adtτ)
-size-t (T-Sub δ superδ sub) = suc (size-t δ ⊕ size-twf superδ ⊕ size-st sub)
+size-t (T-Sub δ superδ sub) = suc (size-t δ ⊕ size-twf superδ ⊕ size-<: sub)
 size-t (T-RConv εδ τ'δ _) = suc (size-t εδ ⊕ size-twf τ'δ)
 
-size-st (ST-Base _ _) = 0
-size-st (ST-Arr sub₁ sub₂) = suc (size-st sub₁ ⊕ size-st sub₂)
+size-<: (ST-Base _ _) = 0
+size-<: (ST-Arr sub₁ sub₂) = suc (size-<: sub₁ ⊕ size-<: sub₂)
 
 size-bs NoBranches = 0
 size-bs (OneMoreBranch εδ rest) = suc (size-t εδ ⊕ size-bs rest)
