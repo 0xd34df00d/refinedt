@@ -43,6 +43,18 @@ abstract
   k≤m⊕n⊕k : ∀ m n k → k ≤ m ⊕ n ⊕ k
   k≤m⊕n⊕k m n k = ≤-trans (n≤m⊕n n k) (n≤m⊕n m (n ⊔ k))
 
+  ₁≤₄ : ∀ n₁ n₂ n₃ n₄ → n₁ ≤ n₁ ⊕ n₂ ⊕ n₃ ⊕ n₄
+  ₁≤₄ n₁ n₂ n₃ n₄ = m≤m⊕n _ _
+
+  ₂≤₄ : ∀ n₁ n₂ n₃ n₄ → n₂ ≤ n₁ ⊕ n₂ ⊕ n₃ ⊕ n₄
+  ₂≤₄ n₁ n₂ n₃ n₄ = n≤m⊕n⊕k n₁ n₂ (n₃ ⊔ n₄)
+
+  ₃≤₄ : ∀ n₁ n₂ n₃ n₄ → n₃ ≤ n₁ ⊕ n₂ ⊕ n₃ ⊕ n₄
+  ₃≤₄ n₁ n₂ n₃ n₄ = ≤-trans (m≤m⊕n n₃ n₄) (k≤m⊕n⊕k n₁ n₂ (n₃ ⊔ n₄))
+
+  ₄≤₄ : ∀ n₁ n₂ n₃ n₄ → n₄ ≤ n₁ ⊕ n₂ ⊕ n₃ ⊕ n₄
+  ₄≤₄ n₁ n₂ n₃ n₄ = ≤-trans (n≤m⊕n n₃ n₄) (k≤m⊕n⊕k n₁ n₂ (n₃ ⊔ n₄))
+
 size-ok TCTX-Empty = 0
 size-ok (TCTX-Bind prevOk τδ) = suc (size-ok prevOk ⊕ size-twf τδ)
 
