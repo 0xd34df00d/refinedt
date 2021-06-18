@@ -33,7 +33,7 @@ size-lemma₁ n δ = let r1 = Γok-head-smaller (Γ⊢ε⦂τ-⇒-Γok δ)
 st-thinning : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ₁ τ₂ : SType ℓ}
             → (Γ⊂Γ' : Γ ⊂ Γ')
             → (Γ ⊢ τ₁ <: τ₂)
-            → (Γ' ⊢ R.act-τ (_⊂_.ρ Γ⊂Γ') τ₁ <: R.act-τ (_⊂_.ρ Γ⊂Γ') τ₂)
+            → Γ' ⊢ R.act-τ (_⊂_.ρ Γ⊂Γ') τ₁ <: R.act-τ (_⊂_.ρ Γ⊂Γ') τ₂
 st-thinning Γ⊂Γ' (ST-Base oracle just-prf) = ST-Base oracle (Oracle.thin oracle Γ⊂Γ' just-prf)
 st-thinning Γ⊂Γ' (ST-Arr δ₁ δ₂) = ST-Arr (st-thinning Γ⊂Γ' δ₁) (st-thinning (append-both Γ⊂Γ') δ₂)
 
@@ -43,7 +43,7 @@ mutual
                      → Γ' ok
                      → (δ : Γ ⊢ τ)
                      → Acc _<_ (size-twf δ)
-                     → (Γ' ⊢ R.act-τ (_⊂_.ρ Γ⊂Γ') τ)
+                     → Γ' ⊢ R.act-τ (_⊂_.ρ Γ⊂Γ') τ
   twf-thinning-sized Γ⊂Γ' Γ'ok (TWF-TrueRef _) _ = TWF-TrueRef Γ'ok
   twf-thinning-sized Γ⊂Γ' Γ'ok (TWF-Base ε₁δ ε₂δ) (acc rec)
     = let expCtxOk = TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)
@@ -80,7 +80,7 @@ mutual
                    → Γ' ok
                    → (δ : Γ ⊢ ε ⦂ τ)
                    → Acc _<_ (size-t δ)
-                   → (Γ' ⊢ R.act-ε (_⊂_.ρ Γ⊂Γ') ε ⦂ R.act-τ (_⊂_.ρ Γ⊂Γ') τ)
+                   → Γ' ⊢ R.act-ε (_⊂_.ρ Γ⊂Γ') ε ⦂ R.act-τ (_⊂_.ρ Γ⊂Γ') τ
   t-thinning-sized Γ⊂Γ' Γ'ok (T-Unit gok) _ = T-Unit Γ'ok
   t-thinning-sized Γ⊂Γ' Γ'ok (T-Var gok x) _ = T-Var Γ'ok (_⊂_.ρ-∈ Γ⊂Γ' x)
   t-thinning-sized Γ⊂Γ' Γ'ok (T-Abs arrδ bodyδ) (acc rec)
