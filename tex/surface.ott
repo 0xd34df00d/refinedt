@@ -133,7 +133,7 @@ G |- \x : ts1. es : ( x : ts1 ) -> ts2
 ts def < </ li : tsi // i /> >
 G |- ts'
 G |- es : ts
-</ G , xi : tsi , x : { _ : Unit | es = < li = xi > as ts of ts } |- esi : ts' // i />
+</ G , xi : tsi , x : { _ : Unit | es = (< li = xi > as ts) of ts } |- esi : ts' // i />
 x fresh
 -------------------------------------------------------------------------- :: Case
 G |- case es of </ li = xi -> esi // i />  : ts'

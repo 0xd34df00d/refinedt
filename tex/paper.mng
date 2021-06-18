@@ -928,7 +928,7 @@ We consider the term typing rule at the root of the derivation tree for $[[ G |-
     and the main complication stems from the following.
     In \textsc{T-Case}, each (surface) $[[esi]]$ is being type checked in the context
     where $x$ (the witness of the $\mathbf{case}$ branch taken)
-    has type $[[ { _ : Unit | es = < li = xi > as ts of ts } ]]$.
+    has type $[[ { _ : Unit | es = (< li = xi > as ts) of ts } ]]$.
     After $[[esi]]$ gets translated into the (core) term $[[eci]]$,
     the latter is type checked in the context where $\hat x$
     has the dependent pair type $[[ Sigma Unitc (\_ : Unitc. ec equal ( < li = xi > as tc ) of tc) ]]$.
