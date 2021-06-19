@@ -20,13 +20,11 @@ open import Translation.Untyped
 
 mutual
   μ-<: : {τ τ' : SType ℓ}
-       → Γˢ ⊢ τ
-       → Γˢ ⊢ τ'
        → Γˢ ⊢ τ <: τ'
        → CExpr ℓ
-  μ-<: _ _ (ST-Base oracle positive) with to-witness positive
+  μ-<: (ST-Base oracle positive) with to-witness positive
   ... | MkPD <:-ε = <:-ε
-  μ-<: δτ@(TWF-Arr {τ₁ = τ₁} {τ₂ = τ₂} δτ₁ δτ₂) δτ'@(TWF-Arr {τ₁ = τ₁'} {τ₂ = τ₂'} δτ₁' δτ₂') (ST-Arr <:₁ <:₂) =
+  μ-<: (ST-Arr <:₁ <:₂ δτ δτ₁') =
     {-
     We need to build a function of type (τ₁ ⇒ τ₂) ⇒ (τ₁' ⇒ τ₂')
     Thus, we do the following:
@@ -36,8 +34,8 @@ mutual
           (#1
             (μ(<:₁) (#0)))
     -}
-    let arg-ε = μ-<: δτ₁' δτ₁ <:₁                             -- ⦂ τ₁' ⇒ τ₁
-        res-ε = μ-<: (Γ⊢τ-narrowing ⊘ <:₁ δτ₁' δτ₂) δτ₂' <:₂  -- ⦂ τ₂ ⇒ τ₂'
+    let arg-ε = μ-<: <:₁  -- ⦂ τ₁' ⇒ τ₁
+        res-ε = μ-<: <:₂  -- ⦂ τ₂ ⇒ τ₂'
      in CLam
           (μ-τ δτ)
           (CLam
@@ -65,7 +63,7 @@ mutual
   μ-ε (T-App δε₁ δε₂) = μ-ε δε₁ · μ-ε δε₂
   μ-ε (T-Case resδ δε branches) = CCase (μ-ε δε) (μ-branches branches)
   μ-ε (T-Con {ι = ι} _ δε (TWF-ADT consδs)) = CCon ι (μ-ε δε) (μ-cons consδs)
-  μ-ε (T-Sub δε τ'δ <:) = μ-<: (Γ⊢ε⦂τ-⇒-Γ⊢τ δε) τ'δ <: · μ-ε δε
+  μ-ε (T-Sub δε τ'δ <:) = μ-<: <: · μ-ε δε
   μ-ε (T-RConv δε _ _) = μ-ε δε
 
   μ-cons : {cons : S.ADTCons nₐ ℓ}
