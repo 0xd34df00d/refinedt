@@ -145,4 +145,6 @@ data _⊢_<:_ where
               → Γ ⊢ ⟨ b ∣ ρ₁ ⟩ <: ⟨ b ∣ ρ₂ ⟩
   ST-Arr      : Γ ⊢ τ₁' <: τ₁
               → Γ , τ₁' ⊢ τ₂ <: τ₂'
+              → Γ ⊢ τ₁ ⇒ τ₂   {- TODO this needn't be required, but proving translation without it is difficult for termination reasons -}
+              → Γ ⊢ τ₁'       {- ditto -}
               → Γ ⊢ τ₁ ⇒ τ₂ <: τ₁' ⇒ τ₂'

@@ -13,15 +13,20 @@ open import Surface.Operational
 open import Surface.Operational.BetaEquivalence
 open import Surface.Theorems.Thinning
 
-<:-equivalence : (Δ : CtxSuffix (suc ℓ) k)
-               → τ ↭βτ τ'
-               → Γ , τ  ++ Δ ⊢ τ₁ <: τ₂
-               → Γ , τ' ++ Δ ⊢ τ₁ <: τ₂
-<:-equivalence Δ τ-↭βτ (ST-Base oracle is-just) = ST-Base oracle (Oracle.stepping oracle τ-↭βτ is-just)
-<:-equivalence Δ τ-↭βτ (ST-Arr <:₁ <:₂) = ST-Arr (<:-equivalence Δ τ-↭βτ <:₁) (<:-equivalence (Δ , _) τ-↭βτ <:₂)
-
 -- Referred to as context-equivalence in the paper
 mutual
+  <:-equivalence : (Δ : CtxSuffix (suc ℓ) k)
+                 → τ ↭βτ τ'
+                 → Γ ⊢ τ'
+                 → Γ , τ  ++ Δ ⊢ τ₁ <: τ₂
+                 → Γ , τ' ++ Δ ⊢ τ₁ <: τ₂
+  <:-equivalence Δ τ-↭βτ Γ⊢τ' (ST-Base oracle is-just) = ST-Base oracle (Oracle.stepping oracle τ-↭βτ is-just)
+  <:-equivalence Δ τ-↭βτ Γ⊢τ' (ST-Arr <:₁ <:₂ δτ₁⇒τ₂ δτ₁') = ST-Arr
+                                                              (<:-equivalence Δ τ-↭βτ Γ⊢τ' <:₁)
+                                                              (<:-equivalence (Δ , _) τ-↭βτ Γ⊢τ' <:₂)
+                                                              (Γ⊢τ-equivalence Δ τ-↭βτ Γ⊢τ' δτ₁⇒τ₂)
+                                                              (Γ⊢τ-equivalence Δ τ-↭βτ Γ⊢τ' δτ₁')
+
   Γok-equivalence : (Δ : CtxSuffix (suc ℓ) k)
                   → τ ↭βτ τ'
                   → Γ ⊢ τ'
@@ -96,7 +101,7 @@ mutual
   Γ⊢ε⦂τ-equivalence Δ τ-↭βτ Γ⊢τ₁' (T-Sub εδ τ'δ <:)
     = let εδ' = Γ⊢ε⦂τ-equivalence Δ τ-↭βτ Γ⊢τ₁' εδ
           τ'δ' = Γ⊢τ-equivalence Δ τ-↭βτ Γ⊢τ₁' τ'δ
-          <:' = <:-equivalence Δ τ-↭βτ <:
+          <:' = <:-equivalence Δ τ-↭βτ Γ⊢τ₁' <:
        in T-Sub εδ' τ'δ' <:'
   Γ⊢ε⦂τ-equivalence Δ τ-↭βτ Γ⊢τ₁' (T-RConv εδ τ'δ τ~τ')
     = let εδ' = Γ⊢ε⦂τ-equivalence Δ τ-↭βτ Γ⊢τ₁' εδ

@@ -77,7 +77,7 @@ size-t (T-Sub δ superδ sub) = suc (size-t δ ⊕ size-twf superδ ⊕ size-<: 
 size-t (T-RConv εδ τ'δ _) = suc (size-t εδ ⊕ size-twf τ'δ)
 
 size-<: (ST-Base _ _) = 0
-size-<: (ST-Arr sub₁ sub₂) = suc (size-<: sub₁ ⊕ size-<: sub₂)
+size-<: (ST-Arr sub₁ sub₂ δτ₁⇒τ₂ δτ₁') = suc (size-<: sub₁ ⊕ size-<: sub₂ ⊕ size-twf δτ₁⇒τ₂ ⊕ size-twf δτ₁')
 
 size-bs NoBranches = 0
 size-bs (OneMoreBranch εδ rest) = suc (size-t εδ ⊕ size-bs rest)

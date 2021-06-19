@@ -10,23 +10,28 @@ open import Surface.Syntax.Membership
 open import Surface.Derivations
 open import Surface.Theorems.Thinning
 
-<:-narrowing : ∀ Δ
-             → Γ ⊢ σ' <: σ
-             → Γ , σ  ++ Δ ⊢ τ₂ <: τ₂'
-             → Γ , σ' ++ Δ ⊢ τ₂ <: τ₂'
-<:-narrowing _ σ-<: (ST-Base oracle is-just) = ST-Base oracle (Oracle.narrowing oracle {- TODO σ-<: -} is-just)
-<:-narrowing Δ σ-<: (ST-Arr <:₁ <:₂) = ST-Arr (<:-narrowing Δ σ-<: <:₁) (<:-narrowing (Δ , _) σ-<: <:₂)
-
-<:-trans : Γ ⊢ τ₁ <: τ₂
-         → Γ ⊢ τ₂ <: τ₃
-         → Γ ⊢ τ₁ <: τ₃
-<:-trans (ST-Base oracle ⦃ UoO ⦄ is-just₁) (ST-Base oracle' is-just₂)
-  rewrite UniquenessOfOracles.oracles-equal UoO oracle' oracle
-        = ST-Base oracle ⦃ UoO ⦄ (Oracle.trans oracle is-just₁ is-just₂)
-<:-trans (ST-Arr <:₁ <:₂) (ST-Arr <:₁' <:₂') = ST-Arr (<:-trans <:₁' <:₁) (<:-trans (<:-narrowing ⊘ <:₁' <:₂) <:₂')
-
 -- Referred to as typing-narrowing in the paper
 mutual
+  <:-narrowing : ∀ Δ
+               → Γ ⊢ σ' <: σ
+               → Γ ⊢ σ'
+               → Γ , σ  ++ Δ ⊢ τ₂ <: τ₂'
+               → Γ , σ' ++ Δ ⊢ τ₂ <: τ₂'
+  <:-narrowing _ σ-<: Γ⊢σ' (ST-Base oracle is-just) = ST-Base oracle (Oracle.narrowing oracle {- TODO σ-<: -} is-just)
+  <:-narrowing Δ σ-<: Γ⊢σ' (ST-Arr <:₁ <:₂ δτ₁⇒τ₂ δτ₁') = ST-Arr
+                                                            (<:-narrowing Δ σ-<: Γ⊢σ' <:₁)
+                                                            (<:-narrowing (Δ , _) σ-<: Γ⊢σ' <:₂)
+                                                            (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' δτ₁⇒τ₂)
+                                                            (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' δτ₁')
+
+  <:-trans : Γ ⊢ τ₁ <: τ₂
+           → Γ ⊢ τ₂ <: τ₃
+           → Γ ⊢ τ₁ <: τ₃
+  <:-trans (ST-Base oracle ⦃ UoO ⦄ is-just₁) (ST-Base oracle' is-just₂)
+    rewrite UniquenessOfOracles.oracles-equal UoO oracle' oracle
+          = ST-Base oracle ⦃ UoO ⦄ (Oracle.trans oracle is-just₁ is-just₂)
+  <:-trans (ST-Arr <:₁ <:₂ δτ₁⇒τ₂ _) (ST-Arr <:₁' <:₂' _ δτ₁') = ST-Arr (<:-trans <:₁' <:₁) (<:-trans (<:-narrowing ⊘ <:₁' δτ₁' <:₂) <:₂') δτ₁⇒τ₂ δτ₁'
+
   Γok-narrowing : (Δ : CtxSuffix (suc ℓ) k)
                 → Γ ⊢ σ' <: σ
                 → Γ ⊢ σ'
@@ -61,7 +66,7 @@ mutual
                  → Γ ⊢ σ'
                  → τ ∈ Γ , σ ++ Δ at ι
                  → Γ , σ' ++ Δ ⊢ SVar ι ⦂ τ
-  SVar-narrowing ⊘ (TCTX-Bind Γok τδ) σ-<: Γ⊢σ' (∈-zero refl) = T-Sub (T-Var (TCTX-Bind Γok Γ⊢σ') (∈-zero refl)) (twf-weakening Γok Γ⊢σ' τδ) (st-weakening Γok σ-<:)
+  SVar-narrowing ⊘ (TCTX-Bind Γok τδ) σ-<: Γ⊢σ' (∈-zero refl) = T-Sub (T-Var (TCTX-Bind Γok Γ⊢σ') (∈-zero refl)) (twf-weakening Γok Γ⊢σ' τδ) (st-weakening Γok Γ⊢σ' σ-<:)
   SVar-narrowing ⊘ (TCTX-Bind Γok _) σ-<: Γ⊢σ' (∈-suc refl ∈) = T-Var (TCTX-Bind Γok Γ⊢σ') (∈-suc refl ∈)
   SVar-narrowing (Δ , τ) Γ,σ,Δok σ-<: Γ⊢σ' (∈-zero refl) = T-Var (Γok-narrowing (Δ , _) σ-<: Γ⊢σ' Γ,σ,Δok) (∈-zero refl)
   SVar-narrowing (Δ , τ) (TCTX-Bind Γ,σ,Δok Γ,σ,Δ⊢τ) σ-<: Γ⊢σ' (∈-suc refl ∈)
@@ -95,6 +100,6 @@ mutual
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Sub εδ τ'δ <:)
     = let εδ-narrowed = Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ
           τ'δ-narrowed = Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' τ'δ
-          <:-narrowed = <:-narrowing Δ σ-<: <:
+          <:-narrowed = <:-narrowing Δ σ-<: Γ⊢σ' <:
        in T-Sub εδ-narrowed τ'δ-narrowed <:-narrowed
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-RConv εδ τ'δ τ~τ') = T-RConv (Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ) (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' τ'δ) τ~τ'

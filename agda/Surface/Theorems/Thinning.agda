@@ -30,14 +30,26 @@ size-lemma₁ n δ = let r1 = Γok-head-smaller (Γ⊢ε⦂τ-⇒-Γok δ)
                       r3 = <-trans r1 r2
                    in <-trans r3 (s≤s (m≤m⊕n (size-t δ) n))
 
-st-thinning : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ₁ τ₂ : SType ℓ}
-            → (Γ⊂Γ' : Γ ⊂ Γ')
-            → (Γ ⊢ τ₁ <: τ₂)
-            → Γ' ⊢ R.act-τ (_⊂_.ρ Γ⊂Γ') τ₁ <: R.act-τ (_⊂_.ρ Γ⊂Γ') τ₂
-st-thinning Γ⊂Γ' (ST-Base oracle just-prf) = ST-Base oracle (Oracle.thin oracle Γ⊂Γ' just-prf)
-st-thinning Γ⊂Γ' (ST-Arr δ₁ δ₂) = ST-Arr (st-thinning Γ⊂Γ' δ₁) (st-thinning (append-both Γ⊂Γ') δ₂)
-
 mutual
+  st-thinning-sized : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ₁ τ₂ : SType ℓ}
+                    → (Γ⊂Γ' : Γ ⊂ Γ')
+                     → Γ' ok
+                    → (δ<: : Γ ⊢ τ₁ <: τ₂)
+                     → Acc _<_ (size-<: δ<:)
+                    → Γ' ⊢ R.act-τ (_⊂_.ρ Γ⊂Γ') τ₁ <: R.act-τ (_⊂_.ρ Γ⊂Γ') τ₂
+  st-thinning-sized Γ⊂Γ' _ (ST-Base oracle just-prf) _ = ST-Base oracle (Oracle.thin oracle Γ⊂Γ' just-prf)
+  st-thinning-sized Γ⊂Γ' Γ'ok (ST-Arr δ₁ δ₂ δτ₁⇒τ₂ δτ₁') (acc rec)
+    = let rec₁ = rec _ (s≤s (₁≤₄ (size-<: δ₁) (size-<: δ₂) (size-twf δτ₁⇒τ₂) (size-twf δτ₁')))
+          rec₂ = rec _ (s≤s (₂≤₄ (size-<: δ₁) (size-<: δ₂) (size-twf δτ₁⇒τ₂) (size-twf δτ₁')))
+          rec₃ = rec _ (s≤s (₃≤₄ (size-<: δ₁) (size-<: δ₂) (size-twf δτ₁⇒τ₂) (size-twf δτ₁')))
+          rec₄ = rec _ (s≤s (₄≤₄ (size-<: δ₁) (size-<: δ₂) (size-twf δτ₁⇒τ₂) (size-twf δτ₁')))
+          δτ₁'-thinned = twf-thinning-sized Γ⊂Γ' Γ'ok δτ₁' rec₄
+       in ST-Arr
+            (st-thinning-sized Γ⊂Γ' Γ'ok δ₁ rec₁)
+            (st-thinning-sized (append-both Γ⊂Γ') (TCTX-Bind Γ'ok δτ₁'-thinned) δ₂ rec₂)
+            (twf-thinning-sized Γ⊂Γ' Γ'ok δτ₁⇒τ₂ rec₃)
+            δτ₁'-thinned
+
   twf-thinning-sized : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ : SType ℓ}
                      → (Γ⊂Γ' : Γ ⊂ Γ')
                      → Γ' ok
@@ -127,9 +139,10 @@ mutual
   t-thinning-sized Γ⊂Γ' Γ'ok (T-Sub εδ superδ <:δ) (acc rec)
     = let rec₁ = rec _ (s≤s (m≤m⊕n _ _))
           rec₂ = rec _ (s≤s (n≤m⊕n⊕k (size-t εδ) (size-twf superδ) (size-<: <:δ)))
+          rec₃ = rec _ (s≤s (k≤m⊕n⊕k (size-t εδ) (size-twf superδ) (size-<: <:δ)))
           εδ' = t-thinning-sized Γ⊂Γ' Γ'ok εδ rec₁
           superδ' = twf-thinning-sized Γ⊂Γ' Γ'ok superδ rec₂
-          <:δ' = st-thinning Γ⊂Γ' <:δ
+          <:δ' = st-thinning-sized Γ⊂Γ' Γ'ok <:δ rec₃
        in T-Sub εδ' superδ' <:δ'
   t-thinning-sized Γ⊂Γ' Γ'ok (T-RConv εδ τ'δ ↝βτ) (acc rec)
     = let rec₁ = rec _ (s≤s (m≤m⊕n _ _))
@@ -152,10 +165,18 @@ t-thinning   : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ : SType ℓ}
              → Γ' ⊢ R.act-ε (_⊂_.ρ Γ⊂Γ') ε ⦂ R.act-τ (_⊂_.ρ Γ⊂Γ') τ
 t-thinning Γ⊂Γ' Γ'ok δ = t-thinning-sized Γ⊂Γ' Γ'ok δ (<-wellFounded _)
 
+st-thinning : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ₁ τ₂ : SType ℓ}
+            → (Γ⊂Γ' : Γ ⊂ Γ')
+            → Γ' ok
+            → (Γ ⊢ τ₁ <: τ₂)
+            → Γ' ⊢ R.act-τ (_⊂_.ρ Γ⊂Γ') τ₁ <: R.act-τ (_⊂_.ρ Γ⊂Γ') τ₂
+st-thinning Γ⊂Γ' Γ'ok <: = st-thinning-sized Γ⊂Γ' Γ'ok <: (<-wellFounded _)
+
 st-weakening : Γ ok
+             → Γ ⊢ τ'
              → Γ ⊢ τ₁ <: τ₂
              → (Γ , τ') ⊢ R.weaken-τ τ₁ <: R.weaken-τ τ₂
-st-weakening Γok <: = st-thinning (ignore-head ⊂-refl) <:
+st-weakening Γok τ'δ <: = st-thinning (ignore-head ⊂-refl) (TCTX-Bind Γok τ'δ) <:
 
 twf-weakening : {Γ : Ctx ℓ}
               → Γ ok

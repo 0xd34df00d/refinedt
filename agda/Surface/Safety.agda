@@ -34,7 +34,7 @@ canonical-⇒ : ⊘ ⊢ ε ⦂ τ
             → τ ≡ τ₁ ⇒ τ₂
             → Canonical ε τ
 canonical-⇒ (T-Abs arrδ εδ) is-value ≡-prf = C-Lam
-canonical-⇒ (T-Sub εδ τ'δ <:@(ST-Arr _ _)) is-value refl with canonical-⇒ εδ is-value refl
+canonical-⇒ (T-Sub εδ τ'δ <:@(ST-Arr _ _ _ _)) is-value refl with canonical-⇒ εδ is-value refl
 ... | C-Lam = C-Lam
 canonical-⇒ (T-RConv {τ = τ₁' ⇒ τ₂'} εδ τ'δ τ~τ') is-value refl with canonical-⇒ εδ is-value refl
 ... | C-Lam = C-Lam
@@ -84,7 +84,7 @@ progress (T-RConv εδ _ τ↝τ') = progress εδ
 SLam-inv : Γ ⊢ SLam τ ε ⦂ τ₁ ⇒ τ₂
          → Γ , τ₁ ⊢ ε ⦂ τ₂
 SLam-inv (T-Abs _ εδ) = εδ
-SLam-inv (T-Sub εδ (TWF-Arr τ₁-ok τ₂-ok₁) (ST-Arr <:₁ <:₂)) = T-Sub (Γ⊢ε⦂τ-narrowing ⊘ <:₁ τ₁-ok (SLam-inv εδ)) τ₂-ok₁ <:₂
+SLam-inv (T-Sub εδ (TWF-Arr τ₁-ok τ₂-ok₁) (ST-Arr <:₁ <:₂ _ _)) = T-Sub (Γ⊢ε⦂τ-narrowing ⊘ <:₁ τ₁-ok (SLam-inv εδ)) τ₂-ok₁ <:₂
 SLam-inv (T-RConv {τ = τ₁' ⇒ τ₂'} εδ (TWF-Arr τ₁δ τ₂δ) τ~τ')
   = let Γ,τ₁⊢ε⦂τ₂' = Γ⊢ε⦂τ-equivalence ⊘ (↭βτ-⇒-dom τ~τ') τ₁δ (SLam-inv εδ)
      in T-RConv Γ,τ₁⊢ε⦂τ₂' τ₂δ (↭βτ-⇒-cod τ~τ')
