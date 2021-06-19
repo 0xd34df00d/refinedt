@@ -13,8 +13,6 @@ open import Core.Derivations as C
 open import Surface.Syntax as S renaming (Γ to Γˢ; τ to τˢ; ε to εˢ)
 open import Surface.Syntax.CtxSuffix
 open import Surface.Derivations as S renaming (_⊢_⦂_ to _⊢ˢ_⦂_)
-open import Surface.Theorems.Agreement
-open import Surface.Theorems.Subtyping
 
 open import Translation.Untyped
 
