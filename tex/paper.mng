@@ -438,12 +438,13 @@ We also have the following concessions:
 the proofs are done over the language defined here, we need to add at least Int.}
 \end{remark}
 
-Type equivalence, together with the \textsc{T-RConv} typing rule, deserves some special attention.
-Note that $[[ requiv ]]$ alone is neither transitive nor reflexive,
-but those properties are regained by applying \textsc{T-RConv}, the only rule relying on $[[ requiv ]]$, enough times:
-zero for reflexivity and multiple times for transitivity.
-Delegating reflexivity and transitivity to the typing derivations, while perhaps being non-canonical,
-simplifies the proofs of the metatheoretical properties of the language.
+\begin{remark}
+  Type equivalence $[[ requiv ]]$ alone is neither transitive nor reflexive,
+  but those properties are regained by applying \textsc{T-RConv}, the only rule relying on $[[ requiv ]]$, enough times:
+  zero for reflexivity and multiple times for transitivity.
+  Delegating reflexivity and transitivity to the typing derivations, while perhaps being non-canonical,
+  simplifies the proofs of the metatheoretical properties of the language.
+\end{remark}
 
 \begin{figure}[ht]
   \centering
