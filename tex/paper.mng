@@ -480,7 +480,7 @@ simplifies the proofs of the metatheoretical properties of the language.
 
 The translation function $[|\ |]$ maps the typing context $\nonterm G$ to some logic that the oracle can handle, and that we leave abstract.
 Generally, the translation of a whole context is the conjunction of the translations of the types of the individual bindings,
-and, within each type, the translation of the conjunction of atomic refinements is the conjunction of the translations of the atomic refinements.
+and, within each refined type, the translation of the conjunction of atomic refinements is the conjunction of the translations of the atomic refinements.
 
 \subsubsection{Requirements on the oracle}\label{sect:oracle_requirements}
 
