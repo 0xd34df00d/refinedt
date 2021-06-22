@@ -19,7 +19,7 @@ l {{ tex \nonterm l }} :: labels_ ::= {{ com ADT labels }}
   | <token>             ::   :: str {{ com token }}
 
 r {{ tex \nonterm r }} :: ref_ ::= {{ com refinements }}
-  | top                 :: M :: top {{ com top }}
+  | top                 ::   :: top {{ com trivially true refinement }}
   | es1 = es2 of ts     ::   :: rexpr {{ com atomic refinement }}  % TODO shall we note that having ts here is purely for convenience of translation?
   | r1 /\ r2            ::   :: rconj {{ com conjunction }}
   | [ v |-> es ] r      :: M :: vsubst {{ com subst }}
