@@ -386,12 +386,6 @@ The typing rules for the surface language are presented in \figref{surface_typin
 As usual, to simplify the exposition,
 all bindings in contexts are assumed to have different names, and all labels in each ADT are assumed to be different.
 
-We also introduce a shorthand notation $\top$ denoting some tautology
-which we use for trivial refinements that do not carry any extra information.
-In particular, one good way to define $\top$ is
-to state the equality of the sole inhabitant of $\Unit$ to itself:
-$\top \triangleq \unit = \unit$.
-
 We also have the following concessions:
 \begin{itemize}
   \item The syntax only allows refinements on base types.
