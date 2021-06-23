@@ -21,3 +21,7 @@ open import Surface.Operational.BetaEquivalence as S
 
 open import Translation.Untyped
 open import Translation.Typed
+
+μ-Τ-well-formed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
+                → Γᶜ ⊢ᶜ ⌊μ⌋-Τ ⦂ ⋆ₑ
+μ-Τ-well-formed δ = ≡̂-well-typed (CT-UnitTerm δ) (CT-UnitTerm δ) (CT-UnitType δ)
