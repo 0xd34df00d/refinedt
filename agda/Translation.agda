@@ -26,10 +26,9 @@ open import Translation.Typed
                → Γᶜ ⊢ᶜ ⌊μ⌋-Τ ⦂ ⋆ₑ
 μ-Τ-well-typed δ = ≡̂-well-typed (CT-UnitTerm δ) (CT-UnitTerm δ) (CT-UnitType δ)
 
-μ-b-well-typed : {Γok : Γˢ ok}
-               → μ-Γ Γok ⊢ᶜ ⋆ₑ ⦂ □ₑ
+μ-b-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
                → ∀ b
-               → μ-Γ Γok ⊢ᶜ ⌊μ⌋-b b ⦂ ⋆ₑ
+               → Γᶜ ⊢ᶜ ⌊μ⌋-b b ⦂ ⋆ₑ
 μ-b-well-typed Γᶜok BUnit =
     Σ-well-typed
       Γ⊢CUnit
