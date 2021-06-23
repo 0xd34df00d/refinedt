@@ -32,7 +32,7 @@ open import Translation.Typed
                → μ-Γ Γok ⊢ᶜ ⌊μ⌋-b b ⦂ ⋆ₑ
 μ-b-well-typed Γᶜok BUnit =
     Σ-well-typed
-      (CT-UnitType Γᶜok)
+      Γ⊢CUnit
       (CT-Abs
         (μ-Τ-well-typed Γ,CUnit-ok)
         (CT-Form Γ⊢CUnit Γ,CUnit-ok)
