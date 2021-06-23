@@ -76,3 +76,9 @@ mutual
              → C.CaseBranches nₐ ℓ
   μ-branches NoBranches = []
   μ-branches (OneMoreBranch εδ bs) = {- TODO this is a placeholder proper proof -} Cunit ∷ μ-branches bs
+
+μ-Γ : {Γˢ : S.Ctx ℓ}
+    → Γˢ ok
+    → C.Ctx ℓ
+μ-Γ TCTX-Empty = ⊘
+μ-Γ (TCTX-Bind Γok τδ) = μ-Γ Γok , μ-τ τδ
