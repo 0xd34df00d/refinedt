@@ -57,4 +57,22 @@ mutual
   μ-τ-well-typed : (Γok : Γˢ ok)
                  → (τδ : Γˢ ⊢ τˢ)
                  → μ-Γ Γok ⊢ᶜ μ-τ τδ ⦂ ⋆ₑ
-  μ-τ-well-typed Γok τδ = {! !}
+  μ-τ-well-typed Γok (TWF-TrueRef x) = {! !}
+  μ-τ-well-typed Γok (TWF-Base {b = b} ε₁δ ε₂δ) with Γ⊢ε⦂τ-⇒-Γok ε₁δ
+  ... | Γ'ok@(TCTX-Bind _ _) =
+    let ε̂₁δ = μ-ε-well-typed Γ'ok {! !} ε₁δ
+     in Σ-well-typed
+          (μ-b-well-typed (μ-Γ-well-typed Γok) b)
+          (CT-Abs
+            (≡̂-well-typed {! ε̂₁δ !} {! !} {! !})
+            (μ-b-P-well-typed (μ-Γ-well-typed Γok))
+          )
+  μ-τ-well-typed Γok (TWF-Conj τδ₁ τδ₂) = ×-well-typed (μ-τ-well-typed Γok τδ₁) (μ-τ-well-typed Γok τδ₂)
+  μ-τ-well-typed Γok (TWF-Arr τδ₁ τδ₂) = CT-Form (μ-τ-well-typed Γok τδ₁) (μ-τ-well-typed (TCTX-Bind Γok τδ₁) τδ₂)
+  μ-τ-well-typed Γok (TWF-ADT consδs) = {! !}
+
+  μ-ε-well-typed : (Γok : Γˢ ok)
+                 → (τδ : Γˢ ⊢ τˢ)
+                 → (εδ : Γˢ ⊢ˢ εˢ ⦂ τˢ)
+                 → μ-Γ Γok ⊢ᶜ μ-ε εδ ⦂ μ-τ τδ
+  μ-ε-well-typed Γok τδ εδ = {! !}
