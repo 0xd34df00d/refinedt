@@ -46,6 +46,14 @@ mutual
   μ-Γ-well-typed TCTX-Empty = CT-Sort
   μ-Γ-well-typed (TCTX-Bind Γok τδ) = CT-Weaken (μ-Γ-well-typed Γok) (μ-τ-well-typed Γok τδ)
 
+  μ-b-P-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
+                   → Γᶜ ⊢ᶜ CΠ (⌊μ⌋-b b) ⋆ₑ ⦂ □ₑ
+  μ-b-P-well-typed Γᶜok = CT-Form
+                            μ-b-ok
+                            (Γ⊢τ-⇒-Γ,τ-ok μ-b-ok)
+    where
+    μ-b-ok = (μ-b-well-typed Γᶜok _)
+
   μ-τ-well-typed : (Γok : Γˢ ok)
                  → (τδ : Γˢ ⊢ τˢ)
                  → μ-Γ Γok ⊢ᶜ μ-τ τδ ⦂ ⋆ₑ
