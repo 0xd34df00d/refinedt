@@ -39,3 +39,14 @@ open import Translation.Typed
     where
     Γ⊢CUnit = CT-UnitType Γᶜok
     Γ,CUnit-ok = Γ⊢τ-⇒-Γ,τ-ok Γ⊢CUnit
+
+mutual
+  μ-Γ-well-typed : (Γok : Γˢ ok)
+                 → μ-Γ Γok ⊢ᶜ ⋆ₑ ⦂ □ₑ
+  μ-Γ-well-typed TCTX-Empty = CT-Sort
+  μ-Γ-well-typed (TCTX-Bind Γok τδ) = CT-Weaken (μ-Γ-well-typed Γok) (μ-τ-well-typed Γok τδ)
+
+  μ-τ-well-typed : (Γok : Γˢ ok)
+                 → (τδ : Γˢ ⊢ τˢ)
+                 → μ-Γ Γok ⊢ᶜ μ-τ τδ ⦂ ⋆ₑ
+  μ-τ-well-typed Γok τδ = {! !}
