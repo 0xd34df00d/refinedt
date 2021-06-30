@@ -561,7 +561,7 @@ to denote the core language analogue of a surface language base type $B$,
 which exists for $\Unit$ ($\hat B$ then being $\Unitc$)
 and which we assume to exist for any other surface language base type
 mentioned in \cref{remark:surface_base_types}.
-We also assume that $\hat B$ has type $\star$ without any extra premises.
+We also assume that $\hat B$ has type $\star$.
 
 Note that the \textsc{CT-ADTCase} rule uses $\equiv$ denoting the equality,
 which is a derived form defined later.
