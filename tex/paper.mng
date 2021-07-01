@@ -571,9 +571,7 @@ $[[ ec ]]$ is understood as usual, denoting any expression in the core language,
 The $\_$ placeholder is used where a binding name is expected but the binding is not used in the corresponding subterm,
 as in $[[ Pi _ : tc1. tc2 ]]$.
 
-Note that the \textsc{CT-ADTCase} rule uses $\equiv$ denoting the equality,
-which is a derived form defined later.
-Moreover, unlike with the surface language,
+Unlike the surface language,
 there is no separate rules for type or context well-formedness.
 Instead, when we say that a type $[[ tc ]]$ (with the above remark about what a ``type'' means) is well-formed,
 we just mean that $[[ GC |- tc : sst ]]$ or $[[ GC |- tc : ssq ]]$.
@@ -583,6 +581,9 @@ for some $[[ ec1 ]], [[ ec2 ]]$.
 Derivability of $[[ GC |- ec1 : ec2 ]]$, in turn, can be shown to imply the derivability of $[[ GC |- sst : ssq ]]$.
 The latter is by no coincidence used as a premise in the the \textsc{CT-UnitType} and \textsc{CT-UnitTerm} rules:
 indeed, the purpose of this premise is to ensure that those rules are only applicable in a well-formed context.
+
+Note that the \textsc{CT-ADTCase} rule uses $\equiv$ denoting the equality,
+which is a derived form defined later.
 
 Even though we believe that our core language enjoys the strong normalization property,
 we still explicitly define the evaluation rules (\figref{core_opsem}).
