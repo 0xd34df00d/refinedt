@@ -547,11 +547,13 @@ for instance, referring to \cite{Barendregt92}:
   \item Consistency, that is, $\bot$ is not derivable in the empty context~--- follows from Theorem 5.2.31 and strong normalization.
 \end{itemize}
 
-One plausible way to avoid the doubt in type safety of our core language stemming from the presence of the ADTs is to
-encode them via the Boehm-Berarducci encoding~\citeparens{Bohm85}.
-Unfortunately, this does not work in our case,
-as this encoding does not allow expressing the equality witness between the scrutinee of a pattern match and the patterns in each branch,
-and it seemingly cannot be easily extended to account for this witness.
+\begin{remark}
+  One plausible way to avoid the doubt in type safety of our core language stemming from the presence of the ADTs is to
+  encode them via the Boehm-Berarducci encoding~\citeparens{Bohm85}.
+  Unfortunately, this does not work in our case,
+  as this encoding does not allow expressing the equality witness between the scrutinee of a pattern match and the patterns in each branch,
+  and it seemingly cannot be easily extended to account for this witness.
+\end{remark}
 
 As a general convention,
 core entities corresponding to the surface language will be denoted by the same symbol, but with a $\widehat{\text{hat}}$.
