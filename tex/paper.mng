@@ -540,7 +540,7 @@ the core $\lambda C$ typing rules are defined in \figref{core_typing}
 and the rules for our extensions are defined in \figref{core_typing_exts}.
 
 We conjecture these extensions do not break the metatheoretical properties of the original $\lambda C$,
-for instance, referring to \cite{Barendregt92}:
+for instance, referring to~\cite{Barendregt92}:
 \begin{itemize}
   \item Preservation~--- Theorem 5.2.15.
   \item Strong normalization~--- Theorem 5.3.33.
