@@ -332,13 +332,6 @@ This simplifies the formal model of the surface language considerably, while sti
 \paragraph{Core language}
 Our core language is a full dependently typed language based on $\lambda C$ \citeparens{Schmidt1994,Barendregt92}
 and extended with a unit type and a restricted form of algebraic data types.
-We conjecture these extensions do not break the type safety of the language. %TODO refer some existing theorems about λC
-
-One plausible way to avoid the doubt in type safety of our core language stemming from the presence of the ADTs is to
-encode them via the Boehm-Berarducci encoding~\citeparens{Bohm85}.
-Unfortunately, this does not work in our case,
-as this encoding does not allow expressing the equality witness between the scrutinee of a pattern match and the patterns in each branch,
-and it seemingly cannot be easily extended to account for this witness.
 
 \paragraph{Subtyping oracle}
 The refinements in our surface language may contain arbitrary terms, including function application.
@@ -545,6 +538,14 @@ with the corresponding proof terms referred in lemmas names.
 The syntax of the core language is presented in \figref{core_syntax},
 the core $\lambda C$ typing rules are defined in \figref{core_typing}
 and the rules for our extensions are defined in \figref{core_typing_exts}.
+
+We conjecture these extensions do not break the type safety of the language. %TODO refer some existing theorems about λC
+
+One plausible way to avoid the doubt in type safety of our core language stemming from the presence of the ADTs is to
+encode them via the Boehm-Berarducci encoding~\citeparens{Bohm85}.
+Unfortunately, this does not work in our case,
+as this encoding does not allow expressing the equality witness between the scrutinee of a pattern match and the patterns in each branch,
+and it seemingly cannot be easily extended to account for this witness.
 
 As a general convention,
 core entities corresponding to the surface language will be denoted by the same symbol, but with a $\widehat{\text{hat}}$.
