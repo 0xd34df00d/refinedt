@@ -332,7 +332,7 @@ This simplifies the formal model of the surface language considerably, while sti
 \paragraph{Core language}
 Our core language is a fully dependently typed language $\lambda C$~\citeparens{TTFPLambdaC}~---
 a pure type system~\citeparens{Schmidt1994,Barendregt92} with two sorts~---
-extended with a unit type and a restricted form of ADTs.
+extended with a unit type and a restricted form of algebraic data types.
 We conjecture these extensions do not break the type safety of the language. %TODO refer some existing theorems about λC
 
 One plausible way to avoid the doubt in type safety of our core language stemming from the presence of the ADTs is to
