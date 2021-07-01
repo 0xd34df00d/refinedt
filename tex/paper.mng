@@ -584,7 +584,7 @@ Derivability of $[[ GC |- ec1 : ec2 ]]$, in turn, can be shown to imply the deri
 The latter is by no coincidence used as a premise in the the \textsc{CT-UnitType} and \textsc{CT-UnitTerm} rules:
 indeed, the purpose of this premise is to ensure that those rules are only applicable in a well-formed context.
 
-Even though we believe that our core language enjoys the strong normalization property even with our extensions,
+Even though we believe that our core language enjoys the strong normalization property,
 we still explicitly define the evaluation rules (\figref{core_opsem}).
 Firstly, this allows fixing a specific evaluation strategy mirroring the one for the surface language,
 simplifying the subsequent proofs of some key theorems.
