@@ -569,7 +569,7 @@ Although there is no separate syntactic notion of a type,
 $[[ tc ]]$ is used as a metavariable where a ``type'' (an inhabitant of $\star$) or a sort ($\star$ itself or $\square$) is expected.
 $[[ ec ]]$ is understood as usual, denoting any expression in the core language, be it a ``term'', a ``type'' or a sort.
 The $\_$ placeholder is used where a binding name is expected but the binding is not used in the corresponding subterm,
-as in $[[ \ _ : ec. unitc ]]$ or, for a more general example, $[[ Pi _ : tc1. tc2 ]]$.
+as in $[[ Pi _ : tc1. tc2 ]]$.
 
 Note that the \textsc{CT-ADTCase} rule uses $\equiv$ denoting the equality,
 which is a derived form defined later.
