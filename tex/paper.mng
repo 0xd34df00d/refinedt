@@ -330,9 +330,8 @@ One major difference between our surface language and the languages in~\citeinli
 This simplifies the formal model of the surface language considerably, while still giving meaningful results.
 
 \paragraph{Core language}
-Our core language is a fully dependently typed language $\lambda C$~---
-a pure type system with two sorts (see \cite{Schmidt1994,Barendregt92}, or, for a more textbook-style exposition in \cite{TTFPLambdaC})~---
-extended with a unit type and a restricted form of algebraic data types.
+Our core language is a full dependently typed language based on $\lambda C$ \citeparens{Schmidt1994,Barendregt92}
+and extended with a unit type and a restricted form of algebraic data types.
 We conjecture these extensions do not break the type safety of the language. %TODO refer some existing theorems about λC
 
 One plausible way to avoid the doubt in type safety of our core language stemming from the presence of the ADTs is to
