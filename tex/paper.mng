@@ -1184,8 +1184,6 @@ Investigating how to do this in a sound and feasible way seems important to make
 
 \begin{appendices}
 
-%TODO the name of the appendix super-section
-
 \section{Properties of the surface language.}\label{appendix:surface_props}
 
 \begin{lemma}[Agreement I, \prooftermname{T-implies-TCTX}]\label{lma:term_wf_implies_ctx_wf}
