@@ -547,14 +547,6 @@ for instance, referring to~\cite{Barendregt92}:
   \item Consistency, that is, $\bot$ is not derivable in the empty context~--- follows from Theorem 5.2.31 and strong normalization.
 \end{itemize}
 
-\begin{remark}
-  One plausible way to avoid the doubt in type safety of our core language stemming from the presence of the ADTs is to
-  encode them via the Boehm-Berarducci encoding~\citeparens{Bohm85}.
-  Unfortunately, this does not work in our case,
-  as this encoding does not allow expressing the equality witness between the scrutinee of a pattern match and the patterns in each branch,
-  and it seemingly cannot be easily extended to account for this witness.
-\end{remark}
-
 As a general convention,
 core entities corresponding to the surface language are denoted by the same symbol, but with a $\widehat{\text{hat}}$.
 For instance, core typing contexts are denoted as $[[ GC ]]$ and core expressions are denoted as $[[ ec ]]$.
@@ -588,6 +580,14 @@ not only to the variable $[[ xi ]]$ under the corresponding constructor $[[ li ]
 but also to a proof term $[[ pi ]]$ showing that
 this $[[ xi ]]$, decorated by the constructor $[[ li ]]$, is equal to the scrutinee.
 This equality is denoted by $\equiv$, which is a derived form defined later.
+
+\begin{remark}
+  One plausible way to avoid the doubt in the type safety of our core language stemming from the presence of the ADTs is to
+  encode them via the Boehm-Berarducci encoding~\citeparens{Bohm85}.
+  Unfortunately, this does not work in our case,
+  as this encoding does not allow expressing the equality witness between the scrutinee of a pattern match and the patterns in each branch,
+  and it seemingly cannot be easily extended to account for this witness.
+\end{remark}
 
 Even though we believe that our core language enjoys the strong normalization property,
 we still explicitly define the evaluation rules (\figref{core_opsem}).
