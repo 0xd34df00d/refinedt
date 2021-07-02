@@ -187,8 +187,7 @@ Having refinement types and dependent types in a single language is useful for m
 
 Firstly, refinement types indeed lower the cognitive load and the amount of (both keyboard and mathematical) typing the programmer has to do.
 As an example, consider a function taking two non-negative numbers $x, y$ and returning $x + y + x$ along with a proof that each summand is less than or equal to the sum.
-In a language with refinement types writing such a function is at most\footnote{Some implementations can infer refinements automatically}
-%TODO good to \citeparens{LiquidTypes08} in the footnote, but I don't know how to do that in jfp style
+In a language with refinement types writing such a function is at most\footnote{Some implementations \citeparens{LiquidTypes08} can infer refinements automatically}
 a matter of decorating its type with the right refinements, along the lines of:
 \begin{minted}{idris}
 funnyAdd : (x : { v : Int | v >= 0 })
