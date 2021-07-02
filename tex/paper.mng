@@ -579,7 +579,7 @@ To define the notion of context well-formedness,
 we say that a context $[[ GC ]]$ is well-formed iff it is possible to derive $[[ GC |- ec1 : ec2 ]]$
 for some $[[ ec1 ]], [[ ec2 ]]$.
 Derivability of $[[ GC |- ec1 : ec2 ]]$, in turn, can be shown to imply the derivability of $[[ GC |- sst : ssq ]]$.
-The latter is by no coincidence used as a premise in the the \textsc{CT-UnitType} and \textsc{CT-UnitTerm} rules:
+The latter is by no coincidence used as a premise in the \textsc{CT-UnitType} and \textsc{CT-UnitTerm} rules:
 indeed, the purpose of this premise is to ensure that those rules are only applicable in a well-formed context.
 
 Note that the \textsc{CT-ADTCase} rule uses $\equiv$ denoting the equality,
