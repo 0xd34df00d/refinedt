@@ -28,6 +28,7 @@
 \usepackage{minted}
 \usepackage[english]{babel}
 \usepackage{newunicodechar}
+\usepackage[toc,page]{appendix}
 
 \newunicodechar{ℓ}{\ensuremath{\mathnormal\ell}}
 \newunicodechar{ρ}{\ensuremath{\mathnormal\rho}}
@@ -1182,7 +1183,7 @@ Investigating how to do this in a sound and feasible way seems important to make
 \bibliographystyle{jfplike}
 \bibliography{biblio}
 
-\appendix
+\begin{appendices}
 
 %TODO the name of the appendix super-section
 
@@ -1364,5 +1365,7 @@ Investigating how to do this in a sound and feasible way seems important to make
       after substituting the pattern match variable $[[ xj ]]$ in the branch term $[[ esj ]]$ for the scrutinee value $[[ vs ]]$.
   \end{itemize}
 \end{proof}
+
+\end{appendices}
 
 \end{document}
