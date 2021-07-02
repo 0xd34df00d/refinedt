@@ -587,6 +587,7 @@ In our system, each right-hand side of a case match has access
 not only to the variable $[[ xi ]]$ under the corresponding constructor $[[ li ]]$,
 but also to a proof term $[[ pi ]]$ showing that
 this $[[ xi ]]$, decorated by the constructor $[[ li ]]$, is equal to the scrutinee.
+This equality is denoted by $\equiv$, which is a derived form defined later.
 
 Even though we believe that our core language enjoys the strong normalization property,
 we still explicitly define the evaluation rules (\figref{core_opsem}).
