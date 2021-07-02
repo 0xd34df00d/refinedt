@@ -575,10 +575,10 @@ The latter is by no coincidence used as a premise in the \textsc{CT-UnitType} an
 indeed, the purpose of this premise is to ensure that those rules are only applicable in a well-formed context.
 
 The \textsc{CT-ADTCase} rule differs slightly from a typical case matching rule.
-In our system, each right-hand side of a case match has access
+In our system, each right-hand side of a case match on a term $[[ es ]]$ has access
 not only to the variable $[[ xi ]]$ under the corresponding constructor $[[ li ]]$,
 but also to a proof term $[[ pi ]]$ showing that
-this $[[ xi ]]$, decorated by the constructor $[[ li ]]$, is equal to the scrutinee.
+this $[[ xi ]]$, decorated by the constructor $[[ li ]]$, is equal to the scrutinee $[[ es ]]$.
 This equality is denoted by $\equiv$, which is a derived form defined later.
 
 \begin{remark}
