@@ -584,8 +584,8 @@ This equality is denoted by $\equiv$, which is a derived form defined later.
 \begin{remark}
   One plausible way to avoid the doubt in the type safety of our core language stemming from the presence of the ADTs is to
   encode them via the Boehm-Berarducci encoding~\citeparens{Bohm85}.
-  Unfortunately, this does not work in our case,
-  as this encoding does not allow expressing the equality witness between the scrutinee of a pattern match and the patterns in each branch,
+  Unfortunately, this does not work in our case precisely due to the presence of the equality proof term:
+  this encoding does not provide the equality witness,
   and it seemingly cannot be easily extended to account for this witness.
 \end{remark}
 
