@@ -24,7 +24,9 @@ ec {{ tex \nonterm{ec} }}, tc {{ tex \nonterm{tc} }} :: tmCore_ ::= {{ com expre
   | ( ec )              :: M :: parens
   | eqrefl tc ec        :: M :: eq_introduction
   | BC                  :: M :: base {{ tex \Basec }}
-  | ( ec1 , ec2 )       :: M :: pair
+  | ( tc1 , tc2 )       :: M :: pair
+  | ( ec1 : tc1 , ec2 : tc2 )
+                        :: M :: paircon
   | Sigma tc ec         :: M :: dvpair
   | < ec : tc , p of Pred >
                         :: M :: dxpaircon
