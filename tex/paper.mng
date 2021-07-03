@@ -639,7 +639,7 @@ We also establish some derived forms in the core language to simplify the subseq
     \]
     with the corresponding constructor:
     \[
-      [[ < ec : tc , p of Pred > ]] \triangleq [[ \ alpha : sst. \ f : (Pi x : tc. Pred x -> alpha). f ec p ]]
+      [[ < ec : tc , p of Pred > ]] \triangleq [[ \ alpha : sst. \ f : (Pi x : tc. Pred x -> alpha). f ec p ]].
     \]
 
   \item Non-dependent pair type:
