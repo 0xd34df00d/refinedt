@@ -673,6 +673,12 @@ We also establish some derived forms in the core language to simplify the subseq
     \]
 \end{itemize}
 
+It can be shown that, for each definition,
+if the entities to the left of $\triangleq$ have the naturally expected type,
+then the expression to the right of it is well-typed.
+We prove this in our Agda code,
+and we present the statements of the corresponding lemmas in \cref{appendix:core_derived_forms}.
+
 \section{Translation}
 
 \newcommand{\tranty}{\mu_\tau}
