@@ -1390,6 +1390,10 @@ Investigating how to do this in a sound and feasible way seems important to make
   If $[[ GC |- tc1 : s1 ]]$ and $[[ GC |- tc2 : s2 ]]$, then $[[ GC |- tc1 -> tc2 : s2 ]]$.
 \end{lemma}
 
+\begin{lemma}[Dependent pair type]
+  If $[[ GC |- tc : s ]]$ and $[[ GC |- Pred : tc -> sst ]]$, then $[[ GC |- Sigma tc Pred : sst ]]$.
+\end{lemma}
+
 \end{appendices}
 
 \end{document}
