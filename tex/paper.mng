@@ -1382,6 +1382,10 @@ Investigating how to do this in a sound and feasible way seems important to make
 
 \section{Derived forms typing.}\label{appendix:core_derived_forms}
 
+\begin{lemma}[\textsc{CT-VarW}]
+  If $[[ GC |- ec : s ]]$ and $[[ x : ec in GC ]]$, then $[[ GC |- x : ec ]]$.
+\end{lemma}
+
 \end{appendices}
 
 \end{document}
