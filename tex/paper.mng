@@ -1425,6 +1425,16 @@ particularly in \verb+Core/Syntax/Derived/Typing.agda+.
   then $[[ GC |- (ec1 : tc1, ec2 : tc2) : sst ]]$.
 \end{lemma}
 
+\begin{lemma}[Equality type]
+  If
+  \begin{itemize}
+    \item $[[ GC |- tc : sst ]]$,
+    \item $[[ GC |- ec1 : tc ]]$,
+    \item $[[ GC |- ec2 : tc ]]$,
+  \end{itemize}
+  then $[[ GC |- ec1 equal ec2 of tc : sst ]]$.
+\end{lemma}
+
 \end{appendices}
 
 \end{document}
