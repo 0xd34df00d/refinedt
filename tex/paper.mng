@@ -1414,6 +1414,17 @@ particularly in \verb+Core/Syntax/Derived/Typing.agda+.
   If $[[ GC |- tc1 : sst ]]$ and $[[ GC |- tc2 : sst ]]$, then $[[ GC |- (tc1, tc2) : sst ]]$.
 \end{lemma}
 
+\begin{lemma}[Non-dependent pair constructor]
+  If
+  \begin{itemize}
+    \item $[[ GC |- tc1 : sst ]]$,
+    \item $[[ GC |- tc2 : sst ]]$,
+    \item $[[ GC |- ec1 : tc1 ]]$,
+    \item $[[ GC |- ec2 : tc2 ]]$,
+  \end{itemize}
+  then $[[ GC |- (ec1 : tc1, ec2 : tc2) : sst ]]$.
+\end{lemma}
+
 \end{appendices}
 
 \end{document}
