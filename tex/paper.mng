@@ -1410,6 +1410,10 @@ particularly in \verb+Core/Syntax/Derived/Typing.agda+.
   then $[[ GC |- Sigma tc Pred : sst ]]$.
 \end{lemma}
 
+\begin{lemma}[Non-dependent pair type]
+  If $[[ GC |- tc1 : sst ]]$ and $[[ GC |- tc2 : sst ]]$, then $[[ GC |- (tc1, tc2) : sst ]]$.
+\end{lemma}
+
 \end{appendices}
 
 \end{document}
