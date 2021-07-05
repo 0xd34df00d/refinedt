@@ -1399,6 +1399,17 @@ particularly in \verb+Core/Syntax/Derived/Typing.agda+.
   If $[[ GC |- tc : s ]]$ and $[[ GC |- Pred : tc -> sst ]]$, then $[[ GC |- Sigma tc Pred : sst ]]$.
 \end{lemma}
 
+\begin{lemma}[Dependent pair constructor]
+  If
+  \begin{itemize}
+    \item $[[ GC |- tc : s ]]$,
+    \item $[[ GC |- Pred : tc -> sst ]]$,
+    \item $[[ GC |- ec : tc ]]$,
+    \item $[[ GC |- pi : Pred ec ]]$,
+  \end{itemize}
+  then $[[ GC |- Sigma tc Pred : sst ]]$.
+\end{lemma}
+
 \end{appendices}
 
 \end{document}
