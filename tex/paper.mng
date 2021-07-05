@@ -1435,6 +1435,10 @@ particularly in \verb+Core/Syntax/Derived/Typing.agda+.
   then $[[ GC |- ec1 equal ec2 of tc : sst ]]$.
 \end{lemma}
 
+\begin{lemma}[Equality constructor]
+  If $[[ GC |- tc : sst ]]$ and $[[ GC |- ec : tc ]]$, then $[[ GC |- eqrefl tc ec : ec equal ec of tc ]]$.
+\end{lemma}
+
 \end{appendices}
 
 \end{document}
