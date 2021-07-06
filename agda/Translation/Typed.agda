@@ -47,7 +47,9 @@ mutual
       → Γˢ ⊢ τ
       → CExpr ℓ
   μ-τ (TWF-TrueRef {b = b} Γok) = ⌊μ⌋-b b
-  μ-τ (TWF-Base {b = b} {b' = b'} δε₁ δε₂) = Σ[ ⌊μ⌋-b b ] CLam (⌊μ⌋-b b) (μ-ε δε₁ ≡̂ μ-ε δε₂ of ⌊μ⌋-b b')
+  μ-τ (TWF-Base {b = b} {b' = b'} δε₁ δε₂) = Σ[ b̂ ] CLam b̂ (μ-ε δε₁ ≡̂ μ-ε δε₂ of ⌊μ⌋-b b')
+    where
+    b̂ = ⌊μ⌋-b b
   μ-τ (TWF-Conj δ₁ δ₂) = ⟨ μ-τ δ₁ × μ-τ δ₂ ⟩
   μ-τ (TWF-Arr δτ₁ δτ₂) = CΠ (μ-τ δτ₁) (μ-τ δτ₂)
   μ-τ (TWF-ADT consδs) = CADT (μ-cons consδs)
