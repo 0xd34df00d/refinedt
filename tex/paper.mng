@@ -619,7 +619,7 @@ deserves some special attention.
 
 \newcommand{\dast}{\ **\ }
 
-\subsubsection{Derived forms}
+\subsubsection{Derived forms}\label{sect:derived_forms}
 We also establish some derived forms in the core language to simplify the subsequent exposition:
 \begin{itemize}
   \item Simplified variable typing rule which we call \textsc{CT-VarW}:
