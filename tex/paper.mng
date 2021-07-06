@@ -1383,7 +1383,8 @@ Investigating how to do this in a sound and feasible way seems important to make
 \section{Derived forms typing}\label{appendix:core_derived_forms}
 
 Below is the list of lemmas stating that
-our core language derived forms are well-typed given the respective assumptions.
+our core language derived forms (\cref{sect:derived_forms})
+are well-typed given the respective assumptions.
 We also verify these lemmas mechanically in our Agda code,
 particularly in \verb+Core/Syntax/Derived/Typing.agda+.
 
