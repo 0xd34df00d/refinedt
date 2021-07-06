@@ -1380,7 +1380,7 @@ Investigating how to do this in a sound and feasible way seems important to make
   \end{itemize}
 \end{proof}
 
-\section{Derived forms typing.}\label{appendix:core_derived_forms}
+\section{Derived forms typing}\label{appendix:core_derived_forms}
 
 Below is the list of lemmas stating that
 our core language derived forms are well-typed given the respective assumptions.
