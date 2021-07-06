@@ -63,7 +63,7 @@ mutual
      in Σ-well-typed
           (μ-b-well-typed (μ-Γ-well-typed Γok) _)
           (CT-Abs
-            (≡̂-well-typed {! ε̂₁δ !} {! !} {! !})
+            (≡̂-well-typed ε̂₁δ {! !} {! !})
             (μ-b-P-well-typed (μ-Γ-well-typed Γok))
           )
   μ-τ-well-typed Γok (TWF-Conj τδ₁ τδ₂) = ×-well-typed (μ-τ-well-typed Γok τδ₁) (μ-τ-well-typed Γok τδ₂)
