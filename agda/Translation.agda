@@ -57,7 +57,7 @@ mutual
   μ-τ-well-typed : (Γok : Γˢ ok)
                  → (τδ : Γˢ ⊢ τˢ)
                  → μ-Γ Γok ⊢ᶜ μ-τ τδ ⦂ ⋆ₑ
-  μ-τ-well-typed Γok (TWF-TrueRef x) = {! !}
+  μ-τ-well-typed Γok (TWF-TrueRef _) = μ-b-well-typed (μ-Γ-well-typed Γok) _
   μ-τ-well-typed Γok (TWF-Base ε₁δ ε₂δ) =
     let Γ,⟨b∣Τ⟩ok = TCTX-Bind Γok (TWF-TrueRef Γok)
         ε̂₁δ = μ-ε-well-typed Γ,⟨b∣Τ⟩ok (TWF-TrueRef (TCTX-Bind Γok _)) ε₁δ
