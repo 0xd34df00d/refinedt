@@ -30,15 +30,15 @@ open import Translation.Typed
                → ∀ b
                → Γᶜ ⊢ᶜ ⌊μ⌋-b b ⦂ ⋆ₑ
 μ-b-well-typed Γᶜok BUnit =
-    Σ-well-typed
-      Γ⊢CUnit
-      (CT-Abs
-        (μ-Τ-well-typed Γ,CUnit-ok)
-        (CT-Form Γ⊢CUnit Γ,CUnit-ok)
-      )
-    where
-    Γ⊢CUnit = CT-UnitType Γᶜok
-    Γ,CUnit-ok = Γ⊢τ-⇒-Γ,τ-ok Γ⊢CUnit
+  Σ-well-typed
+    Γ⊢CUnit
+    (CT-Abs
+      (μ-Τ-well-typed Γ,CUnit-ok)
+      (CT-Form Γ⊢CUnit Γ,CUnit-ok)
+    )
+  where
+  Γ⊢CUnit = CT-UnitType Γᶜok
+  Γ,CUnit-ok = Γ⊢τ-⇒-Γ,τ-ok Γ⊢CUnit
 
 mutual
   μ-Γ-well-typed : (Γok : Γˢ ok)
@@ -59,15 +59,16 @@ mutual
                  → μ-Γ Γok ⊢ᶜ μ-τ τδ ⦂ ⋆ₑ
   μ-τ-well-typed Γok (TWF-TrueRef _) = μ-b-well-typed (μ-Γ-well-typed Γok) _
   μ-τ-well-typed Γok (TWF-Base ε₁δ ε₂δ) =
-    let Γ,⟨b∣Τ⟩ok = TCTX-Bind Γok (TWF-TrueRef Γok)
-        ε̂₁δ = μ-ε-well-typed Γ,⟨b∣Τ⟩ok (TWF-TrueRef (TCTX-Bind Γok _)) ε₁δ
-        ε̂₂δ = μ-ε-well-typed Γ,⟨b∣Τ⟩ok (TWF-TrueRef (TCTX-Bind Γok _)) ε₂δ
-     in Σ-well-typed
-          (μ-b-well-typed (μ-Γ-well-typed Γok) _)
-          (CT-Abs
-            (≡̂-well-typed ε̂₁δ ε̂₂δ (μ-b-well-typed (μ-Γ-well-typed Γ,⟨b∣Τ⟩ok) _))
-            (μ-b-P-well-typed (μ-Γ-well-typed Γok))
-          )
+    Σ-well-typed
+      (μ-b-well-typed (μ-Γ-well-typed Γok) _)
+      (CT-Abs
+        (≡̂-well-typed ε̂₁δ ε̂₂δ (μ-b-well-typed (μ-Γ-well-typed Γ,⟨b∣Τ⟩ok) _))
+        (μ-b-P-well-typed (μ-Γ-well-typed Γok))
+      )
+    where
+    Γ,⟨b∣Τ⟩ok = TCTX-Bind Γok (TWF-TrueRef Γok)
+    ε̂₁δ = μ-ε-well-typed Γ,⟨b∣Τ⟩ok (TWF-TrueRef (TCTX-Bind Γok _)) ε₁δ
+    ε̂₂δ = μ-ε-well-typed Γ,⟨b∣Τ⟩ok (TWF-TrueRef (TCTX-Bind Γok _)) ε₂δ
   μ-τ-well-typed Γok (TWF-Conj τδ₁ τδ₂) = ×-well-typed (μ-τ-well-typed Γok τδ₁) (μ-τ-well-typed Γok τδ₂)
   μ-τ-well-typed Γok (TWF-Arr τδ₁ τδ₂) = CT-Form (μ-τ-well-typed Γok τδ₁) (μ-τ-well-typed (TCTX-Bind Γok τδ₁) τδ₂)
   μ-τ-well-typed Γok (TWF-ADT consδs) = {! !}
