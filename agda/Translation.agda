@@ -60,12 +60,13 @@ mutual
   μ-τ-well-typed Γok (TWF-TrueRef _) = μ-b-well-typed (μ-Γ-well-typed Γok) _
   μ-τ-well-typed Γok (TWF-Base ε₁δ ε₂δ) =
     Σ-well-typed
-      (μ-b-well-typed (μ-Γ-well-typed Γok) _)
+      (μ-b-well-typed Γ̂ok _)
       (CT-Abs
-        (≡̂-well-typed ε̂₁δ ε̂₂δ (μ-b-well-typed (μ-Γ-well-typed Γ,⟨b∣Τ⟩ok) _))
-        (μ-b-P-well-typed (μ-Γ-well-typed Γok))
+        (≡̂-well-typed ε̂₁δ ε̂₂δ (μ-b-well-typed (CT-Weaken Γ̂ok (μ-b-well-typed Γ̂ok _)) _))
+        (μ-b-P-well-typed Γ̂ok)
       )
     where
+    Γ̂ok = μ-Γ-well-typed Γok
     Γ,⟨b∣Τ⟩ok = TCTX-Bind Γok (TWF-TrueRef Γok)
     ε̂₁δ = μ-ε-well-typed Γ,⟨b∣Τ⟩ok (TWF-TrueRef (TCTX-Bind Γok _)) ε₁δ
     ε̂₂δ = μ-ε-well-typed Γ,⟨b∣Τ⟩ok (TWF-TrueRef (TCTX-Bind Γok _)) ε₂δ
