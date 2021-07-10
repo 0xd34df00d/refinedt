@@ -71,7 +71,14 @@ mutual
     ε̂₂δ = μ-ε-well-typed Γ,⟨b∣Τ⟩ok (TWF-TrueRef (TCTX-Bind Γok _)) ε₂δ
   μ-τ-well-typed Γok (TWF-Conj τδ₁ τδ₂) = ×-well-typed (μ-τ-well-typed Γok τδ₁) (μ-τ-well-typed Γok τδ₂)
   μ-τ-well-typed Γok (TWF-Arr τδ₁ τδ₂) = CT-Form (μ-τ-well-typed Γok τδ₁) (μ-τ-well-typed (TCTX-Bind Γok τδ₁) τδ₂)
-  μ-τ-well-typed Γok (TWF-ADT consδs) = {! !}
+  μ-τ-well-typed Γok (TWF-ADT consδs) = CT-ADTForm (μ-cons-well-typed Γok consδs)
+
+  μ-cons-well-typed : {cons : S.ADTCons nₐ ℓ}
+                    → (Γok : Γˢ ok)
+                    → (δs : All (Γˢ ⊢_) cons)
+                    → All (λ con → μ-Γ Γok ⊢ᶜ con ⦂ ⋆ₑ) (μ-cons δs)
+  μ-cons-well-typed Γok [] = []
+  μ-cons-well-typed Γok (τδ ∷ δs) = μ-τ-well-typed Γok τδ ∷ μ-cons-well-typed Γok δs
 
   μ-ε-well-typed : (Γok : Γˢ ok)
                  → (τδ : Γˢ ⊢ τˢ)
