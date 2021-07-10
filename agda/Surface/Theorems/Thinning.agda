@@ -93,8 +93,8 @@ mutual
                    → (δ : Γ ⊢ ε ⦂ τ)
                    → Acc _<_ (size-t δ)
                    → Γ' ⊢ R.act-ε (_⊂_.ρ Γ⊂Γ') ε ⦂ R.act-τ (_⊂_.ρ Γ⊂Γ') τ
-  t-thinning-sized Γ⊂Γ' Γ'ok (T-Unit gok) _ = T-Unit Γ'ok
-  t-thinning-sized Γ⊂Γ' Γ'ok (T-Var gok x) _ = T-Var Γ'ok (_⊂_.ρ-∈ Γ⊂Γ' x)
+  t-thinning-sized Γ⊂Γ' Γ'ok (T-Unit _) _ = T-Unit Γ'ok
+  t-thinning-sized Γ⊂Γ' Γ'ok (T-Var _ ∈) _ = T-Var Γ'ok (_⊂_.ρ-∈ Γ⊂Γ' ∈)
   t-thinning-sized Γ⊂Γ' Γ'ok (T-Abs arrδ bodyδ) (acc rec)
     = let rec₁ = rec _ (s≤s (m≤m⊕n _ _))
           rec₂ = rec _ (s≤s (n≤m⊕n _ _))
