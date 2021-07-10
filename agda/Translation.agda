@@ -27,9 +27,8 @@ open import Translation.Typed
 μ-Τ-well-typed δ = ≡̂-well-typed (CT-UnitTerm δ) (CT-UnitTerm δ) (CT-UnitType δ)
 
 μ-b-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
-               → ∀ b
                → Γᶜ ⊢ᶜ ⌊μ⌋-b b ⦂ ⋆ₑ
-μ-b-well-typed Γᶜok BUnit =
+μ-b-well-typed {b = BUnit} Γᶜok =
   Σ-well-typed
     Γ⊢CUnit
     (CT-Abs
@@ -52,17 +51,17 @@ mutual
                             μ-b-ok
                             (Γ⊢τ-⇒-Γ,τ-ok μ-b-ok)
     where
-    μ-b-ok = (μ-b-well-typed Γᶜok _)
+    μ-b-ok = μ-b-well-typed Γᶜok
 
   μ-τ-well-typed : (Γok : Γˢ ok)
                  → (τδ : Γˢ ⊢ τˢ)
                  → μ-Γ Γok ⊢ᶜ μ-τ τδ ⦂ ⋆ₑ
-  μ-τ-well-typed Γok (TWF-TrueRef _) = μ-b-well-typed (μ-Γ-well-typed Γok) _
+  μ-τ-well-typed Γok (TWF-TrueRef _) = μ-b-well-typed (μ-Γ-well-typed Γok)
   μ-τ-well-typed Γok (TWF-Base ε₁δ ε₂δ) =
     Σ-well-typed
-      (μ-b-well-typed Γ̂ok _)
+      (μ-b-well-typed Γ̂ok)
       (CT-Abs
-        (≡̂-well-typed ε̂₁δ ε̂₂δ (μ-b-well-typed (CT-Weaken Γ̂ok (μ-b-well-typed Γ̂ok _)) _))
+        (≡̂-well-typed ε̂₁δ ε̂₂δ (μ-b-well-typed (CT-Weaken Γ̂ok (μ-b-well-typed Γ̂ok))))
         (μ-b-P-well-typed Γ̂ok)
       )
     where
