@@ -31,7 +31,7 @@ jobs:
         run: |
           export PATH=$(opam config var prefix)/bin:$PATH
           cd tex
-          ./build.sh
+          make
           
       - uses: actions/upload-artifact@v2
         with:
