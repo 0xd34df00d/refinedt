@@ -655,7 +655,8 @@ We also establish some derived forms in the core language to simplify the subseq
     \[
       [[ (tc1, tc2) ]] \triangleq [[ Sigma tc1 (\ _ : tc1. tc2) ]],
     \]
-    but proving this definition is well-typed (given our call-by-value operational semantics) requires proving that the core language is strongly normalizing,
+    but mechanically proving this definition is well-typed (given our call-by-value operational semantics)
+    requires mechanically proving that the core language is strongly normalizing,
     which is beyond the scope of this work.
   \item Equality of expressions $[[ ec1 ]], [[ ec2 ]]$ of type $[[ tc ]]$:
     \[
