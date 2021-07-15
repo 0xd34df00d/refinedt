@@ -15,3 +15,5 @@ paper.tex: paper.mng $(OTTFILES)
 
 clean:
 	rm -f paper.tex paper.aux paper.pdf paper.log paper.bbl paper.blg surface.ott.tex paper.out
+
+.PHONY: clean
