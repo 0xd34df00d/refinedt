@@ -653,7 +653,7 @@ We also establish some derived forms in the core language to simplify the subseq
 
     Alternatively, we could have defined non-dependent pairs via dependent pairs, along the lines of
     \[
-      [[ (tc1, tc2) ]] \triangleq [[ Sigma tc1 (\ _ : tc1. tc2) ]].
+      [[ (tc1, tc2) ]] \triangleq [[ Sigma tc1 (\ _ : tc1. tc2) ]],
     \]
     but proving this definition is well-typed (given our call-by-value operational semantics) requires proving that the core language is strongly normalizing,
     which is beyond the scope of this work.
