@@ -664,7 +664,7 @@ We also establish some derived forms in the core language to simplify the subseq
         \triangleq
         [[ Pi Pred : tc -> sst. ( Pred ec1 -> Pred ec2 , Pred ec2 -> Pred ec1 ) ]]
     \]
-    The reader might recognize this as the Leibniz equality~\citeparens{FindSomethingForLeibnizEq}.
+    The reader might recognize this as the Leibniz equality~\citeparens{LeibnizEq}.
 
     The corresponding constructor $[[ eqrefl tc ec ]]$ of type $[[ ec equal ec of tc ]]$
     stating that $[[ ec ]]$ of type $[[ tc ]]$ is equal to itself
