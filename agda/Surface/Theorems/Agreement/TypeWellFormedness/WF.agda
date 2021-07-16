@@ -68,7 +68,7 @@ mutual
   size-st : Γ ⊢ τ₁ <: τ₂
           → ℕ
   size-st (ST-Base _ _) = 0
-  size-st (ST-Arr sub₁ sub₂) = suc (size-st sub₁ ⊕ size-st sub₂)
+  size-st (ST-Arr sub₁ sub₂ _ _) = suc (size-st sub₁ ⊕ size-st sub₂)
 
   size-bs : ∀ {τ cons} {bs : CaseBranches nₐ ℓ}
           → BranchesHaveType Γ cons bs τ
