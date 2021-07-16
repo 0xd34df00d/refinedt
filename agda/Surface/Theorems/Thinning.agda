@@ -151,21 +151,21 @@ mutual
           τ'δ' = twf-thinning-sized Γ⊂Γ' Γ'ok τ'δ rec₂
        in T-RConv εδ' τ'δ' (ρ-preserves-↭βτ (_⊂_.ρ Γ⊂Γ') ↝βτ)
 
-twf-thinning : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ : SType ℓ}
+twf-thinning : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'}
              → (Γ⊂Γ' : Γ ⊂ Γ')
              → Γ' ok
              → Γ ⊢ τ
              → Γ' ⊢ R.act-τ (_⊂_.ρ Γ⊂Γ') τ
 twf-thinning Γ⊂Γ' Γ'ok δ = twf-thinning-sized Γ⊂Γ' Γ'ok δ (<-wellFounded _)
 
-t-thinning   : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ : SType ℓ}
+t-thinning   : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'}
              → (Γ⊂Γ' : Γ ⊂ Γ')
              → Γ' ok
              → Γ ⊢ ε ⦂ τ
              → Γ' ⊢ R.act-ε (_⊂_.ρ Γ⊂Γ') ε ⦂ R.act-τ (_⊂_.ρ Γ⊂Γ') τ
 t-thinning Γ⊂Γ' Γ'ok δ = t-thinning-sized Γ⊂Γ' Γ'ok δ (<-wellFounded _)
 
-st-thinning : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ₁ τ₂ : SType ℓ}
+st-thinning : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'}
             → (Γ⊂Γ' : Γ ⊂ Γ')
             → Γ' ok
             → (Γ ⊢ τ₁ <: τ₂)
@@ -178,12 +178,11 @@ st-weakening : Γ ok
              → (Γ , τ') ⊢ R.weaken-τ τ₁ <: R.weaken-τ τ₂
 st-weakening Γok τ'δ <: = st-thinning (ignore-head ⊂-refl) (TCTX-Bind Γok τ'δ) <:
 
-twf-weakening : {Γ : Ctx ℓ}
-              → Γ ok
+twf-weakening : Γ ok
               → Γ ⊢ τ'
               → Γ ⊢ τ
               → (Γ , τ') ⊢ R.weaken-τ τ
-twf-weakening {Γ} Γok τ'δ τδ = twf-thinning (ignore-head ⊂-refl) (TCTX-Bind Γok τ'δ) τδ
+twf-weakening Γok τ'δ τδ = twf-thinning (ignore-head ⊂-refl) (TCTX-Bind Γok τ'δ) τδ
 
 t-weakening-suffix : {Δ : CtxSuffix ℓ k}
                    → (Γ ++ Δ) ok
