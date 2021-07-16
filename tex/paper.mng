@@ -1102,7 +1102,7 @@ In other words, the translation and evaluation relations commute.
 Our formalization of the above languages is heavily inspired by~\citeinline{plfa} and~\citeinline{SystemFAgda}.
 
 In this section we briefly outline key design decisions of our formal proof.
-We use the notion of a \emph{metatype} when discussing the (Agda) types representing the various entities in our surface and core languages.
+We use the word ``\emph{metatype}'' when discussing the (Agda) types representing the various entities in our surface and core languages.
 
 \subsection{Formalizing surface language}
 
