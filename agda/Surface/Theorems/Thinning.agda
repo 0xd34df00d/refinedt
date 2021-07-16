@@ -21,14 +21,17 @@ open import Surface.Theorems.Agreement.Γok
 open import Surface.Theorems.Agreement.Γok.WF
 open import Surface.Theorems.Helpers
 
-Γok-head-smaller : (δ : (Γ , τ) ok) → size-twf (Γok-head δ) < size-ok δ
+Γok-head-smaller : (δ : (Γ , τ) ok)
+                 → size-twf (Γok-head δ) < size-ok δ
 Γok-head-smaller (TCTX-Bind prevOk τδ) = s≤s (n≤m⊕n (size-ok prevOk) (size-twf τδ))
 
-size-lemma₁ : (n : ℕ) → (δ : (Γ , τ') ⊢ ε ⦂ τ) → size-twf (Γok-head (Γ⊢ε⦂τ-⇒-Γok δ)) < suc (size-t δ ⊕ n)
-size-lemma₁ n δ = let r1 = Γok-head-smaller (Γ⊢ε⦂τ-⇒-Γok δ)
-                      r2 = Γ⊢ε⦂τ-⇒-Γok-smaller δ
-                      r3 = <-trans r1 r2
-                   in <-trans r3 (s≤s (m≤m⊕n (size-t δ) n))
+size-lemma₁ : (n : ℕ)
+            → (δ : (Γ , τ') ⊢ ε ⦂ τ)
+            → size-twf (Γok-head (Γ⊢ε⦂τ-⇒-Γok δ)) < suc (size-t δ ⊕ n)
+size-lemma₁ n δ = let r₁ = Γok-head-smaller (Γ⊢ε⦂τ-⇒-Γok δ)
+                      r₂ = Γ⊢ε⦂τ-⇒-Γok-smaller δ
+                      r₃ = <-trans r₁ r₂
+                   in <-trans r₃ (s≤s (m≤m⊕n (size-t δ) n))
 
 mutual
   st-thinning-sized : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'} {τ₁ τ₂ : SType ℓ}
@@ -168,7 +171,7 @@ t-thinning Γ⊂Γ' Γ'ok δ = t-thinning-sized Γ⊂Γ' Γ'ok δ (<-wellFounded
 st-thinning : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'}
             → (Γ⊂Γ' : Γ ⊂ Γ')
             → Γ' ok
-            → (Γ ⊢ τ₁ <: τ₂)
+            → Γ ⊢ τ₁ <: τ₂
             → Γ' ⊢ R.act-τ (_⊂_.ρ Γ⊂Γ') τ₁ <: R.act-τ (_⊂_.ρ Γ⊂Γ') τ₂
 st-thinning Γ⊂Γ' Γ'ok <: = st-thinning-sized Γ⊂Γ' Γ'ok <: (<-wellFounded _)
 
