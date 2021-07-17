@@ -40,11 +40,15 @@ mutual
                → Γ ⊢ τ
                → Γ' ⊢ R.act-τ (ext-k' k suc) τ
   Γ⊢τ-thinning Γ⊂Γ' Γ'ok (TWF-TrueRef _) = TWF-TrueRef Γ'ok
-  Γ⊢τ-thinning Γ⊂Γ' Γ'ok (TWF-Base ε₁δ ε₂δ) = {! !}
+  Γ⊢τ-thinning Γ⊂Γ' Γ'ok (TWF-Base ε₁δ ε₂δ) =
+    TWF-Base
+      (Γ⊢ε⦂τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)) ε₁δ)
+      (Γ⊢ε⦂τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)) ε₂δ)
   Γ⊢τ-thinning Γ⊂Γ' Γ'ok (TWF-Conj δ₁ δ₂) = TWF-Conj (Γ⊢τ-thinning Γ⊂Γ' Γ'ok δ₁) (Γ⊢τ-thinning Γ⊂Γ' Γ'ok δ₂)
-  Γ⊢τ-thinning Γ⊂Γ' Γ'ok (TWF-Arr δ₁ δ₂) = TWF-Arr
-                                            (Γ⊢τ-thinning Γ⊂Γ' Γ'ok δ₁)
-                                            (Γ⊢τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (Γ⊢τ-thinning Γ⊂Γ' Γ'ok δ₁)) δ₂)
+  Γ⊢τ-thinning Γ⊂Γ' Γ'ok (TWF-Arr δ₁ δ₂) =
+    TWF-Arr
+      (Γ⊢τ-thinning Γ⊂Γ' Γ'ok δ₁)
+      (Γ⊢τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (Γ⊢τ-thinning Γ⊂Γ' Γ'ok δ₁)) δ₂)
   Γ⊢τ-thinning Γ⊂Γ' Γ'ok (TWF-ADT consδs) = {! !}
 
   Γ⊢ε⦂τ-thinning : (Γ⊂Γ' : k by Γ ⊂' Γ')
