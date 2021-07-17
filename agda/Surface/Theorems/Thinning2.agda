@@ -51,11 +51,22 @@ mutual
       (Γ⊢τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (Γ⊢τ-thinning Γ⊂Γ' Γ'ok δ₁)) δ₂)
   Γ⊢τ-thinning Γ⊂Γ' Γ'ok (TWF-ADT consδs) = {! !}
 
-  Γ⊢ε⦂τ-thinning : (Γ⊂Γ' : k by Γ ⊂' Γ')
+  Γ⊢ε⦂τ-thinning : {Γ : Ctx (k + ℓ)}
+                 → (Γ⊂Γ' : k by Γ ⊂' Γ')
                  → Γ' ok
                  → Γ ⊢ ε ⦂ τ
-                 → Γ' ⊢ R.weaken-ε ε ⦂ R.weaken-τ τ
-  Γ⊢ε⦂τ-thinning = {! !}
+                 → Γ' ⊢ R.act-ε (ext-k' k suc) ε ⦂ R.act-τ (ext-k' k suc) τ
+  Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-Unit _) = T-Unit Γ'ok
+  Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-Var Γok ∈) = {! !}
+  Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-Abs arrδ@(TWF-Arr domδ codδ) δ) =
+    T-Abs
+      (Γ⊢τ-thinning Γ⊂Γ' Γ'ok arrδ)
+      (Γ⊢ε⦂τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (Γ⊢τ-thinning Γ⊂Γ' Γ'ok domδ)) δ)
+  Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-App δ₁ δ₂) = {! T-App !}
+  Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-Case resδ δ₁ branches-well-typed) = {! !}
+  Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-Con ≡-prf δ₁ adtτ) = {! !}
+  Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-Sub δ₁ τ'δ <:) = {! !}
+  Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-RConv δ₁ τ'δ τ~τ') = {! !}
 
 Γ⊢ε⦂τ-weakening : Γ ok
                 → Γ ⊢ τ'
