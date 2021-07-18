@@ -70,7 +70,15 @@ mutual
     TWF-Arr
       (Γ⊢τ-thinning Γ⊂Γ' Γ'ok δ₁)
       (Γ⊢τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (Γ⊢τ-thinning Γ⊂Γ' Γ'ok δ₁)) δ₂)
-  Γ⊢τ-thinning Γ⊂Γ' Γ'ok (TWF-ADT consδs) = {! !}
+  Γ⊢τ-thinning {k = k} Γ⊂Γ' Γ'ok (TWF-ADT consδs) = TWF-ADT (thin-cons Γ⊂Γ' Γ'ok consδs)
+    where
+    thin-cons : (k by Γ ⊂' Γ')
+              → Γ' ok
+              → {cons : ADTCons nₐ (k + ℓ)}
+              → All (Γ ⊢_) cons
+              → All (Γ' ⊢_) (R.act-cons (ext-k' k suc) cons)
+    thin-cons Γ⊂Γ' Γ'ok [] = []
+    thin-cons Γ⊂Γ' Γ'ok (δ ∷ consδs) = Γ⊢τ-thinning Γ⊂Γ' Γ'ok δ ∷ thin-cons Γ⊂Γ' Γ'ok consδs
 
   Γ⊢ε⦂τ-thinning : {Γ : Ctx (k + ℓ)}
                  → (Γ⊂Γ' : k by Γ ⊂' Γ')
