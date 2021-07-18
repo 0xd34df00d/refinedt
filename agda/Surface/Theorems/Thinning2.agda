@@ -5,6 +5,7 @@ open import Data.Nat.Base
 open import Data.Nat.Induction
 open import Data.Nat.Properties
 open import Data.Vec.Base using (lookup; _∷_)
+open import Function
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 
 open import Common.Helpers
@@ -37,6 +38,22 @@ data _by_⊂'_ : (k : ℕ) → Ctx (k + ℓ) → Ctx (suc (k + ℓ)) → Set whe
               → k by Γ ⊂' Γ'
               → suc k by Γ , τ ⊂' Γ' , R.act-τ (ext-k' k suc) τ
 
+ext-k'-suc-commute : (k : ℕ)
+                   → (τ : SType (k + ℓ))
+                   → R.act-τ (R.ext (ext-k' k suc)) (R.act-τ suc τ) ≡ R.act-τ suc (R.act-τ (ext-k' k suc) τ)
+ext-k'-suc-commute k τ
+  rewrite R.act-τ-distr suc (R.ext (ext-k' k suc)) τ
+        | R.act-τ-distr (ext-k' k suc) suc τ
+        = refl
+
+∈-thinning : {Γ : Ctx (k + ℓ)}
+           → k by Γ ⊂' Γ'
+           → τ ∈ Γ at ι
+           → R.act-τ (ext-k' k suc) τ ∈ Γ' at ext-k' k suc ι
+∈-thinning ignore-head ∈ = ∈-suc refl ∈
+∈-thinning (append-both {k = k} {τ = τ} Γ⊂Γ') (∈-zero refl) = ∈-zero (ext-k'-suc-commute k τ)
+∈-thinning (append-both {k = k} Γ⊂Γ') (∈-suc {τ = τ} refl ∈) = ∈-suc (ext-k'-suc-commute k τ) (∈-thinning Γ⊂Γ' ∈)
+
 mutual
   Γ⊢τ-thinning : {Γ : Ctx (k + ℓ)}
                → (Γ⊂Γ' : k by Γ ⊂' Γ')
@@ -61,7 +78,7 @@ mutual
                  → Γ ⊢ ε ⦂ τ
                  → Γ' ⊢ R.act-ε (ext-k' k suc) ε ⦂ R.act-τ (ext-k' k suc) τ
   Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-Unit _) = T-Unit Γ'ok
-  Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-Var Γok ∈) = {! !}
+  Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-Var Γok ∈) = T-Var Γ'ok (∈-thinning Γ⊂Γ' ∈)
   Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-Abs arrδ@(TWF-Arr domδ codδ) δ) =
     T-Abs
       (Γ⊢τ-thinning Γ⊂Γ' Γ'ok arrδ)
