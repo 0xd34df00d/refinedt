@@ -196,9 +196,8 @@ t-weakening-suffix {Γ = Γ} {ε = ε} {τ = τ} {Δ = Δ} Γok εδ
         | suffix-weakening-τ {Γ = Γ} Δ τ
         = t-thinning (suffix-as-⊂ Δ) Γok εδ
 
-t-weakening : {Γ : Ctx ℓ}
-            → Γ ok
+t-weakening : Γ ok
             → Γ ⊢ τ'
             → Γ ⊢ ε ⦂ τ
             → (Γ , τ') ⊢ R.weaken-ε ε ⦂ R.weaken-τ τ
-t-weakening {Γ} Γok τ'δ εδ = t-thinning (ignore-head ⊂-refl) (TCTX-Bind Γok τ'δ) εδ
+t-weakening Γok τ'δ εδ = t-thinning (ignore-head ⊂-refl) (TCTX-Bind Γok τ'δ) εδ
