@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Surface.Theorems.Thinning2 where
 
 open import Data.Fin.Base using (zero; suc; raise)
