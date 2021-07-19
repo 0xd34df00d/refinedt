@@ -42,6 +42,13 @@ branch-lookup-comm : (ρ : Fin ℓ → Fin ℓ')
 branch-lookup-comm ρ zero (_ ∷ _) = refl
 branch-lookup-comm ρ (suc ι) (_ ∷ bs) = branch-lookup-comm ρ ι bs
 
+cons-lookup-comm : (ρ : Fin ℓ → Fin ℓ')
+                 → (ι : Fin n)
+                 → (cons : ADTCons (Mkℕₐ n) ℓ)
+                 → act-τ ρ (lookup cons ι) ≡ lookup (act-cons ρ cons) ι
+cons-lookup-comm ρ zero (τ ∷ _) = refl
+cons-lookup-comm ρ (suc ι) (_ ∷ cons) = cons-lookup-comm ρ ι cons
+
 ext-monotonic : ∀ {ρ : Fin ℓ → Fin ℓ'}
               → Monotonic ρ
               → Monotonic (ext ρ)
