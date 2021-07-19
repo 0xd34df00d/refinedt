@@ -93,7 +93,13 @@ mutual
       (Γ⊢ε⦂τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (Γ⊢τ-thinning Γ⊂Γ' Γ'ok domδ)) δ)
   Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-App δ₁ δ₂) = {! T-App !}
   Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-Case resδ δ₁ branches-well-typed) = {! !}
-  Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-Con ≡-prf δ₁ adtτ) = {! !}
+  Γ⊢ε⦂τ-thinning {k = k} Γ⊂Γ' Γ'ok (T-Con {ε = ε} {ι = ι} {cons = cons} refl δ adtτ) =
+    let δ' = Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok δ
+        δ-substed = subst (λ τ → _ ⊢ R.act-ε (ext-k' k suc) ε ⦂ τ) (R.cons-lookup-comm (ext-k' k suc) ι cons) δ'
+     in T-Con
+          refl
+          δ-substed
+          (Γ⊢τ-thinning Γ⊂Γ' Γ'ok adtτ)
   Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-Sub δ₁ τ'δ <:) = {! !}
   Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-RConv δ₁ τ'δ τ~τ') = {! !}
 
