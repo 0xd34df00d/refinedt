@@ -6,7 +6,7 @@ open import Data.Nat.Induction
 open import Data.Nat.Properties
 open import Data.Vec.Base using (lookup; _∷_)
 open import Function
-open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst)
 
 open import Common.Helpers
 open import Surface.Syntax
