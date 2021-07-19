@@ -19,8 +19,6 @@ open import Surface.Syntax.Substitution as S
 open import Surface.Syntax.Substitution.Distributivity
 open import Surface.Operational.BetaEquivalence
 open import Surface.Derivations
-open import Surface.Theorems.Agreement.Γok
-open import Surface.Theorems.Agreement.Γok.WF
 open import Surface.Theorems.Helpers
 
 -- This has a slightly different (and less generic) type
