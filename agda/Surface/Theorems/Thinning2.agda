@@ -92,7 +92,23 @@ mutual
       (Γ⊢τ-thinning Γ⊂Γ' Γ'ok arrδ)
       (Γ⊢ε⦂τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (Γ⊢τ-thinning Γ⊂Γ' Γ'ok domδ)) δ)
   Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-App δ₁ δ₂) = {! T-App !}
-  Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-Case resδ δ₁ branches-well-typed) = {! !}
+  Γ⊢ε⦂τ-thinning {k = k} {ℓ = ℓ} {Γ' = Γ'} {Γ = Γ} Γ⊂Γ' Γ'ok (T-Case resδ δ branchesδ) =
+    T-Case
+      (Γ⊢τ-thinning Γ⊂Γ' Γ'ok resδ)
+      (Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok δ)
+      (thin-branches branchesδ)
+    where
+    thin-branches : {cons : ADTCons nₐ (k + ℓ)}
+                  → {bs : CaseBranches nₐ (k + ℓ)}
+                  → BranchesHaveType Γ cons bs τ
+                  → BranchesHaveType Γ' (R.act-cons (ext-k' k suc) cons) (R.act-branches (ext-k' k suc) bs) (R.act-τ (ext-k' k suc) τ)
+    thin-branches NoBranches = NoBranches
+    thin-branches {τ = τ} (OneMoreBranch εδ branchesδ) =
+      let εδ' = Γ⊢ε⦂τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (Γ⊢τ-thinning Γ⊂Γ' Γ'ok {! !})) εδ
+          εδ'-substed = subst {! !} (ext-k'-suc-commute k τ) εδ'
+       in OneMoreBranch
+            εδ'-substed
+            (thin-branches branchesδ)
   Γ⊢ε⦂τ-thinning {k = k} Γ⊂Γ' Γ'ok (T-Con {ε = ε} {ι = ι} {cons = cons} refl δ adtτ) =
     let δ' = Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok δ
         δ-substed = subst (λ τ → _ ⊢ R.act-ε (ext-k' k suc) ε ⦂ τ) (R.cons-lookup-comm (ext-k' k suc) ι cons) δ'
