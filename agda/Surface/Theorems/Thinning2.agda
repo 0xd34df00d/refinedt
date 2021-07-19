@@ -117,6 +117,12 @@ mutual
   Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-Sub δ₁ τ'δ <:) = {! !}
   Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-RConv δ₁ τ'δ τ~τ') = {! !}
 
+Γ⊢τ-weakening : Γ ok
+              → Γ ⊢ τ'
+              → Γ ⊢ τ
+              → (Γ , τ') ⊢ R.weaken-τ τ
+Γ⊢τ-weakening Γok Γ⊢τ' Γ⊢τ = Γ⊢τ-thinning ignore-head (TCTX-Bind Γok Γ⊢τ') Γ⊢τ
+
 Γ⊢ε⦂τ-weakening : Γ ok
                 → Γ ⊢ τ'
                 → Γ ⊢ ε ⦂ τ
