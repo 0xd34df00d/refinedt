@@ -95,7 +95,7 @@ mutual
                       → BranchesHaveType (Γ , σ  ++ Δ) cons bs τ
                       → BranchesHaveType (Γ , σ' ++ Δ) cons bs τ
       narrow-branches Δ σ-<: Γ⊢σ' NoBranches = NoBranches
-      narrow-branches Δ σ-<: Γ⊢σ' (OneMoreBranch εδ bs) = OneMoreBranch (Γ⊢ε⦂τ-narrowing (Δ , _) σ-<: Γ⊢σ' εδ) (narrow-branches Δ σ-<: Γ⊢σ' bs)
+      narrow-branches Δ σ-<: Γ⊢σ' (OneMoreBranch conτδ εδ bs) = OneMoreBranch (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' conτδ) (Γ⊢ε⦂τ-narrowing (Δ , _) σ-<: Γ⊢σ' εδ) (narrow-branches Δ σ-<: Γ⊢σ' bs)
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ) (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' adtτ)
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Sub εδ τ'δ <:)
     = let εδ-narrowed = Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ

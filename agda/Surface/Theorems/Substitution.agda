@@ -144,7 +144,7 @@ mutual
                    → BranchesHaveType (Γ ,σ, Δ) cons bs τ
                    → BranchesHaveType (Γ ++ [↦Δ ε ] Δ) ([ ℓ ↦c< ε ] cons) ([ ℓ ↦bs< ε ] bs) ([ ℓ ↦τ< ε ] τ)
       sub-branches NoBranches = NoBranches
-      sub-branches {τ = τ} (OneMoreBranch {ε' = ε'} {conτ = conτ} branch-εδ bs) = OneMoreBranch branch-εδ' (sub-branches bs)
+      sub-branches {τ = τ} (OneMoreBranch {ε' = ε'} {conτ = conτ} conτδ branch-εδ bs) = OneMoreBranch (sub-Γ⊢τ Δ εδ conτδ) branch-εδ' (sub-branches bs)
         where
           branch-εδ' : Γ ++ [↦Δ ε ] (Δ , conτ) ⊢
                        S.act-ε (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ε' ⦂

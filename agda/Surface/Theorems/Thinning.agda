@@ -7,7 +7,7 @@ open import Data.Nat.Base
 open import Data.Nat.Induction
 open import Data.Nat.Properties
 open import Data.Vec.Base using (lookup; _∷_)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; subst)
 
 open import Surface.Syntax
 open import Surface.Syntax.CtxSuffix
@@ -126,15 +126,15 @@ mutual
                         (R.act-branches ρ bs)
                         (R.act-τ ρ τ)
       thin-branches NoBranches _ = NoBranches
-      thin-branches {τ = τ} (OneMoreBranch {ε' = ε'} {conτ = conτ} εδ rest) (acc rec') = OneMoreBranch εδ' (thin-branches rest (rec' _ (s≤s (n≤m⊕n _ _))))
-        where
-          εδ' : Γ' , R.act-τ (_⊂_.ρ Γ⊂Γ') conτ ⊢ R.act-ε (R.ext (_⊂_.ρ Γ⊂Γ')) ε' ⦂ R.weaken-τ (R.act-τ (_⊂_.ρ Γ⊂Γ') τ)
-          εδ' rewrite sym (R.weaken-τ-comm (_⊂_.ρ Γ⊂Γ') τ)
-                    = let branch-Γ-ok = Γ⊢ε⦂τ-⇒-Γok εδ
-                          rec₁ = rec' (size-twf (Γok-head (Γ⊢ε⦂τ-⇒-Γok εδ))) (size-lemma₁ (size-bs rest) εδ)
-                          rec₂ = rec' _ (s≤s (m≤m⊕n _ _))
-                          branch'-Γ-ok = TCTX-Bind Γ'ok (twf-thinning-sized Γ⊂Γ' Γ'ok (Γok-head branch-Γ-ok) rec₁)
-                       in t-thinning-sized (append-both Γ⊂Γ') branch'-Γ-ok εδ rec₂
+      thin-branches {τ = τ} (OneMoreBranch {ε' = ε'} {conτ = conτ} conτδ εδ rest) (acc rec') =
+        let branch-Γ-ok = Γ⊢ε⦂τ-⇒-Γok εδ
+            rec₁ = rec' (size-twf (Γok-head (Γ⊢ε⦂τ-⇒-Γok εδ))) (size-lemma₁ (size-bs rest) εδ)
+            rec₂ = rec' _ (s≤s (m≤m⊕n _ _))
+            conτ'-ok = twf-thinning-sized Γ⊂Γ' Γ'ok (Γok-head branch-Γ-ok) rec₁
+            branch'-Γ-ok = TCTX-Bind Γ'ok conτ'-ok
+            εδ' = t-thinning-sized (append-both Γ⊂Γ') branch'-Γ-ok εδ rec₂
+            εδ'-substed = subst (λ τ → Γ' , R.act-τ (_⊂_.ρ Γ⊂Γ') conτ ⊢ R.act-ε (R.ext (_⊂_.ρ Γ⊂Γ')) ε' ⦂ τ) (R.weaken-τ-comm (_⊂_.ρ Γ⊂Γ') τ) εδ'
+         in OneMoreBranch conτ'-ok εδ'-substed (thin-branches rest (rec' _ (s≤s (n≤m⊕n _ _))))
   t-thinning-sized Γ⊂Γ' Γ'ok (T-Con {cons = cons} ≡-prf conArg adtτ) (acc rec)
     = let rec₁ = rec _ (s≤s (m≤m⊕n _ _))
           rec₂ = rec _ (s≤s (n≤m⊕n _ _))

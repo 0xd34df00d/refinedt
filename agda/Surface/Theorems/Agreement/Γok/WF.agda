@@ -80,4 +80,4 @@ size-<: (ST-Base _ _) = 0
 size-<: (ST-Arr sub₁ sub₂ δτ₁⇒τ₂ δτ₁') = suc (size-<: sub₁ ⊕ size-<: sub₂ ⊕ size-twf δτ₁⇒τ₂ ⊕ size-twf δτ₁')
 
 size-bs NoBranches = 0
-size-bs (OneMoreBranch εδ rest) = suc (size-t εδ ⊕ size-bs rest)
+size-bs (OneMoreBranch _ εδ rest) = suc (size-t εδ ⊕ size-bs rest)

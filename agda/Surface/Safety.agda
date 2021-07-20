@@ -139,5 +139,5 @@ preservation (E-CaseMatch ε-is-value ι) (T-Case resδ εδ branches)
                     → (ι : Fin n)
                     → BranchesHaveType Γ cons bs τ
                     → Γ , lookup cons ι ⊢ CaseBranch.body (lookup bs ι) ⦂ R.weaken-τ τ
-    branch-has-type zero (OneMoreBranch εδ bht) = εδ
-    branch-has-type (suc ι) (OneMoreBranch εδ bht) = branch-has-type ι bht
+    branch-has-type zero (OneMoreBranch _ εδ _) = εδ
+    branch-has-type (suc ι) (OneMoreBranch _ _ bht) = branch-has-type ι bht

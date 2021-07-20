@@ -42,6 +42,7 @@ data BranchesHaveType (Γ : Ctx ℓ) : (cons : ADTCons nₐ ℓ)
                                   where
   NoBranches    : BranchesHaveType Γ [] [] τ'
   OneMoreBranch : ∀ {conτ} {cons' : ADTCons nₐ ℓ} {bs' : CaseBranches nₐ ℓ}
+                → (conτδ : Γ ⊢ conτ)
                 → (εδ : (Γ , conτ) ⊢ ε' ⦂ R.weaken-τ τ')
                 → (rest : BranchesHaveType Γ cons' bs' τ')
                 → BranchesHaveType Γ (conτ ∷ cons') (MkCaseBranch ε' ∷ bs') τ'

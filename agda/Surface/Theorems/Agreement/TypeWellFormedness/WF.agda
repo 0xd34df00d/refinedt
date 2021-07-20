@@ -74,7 +74,7 @@ mutual
           → BranchesHaveType Γ cons bs τ
           → ℕ
   size-bs NoBranches = 0
-  size-bs (OneMoreBranch εδ rest) = suc (size-t εδ ⊕ size-bs rest)
+  size-bs (OneMoreBranch _ εδ rest) = suc (size-t εδ ⊕ size-bs rest)
 
 -- Properties
 size-ok-≤-size-∈ : (Γok : Γ ok)

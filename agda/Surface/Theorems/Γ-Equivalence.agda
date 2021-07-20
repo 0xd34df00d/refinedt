@@ -96,7 +96,7 @@ mutual
                      → BranchesHaveType (Γ , τ  ++ Δ) cons bs τ₀
                      → BranchesHaveType (Γ , τ' ++ Δ) cons bs τ₀
       equiv-branches Δ τ-↭βτ Γ⊢τ₁' NoBranches = NoBranches
-      equiv-branches Δ τ-↭βτ Γ⊢τ₁' (OneMoreBranch εδ bs) = OneMoreBranch (Γ⊢ε⦂τ-equivalence (Δ , _) τ-↭βτ Γ⊢τ₁' εδ) (equiv-branches Δ τ-↭βτ Γ⊢τ₁' bs)
+      equiv-branches Δ τ-↭βτ Γ⊢τ₁' (OneMoreBranch conτδ εδ bs) = OneMoreBranch (Γ⊢τ-equivalence Δ τ-↭βτ Γ⊢τ₁' conτδ) (Γ⊢ε⦂τ-equivalence (Δ , _) τ-↭βτ Γ⊢τ₁' εδ) (equiv-branches Δ τ-↭βτ Γ⊢τ₁' bs)
   Γ⊢ε⦂τ-equivalence Δ τ-↭βτ Γ⊢τ₁' (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (Γ⊢ε⦂τ-equivalence Δ τ-↭βτ Γ⊢τ₁' εδ) (Γ⊢τ-equivalence Δ τ-↭βτ Γ⊢τ₁' adtτ)
   Γ⊢ε⦂τ-equivalence Δ τ-↭βτ Γ⊢τ₁' (T-Sub εδ τ'δ <:)
     = let εδ' = Γ⊢ε⦂τ-equivalence Δ τ-↭βτ Γ⊢τ₁' εδ
