@@ -46,6 +46,11 @@ data BranchesHaveType (Γ : Ctx ℓ) : (cons : ADTCons nₐ ℓ)
                 → (εδ : (Γ , conτ) ⊢ ε' ⦂ R.weaken-τ τ')
                 → (rest : BranchesHaveType Γ cons' bs' τ')
                 → BranchesHaveType Γ (conτ ∷ cons') (MkCaseBranch ε' ∷ bs') τ'
+ {-
+ TODO Γ ⊢ conτ is technically not needed to prove agreement and seemingly all other lemmas,
+ TODO but its presence makes proofs of thinning much easier,
+ TODO avoiding explicit recursion well-foundedness witnesses and allowing to use structural recursion.
+ -}
 
 data _ok where
   TCTX-Empty : ⊘ ok
