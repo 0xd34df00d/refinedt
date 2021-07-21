@@ -101,10 +101,13 @@ mutual
                   → BranchesHaveType Γ cons bs τ
                   → BranchesHaveType Γ' (R.act-cons (ext-k' k suc) cons) (R.act-branches (ext-k' k suc) bs) (R.act-τ (ext-k' k suc) τ)
     thin-branches NoBranches = NoBranches
-    thin-branches {τ = τ} (OneMoreBranch εδ branchesδ) =
-      let εδ' = Γ⊢ε⦂τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (Γ⊢τ-thinning Γ⊂Γ' Γ'ok {! !})) εδ
-          εδ'-substed = subst {! !} (ext-k'-suc-commute k τ) εδ'
+    thin-branches {τ = τ} (OneMoreBranch {ε' = ε'} {conτ = conτ} conτδ εδ branchesδ) =
+      let conτδ' = Γ⊢τ-thinning Γ⊂Γ' Γ'ok conτδ
+          εδ' = Γ⊢ε⦂τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok conτδ') εδ
+          derivable τ = Γ' , R.act-τ (ext-k' k suc) conτ ⊢ R.act-ε (R.ext (ext-k' k suc)) ε' ⦂ τ
+          εδ'-substed = subst derivable (ext-k'-suc-commute k τ) εδ'
        in OneMoreBranch
+            conτδ'
             εδ'-substed
             (thin-branches branchesδ)
   Γ⊢ε⦂τ-thinning {k = k} Γ⊂Γ' Γ'ok (T-Con {ε = ε} {ι = ι} {cons = cons} refl δ adtτ) =
