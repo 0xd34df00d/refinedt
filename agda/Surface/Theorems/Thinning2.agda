@@ -118,7 +118,7 @@ mutual
           δ-substed
           (Γ⊢τ-thinning Γ⊂Γ' Γ'ok adtτ)
   Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-Sub δ₁ τ'δ <:) = {! !}
-  Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-RConv δ₁ τ'δ τ~τ') = {! !}
+  Γ⊢ε⦂τ-thinning {k = k} Γ⊂Γ' Γ'ok (T-RConv δ τ'δ τ~τ') = T-RConv (Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok δ) (Γ⊢τ-thinning Γ⊂Γ' Γ'ok τ'δ) (ρ-preserves-↭βτ (ext-k' k suc) τ~τ')
 
 Γ⊢τ-weakening : Γ ok
               → Γ ⊢ τ'
