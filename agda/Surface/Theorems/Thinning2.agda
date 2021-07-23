@@ -27,7 +27,7 @@ open import Surface.Theorems.Helpers
 -- and is more convenient in the context of this module.
 ext-k' : (k : ℕ)
        → (ρ : Fin ℓ → Fin (suc ℓ))
-       → Fin (k + ℓ) → Fin (suc (k + ℓ))
+       → Fin (k + ℓ) → Fin (suc k + ℓ)
 ext-k' zero ρ = ρ
 ext-k' (suc k) ρ = R.ext (ext-k' k ρ)
 
@@ -61,15 +61,15 @@ mutual
                → Γ ⊢ τ
                → Γ' ⊢ R.act-τ (ext-k' k suc) τ
   Γ⊢τ-thinning Γ⊂Γ' Γ'ok (TWF-TrueRef _) = TWF-TrueRef Γ'ok
-  Γ⊢τ-thinning Γ⊂Γ' Γ'ok (TWF-Base ε₁δ ε₂δ) =
-    TWF-Base
-      (Γ⊢ε⦂τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)) ε₁δ)
-      (Γ⊢ε⦂τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)) ε₂δ)
+  Γ⊢τ-thinning Γ⊂Γ' Γ'ok (TWF-Base ε₁δ ε₂δ)
+    = TWF-Base
+        (Γ⊢ε⦂τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)) ε₁δ)
+        (Γ⊢ε⦂τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)) ε₂δ)
   Γ⊢τ-thinning Γ⊂Γ' Γ'ok (TWF-Conj δ₁ δ₂) = TWF-Conj (Γ⊢τ-thinning Γ⊂Γ' Γ'ok δ₁) (Γ⊢τ-thinning Γ⊂Γ' Γ'ok δ₂)
-  Γ⊢τ-thinning Γ⊂Γ' Γ'ok (TWF-Arr δ₁ δ₂) =
-    TWF-Arr
-      (Γ⊢τ-thinning Γ⊂Γ' Γ'ok δ₁)
-      (Γ⊢τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (Γ⊢τ-thinning Γ⊂Γ' Γ'ok δ₁)) δ₂)
+  Γ⊢τ-thinning Γ⊂Γ' Γ'ok (TWF-Arr δ₁ δ₂)
+    = TWF-Arr
+        (Γ⊢τ-thinning Γ⊂Γ' Γ'ok δ₁)
+        (Γ⊢τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (Γ⊢τ-thinning Γ⊂Γ' Γ'ok δ₁)) δ₂)
   Γ⊢τ-thinning {k = k} {ℓ = ℓ} {Γ' = Γ'} {Γ = Γ} Γ⊂Γ' Γ'ok (TWF-ADT consδs) = TWF-ADT (thin-cons consδs)
     where
     thin-cons : {cons : ADTCons nₐ (k + ℓ)}
@@ -85,16 +85,16 @@ mutual
                  → Γ' ⊢ R.act-ε (ext-k' k suc) ε ⦂ R.act-τ (ext-k' k suc) τ
   Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-Unit _) = T-Unit Γ'ok
   Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-Var Γok ∈) = T-Var Γ'ok (∈-thinning Γ⊂Γ' ∈)
-  Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-Abs arrδ@(TWF-Arr domδ codδ) δ) =
-    T-Abs
-      (Γ⊢τ-thinning Γ⊂Γ' Γ'ok arrδ)
-      (Γ⊢ε⦂τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (Γ⊢τ-thinning Γ⊂Γ' Γ'ok domδ)) δ)
+  Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-Abs arrδ@(TWF-Arr domδ codδ) δ)
+    = T-Abs
+        (Γ⊢τ-thinning Γ⊂Γ' Γ'ok arrδ)
+        (Γ⊢ε⦂τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (Γ⊢τ-thinning Γ⊂Γ' Γ'ok domδ)) δ)
   Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-App δ₁ δ₂) = {! T-App !}
-  Γ⊢ε⦂τ-thinning {k = k} {ℓ = ℓ} {Γ' = Γ'} {Γ = Γ} Γ⊂Γ' Γ'ok (T-Case resδ δ branchesδ) =
-    T-Case
-      (Γ⊢τ-thinning Γ⊂Γ' Γ'ok resδ)
-      (Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok δ)
-      (thin-branches branchesδ)
+  Γ⊢ε⦂τ-thinning {k = k} {ℓ = ℓ} {Γ' = Γ'} {Γ = Γ} Γ⊂Γ' Γ'ok (T-Case resδ δ branchesδ)
+    = T-Case
+        (Γ⊢τ-thinning Γ⊂Γ' Γ'ok resδ)
+        (Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok δ)
+        (thin-branches branchesδ)
     where
     thin-branches : {cons : ADTCons nₐ (k + ℓ)}
                   → {bs : CaseBranches nₐ (k + ℓ)}

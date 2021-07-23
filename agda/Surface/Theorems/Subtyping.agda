@@ -51,7 +51,7 @@ mutual
   Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' (TWF-Arr argδ resδ) = TWF-Arr (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' argδ) (Γ⊢τ-narrowing (Δ , _) σ-<: Γ⊢σ' resδ)
   Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' (TWF-ADT consδs) = TWF-ADT (narrow-cons Δ σ-<: Γ⊢σ' consδs)
     where
-      narrow-cons : ∀ {cons : ADTCons nₐ (k + suc ℓ)}
+      narrow-cons : {cons : ADTCons nₐ (k + suc ℓ)}
                   → (Δ : CtxSuffix (suc ℓ) k)
                   → Γ ⊢ σ' <: σ
                   → Γ ⊢ σ'
