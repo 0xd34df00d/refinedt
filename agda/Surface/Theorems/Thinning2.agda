@@ -13,38 +13,14 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst)
 open import Common.Helpers
 open import Surface.Syntax
 open import Surface.Syntax.CtxSuffix
-open import Surface.Syntax.Membership hiding (_⊂'_; ignore-head; append-both)
+open import Surface.Syntax.Subcontext
+open import Surface.Syntax.Membership hiding (ignore-head; append-both)
 open import Surface.Syntax.Renaming as R
 open import Surface.Syntax.Substitution as S
 open import Surface.Syntax.Substitution.Distributivity
 open import Surface.Operational.BetaEquivalence
 open import Surface.Derivations
 open import Surface.Theorems.Helpers
-
--- This has a slightly different (and less generic) type
--- than the ext-k version from the Actions module,
--- so it normalizes slightly differently
--- and is more convenient in the context of this module.
-ext-k' : (k : ℕ)
-       → (ρ : Fin ℓ → Fin (suc ℓ))
-       → Fin (k + ℓ) → Fin (suc k + ℓ)
-ext-k' zero ρ = ρ
-ext-k' (suc k) ρ = R.ext (ext-k' k ρ)
-
-infix 4 _by_⊂'_
-data _by_⊂'_ : (k : ℕ) → Ctx (k + ℓ) → Ctx (suc (k + ℓ)) → Set where
-  ignore-head : zero by Γ ⊂' Γ , τ
-  append-both : {Γ : Ctx (k + ℓ)}
-              → k by Γ ⊂' Γ'
-              → suc k by Γ , τ ⊂' Γ' , R.act-τ (ext-k' k suc) τ
-
-ext-k'-suc-commute : (k : ℕ)
-                   → (τ : SType (k + ℓ))
-                   → R.act-τ (R.ext (ext-k' k suc)) (R.act-τ suc τ) ≡ R.act-τ suc (R.act-τ (ext-k' k suc) τ)
-ext-k'-suc-commute k τ
-  rewrite R.act-τ-distr suc (R.ext (ext-k' k suc)) τ
-        | R.act-τ-distr (ext-k' k suc) suc τ
-        = refl
 
 ∈-thinning : {Γ : Ctx (k + ℓ)}
            → k by Γ ⊂' Γ'
