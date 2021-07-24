@@ -8,7 +8,7 @@ open import Data.Nat.Induction
 open import Data.Nat.Properties
 open import Data.Vec.Base using (lookup; _∷_)
 open import Function
-open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst; sym)
 
 open import Common.Helpers
 open import Surface.Syntax
@@ -138,3 +138,16 @@ mutual
                 → Γ ⊢ ε ⦂ τ
                 → (Γ , τ') ⊢ R.weaken-ε ε ⦂ R.weaken-τ τ
 Γ⊢ε⦂τ-weakening Γok Γ⊢τ' = Γ⊢ε⦂τ-thinning ignore-head (TCTX-Bind Γok Γ⊢τ')
+
+Γ⊢ε⦂τ-weakening-suffix : {Δ : CtxSuffix ℓ k}
+                       → (Γ ++ Δ) ok
+                       → Γ ⊢ ε ⦂ τ
+                       → Γ ++ Δ ⊢ R.weaken-ε-k k ε ⦂ R.weaken-τ-k k τ
+Γ⊢ε⦂τ-weakening-suffix {ε = ε} {τ = τ} {Δ = ⊘} Γ++Δok εδ
+  rewrite R.act-ε-id (λ _ → refl) ε
+        | R.act-τ-id (λ _ → refl) τ
+        = εδ
+Γ⊢ε⦂τ-weakening-suffix {k = suc k} {ε = ε} {τ = τ} {Δ = Δ , _} (TCTX-Bind Γ++Δok τδ) εδ
+  rewrite sym (R.act-ε-distr (raise k) suc ε)
+        | sym (R.act-τ-distr (raise k) suc τ)
+        = Γ⊢ε⦂τ-weakening Γ++Δok τδ (Γ⊢ε⦂τ-weakening-suffix Γ++Δok εδ)
