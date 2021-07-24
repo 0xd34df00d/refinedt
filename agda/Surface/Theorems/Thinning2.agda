@@ -121,6 +121,12 @@ mutual
         (Γ⊢τ-thinning Γ⊂Γ' Γ'ok τ'δ)
         (ρ-preserves-↭βτ (ext-k' k suc) τ~τ')
 
+<:-weakening : Γ ok
+             → Γ ⊢ τ'
+             → Γ ⊢ τ₁ <: τ₂
+             → (Γ , τ') ⊢ R.weaken-τ τ₁ <: R.weaken-τ τ₂
+<:-weakening Γok Γ⊢τ' = <:-thinning ignore-head (TCTX-Bind Γok Γ⊢τ')
+
 Γ⊢τ-weakening : Γ ok
               → Γ ⊢ τ'
               → Γ ⊢ τ
