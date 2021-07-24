@@ -31,6 +31,20 @@ open import Surface.Theorems.Helpers
 ∈-thinning (append-both {k = k} Γ⊂Γ') (∈-suc {τ = τ} refl ∈) = ∈-suc (ext-k'-suc-commute k τ) (∈-thinning Γ⊂Γ' ∈)
 
 mutual
+  <:-thinning : {Γ : Ctx (k + ℓ)}
+              → (Γ⊂Γ' : k by Γ ⊂' Γ')
+              → Γ' ok
+              → Γ ⊢ τ <: τ'
+              → Γ' ⊢ R.act-τ (ext-k' k suc) τ <: R.act-τ (ext-k' k suc) τ'
+  <:-thinning Γ⊂Γ' Γ'ok (ST-Base oracle is-just) = ST-Base oracle (Oracle.thin' oracle Γ⊂Γ' is-just)
+  <:-thinning Γ⊂Γ' Γ'ok (ST-Arr <:₁δ <:₂δ ⇒δ τ₁'δ) =
+    let τ₁'δ' = Γ⊢τ-thinning Γ⊂Γ' Γ'ok τ₁'δ
+     in ST-Arr
+          (<:-thinning Γ⊂Γ' Γ'ok <:₁δ)
+          (<:-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok τ₁'δ') <:₂δ)
+          (Γ⊢τ-thinning Γ⊂Γ' Γ'ok ⇒δ)
+          τ₁'δ'
+
   Γ⊢τ-thinning : {Γ : Ctx (k + ℓ)}
                → (Γ⊂Γ' : k by Γ ⊂' Γ')
                → Γ' ok
@@ -93,8 +107,16 @@ mutual
           refl
           δ-substed
           (Γ⊢τ-thinning Γ⊂Γ' Γ'ok adtτ)
-  Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-Sub δ₁ τ'δ <:) = {! !}
-  Γ⊢ε⦂τ-thinning {k = k} Γ⊂Γ' Γ'ok (T-RConv δ τ'δ τ~τ') = T-RConv (Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok δ) (Γ⊢τ-thinning Γ⊂Γ' Γ'ok τ'δ) (ρ-preserves-↭βτ (ext-k' k suc) τ~τ')
+  Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-Sub δ τ'δ <:)
+    = T-Sub
+        (Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok δ)
+        (Γ⊢τ-thinning Γ⊂Γ' Γ'ok τ'δ)
+        (<:-thinning Γ⊂Γ' Γ'ok <:)
+  Γ⊢ε⦂τ-thinning {k = k} Γ⊂Γ' Γ'ok (T-RConv δ τ'δ τ~τ')
+    = T-RConv
+        (Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok δ)
+        (Γ⊢τ-thinning Γ⊂Γ' Γ'ok τ'δ)
+        (ρ-preserves-↭βτ (ext-k' k suc) τ~τ')
 
 Γ⊢τ-weakening : Γ ok
               → Γ ⊢ τ'
