@@ -10,14 +10,14 @@ open import Surface.Syntax
 open import Surface.Syntax.Membership
 open import Surface.Derivations
 open import Surface.Theorems.Helpers
-open import Surface.Theorems.Thinning
+open import Surface.Theorems.Thinning2
 open import Surface.Theorems.Substitution
 
 τ∈Γ-⇒-Γ⊢τ : Γ ok
           → τ ∈ Γ at ι
           → Γ ⊢ τ
-τ∈Γ-⇒-Γ⊢τ (TCTX-Bind Γok τδ) (∈-zero refl) = twf-weakening Γok τδ τδ
-τ∈Γ-⇒-Γ⊢τ (TCTX-Bind Γok τδ) (∈-suc refl ∈) = twf-weakening Γok τδ (τ∈Γ-⇒-Γ⊢τ Γok ∈)
+τ∈Γ-⇒-Γ⊢τ (TCTX-Bind Γok τδ) (∈-zero refl) = Γ⊢τ-weakening Γok τδ τδ
+τ∈Γ-⇒-Γ⊢τ (TCTX-Bind Γok τδ) (∈-suc refl ∈) = Γ⊢τ-weakening Γok τδ (τ∈Γ-⇒-Γ⊢τ Γok ∈)
 
 -- Referred to as T-implies-TWF in the paper
 Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢ ε ⦂ τ

@@ -8,7 +8,7 @@ open import Surface.Syntax
 open import Surface.Syntax.CtxSuffix
 open import Surface.Syntax.Membership
 open import Surface.Derivations
-open import Surface.Theorems.Thinning
+open import Surface.Theorems.Thinning2
 
 -- Referred to as typing-narrowing in the paper
 mutual
@@ -66,13 +66,13 @@ mutual
                  → Γ ⊢ σ'
                  → τ ∈ Γ , σ ++ Δ at ι
                  → Γ , σ' ++ Δ ⊢ SVar ι ⦂ τ
-  SVar-narrowing ⊘ (TCTX-Bind Γok τδ) σ-<: Γ⊢σ' (∈-zero refl) = T-Sub (T-Var (TCTX-Bind Γok Γ⊢σ') (∈-zero refl)) (twf-weakening Γok Γ⊢σ' τδ) (st-weakening Γok Γ⊢σ' σ-<:)
+  SVar-narrowing ⊘ (TCTX-Bind Γok τδ) σ-<: Γ⊢σ' (∈-zero refl) = T-Sub (T-Var (TCTX-Bind Γok Γ⊢σ') (∈-zero refl)) (Γ⊢τ-weakening Γok Γ⊢σ' τδ) (<:-weakening Γok Γ⊢σ' σ-<:)
   SVar-narrowing ⊘ (TCTX-Bind Γok _) σ-<: Γ⊢σ' (∈-suc refl ∈) = T-Var (TCTX-Bind Γok Γ⊢σ') (∈-suc refl ∈)
   SVar-narrowing (Δ , τ) Γ,σ,Δok σ-<: Γ⊢σ' (∈-zero refl) = T-Var (Γok-narrowing (Δ , _) σ-<: Γ⊢σ' Γ,σ,Δok) (∈-zero refl)
   SVar-narrowing (Δ , τ) (TCTX-Bind Γ,σ,Δok Γ,σ,Δ⊢τ) σ-<: Γ⊢σ' (∈-suc refl ∈)
     = let Γ,σ',Δok = Γok-narrowing Δ σ-<: Γ⊢σ' Γ,σ,Δok
           Γ,σ',Δ⊢τ = Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' Γ,σ,Δ⊢τ
-       in t-weakening Γ,σ',Δok Γ,σ',Δ⊢τ (SVar-narrowing Δ Γ,σ,Δok σ-<: Γ⊢σ' ∈)
+       in Γ⊢ε⦂τ-weakening Γ,σ',Δok Γ,σ',Δ⊢τ (SVar-narrowing Δ Γ,σ,Δok σ-<: Γ⊢σ' ∈)
 
   Γ⊢ε⦂τ-narrowing : (Δ : CtxSuffix (suc ℓ) k)
                   → Γ ⊢ σ' <: σ

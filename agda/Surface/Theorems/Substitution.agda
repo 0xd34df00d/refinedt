@@ -21,7 +21,7 @@ open import Surface.Syntax.Substitution.Distributivity as S
 open import Surface.Syntax.Substitution.Commutativity
 open import Surface.Operational.BetaEquivalence
 open import Surface.Derivations
-open import Surface.Theorems.Thinning
+open import Surface.Theorems.Thinning2
 
 -- Substitution lemmas
 
@@ -116,7 +116,7 @@ mutual
   ... | less rep<var = T-Var (sub-Γok Δ εδ Γok) (var-earlier-in-Γ-remains Δ τ-∈ rep<var)
   ... | equal refl rewrite ∈-at-concat-point Δ τ-∈
                          | replace-weakened-τ k (weaken-ε-k k ε) σ
-                         = t-weakening-suffix (sub-Γok Δ εδ Γok) εδ
+                         = Γ⊢ε⦂τ-weakening-suffix (sub-Γok Δ εδ Γok) εδ
   ... | greater rep>var = T-Var (sub-Γok Δ εδ Γok) (var-later-in-Γ-remains Δ τ-∈ rep>var)
   sub-Γ⊢ε⦂τ {k = k} {Γ = Γ} {ε = ε}
             Δ εδ (T-Abs {τ₁ = τ₁} {τ₂ = τ₂} {ε = ε'} arrδ bodyδ) = T-Abs (sub-Γ⊢τ Δ εδ arrδ) bodyδ'

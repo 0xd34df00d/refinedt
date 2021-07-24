@@ -11,7 +11,7 @@ open import Surface.Syntax.Membership
 open import Surface.Derivations
 open import Surface.Operational
 open import Surface.Operational.BetaEquivalence
-open import Surface.Theorems.Thinning
+open import Surface.Theorems.Thinning2
 
 -- Referred to as context-equivalence in the paper
 mutual
@@ -63,7 +63,7 @@ mutual
                   → Γ , τ₁' ++ Δ ⊢ SVar ι ⦂ τ
   Var-equivalence ⊘ τ-↭βτ Γ⊢τ₁' (TCTX-Bind ctx-ok τδ) (∈-zero refl)
     = let var-δ = T-Var (TCTX-Bind ctx-ok Γ⊢τ₁') (∈-zero refl)
-          r-τδ = twf-weakening ctx-ok Γ⊢τ₁' τδ
+          r-τδ = Γ⊢τ-weakening ctx-ok Γ⊢τ₁' τδ
           ↭βτ = ρ-preserves-↭βτ suc (↭βτ-is-symmetric τ-↭βτ)
        in T-RConv var-δ r-τδ ↭βτ
   Var-equivalence ⊘ τ-↭βτ Γ⊢τ₁' (TCTX-Bind ctx-ok τδ) (∈-suc refl ∈) = T-Var (TCTX-Bind ctx-ok Γ⊢τ₁') (∈-suc refl ∈)
@@ -72,7 +72,7 @@ mutual
     = let Γ,τ₁',Δ-ok = Γok-equivalence Δ τ-↭βτ Γ⊢τ₁' Γ,τ₁,Δ-ok
           Γ,τ₁,Δ⊢τ = Γ⊢τ-equivalence Δ τ-↭βτ Γ⊢τ₁' τδ
           SVar-ι = Var-equivalence Δ τ-↭βτ Γ⊢τ₁' Γ,τ₁,Δ-ok ∈
-       in t-weakening Γ,τ₁',Δ-ok Γ,τ₁,Δ⊢τ SVar-ι
+       in Γ⊢ε⦂τ-weakening Γ,τ₁',Δ-ok Γ,τ₁,Δ⊢τ SVar-ι
 
   Γ⊢ε⦂τ-equivalence : (Δ : CtxSuffix (suc ℓ) k)
                     → τ₁ ↭βτ τ₁'
