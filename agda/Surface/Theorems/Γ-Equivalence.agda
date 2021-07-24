@@ -11,7 +11,7 @@ open import Surface.Syntax.Membership
 open import Surface.Derivations
 open import Surface.Operational
 open import Surface.Operational.BetaEquivalence
-open import Surface.Theorems.Thinning2
+open import Surface.Theorems.Thinning
 
 -- Referred to as context-equivalence in the paper
 mutual

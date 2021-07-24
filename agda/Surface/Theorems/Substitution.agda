@@ -21,7 +21,7 @@ open import Surface.Syntax.Substitution.Distributivity as S
 open import Surface.Syntax.Substitution.Commutativity
 open import Surface.Operational.BetaEquivalence
 open import Surface.Derivations
-open import Surface.Theorems.Thinning2
+open import Surface.Theorems.Thinning
 
 -- Substitution lemmas
 

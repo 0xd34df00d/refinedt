@@ -10,7 +10,7 @@ open import Surface.Syntax
 open import Surface.Syntax.Membership
 open import Surface.Derivations
 open import Surface.Theorems.Helpers
-open import Surface.Theorems.Thinning2
+open import Surface.Theorems.Thinning
 open import Surface.Theorems.Substitution
 
 τ∈Γ-⇒-Γ⊢τ : Γ ok

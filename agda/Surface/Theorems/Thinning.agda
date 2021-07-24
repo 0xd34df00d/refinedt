@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Surface.Theorems.Thinning2 where
+module Surface.Theorems.Thinning where
 
 open import Data.Fin.Base using (zero; suc; raise)
 open import Data.Nat.Base
