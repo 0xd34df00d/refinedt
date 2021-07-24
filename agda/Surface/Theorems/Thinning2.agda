@@ -125,10 +125,10 @@ mutual
               → Γ ⊢ τ'
               → Γ ⊢ τ
               → (Γ , τ') ⊢ R.weaken-τ τ
-Γ⊢τ-weakening Γok Γ⊢τ' Γ⊢τ = Γ⊢τ-thinning ignore-head (TCTX-Bind Γok Γ⊢τ') Γ⊢τ
+Γ⊢τ-weakening Γok Γ⊢τ' = Γ⊢τ-thinning ignore-head (TCTX-Bind Γok Γ⊢τ')
 
 Γ⊢ε⦂τ-weakening : Γ ok
                 → Γ ⊢ τ'
                 → Γ ⊢ ε ⦂ τ
                 → (Γ , τ') ⊢ R.weaken-ε ε ⦂ R.weaken-τ τ
-Γ⊢ε⦂τ-weakening Γok Γ⊢τ' Γ⊢ε⦂τ = Γ⊢ε⦂τ-thinning ignore-head (TCTX-Bind Γok Γ⊢τ') Γ⊢ε⦂τ
+Γ⊢ε⦂τ-weakening Γok Γ⊢τ' = Γ⊢ε⦂τ-thinning ignore-head (TCTX-Bind Γok Γ⊢τ')
