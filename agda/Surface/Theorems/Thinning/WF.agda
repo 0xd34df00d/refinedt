@@ -29,7 +29,6 @@ lemma' : (Γ⊂Γ' : Γ ⊂' Γ')
        → (let ∈' = _⊂'_.ρ-∈ Γ⊂Γ' ∈ τ'-≡ ι'-≡)
        → size-∈ Γ'ok ∈' ≤ size-ok Γok ⊔ size-twf τδ + suc (size-ok Γ'ok ⊔ size-twf τ'δ)
 lemma' = {! !}
--}
 
 lemma : (Γ⊂Γ' : Γ ⊂' Γ')
       → (Γok : Γ ok)
@@ -45,6 +44,7 @@ lemma (MkTR ρ ρ-∈ ρ-mono) (TCTX-Bind Γok τδ) (∈-zero refl) (TCTX-Bind 
 lemma (MkTR ρ ρ-∈ ρ-mono) (TCTX-Bind Γok τδ) (∈-suc refl ∈) (TCTX-Bind Γ'ok τ'δ) τ'-≡ ι'-≡ with ρ-∈ (∈-suc refl ∈) τ'-≡ ι'-≡
 ... | ∈-zero refl = {! impossible, prove later !}
 ... | ∈-suc refl ∈' = let rec = lemma {! !} Γok ∈ Γ'ok refl refl in s≤s {! !}
+-}
 
 mutual
   twf-thinning-sized-size : (Γ⊂Γ' : Γ ⊂ Γ')
