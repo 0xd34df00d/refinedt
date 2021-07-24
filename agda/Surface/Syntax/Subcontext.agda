@@ -8,7 +8,6 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Surface.Syntax
 open import Surface.Syntax.Renaming
-open import Surface.Derivations
 
 -- This has a slightly different (and less generic) type
 -- than the ext-k version from the Actions module,

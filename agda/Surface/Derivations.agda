@@ -2,7 +2,7 @@
 
 module Surface.Derivations where
 
-open import Data.Fin using (zero)
+open import Data.Fin using (zero; suc)
 open import Data.Maybe
 open import Data.Nat.Base using (_+_)
 open import Data.Vec using (lookup; _∷_; [])
@@ -11,6 +11,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_)
 
 open import Surface.Syntax
 open import Surface.Syntax.CtxSuffix
+open import Surface.Syntax.Subcontext
 open import Surface.Syntax.Substitution using ([_↦τ_]_; [_↦Γ_]_)
 open import Surface.Syntax.Membership
 open import Surface.Operational.BetaEquivalence
@@ -120,6 +121,10 @@ record Oracle where
            → (Γ⊂Γ' : Γ ⊂ Γ')
            → Is-just (decide Γ b ρ₁ ρ₂)
            → Is-just (decide Γ' b (act-ρ (ext (_⊂_.ρ Γ⊂Γ')) ρ₁) (act-ρ (ext (_⊂_.ρ Γ⊂Γ')) ρ₂))
+    thin'  : ∀ {Γ : Ctx (k + ℓ)} {Γ' : Ctx (suc k + ℓ)} {ρ₁ ρ₂ : Refinement (suc k + ℓ)}
+           → (Γ⊂Γ' : k by Γ ⊂' Γ')
+           → Is-just (decide Γ b ρ₁ ρ₂)
+           → Is-just (decide Γ' b (R.act-ρ (ext-k' (suc k) suc) ρ₁) (act-ρ (ext-k' (suc k) suc) ρ₂))
     subst  : ∀ {Δ : ,-CtxSuffix ℓ σ k} {ρ₁ ρ₂ : Refinement (suc (suc k + ℓ))}
            -- TODO add this back when parametrizing everything by an oracle: → Γ ⊢ ε ⦂ σ
            → Is-just (decide (Γ ,σ, Δ) b ρ₁ ρ₂)
