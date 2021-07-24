@@ -79,7 +79,10 @@ mutual
     = T-Abs
         (Γ⊢τ-thinning Γ⊂Γ' Γ'ok arrδ)
         (Γ⊢ε⦂τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (Γ⊢τ-thinning Γ⊂Γ' Γ'ok domδ)) δ)
-  Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok (T-App δ₁ δ₂) = {! T-App !}
+  Γ⊢ε⦂τ-thinning {k = k} Γ⊂Γ' Γ'ok (T-App {τ₂ = τ₂} {ε₂ = ε₂} δ₁ δ₂)
+    rewrite ρ-subst-distr-τ-0 (ext-k' k suc) ε₂ τ₂
+          | R.act-τ-extensionality (ρ-0th-is-ext (ext-k' k suc)) τ₂
+          = T-App (Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok δ₁) (Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok δ₂)
   Γ⊢ε⦂τ-thinning {k = k} {ℓ = ℓ} {Γ' = Γ'} {Γ = Γ} Γ⊂Γ' Γ'ok (T-Case resδ δ branchesδ)
     = T-Case
         (Γ⊢τ-thinning Γ⊂Γ' Γ'ok resδ)
