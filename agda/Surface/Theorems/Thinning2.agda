@@ -14,7 +14,7 @@ open import Common.Helpers
 open import Surface.Syntax
 open import Surface.Syntax.CtxSuffix
 open import Surface.Syntax.Subcontext
-open import Surface.Syntax.Membership hiding (ignore-head; append-both)
+open import Surface.Syntax.Membership
 open import Surface.Syntax.Renaming as R
 open import Surface.Syntax.Substitution as S
 open import Surface.Syntax.Substitution.Distributivity
@@ -36,7 +36,7 @@ mutual
               → Γ' ok
               → Γ ⊢ τ <: τ'
               → Γ' ⊢ R.act-τ (ext-k' k suc) τ <: R.act-τ (ext-k' k suc) τ'
-  <:-thinning Γ⊂Γ' Γ'ok (ST-Base oracle is-just) = ST-Base oracle (Oracle.thin' oracle Γ⊂Γ' is-just)
+  <:-thinning Γ⊂Γ' Γ'ok (ST-Base oracle is-just) = ST-Base oracle (Oracle.thin oracle Γ⊂Γ' is-just)
   <:-thinning Γ⊂Γ' Γ'ok (ST-Arr <:₁δ <:₂δ ⇒δ τ₁'δ) =
     let τ₁'δ' = Γ⊢τ-thinning Γ⊂Γ' Γ'ok τ₁'δ
      in ST-Arr

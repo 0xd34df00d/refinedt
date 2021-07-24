@@ -27,25 +27,6 @@ _++_ : Ctx ℓ → CtxSuffix ℓ k → Ctx (k + ℓ)
 variable
   Δ : CtxSuffix ℓ k
 
-suffix-as-⊂ : (Δ : CtxSuffix ℓ k)
-            → Γ ⊂ (Γ ++ Δ)
-suffix-as-⊂ ⊘ = ⊂-refl
-suffix-as-⊂ (Δ , τ) = ignore-head (suffix-as-⊂ Δ)
-
-suffix-is-raise : (Δ : CtxSuffix ℓ k)
-                → raise k f≡ _⊂_.ρ {Γ = Γ} (suffix-as-⊂ Δ)
-suffix-is-raise ⊘ n = refl
-suffix-is-raise (Δ , τ) n = cong suc (suffix-is-raise Δ n)
-
-suffix-weakening-ε : (Δ : CtxSuffix ℓ k)
-                   → weaken-ε-k k f≡ R.act-ε (_⊂_.ρ {Γ = Γ} (suffix-as-⊂ Δ))
-suffix-weakening-ε Δ = R.act-ε-extensionality (suffix-is-raise Δ)
-
-suffix-weakening-τ : (Δ : CtxSuffix ℓ k)
-                   → weaken-τ-k k f≡ R.act-τ (_⊂_.ρ {Γ = Γ} (suffix-as-⊂ Δ))
-suffix-weakening-τ Δ = R.act-τ-extensionality (suffix-is-raise Δ)
-
-
 
 -- Non-empty suffix, useful for the substitution lemmas
 data ,-CtxSuffix (ℓ : ℕ) : (σ : SType ℓ) → (k : ℕ) → Set where

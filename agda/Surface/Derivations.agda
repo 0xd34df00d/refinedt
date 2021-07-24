@@ -117,11 +117,7 @@ record Oracle where
            → (b : BaseType)
            → (ρ₁ ρ₂ : Refinement (suc ℓ))
            → Maybe (PositiveDecision ℓ)
-    thin   : ∀ {Γ : Ctx ℓ} {Γ' : Ctx ℓ'}
-           → (Γ⊂Γ' : Γ ⊂ Γ')
-           → Is-just (decide Γ b ρ₁ ρ₂)
-           → Is-just (decide Γ' b (act-ρ (ext (_⊂_.ρ Γ⊂Γ')) ρ₁) (act-ρ (ext (_⊂_.ρ Γ⊂Γ')) ρ₂))
-    thin'  : ∀ {Γ : Ctx (k + ℓ)} {Γ' : Ctx (suc k + ℓ)} {ρ₁ ρ₂ : Refinement (suc k + ℓ)}
+    thin   : ∀ {Γ : Ctx (k + ℓ)} {Γ' : Ctx (suc k + ℓ)} {ρ₁ ρ₂ : Refinement (suc k + ℓ)}
            → (Γ⊂Γ' : k by Γ ⊂' Γ')
            → Is-just (decide Γ b ρ₁ ρ₂)
            → Is-just (decide Γ' b (R.act-ρ (ext-k' (suc k) suc) ρ₁) (act-ρ (ext-k' (suc k) suc) ρ₂))
