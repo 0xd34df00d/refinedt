@@ -38,9 +38,9 @@ open import Surface.Theorems.Agreement.TypeWellFormedness.WF
 τ∈Γ-⇒-Γ⊢τ-smaller : (Γok : Γ ok)
                   → (∈ : τ ∈ Γ at ι)
                   → size-twf (τ∈Γ-⇒-Γ⊢τ Γok ∈) ≤ size-∈ Γok ∈
-τ∈Γ-⇒-Γ⊢τ-smaller (TCTX-Bind Γok τδ) (∈-zero refl) = let r = twf-weakening-size Γok τδ τδ in {! !}
+τ∈Γ-⇒-Γ⊢τ-smaller (TCTX-Bind Γok τδ) (∈-zero refl) = let r = Γ⊢τ-weakening-size Γok τδ τδ in {! !}
 τ∈Γ-⇒-Γ⊢τ-smaller (TCTX-Bind Γok τδ) (∈-suc refl ∈) =
-  let r₁ = twf-weakening-size Γok τδ (τ∈Γ-⇒-Γ⊢τ Γok ∈)
+  let r₁ = Γ⊢τ-weakening-size Γok τδ (τ∈Γ-⇒-Γ⊢τ Γok ∈)
       r₂ = τ∈Γ-⇒-Γ⊢τ-smaller Γok ∈
    in {! !}
 
