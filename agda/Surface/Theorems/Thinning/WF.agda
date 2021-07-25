@@ -19,16 +19,6 @@ open import Surface.Syntax.Subcontext
 open import Surface.Syntax.Renaming as R
 
 {-
-lemma' : (Γ⊂Γ' : Γ ⊂' Γ')
-       → (Γok : Γ ok)
-       → (∈ : τ ∈ Γ at ι)
-       → (Γ'ok : Γ' ok)
-       → (τ'-≡ : τ' ≡ act-τ (_⊂'_.ρ Γ⊂Γ') τ)
-       → (ι'-≡ : ι' ≡ _⊂'_.ρ Γ⊂Γ' ι)
-       → (let ∈' = _⊂'_.ρ-∈ Γ⊂Γ' ∈ τ'-≡ ι'-≡)
-       → size-∈ Γ'ok ∈' ≤ size-ok Γok ⊔ size-twf τδ + suc (size-ok Γ'ok ⊔ size-twf τ'δ)
-lemma' = {! !}
-
 lemma : (Γ⊂Γ' : Γ ⊂' Γ')
       → (Γok : Γ ok)
       → (∈ : τ ∈ Γ at ι)
@@ -44,6 +34,16 @@ lemma (MkTR ρ ρ-∈ ρ-mono) (TCTX-Bind Γok τδ) (∈-suc refl ∈) (TCTX-Bi
 ... | ∈-zero refl = {! impossible, prove later !}
 ... | ∈-suc refl ∈' = let rec = lemma {! !} Γok ∈ Γ'ok refl refl in s≤s {! !}
 -}
+
+lemma : (Γ⊂Γ' : k by Γ ⊂' Γ')
+      → (∈ : τ ∈ Γ at ι)
+      → (Γok : Γ ok)
+      → (Γ'ok : Γ' ok)
+      → size-∈ Γ'ok (∈-thinning Γ⊂Γ' ∈) ≤ size-∈ Γok ∈ + size-ok Γ'ok
+lemma ignore-head (∈-zero refl) (TCTX-Bind Γok τδ) (TCTX-Bind Γ'ok τδ₁) = s≤s {! !}
+lemma ignore-head (∈-suc refl ∈) (TCTX-Bind Γok τδ) (TCTX-Bind Γ'ok τδ₁) = s≤s {! !}
+lemma (append-both Γ⊂Γ') (∈-zero refl) (TCTX-Bind Γok τδ) (TCTX-Bind Γ'ok τδ₁) = {! !}
+lemma (append-both Γ⊂Γ') (∈-suc refl ∈) (TCTX-Bind Γok τδ) (TCTX-Bind Γ'ok τδ₁) = {! !}
 
 mutual
   Γ⊢τ-thinning-size : (Γ⊂Γ' : k by Γ ⊂' Γ')
