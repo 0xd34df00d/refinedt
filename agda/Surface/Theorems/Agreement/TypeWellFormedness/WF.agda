@@ -51,7 +51,7 @@ mutual
   size-∈ : Γ ok
          → τ ∈ Γ at ι
          → ℕ
-  size-∈ Γok@(TCTX-Bind sub-Γok τδ) (∈-zero refl) = size-ok Γok + size-twf τδ
+  size-∈ Γok@(TCTX-Bind _       τδ) (∈-zero refl)  = size-ok Γok + size-twf τδ
   size-∈ Γok@(TCTX-Bind sub-Γok τδ) (∈-suc refl ∈) = size-ok Γok + size-∈ sub-Γok ∈
 
   size-t : Γ ⊢ ε ⦂ τ
