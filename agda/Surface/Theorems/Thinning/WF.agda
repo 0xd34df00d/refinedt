@@ -45,8 +45,8 @@ lemma : (Γ⊂Γ' : k by Γ ⊂' Γ')
       → (Γok : Γ ok)
       → (Γ'ok : Γ' ok)
       → size-∈ Γ'ok (∈-thinning Γ⊂Γ' ∈) ≤ size-∈ Γok ∈ + size-ok Γ'ok
-lemma ignore-head (∈-zero refl) (TCTX-Bind Γok τδ) (TCTX-Bind Γ'ok τδ₁) = s≤s (n₁≤suc[n₂]⇒m+n₁≤n₂+suc[m] _ _ _ {! !})
-lemma ignore-head (∈-suc refl ∈) (TCTX-Bind Γok τδ) (TCTX-Bind Γ'ok τδ₁) = s≤s {! !}
+lemma ignore-head (∈-zero refl) (TCTX-Bind Γok τδ) (TCTX-Bind (TCTX-Bind Γ'ok τδ₂) τδ₁) = s≤s (n₁≤suc[n₂]⇒m+n₁≤n₂+suc[m] _ _ _ (s≤s {! !}))
+lemma ignore-head (∈-suc refl ∈) (TCTX-Bind Γok τδ) (TCTX-Bind (TCTX-Bind Γ'ok τδ₂) τδ₁) = s≤s (n₁≤suc[n₂]⇒m+n₁≤n₂+suc[m] _ _ _ (s≤s {! !}))
 lemma (append-both Γ⊂Γ') (∈-zero refl) (TCTX-Bind Γok τδ) (TCTX-Bind Γ'ok τδ₁) = {! !}
 lemma (append-both Γ⊂Γ') (∈-suc refl ∈) (TCTX-Bind Γok τδ) (TCTX-Bind Γ'ok τδ₁) = {! !}
 
