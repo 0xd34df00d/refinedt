@@ -28,32 +28,32 @@ _⊕_ : ℕ → ℕ → ℕ
 _⊕_ = _⊔_
 
 abstract
-  m≤m⊕n : ∀ m n → m ≤ m ⊕ n
-  m≤m⊕n = m≤m⊔n
+  ₁≤₂ : ∀ m n → m ≤ m ⊕ n
+  ₁≤₂ = m≤m⊔n
 
-  n≤m⊕n : ∀ m n → n ≤ m ⊕ n
-  n≤m⊕n = n≤m⊔n
+  ₂≤₂ : ∀ m n → n ≤ m ⊕ n
+  ₂≤₂ = n≤m⊔n
 
-  m≤m⊕n⊕k : ∀ m n k → m ≤ m ⊕ n ⊕ k
-  m≤m⊕n⊕k m n k = m≤m⊕n m (n ⊔ k)
+  ₁≤₃ : ∀ m n k → m ≤ m ⊕ n ⊕ k
+  ₁≤₃ m n k = ₁≤₂ m (n ⊔ k)
 
-  n≤m⊕n⊕k : ∀ m n k → n ≤ m ⊕ n ⊕ k
-  n≤m⊕n⊕k m n k = ≤-trans (m≤m⊕n n k) (n≤m⊕n m (n ⊔ k))
+  ₂≤₃ : ∀ m n k → n ≤ m ⊕ n ⊕ k
+  ₂≤₃ m n k = ≤-trans (₁≤₂ n k) (₂≤₂ m (n ⊔ k))
 
-  k≤m⊕n⊕k : ∀ m n k → k ≤ m ⊕ n ⊕ k
-  k≤m⊕n⊕k m n k = ≤-trans (n≤m⊕n n k) (n≤m⊕n m (n ⊔ k))
+  ₃≤₃ : ∀ m n k → k ≤ m ⊕ n ⊕ k
+  ₃≤₃ m n k = ≤-trans (₂≤₂ n k) (₂≤₂ m (n ⊔ k))
 
   ₁≤₄ : ∀ n₁ n₂ n₃ n₄ → n₁ ≤ n₁ ⊕ n₂ ⊕ n₃ ⊕ n₄
-  ₁≤₄ n₁ n₂ n₃ n₄ = m≤m⊕n _ _
+  ₁≤₄ n₁ n₂ n₃ n₄ = ₁≤₂ _ _
 
   ₂≤₄ : ∀ n₁ n₂ n₃ n₄ → n₂ ≤ n₁ ⊕ n₂ ⊕ n₃ ⊕ n₄
-  ₂≤₄ n₁ n₂ n₃ n₄ = n≤m⊕n⊕k n₁ n₂ (n₃ ⊔ n₄)
+  ₂≤₄ n₁ n₂ n₃ n₄ = ₂≤₃ n₁ n₂ (n₃ ⊔ n₄)
 
   ₃≤₄ : ∀ n₁ n₂ n₃ n₄ → n₃ ≤ n₁ ⊕ n₂ ⊕ n₃ ⊕ n₄
-  ₃≤₄ n₁ n₂ n₃ n₄ = ≤-trans (m≤m⊕n n₃ n₄) (k≤m⊕n⊕k n₁ n₂ (n₃ ⊔ n₄))
+  ₃≤₄ n₁ n₂ n₃ n₄ = ≤-trans (₁≤₂ n₃ n₄) (₃≤₃ n₁ n₂ (n₃ ⊔ n₄))
 
   ₄≤₄ : ∀ n₁ n₂ n₃ n₄ → n₄ ≤ n₁ ⊕ n₂ ⊕ n₃ ⊕ n₄
-  ₄≤₄ n₁ n₂ n₃ n₄ = ≤-trans (n≤m⊕n n₃ n₄) (k≤m⊕n⊕k n₁ n₂ (n₃ ⊔ n₄))
+  ₄≤₄ n₁ n₂ n₃ n₄ = ≤-trans (₂≤₂ n₃ n₄) (₃≤₃ n₁ n₂ (n₃ ⊔ n₄))
 
 size-ok TCTX-Empty = 0
 size-ok (TCTX-Bind prevOk τδ) = suc (size-ok prevOk ⊕ size-twf τδ)
