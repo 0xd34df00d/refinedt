@@ -27,8 +27,8 @@ variable
   φ : TSFlavour
 
 data Enrich (A : Set) : TSFlavour → Set where
-  Omitted   : Enrich A M
-  Enriched  : (δ : A)
+  omitted   : Enrich A M
+  enriched  : (δ : A)
             → Enrich A E
 
 record PositiveDecision (ℓ : ℕ) : Set where
