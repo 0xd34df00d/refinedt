@@ -35,7 +35,7 @@ abstract
   ₂≤₂ = n≤m⊔n
 
   ₁≤₃ : ∀ m n k → m ≤ m ⊕ n ⊕ k
-  ₁≤₃ m n k = ₁≤₂ m (n ⊔ k)
+  ₁≤₃ m n k = ₁≤₂ _ _
 
   ₂≤₃ : ∀ m n k → n ≤ m ⊕ n ⊕ k
   ₂≤₃ m n k = ≤-trans (₁≤₂ n k) (₂≤₂ m (n ⊔ k))
