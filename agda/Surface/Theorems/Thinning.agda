@@ -90,7 +90,7 @@ mutual
     rewrite ρ-subst-distr-τ-0 (ext-k' k suc) ε₂ τ₂
           | R.act-τ-extensionality (ρ-0th-is-ext (ext-k' k suc)) τ₂
           = T-App (Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok δ₁) (Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok δ₂)
-  Γ⊢ε⦂τ-thinning {k = k} {ℓ = ℓ} {Γ' = Γ'} {Γ = Γ} Γ⊂Γ' Γ'ok (T-Case resδ δ branchesδ)
+  Γ⊢ε⦂τ-thinning {k = k} {ℓ = ℓ} {Γ' = Γ'} {φ = φ} {Γ = Γ} Γ⊂Γ' Γ'ok (T-Case resδ δ branchesδ)
     = T-Case
         (Γ⊢τ-thinning Γ⊂Γ' Γ'ok resδ)
         (Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok δ)
@@ -101,11 +101,10 @@ mutual
                   → BranchesHaveType φ Γ cons bs τ
                   → BranchesHaveType φ Γ' (R.act-cons (ext-k' k suc) cons) (R.act-branches (ext-k' k suc) bs) (R.act-τ (ext-k' k suc) τ)
     thin-branches NoBranches = NoBranches
-    thin-branches {φ = φ} {τ = τ} (OneMoreBranch {ε' = ε'} {conτ = conτ} εδ branchesδ) =
-      let conτδ' = Γ⊢τ-thinning Γ⊂Γ' Γ'ok {! conτδ !}
-          εδ' = Γ⊢ε⦂τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok conτδ') {! εδ !}
-          derivable τ = Γ' , R.act-τ (ext-k' k suc) conτ ⊢[ φ ] R.act-ε (R.ext (ext-k' k suc)) ε' ⦂ τ
-          εδ'-substed = subst derivable (ext-k'-suc-commute k τ) {! εδ' !}
+    thin-branches {τ = τ} (OneMoreBranch {ε' = ε'} {conτ = conτ} εδ branchesδ) =
+      let εδ' = Γ⊢ε⦂τ-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok {! !}) εδ
+          derivable τ = Γ' , R.act-τ (ext-k' k suc) conτ ⊢[ _ ] R.act-ε (R.ext (ext-k' k suc)) ε' ⦂ τ
+          εδ'-substed = subst derivable (ext-k'-suc-commute k τ) εδ'
        in OneMoreBranch
             εδ'-substed
             (thin-branches branchesδ)
