@@ -26,12 +26,10 @@ data TSFlavour : Set where
 variable
   fl : TSFlavour
 
-data Enrich : TSFlavour → Set → Set where
-  Omitted   : {A : Set}
-            → Enrich M A
-  Enriched  : {A : Set}
-            → (δ : A)
-            → Enrich E A
+data Enrich (A : Set) : TSFlavour → Set where
+  Omitted   : Enrich A M
+  Enriched  : (δ : A)
+            → Enrich A E
 
 record PositiveDecision (ℓ : ℕ) : Set where
   constructor MkPD
