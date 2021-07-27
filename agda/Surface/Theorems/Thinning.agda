@@ -33,24 +33,23 @@ open import Surface.Theorems.Helpers
 mutual
   <:-thinning : {Γ : Ctx (k + ℓ)}
               → (Γ⊂Γ' : k by Γ ⊂' Γ')
-              → Γ' ok[ φ ]
+              → Enrich (Γ' ok[ φ ]) φ
               → Γ ⊢[ φ ] τ <: τ'
               → Γ' ⊢[ φ ] R.act-τ (ext-k' k suc) τ <: R.act-τ (ext-k' k suc) τ'
-  <:-thinning Γ⊂Γ' Γ'ok (ST-Base oracle is-just) = ST-Base oracle (Oracle.thin oracle Γ⊂Γ' is-just)
-  <:-thinning Γ⊂Γ' Γ'ok (ST-Arr <:₁δ <:₂δ omitted omitted) =
-    let foo = {! !}
+  <:-thinning Γ⊂Γ' _ (ST-Base oracle is-just) = ST-Base oracle (Oracle.thin oracle Γ⊂Γ' is-just)
+  <:-thinning Γ⊂Γ' _ (ST-Arr <:₁δ <:₂δ omitted omitted)
+    = ST-Arr
+        (<:-thinning Γ⊂Γ' omitted <:₁δ)
+        (<:-thinning (append-both Γ⊂Γ') omitted <:₂δ)
+        omitted
+        omitted
+  <:-thinning Γ⊂Γ' (enriched Γ'ok) (ST-Arr <:₁δ <:₂δ (enriched δτ₁⇒τ₂) (enriched δτ₁')) =
+    let τ₁'δ' = Γ⊢τ-thinning Γ⊂Γ' Γ'ok δτ₁'
      in ST-Arr
-          (<:-thinning Γ⊂Γ' Γ'ok <:₁δ)
-          (<:-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok {! !}) <:₂δ)
-          omitted
-          omitted
-  <:-thinning Γ⊂Γ' Γ'ok (ST-Arr <:₁δ <:₂δ (enriched ⇒δ) (enriched τ₁'δ)) =
-    let τ₁'δ' = Γ⊢τ-thinning Γ⊂Γ' Γ'ok τ₁'δ
-     in ST-Arr
-          (<:-thinning Γ⊂Γ' Γ'ok <:₁δ)
-          (<:-thinning (append-both Γ⊂Γ') (TCTX-Bind Γ'ok τ₁'δ') <:₂δ)
-          (enriched (Γ⊢τ-thinning Γ⊂Γ' Γ'ok ⇒δ))
-          (enriched τ₁'δ')
+          (<:-thinning Γ⊂Γ' (enriched Γ'ok) <:₁δ)
+          (<:-thinning (append-both Γ⊂Γ') (enriched (TCTX-Bind Γ'ok τ₁'δ')) <:₂δ)
+          (as-enrichment (Γ⊢τ-thinning Γ⊂Γ' Γ'ok δτ₁⇒τ₂))
+          (as-enrichment τ₁'δ')
 
   Γ⊢τ-thinning : {Γ : Ctx (k + ℓ)}
                → (Γ⊂Γ' : k by Γ ⊂' Γ')
@@ -119,7 +118,7 @@ mutual
     = T-Sub
         (Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok δ)
         (Γ⊢τ-thinning Γ⊂Γ' Γ'ok τ'δ)
-        (<:-thinning Γ⊂Γ' Γ'ok <:)
+        (<:-thinning Γ⊂Γ' (as-enrichment Γ'ok) <:)
   Γ⊢ε⦂τ-thinning {k = k} Γ⊂Γ' Γ'ok (T-RConv δ τ'δ τ~τ')
     = T-RConv
         (Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok δ)
@@ -130,7 +129,7 @@ mutual
              → Γ ⊢[ φ ] τ'
              → Γ ⊢[ φ ] τ₁ <: τ₂
              → (Γ , τ') ⊢[ φ ] R.weaken-τ τ₁ <: R.weaken-τ τ₂
-<:-weakening Γok Γ⊢τ' = <:-thinning ignore-head (TCTX-Bind Γok Γ⊢τ')
+<:-weakening Γok Γ⊢τ' = <:-thinning ignore-head (as-enrichment (TCTX-Bind Γok Γ⊢τ'))
 
 Γ⊢τ-weakening : Γ ok[ φ ]
               → Γ ⊢[ φ ] τ'
