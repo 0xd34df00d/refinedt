@@ -24,7 +24,7 @@ data TSFlavour : Set where
   M E : TSFlavour
 
 variable
-  fl : TSFlavour
+  φ : TSFlavour
 
 data Enrich (A : Set) : TSFlavour → Set where
   Omitted   : Enrich A M
