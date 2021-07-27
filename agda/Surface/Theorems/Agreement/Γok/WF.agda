@@ -14,14 +14,14 @@ open import Data.Nat.Properties
 open import Surface.Derivations
 open import Surface.Syntax
 
-size-ok  : Γ ok         → ℕ
-size-twf : Γ ⊢ τ        → ℕ
-size-t   : Γ ⊢ ε ⦂ τ    → ℕ
-size-<:  : Γ ⊢ τ₁ <: τ₂ → ℕ
+size-ok  : Γ ok[ φ ]         → ℕ
+size-twf : Γ ⊢[ φ ] τ        → ℕ
+size-t   : Γ ⊢[ φ ] ε ⦂ τ    → ℕ
+size-<:  : Γ ⊢[ φ ] τ₁ <: τ₂ → ℕ
 size-bs  : ∀ {τ cons} {bs : CaseBranches nₐ ℓ}
-         → BranchesHaveType Γ cons bs τ
+         → BranchesHaveType φ Γ cons bs τ
          → ℕ
-size-all-cons : {cons : ADTCons nₐ ℓ} → All (Γ ⊢_) cons → ℕ
+size-all-cons : {cons : ADTCons nₐ ℓ} → All (Γ ⊢[ φ ]_) cons → ℕ
 
 infixr 20 _⊕_
 _⊕_ : ℕ → ℕ → ℕ
@@ -77,7 +77,7 @@ size-t (T-Sub δ superδ sub) = suc (size-t δ ⊕ size-twf superδ ⊕ size-<: 
 size-t (T-RConv εδ τ'δ _) = suc (size-t εδ ⊕ size-twf τ'δ)
 
 size-<: (ST-Base _ _) = 0
-size-<: (ST-Arr sub₁ sub₂ δτ₁⇒τ₂ δτ₁') = suc (size-<: sub₁ ⊕ size-<: sub₂ ⊕ size-twf δτ₁⇒τ₂ ⊕ size-twf δτ₁')
+size-<: (ST-Arr sub₁ sub₂ δτ₁⇒τ₂ δτ₁') = suc (size-<: sub₁ ⊕ size-<: sub₂ ⊕ 0 {- size-twf δτ₁⇒τ₂ -} ⊕ 0 {-size-twf δτ₁'-})
 
 size-bs NoBranches = 0
-size-bs (OneMoreBranch _ εδ rest) = suc (size-t εδ ⊕ size-bs rest)
+size-bs (OneMoreBranch εδ rest) = suc (size-t εδ ⊕ size-bs rest)
