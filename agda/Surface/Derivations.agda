@@ -64,11 +64,6 @@ data BranchesHaveType (φ : TSFlavour) (Γ : Ctx ℓ)
                 → (εδ : (Γ , conτ) ⊢[ φ ] ε' ⦂ R.weaken-τ τ')
                 → (rest : BranchesHaveType φ Γ cons' bs' τ')
                 → BranchesHaveType φ Γ (conτ ∷ cons') (MkCaseBranch ε' ∷ bs') τ'
- {-
- TODO Γ ⊢ conτ is technically not needed to prove agreement and seemingly all other lemmas,
- TODO but its presence makes proofs of thinning much easier,
- TODO avoiding explicit recursion well-foundedness witnesses and allowing to use structural recursion.
- -}
 
 data _ok[_] where
   TCTX-Empty : ⊘ ok[ φ ]
