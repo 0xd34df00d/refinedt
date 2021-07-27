@@ -38,86 +38,87 @@ record PositiveDecision (ℓ : ℕ) : Set where
 
 record Oracle : Set
 
-data _ok : (Γ : Ctx ℓ) → Set
-data _⊢_⦂_ : (Γ : Ctx ℓ) → (ε : STerm ℓ) → (τ : SType ℓ) → Set
-data _⊢_<:_ : (Γ : Ctx ℓ) → (τ τ' : SType ℓ) → Set
-data _⊢_ : (Γ : Ctx ℓ) → (τ : SType ℓ) → Set
+data _ok[_]     : (Γ : Ctx ℓ) → TSFlavour → Set
+data _⊢[_]_⦂_   : (Γ : Ctx ℓ) → TSFlavour → (ε : STerm ℓ) → (τ : SType ℓ) → Set
+data _⊢[_]_<:_  : (Γ : Ctx ℓ) → TSFlavour → (τ τ' : SType ℓ) → Set
+data _⊢[_]_     : (Γ : Ctx ℓ) → TSFlavour → (τ : SType ℓ) → Set
 
-infix 2 _⊢_⦂_
-infix 2 _⊢_<:_
-infix 1 _⊢_
+infix 2 _⊢[_]_⦂_
+infix 2 _⊢[_]_<:_
+infix 1 _⊢[_]_
 
-data BranchesHaveType (Γ : Ctx ℓ) : (cons : ADTCons nₐ ℓ)
-                                  → (bs : CaseBranches nₐ ℓ)
-                                  → (τ' : SType ℓ)
-                                  → Set
-                                  where
-  NoBranches    : BranchesHaveType Γ [] [] τ'
+data BranchesHaveType (φ : TSFlavour) (Γ : Ctx ℓ)
+                    : (cons : ADTCons nₐ ℓ)
+                    → (bs : CaseBranches nₐ ℓ)
+                    → (τ' : SType ℓ)
+                    → Set
+                    where
+  NoBranches    : BranchesHaveType φ Γ [] [] τ'
   OneMoreBranch : ∀ {conτ} {cons' : ADTCons nₐ ℓ} {bs' : CaseBranches nₐ ℓ}
-                → (conτδ : Γ ⊢ conτ)
-                → (εδ : (Γ , conτ) ⊢ ε' ⦂ R.weaken-τ τ')
-                → (rest : BranchesHaveType Γ cons' bs' τ')
-                → BranchesHaveType Γ (conτ ∷ cons') (MkCaseBranch ε' ∷ bs') τ'
+                → (conτδ : Γ ⊢[ φ ] conτ)
+                → (εδ : (Γ , conτ) ⊢[ φ ] ε' ⦂ R.weaken-τ τ')
+                → (rest : BranchesHaveType φ Γ cons' bs' τ')
+                → BranchesHaveType φ Γ (conτ ∷ cons') (MkCaseBranch ε' ∷ bs') τ'
  {-
  TODO Γ ⊢ conτ is technically not needed to prove agreement and seemingly all other lemmas,
  TODO but its presence makes proofs of thinning much easier,
  TODO avoiding explicit recursion well-foundedness witnesses and allowing to use structural recursion.
  -}
 
-data _ok where
-  TCTX-Empty : ⊘ ok
-  TCTX-Bind  : (prevOk : Γ ok)
-             → (τδ : Γ ⊢ τ)
-             → (Γ , τ) ok
+data _ok[_] where
+  TCTX-Empty : ⊘ ok[ φ ]
+  TCTX-Bind  : (prevOk : Γ ok[ φ ])
+             → (τδ : Γ ⊢[ φ ] τ)
+             → (Γ , τ) ok[ φ ]
 
-data _⊢_ where
-  TWF-TrueRef : Γ ok
-              → Γ ⊢ ⟨ b ∣ Τ ⟩
-  TWF-Base    : (ε₁δ : Γ , ⟨ b ∣ Τ ⟩ ⊢ ε₁ ⦂ ⟨ b' ∣ Τ ⟩)
-              → (ε₂δ : Γ , ⟨ b ∣ Τ ⟩ ⊢ ε₂ ⦂ ⟨ b' ∣ Τ ⟩)
-              → Γ ⊢ ⟨ b ∣ ε₁ ≈ ε₂ of ⟨ b' ∣ Τ ⟩ ⟩
-  TWF-Conj    : (ρ₁δ : Γ ⊢ ⟨ b ∣ ρ₁ ⟩)
-              → (ρ₂δ : Γ ⊢ ⟨ b ∣ ρ₂ ⟩)
-              → Γ ⊢ ⟨ b ∣ ρ₁ ∧ ρ₂ ⟩
-  TWF-Arr     : (argδ : Γ ⊢ τ₁)
-              → (resδ : Γ , τ₁ ⊢ τ₂)
-              → Γ ⊢ τ₁ ⇒ τ₂
+data _⊢[_]_ where
+  TWF-TrueRef : Γ ok[ φ ]
+              → Γ ⊢[ φ ] ⟨ b ∣ Τ ⟩
+  TWF-Base    : (ε₁δ : Γ , ⟨ b ∣ Τ ⟩ ⊢[ φ ] ε₁ ⦂ ⟨ b' ∣ Τ ⟩)
+              → (ε₂δ : Γ , ⟨ b ∣ Τ ⟩ ⊢[ φ ] ε₂ ⦂ ⟨ b' ∣ Τ ⟩)
+              → Γ ⊢[ φ ] ⟨ b ∣ ε₁ ≈ ε₂ of ⟨ b' ∣ Τ ⟩ ⟩
+  TWF-Conj    : (ρ₁δ : Γ ⊢[ φ ] ⟨ b ∣ ρ₁ ⟩)
+              → (ρ₂δ : Γ ⊢[ φ ] ⟨ b ∣ ρ₂ ⟩)
+              → Γ ⊢[ φ ] ⟨ b ∣ ρ₁ ∧ ρ₂ ⟩
+  TWF-Arr     : (argδ : Γ ⊢[ φ ] τ₁)
+              → (resδ : Γ , τ₁ ⊢[ φ ] τ₂)
+              → Γ ⊢[ φ ] τ₁ ⇒ τ₂
   TWF-ADT     : {adtCons : ADTCons (Mkℕₐ (suc n)) ℓ}
-              → (consδs : All (Γ ⊢_) adtCons)
-              → Γ ⊢ ⊍ adtCons
+              → (consδs : All (Γ ⊢[ φ ]_) adtCons)
+              → Γ ⊢[ φ ] ⊍ adtCons
 
-data _⊢_⦂_ where
-  T-Unit      : (Γok : Γ ok)
-              → Γ ⊢ SUnit ⦂ ⟨ BUnit ∣ Τ ⟩
-  T-Var       : (Γok : Γ ok)
+data _⊢[_]_⦂_ where
+  T-Unit      : (Γok : Γ ok[ φ ])
+              → Γ ⊢[ φ ] SUnit ⦂ ⟨ BUnit ∣ Τ ⟩
+  T-Var       : (Γok : Γ ok[ φ ])
               → τ ∈ Γ at ι
-              → Γ ⊢ SVar ι ⦂ τ
-  T-Abs       : (arrδ : Γ ⊢ τ₁ ⇒ τ₂)
-              → (bodyδ : Γ , τ₁ ⊢ ε ⦂ τ₂)
-              → Γ ⊢ SLam τ₁ ε ⦂ τ₁ ⇒ τ₂
-  T-App       : (δ₁ : Γ ⊢ ε₁ ⦂ τ₁ ⇒ τ₂)
-              → (δ₂ : Γ ⊢ ε₂ ⦂ τ₁)
-              → Γ ⊢ SApp ε₁ ε₂ ⦂ [ zero ↦τ ε₂ ] τ₂
+              → Γ ⊢[ φ ] SVar ι ⦂ τ
+  T-Abs       : (arrδ : Γ ⊢[ φ ] τ₁ ⇒ τ₂)
+              → (bodyδ : Γ , τ₁ ⊢[ φ ] ε ⦂ τ₂)
+              → Γ ⊢[ φ ] SLam τ₁ ε ⦂ τ₁ ⇒ τ₂
+  T-App       : (δ₁ : Γ ⊢[ φ ] ε₁ ⦂ τ₁ ⇒ τ₂)
+              → (δ₂ : Γ ⊢[ φ ] ε₂ ⦂ τ₁)
+              → Γ ⊢[ φ ] SApp ε₁ ε₂ ⦂ [ zero ↦τ ε₂ ] τ₂
   T-Case      : {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
               → {bs : CaseBranches (Mkℕₐ (suc n)) ℓ}
-              → (resδ : Γ ⊢ τ')
-              → (scrutτδ : Γ ⊢ ε ⦂ ⊍ cons)
-              → (branches-well-typed : BranchesHaveType Γ cons bs τ')
-              → Γ ⊢ SCase ε bs ⦂ τ'
+              → (resδ : Γ ⊢[ φ ] τ')
+              → (scrutτδ : Γ ⊢[ φ ] ε ⦂ ⊍ cons)
+              → (branches-well-typed : BranchesHaveType φ Γ cons bs τ')
+              → Γ ⊢[ φ ] SCase ε bs ⦂ τ'
   T-Con       : ∀ {ι}
               → {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
               → (≡-prf : τⱼ ≡ lookup cons ι)
-              → (conArg : Γ ⊢ ε ⦂ τⱼ)
-              → (adtτ : Γ ⊢ ⊍ cons)
-              → Γ ⊢ SCon ι ε cons ⦂ ⊍ cons
-  T-Sub       : (εδ : Γ ⊢ ε ⦂ τ)
-              → (τ'δ : Γ ⊢ τ')
-              → (<: : Γ ⊢ τ <: τ')
-              → Γ ⊢ ε ⦂ τ'
-  T-RConv     : (εδ : Γ ⊢ ε ⦂ τ)
-              → (τ'δ : Γ ⊢ τ')
+              → (conArg : Γ ⊢[ φ ] ε ⦂ τⱼ)
+              → (adtτ : Γ ⊢[ φ ] ⊍ cons)
+              → Γ ⊢[ φ ] SCon ι ε cons ⦂ ⊍ cons
+  T-Sub       : (εδ : Γ ⊢[ φ ] ε ⦂ τ)
+              → (τ'δ : Γ ⊢[ φ ] τ')
+              → (<: : Γ ⊢[ φ ] τ <: τ')
+              → Γ ⊢[ φ ] ε ⦂ τ'
+  T-RConv     : (εδ : Γ ⊢[ φ ] ε ⦂ τ)
+              → (τ'δ : Γ ⊢[ φ ] τ')
               → (τ~τ' : τ ↭βτ τ')
-              → Γ ⊢ ε ⦂ τ'
+              → Γ ⊢[ φ ] ε ⦂ τ'
 
 record Oracle where
   inductive
@@ -156,13 +157,13 @@ record UniquenessOfOracles : Set where
   field
     oracles-equal : ∀ (ω₁ ω₂ : Oracle) → ω₁ ≡ ω₂
 
-data _⊢_<:_ where
+data _⊢[_]_<:_ where
   ST-Base     : (oracle : Oracle)
               → ⦃ UoO : UniquenessOfOracles ⦄
               → Is-just (Oracle.decide oracle Γ b ρ₁ ρ₂)
-              → Γ ⊢ ⟨ b ∣ ρ₁ ⟩ <: ⟨ b ∣ ρ₂ ⟩
-  ST-Arr      : Γ ⊢ τ₁' <: τ₁
-              → Γ , τ₁' ⊢ τ₂ <: τ₂'
-              → Γ ⊢ τ₁ ⇒ τ₂   {- TODO this needn't be required, but proving translation without it is difficult for termination reasons -}
-              → Γ ⊢ τ₁'       {- ditto -}
-              → Γ ⊢ τ₁ ⇒ τ₂ <: τ₁' ⇒ τ₂'
+              → Γ ⊢[ φ ] ⟨ b ∣ ρ₁ ⟩ <: ⟨ b ∣ ρ₂ ⟩
+  ST-Arr      : Γ ⊢[ φ ] τ₁' <: τ₁
+              → Γ , τ₁' ⊢[ φ ] τ₂ <: τ₂'
+              → Enrich (Γ ⊢[ φ ] τ₁ ⇒ τ₂) φ
+              → Enrich (Γ ⊢[ φ ] τ₁') φ
+              → Γ ⊢[ φ ] τ₁ ⇒ τ₂ <: τ₁' ⇒ τ₂'
