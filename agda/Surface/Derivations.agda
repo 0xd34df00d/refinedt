@@ -20,6 +20,19 @@ import Surface.Syntax.Substitution as S
 
 open import Core.Syntax using (CExpr)
 
+data TSFlavour : Set where
+  M E : TSFlavour
+
+variable
+  fl : TSFlavour
+
+data Enrich : TSFlavour → Set → Set where
+  Omitted   : {A : Set}
+            → Enrich M A
+  Enriched  : {A : Set}
+            → (δ : A)
+            → Enrich E A
+
 record PositiveDecision (ℓ : ℕ) : Set where
   constructor MkPD
   field
