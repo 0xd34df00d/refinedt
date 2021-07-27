@@ -158,12 +158,12 @@ record UniquenessOfOracles : Set where
     oracles-equal : ∀ (ω₁ ω₂ : Oracle) → ω₁ ≡ ω₂
 
 data _⊢[_]_<:_ where
-  ST-Base     : (oracle : Oracle)
-              → ⦃ UoO : UniquenessOfOracles ⦄
-              → Is-just (Oracle.decide oracle Γ b ρ₁ ρ₂)
-              → Γ ⊢[ φ ] ⟨ b ∣ ρ₁ ⟩ <: ⟨ b ∣ ρ₂ ⟩
-  ST-Arr      : Γ ⊢[ φ ] τ₁' <: τ₁
-              → Γ , τ₁' ⊢[ φ ] τ₂ <: τ₂'
-              → Enrich (Γ ⊢[ φ ] τ₁ ⇒ τ₂) φ
-              → Enrich (Γ ⊢[ φ ] τ₁') φ
-              → Γ ⊢[ φ ] τ₁ ⇒ τ₂ <: τ₁' ⇒ τ₂'
+  ST-Base : (oracle : Oracle)
+          → ⦃ UoO : UniquenessOfOracles ⦄
+          → Is-just (Oracle.decide oracle Γ b ρ₁ ρ₂)
+          → Γ ⊢[ φ ] ⟨ b ∣ ρ₁ ⟩ <: ⟨ b ∣ ρ₂ ⟩
+  ST-Arr  : Γ ⊢[ φ ] τ₁' <: τ₁
+          → Γ , τ₁' ⊢[ φ ] τ₂ <: τ₂'
+          → Enrich (Γ ⊢[ φ ] τ₁ ⇒ τ₂) φ
+          → Enrich (Γ ⊢[ φ ] τ₁') φ
+          → Γ ⊢[ φ ] τ₁ ⇒ τ₂ <: τ₁' ⇒ τ₂'
