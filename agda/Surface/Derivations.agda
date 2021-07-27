@@ -31,6 +31,12 @@ data Enrich (A : Set) : TSFlavour → Set where
   enriched  : (δ : A)
             → Enrich A E
 
+as-enrichment : ∀ {A}
+              → A
+              → Enrich A φ
+as-enrichment {φ = M} δ = omitted
+as-enrichment {φ = E} δ = enriched δ
+
 record PositiveDecision (ℓ : ℕ) : Set where
   constructor MkPD
   field
