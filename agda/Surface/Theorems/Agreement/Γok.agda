@@ -12,7 +12,7 @@ open import Surface.Theorems.Helpers
 open import Surface.Theorems.Agreement.Γok.WF
 
 Γok-tail-smaller : (δ : (Γ , τ) ok[ φ ]) → size-ok (Γok-tail δ) < size-ok δ
-Γok-tail-smaller (TCTX-Bind prevOk τδ) = s≤s (m≤m⊕n (size-ok prevOk) (size-twf τδ))
+Γok-tail-smaller (TCTX-Bind prevOk τδ) = s≤s (₁≤₂ (size-ok prevOk) (size-twf τδ))
 
 abstract
   -- Referred to as T-implies-TCTX in the paper
@@ -39,10 +39,10 @@ abstract
 
   private
     a<b-⇒-a<b⊕c : {b c a : ℕ} → a < b → a < suc (b ⊕ c)
-    a<b-⇒-a<b⊕c {b} {c} a<b = <-trans a<b (s≤s (m≤m⊕n b c))
+    a<b-⇒-a<b⊕c {b} {c} a<b = <-trans a<b (s≤s (₁≤₂ b c))
 
     a<c-⇒-a<b⊕c : {b c a : ℕ} → a < c → a < suc (b ⊕ c)
-    a<c-⇒-a<b⊕c {b} {c} a<c = <-trans a<c (s≤s (n≤m⊕n b c))
+    a<c-⇒-a<b⊕c {b} {c} a<c = <-trans a<c (s≤s (₂≤₂ b c))
 
   Γ⊢ε⦂τ-⇒-Γok-smaller : (δ : Γ ⊢[ φ ] ε ⦂ τ)
                       → size-ok (Γ⊢ε⦂τ-⇒-Γok δ) < size-t δ
