@@ -61,7 +61,6 @@ data BranchesHaveType (φ : TSFlavour) (Γ : Ctx ℓ)
                     where
   NoBranches    : BranchesHaveType φ Γ [] [] τ'
   OneMoreBranch : ∀ {conτ} {cons' : ADTCons nₐ ℓ} {bs' : CaseBranches nₐ ℓ}
-                → (conτδ : Γ ⊢[ φ ] conτ)
                 → (εδ : (Γ , conτ) ⊢[ φ ] ε' ⦂ R.weaken-τ τ')
                 → (rest : BranchesHaveType φ Γ cons' bs' τ')
                 → BranchesHaveType φ Γ (conτ ∷ cons') (MkCaseBranch ε' ∷ bs') τ'
