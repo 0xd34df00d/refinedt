@@ -13,15 +13,15 @@ open import Surface.Theorems.Helpers
 open import Surface.Theorems.Thinning
 open import Surface.Theorems.Substitution
 
-τ∈Γ-⇒-Γ⊢τ : Γ ok
+τ∈Γ-⇒-Γ⊢τ : Γ ok[ φ ]
           → τ ∈ Γ at ι
-          → Γ ⊢ τ
+          → Γ ⊢[ φ ] τ
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind Γok τδ) (∈-zero refl) = Γ⊢τ-weakening Γok τδ τδ
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind Γok τδ) (∈-suc refl ∈) = Γ⊢τ-weakening Γok τδ (τ∈Γ-⇒-Γ⊢τ Γok ∈)
 
 -- Referred to as T-implies-TWF in the paper
-Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢ ε ⦂ τ
-            → Γ ⊢ τ
+Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢[ φ ] ε ⦂ τ
+            → Γ ⊢[ φ ] τ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Unit Γok) = TWF-TrueRef Γok
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Var Γok ∈-prf) = τ∈Γ-⇒-Γ⊢τ Γok ∈-prf
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Abs arrδ _) = arrδ
@@ -35,7 +35,7 @@ open import Surface.Theorems.Substitution
 open import Surface.Theorems.Thinning.WF
 open import Surface.Theorems.Agreement.TypeWellFormedness.WF
 
-τ∈Γ-⇒-Γ⊢τ-smaller : (Γok : Γ ok)
+τ∈Γ-⇒-Γ⊢τ-smaller : (Γok : Γ ok[ φ ])
                   → (∈ : τ ∈ Γ at ι)
                   → size-twf (τ∈Γ-⇒-Γ⊢τ Γok ∈) ≤ size-∈ Γok ∈
 τ∈Γ-⇒-Γ⊢τ-smaller (TCTX-Bind Γok τδ) (∈-zero refl) = let r = Γ⊢τ-weakening-size Γok τδ τδ in {! !}
