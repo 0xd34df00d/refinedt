@@ -17,29 +17,31 @@ open import Surface.Theorems.Thinning
 mutual
   <:-equivalence : (Δ : CtxSuffix (suc ℓ) k)
                  → τ ↭βτ τ'
-                 → Γ ⊢ τ'
-                 → Γ , τ  ++ Δ ⊢ τ₁ <: τ₂
-                 → Γ , τ' ++ Δ ⊢ τ₁ <: τ₂
+                 → Γ ⊢[ φ ] τ'
+                 → Γ , τ  ++ Δ ⊢[ φ ] τ₁ <: τ₂
+                 → Γ , τ' ++ Δ ⊢[ φ ] τ₁ <: τ₂
   <:-equivalence Δ τ-↭βτ Γ⊢τ' (ST-Base oracle is-just) = ST-Base oracle (Oracle.stepping oracle τ-↭βτ is-just)
-  <:-equivalence Δ τ-↭βτ Γ⊢τ' (ST-Arr <:₁ <:₂ δτ₁⇒τ₂ δτ₁') = ST-Arr
-                                                              (<:-equivalence Δ τ-↭βτ Γ⊢τ' <:₁)
-                                                              (<:-equivalence (Δ , _) τ-↭βτ Γ⊢τ' <:₂)
-                                                              (Γ⊢τ-equivalence Δ τ-↭βτ Γ⊢τ' δτ₁⇒τ₂)
-                                                              (Γ⊢τ-equivalence Δ τ-↭βτ Γ⊢τ' δτ₁')
+  <:-equivalence Δ τ-↭βτ Γ⊢τ' (ST-Arr <:₁ <:₂ omitted omitted) = ST-Arr (<:-equivalence Δ τ-↭βτ Γ⊢τ' <:₁) (<:-equivalence (Δ , _) τ-↭βτ Γ⊢τ' <:₂) omitted omitted
+  <:-equivalence Δ τ-↭βτ Γ⊢τ' (ST-Arr <:₁ <:₂ (enriched δτ₁⇒τ₂) (enriched δτ₁'))
+    = ST-Arr
+        (<:-equivalence Δ τ-↭βτ Γ⊢τ' <:₁)
+        (<:-equivalence (Δ , _) τ-↭βτ Γ⊢τ' <:₂)
+        (enriched (Γ⊢τ-equivalence Δ τ-↭βτ Γ⊢τ' δτ₁⇒τ₂))
+        (enriched (Γ⊢τ-equivalence Δ τ-↭βτ Γ⊢τ' δτ₁'))
 
   Γok-equivalence : (Δ : CtxSuffix (suc ℓ) k)
                   → τ ↭βτ τ'
-                  → Γ ⊢ τ'
-                  → (Γ , τ  ++ Δ) ok
-                  → (Γ , τ' ++ Δ) ok
+                  → Γ ⊢[ φ ] τ'
+                  → (Γ , τ  ++ Δ) ok[ φ ]
+                  → (Γ , τ' ++ Δ) ok[ φ ]
   Γok-equivalence ⊘       τ-↭βτ Γ⊢τ' (TCTX-Bind Γok τδ) = TCTX-Bind Γok Γ⊢τ'
   Γok-equivalence (Δ , τ) τ-↭βτ Γ⊢τ' (TCTX-Bind Γok τδ) = TCTX-Bind (Γok-equivalence Δ τ-↭βτ Γ⊢τ' Γok) (Γ⊢τ-equivalence Δ τ-↭βτ Γ⊢τ' τδ)
 
   Γ⊢τ-equivalence : (Δ : CtxSuffix (suc ℓ) k)
                   → τ₁ ↭βτ τ₁'
-                  → Γ ⊢ τ₁'
-                  → Γ , τ₁  ++ Δ ⊢ τ₂
-                  → Γ , τ₁' ++ Δ ⊢ τ₂
+                  → Γ ⊢[ φ ] τ₁'
+                  → Γ , τ₁  ++ Δ ⊢[ φ ] τ₂
+                  → Γ , τ₁' ++ Δ ⊢[ φ ] τ₂
   Γ⊢τ-equivalence Δ τ-↭βτ Γ⊢τ' (TWF-TrueRef Γok) = TWF-TrueRef (Γok-equivalence Δ τ-↭βτ Γ⊢τ' Γok)
   Γ⊢τ-equivalence Δ τ-↭βτ Γ⊢τ' (TWF-Base ε₁δ ε₂δ) = TWF-Base (Γ⊢ε⦂τ-equivalence (Δ , _) τ-↭βτ Γ⊢τ' ε₁δ) (Γ⊢ε⦂τ-equivalence (Δ , _) τ-↭βτ Γ⊢τ' ε₂δ)
   Γ⊢τ-equivalence Δ τ-↭βτ Γ⊢τ' (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (Γ⊢τ-equivalence Δ τ-↭βτ Γ⊢τ' ρ₁δ) (Γ⊢τ-equivalence Δ τ-↭βτ Γ⊢τ' ρ₂δ)
@@ -49,18 +51,18 @@ mutual
       equiv-cons : ∀ {cons : ADTCons nₐ (k + suc ℓ)}
                  → (Δ : CtxSuffix (suc ℓ) k)
                  → τ ↭βτ τ'
-                 → Γ ⊢ τ'
-                 → All ((Γ , τ  ++ Δ) ⊢_) cons
-                 → All ((Γ , τ' ++ Δ) ⊢_) cons
+                 → Γ ⊢[ φ ] τ'
+                 → All ((Γ , τ  ++ Δ) ⊢[ φ ]_) cons
+                 → All ((Γ , τ' ++ Δ) ⊢[ φ ]_) cons
       equiv-cons Δ τ-↭βτ Γ⊢τ' [] = []
       equiv-cons Δ τ-↭βτ Γ⊢τ' (δ ∷ consδs) = Γ⊢τ-equivalence Δ τ-↭βτ Γ⊢τ' δ ∷ equiv-cons Δ τ-↭βτ Γ⊢τ' consδs
 
   Var-equivalence : (Δ : CtxSuffix (suc ℓ) k)
                   → τ₁ ↭βτ τ₁'
-                  → Γ ⊢ τ₁'
-                  → (Γ , τ₁ ++ Δ) ok
+                  → Γ ⊢[ φ ] τ₁'
+                  → (Γ , τ₁ ++ Δ) ok[ φ ]
                   → τ ∈ Γ , τ₁ ++ Δ at ι
-                  → Γ , τ₁' ++ Δ ⊢ SVar ι ⦂ τ
+                  → Γ , τ₁' ++ Δ ⊢[ φ ] SVar ι ⦂ τ
   Var-equivalence ⊘ τ-↭βτ Γ⊢τ₁' (TCTX-Bind ctx-ok τδ) (∈-zero refl)
     = let var-δ = T-Var (TCTX-Bind ctx-ok Γ⊢τ₁') (∈-zero refl)
           r-τδ = Γ⊢τ-weakening ctx-ok Γ⊢τ₁' τδ
@@ -76,9 +78,9 @@ mutual
 
   Γ⊢ε⦂τ-equivalence : (Δ : CtxSuffix (suc ℓ) k)
                     → τ₁ ↭βτ τ₁'
-                    → Γ ⊢ τ₁'
-                    → Γ , τ₁  ++ Δ ⊢ ε ⦂ τ₂
-                    → Γ , τ₁' ++ Δ ⊢ ε ⦂ τ₂
+                    → Γ ⊢[ φ ] τ₁'
+                    → Γ , τ₁  ++ Δ ⊢[ φ ] ε ⦂ τ₂
+                    → Γ , τ₁' ++ Δ ⊢[ φ ] ε ⦂ τ₂
   Γ⊢ε⦂τ-equivalence Δ τ-↭βτ Γ⊢τ₁' (T-Unit Γok) = T-Unit (Γok-equivalence Δ τ-↭βτ Γ⊢τ₁' Γok)
   Γ⊢ε⦂τ-equivalence Δ τ-↭βτ Γ⊢τ₁' (T-Var Γok ∈) = Var-equivalence Δ τ-↭βτ Γ⊢τ₁' Γok ∈
   Γ⊢ε⦂τ-equivalence Δ τ-↭βτ Γ⊢τ₁' (T-Abs arrδ εδ) = T-Abs (Γ⊢τ-equivalence Δ τ-↭βτ Γ⊢τ₁' arrδ) (Γ⊢ε⦂τ-equivalence (Δ , _) τ-↭βτ Γ⊢τ₁' εδ)
@@ -92,11 +94,11 @@ mutual
       equiv-branches : ∀ {cons : ADTCons nₐ (k + suc ℓ)} {bs : CaseBranches nₐ (k + suc ℓ)}
                      → (Δ : CtxSuffix (suc ℓ) k)
                      → τ ↭βτ τ'
-                     → Γ ⊢ τ'
-                     → BranchesHaveType (Γ , τ  ++ Δ) cons bs τ₀
-                     → BranchesHaveType (Γ , τ' ++ Δ) cons bs τ₀
+                     → Γ ⊢[ φ ] τ'
+                     → BranchesHaveType φ (Γ , τ  ++ Δ) cons bs τ₀
+                     → BranchesHaveType φ (Γ , τ' ++ Δ) cons bs τ₀
       equiv-branches Δ τ-↭βτ Γ⊢τ₁' NoBranches = NoBranches
-      equiv-branches Δ τ-↭βτ Γ⊢τ₁' (OneMoreBranch conτδ εδ bs) = OneMoreBranch (Γ⊢τ-equivalence Δ τ-↭βτ Γ⊢τ₁' conτδ) (Γ⊢ε⦂τ-equivalence (Δ , _) τ-↭βτ Γ⊢τ₁' εδ) (equiv-branches Δ τ-↭βτ Γ⊢τ₁' bs)
+      equiv-branches Δ τ-↭βτ Γ⊢τ₁' (OneMoreBranch εδ bs) = OneMoreBranch (Γ⊢ε⦂τ-equivalence (Δ , _) τ-↭βτ Γ⊢τ₁' εδ) (equiv-branches Δ τ-↭βτ Γ⊢τ₁' bs)
   Γ⊢ε⦂τ-equivalence Δ τ-↭βτ Γ⊢τ₁' (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (Γ⊢ε⦂τ-equivalence Δ τ-↭βτ Γ⊢τ₁' εδ) (Γ⊢τ-equivalence Δ τ-↭βτ Γ⊢τ₁' adtτ)
   Γ⊢ε⦂τ-equivalence Δ τ-↭βτ Γ⊢τ₁' (T-Sub εδ τ'δ <:)
     = let εδ' = Γ⊢ε⦂τ-equivalence Δ τ-↭βτ Γ⊢τ₁' εδ
