@@ -97,12 +97,12 @@ lookup-preserves-Γ⊢τ : {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
                      → Γ ⊢[ φ ] lookup cons ι
 lookup-preserves-Γ⊢τ {φ = φ} ι (TWF-ADT consδs) = go ι consδs
   where
-    go : (ι : Fin n)
-       → {cons : ADTCons (Mkℕₐ n) ℓ}
-       → All (Γ ⊢[ φ ]_) cons
-       → Γ ⊢[ φ ] lookup cons ι
-    go zero (px ∷ _) = px
-    go (suc ι) (_ ∷ consδs) = go ι consδs
+  go : (ι : Fin n)
+     → {cons : ADTCons (Mkℕₐ n) ℓ}
+     → All (Γ ⊢[ φ ]_) cons
+     → Γ ⊢[ φ ] lookup cons ι
+  go zero (px ∷ _) = px
+  go (suc ι) (_ ∷ consδs) = go ι consδs
 
 con-has-type : ∀ {cons cons' : ADTCons (Mkℕₐ (suc n)) ℓ} {ι}
              → Γ ⊢[ φ ] SCon ι ε cons ⦂ ⊍ cons'
@@ -135,9 +135,9 @@ preservation {φ = φ} (E-CaseMatch ε-is-value ι) (T-Case resδ εδ branches)
   = let branchδ = sub-Γ⊢ε⦂τ-front (con-has-type εδ) (branch-has-type ι branches)
      in subst-Γ⊢ε⦂τ-τ (replace-weakened-τ-zero _ _) branchδ
   where
-    branch-has-type : ∀ {cons : ADTCons (Mkℕₐ n) ℓ} {bs : CaseBranches (Mkℕₐ n) ℓ} {τ}
-                    → (ι : Fin n)
-                    → BranchesHaveType φ Γ cons bs τ
-                    → Γ , lookup cons ι ⊢[ φ ] CaseBranch.body (lookup bs ι) ⦂ R.weaken-τ τ
-    branch-has-type zero (OneMoreBranch εδ _) = εδ
-    branch-has-type (suc ι) (OneMoreBranch _ bht) = branch-has-type ι bht
+  branch-has-type : ∀ {cons : ADTCons (Mkℕₐ n) ℓ} {bs : CaseBranches (Mkℕₐ n) ℓ} {τ}
+                  → (ι : Fin n)
+                  → BranchesHaveType φ Γ cons bs τ
+                  → Γ , lookup cons ι ⊢[ φ ] CaseBranch.body (lookup bs ι) ⦂ R.weaken-τ τ
+  branch-has-type zero (OneMoreBranch εδ _) = εδ
+  branch-has-type (suc ι) (OneMoreBranch _ bht) = branch-has-type ι bht
