@@ -15,7 +15,7 @@ open import Core.Derivations.Lemmas
 open import Core.Operational as C
 open import Core.Operational.BetaEquivalence as C
 open import Surface.Syntax as S renaming (Γ to Γˢ; τ to τˢ; ε to εˢ)
-open import Surface.Derivations as S renaming (_⊢_⦂_ to _⊢ˢ_⦂_)
+open import Surface.Derivations as S
 open import Surface.Theorems.Agreement.Γok
 open import Surface.Operational.BetaEquivalence as S
 
@@ -40,7 +40,7 @@ open import Translation.Typed
   Γ,CUnit-ok = Γ⊢τ-⇒-Γ,τ-ok Γ⊢CUnit
 
 mutual
-  μ-Γ-well-typed : (Γok : Γˢ ok)
+  μ-Γ-well-typed : (Γok : Γˢ ok[ E ])
                  → μ-Γ Γok ⊢ᶜ ⋆ₑ ⦂ □ₑ
   μ-Γ-well-typed TCTX-Empty = CT-Sort
   μ-Γ-well-typed (TCTX-Bind Γok τδ) = CT-Weaken (μ-Γ-well-typed Γok) (μ-τ-well-typed Γok τδ)
@@ -53,8 +53,8 @@ mutual
     where
     μ-b-ok = μ-b-well-typed Γᶜok
 
-  μ-τ-well-typed : (Γok : Γˢ ok)
-                 → (τδ : Γˢ ⊢ τˢ)
+  μ-τ-well-typed : (Γok : Γˢ ok[ E ])
+                 → (τδ : Γˢ ⊢[ E ] τˢ)
                  → μ-Γ Γok ⊢ᶜ μ-τ τδ ⦂ ⋆ₑ
   μ-τ-well-typed Γok (TWF-TrueRef _) = μ-b-well-typed (μ-Γ-well-typed Γok)
   μ-τ-well-typed Γok (TWF-Base ε₁δ ε₂δ) =
@@ -74,14 +74,14 @@ mutual
   μ-τ-well-typed Γok (TWF-ADT consδs) = CT-ADTForm (μ-cons-well-typed Γok consδs)
 
   μ-cons-well-typed : {cons : S.ADTCons nₐ ℓ}
-                    → (Γok : Γˢ ok)
-                    → (δs : All (Γˢ ⊢_) cons)
+                    → (Γok : Γˢ ok[ E ])
+                    → (δs : All (Γˢ ⊢[ E ]_) cons)
                     → All (λ con → μ-Γ Γok ⊢ᶜ con ⦂ ⋆ₑ) (μ-cons δs)
   μ-cons-well-typed Γok [] = []
   μ-cons-well-typed Γok (τδ ∷ δs) = μ-τ-well-typed Γok τδ ∷ μ-cons-well-typed Γok δs
 
-  μ-ε-well-typed : (Γok : Γˢ ok)
-                 → (τδ : Γˢ ⊢ τˢ)
-                 → (εδ : Γˢ ⊢ˢ εˢ ⦂ τˢ)
+  μ-ε-well-typed : (Γok : Γˢ ok[ E ])
+                 → (τδ : Γˢ ⊢[ E ] τˢ)
+                 → (εδ : Γˢ ⊢[ E ] εˢ ⦂ τˢ)
                  → μ-Γ Γok ⊢ᶜ μ-ε εδ ⦂ μ-τ τδ
   μ-ε-well-typed Γok τδ εδ = {! !}
