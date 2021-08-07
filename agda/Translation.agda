@@ -15,6 +15,7 @@ open import Core.Derivations.Lemmas
 open import Core.Operational as C
 open import Core.Operational.BetaEquivalence as C
 open import Surface.Syntax as S renaming (Γ to Γˢ; τ to τˢ; ε to εˢ)
+open import Surface.Syntax.Membership as S
 open import Surface.Derivations as S
 open import Surface.Theorems.Agreement.Γok
 open import Surface.Operational.BetaEquivalence as S
@@ -84,4 +85,11 @@ mutual
                  → (τδ : Γˢ ⊢[ E ] τˢ)
                  → (εδ : Γˢ ⊢[ E ] εˢ ⦂ τˢ)
                  → μ-Γ Γok ⊢ᶜ μ-ε εδ ⦂ μ-τ τδ
-  μ-ε-well-typed Γok τδ εδ = {! !}
+  μ-ε-well-typed Γok τδ (T-Unit _) = {! !}
+  μ-ε-well-typed Γok τδ (T-Var _ ∈) = {! !}
+  μ-ε-well-typed Γok τδ (T-Abs arrδ εδ) = {! !}
+  μ-ε-well-typed Γok τδ (T-App δ₁ δ₂) = {! !}
+  μ-ε-well-typed Γok τδ (T-Case resδ δ branches-well-typed) = {! !}
+  μ-ε-well-typed Γok τδ (T-Con refl δ adtτ) = {! !}
+  μ-ε-well-typed Γok τδ (T-Sub δ τ'δ <:) = {! !}
+  μ-ε-well-typed Γok τδ (T-RConv δ τ'δ τ~τ') = {! !}
