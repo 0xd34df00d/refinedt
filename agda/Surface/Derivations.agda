@@ -45,9 +45,9 @@ record PositiveDecision (ℓ : ℕ) : Set where
 record Oracle : Set
 
 data _ok[_]     : (Γ : Ctx ℓ) → TSFlavour → Set
-data _⊢[_]_⦂_   : (Γ : Ctx ℓ) → TSFlavour → (ε : STerm ℓ) → (τ : SType ℓ) → Set
-data _⊢[_]_<:_  : (Γ : Ctx ℓ) → TSFlavour → (τ τ' : SType ℓ) → Set
-data _⊢[_]_     : (Γ : Ctx ℓ) → TSFlavour → (τ : SType ℓ) → Set
+data _⊢[_]_⦂_   (Γ : Ctx ℓ) (φ : TSFlavour) : (ε : STerm ℓ) → (τ : SType ℓ) → Set
+data _⊢[_]_<:_  (Γ : Ctx ℓ) (φ : TSFlavour) : (τ τ' : SType ℓ) → Set
+data _⊢[_]_     (Γ : Ctx ℓ) (φ : TSFlavour) : (τ : SType ℓ) → Set
 
 infix 2 _⊢[_]_⦂_
 infix 2 _⊢[_]_<:_
@@ -71,7 +71,7 @@ data _ok[_] where
              → (τδ : Γ ⊢[ φ ] τ)
              → (Γ , τ) ok[ φ ]
 
-data _⊢[_]_ where
+data _⊢[_]_ {ℓ} Γ φ where
   TWF-TrueRef : Γ ok[ φ ]
               → Γ ⊢[ φ ] ⟨ b ∣ Τ ⟩
   TWF-Base    : (ε₁δ : Γ , ⟨ b ∣ Τ ⟩ ⊢[ φ ] ε₁ ⦂ ⟨ b' ∣ Τ ⟩)
@@ -87,7 +87,7 @@ data _⊢[_]_ where
               → (consδs : All (Γ ⊢[ φ ]_) adtCons)
               → Γ ⊢[ φ ] ⊍ adtCons
 
-data _⊢[_]_⦂_ where
+data _⊢[_]_⦂_ {ℓ} Γ φ where
   T-Unit      : (Γok : Γ ok[ φ ])
               → Γ ⊢[ φ ] SUnit ⦂ ⟨ BUnit ∣ Τ ⟩
   T-Var       : (Γok : Γ ok[ φ ])
@@ -157,7 +157,7 @@ record UniquenessOfOracles : Set where
   field
     oracles-equal : ∀ (ω₁ ω₂ : Oracle) → ω₁ ≡ ω₂
 
-data _⊢[_]_<:_ where
+data _⊢[_]_<:_ {ℓ} Γ φ where
   ST-Base : (oracle : Oracle)
           → ⦃ UoO : UniquenessOfOracles ⦄
           → Is-just (Oracle.decide oracle Γ b ρ₁ ρ₂)
