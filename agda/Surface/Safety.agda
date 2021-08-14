@@ -2,7 +2,6 @@
 
 module Surface.Safety where
 
-open import Data.Empty
 open import Data.Fin using (zero; suc)
 open import Data.Nat using (zero)
 open import Data.Vec.Base using (lookup)
@@ -11,13 +10,11 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 open import Surface.Syntax
 open import Surface.Syntax.CtxSuffix
 open import Surface.Syntax.Renaming as R
-open import Surface.Syntax.Substitution as S
 open import Surface.Syntax.Substitution.Stable
 open import Surface.Syntax.Shape
 open import Surface.Derivations
 open import Surface.Operational
 open import Surface.Operational.BetaEquivalence
-open import Surface.Operational.Lemmas
 open import Surface.Theorems.Agreement
 open import Surface.Theorems.Substitution
 open import Surface.Theorems.Subtyping
