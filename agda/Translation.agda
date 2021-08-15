@@ -9,13 +9,14 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 open import Core.Syntax as C renaming (Γ to Γᶜ)
 open import Core.Syntax.Derived as C
 open import Core.Syntax.Derived.Typing as C
+open import Core.Syntax.Membership as C renaming (_∈_at_ to _∈ᶜ_at_)
 open import Core.Syntax.Renaming as CR
 open import Core.Derivations as C renaming (_⊢_⦂_ to _⊢ᶜ_⦂_)
 open import Core.Derivations.Lemmas
 open import Core.Operational as C
 open import Core.Operational.BetaEquivalence as C
 open import Surface.Syntax as S renaming (Γ to Γˢ; τ to τˢ; ε to εˢ)
-open import Surface.Syntax.Membership as S
+open import Surface.Syntax.Membership as S renaming (_∈_at_ to _∈ˢ_at_)
 open import Surface.Derivations as S
 open import Surface.Theorems.Agreement.Γok
 open import Surface.Operational.BetaEquivalence as S
