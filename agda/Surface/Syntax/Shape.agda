@@ -40,4 +40,7 @@ shape-contra₂ : {A : Set}
               → τ₂ rel₂ τ₀
               → ¬ (shape-of τ₁ ≡ shape-of τ₂)
               → A
-shape-contra₂ pres₁ pres₂ rel₁ rel₂ ¬shape rewrite pres₁ rel₁ | pres₂ rel₂ = ⊥-elim (¬shape refl)
+shape-contra₂ pres₁ pres₂ rel₁ rel₂ ¬shape
+  rewrite pres₁ rel₁
+        | pres₂ rel₂
+        = ⊥-elim (¬shape refl)
