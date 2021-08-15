@@ -41,6 +41,33 @@ open import Translation.Typed
   Γ⊢CUnit = CT-UnitType Γᶜok
   Γ,CUnit-ok = Γ⊢τ-⇒-Γ,τ-ok Γ⊢CUnit
 
+lemma-CT-Sort : ∀ Γˢ
+              → ∀ {Γᶜ₂}
+              → (Γok₁ Γok₂ : Γˢ ok[ E ])
+              → ⊘ ≡ μ-Γ Γok₁
+              → Γᶜ₂ ≡ μ-Γ Γok₂
+              → Γᶜ₂ ⊢ᶜ ⋆ₑ ⦂ □ₑ
+lemma-CT-Sort ⊘ TCTX-Empty TCTX-Empty _ refl = CT-Sort
+
+lemma : ∀ {Γᶜ₁ Γᶜ₂}
+      → (Γok₁ Γok₂ : Γˢ ok[ E ])
+      → Γᶜ₁ ⊢ᶜ ε ⦂ τ
+      → Γᶜ₁ ≡ μ-Γ Γok₁
+      → Γᶜ₂ ≡ μ-Γ Γok₂
+      → Γᶜ₂ ⊢ᶜ ε ⦂ τ
+lemma Γok₁ Γok₂ CT-Sort ≡₁ ≡₂ = lemma-CT-Sort _ Γok₁ Γok₂ ≡₁ ≡₂
+lemma Γok₁ Γok₂ (CT-Var δ) ≡₁ ≡₂ = {! !}
+lemma Γok₁ Γok₂ (CT-Weaken δ δ₁) ≡₁ ≡₂ = {! !}
+lemma Γok₁ Γok₂ (CT-Form δ δ₁) ≡₁ ≡₂ = {! !}
+lemma Γok₁ Γok₂ (CT-App δ δ₁) ≡₁ ≡₂ = {! !}
+lemma Γok₁ Γok₂ (CT-Abs δ δ₁) ≡₁ ≡₂ = {! !}
+lemma Γok₁ Γok₂ (CT-Conv δ δ₁ x) ≡₁ ≡₂ = {! !}
+lemma Γok₁ Γok₂ (CT-UnitType δ) ≡₁ ≡₂ = {! !}
+lemma Γok₁ Γok₂ (CT-UnitTerm δ) ≡₁ ≡₂ = {! !}
+lemma Γok₁ Γok₂ (CT-ADTForm consδs) ≡₁ ≡₂ = {! !}
+lemma Γok₁ Γok₂ (CT-ADTCon ≡-prf δ δ₁) ≡₁ ≡₂ = {! !}
+lemma Γok₁ Γok₂ (CT-ADTCase δ δ₁ branches) ≡₁ ≡₂ = {! !}
+
 mutual
   μ-Γ-well-typed : (Γok : Γˢ ok[ E ])
                  → μ-Γ Γok ⊢ᶜ ⋆ₑ ⦂ □ₑ
