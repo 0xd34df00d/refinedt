@@ -30,6 +30,13 @@ data _↭βτ_ : SType ℓ → SType ℓ → Set where
   backward : (τ₂↝τ₁ : τ₂ ↝βτ τ₁)
            → τ₁ ↭βτ τ₂
 
+infix 5 _↭βτ⋆_
+data _↭βτ⋆_ : SType ℓ → SType ℓ → Set where
+  ↝-refl  : τ ↭βτ⋆ τ
+  ↝-trans : τ₁ ↭βτ τ₂
+          → τ₂ ↭βτ⋆ τ₃
+          → τ₁ ↭βτ⋆ τ₃
+
 ↭βτ-is-symmetric : τ₁ ↭βτ τ₂
                  → τ₂ ↭βτ τ₁
 ↭βτ-is-symmetric (forward τ₁↝τ₂) = backward τ₁↝τ₂
