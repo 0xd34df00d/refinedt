@@ -14,29 +14,29 @@ open import Surface.Theorems.Agreement.Γok.WF
 Γok-tail-smaller : (δ : (Γ , τ) ok[ φ ]) → size-ok (Γok-tail δ) < size-ok δ
 Γok-tail-smaller (TCTX-Bind prevOk τδ) = s≤s (₁≤₂ (size-ok prevOk) (size-twf τδ))
 
+-- Referred to as T-implies-TCTX in the paper
+Γ⊢ε⦂τ-⇒-Γok : Γ ⊢[ φ ] ε ⦂ τ → Γ ok[ φ ]
+Γ⊢ε⦂τ-⇒-Γok (T-Unit gok) = gok
+Γ⊢ε⦂τ-⇒-Γok (T-Var gok _) = gok
+Γ⊢ε⦂τ-⇒-Γok (T-Abs _ bodyδ) = Γok-tail (Γ⊢ε⦂τ-⇒-Γok bodyδ)
+Γ⊢ε⦂τ-⇒-Γok (T-App _ δ₂) = Γ⊢ε⦂τ-⇒-Γok δ₂
+Γ⊢ε⦂τ-⇒-Γok (T-Case _ scrut _) = Γ⊢ε⦂τ-⇒-Γok scrut
+Γ⊢ε⦂τ-⇒-Γok (T-Con _ conArg _) = Γ⊢ε⦂τ-⇒-Γok conArg
+Γ⊢ε⦂τ-⇒-Γok (T-Sub δ _ _) = Γ⊢ε⦂τ-⇒-Γok δ
+Γ⊢ε⦂τ-⇒-Γok (T-RConv δ _ _) = Γ⊢ε⦂τ-⇒-Γok δ
+
+-- Referred to as TWF-implies-TCTX in the paper
+Γ⊢τ-⇒-Γok : Γ ⊢[ φ ] τ → Γ ok[ φ ]
+Γ⊢τ-⇒-Γok (TWF-TrueRef gok) = gok
+Γ⊢τ-⇒-Γok (TWF-Base ε₁δ _) = Γok-tail (Γ⊢ε⦂τ-⇒-Γok ε₁δ)
+Γ⊢τ-⇒-Γok (TWF-Conj ρ₁δ _) = Γ⊢τ-⇒-Γok ρ₁δ
+Γ⊢τ-⇒-Γok (TWF-Arr argδ _) = Γ⊢τ-⇒-Γok argδ
+Γ⊢τ-⇒-Γok (TWF-ADT (px ∷ _)) = Γ⊢τ-⇒-Γok px
+
+Γ⊢ε⦂τ-⇒-Γok-tail-smaller : (δ : (Γ , τ') ⊢[ φ ] ε ⦂ τ)
+                         → size-ok (Γok-tail (Γ⊢ε⦂τ-⇒-Γok δ)) < size-t δ
+
 abstract
-  -- Referred to as T-implies-TCTX in the paper
-  Γ⊢ε⦂τ-⇒-Γok : Γ ⊢[ φ ] ε ⦂ τ → Γ ok[ φ ]
-  Γ⊢ε⦂τ-⇒-Γok (T-Unit gok) = gok
-  Γ⊢ε⦂τ-⇒-Γok (T-Var gok _) = gok
-  Γ⊢ε⦂τ-⇒-Γok (T-Abs _ bodyδ) = Γok-tail (Γ⊢ε⦂τ-⇒-Γok bodyδ)
-  Γ⊢ε⦂τ-⇒-Γok (T-App _ δ₂) = Γ⊢ε⦂τ-⇒-Γok δ₂
-  Γ⊢ε⦂τ-⇒-Γok (T-Case _ scrut _) = Γ⊢ε⦂τ-⇒-Γok scrut
-  Γ⊢ε⦂τ-⇒-Γok (T-Con _ conArg _) = Γ⊢ε⦂τ-⇒-Γok conArg
-  Γ⊢ε⦂τ-⇒-Γok (T-Sub δ _ _) = Γ⊢ε⦂τ-⇒-Γok δ
-  Γ⊢ε⦂τ-⇒-Γok (T-RConv δ _ _) = Γ⊢ε⦂τ-⇒-Γok δ
-
-  -- Referred to as TWF-implies-TCTX in the paper
-  Γ⊢τ-⇒-Γok : Γ ⊢[ φ ] τ → Γ ok[ φ ]
-  Γ⊢τ-⇒-Γok (TWF-TrueRef gok) = gok
-  Γ⊢τ-⇒-Γok (TWF-Base ε₁δ _) = Γok-tail (Γ⊢ε⦂τ-⇒-Γok ε₁δ)
-  Γ⊢τ-⇒-Γok (TWF-Conj ρ₁δ _) = Γ⊢τ-⇒-Γok ρ₁δ
-  Γ⊢τ-⇒-Γok (TWF-Arr argδ _) = Γ⊢τ-⇒-Γok argδ
-  Γ⊢τ-⇒-Γok (TWF-ADT (px ∷ _)) = Γ⊢τ-⇒-Γok px
-
-  Γ⊢ε⦂τ-⇒-Γok-tail-smaller : (δ : (Γ , τ') ⊢[ φ ] ε ⦂ τ)
-                           → size-ok (Γok-tail (Γ⊢ε⦂τ-⇒-Γok δ)) < size-t δ
-
   private
     a<b-⇒-a<b⊕c : {b c a : ℕ} → a < b → a < suc (b ⊕ c)
     a<b-⇒-a<b⊕c {b} {c} a<b = <-trans a<b (s≤s (₁≤₂ b c))
