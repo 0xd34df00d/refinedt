@@ -18,7 +18,7 @@ open import Core.Operational.BetaEquivalence as C
 open import Surface.Syntax as S renaming (Γ to Γˢ; τ to τˢ; ε to εˢ)
 open import Surface.Syntax.Membership as S renaming (_∈_at_ to _∈ˢ_at_)
 open import Surface.Derivations as S
-open import Surface.Theorems.Agreement.Γok
+open import Surface.Theorems.Agreement
 open import Surface.Operational.BetaEquivalence as S
 
 open import Translation.Untyped
