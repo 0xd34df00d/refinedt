@@ -128,6 +128,13 @@ prove-via-↝βτ' f = ↝βτ'-to-↝βτ ∘ f ∘ ↝βτ-to-↝βτ'
 ↭βτ-preserves-shape (forward τ₁↝τ₂) = ↝βτ-preserves-shape τ₁↝τ₂
 ↭βτ-preserves-shape (backward τ₂↝τ₁) = sym (↝βτ-preserves-shape τ₂↝τ₁)
 
+↭βτ⋆-preserves-shape : ShapePreserving {ℓ} _↭βτ⋆_
+↭βτ⋆-preserves-shape ↝-refl = refl
+↭βτ⋆-preserves-shape (↝-trans τ₁↭τ₂ τ₂↭⋆τ₃)
+  rewrite ↭βτ-preserves-shape τ₁↭τ₂
+        | ↭βτ⋆-preserves-shape τ₂↭⋆τ₃
+        = refl
+
 ↝βτ'-cons-same-length : ∀ {n₁ n₂}
                       → {cons₁ : ADTCons (Mkℕₐ n₁) ℓ}
                       → {cons₂ : ADTCons (Mkℕₐ n₂) ℓ}
