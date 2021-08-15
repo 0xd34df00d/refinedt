@@ -6,7 +6,7 @@ open import Data.Fin using (zero)
 open import Data.Vec using (Vec; _∷_; [])
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-open import Core.Syntax as C renaming (Γ to Γᶜ)
+open import Core.Syntax as C renaming (Γ to Γᶜ; ε to εᶜ)
 open import Core.Syntax.Derived as C
 open import Core.Syntax.Derived.Typing as C
 open import Core.Syntax.Membership as C renaming (_∈_at_ to _∈ᶜ_at_)
@@ -51,10 +51,10 @@ lemma-CT-Sort ⊘ TCTX-Empty TCTX-Empty _ refl = CT-Sort
 
 lemma : ∀ {Γᶜ₁ Γᶜ₂}
       → (Γok₁ Γok₂ : Γˢ ok[ E ])
-      → Γᶜ₁ ⊢ᶜ ε ⦂ τ
+      → Γᶜ₁ ⊢ᶜ εᶜ ⦂ τ
       → Γᶜ₁ ≡ μ-Γ Γok₁
       → Γᶜ₂ ≡ μ-Γ Γok₂
-      → Γᶜ₂ ⊢ᶜ ε ⦂ τ
+      → Γᶜ₂ ⊢ᶜ εᶜ ⦂ τ
 lemma Γok₁ Γok₂ CT-Sort ≡₁ ≡₂ = lemma-CT-Sort _ Γok₁ Γok₂ ≡₁ ≡₂
 lemma Γok₁ Γok₂ (CT-Var δ) ≡₁ ≡₂ = {! !}
 lemma Γok₁ Γok₂ (CT-Weaken δ δ₁) ≡₁ ≡₂ = {! !}
