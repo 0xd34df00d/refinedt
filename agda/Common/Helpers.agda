@@ -3,7 +3,7 @@
 module Common.Helpers where
 
 open import Data.Nat.Base using (ℕ; suc)
-open import Data.Fin.Base using (Fin)
+open import Data.Fin.Base using (Fin; suc; zero)
 open import Relation.Binary.PropositionalEquality using (_≡_)
 
 open import Data.Fin.Extra
@@ -24,3 +24,9 @@ replace-at-generic MkVar replace-idx ε var-idx with replace-idx <>? var-idx
 -- replacement index is greater than current variable index, so the variable still refers to the same binder,
 -- so leave the var index as-is, just shrinking the bound of Fin as the binders count just decremented:
 ... | greater rep>var = MkVar (tighten rep>var)
+
+ext-ρ : ∀ {ℓ ℓ'}
+      → (Fin ℓ → Fin ℓ')
+      → Fin (suc ℓ) → Fin (suc ℓ')
+ext-ρ ρ zero = zero
+ext-ρ ρ (suc ι) = suc (ρ ι)

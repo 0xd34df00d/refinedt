@@ -7,11 +7,11 @@ open import Data.Fin using (zero; suc)
 open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 
+open import Common.Helpers
 open import Core.Syntax
 open import Core.Syntax.Actions (record { Target = Fin
                                         ; var-action = λ ι → CVar ι
-                                        ; ext = λ where _ zero → zero
-                                                        ρ (suc n) → suc (ρ n)
+                                        ; ext = ext-ρ
                                         }) public
 
 open import Core.Syntax.Injectivity

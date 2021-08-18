@@ -15,8 +15,7 @@ open import Data.Fin.Extra
 open import Surface.Syntax
 open import Surface.Syntax.Actions (record { Target = Fin
                                            ; var-action = λ ι → SVar ι
-                                           ; ext = λ where _ zero → zero
-                                                           r (suc n) → suc (r n)
+                                           ; ext = ext-ρ
                                            }) public
 
 weaken-τ : SType ℓ → SType (suc ℓ)
