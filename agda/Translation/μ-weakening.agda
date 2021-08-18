@@ -18,16 +18,20 @@ open import Surface.Theorems.Thinning
 open import Translation.Untyped
 open import Translation.Typed
 
+⌊μ⌋-b-weaken-id : ∀ b
+                → ⌊μ⌋-b b ≡ CR.weaken-ε {ℓ} (⌊μ⌋-b b)
+⌊μ⌋-b-weaken-id BUnit = refl
+
 μ-τ-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
                        → (Γ⊂Γ' : k by Γˢ ⊂' Γˢ')
                        → (Γ'ok : Γˢ' ok[ E ])
                        → (τδ : Γˢ ⊢[ E ] τˢ)
                        → (τδ↓ : Acc _<_ (size-twf τδ))
                        → μ-τ (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τδ τδ↓) ≡ CR.weaken-ε (μ-τ τδ)
-μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok (TWF-TrueRef _) _ = {! !}
+μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok (TWF-TrueRef _) _ = ⌊μ⌋-b-weaken-id _
 μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok (TWF-Base ε₁δ ε₂δ) (acc rec) = {! !}
-μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok (TWF-Conj τδ τδ₁) (acc rec) = {! !}
-μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok (TWF-Arr τδ τδ₁) (acc rec) = {! !}
+μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok (TWF-Conj τδ₁ τδ₂) (acc rec) = {! !}
+μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok (TWF-Arr τδ₁ τδ₂) (acc rec) = {! !}
 μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok (TWF-ADT consδs) (acc rec) = {! !}
 
 μ-τ-thinning-commutes : {Γˢ : S.Ctx (k + ℓ)}
