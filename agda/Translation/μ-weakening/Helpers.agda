@@ -28,11 +28,6 @@ open import Translation.Untyped
              → CR.act-ε f (⌊μ⌋-b {ℓ} b) ≡ ⌊μ⌋-b b
 ⌊μ⌋-b-act-id _ _ BUnit = refl
 
-sub-lemma₁ : ∀ {ℓ} k ι
-           → ext suc (ext suc (ext-k' {ℓ} (1 + k) suc ι)) ≡ ext (ext-k' (2 + k) suc) (ext suc (ext suc ι))
-sub-lemma₁ k zero = refl
-sub-lemma₁ k (suc ι) = refl
-
 lemma₁ : ∀ k (ε : CExpr (1 + k + ℓ))
        → (act-ε (ext-k' 3 suc)
            (act-ε (ext-k' 3 suc)
@@ -51,4 +46,9 @@ lemma₁ k ε
         | act-ε-distr (λ ι → suc (ext (ext-k' k suc) ι)) suc ε
         | act-ε-distr (λ ι → suc (suc (ext (ext-k' k suc) ι))) (ext-k' 3 suc) ε
         | act-ε-distr (λ ι → suc (suc (ext suc (ext (ext-k' k suc) ι)))) (ext-k' 3 suc) ε
-        = CR.act-ε-extensionality (λ ι → cong (λ x → suc (suc x)) (sub-lemma₁ k ι)) ε
+        = CR.act-ε-extensionality (λ ι → cong (λ x → suc (suc x)) (sub-lemma₁ ι)) ε
+  where
+  sub-lemma₁ : ∀ {ℓ} ι
+             → ext suc (ext suc (ext-k' {ℓ} (1 + k) suc ι)) ≡ ext (ext-k' (2 + k) suc) (ext suc (ext suc ι))
+  sub-lemma₁ zero = refl
+  sub-lemma₁ (suc ι) = refl
