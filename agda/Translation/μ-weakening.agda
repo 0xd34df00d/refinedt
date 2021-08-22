@@ -25,9 +25,9 @@ open import Translation.Typed
                 → ⌊μ⌋-b b ≡ CR.act-ε (ext-k' {ℓ} k suc) (⌊μ⌋-b b)
 ⌊μ⌋-b-weaken-id _ BUnit = refl
 
-⌊μ⌋-b-suc-id : ∀ ℓ b
-             → CR.act-ε suc (⌊μ⌋-b {ℓ} b) ≡ ⌊μ⌋-b b
-⌊μ⌋-b-suc-id _ BUnit = refl
+⌊μ⌋-b-act-id : ∀ ℓ (f : Fin ℓ → Fin ℓ') b
+             → CR.act-ε f (⌊μ⌋-b {ℓ} b) ≡ ⌊μ⌋-b b
+⌊μ⌋-b-act-id _ _ BUnit = refl
 
 mutual
   μ-τ-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
@@ -41,9 +41,9 @@ mutual
     rewrite μ-ε-thinning↓-commutes (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)) ε₁δ (rec _ (s≤s (₁≤₂ _ _)))
           | μ-ε-thinning↓-commutes (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)) ε₂δ (rec _ (s≤s (₂≤₂ _ _)))
        -- |
-          | ⌊μ⌋-b-suc-id (k + ℓ) b
-          | ⌊μ⌋-b-suc-id (suc (k + ℓ)) b
-          | ⌊μ⌋-b-suc-id (suc (suc (k + ℓ))) b
+          | ⌊μ⌋-b-act-id (k + ℓ) suc b
+          | ⌊μ⌋-b-act-id (suc (k + ℓ)) suc b
+          | ⌊μ⌋-b-act-id (suc (suc (k + ℓ))) suc b
           = {! !}
   μ-τ-thinning↓-commutes {k = k} Γ⊂Γ' Γ'ok (TWF-Conj τδ₁ τδ₂) (acc rec)
     rewrite act-×-commutes suc (μ-τ τδ₁) (μ-τ τδ₂)
