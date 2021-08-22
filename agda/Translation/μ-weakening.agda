@@ -22,14 +22,7 @@ open import Surface.Theorems.Thinning
 
 open import Translation.Untyped
 open import Translation.Typed
-
-⌊μ⌋-b-weaken-id : ∀ k b
-                → ⌊μ⌋-b b ≡ CR.act-ε (ext-k' {ℓ} k suc) (⌊μ⌋-b b)
-⌊μ⌋-b-weaken-id _ BUnit = refl
-
-⌊μ⌋-b-act-id : ∀ ℓ (f : Fin ℓ → Fin ℓ') b
-             → CR.act-ε f (⌊μ⌋-b {ℓ} b) ≡ ⌊μ⌋-b b
-⌊μ⌋-b-act-id _ _ BUnit = refl
+open import Translation.μ-weakening.Helpers
 
 mutual
   μ-τ-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
