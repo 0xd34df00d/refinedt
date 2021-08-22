@@ -42,16 +42,16 @@ mutual
           | μ-ε-thinning↓-commutes (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)) ε₂δ (rec _ (s≤s (₂≤₂ _ _)))
        -- |
           | ⌊μ⌋-b-act-id (k + ℓ) suc b
-          | ⌊μ⌋-b-act-id (suc (k + ℓ)) suc b
-          | ⌊μ⌋-b-act-id (suc (suc (k + ℓ))) suc b
+          | ⌊μ⌋-b-act-id (1 + k + ℓ) suc b
+          | ⌊μ⌋-b-act-id (2 + k + ℓ) suc b
        -- |
-          | ⌊μ⌋-b-act-id (suc (k + ℓ)) (ext (ext-k' k suc)) b
-          | ⌊μ⌋-b-act-id (suc (suc (k + ℓ))) (ext (ext (ext-k' k suc))) b
+          | ⌊μ⌋-b-act-id (1 + k + ℓ) (ext-k' (1 + k) suc) b
+          | ⌊μ⌋-b-act-id (2 + k + ℓ) (ext-k' (2 + k) suc) b
        -- |
-          | ⌊μ⌋-b-act-id (suc (k + ℓ)) (ext suc) b'
-          | ⌊μ⌋-b-act-id (suc (suc (k + ℓ))) (ext suc) b'
-          | ⌊μ⌋-b-act-id (suc (suc (suc (k + ℓ)))) (ext suc) b'
-          | ⌊μ⌋-b-act-id (suc (suc (suc (k + ℓ)))) (ext (ext (ext (ext-k' k suc)))) b'
+          | ⌊μ⌋-b-act-id (1 + k + ℓ) (ext suc) b'
+          | ⌊μ⌋-b-act-id (2 + k + ℓ) (ext suc) b'
+          | ⌊μ⌋-b-act-id (3 + k + ℓ) (ext suc) b'
+          | ⌊μ⌋-b-act-id (3 + k + ℓ) (ext-k' (3 + k) suc) b'
           = {! !}
   μ-τ-thinning↓-commutes {k = k} Γ⊂Γ' Γ'ok (TWF-Conj τδ₁ τδ₂) (acc rec)
     rewrite act-×-commutes suc (μ-τ τδ₁) (μ-τ τδ₂)
