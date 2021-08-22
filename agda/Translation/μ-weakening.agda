@@ -58,11 +58,11 @@ mutual
           | μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok τδ₁ (rec _ (s≤s (₁≤₂ _ _)))
           | μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok τδ₂ (rec _ (s≤s (₂≤₂ _ _)))
        -- |
-          | CR.act-ε-distr suc (CR.ext (ext-k' k suc)) (μ-τ τδ₁)
+          | CR.act-ε-distr suc (ext-k' (1 + k) suc) (μ-τ τδ₁)
           | CR.act-ε-distr (ext-k' k suc) suc (μ-τ τδ₁)
        -- |
           | CR.act-ε-distr suc suc (μ-τ τδ₂)
-          | CR.act-ε-distr (λ ι → suc (suc ι)) (CR.ext (CR.ext (ext-k' k suc))) (μ-τ τδ₂)
+          | CR.act-ε-distr (λ ι → suc (suc ι)) (ext-k' (2 + k) suc) (μ-τ τδ₂)
        -- |
           | CR.act-ε-distr (ext-k' k suc) suc (μ-τ τδ₂)
           | CR.act-ε-distr (λ ι → suc (ext-k' k suc ι)) suc (μ-τ τδ₂)
