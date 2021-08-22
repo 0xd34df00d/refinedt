@@ -44,6 +44,14 @@ mutual
           | ⌊μ⌋-b-act-id (k + ℓ) suc b
           | ⌊μ⌋-b-act-id (suc (k + ℓ)) suc b
           | ⌊μ⌋-b-act-id (suc (suc (k + ℓ))) suc b
+       -- |
+          | ⌊μ⌋-b-act-id (suc (k + ℓ)) (ext (ext-k' k suc)) b
+          | ⌊μ⌋-b-act-id (suc (suc (k + ℓ))) (ext (ext (ext-k' k suc))) b
+       -- |
+          | ⌊μ⌋-b-act-id (suc (k + ℓ)) (ext suc) b'
+          | ⌊μ⌋-b-act-id (suc (suc (k + ℓ))) (ext suc) b'
+          | ⌊μ⌋-b-act-id (suc (suc (suc (k + ℓ)))) (ext suc) b'
+          | ⌊μ⌋-b-act-id (suc (suc (suc (k + ℓ)))) (ext (ext (ext (ext-k' k suc)))) b'
           = {! !}
   μ-τ-thinning↓-commutes {k = k} Γ⊂Γ' Γ'ok (TWF-Conj τδ₁ τδ₂) (acc rec)
     rewrite act-×-commutes suc (μ-τ τδ₁) (μ-τ τδ₂)
