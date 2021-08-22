@@ -6,6 +6,8 @@ open import Data.Nat.Induction
 open import Data.Nat.Properties
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
+open import Common.Helpers
+
 open import Core.Syntax as C renaming (Γ to Γᶜ; ε to εᶜ)
 open import Core.Syntax.Renaming as CR
 open import Core.Syntax.Renaming.Distributivity as CR

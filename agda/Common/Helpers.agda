@@ -2,7 +2,7 @@
 
 module Common.Helpers where
 
-open import Data.Nat.Base using (ℕ; suc)
+open import Data.Nat.Base using (ℕ; suc; zero; _+_)
 open import Data.Fin.Base using (Fin; suc; zero)
 open import Relation.Binary.PropositionalEquality using (_≡_)
 
@@ -30,3 +30,14 @@ ext-ρ : ∀ {ℓ ℓ'}
       → Fin (suc ℓ) → Fin (suc ℓ')
 ext-ρ ρ zero = zero
 ext-ρ ρ (suc ι) = suc (ρ ι)
+
+-- This has a slightly different (and less generic) type
+-- than the ext-k version from the Actions modules,
+-- so it normalizes slightly differently
+-- and is more convenient in the context of this module.
+ext-k' : ∀ {ℓ}
+       → (k : ℕ)
+       → (ρ : Fin ℓ → Fin (suc ℓ))
+       → Fin (k + ℓ) → Fin (suc k + ℓ)
+ext-k' zero ρ = ρ
+ext-k' (suc k) ρ = ext-ρ (ext-k' k ρ)

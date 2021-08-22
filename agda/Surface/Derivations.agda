@@ -9,6 +9,8 @@ open import Data.Vec using (lookup; _∷_; [])
 open import Data.Vec.Relation.Unary.All using (All; _∷_; []) public
 open import Relation.Binary.PropositionalEquality using (_≡_)
 
+open import Common.Helpers
+
 open import Surface.Syntax
 open import Surface.Syntax.CtxSuffix
 open import Surface.Syntax.Subcontext
