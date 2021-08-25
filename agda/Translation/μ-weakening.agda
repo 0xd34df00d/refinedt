@@ -50,7 +50,8 @@ mutual
           | lemma₁ k (μ-ε ε₁δ)
           | lemma₂ k (μ-ε ε₂δ)
           | lemma₃ k (μ-ε ε₂δ)
-          = {! !}
+          | lemma₄ k (μ-ε ε₁δ)
+          = refl
   μ-τ-thinning↓-commutes {k = k} Γ⊂Γ' Γ'ok (TWF-Conj τδ₁ τδ₂) (acc rec)
     rewrite act-×-commutes suc (μ-τ τδ₁) (μ-τ τδ₂)
           | μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok τδ₁ (rec _ (s≤s (₁≤₂ _ _)))
