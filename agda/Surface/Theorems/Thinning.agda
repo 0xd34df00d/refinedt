@@ -123,26 +123,7 @@ mutual
      in T-Case
           (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok resδ acc₁)
           (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ acc₂)
-          (thin-branches branchesδ acc₃)
-    where
-    thin-branches : {cons : ADTCons nₐ (k + ℓ)}
-                  → {bs : CaseBranches nₐ (k + ℓ)}
-                  → (δs : BranchesHaveType φ Γ cons bs τ)
-                  → Acc _<_ (size-bs δs)
-                  → BranchesHaveType φ Γ' (R.act-cons (ext-k' k suc) cons) (R.act-branches (ext-k' k suc) bs) (R.act-τ (ext-k' k suc) τ)
-    thin-branches NoBranches _ = NoBranches
-    thin-branches {τ = τ} (OneMoreBranch {ε' = ε'} {conτ = conτ} εδ branchesδ) (acc rec) with Γ⊢ε⦂τ-⇒-Γok εδ | Γ⊢ε⦂τ-⇒-Γok-smaller εδ
-    ... | TCTX-Bind _ conτδ | sub-≤ =
-      let acc₁ = rec _ (s≤s (₁≤₂ _ _))
-          acc₂ = rec _ (s≤s (₂≤₂ _ _))
-          acc₃ = rec _ (s≤s (≤-trans (≤-trans (≤-stepsˡ 2 (₂≤₂ _ _)) sub-≤) (₁≤₂ _ _)))
-          conτδ-thinned = Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok conτδ acc₃
-          εδ' = Γ⊢ε⦂τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok conτδ-thinned) εδ acc₁
-          derivable τ = Γ' , R.act-τ (ext-k' k suc) conτ ⊢[ _ ] R.act-ε (R.ext (ext-k' k suc)) ε' ⦂ τ
-          εδ'-substed = subst derivable (ext-k'-suc-commute k τ) εδ'
-       in OneMoreBranch
-            εδ'-substed
-            (thin-branches branchesδ acc₂)
+          (branches-thinning↓ Γ⊂Γ' Γ'ok branchesδ acc₃)
   Γ⊢ε⦂τ-thinning↓ {k = k} {φ = φ} Γ⊂Γ' Γ'ok (T-Con {ε = ε} {ι = ι} {cons = cons} refl δ adtτ) (acc rec) =
     let acc₁ = rec _ (s≤s (₁≤₂ _ _))
         acc₂ = rec _ (s≤s (₂≤₂ _ _))
@@ -167,6 +148,28 @@ mutual
           (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ acc₁)
           (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ'δ acc₂)
           (ρ-preserves-↭βτ (ext-k' k suc) τ~τ')
+
+  branches-thinning↓ : {Γ : Ctx (k + ℓ)}
+                     → {cons : ADTCons nₐ (k + ℓ)}
+                     → {bs : CaseBranches nₐ (k + ℓ)}
+                     → (Γ⊂Γ' : k by Γ ⊂' Γ')
+                     → Γ' ok[ φ ]
+                     → (δs : BranchesHaveType φ Γ cons bs τ)
+                     → Acc _<_ (size-bs δs)
+                     → BranchesHaveType φ Γ' (R.act-cons (ext-k' k suc) cons) (R.act-branches (ext-k' k suc) bs) (R.act-τ (ext-k' k suc) τ)
+  branches-thinning↓ Γ⊂Γ' Γ'ok NoBranches _ = NoBranches
+  branches-thinning↓ {k = k} {Γ' = Γ'} {τ = τ} Γ⊂Γ' Γ'ok (OneMoreBranch {ε' = ε'} {conτ = conτ} εδ branchesδ) (acc rec) with Γ⊢ε⦂τ-⇒-Γok εδ | Γ⊢ε⦂τ-⇒-Γok-smaller εδ
+  ... | TCTX-Bind _ conτδ | sub-≤ =
+    let acc₁ = rec _ (s≤s (₁≤₂ _ _))
+        acc₂ = rec _ (s≤s (₂≤₂ _ _))
+        acc₃ = rec _ (s≤s (≤-trans (≤-trans (≤-stepsˡ 2 (₂≤₂ _ _)) sub-≤) (₁≤₂ _ _)))
+        conτδ-thinned = Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok conτδ acc₃
+        εδ' = Γ⊢ε⦂τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok conτδ-thinned) εδ acc₁
+        derivable τ = Γ' , R.act-τ (ext-k' k suc) conτ ⊢[ _ ] R.act-ε (R.ext (ext-k' k suc)) ε' ⦂ τ
+        εδ'-substed = subst derivable (ext-k'-suc-commute k τ) εδ'
+     in OneMoreBranch
+          εδ'-substed
+          (branches-thinning↓ Γ⊂Γ' Γ'ok branchesδ acc₂)
 
 <:-thinning : {Γ : Ctx (k + ℓ)}
             → (Γ⊂Γ' : k by Γ ⊂' Γ')
