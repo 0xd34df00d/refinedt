@@ -99,7 +99,7 @@ mutual
   μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Case resδ εδ branches-well-typed) (acc rec) = {! !}
   μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Con ≡-prf εδ adtτ) (acc rec) = {! !}
   μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Sub εδ τ'δ <:) (acc rec) = {! !}
-  μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-RConv εδ τ'δ τ~τ') (acc rec) = {! !}
+  μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-RConv εδ τ'δ τ~τ') (acc rec) = μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _)))
 
 μ-τ-thinning-commutes : {Γˢ : S.Ctx (k + ℓ)}
                       → (Γ⊂Γ' : k by Γˢ ⊂' Γˢ')
