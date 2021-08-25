@@ -49,6 +49,7 @@ mutual
           | ⌊μ⌋-b-act-id (3 + k + ℓ) (ext-k' (3 + k) suc) b'
           | lemma₁ k (μ-ε ε₁δ)
           | lemma₂ k (μ-ε ε₂δ)
+          | lemma₃ k (μ-ε ε₂δ)
           = {! !}
   μ-τ-thinning↓-commutes {k = k} Γ⊂Γ' Γ'ok (TWF-Conj τδ₁ τδ₂) (acc rec)
     rewrite act-×-commutes suc (μ-τ τδ₁) (μ-τ τδ₂)
