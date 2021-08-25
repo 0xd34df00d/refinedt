@@ -37,7 +37,7 @@ lemma₁ k ε
         | act-ε-distr (λ ι → suc (suc (ext suc (ext suc ι)))) (ext-k' (5 + k) suc) ε
      -- |
         | act-ε-distr (ext-k' (1 + k) suc) suc ε
-        | act-ε-distr (λ ι → suc (ext (ext-k' k suc) ι)) suc ε
+        | act-ε-distr (λ ι → suc (ext-k' (1 + k) suc ι)) suc ε
         | act-ε-distr (λ ι → suc (suc (ext (ext-k' k suc) ι))) (ext-k' 3 suc) ε
         | act-ε-distr (λ ι → suc (suc (ext suc (ext (ext-k' k suc) ι)))) (ext-k' 3 suc) ε
         = act-ε-extensionality (λ where zero → refl
