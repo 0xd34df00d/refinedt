@@ -43,3 +43,29 @@ lemma₁ k ε
         = act-ε-extensionality (λ where zero → refl
                                         (suc _) → refl
                                ) ε
+
+lemma₂ : ∀ k (ε : CExpr (1 + k + ℓ))
+       → (act-ε (ext-k' 4 suc)
+           (act-ε (ext-k' 4 suc)
+             (act-ε (ext suc)
+               (act-ε suc (act-ε suc (act-ε (ext-k' (1 + k) suc) ε))))))
+         ≡
+         (act-ε (ext-k' (6 + k) suc)
+           (act-ε (ext-k' 4 suc)
+             (act-ε (ext-k' 4 suc)
+               (act-ε (ext suc) (act-ε suc (act-ε suc ε))))))
+lemma₂ k ε
+  rewrite act-ε-distr suc suc ε
+        | act-ε-distr (λ ι → suc (suc ι)) (ext suc) ε
+        | act-ε-distr (λ ι → suc (suc (suc ι))) (ext-k' 4 suc) ε
+        | act-ε-distr (λ ι → suc (suc (suc (ext suc ι)))) (ext-k' 4 suc) ε
+        | act-ε-distr (λ ι → suc (suc (suc (ext suc (ext suc ι))))) (ext-k' (6 + k) suc) ε
+     -- |
+        | act-ε-distr (ext-k' (1 + k) suc) suc ε
+        | act-ε-distr (λ ι → suc (ext-k' (1 + k) suc ι)) suc ε
+        | act-ε-distr (λ ι → suc (suc (ext-k' (1 + k) suc ι))) (ext suc) ε
+        | act-ε-distr (λ ι → suc (suc (suc (ext-k' (1 + k) suc ι)))) (ext-k' 4 suc) ε
+        | act-ε-distr (λ ι → suc (suc (suc (ext suc (ext-k' (1 + k) suc ι))))) (ext-k' 4 suc) ε
+        = act-ε-extensionality (λ where zero → refl
+                                        (suc _) → refl
+                               ) ε
