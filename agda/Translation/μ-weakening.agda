@@ -16,6 +16,8 @@ open import Core.Syntax.Derived.Renaming as CR
 open import Core.Operational as C
 open import Surface.Syntax as S renaming (Γ to Γˢ; Γ' to Γˢ'; τ to τˢ; τ' to τˢ'; ε to εˢ)
 open import Surface.Syntax.Subcontext as S
+open import Surface.Syntax.Renaming as SR
+open import Surface.Syntax.Substitution.Distributivity
 open import Surface.Derivations as S
 open import Surface.Theorems.Agreement.Γok.WF
 open import Surface.Theorems.Thinning
@@ -88,7 +90,12 @@ mutual
               εδ
               (rec _ (s≤s (₂≤₂ _ _)))
           = refl
-  μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-App ε₁δ ε₂δ) (acc rec) = {! !}
+  μ-ε-thinning↓-commutes {k = k} Γ⊂Γ' Γ'ok (T-App {τ₂ = τ₂} {ε₂ = ε₂} ε₁δ ε₂δ) (acc rec)
+    rewrite ρ-subst-distr-τ-0 (ext-k' k suc) ε₂ τ₂
+          | SR.act-τ-extensionality (ρ-0th-is-ext (ext-k' k suc)) τ₂
+          | μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok ε₁δ (rec _ (s≤s (₁≤₂ _ _)))
+          | μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok ε₂δ (rec _ (s≤s (₂≤₂ _ _)))
+          = refl
   μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Case resδ εδ branches-well-typed) (acc rec) = {! !}
   μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Con ≡-prf εδ adtτ) (acc rec) = {! !}
   μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Sub εδ τ'δ <:) (acc rec) = {! !}
