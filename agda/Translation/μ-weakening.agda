@@ -80,8 +80,15 @@ mutual
                          → μ-ε (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok εδ εδ↓) ≡ CR.act-ε (ext-k' k suc) (μ-ε εδ)
   μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Unit _) _ = refl
   μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Var _ _) _ = refl
-  μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Abs arrδ εδ) (acc rec) = {! !}
-  μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-App εδ εδ₁) (acc rec) = {! !}
+  μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Abs arrδ@(TWF-Arr domδ codδ) εδ) (acc rec)
+    rewrite μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok arrδ (rec _ (s≤s (₁≤₂ _ (size-t εδ))))
+          | μ-ε-thinning↓-commutes
+              (append-both Γ⊂Γ')
+              (TCTX-Bind Γ'ok (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok domδ (rec _ (s≤s (≤-trans (≤-trans (₁≤₂ _ (size-twf codδ)) (n≤1+n _)) (₁≤₂ _ (size-t εδ)))))))
+              εδ
+              (rec _ (s≤s (₂≤₂ _ _)))
+          = refl
+  μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-App ε₁δ ε₂δ) (acc rec) = {! !}
   μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Case resδ εδ branches-well-typed) (acc rec) = {! !}
   μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Con ≡-prf εδ adtτ) (acc rec) = {! !}
   μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Sub εδ τ'δ <:) (acc rec) = {! !}
