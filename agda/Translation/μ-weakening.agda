@@ -78,7 +78,14 @@ mutual
                          → (εδ : Γˢ ⊢[ E ] εˢ ⦂ τˢ)
                          → (εδ↓ : Acc _<_ (size-t εδ))
                          → μ-ε (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok εδ εδ↓) ≡ CR.act-ε (ext-k' k suc) (μ-ε εδ)
-  μ-ε-thinning↓-commutes = {! !}
+  μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Unit _) _ = refl
+  μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Var _ _) _ = refl
+  μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Abs arrδ εδ) (acc rec) = {! !}
+  μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-App εδ εδ₁) (acc rec) = {! !}
+  μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Case resδ εδ branches-well-typed) (acc rec) = {! !}
+  μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Con ≡-prf εδ adtτ) (acc rec) = {! !}
+  μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Sub εδ τ'δ <:) (acc rec) = {! !}
+  μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-RConv εδ τ'δ τ~τ') (acc rec) = {! !}
 
 μ-τ-thinning-commutes : {Γˢ : S.Ctx (k + ℓ)}
                       → (Γ⊂Γ' : k by Γˢ ⊂' Γˢ')
