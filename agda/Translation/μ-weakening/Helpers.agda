@@ -23,13 +23,13 @@ open import Translation.Untyped
 ⌊μ⌋-b-act-id _ _ BUnit = refl
 
 lemma₁ : ∀ k (ε : CExpr (1 + k + ℓ))
-       → (act-ε (ext-k' 3 suc)
+       → act-ε (ext-k' 3 suc)
            (act-ε (ext-k' 3 suc)
-             (act-ε suc (act-ε suc (act-ε (ext-k' (1 + k) suc) ε)))))
+             (act-ε suc (act-ε suc (act-ε (ext-k' (1 + k) suc) ε))))
          ≡
-         (act-ε (ext-k' (5 + k) suc)
+         act-ε (ext-k' (5 + k) suc)
            (act-ε (ext-k' 3 suc)
-             (act-ε (ext-k' 3 suc) (act-ε suc (act-ε suc ε)))))
+             (act-ε (ext-k' 3 suc) (act-ε suc (act-ε suc ε))))
 lemma₁ k ε
   rewrite act-ε-distr suc suc ε
         | act-ε-distr (λ ι → suc (suc ι)) (ext-k' 3 suc) ε
@@ -45,15 +45,15 @@ lemma₁ k ε
                                ) ε
 
 lemma₂ : ∀ k (ε : CExpr (1 + k + ℓ))
-       → (act-ε (ext-k' 4 suc)
+       → act-ε (ext-k' 4 suc)
            (act-ε (ext-k' 4 suc)
              (act-ε (ext suc)
-               (act-ε suc (act-ε suc (act-ε (ext-k' (1 + k) suc) ε))))))
+               (act-ε suc (act-ε suc (act-ε (ext-k' (1 + k) suc) ε)))))
          ≡
-         (act-ε (ext-k' (6 + k) suc)
+         act-ε (ext-k' (6 + k) suc)
            (act-ε (ext-k' 4 suc)
              (act-ε (ext-k' 4 suc)
-               (act-ε (ext suc) (act-ε suc (act-ε suc ε))))))
+               (act-ε (ext suc) (act-ε suc (act-ε suc ε)))))
 lemma₂ k ε
   rewrite act-ε-distr suc suc ε
         | act-ε-distr (λ ι → suc (suc ι)) (ext suc) ε
