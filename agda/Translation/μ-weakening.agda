@@ -33,6 +33,14 @@ open import Translation.μ-weakening.Helpers
 μ-ε-subst refl δ = refl
 
 mutual
+  μ-<:-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
+                          → (Γ⊂Γ' : k by Γˢ ⊂' Γˢ')
+                          → (Γ'ok : Γˢ' ok[ E ])
+                          → (δ : Γˢ ⊢[ E ] τˢ <: τˢ')
+                          → (δ↓ : Acc _<_ (size-<: δ))
+                          → μ-<: (<:-thinning↓ Γ⊂Γ' (enriched Γ'ok) δ δ↓) ≡ CR.act-ε (ext-k' k suc) (μ-<: δ)
+  μ-<:-thinning↓-commutes = {! !}
+
   μ-τ-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
                          → (Γ⊂Γ' : k by Γˢ ⊂' Γˢ')
                          → (Γ'ok : Γˢ' ok[ E ])
@@ -111,7 +119,10 @@ mutual
           | μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _)))
           | μ-cons'-thinning↓-commutes Γ⊂Γ' Γ'ok consδs (rec _ (s≤s (₂≤₂ _ _)))
           = refl
-  μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Sub εδ τ'δ <:) (acc rec) = {! !}
+  μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Sub εδ τ'δ <:δ) (acc rec)
+    rewrite μ-<:-thinning↓-commutes Γ⊂Γ' Γ'ok <:δ (rec _ (s≤s (₃≤₃ (size-t εδ) (size-twf τ'δ) (size-<: <:δ))))
+          | μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _)))
+          = refl
   μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-RConv εδ τ'δ τ~τ') (acc rec) = μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _)))
 
   μ-cons'-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
