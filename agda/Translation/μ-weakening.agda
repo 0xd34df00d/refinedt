@@ -106,9 +106,22 @@ mutual
     rewrite μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _)))
           | μ-branches-thinning↓-commutes Γ⊂Γ' Γ'ok branchesδ (rec _ (s≤s (₃≤₃ (size-t εδ) (size-twf resδ) (size-bs branchesδ))))
           = refl
-  μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Con ≡-prf εδ adtτ) (acc rec) = {! !}
+  μ-ε-thinning↓-commutes {k = k} Γ⊂Γ' Γ'ok (T-Con {ι = ι} {cons = cons} refl εδ adtτ@(TWF-ADT consδs)) (acc rec)
+    rewrite μ-ε-subst (SR.cons-lookup-comm (ext-k' k suc) ι cons) (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _))))
+          | μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _)))
+          | μ-cons'-thinning↓-commutes Γ⊂Γ' Γ'ok consδs (rec _ (s≤s (₂≤₂ _ _)))
+          = refl
   μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Sub εδ τ'δ <:) (acc rec) = {! !}
   μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-RConv εδ τ'δ τ~τ') (acc rec) = μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _)))
+
+  μ-cons'-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
+                             → {cons : S.ADTCons (Mkℕₐ (suc n)) (k + ℓ)}
+                             → (Γ⊂Γ' : k by Γˢ ⊂' Γˢ')
+                             → (Γ'ok : Γˢ' ok[ E ])
+                             → (consδs : All (Γˢ ⊢[ E ]_) cons)
+                             → (consδs↓ : Acc _<_ (suc (size-all-cons consδs)))
+                             → μ-cons' (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok (TWF-ADT consδs) consδs↓) ≡ CR.act-cons (ext-k' k suc) (μ-cons consδs)
+  μ-cons'-thinning↓-commutes Γ⊂Γ' Γ'ok consδs (acc rec) = {! !}
 
   μ-branches-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
                                 → {cons : S.ADTCons nₐ (k + ℓ)}
