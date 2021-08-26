@@ -83,7 +83,7 @@ mutual
      in TWF-Arr
           (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok δ₁ acc₁)
           (Γ⊢τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok δ₁ acc₁)) δ₂ acc₂)
-  Γ⊢τ-thinning↓ {k = k} {ℓ = ℓ} {Γ' = Γ'} {φ = φ} {Γ = Γ} Γ⊂Γ' Γ'ok (TWF-ADT consδs) (acc rec) = TWF-ADT (cons-thinning↓ Γ⊂Γ' Γ'ok consδs (rec _ ≤-refl))
+  Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok (TWF-ADT consδs) (acc rec) = TWF-ADT (cons-thinning↓ Γ⊂Γ' Γ'ok consδs (rec _ ≤-refl))
 
   Γ⊢ε⦂τ-thinning↓ : {Γ : Ctx (k + ℓ)}
                   → (Γ⊂Γ' : k by Γ ⊂' Γ')
@@ -106,7 +106,7 @@ mutual
           = let acc₁ = rec _ (s≤s (₁≤₂ _ _))
                 acc₂ = rec _ (s≤s (₂≤₂ _ _))
              in T-App (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ₁ acc₁) (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ₂ acc₂)
-  Γ⊢ε⦂τ-thinning↓ {k = k} {ℓ = ℓ} {Γ' = Γ'} {φ = φ} {Γ = Γ} Γ⊂Γ' Γ'ok (T-Case resδ δ branchesδ) (acc rec) =
+  Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Case resδ δ branchesδ) (acc rec) =
     let acc₁ = rec _ (s≤s (₂≤₃ (size-t δ) (size-twf resδ) (size-bs branchesδ)))
         acc₂ = rec _ (s≤s (₁≤₂ _ _))
         acc₃ = rec _ (s≤s (₃≤₃ (size-t δ) (size-twf resδ) (size-bs branchesδ)))
