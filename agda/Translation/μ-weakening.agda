@@ -4,7 +4,7 @@ open import Data.Fin using (zero; suc)
 open import Data.Nat.Base
 open import Data.Nat.Induction
 open import Data.Nat.Properties
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst)
 
 open import Common.Helpers
 
@@ -26,6 +26,11 @@ open import Surface.Theorems.Thinning
 open import Translation.Untyped
 open import Translation.Typed
 open import Translation.μ-weakening.Helpers
+
+μ-ε-subst : (eq : τˢ ≡ τˢ')
+          → (δ : Γˢ ⊢[ E ] εˢ ⦂ τˢ)
+          → μ-ε (subst (λ τ → Γˢ ⊢[ E ] εˢ ⦂ τ) eq δ) ≡ μ-ε δ
+μ-ε-subst refl δ = refl
 
 mutual
   μ-τ-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
