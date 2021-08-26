@@ -83,17 +83,7 @@ mutual
      in TWF-Arr
           (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok δ₁ acc₁)
           (Γ⊢τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok δ₁ acc₁)) δ₂ acc₂)
-  Γ⊢τ-thinning↓ {k = k} {ℓ = ℓ} {Γ' = Γ'} {φ = φ} {Γ = Γ} Γ⊂Γ' Γ'ok (TWF-ADT consδs) (acc rec) = TWF-ADT (thin-cons consδs (rec _ ≤-refl))
-    where
-    thin-cons : {cons : ADTCons nₐ (k + ℓ)}
-              → (δs : All (Γ ⊢[ φ ]_) cons)
-              → Acc _<_ (size-all-cons δs)
-              → All (Γ' ⊢[ φ ]_) (R.act-cons (ext-k' k suc) cons)
-    thin-cons [] _ = []
-    thin-cons (δ ∷ consδs) (acc rec) =
-      let acc₁ = rec _ (s≤s (₁≤₂ _ _))
-          acc₂ = rec _ (s≤s (₂≤₂ _ _))
-       in Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok δ acc₁ ∷ thin-cons consδs acc₂
+  Γ⊢τ-thinning↓ {k = k} {ℓ = ℓ} {Γ' = Γ'} {φ = φ} {Γ = Γ} Γ⊂Γ' Γ'ok (TWF-ADT consδs) (acc rec) = TWF-ADT (cons-thinning↓ Γ⊂Γ' Γ'ok consδs (rec _ ≤-refl))
 
   Γ⊢ε⦂τ-thinning↓ : {Γ : Ctx (k + ℓ)}
                   → (Γ⊂Γ' : k by Γ ⊂' Γ')
@@ -149,6 +139,19 @@ mutual
           (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ'δ acc₂)
           (ρ-preserves-↭βτ (ext-k' k suc) τ~τ')
 
+  cons-thinning↓ : {Γ : Ctx (k + ℓ)}
+                 → {cons : ADTCons nₐ (k + ℓ)}
+                 → (Γ⊂Γ' : k by Γ ⊂' Γ')
+                 → Γ' ok[ φ ]
+                 → (δs : All (Γ ⊢[ φ ]_) cons)
+                 → Acc _<_ (size-all-cons δs)
+                 → All (Γ' ⊢[ φ ]_) (R.act-cons (ext-k' k suc) cons)
+  cons-thinning↓ Γ⊂Γ' Γ'ok [] _ = []
+  cons-thinning↓ Γ⊂Γ' Γ'ok (δ ∷ consδs) (acc rec) =
+    let acc₁ = rec _ (s≤s (₁≤₂ _ _))
+        acc₂ = rec _ (s≤s (₂≤₂ _ _))
+     in Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok δ acc₁ ∷ cons-thinning↓ Γ⊂Γ' Γ'ok consδs acc₂
+
   branches-thinning↓ : {Γ : Ctx (k + ℓ)}
                      → {cons : ADTCons nₐ (k + ℓ)}
                      → {bs : CaseBranches nₐ (k + ℓ)}
@@ -170,6 +173,7 @@ mutual
      in OneMoreBranch
           εδ'-substed
           (branches-thinning↓ Γ⊂Γ' Γ'ok branchesδ acc₂)
+
 
 <:-thinning : {Γ : Ctx (k + ℓ)}
             → (Γ⊂Γ' : k by Γ ⊂' Γ')
