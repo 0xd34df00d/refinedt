@@ -61,9 +61,14 @@ mutual
   μ-ε (T-Abs δarr δε) = CLam (μ-τ δarr) (μ-ε δε)
   μ-ε (T-App δε₁ δε₂) = μ-ε δε₁ · μ-ε δε₂
   μ-ε (T-Case resδ δε branches) = CCase (μ-ε δε) (μ-branches branches)
-  μ-ε (T-Con {ι = ι} _ δε (TWF-ADT consδs)) = CCon ι (μ-ε δε) (μ-cons consδs)
+  μ-ε (T-Con {ι = ι} _ δε adtτ) = CCon ι (μ-ε δε) (μ-cons' adtτ)
   μ-ε (T-Sub δε τ'δ <:) = μ-<: <: · μ-ε δε
   μ-ε (T-RConv δε _ _) = μ-ε δε
+
+  μ-cons' : {cons : S.ADTCons nₐ ℓ}
+          → Γˢ ⊢[ E ] ⊍ cons
+          → C.ADTCons nₐ ℓ
+  μ-cons' (TWF-ADT consδs) = μ-cons consδs
 
   μ-cons : {cons : S.ADTCons nₐ ℓ}
          → All (Γˢ ⊢[ E ]_) cons
