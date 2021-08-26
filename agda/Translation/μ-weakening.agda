@@ -121,7 +121,20 @@ mutual
                              → (consδs : All (Γˢ ⊢[ E ]_) cons)
                              → (consδs↓ : Acc _<_ (suc (size-all-cons consδs)))
                              → μ-cons' (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok (TWF-ADT consδs) consδs↓) ≡ CR.act-cons (ext-k' k suc) (μ-cons consδs)
-  μ-cons'-thinning↓-commutes Γ⊂Γ' Γ'ok consδs (acc rec) = {! !}
+  μ-cons'-thinning↓-commutes Γ⊂Γ' Γ'ok consδs (acc rec) = μ-cons-thinning↓-commutes Γ⊂Γ' Γ'ok consδs (rec _ ≤-refl)
+
+  μ-cons-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
+                            → {cons : S.ADTCons nₐ (k + ℓ)}
+                            → (Γ⊂Γ' : k by Γˢ ⊂' Γˢ')
+                            → (Γ'ok : Γˢ' ok[ E ])
+                            → (consδs : All (Γˢ ⊢[ E ]_) cons)
+                            → (consδs↓ : Acc _<_ (size-all-cons consδs))
+                            → μ-cons (cons-thinning↓ Γ⊂Γ' Γ'ok consδs consδs↓) ≡ CR.act-cons (ext-k' k suc) (μ-cons consδs)
+  μ-cons-thinning↓-commutes Γ⊂Γ' Γ'ok [] (acc rec) = refl
+  μ-cons-thinning↓-commutes Γ⊂Γ' Γ'ok (δ ∷ consδs) (acc rec)
+    rewrite μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok δ (rec _ (s≤s (₁≤₂ _ _)))
+          | μ-cons-thinning↓-commutes Γ⊂Γ' Γ'ok consδs (rec _ (s≤s (₂≤₂ _ _)))
+          = refl
 
   μ-branches-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
                                 → {cons : S.ADTCons nₐ (k + ℓ)}
