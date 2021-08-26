@@ -40,9 +40,7 @@ lemma₁ k ε
         | act-ε-distr (λ ι → suc (ext-k' (1 + k) suc ι)) suc ε
         | act-ε-distr (λ ι → suc (suc (ext (ext-k' k suc) ι))) (ext-k' 3 suc) ε
         | act-ε-distr (λ ι → suc (suc (ext suc (ext (ext-k' k suc) ι)))) (ext-k' 3 suc) ε
-        = act-ε-extensionality (λ where zero → refl
-                                        (suc _) → refl
-                               ) ε
+        = act-ε-extensionality (λ where zero → refl; (suc _) → refl) ε
 
 lemma₂ : ∀ k (ε : CExpr (1 + k + ℓ))
        → act-ε (ext-k' 4 suc)
@@ -66,9 +64,7 @@ lemma₂ k ε
         | act-ε-distr (λ ι → suc (suc (ext-k' (1 + k) suc ι))) (ext suc) ε
         | act-ε-distr (λ ι → suc (suc (suc (ext-k' (1 + k) suc ι)))) (ext-k' 4 suc) ε
         | act-ε-distr (λ ι → suc (suc (suc (ext suc (ext-k' (1 + k) suc ι))))) (ext-k' 4 suc) ε
-        = act-ε-extensionality (λ where zero → refl
-                                        (suc _) → refl
-                               ) ε
+        = act-ε-extensionality (λ where zero → refl; (suc _) → refl) ε
 
 lemma₃ : ∀ k (ε : CExpr (1 + k + ℓ))
        → act-ε (ext-k' 4 suc)
@@ -92,8 +88,7 @@ lemma₃ k ε
         | act-ε-distr (λ ι → suc (suc (ext-k' (1 + k) suc ι))) suc ε
         | act-ε-distr (λ ι → suc (suc (suc (ext-k' (1 + k) suc ι)))) (ext-k' 4 suc) ε
         | act-ε-distr (λ ι → suc (suc (suc (ext suc (ext-k' (1 + k) suc ι))))) (ext-k' 4 suc) ε
-        = act-ε-extensionality (λ where zero → refl
-                                        (suc _) → refl) ε
+        = act-ε-extensionality (λ where zero → refl; (suc _) → refl) ε
 
 lemma₄ : ∀ k (ε : CExpr (1 + k + ℓ))
        → act-ε (ext-k' 5 suc)
@@ -122,5 +117,4 @@ lemma₄ k ε
         | act-ε-distr (λ ι → suc (suc (suc (ext-k' (1 + k) suc ι)))) (ext suc) ε
         | act-ε-distr (λ ι → suc (suc (suc (suc (ext-k' (1 + k) suc ι))))) (ext-k' 5 suc) ε
         | act-ε-distr (λ ι → suc (suc (suc (suc (ext suc (ext-k' (1 + k) suc ι)))))) (ext-k' 5 suc) ε
-        = act-ε-extensionality (λ where zero → refl
-                                        (suc _) → refl) ε
+        = act-ε-extensionality (λ where zero → refl; (suc _) → refl) ε
