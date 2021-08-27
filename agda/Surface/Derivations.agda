@@ -39,11 +39,6 @@ as-enrichment : ∀ {A}
 as-enrichment {φ = M} δ = omitted
 as-enrichment {φ = E} δ = enriched δ
 
-record PositiveDecision (ℓ : ℕ) : Set where
-  constructor MkPD
-  field
-    <:-ε : CExpr ℓ
-
 record Oracle : Set
 
 data _ok[_]     : (Γ : Ctx ℓ) → TSFlavour → Set
@@ -121,6 +116,11 @@ data _⊢[_]_⦂_ {ℓ} Γ φ where
               → (τ'δ : Γ ⊢[ φ ] τ')
               → (τ~τ' : τ ↭βτ τ')
               → Γ ⊢[ φ ] ε ⦂ τ'
+
+record PositiveDecision (ℓ : ℕ) : Set where
+  constructor MkPD
+  field
+    <:-ε : CExpr ℓ
 
 record Oracle where
   inductive
