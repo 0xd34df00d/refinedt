@@ -62,9 +62,9 @@ mutual
           | ⌊μ⌋-b-act-id (1 + k + ℓ) (ext-k' (1 + k) suc) b
           | ⌊μ⌋-b-act-id (2 + k + ℓ) (ext-k' (2 + k) suc) b
        -- |
-          | ⌊μ⌋-b-act-id (1 + k + ℓ) (ext suc) b'
-          | ⌊μ⌋-b-act-id (2 + k + ℓ) (ext suc) b'
-          | ⌊μ⌋-b-act-id (3 + k + ℓ) (ext suc) b'
+          | ⌊μ⌋-b-act-id (1 + k + ℓ) (CR.ext suc) b'
+          | ⌊μ⌋-b-act-id (2 + k + ℓ) (CR.ext suc) b'
+          | ⌊μ⌋-b-act-id (3 + k + ℓ) (CR.ext suc) b'
           | ⌊μ⌋-b-act-id (3 + k + ℓ) (ext-k' (3 + k) suc) b'
           | lemma₁ k (μ-ε ε₁δ)
           | lemma₂ k (μ-ε ε₂δ)
