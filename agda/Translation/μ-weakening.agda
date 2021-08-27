@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Translation.μ-weakening where
 
 open import Data.Fin using (zero; suc)
