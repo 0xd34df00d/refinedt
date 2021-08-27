@@ -118,3 +118,12 @@ lemma₄ k ε
         | act-ε-distr (λ ι → suc (suc (suc (suc (ext-k' (1 + k) suc ι))))) (ext-k' 5 suc) ε
         | act-ε-distr (λ ι → suc (suc (suc (suc (ext suc (ext-k' (1 + k) suc ι)))))) (ext-k' 5 suc) ε
         = act-ε-extensionality (λ where zero → refl; (suc _) → refl) ε
+
+lemma₅ : ∀ k (ε : CExpr (1 + k + ℓ))
+       → act-ε (ext suc) (act-ε (ext-k' (1 + k) suc) ε)
+         ≡
+         act-ε (ext-k' (2 + k) suc) (act-ε (ext suc) ε)
+lemma₅ k ε
+  rewrite act-ε-distr (ext-k' (1 + k) suc) (ext suc) ε
+        | act-ε-distr (ext suc) (ext-k' (2 + k) suc) ε
+        = act-ε-extensionality (λ where zero → refl; (suc _) → refl) ε
