@@ -21,6 +21,7 @@ import Surface.Syntax.Renaming as R
 import Surface.Syntax.Substitution as S
 
 open import Core.Syntax using (CExpr)
+open import Core.Syntax.Renaming as CR using (act-ε)
 
 data TSFlavour : Set where
   M E : TSFlavour
@@ -152,6 +153,13 @@ record Oracle where
           : τ ↭βτ τ'
           → Is-just (decide (Γ , τ  ++ Δ) b ρ₁ ρ₂)
           → Is-just (decide (Γ , τ' ++ Δ) b ρ₁ ρ₂)
+
+    thin-ε : ∀ {Γ : Ctx (k + ℓ)} {Γ' : Ctx (suc k + ℓ)} {ρ₁ ρ₂ : Refinement (suc k + ℓ)}
+           → (is-just : Is-just (decide Γ b ρ₁ ρ₂))
+           → (Γ⊂Γ' : k by Γ ⊂' Γ')
+           → PositiveDecision.<:-ε (to-witness (thin Γ⊂Γ' is-just))
+             ≡
+             CR.act-ε (ext-k' k suc) (PositiveDecision.<:-ε (to-witness is-just))
 
 
 -- Purely technical requirement to avoid parametrizing all of the modules by the same oracle and making hole types ugly
