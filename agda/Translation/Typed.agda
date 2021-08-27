@@ -22,7 +22,7 @@ mutual
        → CExpr ℓ
   μ-<: (ST-Base oracle positive) with to-witness positive
   ... | MkPD <:-ε = <:-ε
-  μ-<: (ST-Arr <:₁ <:₂ (enriched δτ) (enriched δτ₁')) =
+  μ-<: (ST-Arr <:₁ <:₂ (enriched δτ) (enriched δτ₁'))
     {-
     We need to build a function of type (τ₁ ⇒ τ₂) ⇒ (τ₁' ⇒ τ₂')
     Thus, we do the following:
@@ -32,23 +32,24 @@ mutual
           (#1
             (μ(<:₁) (#0)))
     -}
-    let arg-ε = μ-<: <:₁  -- ⦂ τ₁' ⇒ τ₁
-        res-ε = μ-<: <:₂  -- ⦂ τ₂ ⇒ τ₂'
-     in CLam
-          (μ-τ δτ)
-          (CLam
-            (weaken-ε (μ-τ δτ₁'))
-            (act-ε (ext suc) res-ε ·
-              (CVar (suc zero) ·
-                (weaken-ε-k 2 arg-ε · CVar zero)))
-          )
+    = let arg-ε = μ-<: <:₁  -- ⦂ τ₁' ⇒ τ₁
+          res-ε = μ-<: <:₂  -- ⦂ τ₂ ⇒ τ₂'
+       in CLam
+            (μ-τ δτ)
+            (CLam
+              (weaken-ε (μ-τ δτ₁'))
+              (act-ε (ext suc) res-ε ·
+                (CVar (suc zero) ·
+                  (weaken-ε-k 2 arg-ε · CVar zero)))
+            )
 
   μ-τ : {τ : SType ℓ}
       → Γˢ ⊢[ E ] τ
       → CExpr ℓ
   μ-τ (TWF-TrueRef {b = b} Γok) = ⌊μ⌋-b b
-  μ-τ (TWF-Base {b = b} {b' = b'} δε₁ δε₂) = let b̂ = ⌊μ⌋-b b
-                                              in Σ[ b̂ ] CLam b̂ (μ-ε δε₁ ≡̂ μ-ε δε₂ of ⌊μ⌋-b b')
+  μ-τ (TWF-Base {b = b} {b' = b'} δε₁ δε₂)
+    = let b̂ = ⌊μ⌋-b b
+       in Σ[ b̂ ] CLam b̂ (μ-ε δε₁ ≡̂ μ-ε δε₂ of ⌊μ⌋-b b')
   μ-τ (TWF-Conj δ₁ δ₂) = ⟨ μ-τ δ₁ × μ-τ δ₂ ⟩
   μ-τ (TWF-Arr δτ₁ δτ₂) = CΠ (μ-τ δτ₁) (μ-τ δτ₂)
   μ-τ (TWF-ADT consδs) = CADT (μ-cons consδs)
