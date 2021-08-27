@@ -41,7 +41,8 @@ mutual
                           → (δ : Γˢ ⊢[ E ] τˢ <: τˢ')
                           → (δ↓ : Acc _<_ (size-<: δ))
                           → μ-<: (<:-thinning↓ Γ⊂Γ' (enriched Γ'ok) δ δ↓) ≡ CR.act-ε (ext-k' k suc) (μ-<: δ)
-  μ-<:-thinning↓-commutes = {! !}
+  μ-<:-thinning↓-commutes Γ⊂Γ' Γ'ok (ST-Base oracle is-just) (acc rec) = Oracle.thin-ε oracle is-just Γ⊂Γ'
+  μ-<:-thinning↓-commutes Γ⊂Γ' Γ'ok (ST-Arr <:₁δ <:₂δ (enriched δτ₁⇒τ₂) (enriched δτ₁')) (acc rec) = {! !}
 
   μ-τ-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
                          → (Γ⊂Γ' : k by Γˢ ⊂' Γˢ')
