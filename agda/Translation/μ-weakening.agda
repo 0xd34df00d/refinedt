@@ -42,7 +42,30 @@ mutual
                           → (δ↓ : Acc _<_ (size-<: δ))
                           → μ-<: (<:-thinning↓ Γ⊂Γ' (enriched Γ'ok) δ δ↓) ≡ CR.act-ε (ext-k' k suc) (μ-<: δ)
   μ-<:-thinning↓-commutes Γ⊂Γ' Γ'ok (ST-Base oracle is-just) (acc rec) = Oracle.thin-ε oracle is-just Γ⊂Γ'
-  μ-<:-thinning↓-commutes Γ⊂Γ' Γ'ok (ST-Arr <:₁δ <:₂δ (enriched δτ₁⇒τ₂) (enriched δτ₁')) (acc rec) = {! !}
+  μ-<:-thinning↓-commutes {k = k} Γ⊂Γ' Γ'ok (ST-Arr <:₁δ <:₂δ (enriched δτ₁⇒τ₂) (enriched δτ₁')) (acc rec)
+    rewrite μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok δτ₁⇒τ₂ (rec _ (s≤s (₃≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf δτ₁⇒τ₂) (size-twf δτ₁'))))
+          | μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok δτ₁'   (rec _ (s≤s (₄≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf δτ₁⇒τ₂) (size-twf δτ₁'))))
+          | μ-<:-thinning↓-commutes
+                  Γ⊂Γ'
+                  Γ'ok
+                  <:₁δ
+                  (rec _ (s≤s (₁≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf δτ₁⇒τ₂) (size-twf δτ₁'))))
+          | μ-<:-thinning↓-commutes
+                  (append-both Γ⊂Γ')
+                  (TCTX-Bind Γ'ok (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok δτ₁' (rec _ (s≤s (₄≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf δτ₁⇒τ₂) (size-twf δτ₁'))))))
+                  <:₂δ
+                  (rec _ (s≤s (₂≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf δτ₁⇒τ₂) (size-twf δτ₁'))))
+       -- |
+          | CR.act-ε-distr suc (ext-k' (1 + k) suc) (μ-τ δτ₁')
+          | CR.act-ε-distr (ext-k' k suc) suc (μ-τ δτ₁')
+       -- |
+          | lemma₅ k (μ-<: <:₂δ)
+       -- |
+          | CR.act-ε-distr (ext-k' k suc) suc (μ-<: <:₁δ)
+          | CR.act-ε-distr (λ ι → suc (ext-k' k suc ι)) suc (μ-<: <:₁δ)
+          | CR.act-ε-distr suc suc (μ-<: <:₁δ)
+          | CR.act-ε-distr (λ ι → suc (suc ι)) (ext-k' (2 + k) suc) (μ-<: <:₁δ)
+          = refl
 
   μ-τ-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
                          → (Γ⊂Γ' : k by Γˢ ⊂' Γˢ')
