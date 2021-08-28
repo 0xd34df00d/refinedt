@@ -70,7 +70,7 @@ data _ok[_] where
              → (Γ , τ) ok[ φ ]
 
 data _⊢[_]_ {ℓ} Γ φ where
-  TWF-TrueRef : Γ ok[ φ ]
+  TWF-TrueRef : (Γok : Γ ok[ φ ])
               → Γ ⊢[ φ ] ⟨ b ∣ Τ ⟩
   TWF-Base    : (ε₁δ : Γ , ⟨ b ∣ Τ ⟩ ⊢[ φ ] ε₁ ⦂ ⟨ b' ∣ Τ ⟩)
               → (ε₂δ : Γ , ⟨ b ∣ Τ ⟩ ⊢[ φ ] ε₂ ⦂ ⟨ b' ∣ Τ ⟩)
