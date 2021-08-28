@@ -23,6 +23,7 @@ open import Surface.Operational.BetaEquivalence as S
 
 open import Translation.Untyped
 open import Translation.Typed
+open import Translation.μ-weakening
 
 μ-Τ-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
                → Γᶜ ⊢ᶜ ⌊μ⌋-Τ ⦂ ⋆ₑ
@@ -67,6 +68,12 @@ lemma Γok₁ Γok₂ (CT-UnitTerm δ) ≡₁ ≡₂ = {! !}
 lemma Γok₁ Γok₂ (CT-ADTForm consδs) ≡₁ ≡₂ = {! !}
 lemma Γok₁ Γok₂ (CT-ADTCon ≡-prf δ δ₁) ≡₁ ≡₂ = {! !}
 lemma Γok₁ Γok₂ (CT-ADTCase δ δ₁ branches) ≡₁ ≡₂ = {! !}
+
+μ-preserves-∈ : (Γok : Γˢ ok[ E ])
+              → (∈ : τˢ ∈ˢ Γˢ at ι)
+              → μ-τ (τ∈Γ-⇒-Γ⊢τ Γok ∈) ∈ᶜ μ-Γ Γok at ι
+μ-preserves-∈ (TCTX-Bind Γok τδ) (∈-zero refl) = ∈-zero (μ-τ-weakening-commutes Γok τδ τδ)
+μ-preserves-∈ (TCTX-Bind Γok τδ) (∈-suc refl ∈) = ∈-suc (μ-τ-weakening-commutes Γok τδ (τ∈Γ-⇒-Γ⊢τ Γok ∈)) (μ-preserves-∈ Γok ∈)
 
 mutual
   μ-Γ-well-typed : (Γok : Γˢ ok[ E ])
