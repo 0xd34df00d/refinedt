@@ -83,11 +83,11 @@ mutual
 
   μ-b-P-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
                    → Γᶜ ⊢ᶜ CΠ (⌊μ⌋-b b) ⋆ₑ ⦂ □ₑ
-  μ-b-P-well-typed Γᶜok = CT-Form
-                            μ-b-ok
-                            (Γ⊢τ-⇒-Γ,τ-ok μ-b-ok)
-    where
-    μ-b-ok = μ-b-well-typed Γᶜok
+  μ-b-P-well-typed Γᶜok
+    = let μ-b-ok = μ-b-well-typed Γᶜok
+       in CT-Form
+            μ-b-ok
+            (Γ⊢τ-⇒-Γ,τ-ok μ-b-ok)
 
   μ-τ-well-typed : (Γok : Γˢ ok[ E ])
                  → (τδ : Γˢ ⊢[ E ] τˢ)
