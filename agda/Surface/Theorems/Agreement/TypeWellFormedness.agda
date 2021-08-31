@@ -29,7 +29,6 @@ open import Surface.Theorems.Substitution
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Case resδ _ _) = resδ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Con _ _ adtτ) = adtτ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Sub _ superδ _) = superδ
-Γ⊢ε⦂τ-⇒-Γ⊢τ (T-RConv _ τ'δ _) = τ'δ
 
 {-
 open import Surface.Theorems.Thinning.WF
@@ -53,5 +52,4 @@ open import Surface.Theorems.Agreement.TypeWellFormedness.WF
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Case resδ scrutτδ branches) = s≤s (n≤m⊕n⊕k (size-t scrutτδ) (size-twf resδ) (size-bs branches))
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Con _ _ _) = s≤s (n≤m⊕n _ _)
 Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-Sub δ τ'δ <:) = s≤s (n≤m⊕n⊕k (size-t δ) (size-twf τ'δ) (size-st <:))
-Γ⊢ε⦂τ-⇒-Γ⊢τ-smaller (T-RConv _ _ _) = s≤s (n≤m⊕n _ _)
 -}

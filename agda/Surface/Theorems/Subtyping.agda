@@ -109,4 +109,3 @@ mutual
           τ'δ-narrowed = Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' τ'δ
           <:-narrowed = <:-narrowing Δ σ-<: (as-enrichment Γ⊢σ') <:
        in T-Sub εδ-narrowed τ'δ-narrowed <:-narrowed
-  Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-RConv εδ τ'δ τ~τ') = T-RConv (Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ) (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' τ'δ) τ~τ'

@@ -16,7 +16,6 @@ open import Surface.Syntax.CtxSuffix
 open import Surface.Syntax.Subcontext
 open import Surface.Syntax.Substitution using ([_↦τ_]_; [_↦Γ_]_)
 open import Surface.Syntax.Membership
-open import Surface.Operational.BetaEquivalence
 import Surface.Syntax.Renaming as R
 import Surface.Syntax.Substitution as S
 
@@ -113,10 +112,6 @@ data _⊢[_]_⦂_ {ℓ} Γ φ where
               → (τ'δ : Γ ⊢[ φ ] τ')
               → (<: : Γ ⊢[ φ ] τ <: τ')
               → Γ ⊢[ φ ] ε ⦂ τ'
-  T-RConv     : (εδ : Γ ⊢[ φ ] ε ⦂ τ)
-              → (τ'δ : Γ ⊢[ φ ] τ')
-              → (τ~τ' : τ ↭βτ τ')
-              → Γ ⊢[ φ ] ε ⦂ τ'
 
 record PositiveDecision (ℓ : ℕ) : Set where
   constructor MkPD
@@ -149,10 +144,6 @@ record Oracle where
           -- TODO add this back when parametrizing everything by an oracle: → Γ ⊢ σ' <: σ
           : Is-just (decide (Γ , σ  ++ Δ) b ρ₁ ρ₂)
           → Is-just (decide (Γ , σ' ++ Δ) b ρ₁ ρ₂)
-    stepping
-          : τ ↭βτ τ'
-          → Is-just (decide (Γ , τ  ++ Δ) b ρ₁ ρ₂)
-          → Is-just (decide (Γ , τ' ++ Δ) b ρ₁ ρ₂)
 
     thin-ε : ∀ {Γ : Ctx (k + ℓ)} {Γ' : Ctx (suc k + ℓ)} {ρ₁ ρ₂ : Refinement (suc k + ℓ)}
            → (is-just : Is-just (decide Γ b ρ₁ ρ₂))

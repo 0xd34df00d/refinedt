@@ -12,7 +12,6 @@ open import Surface.Syntax.Renaming as R
 open import Surface.Syntax.Substitution.Stable
 open import Surface.Derivations
 open import Surface.Operational
-open import Surface.Operational.BetaEquivalence
 open import Surface.Theorems.Agreement
 open import Surface.Theorems.Substitution
 open import Surface.Theorems.Helpers
@@ -41,14 +40,12 @@ progress (T-Con _ εδ adtτ) with progress εδ
 ... | step ε↝ε' = step (E-ADT ε↝ε')
 ... | done is-value = done (IV-ADT is-value)
 progress (T-Sub εδ τδ τ<:τ') = progress εδ
-progress (T-RConv εδ _ τ↝τ') = progress εδ
 
 
 preservation : ε ↝ ε'
              → Γ ⊢[ φ ] ε ⦂ τ
              → Γ ⊢[ φ ] ε' ⦂ τ
 preservation ε↝ε' (T-Sub εδ Γ⊢τ' Γ⊢τ<:τ') = T-Sub (preservation ε↝ε' εδ) Γ⊢τ' Γ⊢τ<:τ'
-preservation ε↝ε' (T-RConv εδ τ'δ τ↝τ') = T-RConv (preservation ε↝ε' εδ) τ'δ τ↝τ'
 preservation (E-AppL ε↝ε') (T-App ε₁δ ε₂δ) = T-App (preservation ε↝ε' ε₁δ) ε₂δ
 preservation (E-AppAbs) (T-App ε₁δ ε₂δ) = sub-Γ⊢ε⦂τ-front ε₂δ (SLam-inv ε₁δ)
 preservation (E-ADT ε↝ε') (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (preservation ε↝ε' εδ) adtτ

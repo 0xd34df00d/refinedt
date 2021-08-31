@@ -18,7 +18,6 @@ open import Surface.Syntax.Membership
 open import Surface.Syntax.Renaming as R
 open import Surface.Syntax.Substitution as S
 open import Surface.Syntax.Substitution.Distributivity
-open import Surface.Operational.BetaEquivalence
 open import Surface.Derivations
 open import Surface.Theorems.Helpers
 open import Surface.Theorems.Agreement.Γok
@@ -131,13 +130,6 @@ mutual
           (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ acc₁)
           (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ'δ acc₂)
           (<:-thinning↓ Γ⊂Γ' (as-enrichment Γ'ok) <: acc₃)
-  Γ⊢ε⦂τ-thinning↓ {k = k} Γ⊂Γ' Γ'ok (T-RConv δ τ'δ τ~τ') (acc rec) =
-    let acc₁ = rec _ (s≤s (₁≤₂ _ _))
-        acc₂ = rec _ (s≤s (₂≤₂ _ _))
-     in T-RConv
-          (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ acc₁)
-          (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ'δ acc₂)
-          (ρ-preserves-↭βτ (ext-k' k suc) τ~τ')
 
   cons-thinning↓ : {Γ : Ctx (k + ℓ)}
                  → {cons : ADTCons nₐ (k + ℓ)}

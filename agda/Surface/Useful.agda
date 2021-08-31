@@ -14,7 +14,6 @@ open import Surface.Syntax.Membership
 open import Surface.Syntax.Renaming
 open import Surface.Derivations
 open import Surface.Operational
-open import Surface.Operational.BetaEquivalence
 open import Surface.Theorems.Thinning
 
 unit : SType 0

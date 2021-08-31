@@ -19,7 +19,6 @@ open import Surface.Syntax.Substitution using ([_↦τ_]_; [_↦ε_]_; [_↦c_]_
 open import Surface.Syntax.Substitution.Stable
 open import Surface.Syntax.Substitution.Distributivity as S
 open import Surface.Syntax.Substitution.Commutativity
-open import Surface.Operational.BetaEquivalence
 open import Surface.Derivations
 open import Surface.Theorems.Thinning
 
@@ -156,9 +155,6 @@ mutual
   sub-Γ⊢ε⦂τ Δ εδ (T-Con {cons = cons} ≡-prf conδ adtτ)
     = T-Con (S.act-cons-member _ cons ≡-prf) (sub-Γ⊢ε⦂τ Δ εδ conδ) (sub-Γ⊢τ Δ εδ adtτ)
   sub-Γ⊢ε⦂τ Δ εδ (T-Sub εδ' τ'δ <:) = T-Sub (sub-Γ⊢ε⦂τ Δ εδ εδ') (sub-Γ⊢τ Δ εδ τ'δ) (sub-Γ⊢τ<:τ' Δ εδ <:)
-  sub-Γ⊢ε⦂τ {k = k} {ε = ε} Δ εδ (T-RConv εδ' τ'δ τ~τ')
-    = let sub-τ~τ' = ↦τ-preserves-↭βτ (ctx-idx k) (R.act-ε (raise k) ε) τ~τ'
-       in T-RConv (sub-Γ⊢ε⦂τ Δ εδ εδ') (sub-Γ⊢τ Δ εδ τ'δ) sub-τ~τ'
 
   sub-Γ⊢τ<:τ' : (Δ : ,-CtxSuffix ℓ σ k)
               → Γ ⊢[ φ ] ε ⦂ σ
