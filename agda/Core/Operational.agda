@@ -21,11 +21,7 @@ infix 4 _↝_
 data _↝_ : CExpr ℓ → CExpr ℓ → Set where
   CE-AppL : (ε₁↝ε₁' : ε₁ ↝ ε₁')
           → CApp ε₁ ε₂ ↝ CApp ε₁' ε₂
-  CE-AppR : IsValue ϖ
-          → (ε₂↝ε₂' : ε₂ ↝ ε₂')
-          → CApp ϖ ε₂ ↝ CApp ϖ ε₂'
-  CE-AppAbs : IsValue ϖ
-            → CApp (CLam τ ε) ϖ ↝ [ zero ↦ ϖ ] ε
+  CE-AppAbs : CApp (CLam τ ε) ϖ ↝ [ zero ↦ ϖ ] ε
   CE-ADT  : ∀ {cons} {idx : Fin n}
           → ε ↝ ε'
           → CCon idx ε cons ↝ CCon idx ε' cons
