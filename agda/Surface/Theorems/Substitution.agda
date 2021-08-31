@@ -97,13 +97,13 @@ mutual
           = TWF-Arr (sub-Γ⊢τ Δ εδ arrδ) (sub-Γ⊢τ (Δ , _) εδ resδ)
   sub-Γ⊢τ Δ εδ (TWF-ADT consδs) = TWF-ADT (sub-cons Δ εδ consδs)
     where
-      sub-cons : {cons : ADTCons nₐ _}
-               → (Δ : ,-CtxSuffix ℓ σ k)
-               → Γ ⊢[ φ ] ε ⦂ σ
-               → All (λ conτ → Γ ,σ, Δ ⊢[ φ ] conτ) cons
-               → All (λ conτ → Γ ++ [↦Δ ε ] Δ ⊢[ φ ] conτ) ([ ctx-idx k ↦c R.weaken-ε-k k ε ] cons)
-      sub-cons _ _ [] = []
-      sub-cons Δ εδ (px ∷ pxs) = sub-Γ⊢τ Δ εδ px ∷ sub-cons Δ εδ pxs
+    sub-cons : {cons : ADTCons nₐ _}
+             → (Δ : ,-CtxSuffix ℓ σ k)
+             → Γ ⊢[ φ ] ε ⦂ σ
+             → All (λ conτ → Γ ,σ, Δ ⊢[ φ ] conτ) cons
+             → All (λ conτ → Γ ++ [↦Δ ε ] Δ ⊢[ φ ] conτ) ([ ctx-idx k ↦c R.weaken-ε-k k ε ] cons)
+    sub-cons _ _ [] = []
+    sub-cons Δ εδ (px ∷ pxs) = sub-Γ⊢τ Δ εδ px ∷ sub-cons Δ εδ pxs
 
   sub-Γ⊢ε⦂τ : (Δ : ,-CtxSuffix ℓ σ k)
             → Γ ⊢[ φ ] ε ⦂ σ
@@ -120,38 +120,38 @@ mutual
   sub-Γ⊢ε⦂τ {k = k} {Γ = Γ} {φ = φ} {ε = ε}
             Δ εδ (T-Abs {τ₁ = τ₁} {τ₂ = τ₂} {ε = ε'} arrδ bodyδ) = T-Abs (sub-Γ⊢τ Δ εδ arrδ) bodyδ'
     where
-      bodyδ' : Γ ++ [↦Δ ε ] (Δ , τ₁) ⊢[ φ ]
-               S.act-ε (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ε' ⦂
-               S.act-τ (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) τ₂
-      bodyδ' rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
-                   | S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
-                   | R.act-ε-distr (raise k) suc ε
-                   = sub-Γ⊢ε⦂τ ( Δ , _ ) εδ bodyδ
+    bodyδ' : Γ ++ [↦Δ ε ] (Δ , τ₁) ⊢[ φ ]
+             S.act-ε (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ε' ⦂
+             S.act-τ (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) τ₂
+    bodyδ' rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
+                 | S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
+                 | R.act-ε-distr (raise k) suc ε
+                 = sub-Γ⊢ε⦂τ ( Δ , _ ) εδ bodyδ
   sub-Γ⊢ε⦂τ {ℓ = ℓ} {k = k} {Γ = Γ} {φ = φ} {ε = ε}
             Δ εδ (T-App {ε₁ = ε₁} {τ₁} {τ₂} {ε₂} ε₁δ ε₂δ)
     rewrite subst-commutes-τ-zero (ctx-idx k) (R.weaken-ε-k _ ε) ε₂ τ₂
           = T-App ε₁δ' (sub-Γ⊢ε⦂τ Δ εδ ε₂δ)
     where
-      ε₁δ' : Γ ++ [↦Δ ε ] Δ ⊢[ φ ]
-             [ ℓ ↦ε< ε ] ε₁ ⦂
-             ([ ℓ ↦τ< ε ] τ₁) ⇒ ([ suc (ctx-idx k) ↦τ R.weaken-ε (R.weaken-ε-k k ε) ] τ₂)
-      ε₁δ' rewrite sym (S.act-τ-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂) = sub-Γ⊢ε⦂τ Δ εδ ε₁δ
+    ε₁δ' : Γ ++ [↦Δ ε ] Δ ⊢[ φ ]
+           [ ℓ ↦ε< ε ] ε₁ ⦂
+           ([ ℓ ↦τ< ε ] τ₁) ⇒ ([ suc (ctx-idx k) ↦τ R.weaken-ε (R.weaken-ε-k k ε) ] τ₂)
+    ε₁δ' rewrite sym (S.act-τ-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂) = sub-Γ⊢ε⦂τ Δ εδ ε₁δ
   sub-Γ⊢ε⦂τ {ℓ = ℓ} {k = k} {Γ = Γ} {φ = φ} {ε = ε} Δ εδ (T-Case resδ ε₀δ branches)
     = T-Case (sub-Γ⊢τ Δ εδ resδ) (sub-Γ⊢ε⦂τ Δ εδ ε₀δ) (sub-branches branches)
     where
-      sub-branches : ∀ {bs : CaseBranches nₐ (suc k + ℓ)} {cons : ADTCons nₐ (suc k + ℓ)}
-                   → BranchesHaveType φ (Γ ,σ, Δ) cons bs τ
-                   → BranchesHaveType φ (Γ ++ [↦Δ ε ] Δ) ([ ℓ ↦c< ε ] cons) ([ ℓ ↦bs< ε ] bs) ([ ℓ ↦τ< ε ] τ)
-      sub-branches NoBranches = NoBranches
-      sub-branches {τ = τ} (OneMoreBranch {ε' = ε'} {conτ = conτ} branch-εδ bs) = OneMoreBranch branch-εδ' (sub-branches bs)
-        where
-          branch-εδ' : Γ ++ [↦Δ ε ] (Δ , conτ) ⊢[ φ ]
-                       S.act-ε (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ε' ⦂
-                       weaken-τ ([ ℓ ↦τ< ε ] τ)
-          branch-εδ' rewrite sym (weaken-↦<-suc-comm-τ {τ = τ} ε)
-                           | S.act-ε-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
-                           | R.act-ε-distr (raise k) suc ε
-                           = sub-Γ⊢ε⦂τ (Δ , conτ) εδ branch-εδ
+    sub-branches : ∀ {bs : CaseBranches nₐ (suc k + ℓ)} {cons : ADTCons nₐ (suc k + ℓ)}
+                 → BranchesHaveType φ (Γ ,σ, Δ) cons bs τ
+                 → BranchesHaveType φ (Γ ++ [↦Δ ε ] Δ) ([ ℓ ↦c< ε ] cons) ([ ℓ ↦bs< ε ] bs) ([ ℓ ↦τ< ε ] τ)
+    sub-branches NoBranches = NoBranches
+    sub-branches {τ = τ} (OneMoreBranch {ε' = ε'} {conτ = conτ} branch-εδ bs) = OneMoreBranch branch-εδ' (sub-branches bs)
+      where
+      branch-εδ' : Γ ++ [↦Δ ε ] (Δ , conτ) ⊢[ φ ]
+                   S.act-ε (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ε' ⦂
+                   weaken-τ ([ ℓ ↦τ< ε ] τ)
+      branch-εδ' rewrite sym (weaken-↦<-suc-comm-τ {τ = τ} ε)
+                       | S.act-ε-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
+                       | R.act-ε-distr (raise k) suc ε
+                       = sub-Γ⊢ε⦂τ (Δ , conτ) εδ branch-εδ
   sub-Γ⊢ε⦂τ Δ εδ (T-Con {cons = cons} ≡-prf conδ adtτ)
     = T-Con (S.act-cons-member _ cons ≡-prf) (sub-Γ⊢ε⦂τ Δ εδ conδ) (sub-Γ⊢τ Δ εδ adtτ)
   sub-Γ⊢ε⦂τ Δ εδ (T-Sub εδ' τ'δ <:) = T-Sub (sub-Γ⊢ε⦂τ Δ εδ εδ') (sub-Γ⊢τ Δ εδ τ'δ) (sub-Γ⊢τ<:τ' Δ εδ <:)
@@ -164,23 +164,23 @@ mutual
   sub-Γ⊢τ<:τ' {k = k} {Γ = Γ} {φ = φ} {ε = ε} Δ εδ (ST-Arr {τ₂ = τ₂} {τ₂' = τ₂'} <:₁ <:₂ omitted omitted)
     = ST-Arr (sub-Γ⊢τ<:τ' Δ εδ <:₁) <:₂' omitted omitted
     where
-      <:₂' : (Γ ++ ([↦Δ ε ] (Δ , _))) ⊢[ φ ]
-             S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂ <:
-             S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂'
-      <:₂' rewrite S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂
-                 | S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂'
-                 | R.act-ε-distr (raise k) suc ε
-                 = sub-Γ⊢τ<:τ' (Δ , _) εδ <:₂
+    <:₂' : (Γ ++ ([↦Δ ε ] (Δ , _))) ⊢[ φ ]
+           S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂ <:
+           S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂'
+    <:₂' rewrite S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂
+               | S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂'
+               | R.act-ε-distr (raise k) suc ε
+               = sub-Γ⊢τ<:τ' (Δ , _) εδ <:₂
   sub-Γ⊢τ<:τ' {k = k} {Γ = Γ} {φ = φ} {ε = ε} Δ εδ (ST-Arr {τ₂ = τ₂} {τ₂' = τ₂'} <:₁ <:₂ (enriched δτ₁⇒τ₂) (enriched δτ₁'))
     = ST-Arr (sub-Γ⊢τ<:τ' Δ εδ <:₁) <:₂' (enriched (sub-Γ⊢τ Δ εδ δτ₁⇒τ₂)) (enriched (sub-Γ⊢τ Δ εδ δτ₁'))
     where
-      <:₂' : (Γ ++ ([↦Δ ε ] (Δ , _))) ⊢[ φ ]
-             S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂ <:
-             S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂'
-      <:₂' rewrite S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂
-                 | S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂'
-                 | R.act-ε-distr (raise k) suc ε
-                 = sub-Γ⊢τ<:τ' (Δ , _) εδ <:₂
+    <:₂' : (Γ ++ ([↦Δ ε ] (Δ , _))) ⊢[ φ ]
+           S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂ <:
+           S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂'
+    <:₂' rewrite S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂
+               | S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂'
+               | R.act-ε-distr (raise k) suc ε
+               = sub-Γ⊢τ<:τ' (Δ , _) εδ <:₂
 
 sub-Γ⊢ε⦂τ-front : {Γ : Ctx ℓ}
                 → Γ ⊢[ φ ] ϖ ⦂ σ
