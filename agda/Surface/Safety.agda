@@ -30,10 +30,8 @@ progress (T-Unit Γok) = done IV-Unit
 progress (T-Abs arrδ εδ) = done IV-Abs
 progress (T-App {ε₂ = ε₂} ε₁δ ε₂δ) with progress ε₁δ
 ... | step ε↝ε' = step (E-AppL ε↝ε')
-... | done is-value-ε₁ with progress ε₂δ
-...   | step ε↝ε' = step (E-AppR is-value-ε₁ ε↝ε')
-...   | done is-value-ε₂ with canonical-⇒ ε₁δ is-value-ε₁ refl
-...     | C-Lam = step (E-AppAbs is-value-ε₂)
+... | done is-value-ε₁ with canonical-⇒ ε₁δ is-value-ε₁ refl
+...   | C-Lam = step E-AppAbs
 progress (T-Case resδ εδ branches) with progress εδ
 ... | step ε↝ε' = step (E-CaseScrut ε↝ε')
 ... | done is-value with canonical-⊍ εδ is-value refl
@@ -52,11 +50,7 @@ preservation : ε ↝ ε'
 preservation ε↝ε' (T-Sub εδ Γ⊢τ' Γ⊢τ<:τ') = T-Sub (preservation ε↝ε' εδ) Γ⊢τ' Γ⊢τ<:τ'
 preservation ε↝ε' (T-RConv εδ τ'δ τ↝τ') = T-RConv (preservation ε↝ε' εδ) τ'δ τ↝τ'
 preservation (E-AppL ε↝ε') (T-App ε₁δ ε₂δ) = T-App (preservation ε↝ε' ε₁δ) ε₂δ
-preservation (E-AppR x ε↝ε') (T-App ε₁δ ε₂δ)
-  = let τ₂δ = arr-wf-⇒-cod-wf (Γ⊢ε⦂τ-⇒-Γ⊢τ ε₁δ)
-        τ'δ = sub-Γ⊢τ-front ε₂δ τ₂δ
-     in T-RConv (T-App ε₁δ (preservation ε↝ε' ε₂δ)) τ'δ (forward (↝βτ-Subst zero _ _ _ ε↝ε'))
-preservation (E-AppAbs ε₂-is-value) (T-App ε₁δ ε₂δ) = sub-Γ⊢ε⦂τ-front ε₂δ (SLam-inv ε₁δ)
+preservation (E-AppAbs) (T-App ε₁δ ε₂δ) = sub-Γ⊢ε⦂τ-front ε₂δ (SLam-inv ε₁δ)
 preservation (E-ADT ε↝ε') (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (preservation ε↝ε' εδ) adtτ
 preservation (E-CaseScrut ε↝ε') (T-Case resδ εδ branches) = T-Case resδ (preservation ε↝ε' εδ) branches
 preservation {φ = φ} (E-CaseMatch ε-is-value ι) (T-Case resδ εδ branches)

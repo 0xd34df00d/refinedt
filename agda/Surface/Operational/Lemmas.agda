@@ -58,11 +58,10 @@ open import Surface.Operational
               → ε ↝ ε'
               → R.act-ε ρ ε ↝ R.act-ε ρ ε'
 ρ-preserves-↝ ρ (E-AppL ε↝ε') = E-AppL (ρ-preserves-↝ ρ ε↝ε')
-ρ-preserves-↝ ρ (E-AppR is-value ε↝ε') = E-AppR (ρ-preserves-values is-value) (ρ-preserves-↝ ρ ε↝ε')
-ρ-preserves-↝ ρ (E-AppAbs {ϖ = ϖ} {ε = ε} is-value)
-  rewrite ρ-subst-distr-ε-0 ρ ϖ ε
+ρ-preserves-↝ ρ (E-AppAbs {ε = ε} {ε' = ε'})
+  rewrite ρ-subst-distr-ε-0 ρ ε' ε
         | R.act-ε-extensionality (ρ-0th-is-ext ρ) ε
-        = E-AppAbs (ρ-preserves-values is-value)
+        = E-AppAbs
 ρ-preserves-↝ ρ (E-ADT ε↝ε') = E-ADT (ρ-preserves-↝ ρ ε↝ε')
 ρ-preserves-↝ ρ (E-CaseScrut ε↝ε') = E-CaseScrut (ρ-preserves-↝ ρ ε↝ε')
 ρ-preserves-↝ ρ (E-CaseMatch {ϖ = ϖ} {bs = bs} is-value ι)
@@ -73,11 +72,10 @@ subst-preserves-↝ : ∀ ι ε₀
                   → ε ↝ ε'
                   → ([ ι ↦ε ε₀ ] ε) ↝ ([ ι ↦ε ε₀ ] ε')
 subst-preserves-↝ ι ε₀ (E-AppL ε↝ε') = E-AppL (subst-preserves-↝ ι ε₀ ε↝ε')
-subst-preserves-↝ ι ε₀ (E-AppR is-value ε↝ε') = E-AppR (σ-preserves-values is-value) (subst-preserves-↝ ι ε₀ ε↝ε')
-subst-preserves-↝ ι ε₀ (E-AppAbs {ϖ = ϖ} {ε = ε} is-value)
-  rewrite subst-commutes-ε-zero ι ε₀ ϖ ε
+subst-preserves-↝ ι ε₀ (E-AppAbs {ε = ε} {ε' = ε'})
+  rewrite subst-commutes-ε-zero ι ε₀ ε' ε
         | S.act-ε-extensionality (ext-replace-comm ε₀ ι) ε
-        = E-AppAbs (σ-preserves-values is-value)
+        = E-AppAbs
 subst-preserves-↝ ι ε₀ (E-ADT ε↝ε') = E-ADT (subst-preserves-↝ ι ε₀ ε↝ε')
 subst-preserves-↝ ι ε₀ (E-CaseScrut ε↝ε') = E-CaseScrut (subst-preserves-↝ ι ε₀ ε↝ε')
 subst-preserves-↝ ι ε₀ (E-CaseMatch {ϖ = ϖ} {bs = bs} is-value ι')

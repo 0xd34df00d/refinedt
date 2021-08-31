@@ -24,11 +24,7 @@ infix 4 _↝_
 data _↝_ : STerm ℓ → STerm ℓ → Set where
   E-AppL      : ε₁ ↝ ε₁'
               → SApp ε₁ ε₂ ↝ SApp ε₁' ε₂
-  E-AppR      : IsValue ϖ
-              → ε₂ ↝ ε₂'
-              → SApp ϖ ε₂ ↝ SApp ϖ ε₂'
-  E-AppAbs    : IsValue ϖ
-              → SApp (SLam τ ε) ϖ ↝ [ zero ↦ε ϖ ] ε
+  E-AppAbs    : SApp (SLam τ ε) ε' ↝ [ zero ↦ε ε' ] ε
   E-ADT       : ∀ {cons} {ι : Fin n}
               → ε ↝ ε'
               → SCon ι ε cons ↝ SCon ι ε' cons
