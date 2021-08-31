@@ -151,7 +151,6 @@ mutual
     rewrite μ-<:-thinning↓-commutes Γ⊂Γ' Γ'ok <:δ (rec _ (s≤s (₃≤₃ (size-t εδ) (size-twf τ'δ) (size-<: <:δ))))
           | μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _)))
           = refl
-  μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-RConv εδ τ'δ τ~τ') (acc rec) = μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _)))
 
   μ-cons'-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
                              → {cons : S.ADTCons (Mkℕₐ (suc n)) (k + ℓ)}

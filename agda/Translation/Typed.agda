@@ -64,7 +64,6 @@ mutual
   μ-ε (T-Case resδ δε branches) = CCase (μ-ε δε) (μ-branches branches)
   μ-ε (T-Con {ι = ι} _ δε adtτ) = CCon ι (μ-ε δε) (μ-cons' adtτ)
   μ-ε (T-Sub δε τ'δ <:) = μ-<: <: · μ-ε δε
-  μ-ε (T-RConv δε _ _) = μ-ε δε
 
   μ-cons' : {cons : S.ADTCons nₐ ℓ}
           → Γˢ ⊢[ E ] ⊍ cons

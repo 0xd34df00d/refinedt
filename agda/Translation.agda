@@ -19,7 +19,6 @@ open import Surface.Syntax as S renaming (Γ to Γˢ; τ to τˢ; ε to εˢ)
 open import Surface.Syntax.Membership as S renaming (_∈_at_ to _∈ˢ_at_)
 open import Surface.Derivations as S
 open import Surface.Theorems.Agreement
-open import Surface.Operational.BetaEquivalence as S
 
 open import Translation.Untyped
 open import Translation.Typed
@@ -102,7 +101,6 @@ mutual
   μ-ε-well-typed (T-Case resδ δ branches-well-typed) = {! !}
   μ-ε-well-typed (T-Con ≡-prf δ adtτ) = {! !}
   μ-ε-well-typed (T-Sub δ τ'δ <:) = {! !}
-  μ-ε-well-typed (T-RConv δ τ'δ τ~τ') = {! !}
 
                  {-
   μ-τ-well-typed : (Γok : Γˢ ok[ E ])
@@ -145,5 +143,4 @@ mutual
   μ-ε-well-typed Γok τδ (T-Case resδ δ branches-well-typed) = {! !}
   μ-ε-well-typed Γok τδ (T-Con refl δ adtτ) = {! !}
   μ-ε-well-typed Γok τδ (T-Sub δ τ'δ <:) = {! !}
-  μ-ε-well-typed Γok τδ (T-RConv δ τ'δ τ~τ') = {! !}
   -}
