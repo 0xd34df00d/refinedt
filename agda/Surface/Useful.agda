@@ -19,7 +19,7 @@ open import Surface.Theorems.Thinning
 unit : SType 0
 unit = ⟨ BUnit ∣ Τ ⟩
 
-unit-typeable : ⊘ ⊢ SUnit ⦂ unit
+unit-typeable : ⊘ ⊢[ φ ] SUnit ⦂ unit
 unit-typeable = T-Unit TCTX-Empty
 
 
@@ -29,7 +29,7 @@ bool-cons = unit ∷ unit ∷ []
 bool : SType 0
 bool = ⊍ bool-cons
 
-bool-wf : ⊘ ⊢ bool
+bool-wf : ⊘ ⊢[ φ ] bool
 bool-wf = TWF-ADT (TWF-TrueRef TCTX-Empty ∷ TWF-TrueRef TCTX-Empty ∷ [])
 
 false : STerm 0
@@ -38,10 +38,10 @@ false = SCon zero SUnit bool-cons
 true : STerm 0
 true = SCon (suc zero) SUnit bool-cons
 
-false-typeable : ⊘ ⊢ false ⦂ bool
+false-typeable : ⊘ ⊢[ φ ] false ⦂ bool
 false-typeable = T-Con refl unit-typeable bool-wf
 
-true-typeable : ⊘ ⊢ true ⦂ bool
+true-typeable : ⊘ ⊢[ φ ] true ⦂ bool
 true-typeable = T-Con refl unit-typeable bool-wf
 
 
@@ -56,16 +56,16 @@ not = SLam
 bool-fun : SType 0
 bool-fun = bool ⇒ weaken-τ bool
 
-bool-wf-weaken : ⊘ , bool ⊢ weaken-τ bool
-bool-wf-weaken = twf-weakening TCTX-Empty bool-wf bool-wf
+bool-wf-weaken : ⊘ , bool ⊢[ φ ] weaken-τ bool
+bool-wf-weaken = Γ⊢τ-weakening TCTX-Empty bool-wf bool-wf
 
-bool-fun-wf : ⊘ ⊢ bool-fun
+bool-fun-wf : ⊘ ⊢[ φ ] bool-fun
 bool-fun-wf = TWF-Arr bool-wf bool-wf-weaken
 
-bool-ctx-ok : (⊘ , bool) ok
+bool-ctx-ok : (⊘ , bool) ok[ φ ]
 bool-ctx-ok = TCTX-Bind TCTX-Empty bool-wf
 
-not-typeable : ⊘ ⊢ not ⦂ bool-fun
+not-typeable : ⊘ ⊢[ φ ] not ⦂ bool-fun
 not-typeable =
   T-Abs
     bool-fun-wf
@@ -73,23 +73,23 @@ not-typeable =
       bool-wf-weaken
       (T-Var bool-ctx-ok (∈-zero refl))
       (OneMoreBranch
-        (t-weakening
+        (Γ⊢ε⦂τ-weakening
           bool-ctx-ok
-          (twf-weakening TCTX-Empty bool-wf (TWF-TrueRef TCTX-Empty))
+          (Γ⊢τ-weakening TCTX-Empty bool-wf (TWF-TrueRef TCTX-Empty))
           (T-Con
             refl
             (T-Unit bool-ctx-ok)
-            (twf-weakening TCTX-Empty bool-wf bool-wf)
+            (Γ⊢τ-weakening TCTX-Empty bool-wf bool-wf)
           )
         )
         (OneMoreBranch
-          (t-weakening
+          (Γ⊢ε⦂τ-weakening
             bool-ctx-ok
-            (twf-weakening TCTX-Empty bool-wf (TWF-TrueRef TCTX-Empty))
+            (Γ⊢τ-weakening TCTX-Empty bool-wf (TWF-TrueRef TCTX-Empty))
             (T-Con
               refl
               (T-Unit bool-ctx-ok)
-              (twf-weakening TCTX-Empty bool-wf bool-wf)
+              (Γ⊢τ-weakening TCTX-Empty bool-wf bool-wf)
             )
           )
           NoBranches
@@ -100,17 +100,16 @@ not-typeable =
 not-true-is-false : SApp not true ↝⋆ false
 not-true-is-false =
   ↝-trans
-    (E-AppAbs (IV-ADT IV-Unit))
+    (E-AppAbs)
     (↝-trans
       (E-CaseMatch IV-Unit (suc zero))
       ↝-refl
     )
 
 
-bool-inhabitants : ⊘ ⊢ ε ⦂ τ
+bool-inhabitants : ⊘ ⊢[ φ ] ε ⦂ τ
                  → τ ≡ bool
                  → IsValue ε
                  → ε ≡ false ⊎ ε ≡ true
 bool-inhabitants (T-Con ≡-prf Γ adtτ) τ-≡ iv = {! !}
 bool-inhabitants (T-Sub Γ τ'δ <:) τ-≡ iv = {! !}
-bool-inhabitants (T-RConv Γ τ'δ τ~τ') refl iv = {! τ~τ'!}
