@@ -48,7 +48,7 @@ abstract
   Γ⊢ε⦂τ-⇒-Γok-smaller (T-Unit _) = s≤s (≤-step ≤-refl)
   Γ⊢ε⦂τ-⇒-Γok-smaller (T-Var _ _) = s≤s ≤-refl
   Γ⊢ε⦂τ-⇒-Γok-smaller (T-Abs _ bodyδ) = a<c-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-tail-smaller bodyδ)
-  Γ⊢ε⦂τ-⇒-Γok-smaller (T-App _ δ₂) = a<c-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller δ₂)
+  Γ⊢ε⦂τ-⇒-Γok-smaller (T-App δ₁ _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller δ₁)
   Γ⊢ε⦂τ-⇒-Γok-smaller (T-Case _ scrutδ _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller scrutδ)
   Γ⊢ε⦂τ-⇒-Γok-smaller (T-Con _ conArg _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller conArg)
   Γ⊢ε⦂τ-⇒-Γok-smaller (T-Sub δ _ _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller δ)
