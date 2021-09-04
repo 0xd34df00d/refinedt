@@ -34,7 +34,6 @@ open import Surface.Operational
           → (bs : CaseBranches (Mkℕₐ n) ℓ)
           → R.act-ε ρ ([ ι ↦ₘ ε ] bs) ≡ [ ι ↦ₘ R.act-ε ρ ε ] R.act-branches ρ bs
 ρ-↦ₘ-comm ρ ι ε bs rewrite ρ-subst-distr-ε-0 ρ ε (CaseBranch.body (lookup bs ι))
-                         | R.act-ε-extensionality (ρ-0th-is-ext ρ) (CaseBranch.body (lookup bs ι))
                          | R.branch-lookup-comm ρ ι bs
                          = refl
 
@@ -60,7 +59,6 @@ open import Surface.Operational
 ρ-preserves-↝ ρ (E-AppL ε↝ε') = E-AppL (ρ-preserves-↝ ρ ε↝ε')
 ρ-preserves-↝ ρ (E-AppAbs {ε = ε} {ε' = ε'})
   rewrite ρ-subst-distr-ε-0 ρ ε' ε
-        | R.act-ε-extensionality (ρ-0th-is-ext ρ) ε
         = E-AppAbs
 ρ-preserves-↝ ρ (E-ADT ε↝ε') = E-ADT (ρ-preserves-↝ ρ ε↝ε')
 ρ-preserves-↝ ρ (E-CaseScrut ε↝ε') = E-CaseScrut (ρ-preserves-↝ ρ ε↝ε')

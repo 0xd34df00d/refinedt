@@ -101,7 +101,6 @@ mutual
           (Γ⊢ε⦂τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok domδ acc₂)) δ acc₃)
   Γ⊢ε⦂τ-thinning↓ {k = k} Γ⊂Γ' Γ'ok (T-App {τ₂ = τ₂} {ε₂ = ε₂} δ₁ δ₂) (acc rec)
     rewrite ρ-subst-distr-τ-0 (ext-k' k suc) ε₂ τ₂
-          | R.act-τ-extensionality (ρ-0th-is-ext (ext-k' k suc)) τ₂
           = let acc₁ = rec _ (s≤s (₁≤₂ _ _))
                 acc₂ = rec _ (s≤s (₂≤₂ _ _))
              in T-App (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ₁ acc₁) (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ₂ acc₂)

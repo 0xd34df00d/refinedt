@@ -323,11 +323,15 @@ private
 ρ-subst-distr-τ-0 : (ρ : Fin ℓ → Fin ℓ')
                   → (ε : STerm ℓ)
                   → (τ : SType (suc ℓ))
-                  → R.act-τ ρ ([ zero ↦τ ε ] τ) ≡ [ zero ↦τ R.act-ε ρ ε ] (R.act-τ (ρ-ιth ρ zero) τ)
-ρ-subst-distr-τ-0 ρ = ρ-subst-distr-τ ρ zero
+                  → R.act-τ ρ ([ zero ↦τ ε ] τ) ≡ [ zero ↦τ R.act-ε ρ ε ] (R.act-τ (R.ext ρ) τ)
+ρ-subst-distr-τ-0 ρ ε τ
+  rewrite R.act-τ-extensionality (sym ∘ ρ-0th-is-ext ρ) τ
+        = ρ-subst-distr-τ ρ zero ε τ
 
 ρ-subst-distr-ε-0 : (ρ : Fin ℓ → Fin ℓ')
                   → (ε : STerm ℓ)
                   → (ε' : STerm (suc ℓ))
-                  → R.act-ε ρ ([ zero ↦ε ε ] ε') ≡ [ zero ↦ε R.act-ε ρ ε ] (R.act-ε (ρ-ιth ρ zero) ε')
-ρ-subst-distr-ε-0 ρ = ρ-subst-distr-ε ρ zero
+                  → R.act-ε ρ ([ zero ↦ε ε ] ε') ≡ [ zero ↦ε R.act-ε ρ ε ] (R.act-ε (R.ext ρ) ε')
+ρ-subst-distr-ε-0 ρ ε ε'
+  rewrite R.act-ε-extensionality (sym ∘ ρ-0th-is-ext ρ) ε'
+        = ρ-subst-distr-ε ρ zero ε ε'
