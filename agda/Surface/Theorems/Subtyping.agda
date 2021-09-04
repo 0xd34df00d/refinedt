@@ -58,14 +58,14 @@ mutual
   Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' (TWF-Arr argδ resδ) = TWF-Arr (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' argδ) (Γ⊢τ-narrowing (Δ , _) σ-<: Γ⊢σ' resδ)
   Γ⊢τ-narrowing {φ = φ} Δ σ-<: Γ⊢σ' (TWF-ADT consδs) = TWF-ADT (narrow-cons Δ σ-<: Γ⊢σ' consδs)
     where
-      narrow-cons : {cons : ADTCons nₐ (k + suc ℓ)}
-                  → (Δ : CtxSuffix (suc ℓ) k)
-                  → Γ ⊢[ φ ] σ' <: σ
-                  → Γ ⊢[ φ ] σ'
-                  → All ((Γ , σ  ++ Δ) ⊢[ φ ]_) cons
-                  → All ((Γ , σ' ++ Δ) ⊢[ φ ]_) cons
-      narrow-cons Δ _ _ [] = []
-      narrow-cons Δ σ-<: Γ⊢σ' (δ ∷ consδs) = Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' δ ∷ narrow-cons Δ σ-<: Γ⊢σ' consδs
+    narrow-cons : {cons : ADTCons nₐ (k + suc ℓ)}
+                → (Δ : CtxSuffix (suc ℓ) k)
+                → Γ ⊢[ φ ] σ' <: σ
+                → Γ ⊢[ φ ] σ'
+                → All ((Γ , σ  ++ Δ) ⊢[ φ ]_) cons
+                → All ((Γ , σ' ++ Δ) ⊢[ φ ]_) cons
+    narrow-cons Δ _ _ [] = []
+    narrow-cons Δ σ-<: Γ⊢σ' (δ ∷ consδs) = Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' δ ∷ narrow-cons Δ σ-<: Γ⊢σ' consδs
 
   SVar-narrowing : (Δ : CtxSuffix (suc ℓ) k)
                  → (Γ , σ ++ Δ) ok[ φ ]
@@ -95,14 +95,14 @@ mutual
           εδ' = Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ
        in T-Case resδ' εδ' (narrow-branches Δ σ-<: Γ⊢σ' branches-well-typed)
     where
-      narrow-branches : ∀ {cons : ADTCons nₐ (k + suc ℓ)} {bs : CaseBranches nₐ (k + suc ℓ)}
-                      → (Δ : CtxSuffix (suc ℓ) k)
-                      → Γ ⊢[ φ ] σ' <: σ
-                      → Γ ⊢[ φ ] σ'
-                      → BranchesHaveType φ (Γ , σ  ++ Δ) cons bs τ
-                      → BranchesHaveType φ (Γ , σ' ++ Δ) cons bs τ
-      narrow-branches Δ σ-<: Γ⊢σ' NoBranches = NoBranches
-      narrow-branches Δ σ-<: Γ⊢σ' (OneMoreBranch εδ bs) = OneMoreBranch (Γ⊢ε⦂τ-narrowing (Δ , _) σ-<: Γ⊢σ' εδ) (narrow-branches Δ σ-<: Γ⊢σ' bs)
+    narrow-branches : ∀ {cons : ADTCons nₐ (k + suc ℓ)} {bs : CaseBranches nₐ (k + suc ℓ)}
+                    → (Δ : CtxSuffix (suc ℓ) k)
+                    → Γ ⊢[ φ ] σ' <: σ
+                    → Γ ⊢[ φ ] σ'
+                    → BranchesHaveType φ (Γ , σ  ++ Δ) cons bs τ
+                    → BranchesHaveType φ (Γ , σ' ++ Δ) cons bs τ
+    narrow-branches Δ σ-<: Γ⊢σ' NoBranches = NoBranches
+    narrow-branches Δ σ-<: Γ⊢σ' (OneMoreBranch εδ bs) = OneMoreBranch (Γ⊢ε⦂τ-narrowing (Δ , _) σ-<: Γ⊢σ' εδ) (narrow-branches Δ σ-<: Γ⊢σ' bs)
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ) (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' adtτ)
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Sub εδ τ'δ <:)
     = let εδ-narrowed = Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ
