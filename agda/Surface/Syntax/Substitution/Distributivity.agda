@@ -256,7 +256,7 @@ act-branches-distr σ₁ σ₂ (MkCaseBranch ε ∷ bs)
 ... | greater ι>v = suc (ρ (tighten ι>v))
 
 ρ-0th-is-ext : (ρ : Fin ℓ → Fin ℓ')
-             → ∀ var → ρ-ιth ρ zero var ≡ R.ext ρ var
+             → ∀ var → R.ext ρ var ≡ ρ-ιth ρ zero var
 ρ-0th-is-ext ρ zero = refl
 ρ-0th-is-ext ρ (suc var) = refl
 
@@ -325,7 +325,7 @@ private
                   → (τ : SType (suc ℓ))
                   → R.act-τ ρ ([ zero ↦τ ε ] τ) ≡ [ zero ↦τ R.act-ε ρ ε ] (R.act-τ (R.ext ρ) τ)
 ρ-subst-distr-τ-0 ρ ε τ
-  rewrite R.act-τ-extensionality (sym ∘ ρ-0th-is-ext ρ) τ
+  rewrite R.act-τ-extensionality (ρ-0th-is-ext ρ) τ
         = ρ-subst-distr-τ ρ zero ε τ
 
 ρ-subst-distr-ε-0 : (ρ : Fin ℓ → Fin ℓ')
@@ -333,5 +333,5 @@ private
                   → (ε' : STerm (suc ℓ))
                   → R.act-ε ρ ([ zero ↦ε ε ] ε') ≡ [ zero ↦ε R.act-ε ρ ε ] (R.act-ε (R.ext ρ) ε')
 ρ-subst-distr-ε-0 ρ ε ε'
-  rewrite R.act-ε-extensionality (sym ∘ ρ-0th-is-ext ρ) ε'
+  rewrite R.act-ε-extensionality (ρ-0th-is-ext ρ) ε'
         = ρ-subst-distr-ε ρ zero ε ε'
