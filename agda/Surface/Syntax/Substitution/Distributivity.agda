@@ -10,6 +10,7 @@ open import Data.Vec
 open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; cong)
 
+open import Common.Helpers
 open import Common.Types
 open import Data.Fin.Extra
 open import Surface.Syntax
@@ -256,7 +257,7 @@ act-branches-distr σ₁ σ₂ (MkCaseBranch ε ∷ bs)
 ... | greater ι>v = suc (ρ (tighten ι>v))
 
 ρ-0th-is-ext : (ρ : Fin ℓ → Fin ℓ')
-             → ∀ var → R.ext ρ var ≡ ρ-ιth ρ zero var
+             → R.ext ρ f≡ ρ-ιth ρ zero
 ρ-0th-is-ext ρ zero = refl
 ρ-0th-is-ext ρ (suc var) = refl
 
