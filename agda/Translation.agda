@@ -75,11 +75,6 @@ open import Translation.μ-weakening
 μ-preserves-∈ (TCTX-Bind Γok τδ) (∈-suc refl ∈) = ∈-suc (μ-τ-weakening-commutes Γok τδ (τ∈Γ-⇒-Γ⊢τ Γok ∈)) (μ-preserves-∈ Γok ∈)
 
 mutual
-  μ-Γ-well-typed : (Γok : Γˢ ok[ E ])
-                 → μ-Γ Γok ⊢ᶜ ⋆ₑ ⦂ □ₑ
-  μ-Γ-well-typed TCTX-Empty = CT-Sort
-  μ-Γ-well-typed (TCTX-Bind Γok τδ) = CT-Weaken (μ-Γ-well-typed Γok) (⊢ᶜ-subst₁ (Γ⊢τ-⇒-Γok τδ) Γok (μ-τ-well-typed τδ) refl refl)
-
   μ-b-P-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
                    → Γᶜ ⊢ᶜ CΠ (⌊μ⌋-b b) ⋆ₑ ⦂ □ₑ
   μ-b-P-well-typed Γᶜok
@@ -87,6 +82,11 @@ mutual
        in CT-Form
             μ-b-ok
             (Γ⊢τ-⇒-Γ,τ-ok μ-b-ok)
+
+  μ-Γ-well-typed : (Γok : Γˢ ok[ E ])
+                 → μ-Γ Γok ⊢ᶜ ⋆ₑ ⦂ □ₑ
+  μ-Γ-well-typed TCTX-Empty = CT-Sort
+  μ-Γ-well-typed (TCTX-Bind Γok τδ) = CT-Weaken (μ-Γ-well-typed Γok) (⊢ᶜ-subst₁ (Γ⊢τ-⇒-Γok τδ) Γok (μ-τ-well-typed τδ) refl refl)
 
   μ-τ-well-typed : (τδ : Γˢ ⊢[ E ] τˢ)
                  → μ-Γ (Γ⊢τ-⇒-Γok τδ) ⊢ᶜ μ-τ τδ ⦂ ⋆ₑ
@@ -102,29 +102,31 @@ mutual
   μ-ε-well-typed (T-Con ≡-prf δ adtτ) = {! !}
   μ-ε-well-typed (T-Sub δ τ'δ <:) = {! !}
 
-                 {-
+{-
+  μ-Γ-well-typed : (Γok : Γˢ ok[ E ])
+                 → μ-Γ Γok ⊢ᶜ ⋆ₑ ⦂ □ₑ
+  μ-Γ-well-typed TCTX-Empty = CT-Sort
+  μ-Γ-well-typed (TCTX-Bind Γok τδ) = CT-Weaken (μ-Γ-well-typed Γok) (μ-τ-well-typed Γok τδ)
+
   μ-τ-well-typed : (Γok : Γˢ ok[ E ])
                  → (τδ : Γˢ ⊢[ E ] τˢ)
                  → μ-Γ Γok ⊢ᶜ μ-τ τδ ⦂ ⋆ₑ
   μ-τ-well-typed Γok (TWF-TrueRef _) = μ-b-well-typed (μ-Γ-well-typed Γok)
-  μ-τ-well-typed Γok (TWF-Base ε₁δ ε₂δ) =
-    Σ-well-typed
-      (μ-b-well-typed Γ̂ok)
-      (CT-Abs
-        (≡̂-well-typed ε̂₁δ ε̂₂δ (μ-b-well-typed (CT-Weaken Γ̂ok (μ-b-well-typed Γ̂ok))))
-        (μ-b-P-well-typed Γ̂ok)
-      )
-    where
-    Γ̂ok = μ-Γ-well-typed Γok
-    Γ,⟨b∣Τ⟩ok = TCTX-Bind Γok (TWF-TrueRef Γok)
-    ε̂₁δ = {! !} -- μ-ε-well-typed Γ,⟨b∣Τ⟩ok (TWF-TrueRef (TCTX-Bind Γok _)) ε₁δ
-    ε̂₂δ = {! !} -- μ-ε-well-typed Γ,⟨b∣Τ⟩ok (TWF-TrueRef (TCTX-Bind Γok _)) ε₂δ
+  μ-τ-well-typed Γok (TWF-Base ε₁δ ε₂δ)
+    = let Γ̂ok = μ-Γ-well-typed Γok
+          Γ,⟨b∣Τ⟩ok = TCTX-Bind Γok (TWF-TrueRef Γok)
+          ε̂₁δ = {! !} -- μ-ε-well-typed Γ,⟨b∣Τ⟩ok (TWF-TrueRef (TCTX-Bind Γok _)) ε₁δ
+          ε̂₂δ = {! !} -- μ-ε-well-typed Γ,⟨b∣Τ⟩ok (TWF-TrueRef (TCTX-Bind Γok _)) ε₂δ
+       in Σ-well-typed
+            (μ-b-well-typed Γ̂ok)
+            (CT-Abs
+              (≡̂-well-typed ε̂₁δ ε̂₂δ (μ-b-well-typed (CT-Weaken Γ̂ok (μ-b-well-typed Γ̂ok))))
+              (μ-b-P-well-typed Γ̂ok)
+            )
   μ-τ-well-typed Γok (TWF-Conj τδ₁ τδ₂) = ×-well-typed (μ-τ-well-typed Γok τδ₁) (μ-τ-well-typed Γok τδ₂)
   μ-τ-well-typed Γok (TWF-Arr τδ₁ τδ₂) = CT-Form (μ-τ-well-typed Γok τδ₁) {! !} -- (μ-τ-well-typed (TCTX-Bind Γok τδ₁) τδ₂)
   μ-τ-well-typed Γok (TWF-ADT consδs) = CT-ADTForm {! !} -- (μ-cons-well-typed Γok consδs)
-  -}
 
-  {-
   μ-cons-well-typed : {cons : S.ADTCons nₐ ℓ}
                     → (Γok : Γˢ ok[ E ])
                     → (δs : All (Γˢ ⊢[ E ]_) cons)
@@ -132,12 +134,19 @@ mutual
   μ-cons-well-typed Γok [] = []
   μ-cons-well-typed Γok (τδ ∷ δs) = μ-τ-well-typed Γok τδ ∷ μ-cons-well-typed Γok δs
 
+  μ-preserves-∈ : (Γok : Γˢ ok[ E ])
+                → (τδ : Γˢ ⊢[ E ] τˢ)
+                → τˢ ∈ˢ Γˢ at ι
+                → μ-τ τδ ∈ᶜ μ-Γ Γok at ι
+  μ-preserves-∈ (TCTX-Bind Γok τδ') τδ (∈-zero refl) = ∈-zero {! !}
+  μ-preserves-∈ (TCTX-Bind Γok τδ') τδ (∈-suc refl ∈) = {! !}
+
   μ-ε-well-typed : (Γok : Γˢ ok[ E ])
                  → (τδ : Γˢ ⊢[ E ] τˢ)
                  → (εδ : Γˢ ⊢[ E ] εˢ ⦂ τˢ)
                  → μ-Γ Γok ⊢ᶜ μ-ε εδ ⦂ μ-τ τδ
   μ-ε-well-typed Γok τδ (T-Unit _) = {!  !}
-  μ-ε-well-typed Γok τδ (T-Var _ ∈) = CT-VarW (μ-τ-well-typed Γok τδ) {! !} -- (μ-preserves-∈ τδ Γok ∈)
+  μ-ε-well-typed Γok τδ (T-Var _ ∈) = CT-VarW (μ-τ-well-typed Γok τδ) (μ-preserves-∈ Γok τδ ∈)
   μ-ε-well-typed Γok τδ (T-Abs arrδ εδ) = {! !}
   μ-ε-well-typed Γok τδ (T-App δ₁ δ₂) = {! !}
   μ-ε-well-typed Γok τδ (T-Case resδ δ branches-well-typed) = {! !}
