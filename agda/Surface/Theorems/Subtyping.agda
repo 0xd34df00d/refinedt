@@ -73,7 +73,7 @@ mutual
                  → Γ ⊢[ φ ] σ'
                  → τ ∈ Γ , σ ++ Δ at ι
                  → Γ , σ' ++ Δ ⊢[ φ ] SVar ι ⦂ τ
-  SVar-narrowing ⊘ (TCTX-Bind Γok τδ) σ-<: Γ⊢σ' (∈-zero refl) = T-Sub (T-Var (TCTX-Bind Γok Γ⊢σ') (∈-zero refl)) (Γ⊢τ-weakening Γok Γ⊢σ' τδ) (<:-weakening Γok Γ⊢σ' σ-<:)
+  SVar-narrowing ⊘ (TCTX-Bind Γok τδ) σ-<: Γ⊢σ' (∈-zero refl) = {! !} -- T-Sub (T-Var (TCTX-Bind Γok Γ⊢σ') (∈-zero refl)) (Γ⊢τ-weakening Γok Γ⊢σ' τδ) (<:-weakening Γok Γ⊢σ' σ-<:)
   SVar-narrowing ⊘ (TCTX-Bind Γok _) σ-<: Γ⊢σ' (∈-suc refl ∈) = T-Var (TCTX-Bind Γok Γ⊢σ') (∈-suc refl ∈)
   SVar-narrowing (Δ , τ) Γ,σ,Δok σ-<: Γ⊢σ' (∈-zero refl) = T-Var (Γok-narrowing (Δ , _) σ-<: Γ⊢σ' Γ,σ,Δok) (∈-zero refl)
   SVar-narrowing (Δ , τ) (TCTX-Bind Γ,σ,Δok Γ,σ,Δ⊢τ) σ-<: Γ⊢σ' (∈-suc refl ∈)
@@ -89,7 +89,7 @@ mutual
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Unit Γok) = T-Unit (Γok-narrowing Δ σ-<: Γ⊢σ' Γok)
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Var Γok ∈) = SVar-narrowing Δ Γok σ-<: Γ⊢σ' ∈
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Abs arrδ εδ) = T-Abs (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' arrδ) (Γ⊢ε⦂τ-narrowing (Δ , _) σ-<: Γ⊢σ' εδ)
-  Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-App εδ εδ₁) = T-App (Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ) (Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ₁)
+  Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-App εδ εδ₁ <: resτδ) = T-App (Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ) (Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ₁) {! !} {! (Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' resτδ)!}
   Γ⊢ε⦂τ-narrowing {φ = φ} Δ σ-<: Γ⊢σ' (T-Case resδ εδ branches-well-typed)
     = let resδ' = Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' resδ
           εδ' = Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ
@@ -104,8 +104,10 @@ mutual
     narrow-branches Δ σ-<: Γ⊢σ' NoBranches = NoBranches
     narrow-branches Δ σ-<: Γ⊢σ' (OneMoreBranch εδ bs) = OneMoreBranch (Γ⊢ε⦂τ-narrowing (Δ , _) σ-<: Γ⊢σ' εδ) (narrow-branches Δ σ-<: Γ⊢σ' bs)
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ) (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' adtτ)
+  {-
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Sub εδ τ'δ <:)
     = let εδ-narrowed = Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ
           τ'δ-narrowed = Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' τ'δ
           <:-narrowed = <:-narrowing Δ σ-<: (as-enrichment Γ⊢σ') <:
        in T-Sub εδ-narrowed τ'δ-narrowed <:-narrowed
+       -}

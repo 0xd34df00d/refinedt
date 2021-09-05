@@ -99,11 +99,19 @@ mutual
      in T-Abs
           (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok arrδ acc₁)
           (Γ⊢ε⦂τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok domδ acc₂)) δ acc₃)
-  Γ⊢ε⦂τ-thinning↓ {k = k} Γ⊂Γ' Γ'ok (T-App {τ₂ = τ₂} {ε₂ = ε₂} δ₁ δ₂) (acc rec)
+  Γ⊢ε⦂τ-thinning↓ {k = k} Γ⊂Γ' Γ'ok (T-App {τ₂ = τ₂} {ε₂ = ε₂} δ₁ δ₂ <: resτδ) (acc rec)
     rewrite ρ-subst-distr-τ-0 (ext-k' k suc) ε₂ τ₂
           = let acc₁ = rec _ (s≤s (₁≤₂ _ _))
-                acc₂ = rec _ (s≤s (₂≤₂ _ _))
-             in T-App (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ₁ acc₁) (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ₂ acc₂)
+                acc₂ = rec _ (s≤s (₂≤₃ (size-t δ₁) _ _))
+                acc₃ = rec _ (s≤s (₃≤₄ (size-t δ₁) (size-t δ₂) _ _))
+                acc₄ = rec _ (s≤s (₄≤₄ (size-t δ₁) (size-t δ₂) _ _))
+                resτδ' = Γ⊢τ-thinning↓  Γ⊂Γ' Γ'ok resτδ acc₄
+                resτδ' = subst (_ ⊢[ _ ]_) (ρ-subst-distr-τ-0 (ext-k' k suc) ε₂ τ₂) resτδ'
+             in T-App
+                  (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ₁ acc₁)
+                  (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ₂ acc₂)
+                  (<:-thinning↓    Γ⊂Γ' (as-enrichment Γ'ok) <: acc₃)
+                  resτδ'
   Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Case resδ δ branchesδ) (acc rec) =
     let acc₁ = rec _ (s≤s (₂≤₃ (size-t δ) (size-twf resδ) (size-bs branchesδ)))
         acc₂ = rec _ (s≤s (₁≤₂ _ _))
@@ -121,14 +129,6 @@ mutual
           refl
           δ-substed
           (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok adtτ acc₂)
-  Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Sub δ τ'δ <:) (acc rec) =
-    let acc₁ = rec _ (s≤s (₁≤₂ _ _))
-        acc₂ = rec _ (s≤s (₂≤₃ (size-t δ) (size-twf τ'δ) (size-<: <:)))
-        acc₃ = rec _ (s≤s (₃≤₃ (size-t δ) (size-twf τ'δ) (size-<: <:)))
-     in T-Sub
-          (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ acc₁)
-          (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ'δ acc₂)
-          (<:-thinning↓ Γ⊂Γ' (as-enrichment Γ'ok) <: acc₃)
 
   cons-thinning↓ : {Γ : Ctx (k + ℓ)}
                  → {cons : ADTCons nₐ (k + ℓ)}

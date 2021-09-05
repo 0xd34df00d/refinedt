@@ -12,7 +12,6 @@ open import Surface.Syntax.CtxSuffix
 open import Surface.Syntax.Shape
 open import Surface.Derivations
 open import Surface.Operational
-open import Surface.Theorems.Subtyping
 
 data Canonical : STerm ℓ → SType ℓ → Set where
   C-Lam  : Canonical (SLam τ ε) (τ₁ ⇒ τ₂)
@@ -24,8 +23,6 @@ canonical-⇒ : ⊘ ⊢[ φ ] ε ⦂ τ
             → τ ≡ τ₁ ⇒ τ₂
             → Canonical ε τ
 canonical-⇒ (T-Abs arrδ εδ) is-value ≡-prf = C-Lam
-canonical-⇒ (T-Sub εδ τ'δ <:@(ST-Arr _ _ _ _)) is-value refl with canonical-⇒ εδ is-value refl
-... | C-Lam = C-Lam
 
 canonical-⊍ : {cons : ADTCons (Mkℕₐ n) zero}
             → ⊘ ⊢[ φ ] ε ⦂ τ
@@ -33,13 +30,11 @@ canonical-⊍ : {cons : ADTCons (Mkℕₐ n) zero}
             → τ ≡ ⊍ cons
             → Canonical ε τ
 canonical-⊍ (T-Con ≡-prf₁ εδ adtτ) (IV-ADT is-value) ≡-prf = C-Con
-canonical-⊍ (T-Sub εδ τ'δ ()) _ refl
 
 
 SLam-inv : Γ ⊢[ φ ] SLam τ ε ⦂ τ₁ ⇒ τ₂
          → Γ , τ₁ ⊢[ φ ] ε ⦂ τ₂
 SLam-inv (T-Abs _ εδ) = εδ
-SLam-inv (T-Sub εδ (TWF-Arr τ₁-ok τ₂-ok₁) (ST-Arr <:₁ <:₂ _ _)) = T-Sub (Γ⊢ε⦂τ-narrowing ⊘ <:₁ τ₁-ok (SLam-inv εδ)) τ₂-ok₁ <:₂
 
 
 lookup-preserves-Γ⊢τ : {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
