@@ -95,7 +95,7 @@ mutual
   μ-ε-well-typed : (εδ : Γˢ ⊢[ E ] εˢ ⦂ τˢ)
                  → μ-Γ (Γ⊢ε⦂τ-⇒-Γok εδ) ⊢ᶜ μ-ε εδ ⦂ μ-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ)
   μ-ε-well-typed (T-Unit Γok) = {! !}
-  μ-ε-well-typed (T-Var Γok ∈) = CT-VarW {! μ-τ-well-typed (τ∈Γ-⇒-Γ⊢τ Γok ∈) !} (μ-preserves-∈ Γok ∈)
+  μ-ε-well-typed (T-Var Γok ∈) = CT-VarW (⊢ᶜ-subst₁ _ _ (μ-τ-well-typed (τ∈Γ-⇒-Γ⊢τ Γok ∈)) refl refl) (μ-preserves-∈ Γok ∈)
   μ-ε-well-typed (T-Abs arrδ δ) = {! !}
   μ-ε-well-typed (T-App δ δ₁) = {! !}
   μ-ε-well-typed (T-Case resδ δ branches-well-typed) = {! !}
