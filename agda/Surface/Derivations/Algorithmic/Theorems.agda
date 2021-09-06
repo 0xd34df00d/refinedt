@@ -6,11 +6,17 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Surface.Syntax
 open import Surface.Syntax.Membership
+open import Surface.Syntax.Renaming.Injectivity
 open import Surface.Derivations.Algorithmic
 
 Unique : ∀ A → Set
 Unique Deriv = ∀ (δ₁ δ₂ : Deriv)
                → δ₁ ≡ δ₂
+
+unique-∈ : Unique (τ ∈ Γ at ι)
+unique-∈ (∈-zero refl) (∈-zero refl) = refl
+unique-∈ (∈-suc {τ = τ₁} refl ∈₁) (∈-suc {τ = τ₂} ≡-prf ∈₂) with weaken-τ-injective ≡-prf | ≡-prf
+... | refl | refl rewrite unique-∈ ∈₁ ∈₂ = refl
 
 mutual
   unique-Γok : Unique (Γ ok[ φ ])
