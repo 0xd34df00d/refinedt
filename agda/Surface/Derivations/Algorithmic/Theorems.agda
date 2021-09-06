@@ -42,7 +42,9 @@ mutual
     rewrite unique-Γ⊢τ δ₁₁ δ₁₂
           | unique-Γ⊢τ δ₂₁ δ₂₂
           = refl
-  unique-Γ⊢τ (TWF-ADT consδs₁) (TWF-ADT consδs₂) = {! !}
+  unique-Γ⊢τ (TWF-ADT consδs₁) (TWF-ADT consδs₂)
+    rewrite unique-cons consδs₁ consδs₂
+          = refl
 
   unique-Γ⊢ε⦂τ : Unique (Γ ⊢[ φ ] ε ⦂ τ)
   unique-Γ⊢ε⦂τ (T-Unit Γok₁) (T-Unit Γok₂)
@@ -55,3 +57,11 @@ mutual
   unique-Γ⊢ε⦂τ (T-App δ₁₁ δ₂₁ <:₁ resτδ₁) δ₂ = {! δ₂ !}
   unique-Γ⊢ε⦂τ (T-Case resδ₁ δ₁ bsδ₁) (T-Case resδ² δ₂ bsδ₂) = {! !}
   unique-Γ⊢ε⦂τ (T-Con refl δ₁ adtτ₁) (T-Con refl δ₂ adtτ₂) = {! !}
+
+  unique-cons : ∀ {cons : ADTCons nₐ ℓ}
+              → Unique (All (Γ ⊢[ φ ]_) cons)
+  unique-cons [] [] = refl
+  unique-cons (δ₁ ∷ δs₁) (δ₂ ∷ δs₂)
+    rewrite unique-Γ⊢τ δ₁ δ₂
+          | unique-cons δs₁ δs₂
+          = refl
