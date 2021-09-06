@@ -52,10 +52,16 @@ mutual
           = refl
   unique-Γ⊢ε⦂τ (T-Var Γok₁ ∈₁) (T-Var Γok₂ ∈₂)
     rewrite unique-Γok Γok₁ Γok₂
+          | unique-∈ ∈₁ ∈₂
+          = refl
+  unique-Γ⊢ε⦂τ (T-Abs arrδ₁ δ₁) (T-Abs arrδ₂ δ₂)
+    rewrite unique-Γ⊢τ arrδ₁ arrδ₂
+          | unique-Γ⊢ε⦂τ δ₁ δ₂
+          = refl
+  unique-Γ⊢ε⦂τ (T-App δ₁₁ δ₂₁ <:₁ resτδ₁) δ₂ = {! !}
+  unique-Γ⊢ε⦂τ (T-Case resδ₁ δ₁ bsδ₁) (T-Case resδ₂ δ₂ bsδ₂)
+    rewrite unique-Γ⊢τ resδ₁ resδ₂
           = {! !}
-  unique-Γ⊢ε⦂τ (T-Abs arrδ₁ δ₁) (T-Abs arrδ₂ δ₂) = {! !}
-  unique-Γ⊢ε⦂τ (T-App δ₁₁ δ₂₁ <:₁ resτδ₁) δ₂ = {! δ₂ !}
-  unique-Γ⊢ε⦂τ (T-Case resδ₁ δ₁ bsδ₁) (T-Case resδ² δ₂ bsδ₂) = {! !}
   unique-Γ⊢ε⦂τ (T-Con refl δ₁ adtτ₁) (T-Con refl δ₂ adtτ₂) = {! !}
 
   unique-cons : ∀ {cons : ADTCons nₐ ℓ}
