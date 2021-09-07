@@ -2,12 +2,28 @@
 
 module Surface.Derivations.Algorithmic.Theorems where
 
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 
 open import Surface.Syntax
 open import Surface.Syntax.Membership
 open import Surface.Syntax.Renaming.Injectivity
 open import Surface.Derivations.Algorithmic
+
+∈-uniqueness : τ₁ ∈ Γ at ι
+             → τ₂ ∈ Γ at ι
+             → τ₁ ≡ τ₂
+∈-uniqueness (∈-zero refl) (∈-zero ≡-prf) = sym ≡-prf
+∈-uniqueness (∈-suc refl ∈₁) (∈-suc ≡-prf ∈₂) rewrite ∈-uniqueness ∈₁ ∈₂ = sym ≡-prf
+
+typing-uniqueness : Γ ⊢[ φ ] ε ⦂ τ₁
+                  → Γ ⊢[ φ ] ε ⦂ τ₂
+                  → τ₁ ≡ τ₂
+typing-uniqueness (T-Unit _) (T-Unit _) = refl
+typing-uniqueness (T-Var _ ∈₁) (T-Var _ ∈₂) = ∈-uniqueness ∈₁ ∈₂
+typing-uniqueness (T-Abs _ δ₁) (T-Abs _ δ₂) rewrite typing-uniqueness δ₁ δ₂ = refl
+typing-uniqueness (T-App δ₁ _ _ _) (T-App δ₂ _ _ _) = {! !}
+typing-uniqueness (T-Case resδ δ₁ branches-well-typed) (T-Case resδ₁ δ₂ branches-well-typed₁) = {! !}
+typing-uniqueness (T-Con _ _ _) (T-Con _ _ _) = refl
 
 Unique : ∀ A → Set
 Unique Deriv = ∀ (δ₁ δ₂ : Deriv)
