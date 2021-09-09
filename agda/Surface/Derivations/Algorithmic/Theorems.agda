@@ -5,6 +5,7 @@ module Surface.Derivations.Algorithmic.Theorems where
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 
 open import Surface.Syntax
+open import Surface.Syntax.Injectivity
 open import Surface.Syntax.Membership
 open import Surface.Syntax.Renaming.Injectivity
 open import Surface.Derivations.Algorithmic
@@ -21,9 +22,11 @@ typing-uniqueness : Γ ⊢[ φ ] ε ⦂ τ₁
 typing-uniqueness (T-Unit _) (T-Unit _) = refl
 typing-uniqueness (T-Var _ ∈₁) (T-Var _ ∈₂) = ∈-uniqueness ∈₁ ∈₂
 typing-uniqueness (T-Abs _ δ₁) (T-Abs _ δ₂) rewrite typing-uniqueness δ₁ δ₂ = refl
-typing-uniqueness (T-App δ₁ _ _ _) (T-App δ₂ _ _ _) = {! !}
-typing-uniqueness (T-Case resδ δ₁ branches-well-typed) (T-Case resδ₁ δ₂ branches-well-typed₁) = {! !}
+typing-uniqueness (T-App δ₁ _ _ _) (T-App δ₂ _ _ _) rewrite ⇒-inj₂ (typing-uniqueness δ₁ δ₂) = refl
+typing-uniqueness (T-Case resδ δ₁ (OneMoreBranch εδ₁ _)) (T-Case resδ₁ δ₂ (OneMoreBranch εδ₂ _)) with typing-uniqueness δ₁ δ₂
+... | refl = weaken-τ-injective (typing-uniqueness εδ₁ εδ₂)
 typing-uniqueness (T-Con _ _ _) (T-Con _ _ _) = refl
+
 
 Unique : ∀ A → Set
 Unique Deriv = ∀ (δ₁ δ₂ : Deriv)
