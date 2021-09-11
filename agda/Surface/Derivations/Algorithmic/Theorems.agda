@@ -1,6 +1,8 @@
 {-# OPTIONS --safe #-}
 
-module Surface.Derivations.Algorithmic.Theorems where
+open import Surface.Derivations.Algorithmic using (UniquenessOfOracles)
+
+module Surface.Derivations.Algorithmic.Theorems(oracles-equal : UniquenessOfOracles) where
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 open import Relation.Nullary using (Irrelevant)
@@ -93,7 +95,7 @@ mutual
           = refl
 
   unique-<: : Irrelevant (Γ ⊢[ φ ] τ' <: τ)
-  unique-<: (ST-Base oracle₁ is-just₁) (ST-Base oracle₂ is-just₂) with UniquenessOfOracles.oracles-equal _ oracle₁ oracle₂
+  unique-<: (ST-Base oracle₁ is-just₁) (ST-Base oracle₂ is-just₂) with oracles-equal oracle₁ oracle₂
   ... | refl = {! !}
   unique-<: (ST-Arr δ₁₁ δ₁₂ <:₁₁ <:₂₁) (ST-Arr δ₃ δ₄ x₂ x₃) = {! !}
 

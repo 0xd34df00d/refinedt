@@ -151,15 +151,8 @@ record Oracle where
              ≡
              CR.act-ε (ext-k' k suc) (PositiveDecision.<:-ε (to-witness is-just))
 
-
--- Purely technical requirement to avoid parametrizing all of the modules by the same oracle and making hole types ugly
-record UniquenessOfOracles : Set where
-  field
-    oracles-equal : ∀ (ω₁ ω₂ : Oracle) → ω₁ ≡ ω₂
-
 data _⊢[_]_<:_ {ℓ} Γ φ where
   ST-Base : (oracle : Oracle)
-          → ⦃ UoO : UniquenessOfOracles ⦄
           → Is-just (Oracle.decide oracle Γ b ρ₁ ρ₂)
           → Γ ⊢[ φ ] ⟨ b ∣ ρ₁ ⟩ <: ⟨ b ∣ ρ₂ ⟩
   ST-Arr  : Γ ⊢[ φ ] τ₁' <: τ₁
@@ -167,3 +160,6 @@ data _⊢[_]_<:_ {ℓ} Γ φ where
           → Enrich (Γ ⊢[ φ ] τ₁ ⇒ τ₂) φ
           → Enrich (Γ ⊢[ φ ] τ₁') φ
           → Γ ⊢[ φ ] τ₁ ⇒ τ₂ <: τ₁' ⇒ τ₂'
+
+UniquenessOfOracles : Set
+UniquenessOfOracles = ∀ (ω₁ ω₂ : Oracle) → ω₁ ≡ ω₂
