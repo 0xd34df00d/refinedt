@@ -3,6 +3,7 @@
 module Surface.Derivations.Algorithmic.Theorems where
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
+open import Relation.Nullary using (Irrelevant)
 
 open import Surface.Syntax
 open import Surface.Syntax.Injectivity
@@ -28,24 +29,20 @@ typing-uniqueness (T-Case resδ δ₁ (OneMoreBranch εδ₁ _)) (T-Case resδ�
 typing-uniqueness (T-Con _ _ _) (T-Con _ _ _) = refl
 
 
-Unique : ∀ A → Set
-Unique Deriv = ∀ (δ₁ δ₂ : Deriv)
-               → δ₁ ≡ δ₂
-
-unique-∈ : Unique (τ ∈ Γ at ι)
+unique-∈ : Irrelevant (τ ∈ Γ at ι)
 unique-∈ (∈-zero refl) (∈-zero refl) = refl
 unique-∈ (∈-suc {τ = τ₁} refl ∈₁) (∈-suc {τ = τ₂} ≡-prf ∈₂) with weaken-τ-injective ≡-prf | ≡-prf
 ... | refl | refl rewrite unique-∈ ∈₁ ∈₂ = refl
 
 mutual
-  unique-Γok : Unique (Γ ok[ φ ])
+  unique-Γok : Irrelevant (Γ ok[ φ ])
   unique-Γok TCTX-Empty TCTX-Empty = refl
   unique-Γok (TCTX-Bind δ₁ τδ₁) (TCTX-Bind δ₂ τδ₂)
     rewrite unique-Γok δ₁ δ₂
           | unique-Γ⊢τ τδ₁ τδ₂
           = refl
 
-  unique-Γ⊢τ : Unique (Γ ⊢[ φ ] τ)
+  unique-Γ⊢τ : Irrelevant (Γ ⊢[ φ ] τ)
   unique-Γ⊢τ (TWF-TrueRef Γok₁) (TWF-TrueRef Γok₂)
     rewrite unique-Γok Γok₁ Γok₂
           = refl
@@ -65,7 +62,7 @@ mutual
     rewrite unique-cons consδs₁ consδs₂
           = refl
 
-  unique-Γ⊢ε⦂τ : Unique (Γ ⊢[ φ ] ε ⦂ τ)
+  unique-Γ⊢ε⦂τ : Irrelevant (Γ ⊢[ φ ] ε ⦂ τ)
   unique-Γ⊢ε⦂τ (T-Unit Γok₁) (T-Unit Γok₂)
     rewrite unique-Γok Γok₁ Γok₂
           = refl
@@ -95,13 +92,13 @@ mutual
           | unique-Γ⊢τ adtτ₁ adtτ₂
           = refl
 
-  unique-<: : Unique (Γ ⊢[ φ ] τ' <: τ)
+  unique-<: : Irrelevant (Γ ⊢[ φ ] τ' <: τ)
   unique-<: (ST-Base oracle₁ is-just₁) (ST-Base oracle₂ is-just₂) with UniquenessOfOracles.oracles-equal _ oracle₁ oracle₂
   ... | refl = {! !}
   unique-<: (ST-Arr δ₁₁ δ₁₂ <:₁₁ <:₂₁) (ST-Arr δ₃ δ₄ x₂ x₃) = {! !}
 
   unique-cons : ∀ {cons : ADTCons nₐ ℓ}
-              → Unique (All (Γ ⊢[ φ ]_) cons)
+              → Irrelevant (All (Γ ⊢[ φ ]_) cons)
   unique-cons [] [] = refl
   unique-cons (δ₁ ∷ δs₁) (δ₂ ∷ δs₂)
     rewrite unique-Γ⊢τ δ₁ δ₂
@@ -109,7 +106,7 @@ mutual
           = refl
 
   unique-bs : ∀ {cons : ADTCons nₐ ℓ} {bs}
-            → Unique (BranchesHaveType φ Γ cons bs τ)
+            → Irrelevant (BranchesHaveType φ Γ cons bs τ)
   unique-bs NoBranches NoBranches = refl
   unique-bs (OneMoreBranch εδ₁ δs₁) (OneMoreBranch εδ₂ δs₂)
     rewrite unique-Γ⊢ε⦂τ εδ₁ εδ₂
