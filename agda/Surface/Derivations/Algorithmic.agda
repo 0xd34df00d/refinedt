@@ -96,8 +96,9 @@ data _⊢[_]_⦂_ {ℓ} Γ φ where
   T-App       : (δ₁ : Γ ⊢[ φ ] ε₁ ⦂ τ₁ ⇒ τ₂)
               → (δ₂ : Γ ⊢[ φ ] ε₂ ⦂ τ₁')
               → (<: : Γ ⊢[ φ ] τ₁' <: τ₁)
-              → (resτδ : Γ ⊢[ φ ] ([ zero ↦τ ε₂ ] τ₂)) -- TODO double-check it's really needed
-              → Γ ⊢[ φ ] SApp ε₁ ε₂ ⦂ [ zero ↦τ ε₂ ] τ₂
+              → (resτ-≡ : τ ≡ [ zero ↦τ ε₂ ] τ₂)
+              → (resτδ : Γ ⊢[ φ ] τ) -- TODO double-check it's really needed
+              → Γ ⊢[ φ ] SApp ε₁ ε₂ ⦂ τ
   T-Case      : {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
               → {bs : CaseBranches (Mkℕₐ (suc n)) ℓ}
               → (resδ : Γ ⊢[ φ ] τ')

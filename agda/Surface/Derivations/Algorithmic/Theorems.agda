@@ -22,7 +22,7 @@ typing-uniqueness : Γ ⊢[ φ ] ε ⦂ τ₁
 typing-uniqueness (T-Unit _) (T-Unit _) = refl
 typing-uniqueness (T-Var _ ∈₁) (T-Var _ ∈₂) = ∈-uniqueness ∈₁ ∈₂
 typing-uniqueness (T-Abs _ δ₁) (T-Abs _ δ₂) rewrite typing-uniqueness δ₁ δ₂ = refl
-typing-uniqueness (T-App δ₁ _ _ _) (T-App δ₂ _ _ _) rewrite ⇒-inj₂ (typing-uniqueness δ₁ δ₂) = refl
+typing-uniqueness (T-App δ₁ _ _ refl _) (T-App δ₂ _ _ refl _) rewrite ⇒-inj₂ (typing-uniqueness δ₁ δ₂) = refl
 typing-uniqueness (T-Case resδ δ₁ (OneMoreBranch εδ₁ _)) (T-Case resδ₁ δ₂ (OneMoreBranch εδ₂ _)) with typing-uniqueness δ₁ δ₂
 ... | refl = weaken-τ-injective (typing-uniqueness εδ₁ εδ₂)
 typing-uniqueness (T-Con _ _ _) (T-Con _ _ _) = refl
@@ -77,7 +77,7 @@ mutual
     rewrite unique-Γ⊢τ arrδ₁ arrδ₂
           | unique-Γ⊢ε⦂τ δ₁ δ₂
           = refl
-  unique-Γ⊢ε⦂τ (T-App δ₁₁ δ₂₁ <:₁ resτδ₁) δ₂ = {! !}
+  unique-Γ⊢ε⦂τ (T-App δ₁₁ δ₂₁ <:₁ refl resτδ₁) (T-App δ₁₂ δ₂₂ <:₂ resτ-≡₂ resτδ₂) = {! !}
   unique-Γ⊢ε⦂τ (T-Case resδ₁ δ₁ bsδ₁) (T-Case resδ₂ δ₂ bsδ₂) with typing-uniqueness δ₁ δ₂
   ... | refl
     rewrite unique-Γ⊢τ resδ₁ resδ₂
