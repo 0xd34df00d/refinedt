@@ -77,7 +77,13 @@ mutual
     rewrite unique-Γ⊢τ arrδ₁ arrδ₂
           | unique-Γ⊢ε⦂τ δ₁ δ₂
           = refl
-  unique-Γ⊢ε⦂τ (T-App δ₁₁ δ₂₁ <:₁ refl resτδ₁) (T-App δ₁₂ δ₂₂ <:₂ resτ-≡₂ resτδ₂) = {! !}
+  unique-Γ⊢ε⦂τ (T-App δ₁₁ δ₂₁ <:₁ refl resτδ₁) (T-App δ₁₂ δ₂₂ <:₂ resτ-≡₂ resτδ₂) with typing-uniqueness δ₁₁ δ₁₂ | typing-uniqueness δ₂₁ δ₂₂ | resτ-≡₂
+  ... | refl | refl | refl
+        rewrite unique-Γ⊢ε⦂τ δ₁₁ δ₁₂
+              | unique-Γ⊢ε⦂τ δ₂₁ δ₂₂
+              | unique-<: <:₁ <:₂
+              | unique-Γ⊢τ resτδ₁ resτδ₂
+              = refl
   unique-Γ⊢ε⦂τ (T-Case resδ₁ δ₁ bsδ₁) (T-Case resδ₂ δ₂ bsδ₂) with typing-uniqueness δ₁ δ₂
   ... | refl
     rewrite unique-Γ⊢τ resδ₁ resδ₂
@@ -88,6 +94,11 @@ mutual
     rewrite unique-Γ⊢ε⦂τ δ₁ δ₂
           | unique-Γ⊢τ adtτ₁ adtτ₂
           = refl
+
+  unique-<: : Unique (Γ ⊢[ φ ] τ' <: τ)
+  unique-<: (ST-Base oracle₁ is-just₁) (ST-Base oracle₂ is-just₂) with UniquenessOfOracles.oracles-equal _ oracle₁ oracle₂
+  ... | refl = {! !}
+  unique-<: (ST-Arr δ₁₁ δ₁₂ <:₁₁ <:₂₁) (ST-Arr δ₃ δ₄ x₂ x₃) = {! !}
 
   unique-cons : ∀ {cons : ADTCons nₐ ℓ}
               → Unique (All (Γ ⊢[ φ ]_) cons)
