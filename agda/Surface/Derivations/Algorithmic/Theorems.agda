@@ -4,6 +4,7 @@ open import Surface.Derivations.Algorithmic using (UniquenessOfOracles)
 
 module Surface.Derivations.Algorithmic.Theorems(oracles-equal : UniquenessOfOracles) where
 
+open import Data.Maybe.Relation.Unary.Any using (irrelevant)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 open import Relation.Nullary using (Irrelevant)
 
@@ -96,8 +97,19 @@ mutual
 
   unique-<: : Irrelevant (Γ ⊢[ φ ] τ' <: τ)
   unique-<: (ST-Base oracle₁ is-just₁) (ST-Base oracle₂ is-just₂) with oracles-equal oracle₁ oracle₂
-  ... | refl = {! !}
-  unique-<: (ST-Arr δ₁₁ δ₁₂ <:₁₁ <:₂₁) (ST-Arr δ₃ δ₄ x₂ x₃) = {! !}
+  ... | refl
+    rewrite irrelevant (λ _ _ → refl) is-just₁ is-just₂
+          = refl
+  unique-<: (ST-Arr <:₁₁ <:₂₁ omitted omitted) (ST-Arr <:₁₂ <:₂₂ omitted omitted)
+    rewrite unique-<: <:₁₁ <:₁₂
+          | unique-<: <:₂₁ <:₂₂
+          = refl
+  unique-<: (ST-Arr <:₁₁ <:₂₁ (enriched δ₁₁) (enriched δ₂₁)) (ST-Arr <:₁₂ <:₂₂ (enriched δ₁₂) (enriched δ₂₂))
+    rewrite unique-<: <:₁₁ <:₁₂
+          | unique-<: <:₂₁ <:₂₂
+          | unique-Γ⊢τ δ₁₁ δ₁₂
+          | unique-Γ⊢τ δ₂₁ δ₂₂
+          = refl
 
   unique-cons : ∀ {cons : ADTCons nₐ ℓ}
               → Irrelevant (All (Γ ⊢[ φ ]_) cons)
