@@ -18,26 +18,10 @@ open import Surface.Syntax.Substitution using ([_↦τ_]_; [_↦Γ_]_)
 open import Surface.Syntax.Membership
 import Surface.Syntax.Renaming as R
 import Surface.Syntax.Substitution as S
+open import Surface.Derivations.Common public
 
 open import Core.Syntax using (CExpr)
 open import Core.Syntax.Renaming as CR using (act-ε)
-
-data TSFlavour : Set where
-  M E : TSFlavour
-
-variable
-  φ : TSFlavour
-
-data Enrich (A : Set) : TSFlavour → Set where
-  omitted   : Enrich A M
-  enriched  : (δ : A)
-            → Enrich A E
-
-as-enrichment : ∀ {A}
-              → A
-              → Enrich A φ
-as-enrichment {φ = M} δ = omitted
-as-enrichment {φ = E} δ = enriched δ
 
 record Oracle : Set
 
