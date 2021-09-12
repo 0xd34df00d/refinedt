@@ -20,10 +20,10 @@ open import Surface.Syntax as S renaming (Γ to Γˢ; Γ' to Γˢ'; τ to τˢ; 
 open import Surface.Syntax.Subcontext as S
 open import Surface.Syntax.Renaming as SR
 open import Surface.Syntax.Substitution.Distributivity
-open import Surface.Derivations as S
-open import Surface.Theorems.Agreement.Γok
-open import Surface.Theorems.Agreement.Γok.WF
-open import Surface.Theorems.Thinning
+open import Surface.Derivations.Algorithmic as S
+open import Surface.Derivations.Algorithmic.Theorems.Agreement.Γok
+open import Surface.Derivations.Algorithmic.Theorems.Agreement.Γok.WF
+open import Surface.Derivations.Algorithmic.Theorems.Thinning
 
 open import Translation.Untyped
 open import Translation.Typed
@@ -132,10 +132,11 @@ mutual
               εδ
               (rec _ (s≤s (₂≤₂ _ _)))
           = refl
-  μ-ε-thinning↓-commutes {k = k} Γ⊂Γ' Γ'ok (T-App {τ₂ = τ₂} {ε₂ = ε₂} ε₁δ ε₂δ) (acc rec)
+  μ-ε-thinning↓-commutes {k = k} Γ⊂Γ' Γ'ok (T-App {τ₂ = τ₂} {ε₂ = ε₂} ε₁δ ε₂δ <: refl _) (acc rec)
     rewrite ρ-subst-distr-τ-0 (ext-k' k suc) ε₂ τ₂
           | μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok ε₁δ (rec _ (s≤s (₁≤₂ _ _)))
-          | μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok ε₂δ (rec _ (s≤s (₂≤₂ _ _)))
+          | μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok ε₂δ (rec _ (s≤s (₂≤₃ (size-t ε₁δ) _ _)))
+          | μ-<:-thinning↓-commutes Γ⊂Γ' Γ'ok <: (rec _ (s≤s (₃≤₄ (size-t ε₁δ) (size-t ε₂δ) _ _)))
           = refl
   μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Case resδ εδ branchesδ) (acc rec)
     rewrite μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _)))
@@ -145,10 +146,6 @@ mutual
     rewrite μ-ε-subst (SR.cons-lookup-comm (ext-k' k suc) ι cons) (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _))))
           | μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _)))
           | μ-cons'-thinning↓-commutes Γ⊂Γ' Γ'ok consδs (rec _ (s≤s (₂≤₂ _ _)))
-          = refl
-  μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Sub εδ τ'δ <:δ) (acc rec)
-    rewrite μ-<:-thinning↓-commutes Γ⊂Γ' Γ'ok <:δ (rec _ (s≤s (₃≤₃ (size-t εδ) (size-twf τ'δ) (size-<: <:δ))))
-          | μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _)))
           = refl
 
   μ-cons'-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
