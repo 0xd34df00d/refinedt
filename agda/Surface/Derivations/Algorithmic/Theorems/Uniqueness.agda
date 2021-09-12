@@ -2,7 +2,7 @@
 
 open import Surface.Derivations.Algorithmic using (UniquenessOfOracles)
 
-module Surface.Derivations.Algorithmic.Theorems(oracles-equal : UniquenessOfOracles) where
+module Surface.Derivations.Algorithmic.Theorems.Uniqueness(oracles-equal : UniquenessOfOracles) where
 
 open import Data.Maybe.Relation.Unary.Any using (irrelevant)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
