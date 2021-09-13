@@ -13,7 +13,6 @@ open import Core.Derivations as C
 open import Surface.Syntax as S renaming (Γ to Γˢ; τ to τˢ; ε to εˢ)
 open import Surface.Syntax.CtxSuffix
 open import Surface.Derivations.Algorithmic as S
-open import Surface.Derivations.Algorithmic.Theorems.Uniqueness as S
 
 open import Translation.Untyped
 

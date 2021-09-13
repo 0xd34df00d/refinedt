@@ -1,12 +1,14 @@
 {-# OPTIONS --safe #-}
 
-module Translation where
+open import Surface.Derivations.Algorithmic using (UniquenessOfOracles)
+
+module Translation(oracles-equal : UniquenessOfOracles) where
 
 open import Data.Fin using (zero)
 open import Data.Vec using (Vec; _∷_; [])
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; subst)
 
-open import Core.Syntax as C renaming (Γ to Γᶜ; ε to εᶜ)
+open import Core.Syntax as C renaming (Γ to Γᶜ; ε to εᶜ; τ to τᶜ)
 open import Core.Syntax.Derived as C
 open import Core.Syntax.Derived.Typing as C
 open import Core.Syntax.Membership as C renaming (_∈_at_ to _∈ᶜ_at_)
@@ -19,6 +21,7 @@ open import Surface.Syntax as S renaming (Γ to Γˢ; τ to τˢ; ε to εˢ)
 open import Surface.Syntax.Membership as S renaming (_∈_at_ to _∈ˢ_at_)
 open import Surface.Derivations.Algorithmic as S
 open import Surface.Derivations.Algorithmic.Theorems.Agreement as S
+open import Surface.Derivations.Algorithmic.Theorems.Uniqueness(oracles-equal)
 
 open import Translation.Untyped
 open import Translation.Typed
@@ -47,6 +50,11 @@ open import Translation.μ-weakening
 μ-preserves-∈ (TCTX-Bind Γok τδ) (∈-zero refl) = ∈-zero (μ-τ-weakening-commutes Γok τδ τδ)
 μ-preserves-∈ (TCTX-Bind Γok τδ) (∈-suc refl ∈) = ∈-suc (μ-τ-weakening-commutes Γok τδ (τ∈Γ-⇒-Γ⊢τ Γok ∈)) (μ-preserves-∈ Γok ∈)
 
+subst-Γ : {Γok₁ Γok₂ : Γˢ ok[ E ]}
+        → μ-Γ Γok₁ ⊢ᶜ εᶜ ⦂ τᶜ
+        → μ-Γ Γok₂ ⊢ᶜ εᶜ ⦂ τᶜ
+subst-Γ = subst (_⊢ᶜ _ ⦂ _) (cong μ-Γ (unique-Γok _ _))
+
 mutual
   μ-b-P-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
                    → Γᶜ ⊢ᶜ CΠ (⌊μ⌋-b b) ⋆ₑ ⦂ □ₑ
@@ -59,7 +67,7 @@ mutual
   μ-Γ-well-typed : (Γok : Γˢ ok[ E ])
                  → μ-Γ Γok ⊢ᶜ ⋆ₑ ⦂ □ₑ
   μ-Γ-well-typed TCTX-Empty = CT-Sort
-  μ-Γ-well-typed (TCTX-Bind Γok τδ) = let r = (μ-τ-well-typed τδ) in CT-Weaken (μ-Γ-well-typed Γok) {! !}
+  μ-Γ-well-typed (TCTX-Bind Γok τδ) = CT-Weaken (μ-Γ-well-typed Γok) (subst-Γ (μ-τ-well-typed τδ))
 
   μ-τ-well-typed : (τδ : Γˢ ⊢[ E ] τˢ)
                  → μ-Γ (Γ⊢τ-⇒-Γok τδ) ⊢ᶜ μ-τ τδ ⦂ ⋆ₑ
