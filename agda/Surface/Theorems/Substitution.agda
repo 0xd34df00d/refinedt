@@ -7,7 +7,7 @@ open import Data.Fin.Base using (suc; zero; fromℕ<; raise)
 open import Data.Nat.Base using (suc; zero; _+_)
 open import Data.Nat.Properties using (≤-stepsʳ; ≤-refl; m≢1+n+m; suc-injective)
 open import Data.Product renaming (_,_ to _,'_)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; subst)
 
 open import Data.Fin.Extra
 open import Surface.Syntax
@@ -148,10 +148,9 @@ mutual
       branch-εδ' : Γ ++ [↦Δ ε ] (Δ , conτ) ⊢[ φ ]
                    S.act-ε (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ε' ⦂
                    weaken-τ ([ ℓ ↦τ< ε ] τ)
-      branch-εδ' rewrite sym (weaken-↦<-suc-comm-τ {τ = τ} ε)
-                       | S.act-ε-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
+      branch-εδ' rewrite S.act-ε-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
                        | R.act-ε-distr (raise k) suc ε
-                       = sub-Γ⊢ε⦂τ (Δ , conτ) εδ branch-εδ
+                       = subst (_ ⊢[ _ ] _ ⦂_) (weaken-↦<-suc-comm-τ {τ = τ} ε) (sub-Γ⊢ε⦂τ (Δ , conτ) εδ branch-εδ)
   sub-Γ⊢ε⦂τ Δ εδ (T-Con {cons = cons} ≡-prf conδ adtτ)
     = T-Con (S.act-cons-member _ cons ≡-prf) (sub-Γ⊢ε⦂τ Δ εδ conδ) (sub-Γ⊢τ Δ εδ adtτ)
   sub-Γ⊢ε⦂τ Δ εδ (T-Sub εδ' τ'δ <:) = T-Sub (sub-Γ⊢ε⦂τ Δ εδ εδ') (sub-Γ⊢τ Δ εδ τ'δ) (sub-Γ⊢τ<:τ' Δ εδ <:)
