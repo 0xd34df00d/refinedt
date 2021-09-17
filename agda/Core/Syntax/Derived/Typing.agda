@@ -32,6 +32,11 @@ CT-VarW δ (∈-suc refl ∈) with head-well-formed δ
               → Γ ⊢ (τ₁ ⇒' τ₂) ⦂ CSort s₂
 ⇒'-well-typed τ₁δ τ₂δ = CT-Form τ₁δ (CT-Weaken τ₂δ τ₁δ)
 
+⇒'-·-well-typed : Γ ⊢ ε₁ ⦂ τ₁ ⇒' τ₂
+                → Γ ⊢ ε₂ ⦂ τ₁
+                → Γ ⊢ ε₁ · ε₂ ⦂ τ₂
+⇒'-·-well-typed ε₁δ ε₂δ = subst (_ ⊢ _ ⦂_) (replace-weakened-ε-zero _ _) (CT-App ε₁δ ε₂δ)
+
 Σ-cont-well-typed : ∀ {Γ : Ctx ℓ} {P}
                   → Γ ⊢ τ ⦂ CSort s
                   → Γ ⊢ P ⦂ τ ⇒' ⋆ₑ
