@@ -80,7 +80,21 @@ mutual
 
   μ-ε-well-typed : (εδ : Γˢ ⊢[ E ] εˢ ⦂ τˢ)
                  → μ-Γ (Γ⊢ε⦂τ-⇒-Γok εδ) ⊢ᶜ μ-ε εδ ⦂ μ-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ)
-  μ-ε-well-typed (T-Unit Γok) = {! !}
+  μ-ε-well-typed (T-Unit Γok)
+    = let Γᶜok = μ-Γ-well-typed Γok
+          Γᶜ⊢CUnit = CT-UnitType Γᶜok
+          Γᶜ⊢Cunit⦂CUnit = CT-UnitTerm Γᶜok
+          Γᶜ⊢λ[CUnit]μ-Τ⦂CUnit⇒⋆ = CT-Abs
+              (μ-Τ-well-typed (CT-Weaken Γᶜok Γᶜ⊢CUnit))
+              (CT-Form Γᶜ⊢CUnit (CT-Weaken Γᶜok Γᶜ⊢CUnit))
+       in Σ-ctor-well-typed {π = eq-refl CUnit Cunit}
+            Γᶜ⊢CUnit
+            Γᶜ⊢λ[CUnit]μ-Τ⦂CUnit⇒⋆
+            Γᶜ⊢Cunit⦂CUnit
+            (CT-Conv
+              (eq-refl-well-typed Γᶜ⊢CUnit Γᶜ⊢Cunit⦂CUnit)
+              (CT-App Γᶜ⊢λ[CUnit]μ-Τ⦂CUnit⇒⋆ Γᶜ⊢Cunit⦂CUnit)
+              (↜-as-↭β CE-AppAbs))
   μ-ε-well-typed (T-Var Γok ∈) = CT-VarW (subst-Γ _ _ (μ-τ-well-typed (τ∈Γ-⇒-Γ⊢τ Γok ∈))) (μ-preserves-∈ Γok ∈)
   μ-ε-well-typed (T-Abs arrδ@(TWF-Arr domδ codδ) εδ)
     = let εδᶜ = subst-Γ _ (TCTX-Bind _ domδ)
