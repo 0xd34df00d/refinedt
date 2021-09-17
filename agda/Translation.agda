@@ -87,7 +87,7 @@ mutual
           Γᶜ⊢λ[CUnit]μ-Τ⦂CUnit⇒⋆ = CT-Abs
               (μ-Τ-well-typed (CT-Weaken Γᶜok Γᶜ⊢CUnit))
               (CT-Form Γᶜ⊢CUnit (CT-Weaken Γᶜok Γᶜ⊢CUnit))
-       in Σ-ctor-well-typed {π = eq-refl CUnit Cunit}
+       in Σ-ctor-well-typed
             Γᶜ⊢CUnit
             Γᶜ⊢λ[CUnit]μ-Τ⦂CUnit⇒⋆
             Γᶜ⊢Cunit⦂CUnit
