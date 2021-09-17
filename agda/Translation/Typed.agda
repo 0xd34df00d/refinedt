@@ -17,6 +17,12 @@ open import Surface.Derivations.Algorithmic as S
 open import Translation.Untyped
 
 mutual
+  {-
+  A witness of
+  τ <: τ'
+  gets translated to a function of type
+  τ ⇒ τ'
+  -}
   μ-<: : {τ τ' : SType ℓ}
        → Γˢ ⊢[ E ] τ <: τ'
        → CExpr ℓ
