@@ -129,7 +129,7 @@ mutual
                  = sub-Γ⊢ε⦂τ ( Δ , _ ) εδ bodyδ
   sub-Γ⊢ε⦂τ {ℓ = ℓ} {k = k} {Γ = Γ} {φ = φ} {ε = ε}
             Δ εδ (T-App {ε₁ = ε₁} {τ₁} {τ₂} {ε₂} ε₁δ ε₂δ)
-    rewrite subst-commutes-τ-zero (ctx-idx k) (R.weaken-ε-k _ ε) ε₂ τ₂
+    rewrite subst-commutes-τ-zero (ctx-idx k) (R.weaken-ε-k k ε) ε₂ τ₂
           = T-App ε₁δ' (sub-Γ⊢ε⦂τ Δ εδ ε₂δ)
     where
     ε₁δ' : Γ ++ [↦Δ ε ] Δ ⊢[ φ ]
