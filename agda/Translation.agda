@@ -50,10 +50,10 @@ open import Translation.μ-weakening(oracles-equal)
 μ-preserves-∈ (TCTX-Bind Γok τδ) (∈-zero refl) = ∈-zero (μ-τ-weakening-commutes Γok τδ τδ)
 μ-preserves-∈ (TCTX-Bind Γok τδ) (∈-suc refl ∈) = ∈-suc (μ-τ-weakening-commutes Γok τδ (τ∈Γ-⇒-Γ⊢τ Γok ∈)) (μ-preserves-∈ Γok ∈)
 
-subst-Γ : {Γok₁ Γok₂ : Γˢ ok[ E ]}
+subst-Γ : (Γok₁ Γok₂ : Γˢ ok[ E ])
         → μ-Γ Γok₁ ⊢ᶜ εᶜ ⦂ τᶜ
         → μ-Γ Γok₂ ⊢ᶜ εᶜ ⦂ τᶜ
-subst-Γ = subst (_⊢ᶜ _ ⦂ _) (cong μ-Γ (unique-Γok _ _))
+subst-Γ _ _ = subst (_⊢ᶜ _ ⦂ _) (cong μ-Γ (unique-Γok _ _))
 
 mutual
   μ-b-P-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
@@ -67,7 +67,7 @@ mutual
   μ-Γ-well-typed : (Γok : Γˢ ok[ E ])
                  → μ-Γ Γok ⊢ᶜ ⋆ₑ ⦂ □ₑ
   μ-Γ-well-typed TCTX-Empty = CT-Sort
-  μ-Γ-well-typed (TCTX-Bind Γok τδ) = CT-Weaken (μ-Γ-well-typed Γok) (subst-Γ (μ-τ-well-typed τδ))
+  μ-Γ-well-typed (TCTX-Bind Γok τδ) = CT-Weaken (μ-Γ-well-typed Γok) (subst-Γ _ _ (μ-τ-well-typed τδ))
 
   μ-τ-well-typed : (τδ : Γˢ ⊢[ E ] τˢ)
                  → μ-Γ (Γ⊢τ-⇒-Γok τδ) ⊢ᶜ μ-τ τδ ⦂ ⋆ₑ
@@ -76,7 +76,7 @@ mutual
   μ-ε-well-typed : (εδ : Γˢ ⊢[ E ] εˢ ⦂ τˢ)
                  → μ-Γ (Γ⊢ε⦂τ-⇒-Γok εδ) ⊢ᶜ μ-ε εδ ⦂ μ-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ)
   μ-ε-well-typed (T-Unit Γok) = {! !}
-  μ-ε-well-typed (T-Var Γok ∈) = CT-VarW (subst-Γ (μ-τ-well-typed (τ∈Γ-⇒-Γ⊢τ Γok ∈))) (μ-preserves-∈ Γok ∈)
+  μ-ε-well-typed (T-Var Γok ∈) = CT-VarW (subst-Γ _ _ (μ-τ-well-typed (τ∈Γ-⇒-Γ⊢τ Γok ∈))) (μ-preserves-∈ Γok ∈)
   μ-ε-well-typed (T-Abs arrδ δ) = {! !}
   μ-ε-well-typed (T-App ε₁δ ε₂δ _ _ _) = {! !}
   μ-ε-well-typed (T-Case resδ δ branches-well-typed) = {! !}
