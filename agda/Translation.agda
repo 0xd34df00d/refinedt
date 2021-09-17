@@ -17,7 +17,7 @@ open import Core.Derivations as C renaming (_⊢_⦂_ to _⊢ᶜ_⦂_)
 open import Core.Derivations.Lemmas
 open import Core.Operational as C
 open import Core.Operational.BetaEquivalence as C
-open import Surface.Syntax as S renaming (Γ to Γˢ; τ to τˢ; ε to εˢ)
+open import Surface.Syntax as S renaming (Γ to Γˢ; τ to τˢ; τ' to τ'ˢ; ε to εˢ)
 open import Surface.Syntax.Membership as S renaming (_∈_at_ to _∈ˢ_at_)
 open import Surface.Derivations.Algorithmic as S
 open import Surface.Derivations.Algorithmic.Theorems.Agreement as S
@@ -104,3 +104,10 @@ mutual
   μ-ε-well-typed (T-App ε₁δ ε₂δ <: _ _) = {! !}
   μ-ε-well-typed (T-Case resδ δ branches-well-typed) = {! !}
   μ-ε-well-typed (T-Con ≡-prf δ adtτ) = {! !}
+
+  μ-<:-well-typed : (Γok : Γˢ ok[ E ])
+                  → (τδ : Γˢ ⊢[ E ] τˢ)
+                  → (τ'δ : Γˢ ⊢[ E ] τ'ˢ)
+                  → (<:δ : Γˢ ⊢[ E ] τˢ <: τ'ˢ)
+                  → μ-Γ Γok ⊢ᶜ μ-<: <:δ ⦂ μ-τ τδ ⇒' μ-τ τ'δ
+  μ-<:-well-typed = {! !}
