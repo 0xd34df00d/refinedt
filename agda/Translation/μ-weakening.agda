@@ -1,6 +1,8 @@
 {-# OPTIONS --safe #-}
 
-module Translation.μ-weakening where
+open import Surface.Derivations.Algorithmic using (UniquenessOfOracles)
+
+module Translation.μ-weakening(oracles-equal : UniquenessOfOracles) where
 
 open import Data.Fin using (zero; suc)
 open import Data.Nat.Base
@@ -24,6 +26,7 @@ open import Surface.Derivations.Algorithmic as S
 open import Surface.Derivations.Algorithmic.Theorems.Agreement.Γok
 open import Surface.Derivations.Algorithmic.Theorems.Agreement.Γok.WF
 open import Surface.Derivations.Algorithmic.Theorems.Thinning
+open import Surface.Derivations.Algorithmic.Theorems.Uniqueness(oracles-equal)
 
 open import Translation.Untyped
 open import Translation.Typed

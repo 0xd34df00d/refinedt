@@ -25,7 +25,7 @@ open import Surface.Derivations.Algorithmic.Theorems.Uniqueness(oracles-equal)
 
 open import Translation.Untyped
 open import Translation.Typed
-open import Translation.μ-weakening
+open import Translation.μ-weakening(oracles-equal)
 
 μ-Τ-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
                → Γᶜ ⊢ᶜ ⌊μ⌋-Τ ⦂ ⋆ₑ
