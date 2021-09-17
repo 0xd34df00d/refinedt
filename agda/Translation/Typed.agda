@@ -59,7 +59,7 @@ mutual
       → CExpr ℓ
   μ-ε (T-Unit Γok) = [ Cunit ⦂ CUnit ∣ eq-refl CUnit Cunit of CLam CUnit ⌊μ⌋-Τ ]
   μ-ε (T-Var {ι = ι} _ _) = CVar ι
-  μ-ε (T-Abs δarr δε) = CLam (μ-τ δarr) (μ-ε δε)
+  μ-ε (T-Abs (TWF-Arr domδ _) δε) = CLam (μ-τ domδ) (μ-ε δε)
   μ-ε (T-App δε₁ δε₂ <: _ _) = μ-ε δε₁ · (μ-<: <: · μ-ε δε₂)
   μ-ε (T-Case resδ δε branches) = CCase (μ-ε δε) (μ-branches branches)
   μ-ε (T-Con {ι = ι} _ δε adtτ) = CCon ι (μ-ε δε) (μ-cons' adtτ)

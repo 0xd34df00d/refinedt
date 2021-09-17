@@ -8,8 +8,9 @@ open import Data.Fin using (zero; suc)
 open import Data.Nat.Base
 open import Data.Nat.Induction
 open import Data.Nat.Properties
-open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst; cong; trans)
 
+open import Common.Inequalities
 open import Common.Helpers
 
 open import Core.Syntax as C renaming (Γ to Γᶜ; ε to εᶜ)
@@ -127,8 +128,9 @@ mutual
                          → μ-ε (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok εδ εδ↓) ≡ CR.act-ε (ext-k' k suc) (μ-ε εδ)
   μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Unit _) _ = refl
   μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Var _ _) _ = refl
-  μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Abs arrδ@(TWF-Arr domδ codδ) εδ) (acc rec)
-    rewrite μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok arrδ (rec _ (s≤s (₁≤₂ _ (size-t εδ))))
+  μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Abs arrδ@(TWF-Arr domδ codδ) εδ) (acc rec) with Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok arrδ (rec _ (s≤s (₁≤₂ _ (size-t εδ))))
+  ... | TWF-Arr domδ' codδ'
+    rewrite trans (cong μ-τ (unique-Γ⊢τ domδ' (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok domδ _))) (μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok domδ (rec _ (s≤s (a<1+[a⊔b]⊔c _ _ (size-t εδ)))))
           | μ-ε-thinning↓-commutes
               (append-both Γ⊂Γ')
               (TCTX-Bind Γ'ok (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok domδ (rec _ (s≤s (≤-trans (≤-trans (₁≤₂ _ (size-twf codδ)) (n≤1+n _)) (₁≤₂ _ (size-t εδ)))))))
