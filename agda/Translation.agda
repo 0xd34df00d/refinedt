@@ -55,6 +55,11 @@ subst-Γ : (Γok₁ Γok₂ : Γˢ ok[ E ])
         → μ-Γ Γok₂ ⊢ᶜ εᶜ ⦂ τᶜ
 subst-Γ _ _ = subst (_⊢ᶜ _ ⦂ _) (cong μ-Γ (unique-Γok _ _))
 
+subst-τ : (Γ⊢τ₁ Γ⊢τ₂ : Γˢ ⊢[ E ] τˢ)
+        → Γᶜ ⊢ᶜ εᶜ ⦂ μ-τ Γ⊢τ₁
+        → Γᶜ ⊢ᶜ εᶜ ⦂ μ-τ Γ⊢τ₂
+subst-τ Γ⊢τ₁ Γ⊢τ₂ = subst (_ ⊢ᶜ _ ⦂_) (cong μ-τ (unique-Γ⊢τ Γ⊢τ₁ Γ⊢τ₂))
+
 mutual
   μ-b-P-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
                    → Γᶜ ⊢ᶜ CΠ (⌊μ⌋-b b) ⋆ₑ ⦂ □ₑ
@@ -77,7 +82,11 @@ mutual
                  → μ-Γ (Γ⊢ε⦂τ-⇒-Γok εδ) ⊢ᶜ μ-ε εδ ⦂ μ-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ)
   μ-ε-well-typed (T-Unit Γok) = {! !}
   μ-ε-well-typed (T-Var Γok ∈) = CT-VarW (subst-Γ _ _ (μ-τ-well-typed (τ∈Γ-⇒-Γ⊢τ Γok ∈))) (μ-preserves-∈ Γok ∈)
-  μ-ε-well-typed (T-Abs arrδ δ) = {! !}
-  μ-ε-well-typed (T-App ε₁δ ε₂δ _ _ _) = {! !}
+  μ-ε-well-typed (T-Abs arrδ@(TWF-Arr domδ codδ) εδ)
+    = let εδᶜ = subst-Γ _ (TCTX-Bind _ domδ)
+                  (subst-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ) codδ
+                    (μ-ε-well-typed εδ))
+       in CT-Abs εδᶜ (μ-τ-well-typed arrδ)
+  μ-ε-well-typed (T-App ε₁δ ε₂δ <: _ _) = {! !}
   μ-ε-well-typed (T-Case resδ δ branches-well-typed) = {! !}
   μ-ε-well-typed (T-Con ≡-prf δ adtτ) = {! !}
