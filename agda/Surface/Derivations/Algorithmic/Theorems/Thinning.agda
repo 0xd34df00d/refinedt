@@ -5,7 +5,7 @@ module Surface.Derivations.Algorithmic.Theorems.Thinning where
 open import Data.Fin.Base using (zero; suc; raise)
 open import Data.Nat.Base
 open import Data.Nat.Induction
-open import Data.Nat.Properties
+open import Data.Nat.Properties using (≤-refl; ≤-trans; n≤1+n; ≤-stepsˡ)
 open import Data.Vec.Base using (lookup; _∷_)
 open import Function
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst; sym)
