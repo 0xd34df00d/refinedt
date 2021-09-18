@@ -111,7 +111,7 @@ mutual
                 funδᶜ
                 (⇒'-·-well-typed
                   (μ-<:-well-typed (Γ⊢ε⦂τ-⇒-Γok funδ) (Γ⊢ε⦂τ-⇒-Γ⊢τ argδ) domδ <:δ)
-                  {! !})
+                  (subst-Γ _ _ argδᶜ))
        in {! !}
   μ-ε-well-typed (T-Case resδ δ branches-well-typed) = {! !}
   μ-ε-well-typed (T-Con refl δ adtτ) = {! !}
