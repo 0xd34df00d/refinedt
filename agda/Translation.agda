@@ -103,7 +103,7 @@ mutual
        in CT-Abs εδᶜ (μ-τ-well-typed arrδ)
   μ-ε-well-typed (T-App ε₁δ ε₂δ <: _ _) = {! !}
   μ-ε-well-typed (T-Case resδ δ branches-well-typed) = {! !}
-  μ-ε-well-typed (T-Con ≡-prf δ adtτ) = {! !}
+  μ-ε-well-typed (T-Con refl δ adtτ) = {! !}
 
   μ-<:-well-typed : (Γok : Γˢ ok[ E ])
                   → (τδ : Γˢ ⊢[ E ] τˢ)
