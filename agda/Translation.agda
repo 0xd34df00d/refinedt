@@ -13,12 +13,14 @@ open import Core.Syntax.Derived as C
 open import Core.Syntax.Derived.Typing as C
 open import Core.Syntax.Membership as C renaming (_∈_at_ to _∈ᶜ_at_)
 open import Core.Syntax.Renaming as CR
+open import Core.Syntax.Substitution as CS
 open import Core.Derivations as C renaming (_⊢_⦂_ to _⊢ᶜ_⦂_)
 open import Core.Derivations.Lemmas
 open import Core.Operational as C
 open import Core.Operational.BetaEquivalence as C
 open import Surface.Syntax as S renaming (Γ to Γˢ; τ to τˢ; τ' to τ'ˢ; ε to εˢ)
 open import Surface.Syntax.Membership as S renaming (_∈_at_ to _∈ˢ_at_)
+open import Surface.Syntax.Substitution as SS
 open import Surface.Derivations.Algorithmic as S
 open import Surface.Derivations.Algorithmic.Theorems.Agreement as S
 open import Surface.Derivations.Algorithmic.Theorems.Uniqueness(oracles-equal)
@@ -101,7 +103,16 @@ mutual
                   (subst-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ) codδ
                     (μ-ε-well-typed εδ))
        in CT-Abs εδᶜ (μ-τ-well-typed arrδ)
-  μ-ε-well-typed (T-App ε₁δ ε₂δ <: _ _) = {! !}
+  μ-ε-well-typed (T-App funδ argδ <:δ refl resτδ) with Γ⊢ε⦂τ-⇒-Γ⊢τ funδ in eq
+  ... | TWF-Arr domδ codδ
+    = let funδᶜ = subst (μ-Γ (Γ⊢ε⦂τ-⇒-Γok funδ) ⊢ᶜ μ-ε funδ ⦂_) (cong μ-τ eq) (μ-ε-well-typed funδ)
+          argδᶜ = μ-ε-well-typed argδ
+          r = CT-App {ε₂ = μ-<: <:δ · μ-ε argδ}
+                funδᶜ
+                (⇒'-·-well-typed
+                  (μ-<:-well-typed (Γ⊢ε⦂τ-⇒-Γok funδ) (Γ⊢ε⦂τ-⇒-Γ⊢τ argδ) domδ <:δ)
+                  {! !})
+       in {! !}
   μ-ε-well-typed (T-Case resδ δ branches-well-typed) = {! !}
   μ-ε-well-typed (T-Con refl δ adtτ) = {! !}
 
