@@ -80,7 +80,7 @@ mutual
                  → μ-Γ (Γ⊢τ-⇒-Γok τδ) ⊢ᶜ μ-τ τδ ⦂ ⋆ₑ
   μ-τ-well-typed δ = {! !}
 
-  μ-ε-well-typed : (εδ : Γˢ ⊢[ E ] εˢ ⦂ τˢ)
+  μ-ε-well-typed : (εδ : Γˢ ⊢[ E of κ ] εˢ ⦂ τˢ)
                  → μ-Γ (Γ⊢ε⦂τ-⇒-Γok εδ) ⊢ᶜ μ-ε εδ ⦂ μ-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ)
   μ-ε-well-typed (T-Unit Γok)
     = let Γᶜok = μ-Γ-well-typed Γok
@@ -103,18 +103,19 @@ mutual
                   (subst-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ) codδ
                     (μ-ε-well-typed εδ))
        in CT-Abs εδᶜ (μ-τ-well-typed arrδ)
-  μ-ε-well-typed (T-App funδ argδ <:δ refl resτδ) with Γ⊢ε⦂τ-⇒-Γ⊢τ funδ in Γ⊢τ₁⇒τ₂-eq
+  μ-ε-well-typed (T-App funδ argδ refl resτδ) with Γ⊢ε⦂τ-⇒-Γ⊢τ funδ in Γ⊢τ₁⇒τ₂-eq
   ... | TWF-Arr domδ codδ
     = let funδᶜ = subst (μ-Γ (Γ⊢ε⦂τ-⇒-Γok funδ) ⊢ᶜ μ-ε funδ ⦂_) (cong μ-τ Γ⊢τ₁⇒τ₂-eq) (μ-ε-well-typed funδ)
           argδᶜ = μ-ε-well-typed argδ
-          r = CT-App {ε₂ = μ-<: <:δ · μ-ε argδ}
-                funδᶜ
-                (⇒'-·-well-typed
-                  (μ-<:-well-typed (Γ⊢ε⦂τ-⇒-Γok funδ) (Γ⊢ε⦂τ-⇒-Γ⊢τ argδ) domδ <:δ)
-                  (subst-Γ _ _ argδᶜ))
+          argδᶜ = subst-Γ (Γ⊢ε⦂τ-⇒-Γok argδ) (Γ⊢ε⦂τ-⇒-Γok funδ) argδᶜ
+          argδᶜ = subst-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ argδ) domδ argδᶜ
+          r = CT-App funδᶜ argδᶜ
        in {! !}
   μ-ε-well-typed (T-Case resδ δ branches-well-typed) = {! !}
   μ-ε-well-typed (T-Con refl δ adtτ) = {! !}
+  μ-ε-well-typed (T-Sub εδ τδ <:δ) = ⇒'-·-well-typed
+                                      (μ-<:-well-typed (Γ⊢ε⦂τ-⇒-Γok εδ) (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ) τδ <:δ)
+                                      (μ-ε-well-typed εδ)
 
   μ-<:-well-typed : (Γok : Γˢ ok[ E ])
                   → (τδ : Γˢ ⊢[ E ] τˢ)
