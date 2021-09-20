@@ -1,12 +1,10 @@
-{-# OPTIONS --safe #-}
-
 open import Surface.Derivations.Algorithmic using (UniquenessOfOracles)
 
 module Translation(oracles-equal : UniquenessOfOracles) where
 
 open import Data.Fin using (zero)
 open import Data.Vec using (Vec; _∷_; [])
-open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; subst)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; subst; sym)
 
 open import Core.Syntax as C renaming (Γ to Γᶜ; ε to εᶜ; τ to τᶜ)
 open import Core.Syntax.Derived as C
@@ -28,6 +26,7 @@ open import Surface.Derivations.Algorithmic.Theorems.Uniqueness(oracles-equal)
 open import Translation.Untyped
 open import Translation.Typed
 open import Translation.μ-weakening(oracles-equal)
+open import Translation.μ-subst
 
 μ-Τ-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
                → Γᶜ ⊢ᶜ ⌊μ⌋-Τ ⦂ ⋆ₑ
@@ -109,8 +108,7 @@ mutual
           argδᶜ = μ-ε-well-typed argδ
           argδᶜ = subst-Γ (Γ⊢ε⦂τ-⇒-Γok argδ) (Γ⊢ε⦂τ-⇒-Γok funδ) argδᶜ
           argδᶜ = subst-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ argδ) domδ argδᶜ
-          r = CT-App funδᶜ argδᶜ
-       in {! !}
+       in subst (_ ⊢ᶜ _ ⦂_) (sym (μ-τ-sub-front-commutes argδ codδ resτδ)) (CT-App funδᶜ argδᶜ)
   μ-ε-well-typed (T-Case resδ δ branches-well-typed) = {! !}
   μ-ε-well-typed (T-Con refl δ adtτ) = {! !}
   μ-ε-well-typed (T-Sub εδ τδ <:δ) = ⇒'-·-well-typed
