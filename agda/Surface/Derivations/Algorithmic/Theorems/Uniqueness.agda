@@ -20,13 +20,13 @@ open import Surface.Derivations.Algorithmic
 ∈-uniqueness (∈-zero refl) (∈-zero ≡-prf) = sym ≡-prf
 ∈-uniqueness (∈-suc refl ∈₁) (∈-suc ≡-prf ∈₂) rewrite ∈-uniqueness ∈₁ ∈₂ = sym ≡-prf
 
-typing-uniqueness : Γ ⊢[ φ ] ε ⦂ τ₁
-                  → Γ ⊢[ φ ] ε ⦂ τ₂
+typing-uniqueness : Γ ⊢[ φ of not-t-sub ] ε ⦂ τ₁
+                  → Γ ⊢[ φ of not-t-sub ] ε ⦂ τ₂
                   → τ₁ ≡ τ₂
 typing-uniqueness (T-Unit _) (T-Unit _) = refl
 typing-uniqueness (T-Var _ ∈₁) (T-Var _ ∈₂) = ∈-uniqueness ∈₁ ∈₂
 typing-uniqueness (T-Abs _ δ₁) (T-Abs _ δ₂) rewrite typing-uniqueness δ₁ δ₂ = refl
-typing-uniqueness (T-App δ₁ _ _ refl _) (T-App δ₂ _ _ refl _) rewrite ⇒-inj₂ (typing-uniqueness δ₁ δ₂) = refl
+typing-uniqueness (T-App δ₁ _ refl _) (T-App δ₂ _ refl _) rewrite ⇒-inj₂ (typing-uniqueness δ₁ δ₂) = refl
 typing-uniqueness (T-Case resδ δ₁ (OneMoreBranch εδ₁ _)) (T-Case resδ₁ δ₂ (OneMoreBranch εδ₂ _)) with typing-uniqueness δ₁ δ₂
 ... | refl = weaken-τ-injective (typing-uniqueness εδ₁ εδ₂)
 typing-uniqueness (T-Con _ _ _) (T-Con _ _ _) = refl
@@ -65,7 +65,7 @@ mutual
     rewrite unique-cons consδs₁ consδs₂
           = refl
 
-  unique-Γ⊢ε⦂τ : Irrelevant (Γ ⊢[ φ ] ε ⦂ τ)
+  unique-Γ⊢ε⦂τ : Irrelevant (Γ ⊢[ φ of not-t-sub ] ε ⦂ τ)
   unique-Γ⊢ε⦂τ (T-Unit Γok₁) (T-Unit Γok₂)
     rewrite unique-Γok Γok₁ Γok₂
           = refl
@@ -77,10 +77,20 @@ mutual
     rewrite unique-Γ⊢τ arrδ₁ arrδ₂
           | unique-Γ⊢ε⦂τ δ₁ δ₂
           = refl
+          {-
   unique-Γ⊢ε⦂τ (T-App δ₁₁ δ₂₁ <:₁ refl resτδ₁) (T-App δ₁₂ δ₂₂ <:₂ resτ-≡₂ resτδ₂) with typing-uniqueness δ₁₁ δ₁₂ | typing-uniqueness δ₂₁ δ₂₂ | resτ-≡₂
   ... | refl | refl | refl
     rewrite unique-Γ⊢ε⦂τ δ₁₁ δ₁₂
           | unique-Γ⊢ε⦂τ δ₂₁ δ₂₂
+          | unique-<: <:₁ <:₂
+          | unique-Γ⊢τ resτδ₁ resτδ₂
+          = refl
+          -}
+  unique-Γ⊢ε⦂τ (T-App δ₁₁ (T-Sub δ₂₁ τ₁'δ <:₁) refl resτδ₁) (T-App δ₁₂ (T-Sub δ₂₂ τ₂'δ <:₂) resτ-≡₂ resτδ₂) with typing-uniqueness δ₁₁ δ₁₂ | typing-uniqueness δ₂₁ δ₂₂ | resτ-≡₂
+  ... | refl | refl | refl
+    rewrite unique-Γ⊢ε⦂τ δ₁₁ δ₁₂
+          | unique-Γ⊢ε⦂τ δ₂₁ δ₂₂
+          | unique-Γ⊢τ τ₁'δ τ₂'δ
           | unique-<: <:₁ <:₂
           | unique-Γ⊢τ resτδ₁ resτδ₂
           = refl

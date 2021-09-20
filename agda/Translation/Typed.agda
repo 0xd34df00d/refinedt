@@ -61,14 +61,15 @@ mutual
   μ-τ (TWF-ADT consδs) = CADT (μ-cons consδs)
 
   μ-ε : ∀ {ε : STerm ℓ} {τ}
-      → Γˢ ⊢[ E ] ε ⦂ τ
+      → Γˢ ⊢[ E of κ ] ε ⦂ τ
       → CExpr ℓ
   μ-ε (T-Unit Γok) = [ Cunit ⦂ CUnit ∣ eq-refl CUnit Cunit of CLam CUnit ⌊μ⌋-Τ ]
   μ-ε (T-Var {ι = ι} _ _) = CVar ι
   μ-ε (T-Abs (TWF-Arr domδ _) δε) = CLam (μ-τ domδ) (μ-ε δε)
-  μ-ε (T-App δε₁ δε₂ <: _ _) = μ-ε δε₁ · (μ-<: <: · μ-ε δε₂)
+  μ-ε (T-App δε₁ δε₂ _ _) = μ-ε δε₁ · μ-ε δε₂
   μ-ε (T-Case resδ δε branches) = CCase (μ-ε δε) (μ-branches branches)
   μ-ε (T-Con {ι = ι} _ δε adtτ) = CCon ι (μ-ε δε) (μ-cons' adtτ)
+  μ-ε (T-Sub δε _ <:) = μ-<: <: · μ-ε δε
 
   μ-cons' : {cons : S.ADTCons nₐ ℓ}
           → Γˢ ⊢[ E ] ⊍ cons

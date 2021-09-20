@@ -20,11 +20,12 @@ open import Surface.Derivations.Algorithmic.Theorems.Thinning
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind Γok τδ) (∈-suc refl ∈) = Γ⊢τ-weakening Γok τδ (τ∈Γ-⇒-Γ⊢τ Γok ∈)
 
 -- Referred to as T-implies-TWF in the paper
-Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢[ φ ] ε ⦂ τ
+Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢[ φ of κ ] ε ⦂ τ
             → Γ ⊢[ φ ] τ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Unit Γok) = TWF-TrueRef Γok
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Var Γok ∈-prf) = τ∈Γ-⇒-Γ⊢τ Γok ∈-prf
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Abs arrδ _) = arrδ
-Γ⊢ε⦂τ-⇒-Γ⊢τ (T-App _ _ _ _ resτδ) = resτδ
+Γ⊢ε⦂τ-⇒-Γ⊢τ (T-App _ _ _ resτδ) = resτδ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Case resδ _ _) = resδ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Con _ _ adtτ) = adtτ
+Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Sub _ superδ _) = superδ

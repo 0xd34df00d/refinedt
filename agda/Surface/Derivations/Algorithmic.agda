@@ -23,14 +23,20 @@ open import Surface.Derivations.Common public
 open import Core.Syntax using (CExpr)
 open import Core.Syntax.Renaming as CR using (act-ε)
 
+data RuleKind : Set where
+  t-sub not-t-sub : RuleKind
+
+variable
+  κ κ' κ₁ κ₂ : RuleKind
+
 record Oracle : Set
 
-data _ok[_]     : (Γ : Ctx ℓ) → TSFlavour → Set
-data _⊢[_]_⦂_   (Γ : Ctx ℓ) (φ : TSFlavour) : (ε : STerm ℓ) → (τ : SType ℓ) → Set
-data _⊢[_]_<:_  (Γ : Ctx ℓ) (φ : TSFlavour) : (τ τ' : SType ℓ) → Set
-data _⊢[_]_     (Γ : Ctx ℓ) (φ : TSFlavour) : (τ : SType ℓ) → Set
+data _ok[_]        : (Γ : Ctx ℓ) → TSFlavour → Set
+data _⊢[_of_]_⦂_   (Γ : Ctx ℓ) (φ : TSFlavour) : (κ : RuleKind) → (ε : STerm ℓ) → (τ : SType ℓ) → Set
+data _⊢[_]_<:_     (Γ : Ctx ℓ) (φ : TSFlavour) : (τ τ' : SType ℓ) → Set
+data _⊢[_]_        (Γ : Ctx ℓ) (φ : TSFlavour) : (τ : SType ℓ) → Set
 
-infix 2 _⊢[_]_⦂_
+infix 2 _⊢[_of_]_⦂_
 infix 2 _⊢[_]_<:_
 infix 1 _⊢[_]_
 
@@ -42,7 +48,7 @@ data BranchesHaveType (φ : TSFlavour) (Γ : Ctx ℓ)
                     where
   NoBranches    : BranchesHaveType φ Γ [] [] τ'
   OneMoreBranch : ∀ {conτ} {cons' : ADTCons nₐ ℓ} {bs' : CaseBranches nₐ ℓ}
-                → (εδ : (Γ , conτ) ⊢[ φ ] ε' ⦂ R.weaken-τ τ')
+                → (εδ : (Γ , conτ) ⊢[ φ of not-t-sub ] ε' ⦂ R.weaken-τ τ')
                 → (rest : BranchesHaveType φ Γ cons' bs' τ')
                 → BranchesHaveType φ Γ (conτ ∷ cons') (MkCaseBranch ε' ∷ bs') τ'
 
@@ -55,8 +61,8 @@ data _ok[_] where
 data _⊢[_]_ {ℓ} Γ φ where
   TWF-TrueRef : (Γok : Γ ok[ φ ])
               → Γ ⊢[ φ ] ⟨ b ∣ Τ ⟩
-  TWF-Base    : (ε₁δ : Γ , ⟨ b ∣ Τ ⟩ ⊢[ φ ] ε₁ ⦂ ⟨ b' ∣ Τ ⟩)
-              → (ε₂δ : Γ , ⟨ b ∣ Τ ⟩ ⊢[ φ ] ε₂ ⦂ ⟨ b' ∣ Τ ⟩)
+  TWF-Base    : (ε₁δ : Γ , ⟨ b ∣ Τ ⟩ ⊢[ φ of not-t-sub ] ε₁ ⦂ ⟨ b' ∣ Τ ⟩)
+              → (ε₂δ : Γ , ⟨ b ∣ Τ ⟩ ⊢[ φ of not-t-sub ] ε₂ ⦂ ⟨ b' ∣ Τ ⟩)
               → Γ ⊢[ φ ] ⟨ b ∣ ε₁ ≈ ε₂ of ⟨ b' ∣ Τ ⟩ ⟩
   TWF-Conj    : (ρ₁δ : Γ ⊢[ φ ] ⟨ b ∣ ρ₁ ⟩)
               → (ρ₂δ : Γ ⊢[ φ ] ⟨ b ∣ ρ₂ ⟩)
@@ -68,33 +74,36 @@ data _⊢[_]_ {ℓ} Γ φ where
               → (consδs : All (Γ ⊢[ φ ]_) adtCons)
               → Γ ⊢[ φ ] ⊍ adtCons
 
-data _⊢[_]_⦂_ {ℓ} Γ φ where
+data _⊢[_of_]_⦂_ {ℓ} Γ φ where
   T-Unit      : (Γok : Γ ok[ φ ])
-              → Γ ⊢[ φ ] SUnit ⦂ ⟨ BUnit ∣ Τ ⟩
+              → Γ ⊢[ φ of not-t-sub ] SUnit ⦂ ⟨ BUnit ∣ Τ ⟩
   T-Var       : (Γok : Γ ok[ φ ])
               → τ ∈ Γ at ι
-              → Γ ⊢[ φ ] SVar ι ⦂ τ
+              → Γ ⊢[ φ of not-t-sub ] SVar ι ⦂ τ
   T-Abs       : (arrδ : Γ ⊢[ φ ] τ₁ ⇒ τ₂)
-              → (bodyδ : Γ , τ₁ ⊢[ φ ] ε ⦂ τ₂)
-              → Γ ⊢[ φ ] SLam τ₁ ε ⦂ τ₁ ⇒ τ₂
-  T-App       : (δ₁ : Γ ⊢[ φ ] ε₁ ⦂ τ₁ ⇒ τ₂)
-              → (δ₂ : Γ ⊢[ φ ] ε₂ ⦂ τ₁')
-              → (<: : Γ ⊢[ φ ] τ₁' <: τ₁)
+              → (bodyδ : Γ , τ₁ ⊢[ φ of not-t-sub ] ε ⦂ τ₂)
+              → Γ ⊢[ φ of not-t-sub ] SLam τ₁ ε ⦂ τ₁ ⇒ τ₂
+  T-App       : (δ₁ : Γ ⊢[ φ of not-t-sub ] ε₁ ⦂ τ₁ ⇒ τ₂)
+              → (δ₂ : Γ ⊢[ φ of t-sub ] ε₂ ⦂ τ₁)
               → (resτ-≡ : τ ≡ [ zero ↦τ ε₂ ] τ₂)
               → (resτδ : Γ ⊢[ φ ] τ) -- TODO double-check it's really needed
-              → Γ ⊢[ φ ] SApp ε₁ ε₂ ⦂ τ
+              → Γ ⊢[ φ of not-t-sub ] SApp ε₁ ε₂ ⦂ τ
   T-Case      : {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
               → {bs : CaseBranches (Mkℕₐ (suc n)) ℓ}
               → (resδ : Γ ⊢[ φ ] τ')
-              → (scrutτδ : Γ ⊢[ φ ] ε ⦂ ⊍ cons)
+              → (scrutτδ : Γ ⊢[ φ of not-t-sub ] ε ⦂ ⊍ cons)
               → (branches-well-typed : BranchesHaveType φ Γ cons bs τ')
-              → Γ ⊢[ φ ] SCase ε bs ⦂ τ'
+              → Γ ⊢[ φ of not-t-sub ] SCase ε bs ⦂ τ'
   T-Con       : ∀ {ι}
               → {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
               → (≡-prf : τⱼ ≡ lookup cons ι)
-              → (conArg : Γ ⊢[ φ ] ε ⦂ τⱼ)
+              → (conArg : Γ ⊢[ φ of not-t-sub ] ε ⦂ τⱼ)
               → (adtτ : Γ ⊢[ φ ] ⊍ cons)
-              → Γ ⊢[ φ ] SCon ι ε cons ⦂ ⊍ cons
+              → Γ ⊢[ φ of not-t-sub ] SCon ι ε cons ⦂ ⊍ cons
+  T-Sub       : (εδ : Γ ⊢[ φ of not-t-sub ] ε ⦂ τ)
+              → (τ'δ : Γ ⊢[ φ ] τ')
+              → (<: : Γ ⊢[ φ ] τ <: τ')
+              → Γ ⊢[ φ of t-sub ] ε ⦂ τ'
 
 record PositiveDecision (ℓ : ℕ) : Set where
   constructor MkPD

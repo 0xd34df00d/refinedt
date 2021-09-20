@@ -16,7 +16,7 @@ open import Surface.Derivations.Algorithmic
 
 size-ok  : Γ ok[ φ ]         → ℕ
 size-twf : Γ ⊢[ φ ] τ        → ℕ
-size-t   : Γ ⊢[ φ ] ε ⦂ τ    → ℕ
+size-t   : Γ ⊢[ φ of κ ] ε ⦂ τ    → ℕ
 size-<:  : Γ ⊢[ φ ] τ₁ <: τ₂ → ℕ
 size-bs  : ∀ {τ cons} {bs : CaseBranches nₐ ℓ}
          → BranchesHaveType φ Γ cons bs τ
@@ -70,9 +70,10 @@ size-all-cons (px ∷ pxs) = suc (size-twf px ⊕ size-all-cons pxs)
 size-t (T-Unit gok) = suc (suc (size-ok gok))
 size-t (T-Var gok _) = suc (size-ok gok)
 size-t (T-Abs arrδ bodyδ) = suc (size-twf arrδ ⊕ size-t bodyδ)
-size-t (T-App δ₁ δ₂ <: _ resτδ) = suc (size-t δ₁ ⊕ size-t δ₂ ⊕ size-<: <: ⊕ size-twf resτδ)
+size-t (T-App δ₁ δ₂ _ resτδ) = suc (size-t δ₁ ⊕ size-t δ₂ ⊕ size-twf resτδ)
 size-t (T-Case resδ scrutτδ branches) = suc (size-t scrutτδ ⊕ size-twf resδ ⊕ size-bs branches)
 size-t (T-Con _ conArg adtτ) = suc (size-t conArg ⊕ size-twf adtτ)
+size-t (T-Sub δ superδ sub) = suc (size-t δ ⊕ size-twf superδ ⊕ size-<: sub)
 
 size-<: (ST-Base _ _) = 0
 size-<: (ST-Arr sub₁ sub₂ omitted omitted) = suc (size-<: sub₁ ⊕ size-<: sub₂)
