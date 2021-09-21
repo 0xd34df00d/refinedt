@@ -4,11 +4,13 @@ module Translation.μ-subst where
 
 open import Data.Fin.Base using (zero; suc)
 open import Data.Nat.Base using (zero; suc)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst; cong; trans)
+open import Relation.Binary.PropositionalEquality as Eq using (_≡_; refl; subst; sym; trans)
 
 open import Core.Syntax as C renaming (Γ to Γᶜ; ε to εᶜ; τ to τᶜ)
+open import Core.Syntax.Derived as C
 open import Core.Syntax.Renaming as CR
 open import Core.Syntax.Substitution as CS
+open import Core.Syntax.Derived.Substitution as CS
 open import Surface.Syntax as S renaming (Γ to Γˢ;
                                           τ to τˢ; τ' to τ'ˢ; τ₁ to τ₁ˢ; τ₁' to τ₁'ˢ; τ₂ to τ₂ˢ; σ to σˢ;
                                           ε to εˢ; ε' to ε'ˢ; ε₁ to ε₁ˢ; ε₂ to ε₂ˢ)
@@ -36,9 +38,20 @@ mutual
                    → μ-τ codδ ≡ [ ℓ ↦< μ-ε argδ ] μ-τ domδ
   μ-τ-sub-commutes Δ argδ (TWF-TrueRef {b = BUnit} Γok) (TWF-TrueRef Γok₂) = refl
   μ-τ-sub-commutes Δ argδ (TWF-Base ε₁δ₁ ε₂δ₁) (TWF-Base ε₁δ₂ ε₂δ₂) = {! !}
-  μ-τ-sub-commutes Δ argδ (TWF-Conj domδ domδ₁) (TWF-Conj codδ codδ₁) = {! !}
-  μ-τ-sub-commutes Δ argδ (TWF-Arr domδ domδ₁) (TWF-Arr codδ codδ₁) = {! !}
-  μ-τ-sub-commutes Δ argδ (TWF-ADT consδs) (TWF-ADT consδs₁) = {! !}
+  μ-τ-sub-commutes {ℓ = ℓ} {k = k} Δ argδ (TWF-Conj ρ₁δ₁ ρ₂δ₁) (TWF-Conj ρ₁δ₂ ρ₂δ₂)
+    = let ×-comm = act-×-commutes
+                    (CS.replace-at (ctx-idx k) (CR.weaken-ε-k _ (μ-ε argδ)))
+                    (μ-τ ρ₁δ₁)
+                    (μ-τ ρ₂δ₁)
+       in trans rec-commutes (sym ×-comm)
+    where
+    rec-commutes : ⟨ μ-τ ρ₁δ₂ × μ-τ ρ₂δ₂ ⟩ ≡ ⟨ ([ ℓ ↦< μ-ε argδ ] μ-τ ρ₁δ₁) × ([ ℓ ↦< μ-ε argδ ] μ-τ ρ₂δ₁) ⟩
+    rec-commutes
+      rewrite μ-τ-sub-commutes Δ argδ ρ₁δ₁ ρ₁δ₂
+            | μ-τ-sub-commutes Δ argδ ρ₂δ₁ ρ₂δ₂
+            = refl
+  μ-τ-sub-commutes Δ argδ (TWF-Arr argδ₁ resδ₁) (TWF-Arr argδ₂ resδ₂) = {! !}
+  μ-τ-sub-commutes Δ argδ (TWF-ADT consδs₁) (TWF-ADT consδs₂) = {! !}
 
 μ-τ-sub-front-commutes : (argδ : Γˢ ⊢[ E of κ ] ε₂ˢ ⦂ τ₁ˢ)
                        → (codδ : Γˢ , τ₁ˢ ⊢[ E ] τ₂ˢ)
