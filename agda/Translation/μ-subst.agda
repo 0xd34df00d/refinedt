@@ -15,20 +15,21 @@ open import Surface.Syntax as S renaming (Γ to Γˢ;
                                           τ to τˢ; τ' to τ'ˢ; τ₁ to τ₁ˢ; τ₁' to τ₁'ˢ; τ₂ to τ₂ˢ; σ to σˢ;
                                           ε to εˢ; ε' to ε'ˢ; ε₁ to ε₁ˢ; ε₂ to ε₂ˢ)
 open import Surface.Syntax.CtxSuffix as S
-open import Surface.Syntax.Substitution as SS hiding (ctx-idx)
+open import Surface.Syntax.Renaming as SR
+open import Surface.Syntax.Substitution as SS
 open import Surface.Derivations.Algorithmic as S
 open import Surface.Theorems.Substitution as S
 
 open import Translation.Untyped
 open import Translation.Typed
 
-ctx-idx : ∀ k → Fin (suc (k + ℓ))
-ctx-idx zero = zero
-ctx-idx (suc k) = suc (ctx-idx k)
+ctx-idxᶜ : ∀ k → Fin (suc (k + ℓ))
+ctx-idxᶜ zero = zero
+ctx-idxᶜ (suc k) = suc (ctx-idxᶜ k)
 
 [_↦<_]_ : ∀ ℓ
         → (ε : CExpr ℓ) → CExpr (suc k + ℓ) → CExpr (k + ℓ)
-[_↦<_]_ {k = k} _ ε τ = [ ctx-idx k ↦ CR.weaken-ε-k _ ε ] τ
+[_↦<_]_ {k = k} _ ε τ = [ ctx-idxᶜ k ↦ CR.weaken-ε-k _ ε ] τ
 
 mutual
   μ-τ-sub-commutes : (Δ : ,-CtxSuffix ℓ σˢ k)
@@ -40,7 +41,7 @@ mutual
   μ-τ-sub-commutes Δ argδ (TWF-Base ε₁δ₁ ε₂δ₁) (TWF-Base ε₁δ₂ ε₂δ₂) = {! !}
   μ-τ-sub-commutes {ℓ = ℓ} {k = k} Δ argδ (TWF-Conj ρ₁δ₁ ρ₂δ₁) (TWF-Conj ρ₁δ₂ ρ₂δ₂)
     = let ×-comm = act-×-commutes
-                    (CS.replace-at (ctx-idx k) (CR.weaken-ε-k _ (μ-ε argδ)))
+                    (CS.replace-at (ctx-idxᶜ k) (CR.weaken-ε-k _ (μ-ε argδ)))
                     (μ-τ ρ₁δ₁)
                     (μ-τ ρ₂δ₁)
        in trans rec-commutes (sym ×-comm)
