@@ -6,6 +6,7 @@ open import Data.Fin using (suc; zero)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 
 open import Common.Helpers
+open import Data.Fin.Extra
 open import Core.Syntax
 import      Core.Syntax.Renaming as R
 open import Core.Syntax.Actions (record { Target = CExpr
@@ -40,3 +41,15 @@ infixr 6 [_↦_]_ [_↦c_]_ [_↦bs_]_
 
 [_↦bs_]_ : SubstOn (CaseBranches nₐ)
 [_↦bs_]_ idx ε = act-branches (replace-at idx ε)
+
+ext-replace-comm : ∀ ε (ι : Fin (suc ℓ))
+                 → ext (replace-at ι ε) f≡ replace-at (suc ι) (R.act-ε suc ε)
+ext-replace-comm _ zero zero = refl
+ext-replace-comm _ (suc ι) zero = refl
+ext-replace-comm _ zero (suc var-idx) with zero <>? var-idx
+... | less m<n rewrite m<n-n-pred-cancel m<n = refl
+... | equal refl = refl
+ext-replace-comm _ (suc ι) (suc var-idx) with suc ι <>? var-idx
+... | less m<n rewrite m<n-n-pred-cancel m<n = refl
+... | equal refl = refl
+... | greater m>n = refl
