@@ -2,9 +2,10 @@
 
 module Translation.μ-subst where
 
-open import Data.Fin.Base using (zero; suc)
+open import Data.Fin.Base using (zero; suc; raise)
 open import Data.Nat.Base using (zero; suc)
-open import Relation.Binary.PropositionalEquality as Eq using (_≡_; refl; subst; sym; trans)
+open import Relation.Binary.PropositionalEquality as Eq using (_≡_; refl; subst; sym; trans; cong)
+open Eq.≡-Reasoning
 
 open import Core.Syntax as C renaming (Γ to Γᶜ; ε to εᶜ; τ to τᶜ)
 open import Core.Syntax.Derived as C
@@ -51,7 +52,24 @@ mutual
       rewrite μ-τ-sub-commutes Δ argδ ρ₁δ₁ ρ₁δ₂
             | μ-τ-sub-commutes Δ argδ ρ₂δ₁ ρ₂δ₂
             = refl
-  μ-τ-sub-commutes Δ argδ (TWF-Arr argδ₁ resδ₁) (TWF-Arr argδ₂ resδ₂) = {! !}
+  μ-τ-sub-commutes {ℓ = ℓ} {k = k} {εˢ = εˢ} Δ argδ (TWF-Arr {τ₂ = τ₂} argδ₁ resδ₁) (TWF-Arr argδ₂ resδ₂)
+    = begin
+        CΠ (μ-τ argδ₂) (μ-τ resδ₂)
+      ≡⟨ cong (λ argδ → CΠ argδ (μ-τ resδ₂)) (μ-τ-sub-commutes Δ argδ argδ₁ argδ₂) ⟩
+        CΠ ([ ℓ ↦< μ-ε argδ ] μ-τ argδ₁) (μ-τ resδ₂)
+      ≡⟨ cong (CΠ _) resδ-subst-massage ⟩
+        CΠ ([ ℓ ↦< μ-ε argδ ] μ-τ argδ₁) ([ ℓ ↦< μ-ε argδ ] μ-τ resδ₁)
+      ≡⟨ cong
+            (CΠ _)
+            (sym (CS.act-ε-extensionality (CS.ext-replace-comm (CR.weaken-ε-k k (μ-ε argδ)) (ctx-idxᶜ k)) (μ-τ resδ₁))) ⟩
+        ([ ℓ ↦< μ-ε argδ ] CΠ (μ-τ argδ₁) (μ-τ resδ₁))
+      ∎
+    where
+    resδ-subst-massage : μ-τ resδ₂ ≡ [ ℓ ↦< μ-ε argδ ] μ-τ resδ₁
+    resδ-subst-massage
+      rewrite SS.act-τ-extensionality (SS.ext-replace-comm (SR.weaken-ε-k k εˢ) (SS.ctx-idx k)) τ₂
+            | SR.act-ε-distr (raise k) suc εˢ
+            = μ-τ-sub-commutes (Δ , _) argδ resδ₁ resδ₂
   μ-τ-sub-commutes Δ argδ (TWF-ADT consδs₁) (TWF-ADT consδs₂) = {! !}
 
 μ-τ-sub-front-commutes : (argδ : Γˢ ⊢[ E of κ ] ε₂ˢ ⦂ τ₁ˢ)
