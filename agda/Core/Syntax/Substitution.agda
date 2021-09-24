@@ -64,3 +64,15 @@ ctx-idx (suc k) = suc (ctx-idx k)
 [_↦'_]_ : ∀ ℓ
         → (ε : CExpr ℓ) → CExpr (suc k + ℓ) → CExpr (k + ℓ)
 [_↦'_]_ {k = k} _ ε τ = [ ctx-idx k ↦ R.weaken-ε-k _ ε ] τ
+
+CΠ-↦'-distr : ∀ ℓ (ε : CExpr ℓ) (ε₁ : CExpr (suc k + ℓ)) ε₂
+            → [ ℓ ↦' ε ] CΠ ε₁ ε₂ ≡ CΠ ([ ℓ ↦' ε ] ε₁) ([ ℓ ↦' ε ] ε₂)
+CΠ-↦'-distr {k = k} _ ε _ ε₂
+  rewrite act-ε-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε₂
+        = refl
+
+CLam-↦'-distr : ∀ ℓ (ε : CExpr ℓ) (ε₁ : CExpr (suc k + ℓ)) ε₂
+              → [ ℓ ↦' ε ] CLam ε₁ ε₂ ≡ CLam ([ ℓ ↦' ε ] ε₁) ([ ℓ ↦' ε ] ε₂)
+CLam-↦'-distr {k = k} _ ε _ ε₂
+  rewrite act-ε-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε₂
+        = refl

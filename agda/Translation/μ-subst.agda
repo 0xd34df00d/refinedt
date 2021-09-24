@@ -73,9 +73,7 @@ mutual
         CΠ ([ ℓ ↦' μ-ε argδ ] μ-τ argδ₁) (μ-τ resδ₂)
       ≡⟨ cong (CΠ _) resδ-subst-massage ⟩
         CΠ ([ ℓ ↦' μ-ε argδ ] μ-τ argδ₁) ([ ℓ ↦' μ-ε argδ ] μ-τ resδ₁)
-      ≡˘⟨ cong
-            (CΠ _)
-            (CS.act-ε-extensionality (CS.ext-replace-comm (CR.weaken-ε-k k (μ-ε argδ)) (CS.ctx-idx k)) (μ-τ resδ₁)) ⟩
+      ≡˘⟨ CS.CΠ-↦'-distr ℓ _ (μ-τ argδ₁) (μ-τ resδ₁) ⟩
         ([ ℓ ↦' μ-ε argδ ] CΠ (μ-τ argδ₁) (μ-τ resδ₁))
       ∎
     where
