@@ -1,6 +1,8 @@
 {-# OPTIONS --allow-unsolved-metas #-}
 
-module Translation.μ-subst where
+open import Surface.Derivations.Algorithmic using (UniquenessOfOracles)
+
+module Translation.μ-subst(oracles-equal : UniquenessOfOracles) where
 
 open import Data.Fin.Base using (zero; suc; raise)
 open import Data.Nat.Base using (zero; suc)
@@ -12,6 +14,7 @@ open import Core.Syntax.Derived as C
 open import Core.Syntax.Renaming as CR
 open import Core.Syntax.Substitution as CS
 open import Core.Syntax.Derived.Substitution as CS
+open import Core.Derivations as C renaming (_⊢_⦂_ to _⊢ᶜ_⦂_)
 open import Surface.Syntax as S renaming (Γ to Γˢ;
                                           τ to τˢ; τ' to τ'ˢ; τ₁ to τ₁ˢ; τ₁' to τ₁'ˢ; τ₂ to τ₂ˢ; σ to σˢ;
                                           ε to εˢ; ε' to ε'ˢ; ε₁ to ε₁ˢ; ε₂ to ε₂ˢ)
@@ -19,10 +22,12 @@ open import Surface.Syntax.CtxSuffix as S
 open import Surface.Syntax.Renaming as SR
 open import Surface.Syntax.Substitution as SS
 open import Surface.Derivations.Algorithmic as S
+open import Surface.Derivations.Algorithmic.Theorems.Uniqueness(oracles-equal)
 open import Surface.Theorems.Substitution as S
 
 open import Translation.Untyped
 open import Translation.Typed
+open import Translation.SubstUnique(oracles-equal)
 
 ctx-idxᶜ : ∀ k → Fin (suc (k + ℓ))
 ctx-idxᶜ zero = zero
@@ -72,8 +77,19 @@ mutual
             = μ-τ-sub-commutes (Δ , _) argδ resδ₁ resδ₂
   μ-τ-sub-commutes Δ argδ (TWF-ADT consδs₁) (TWF-ADT consδs₂) = {! !}
 
-μ-τ-sub-front-commutes : (argδ : Γˢ ⊢[ E of κ ] ε₂ˢ ⦂ τ₁ˢ)
+μ-τ-sub-front-commutes : {Γˢ : S.Ctx ℓ}
+                       → (argδ : Γˢ ⊢[ E of κ ] ε₂ˢ ⦂ τ₁ˢ)
                        → (codδ : Γˢ , τ₁ˢ ⊢[ E ] τ₂ˢ)
                        → (resτδ : Γˢ ⊢[ E ] [ zero ↦τ ε₂ˢ ] τ₂ˢ)
                        → μ-τ resτδ ≡ [ zero ↦  μ-ε argδ ] μ-τ codδ
-μ-τ-sub-front-commutes argδ codδ resτδ = μ-τ-sub-commutes [ _ ] argδ codδ {! !}
+μ-τ-sub-front-commutes {ε₂ˢ = ε₂ˢ} {τ₂ˢ = τ₂ˢ} argδ codδ resτδ
+  = let act-ε-refl = sym (SR.act-ε-id (λ _ → refl) ε₂ˢ)
+        resτδ' = subst (λ ε → _ ⊢[ E ] [ zero ↦τ ε ] τ₂ˢ) act-ε-refl resτδ
+     in trans (helper (cong ([ zero ↦τ_] τ₂ˢ) act-ε-refl) resτδ resτδ') (μ-τ-sub-commutes [ _ ] argδ codδ resτδ')
+  where
+  helper : {τ₁ τ₂ : SType ℓ}
+         → τ₁ ≡ τ₂
+         → (Γ⊢τ₁ : Γˢ ⊢[ E ] τ₁)
+         → (Γ⊢τ₂ : Γˢ ⊢[ E ] τ₂)
+         → μ-τ Γ⊢τ₁ ≡ μ-τ Γ⊢τ₂
+  helper refl Γ⊢τ₁ Γ⊢τ₂ = cong μ-τ (unique-Γ⊢τ Γ⊢τ₁ Γ⊢τ₂)

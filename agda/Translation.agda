@@ -27,7 +27,7 @@ open import Translation.Untyped
 open import Translation.Typed
 open import Translation.SubstUnique(oracles-equal)
 open import Translation.μ-weakening(oracles-equal)
-open import Translation.μ-subst
+open import Translation.μ-subst(oracles-equal)
 
 μ-Τ-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
                → Γᶜ ⊢ᶜ ⌊μ⌋-Τ ⦂ ⋆ₑ
