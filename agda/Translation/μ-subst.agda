@@ -48,7 +48,20 @@ mutual
                    → (codδ : Γˢ ++ [↦Δ εˢ ] Δ ⊢[ E ] [ ℓ ↦τ< εˢ ] τˢ)
                    → μ-τ codδ ≡ [ ℓ ↦< μ-ε argδ ] μ-τ domδ
   μ-τ-sub-commutes {k = k} Δ argδ (TWF-TrueRef Γok) (TWF-TrueRef Γok₂) = ⌊μ⌋-b-sub-id k _ _
-  μ-τ-sub-commutes Δ argδ (TWF-Base ε₁δ₁ ε₂δ₁) (TWF-Base ε₁δ₂ ε₂δ₂) = {! !}
+  μ-τ-sub-commutes {ℓ = ℓ} {k = k} Δ argδ (TWF-Base {b = b} {b' = b'} ε₁δ₁ ε₂δ₁) (TWF-Base ε₁δ₂ ε₂δ₂)
+    = begin
+        Σ[ ⌊μ⌋-b b ] CLam (⌊μ⌋-b b) (μ-ε ε₁δ₂ ≡̂ μ-ε ε₂δ₂ of ⌊μ⌋-b b')
+      ≡⟨ {! !} ⟩
+        Σ[ ⌊μ⌋-b b ] (CLam ([ ℓ ↦< μ-ε argδ ] ⌊μ⌋-b b) ([ ℓ ↦< μ-ε argδ ] (μ-ε ε₁δ₁ ≡̂ μ-ε ε₂δ₁ of ⌊μ⌋-b b')))
+      ≡⟨ {! !} ⟩
+        Σ[ ⌊μ⌋-b b ] ([ ℓ ↦< μ-ε argδ ] CLam (⌊μ⌋-b b) (μ-ε ε₁δ₁ ≡̂ μ-ε ε₂δ₁ of ⌊μ⌋-b b'))
+      ≡⟨ cong
+            (Σ[_] ([ ℓ ↦< μ-ε argδ ] CLam (⌊μ⌋-b b) (μ-ε ε₁δ₁ ≡̂ μ-ε ε₂δ₁ of ⌊μ⌋-b b')))
+            (⌊μ⌋-b-sub-id k _ b) ⟩
+        Σ[ [ ℓ ↦< μ-ε argδ ] ⌊μ⌋-b b ] ([ ℓ ↦< μ-ε argδ ] CLam (⌊μ⌋-b b) (μ-ε ε₁δ₁ ≡̂ μ-ε ε₂δ₁ of ⌊μ⌋-b b'))
+      ≡˘⟨ act-Σ-commutes (CS.replace-at (ctx-idxᶜ k) (CR.weaken-ε-k _ (μ-ε argδ))) (⌊μ⌋-b b) (CLam (⌊μ⌋-b b) (μ-ε ε₁δ₁ ≡̂ μ-ε ε₂δ₁ of ⌊μ⌋-b b')) ⟩
+        [ ℓ ↦< μ-ε argδ ] Σ[ ⌊μ⌋-b b ] (CLam (⌊μ⌋-b b) (μ-ε ε₁δ₁ ≡̂ μ-ε ε₂δ₁ of ⌊μ⌋-b b'))
+      ∎
   μ-τ-sub-commutes {ℓ = ℓ} {k = k} Δ argδ (TWF-Conj ρ₁δ₁ ρ₂δ₁) (TWF-Conj ρ₁δ₂ ρ₂δ₂)
     = let ×-comm = act-×-commutes
                     (CS.replace-at (ctx-idxᶜ k) (CR.weaken-ε-k _ (μ-ε argδ)))
