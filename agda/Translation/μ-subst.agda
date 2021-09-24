@@ -55,11 +55,9 @@ mutual
         [ ℓ ↦' μ-ε argδ ] Σ[ ⌊μ⌋-b b ] (CLam (⌊μ⌋-b b) (μ-ε ε₁δ₁ ≡̂ μ-ε ε₂δ₁ of ⌊μ⌋-b b'))
       ∎
   μ-τ-sub-commutes {ℓ = ℓ} {k = k} Δ argδ (TWF-Conj ρ₁δ₁ ρ₂δ₁) (TWF-Conj ρ₁δ₂ ρ₂δ₂)
-    = let ×-comm = act-×-commutes
-                    (CS.replace-at (CS.ctx-idx k) (CR.weaken-ε-k _ (μ-ε argδ)))
-                    (μ-τ ρ₁δ₁)
-                    (μ-τ ρ₂δ₁)
-       in trans rec-commutes (sym ×-comm)
+    = trans
+        rec-commutes
+        (sym (×-↦'-distr _ (μ-ε argδ) (μ-τ ρ₁δ₁) (μ-τ ρ₂δ₁)))
     where
     rec-commutes : ⟨ μ-τ ρ₁δ₂ × μ-τ ρ₂δ₂ ⟩ ≡ ⟨ ([ ℓ ↦' μ-ε argδ ] μ-τ ρ₁δ₁) × ([ ℓ ↦' μ-ε argδ ] μ-τ ρ₂δ₁) ⟩
     rec-commutes
