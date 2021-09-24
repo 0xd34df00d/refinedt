@@ -25,6 +25,7 @@ open import Surface.Derivations.Algorithmic.Theorems.Uniqueness(oracles-equal)
 
 open import Translation.Untyped
 open import Translation.Typed
+open import Translation.SubstUnique(oracles-equal)
 open import Translation.μ-weakening(oracles-equal)
 open import Translation.μ-subst
 
@@ -50,16 +51,6 @@ open import Translation.μ-subst
               → μ-τ (τ∈Γ-⇒-Γ⊢τ Γok ∈) ∈ᶜ μ-Γ Γok at ι
 μ-preserves-∈ (TCTX-Bind Γok τδ) (∈-zero refl) = ∈-zero (μ-τ-weakening-commutes Γok τδ τδ)
 μ-preserves-∈ (TCTX-Bind Γok τδ) (∈-suc refl ∈) = ∈-suc (μ-τ-weakening-commutes Γok τδ (τ∈Γ-⇒-Γ⊢τ Γok ∈)) (μ-preserves-∈ Γok ∈)
-
-subst-Γ : (Γok₁ Γok₂ : Γˢ ok[ E ])
-        → μ-Γ Γok₁ ⊢ᶜ εᶜ ⦂ τᶜ
-        → μ-Γ Γok₂ ⊢ᶜ εᶜ ⦂ τᶜ
-subst-Γ _ _ = subst (_⊢ᶜ _ ⦂ _) (cong μ-Γ (unique-Γok _ _))
-
-subst-τ : (Γ⊢τ₁ Γ⊢τ₂ : Γˢ ⊢[ E ] τˢ)
-        → Γᶜ ⊢ᶜ εᶜ ⦂ μ-τ Γ⊢τ₁
-        → Γᶜ ⊢ᶜ εᶜ ⦂ μ-τ Γ⊢τ₂
-subst-τ Γ⊢τ₁ Γ⊢τ₂ = subst (_ ⊢ᶜ _ ⦂_) (cong μ-τ (unique-Γ⊢τ Γ⊢τ₁ Γ⊢τ₂))
 
 mutual
   μ-b-P-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
