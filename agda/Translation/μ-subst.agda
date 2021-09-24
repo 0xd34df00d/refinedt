@@ -37,13 +37,17 @@ ctx-idxᶜ (suc k) = suc (ctx-idxᶜ k)
         → (ε : CExpr ℓ) → CExpr (suc k + ℓ) → CExpr (k + ℓ)
 [_↦<_]_ {k = k} _ ε τ = [ ctx-idxᶜ k ↦ CR.weaken-ε-k _ ε ] τ
 
+⌊μ⌋-b-sub-id : ∀ k ε b
+             → ⌊μ⌋-b {ℓ = k + ℓ} b ≡ [ ℓ ↦< ε ] (⌊μ⌋-b b)
+⌊μ⌋-b-sub-id _ _ BUnit = refl
+
 mutual
   μ-τ-sub-commutes : (Δ : ,-CtxSuffix ℓ σˢ k)
                    → (argδ : Γˢ ⊢[ E of κ ] εˢ ⦂ σˢ)
                    → (domδ : Γˢ ,σ, Δ ⊢[ E ] τˢ)
                    → (codδ : Γˢ ++ [↦Δ εˢ ] Δ ⊢[ E ] [ ℓ ↦τ< εˢ ] τˢ)
                    → μ-τ codδ ≡ [ ℓ ↦< μ-ε argδ ] μ-τ domδ
-  μ-τ-sub-commutes Δ argδ (TWF-TrueRef {b = BUnit} Γok) (TWF-TrueRef Γok₂) = refl
+  μ-τ-sub-commutes {k = k} Δ argδ (TWF-TrueRef Γok) (TWF-TrueRef Γok₂) = ⌊μ⌋-b-sub-id k _ _
   μ-τ-sub-commutes Δ argδ (TWF-Base ε₁δ₁ ε₂δ₁) (TWF-Base ε₁δ₂ ε₂δ₂) = {! !}
   μ-τ-sub-commutes {ℓ = ℓ} {k = k} Δ argδ (TWF-Conj ρ₁δ₁ ρ₂δ₁) (TWF-Conj ρ₁δ₂ ρ₂δ₂)
     = let ×-comm = act-×-commutes
