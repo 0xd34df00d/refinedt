@@ -3,6 +3,7 @@
 module Core.Syntax.Derived where
 
 open import Data.Fin using (zero; suc)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Core.Syntax
 open import Core.Syntax.Renaming
@@ -75,3 +76,11 @@ eq-refl τ ε =
   Pε          = CVar zero · weaken-ε ε
   id-fun      = CLam Pε (CVar zero)
   id-fun-type = Pε ⇒' Pε
+
+
+-- Helpers for the above
+≡̂-subst³ : (ε₁ ≡ ε₁')
+         → (ε₂ ≡ ε₂')
+         → (τ  ≡ τ')
+         → ε₁ ≡̂ ε₂ of τ ≡ ε₁' ≡̂ ε₂' of τ'
+≡̂-subst³ refl refl refl = refl
