@@ -2,8 +2,8 @@ open import Surface.Derivations.Algorithmic using (UniquenessOfOracles)
 
 module Translation(oracles-equal : UniquenessOfOracles) where
 
-open import Data.Fin using (zero)
-open import Data.Vec using (Vec; _∷_; [])
+open import Data.Fin using (zero; suc)
+open import Data.Vec using (Vec; _∷_; []; lookup)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; subst; sym)
 
 open import Core.Syntax as C renaming (Γ to Γᶜ; ε to εᶜ; τ to τᶜ)
@@ -51,6 +51,14 @@ open import Translation.μ-subst(oracles-equal)
               → μ-τ (τ∈Γ-⇒-Γ⊢τ Γok ∈) ∈ᶜ μ-Γ Γok at ι
 μ-preserves-∈ (TCTX-Bind Γok τδ) (∈-zero refl) = ∈-zero (μ-τ-weakening-commutes Γok τδ τδ)
 μ-preserves-∈ (TCTX-Bind Γok τδ) (∈-suc refl ∈) = ∈-suc (μ-τ-weakening-commutes Γok τδ (τ∈Γ-⇒-Γ⊢τ Γok ∈)) (μ-preserves-∈ Γok ∈)
+
+μ-lookup-commutes : ∀ ι
+                  → {cons : S.ADTCons nₐ ℓ}
+                  → (consδs : All (Γˢ ⊢[ E ]_) cons)
+                  → (δ : Γˢ ⊢[ E ] lookup cons ι)
+                  → μ-τ δ ≡ lookup (μ-cons consδs) ι
+μ-lookup-commutes zero (δ' ∷ _) δ = cong μ-τ (unique-Γ⊢τ δ δ')
+μ-lookup-commutes (suc ι) (_ ∷ consδs) δ = μ-lookup-commutes ι consδs δ
 
 mutual
   μ-b-P-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
