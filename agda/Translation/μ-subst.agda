@@ -34,13 +34,19 @@ open import Translation.SubstUnique(oracles-equal)
 ⌊μ⌋-b-sub-id _ _ BUnit = refl
 
 mutual
+  μ-ε-sub-commutes : (Δ : ,-CtxSuffix ℓ σˢ k)
+                   → (argδ : Γˢ ⊢[ E of κ ] εˢ ⦂ σˢ)
+                   → (domδ : Γˢ ,σ, Δ ⊢[ E of κ₁ ] ε'ˢ ⦂ τˢ)
+                   → (codδ : Γˢ ++ [↦Δ εˢ ] Δ ⊢[ E of κ₂ ] [ ℓ ↦ε< εˢ ] ε'ˢ ⦂ [ ℓ ↦τ< εˢ ] τˢ)
+                   → μ-ε codδ ≡ [ ℓ ↦' μ-ε argδ ] μ-ε domδ
+
   μ-τ-sub-commutes : (Δ : ,-CtxSuffix ℓ σˢ k)
                    → (argδ : Γˢ ⊢[ E of κ ] εˢ ⦂ σˢ)
                    → (domδ : Γˢ ,σ, Δ ⊢[ E ] τˢ)
                    → (codδ : Γˢ ++ [↦Δ εˢ ] Δ ⊢[ E ] [ ℓ ↦τ< εˢ ] τˢ)
                    → μ-τ codδ ≡ [ ℓ ↦' μ-ε argδ ] μ-τ domδ
   μ-τ-sub-commutes {k = k} Δ argδ (TWF-TrueRef Γok) (TWF-TrueRef Γok₂) = ⌊μ⌋-b-sub-id k _ _
-  μ-τ-sub-commutes {ℓ = ℓ} {k = k} Δ argδ (TWF-Base {b = b} {b' = b'} ε₁δ₁ ε₂δ₁) (TWF-Base ε₁δ₂ ε₂δ₂)
+  μ-τ-sub-commutes {ℓ = ℓ} {k = k} {εˢ = εˢ} Δ argδ (TWF-Base {b = b} {ε₁ = ε₁} {b' = b'} {ε₂ = ε₂} ε₁δ₁ ε₂δ₁) (TWF-Base ε₁δ₂ ε₂δ₂)
     = begin
         Σ[ ⌊μ⌋-b b ] CLam (⌊μ⌋-b b) (μ-ε ε₁δ₂ ≡̂ μ-ε ε₂δ₂ of ⌊μ⌋-b b')
       ≡⟨ cong (Σ[ ⌊μ⌋-b b ]_) CLam≡-distr ⟩
@@ -53,6 +59,18 @@ mutual
         [ ℓ ↦' μ-ε argδ ] Σ[ ⌊μ⌋-b b ] (CLam (⌊μ⌋-b b) (μ-ε ε₁δ₁ ≡̂ μ-ε ε₂δ₁ of ⌊μ⌋-b b'))
       ∎
     where
+    ε₁δ-commutes : μ-ε ε₁δ₂ ≡ [ ℓ ↦' μ-ε argδ ] μ-ε ε₁δ₁
+    ε₁δ-commutes
+      rewrite SS.act-ε-extensionality (SS.ext-replace-comm (SR.weaken-ε-k k εˢ) (SS.ctx-idx k)) ε₁
+            | SR.act-ε-distr (raise k) suc εˢ
+            = μ-ε-sub-commutes (Δ , _) argδ ε₁δ₁ ε₁δ₂
+
+    ε₂δ-commutes : μ-ε ε₂δ₂ ≡ [ ℓ ↦' μ-ε argδ ] μ-ε ε₂δ₁
+    ε₂δ-commutes
+      rewrite SS.act-ε-extensionality (SS.ext-replace-comm (SR.weaken-ε-k k εˢ) (SS.ctx-idx k)) ε₂
+            | SR.act-ε-distr (raise k) suc εˢ
+            = μ-ε-sub-commutes (Δ , _) argδ ε₂δ₁ ε₂δ₂
+
     CLam≡-distr : CLam (⌊μ⌋-b b) (μ-ε ε₁δ₂ ≡̂ μ-ε ε₂δ₂ of ⌊μ⌋-b b')
                   ≡
                   [ ℓ ↦' μ-ε argδ ] CLam (⌊μ⌋-b b) (μ-ε ε₁δ₁ ≡̂ μ-ε ε₂δ₁ of ⌊μ⌋-b b')
@@ -61,7 +79,7 @@ mutual
 
           CLam (⌊μ⌋-b b) (μ-ε ε₁δ₂ ≡̂ μ-ε ε₂δ₂ of ⌊μ⌋-b b')
 
-        ≡⟨ cong (CLam _) (≡̂-subst³ {! !} {! !} (⌊μ⌋-b-sub-id (suc k) _ _)) ⟩
+        ≡⟨ cong (CLam _) (≡̂-subst³ ε₁δ-commutes ε₂δ-commutes (⌊μ⌋-b-sub-id (suc k) _ _)) ⟩
 
           CLam (⌊μ⌋-b b) (([ ℓ ↦' μ-ε argδ ] μ-ε ε₁δ₁) ≡̂ ([ ℓ ↦' μ-ε argδ ] μ-ε ε₂δ₁) of ([ ℓ ↦' μ-ε argδ ] ⌊μ⌋-b b'))
 
