@@ -29,16 +29,8 @@ open import Translation.Untyped
 open import Translation.Typed
 open import Translation.SubstUnique(oracles-equal)
 
-ctx-idxᶜ : ∀ k → Fin (suc (k + ℓ))
-ctx-idxᶜ zero = zero
-ctx-idxᶜ (suc k) = suc (ctx-idxᶜ k)
-
-[_↦<_]_ : ∀ ℓ
-        → (ε : CExpr ℓ) → CExpr (suc k + ℓ) → CExpr (k + ℓ)
-[_↦<_]_ {k = k} _ ε τ = [ ctx-idxᶜ k ↦ CR.weaken-ε-k _ ε ] τ
-
 ⌊μ⌋-b-sub-id : ∀ k ε b
-             → ⌊μ⌋-b {ℓ = k + ℓ} b ≡ [ ℓ ↦< ε ] (⌊μ⌋-b b)
+             → ⌊μ⌋-b {ℓ = k + ℓ} b ≡ [ ℓ ↦' ε ] (⌊μ⌋-b b)
 ⌊μ⌋-b-sub-id _ _ BUnit = refl
 
 mutual
@@ -46,30 +38,30 @@ mutual
                    → (argδ : Γˢ ⊢[ E of κ ] εˢ ⦂ σˢ)
                    → (domδ : Γˢ ,σ, Δ ⊢[ E ] τˢ)
                    → (codδ : Γˢ ++ [↦Δ εˢ ] Δ ⊢[ E ] [ ℓ ↦τ< εˢ ] τˢ)
-                   → μ-τ codδ ≡ [ ℓ ↦< μ-ε argδ ] μ-τ domδ
+                   → μ-τ codδ ≡ [ ℓ ↦' μ-ε argδ ] μ-τ domδ
   μ-τ-sub-commutes {k = k} Δ argδ (TWF-TrueRef Γok) (TWF-TrueRef Γok₂) = ⌊μ⌋-b-sub-id k _ _
   μ-τ-sub-commutes {ℓ = ℓ} {k = k} Δ argδ (TWF-Base {b = b} {b' = b'} ε₁δ₁ ε₂δ₁) (TWF-Base ε₁δ₂ ε₂δ₂)
     = begin
         Σ[ ⌊μ⌋-b b ] CLam (⌊μ⌋-b b) (μ-ε ε₁δ₂ ≡̂ μ-ε ε₂δ₂ of ⌊μ⌋-b b')
       ≡⟨ {! !} ⟩
-        Σ[ ⌊μ⌋-b b ] (CLam ([ ℓ ↦< μ-ε argδ ] ⌊μ⌋-b b) ([ ℓ ↦< μ-ε argδ ] (μ-ε ε₁δ₁ ≡̂ μ-ε ε₂δ₁ of ⌊μ⌋-b b')))
+        Σ[ ⌊μ⌋-b b ] (CLam ([ ℓ ↦' μ-ε argδ ] ⌊μ⌋-b b) ([ ℓ ↦' μ-ε argδ ] (μ-ε ε₁δ₁ ≡̂ μ-ε ε₂δ₁ of ⌊μ⌋-b b')))
       ≡⟨ {! !} ⟩
-        Σ[ ⌊μ⌋-b b ] ([ ℓ ↦< μ-ε argδ ] CLam (⌊μ⌋-b b) (μ-ε ε₁δ₁ ≡̂ μ-ε ε₂δ₁ of ⌊μ⌋-b b'))
+        Σ[ ⌊μ⌋-b b ] ([ ℓ ↦' μ-ε argδ ] CLam (⌊μ⌋-b b) (μ-ε ε₁δ₁ ≡̂ μ-ε ε₂δ₁ of ⌊μ⌋-b b'))
       ≡⟨ cong
-            (Σ[_] ([ ℓ ↦< μ-ε argδ ] CLam (⌊μ⌋-b b) (μ-ε ε₁δ₁ ≡̂ μ-ε ε₂δ₁ of ⌊μ⌋-b b')))
+            (Σ[_] ([ ℓ ↦' μ-ε argδ ] CLam (⌊μ⌋-b b) (μ-ε ε₁δ₁ ≡̂ μ-ε ε₂δ₁ of ⌊μ⌋-b b')))
             (⌊μ⌋-b-sub-id k _ b) ⟩
-        Σ[ [ ℓ ↦< μ-ε argδ ] ⌊μ⌋-b b ] ([ ℓ ↦< μ-ε argδ ] CLam (⌊μ⌋-b b) (μ-ε ε₁δ₁ ≡̂ μ-ε ε₂δ₁ of ⌊μ⌋-b b'))
-      ≡˘⟨ act-Σ-commutes (CS.replace-at (ctx-idxᶜ k) (CR.weaken-ε-k _ (μ-ε argδ))) (⌊μ⌋-b b) (CLam (⌊μ⌋-b b) (μ-ε ε₁δ₁ ≡̂ μ-ε ε₂δ₁ of ⌊μ⌋-b b')) ⟩
-        [ ℓ ↦< μ-ε argδ ] Σ[ ⌊μ⌋-b b ] (CLam (⌊μ⌋-b b) (μ-ε ε₁δ₁ ≡̂ μ-ε ε₂δ₁ of ⌊μ⌋-b b'))
+        Σ[ [ ℓ ↦' μ-ε argδ ] ⌊μ⌋-b b ] ([ ℓ ↦' μ-ε argδ ] CLam (⌊μ⌋-b b) (μ-ε ε₁δ₁ ≡̂ μ-ε ε₂δ₁ of ⌊μ⌋-b b'))
+      ≡˘⟨ act-Σ-commutes (CS.replace-at (CS.ctx-idx k) (CR.weaken-ε-k _ (μ-ε argδ))) (⌊μ⌋-b b) (CLam (⌊μ⌋-b b) (μ-ε ε₁δ₁ ≡̂ μ-ε ε₂δ₁ of ⌊μ⌋-b b')) ⟩
+        [ ℓ ↦' μ-ε argδ ] Σ[ ⌊μ⌋-b b ] (CLam (⌊μ⌋-b b) (μ-ε ε₁δ₁ ≡̂ μ-ε ε₂δ₁ of ⌊μ⌋-b b'))
       ∎
   μ-τ-sub-commutes {ℓ = ℓ} {k = k} Δ argδ (TWF-Conj ρ₁δ₁ ρ₂δ₁) (TWF-Conj ρ₁δ₂ ρ₂δ₂)
     = let ×-comm = act-×-commutes
-                    (CS.replace-at (ctx-idxᶜ k) (CR.weaken-ε-k _ (μ-ε argδ)))
+                    (CS.replace-at (CS.ctx-idx k) (CR.weaken-ε-k _ (μ-ε argδ)))
                     (μ-τ ρ₁δ₁)
                     (μ-τ ρ₂δ₁)
        in trans rec-commutes (sym ×-comm)
     where
-    rec-commutes : ⟨ μ-τ ρ₁δ₂ × μ-τ ρ₂δ₂ ⟩ ≡ ⟨ ([ ℓ ↦< μ-ε argδ ] μ-τ ρ₁δ₁) × ([ ℓ ↦< μ-ε argδ ] μ-τ ρ₂δ₁) ⟩
+    rec-commutes : ⟨ μ-τ ρ₁δ₂ × μ-τ ρ₂δ₂ ⟩ ≡ ⟨ ([ ℓ ↦' μ-ε argδ ] μ-τ ρ₁δ₁) × ([ ℓ ↦' μ-ε argδ ] μ-τ ρ₂δ₁) ⟩
     rec-commutes
       rewrite μ-τ-sub-commutes Δ argδ ρ₁δ₁ ρ₁δ₂
             | μ-τ-sub-commutes Δ argδ ρ₂δ₁ ρ₂δ₂
@@ -78,16 +70,16 @@ mutual
     = begin
         CΠ (μ-τ argδ₂) (μ-τ resδ₂)
       ≡⟨ cong (λ argδ → CΠ argδ (μ-τ resδ₂)) (μ-τ-sub-commutes Δ argδ argδ₁ argδ₂) ⟩
-        CΠ ([ ℓ ↦< μ-ε argδ ] μ-τ argδ₁) (μ-τ resδ₂)
+        CΠ ([ ℓ ↦' μ-ε argδ ] μ-τ argδ₁) (μ-τ resδ₂)
       ≡⟨ cong (CΠ _) resδ-subst-massage ⟩
-        CΠ ([ ℓ ↦< μ-ε argδ ] μ-τ argδ₁) ([ ℓ ↦< μ-ε argδ ] μ-τ resδ₁)
+        CΠ ([ ℓ ↦' μ-ε argδ ] μ-τ argδ₁) ([ ℓ ↦' μ-ε argδ ] μ-τ resδ₁)
       ≡˘⟨ cong
             (CΠ _)
-            (CS.act-ε-extensionality (CS.ext-replace-comm (CR.weaken-ε-k k (μ-ε argδ)) (ctx-idxᶜ k)) (μ-τ resδ₁)) ⟩
-        ([ ℓ ↦< μ-ε argδ ] CΠ (μ-τ argδ₁) (μ-τ resδ₁))
+            (CS.act-ε-extensionality (CS.ext-replace-comm (CR.weaken-ε-k k (μ-ε argδ)) (CS.ctx-idx k)) (μ-τ resδ₁)) ⟩
+        ([ ℓ ↦' μ-ε argδ ] CΠ (μ-τ argδ₁) (μ-τ resδ₁))
       ∎
     where
-    resδ-subst-massage : μ-τ resδ₂ ≡ [ ℓ ↦< μ-ε argδ ] μ-τ resδ₁
+    resδ-subst-massage : μ-τ resδ₂ ≡ [ ℓ ↦' μ-ε argδ ] μ-τ resδ₁
     resδ-subst-massage
       rewrite SS.act-τ-extensionality (SS.ext-replace-comm (SR.weaken-ε-k k εˢ) (SS.ctx-idx k)) τ₂
             | SR.act-ε-distr (raise k) suc εˢ

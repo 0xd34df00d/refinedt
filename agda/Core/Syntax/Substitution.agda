@@ -2,6 +2,7 @@
 
 module Core.Syntax.Substitution where
 
+open import Data.Nat using (suc; zero)
 open import Data.Fin using (suc; zero)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 
@@ -53,3 +54,13 @@ ext-replace-comm _ (suc ι) (suc var-idx) with suc ι <>? var-idx
 ... | less m<n rewrite m<n-n-pred-cancel m<n = refl
 ... | equal refl = refl
 ... | greater m>n = refl
+
+
+ctx-idx : ∀ k → Fin (suc (k + ℓ))
+ctx-idx zero = zero
+ctx-idx (suc k) = suc (ctx-idx k)
+
+-- Position-invariant substitution
+[_↦'_]_ : ∀ ℓ
+        → (ε : CExpr ℓ) → CExpr (suc k + ℓ) → CExpr (k + ℓ)
+[_↦'_]_ {k = k} _ ε τ = [ ctx-idx k ↦ R.weaken-ε-k _ ε ] τ
