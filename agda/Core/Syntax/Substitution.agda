@@ -56,10 +56,6 @@ ext-replace-comm _ (suc ι) (suc var-idx) with suc ι <>? var-idx
 ... | greater m>n = refl
 
 
-ctx-idx : ∀ k → Fin (suc (k + ℓ))
-ctx-idx zero = zero
-ctx-idx (suc k) = suc (ctx-idx k)
-
 -- Position-invariant substitution
 [_↦'_]_ : ∀ ℓ
         → (ε : CExpr ℓ) → CExpr (suc k + ℓ) → CExpr (k + ℓ)

@@ -41,3 +41,7 @@ ext-k' : ∀ {ℓ}
        → Fin (k + ℓ) → Fin (suc k + ℓ)
 ext-k' zero ρ = ρ
 ext-k' (suc k) ρ = ext-ρ (ext-k' k ρ)
+
+ctx-idx : ∀ {ℓ} k → Fin (suc (k + ℓ))
+ctx-idx zero = zero
+ctx-idx (suc k) = suc (ctx-idx k)

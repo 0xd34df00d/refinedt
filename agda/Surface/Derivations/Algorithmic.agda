@@ -127,8 +127,8 @@ record Oracle where
            -- TODO add this back when parametrizing everything by an oracle: → Γ ⊢ ε ⦂ σ
            → Is-just (decide (Γ ,σ, Δ) b ρ₁ ρ₂)
            → Is-just (decide (Γ ++ ([↦Δ ε ] Δ)) b
-                        (S.act-ρ (S.ext (S.replace-at (S.ctx-idx k) (R.weaken-ε-k k ε))) ρ₁)
-                        (S.act-ρ (S.ext (S.replace-at (S.ctx-idx k) (R.weaken-ε-k k ε))) ρ₂))
+                        (S.act-ρ (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ρ₁)
+                        (S.act-ρ (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ρ₂))
     trans : Is-just (decide Γ b ρ₁ ρ₂)
           → Is-just (decide Γ b ρ₂ ρ₃)
           → Is-just (decide Γ b ρ₁ ρ₃)
