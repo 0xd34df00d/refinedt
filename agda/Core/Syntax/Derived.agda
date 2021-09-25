@@ -79,8 +79,8 @@ eq-refl τ ε =
 
 
 -- Helpers for the above
-≡̂-subst³ : (ε₁ ≡ ε₁')
-         → (ε₂ ≡ ε₂')
-         → (τ  ≡ τ')
-         → ε₁ ≡̂ ε₂ of τ ≡ ε₁' ≡̂ ε₂' of τ'
-≡̂-subst³ refl refl refl = refl
+≡̂-subst : (ε₁ ≡ ε₁')
+        → (ε₂ ≡ ε₂')
+        → (τ  ≡ τ')
+        → ε₁ ≡̂ ε₂ of τ ≡ ε₁' ≡̂ ε₂' of τ'
+≡̂-subst refl refl refl = refl

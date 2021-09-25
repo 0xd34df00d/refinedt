@@ -79,7 +79,7 @@ mutual
 
           CLam (⌊μ⌋-b b) (μ-ε ε₁δ₂ ≡̂ μ-ε ε₂δ₂ of ⌊μ⌋-b b')
 
-        ≡⟨ cong (CLam _) (≡̂-subst³ ε₁δ-commutes ε₂δ-commutes (⌊μ⌋-b-sub-id (suc k) _ _)) ⟩
+        ≡⟨ cong (CLam _) (≡̂-subst ε₁δ-commutes ε₂δ-commutes (⌊μ⌋-b-sub-id (suc k) _ _)) ⟩
 
           CLam (⌊μ⌋-b b) (([ ℓ ↦' μ-ε argδ ] μ-ε ε₁δ₁) ≡̂ ([ ℓ ↦' μ-ε argδ ] μ-ε ε₂δ₁) of ([ ℓ ↦' μ-ε argδ ] ⌊μ⌋-b b'))
 
