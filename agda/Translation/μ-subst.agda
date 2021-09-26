@@ -40,19 +40,17 @@ mutual
   μ-Var-sub-commutes : (Δ : ,-CtxSuffix ℓ σˢ k)
                      → (argδ : Γˢ ⊢[ E of κ ] εˢ ⦂ σˢ)
                      → (domδ : Γˢ ,σ, Δ ⊢[ E of not-t-sub ] SVar ι ⦂ τˢ)
-                     → (codδ : Γˢ ++ [↦Δ εˢ ] Δ ⊢[ E of κ₂ ] [ ℓ ↦ε< εˢ ] SVar ι ⦂ [ ℓ ↦τ< εˢ ] τˢ)
+                     → (codδ : Γˢ ++ [↦Δ εˢ ] Δ ⊢[ E of not-t-sub ] [ ℓ ↦ε< εˢ ] SVar ι ⦂ [ ℓ ↦τ< εˢ ] τˢ)
                      → μ-ε codδ ≡ [ ℓ ↦' μ-ε argδ ] μ-ε domδ
   μ-Var-sub-commutes {k = k} Δ argδ (T-Var {ι = ι} Γok ∈) codδ with ctx-idx k <>? ι | codδ
   ... | less _ | T-Var _ _ = refl
-  ... | less m<n | T-Sub codδ' τ'δ <: = {! !}
   ... | greater _ | T-Var _ _ = refl
-  ... | greater m>n | T-Sub codδ₁ τ'δ <: = {! !}
   ... | equal refl | codδ = {! !}
 
   μ-ε-sub-commutes : (Δ : ,-CtxSuffix ℓ σˢ k)
                    → (argδ : Γˢ ⊢[ E of κ ] εˢ ⦂ σˢ)
-                   → (domδ : Γˢ ,σ, Δ ⊢[ E of κ₁ ] ε'ˢ ⦂ τˢ)
-                   → (codδ : Γˢ ++ [↦Δ εˢ ] Δ ⊢[ E of κ₂ ] [ ℓ ↦ε< εˢ ] ε'ˢ ⦂ [ ℓ ↦τ< εˢ ] τˢ)
+                   → (domδ : Γˢ ,σ, Δ ⊢[ E of κ' ] ε'ˢ ⦂ τˢ)
+                   → (codδ : Γˢ ++ [↦Δ εˢ ] Δ ⊢[ E of κ' ] [ ℓ ↦ε< εˢ ] ε'ˢ ⦂ [ ℓ ↦τ< εˢ ] τˢ)
                    → μ-ε codδ ≡ [ ℓ ↦' μ-ε argδ ] μ-ε domδ
   μ-ε-sub-commutes Δ argδ (T-Unit Γok) codδ = {! !}
   μ-ε-sub-commutes Δ argδ domδ@(T-Var _ _) codδ = μ-Var-sub-commutes Δ argδ domδ codδ
