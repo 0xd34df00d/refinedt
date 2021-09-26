@@ -9,6 +9,8 @@ open import Data.Nat.Base using (zero; suc)
 open import Relation.Binary.PropositionalEquality as Eq using (_≡_; refl; subst; sym; trans; cong)
 open Eq.≡-Reasoning
 
+open import Common.Helpers
+
 open import Core.Syntax as C renaming (Γ to Γᶜ; ε to εᶜ; τ to τᶜ)
 open import Core.Syntax.Derived as C
 open import Core.Syntax.Renaming as CR
@@ -68,13 +70,13 @@ mutual
     where
     ε₁δ-commutes : μ-ε ε₁δ₂ ≡ [ ℓ ↦' μ-ε argδ ] μ-ε ε₁δ₁
     ε₁δ-commutes
-      rewrite SS.act-ε-extensionality (SS.ext-replace-comm (SR.weaken-ε-k k εˢ) (SS.ctx-idx k)) ε₁
+      rewrite SS.act-ε-extensionality (SS.ext-replace-comm (SR.weaken-ε-k k εˢ) (ctx-idx k)) ε₁
             | SR.act-ε-distr (raise k) suc εˢ
             = μ-ε-sub-commutes (Δ , _) argδ ε₁δ₁ ε₁δ₂
 
     ε₂δ-commutes : μ-ε ε₂δ₂ ≡ [ ℓ ↦' μ-ε argδ ] μ-ε ε₂δ₁
     ε₂δ-commutes
-      rewrite SS.act-ε-extensionality (SS.ext-replace-comm (SR.weaken-ε-k k εˢ) (SS.ctx-idx k)) ε₂
+      rewrite SS.act-ε-extensionality (SS.ext-replace-comm (SR.weaken-ε-k k εˢ) (ctx-idx k)) ε₂
             | SR.act-ε-distr (raise k) suc εˢ
             = μ-ε-sub-commutes (Δ , _) argδ ε₂δ₁ ε₂δ₂
 
@@ -126,7 +128,7 @@ mutual
     where
     resδ-subst-massage : μ-τ resδ₂ ≡ [ ℓ ↦' μ-ε argδ ] μ-τ resδ₁
     resδ-subst-massage
-      rewrite SS.act-τ-extensionality (SS.ext-replace-comm (SR.weaken-ε-k k εˢ) (SS.ctx-idx k)) τ₂
+      rewrite SS.act-τ-extensionality (SS.ext-replace-comm (SR.weaken-ε-k k εˢ) (ctx-idx k)) τ₂
             | SR.act-ε-distr (raise k) suc εˢ
             = μ-τ-sub-commutes (Δ , _) argδ resδ₁ resδ₂
   μ-τ-sub-commutes Δ argδ (TWF-ADT consδs₁) (TWF-ADT consδs₂) = {! !}
