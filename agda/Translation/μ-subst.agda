@@ -36,17 +36,17 @@ open import Translation.SubstUnique(oracles-equal)
              → ⌊μ⌋-b {ℓ = k + ℓ} b ≡ [ ℓ ↦' ε ] (⌊μ⌋-b b)
 ⌊μ⌋-b-sub-id _ _ BUnit = refl
 
-mutual
-  μ-Var-sub-commutes : (Δ : ,-CtxSuffix ℓ σˢ k)
-                     → (argδ : Γˢ ⊢[ E of κ ] εˢ ⦂ σˢ)
-                     → (domδ : Γˢ ,σ, Δ ⊢[ E of not-t-sub ] SVar ι ⦂ τˢ)
-                     → (codδ : Γˢ ++ [↦Δ εˢ ] Δ ⊢[ E of not-t-sub ] [ ℓ ↦ε< εˢ ] SVar ι ⦂ [ ℓ ↦τ< εˢ ] τˢ)
-                     → μ-ε codδ ≡ [ ℓ ↦' μ-ε argδ ] μ-ε domδ
-  μ-Var-sub-commutes {k = k} Δ argδ (T-Var {ι = ι} Γok ∈) codδ with ctx-idx k <>? ι | codδ
-  ... | less _ | T-Var _ _ = refl
-  ... | greater _ | T-Var _ _ = refl
-  ... | equal refl | codδ = {! !}
+μ-Var-sub-commutes : (Δ : ,-CtxSuffix ℓ σˢ k)
+                   → (argδ : Γˢ ⊢[ E of κ ] εˢ ⦂ σˢ)
+                   → (domδ : Γˢ ,σ, Δ ⊢[ E of not-t-sub ] SVar ι ⦂ τˢ)
+                   → (codδ : Γˢ ++ [↦Δ εˢ ] Δ ⊢[ E of not-t-sub ] [ ℓ ↦ε< εˢ ] SVar ι ⦂ [ ℓ ↦τ< εˢ ] τˢ)
+                   → μ-ε codδ ≡ [ ℓ ↦' μ-ε argδ ] μ-ε domδ
+μ-Var-sub-commutes {k = k} Δ argδ (T-Var {ι = ι} Γok ∈) codδ with ctx-idx k <>? ι | codδ
+... | less _ | T-Var _ _ = refl
+... | greater _ | T-Var _ _ = refl
+... | equal refl | codδ = {! !}
 
+mutual
   μ-ε-sub-commutes : (Δ : ,-CtxSuffix ℓ σˢ k)
                    → (argδ : Γˢ ⊢[ E of κ ] εˢ ⦂ σˢ)
                    → (domδ : Γˢ ,σ, Δ ⊢[ E of κ' ] ε'ˢ ⦂ τˢ)
