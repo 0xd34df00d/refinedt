@@ -10,6 +10,7 @@ open import Relation.Binary.PropositionalEquality as Eq using (_≡_; refl; subs
 open Eq.≡-Reasoning
 
 open import Common.Helpers
+open import Data.Fin.Extra
 
 open import Core.Syntax as C renaming (Γ to Γᶜ; ε to εᶜ; τ to τᶜ)
 open import Core.Syntax.Derived as C
@@ -36,11 +37,30 @@ open import Translation.SubstUnique(oracles-equal)
 ⌊μ⌋-b-sub-id _ _ BUnit = refl
 
 mutual
+  μ-Var-sub-commutes : (Δ : ,-CtxSuffix ℓ σˢ k)
+                     → (argδ : Γˢ ⊢[ E of κ ] εˢ ⦂ σˢ)
+                     → (domδ : Γˢ ,σ, Δ ⊢[ E of not-t-sub ] SVar ι ⦂ τˢ)
+                     → (codδ : Γˢ ++ [↦Δ εˢ ] Δ ⊢[ E of κ₂ ] [ ℓ ↦ε< εˢ ] SVar ι ⦂ [ ℓ ↦τ< εˢ ] τˢ)
+                     → μ-ε codδ ≡ [ ℓ ↦' μ-ε argδ ] μ-ε domδ
+  μ-Var-sub-commutes {k = k} Δ argδ (T-Var {ι = ι} Γok ∈) codδ with ctx-idx k <>? ι | codδ
+  ... | less _ | T-Var _ _ = refl
+  ... | less m<n | T-Sub codδ' τ'δ <: = {! !}
+  ... | greater _ | T-Var _ _ = refl
+  ... | greater m>n | T-Sub codδ₁ τ'δ <: = {! !}
+  ... | equal refl | codδ = {! !}
+
   μ-ε-sub-commutes : (Δ : ,-CtxSuffix ℓ σˢ k)
                    → (argδ : Γˢ ⊢[ E of κ ] εˢ ⦂ σˢ)
                    → (domδ : Γˢ ,σ, Δ ⊢[ E of κ₁ ] ε'ˢ ⦂ τˢ)
                    → (codδ : Γˢ ++ [↦Δ εˢ ] Δ ⊢[ E of κ₂ ] [ ℓ ↦ε< εˢ ] ε'ˢ ⦂ [ ℓ ↦τ< εˢ ] τˢ)
                    → μ-ε codδ ≡ [ ℓ ↦' μ-ε argδ ] μ-ε domδ
+  μ-ε-sub-commutes Δ argδ (T-Unit Γok) codδ = {! !}
+  μ-ε-sub-commutes Δ argδ domδ@(T-Var _ _) codδ = μ-Var-sub-commutes Δ argδ domδ codδ
+  μ-ε-sub-commutes Δ argδ (T-Abs arrδ domδ) codδ = {! !}
+  μ-ε-sub-commutes Δ argδ (T-App domδ domδ₁ resτ-≡ resτδ) codδ = {! !}
+  μ-ε-sub-commutes Δ argδ (T-Case resδ domδ branches-well-typed) codδ = {! !}
+  μ-ε-sub-commutes Δ argδ (T-Con ≡-prf domδ adtτ) codδ = {! !}
+  μ-ε-sub-commutes Δ argδ (T-Sub domδ τ'δ <:) codδ = {! !}
 
   μ-τ-sub-commutes : (Δ : ,-CtxSuffix ℓ σˢ k)
                    → (argδ : Γˢ ⊢[ E of κ ] εˢ ⦂ σˢ)
