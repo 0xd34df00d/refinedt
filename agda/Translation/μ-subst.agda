@@ -48,7 +48,7 @@ open import Translation.SubstUnique(oracles-equal)
 
 mutual
   μ-ε-sub-commutes : (Δ : ,-CtxSuffix ℓ σˢ k)
-                   → (argδ : Γˢ ⊢[ E of κ ] εˢ ⦂ σˢ)
+                   → (argδ : Γˢ ⊢[ E of t-sub ] εˢ ⦂ σˢ)
                    → (domδ : Γˢ ,σ, Δ ⊢[ E of κ' ] ε'ˢ ⦂ τˢ)
                    → (codδ : Γˢ ++ [↦Δ εˢ ] Δ ⊢[ E of κ' ] [ ℓ ↦ε< εˢ ] ε'ˢ ⦂ [ ℓ ↦τ< εˢ ] τˢ)
                    → μ-ε codδ ≡ [ ℓ ↦' μ-ε argδ ] μ-ε domδ
@@ -61,7 +61,7 @@ mutual
   μ-ε-sub-commutes Δ argδ (T-Sub domδ τ'δ <:) codδ = {! !}
 
   μ-τ-sub-commutes : (Δ : ,-CtxSuffix ℓ σˢ k)
-                   → (argδ : Γˢ ⊢[ E of κ ] εˢ ⦂ σˢ)
+                   → (argδ : Γˢ ⊢[ E of t-sub ] εˢ ⦂ σˢ)
                    → (domδ : Γˢ ,σ, Δ ⊢[ E ] τˢ)
                    → (codδ : Γˢ ++ [↦Δ εˢ ] Δ ⊢[ E ] [ ℓ ↦τ< εˢ ] τˢ)
                    → μ-τ codδ ≡ [ ℓ ↦' μ-ε argδ ] μ-τ domδ
@@ -152,7 +152,7 @@ mutual
   μ-τ-sub-commutes Δ argδ (TWF-ADT consδs₁) (TWF-ADT consδs₂) = {! !}
 
 μ-τ-sub-front-commutes : {Γˢ : S.Ctx ℓ}
-                       → (argδ : Γˢ ⊢[ E of κ ] ε₂ˢ ⦂ τ₁ˢ)
+                       → (argδ : Γˢ ⊢[ E of t-sub ] ε₂ˢ ⦂ τ₁ˢ)
                        → (codδ : Γˢ , τ₁ˢ ⊢[ E ] τ₂ˢ)
                        → (resτδ : Γˢ ⊢[ E ] [ zero ↦τ ε₂ˢ ] τ₂ˢ)
                        → μ-τ resτδ ≡ [ zero ↦  μ-ε argδ ] μ-τ codδ
