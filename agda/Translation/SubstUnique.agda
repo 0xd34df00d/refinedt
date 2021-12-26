@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 open import Surface.Derivations.Algorithmic using (UniquenessOfOracles)
 
 module Translation.SubstUnique(oracles-equal : UniquenessOfOracles) where
