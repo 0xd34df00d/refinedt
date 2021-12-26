@@ -107,7 +107,8 @@ mutual
           argδᶜ = μ-ε-well-typed argδ
           argδᶜ = subst-Γ (Γ⊢ε⦂τ-⇒-Γok argδ) (Γ⊢ε⦂τ-⇒-Γok funδ) argδᶜ
           argδᶜ = subst-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ argδ) domδ argδᶜ
-       in subst (_ ⊢ᶜ _ ⦂_) (sym (μ-τ-sub-front-commutes argδ codδ resτδ)) (CT-App funδᶜ argδᶜ)
+          app = CT-App funδᶜ argδᶜ
+       in subst (_ ⊢ᶜ _ ⦂_) (sym (μ-τ-sub-front-distributes argδ codδ resτδ)) app
   μ-ε-well-typed (T-Case resδ δ branches-well-typed) = {! !}
   μ-ε-well-typed (T-Con refl δ τδ@(TWF-ADT consδs))
     = let ≡-prf = μ-lookup-commutes _ consδs (Γ⊢ε⦂τ-⇒-Γ⊢τ δ)
