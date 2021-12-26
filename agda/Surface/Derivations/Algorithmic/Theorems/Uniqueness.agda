@@ -65,7 +65,7 @@ mutual
     rewrite unique-cons consδs₁ consδs₂
           = refl
 
-  unique-Γ⊢ε⦂τ : Irrelevant (Γ ⊢[ φ of not-t-sub ] ε ⦂ τ)
+  unique-Γ⊢ε⦂τ : Irrelevant (Γ ⊢[ φ of κ ] ε ⦂ τ)
   unique-Γ⊢ε⦂τ (T-Unit Γok₁) (T-Unit Γok₂)
     rewrite unique-Γok Γok₁ Γok₂
           = refl
@@ -94,6 +94,12 @@ mutual
   unique-Γ⊢ε⦂τ (T-Con refl δ₁ adtτ₁) (T-Con refl δ₂ adtτ₂)
     rewrite unique-Γ⊢ε⦂τ δ₁ δ₂
           | unique-Γ⊢τ adtτ₁ adtτ₂
+          = refl
+  unique-Γ⊢ε⦂τ (T-Sub εδ₁ τδ₁ <:₁) (T-Sub εδ₂ τδ₂ <:₂) with typing-uniqueness εδ₁ εδ₂
+  ... | refl
+    rewrite unique-Γ⊢ε⦂τ εδ₁ εδ₂
+          | unique-Γ⊢τ τδ₁ τδ₂
+          | unique-<: <:₁ <:₂
           = refl
 
   unique-<: : Irrelevant (Γ ⊢[ φ ] τ' <: τ)
