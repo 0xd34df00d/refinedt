@@ -56,7 +56,7 @@ ext-replace-comm _ (suc ι) (suc var-idx) with suc ι <>? var-idx
 ... | greater m>n = refl
 
 
--- Position-invariant substitution
+-- Tail-invariant substitution
 [_↦'_]_ : ∀ ℓ
         → (ε : CExpr ℓ) → CExpr (suc k + ℓ) → CExpr (k + ℓ)
 [_↦'_]_ {k = k} _ ε τ = [ ctx-idx k ↦ R.weaken-ε-k _ ε ] τ
