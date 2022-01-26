@@ -41,32 +41,32 @@ CT-VarW δ (∈-suc refl ∈) with head-well-formed δ
                   → Γ ⊢ τ ⦂ CSort s
                   → Γ ⊢ P ⦂ τ ⇒' ⋆ₑ
                   → Γ , ⋆ₑ ⊢ Σ-cont τ P ⦂ ⋆ₑ
-Σ-cont-well-typed δτ δP =
+Σ-cont-well-typed τδ δP =
   CT-Form
     Γ,⋆⊢τ
     (⇒'-well-typed
       (CT-App
         (CT-Weaken
-          (CT-Weaken δP (Γ⊢⋆⦂□ δτ))
+          (CT-Weaken δP (Γ⊢⋆⦂□ τδ))
           Γ,⋆⊢τ
         )
         (CT-Var Γ,⋆⊢τ)
       )
-      (CT-Weaken (CT-Var (Γ⊢⋆⦂□ δτ)) Γ,⋆⊢τ)
+      (CT-Weaken (CT-Var (Γ⊢⋆⦂□ τδ)) Γ,⋆⊢τ)
     )
   where
-  Γ,⋆⊢τ = CT-Weaken δτ (Γ⊢⋆⦂□ δτ)
+  Γ,⋆⊢τ = CT-Weaken τδ (Γ⊢⋆⦂□ τδ)
 
 Σ-well-typed : ∀ {Γ : Ctx ℓ} {P}
              → Γ ⊢ τ ⦂ CSort s
              → Γ ⊢ P ⦂ τ ⇒' ⋆ₑ
              → Γ ⊢ Σ[ τ ] P ⦂ ⋆ₑ
-Σ-well-typed δτ δP =
+Σ-well-typed τδ δP =
   CT-Form
-    (Γ⊢⋆⦂□ δτ)
+    (Γ⊢⋆⦂□ τδ)
     (CT-Form
-      (Σ-cont-well-typed δτ δP)
-      (CT-Weaken (CT-Var (Γ⊢⋆⦂□ δτ)) (Σ-cont-well-typed δτ δP))
+      (Σ-cont-well-typed τδ δP)
+      (CT-Weaken (CT-Var (Γ⊢⋆⦂□ τδ)) (Σ-cont-well-typed τδ δP))
     )
 
 ext-suc-suc-is-suc² : (ε : CExpr ℓ)
@@ -82,25 +82,25 @@ ext-suc-suc-is-suc² ε
                   → Γ ⊢ ε ⦂ τ
                   → Γ ⊢ π ⦂ P · ε
                   → Γ ⊢ [ ε ⦂ τ ∣ π of P ] ⦂ Σ[ τ ] P
-Σ-ctor-well-typed {ℓ} {τ} {s} {ε} {Γ} {P} {π} δτ δP δε δπ =
+Σ-ctor-well-typed {ℓ} {τ} {s} {ε} {Γ} {P} {π} τδ δP εδ δπ =
   CT-Abs
     (CT-Abs
       app₂
       (⇒'-well-typed
-        (Σ-cont-well-typed δτ δP)
-        (CT-Var (Γ⊢⋆⦂□ δτ))
+        (Σ-cont-well-typed τδ δP)
+        (CT-Var (Γ⊢⋆⦂□ τδ))
       )
     )
-    (Σ-well-typed δτ δP)
+    (Σ-well-typed τδ δP)
   where
   δ↑↑ : Γ ⊢ ε' ⦂ τ'
       → Γ , ⋆ₑ , Σ-cont τ P ⊢ weaken-ε-k 2 ε' ⦂ weaken-ε-k 2 τ'
-  δ↑↑ δ = CT-Weaken (CT-Weaken δ (Γ⊢⋆⦂□ δ)) (Σ-cont-well-typed δτ δP)
+  δ↑↑ δ = CT-Weaken (CT-Weaken δ (Γ⊢⋆⦂□ δ)) (Σ-cont-well-typed τδ δP)
 
   app₁ : Γ , ⋆ₑ , Σ-cont τ P ⊢
          CVar zero · weaken-ε-k 2 ε ⦂
          [ zero ↦ weaken-ε-k 2 ε ] (R.act-ε (R.ext suc) (weaken-ε-k 2 P · CVar zero ⇒' CVar (suc zero)))
-  app₁ = CT-App (CT-Var (Σ-cont-well-typed δτ δP)) (δ↑↑ δε)
+  app₁ = CT-App (CT-Var (Σ-cont-well-typed τδ δP)) (δ↑↑ εδ)
 
   app₁-lemma : (weaken-ε-k 2 P · weaken-ε-k 2 ε ⇒' CVar (suc zero))
                ≡
@@ -121,59 +121,59 @@ ext-suc-suc-is-suc² ε
 ×-cont-well-typed : Γ ⊢ τ₁ ⦂ ⋆ₑ
                   → Γ ⊢ τ₂ ⦂ ⋆ₑ
                   → Γ , ⋆ₑ ⊢ ×-cont τ₁ τ₂ ⦂ ⋆ₑ
-×-cont-well-typed δτ₁ δτ₂ =
+×-cont-well-typed τ₁δ τ₂δ =
   ⇒'-well-typed
-    (CT-Weaken δτ₁ Γ̂ok)
+    (CT-Weaken τ₁δ Γ̂ok)
     (⇒'-well-typed
       (CT-Weaken
-        δτ₂
+        τ₂δ
         Γ̂ok
       )
       (CT-Var Γ̂ok)
     )
   where
-  Γ̂ok = Γ⊢⋆⦂□ δτ₁
+  Γ̂ok = Γ⊢⋆⦂□ τ₁δ
 
 ×-well-typed : Γ ⊢ τ₁ ⦂ ⋆ₑ
              → Γ ⊢ τ₂ ⦂ ⋆ₑ
              → Γ ⊢ ⟨ τ₁ × τ₂ ⟩ ⦂ ⋆ₑ
-×-well-typed δτ₁ δτ₂ =
+×-well-typed τ₁δ τ₂δ =
   CT-Form
     Γ̂ok
     (CT-Form
-      (×-cont-well-typed δτ₁ δτ₂)
+      (×-cont-well-typed τ₁δ τ₂δ)
       (CT-Weaken
         (CT-Var Γ̂ok)
-        (×-cont-well-typed δτ₁ δτ₂)
+        (×-cont-well-typed τ₁δ τ₂δ)
       )
     )
   where
-  Γ̂ok = Γ⊢⋆⦂□ δτ₁
+  Γ̂ok = Γ⊢⋆⦂□ τ₁δ
 
 ×-ctor-well-typed : Γ ⊢ τ₁ ⦂ ⋆ₑ
                   → Γ ⊢ τ₂ ⦂ ⋆ₑ
                   → Γ ⊢ ε₁ ⦂ τ₁
                   → Γ ⊢ ε₂ ⦂ τ₂
                   → Γ ⊢ ⟨ ε₁ ⦂ τ₁ × ε₂ ⦂ τ₂ ⟩ ⦂ ⟨ τ₁ × τ₂ ⟩
-×-ctor-well-typed {_} {Γ} {τ₁} {τ₂} {ε₁} {ε₂} δτ₁ δτ₂ δε₁ δε₂ =
+×-ctor-well-typed {_} {Γ} {τ₁} {τ₂} {ε₁} {ε₂} τ₁δ τ₂δ ε₁δ ε₂δ =
   CT-Abs
     (CT-Abs
       app₂
       (⇒'-well-typed
-        (×-cont-well-typed δτ₁ δτ₂)
-        (CT-Var (Γ⊢⋆⦂□ δτ₁))
+        (×-cont-well-typed τ₁δ τ₂δ)
+        (CT-Var (Γ⊢⋆⦂□ τ₁δ))
       )
     )
-    (×-well-typed δτ₁ δτ₂)
+    (×-well-typed τ₁δ τ₂δ)
   where
   δ↑↑ : Γ ⊢ ε' ⦂ τ'
       → Γ , ⋆ₑ , ×-cont τ₁ τ₂ ⊢ weaken-ε-k 2 ε' ⦂ weaken-ε-k 2 τ'
-  δ↑↑ δ = CT-Weaken (CT-Weaken δ (Γ⊢⋆⦂□ δ)) (×-cont-well-typed δτ₁ δτ₂)
+  δ↑↑ δ = CT-Weaken (CT-Weaken δ (Γ⊢⋆⦂□ δ)) (×-cont-well-typed τ₁δ τ₂δ)
 
   app₁ : Γ , ⋆ₑ , ×-cont τ₁ τ₂ ⊢
          CVar zero · weaken-ε-k 2 ε₁ ⦂
          [ zero ↦ weaken-ε-k 2 ε₁ ] R.act-ε (R.ext suc) (weaken-ε (weaken-ε τ₂ ⇒' CVar zero))
-  app₁ = CT-App (CT-Var (×-cont-well-typed δτ₁ δτ₂)) (δ↑↑ δε₁)
+  app₁ = CT-App (CT-Var (×-cont-well-typed τ₁δ τ₂δ)) (δ↑↑ ε₁δ)
 
   app₁-lemma : [ zero ↦ weaken-ε-k 2 ε₁ ] R.act-ε (R.ext suc) (weaken-ε (weaken-ε τ₂ ⇒' CVar zero))
                ≡
@@ -189,7 +189,7 @@ ext-suc-suc-is-suc² ε
   app₁' = subst (λ τ → Γ , ⋆ₑ , ×-cont τ₁ τ₂ ⊢ CVar zero · weaken-ε-k 2 ε₁ ⦂ τ) app₁-lemma app₁
 
   app₂ : Γ , ⋆ₑ , ×-cont τ₁ τ₂ ⊢ CVar zero · weaken-ε-k 2 ε₁ · weaken-ε-k 2 ε₂ ⦂ CVar (suc zero)
-  app₂ = CT-App app₁' (δ↑↑ δε₂)
+  app₂ = CT-App app₁' (δ↑↑ ε₂δ)
 
 {- TODO use these typings when expressing non-dependent pairs as derived forms
    (well, second-order derived forms? :)) of dependent pairs,
@@ -210,25 +210,25 @@ ext-suc-suc-is-suc² ε
                   → Γ ⊢ ε₁ ⦂ τ₁
                   → Γ ⊢ ε₂ ⦂ τ₂
                   → Γ ⊢ ⟨ ε₁ ⦂ τ₁ × ε₂ ⦂ τ₂ ⟩ ⦂ ⟨ τ₁ × τ₂ ⟩
-×-ctor-well-typed δτ₁ δτ₂ δε₁ δε₂ =
+×-ctor-well-typed τ₁δ τ₂δ ε₁δ ε₂δ =
   Σ-ctor-well-typed
-    δτ₁
-    (CT-Abs (CT-Weaken δτ₂ δτ₁) (⇒'-well-typed δτ₁ (Γ⊢⋆⦂□ δτ₂)))
-    δε₁
+    τ₁δ
+    (CT-Abs (CT-Weaken τ₂δ τ₁δ) (⇒'-well-typed τ₁δ (Γ⊢⋆⦂□ τ₂δ)))
+    ε₁δ
     (CT-Conv
-      δε₂
+      ε₂δ
       (CT-App
         (CT-Abs
           (CT-Weaken
-            δτ₂
-            δτ₁
+            τ₂δ
+            τ₁δ
           )
           (CT-Form
-            δτ₁
-            (CT-Weaken (Γ⊢⋆⦂□ δτ₁) δτ₁)
+            τ₁δ
+            (CT-Weaken (Γ⊢⋆⦂□ τ₁δ) τ₁δ)
           )
         )
-        δε₁
+        ε₁δ
       )
       {! !} -- (ε-↭β _ _ _)
     )
@@ -263,7 +263,7 @@ ext-suc-suc-is-suc² ε
 eq-refl-well-typed : Γ ⊢ τ ⦂ ⋆ₑ
                    → Γ ⊢ ε ⦂ τ
                    → Γ ⊢ eq-refl τ ε ⦂ ε ≡̂ ε of τ
-eq-refl-well-typed {Γ = Γ} {τ} {ε} δτ δε =
+eq-refl-well-typed {Γ = Γ} {τ} {ε} τδ εδ =
   CT-Abs
     body-wt
     (CT-Form
@@ -274,10 +274,10 @@ eq-refl-well-typed {Γ = Γ} {τ} {ε} δτ δε =
   id-fun = CLam (CVar zero · weaken-ε ε) (CVar zero)
   id-fun-type = CVar zero · weaken-ε ε ⇒' CVar zero · weaken-ε ε
 
-  ⇒'-wf = ⇒'-well-typed δτ (Γ⊢⋆⦂□ δτ)
+  ⇒'-wf = ⇒'-well-typed τδ (Γ⊢⋆⦂□ τδ)
   0·ε-wf = CT-App
             (CT-Var ⇒'-wf)
-            (CT-Weaken δε ⇒'-wf)
+            (CT-Weaken εδ ⇒'-wf)
   id-fun-type-wf = ⇒'-well-typed 0·ε-wf 0·ε-wf
   id-fun-wf = CT-Abs (CT-Var 0·ε-wf) id-fun-type-wf
 
