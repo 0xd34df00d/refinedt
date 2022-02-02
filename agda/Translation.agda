@@ -76,7 +76,11 @@ mutual
 
   μ-τ-well-typed : (τδ : Γˢ ⊢[ E ] τˢ)
                  → μ-Γ (Γ⊢τ-⇒-Γok τδ) ⊢ᶜ μ-τ τδ ⦂ ⋆ₑ
-  μ-τ-well-typed δ = {! !}
+  μ-τ-well-typed (TWF-TrueRef Γok) = μ-b-well-typed (μ-Γ-well-typed Γok)
+  μ-τ-well-typed (TWF-Base ε₁δ ε₂δ) = {! !}
+  μ-τ-well-typed (TWF-Conj δ₁ δ₂) = {! !}
+  μ-τ-well-typed (TWF-Arr δ₁ δ₂) = {! !}
+  μ-τ-well-typed (TWF-ADT consδs) = {! !}
 
   μ-ε-well-typed : (εδ : Γˢ ⊢[ E of κ ] εˢ ⦂ τˢ)
                  → μ-Γ (Γ⊢ε⦂τ-⇒-Γok εδ) ⊢ᶜ μ-ε εδ ⦂ μ-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ)
