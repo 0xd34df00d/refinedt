@@ -78,8 +78,7 @@ mutual
                  → μ-Γ (Γ⊢τ-⇒-Γok τδ) ⊢ᶜ μ-τ τδ ⦂ ⋆ₑ
   μ-τ-well-typed (TWF-TrueRef Γok) = μ-b-well-typed (μ-Γ-well-typed Γok)
   μ-τ-well-typed (TWF-Base ε₁δ ε₂δ) = {! !}
-  μ-τ-well-typed (TWF-Conj τ₁δ τ₂δ) = let Γok = Γ⊢τ-⇒-Γok τ₁δ
-                                          μ-τ₂δ-well-typed = μ-τ-well-typed τ₂δ
+  μ-τ-well-typed (TWF-Conj τ₁δ τ₂δ) = let μ-τ₂δ-well-typed = μ-τ-well-typed τ₂δ
                                           μ-τ₂δ-well-typed' = subst-Γ (Γ⊢τ-⇒-Γok τ₂δ) (Γ⊢τ-⇒-Γok τ₁δ) μ-τ₂δ-well-typed
                                        in ×-well-typed (μ-τ-well-typed τ₁δ) μ-τ₂δ-well-typed'
   μ-τ-well-typed (TWF-Arr δ₁ δ₂) = {! !}
