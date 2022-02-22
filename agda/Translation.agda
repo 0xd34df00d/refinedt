@@ -21,13 +21,11 @@ open import Surface.Syntax.Membership as S renaming (_∈_at_ to _∈ˢ_at_)
 open import Surface.Syntax.Substitution as SS
 open import Surface.Derivations.Algorithmic as S
 open import Surface.Derivations.Algorithmic.Theorems.Agreement as S
-open import Surface.Derivations.Algorithmic.Theorems.Uniqueness(oracles-equal)
 
 open import Translation.Untyped
 open import Translation.Typed
 open import Translation.SubstUnique(oracles-equal)
-open import Translation.μ-weakening(oracles-equal)
-open import Translation.μ-subst(oracles-equal)
+open import Translation.Helpers(oracles-equal)
 
 μ-Τ-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
                → Γᶜ ⊢ᶜ ⌊μ⌋-Τ ⦂ ⋆ₑ
@@ -45,20 +43,6 @@ open import Translation.μ-subst(oracles-equal)
   where
   Γ⊢CUnit = CT-UnitType Γᶜok
   Γ,CUnit-ok = Γ⊢τ-⇒-Γ,τ-ok Γ⊢CUnit
-
-μ-preserves-∈ : (Γok : Γˢ ok[ E ])
-              → (∈ : τˢ ∈ˢ Γˢ at ι)
-              → μ-τ (τ∈Γ-⇒-Γ⊢τ Γok ∈) ∈ᶜ μ-Γ Γok at ι
-μ-preserves-∈ (TCTX-Bind Γok τδ) (∈-zero refl) = ∈-zero (μ-τ-weakening-commutes Γok τδ τδ)
-μ-preserves-∈ (TCTX-Bind Γok τδ) (∈-suc refl ∈) = ∈-suc (μ-τ-weakening-commutes Γok τδ (τ∈Γ-⇒-Γ⊢τ Γok ∈)) (μ-preserves-∈ Γok ∈)
-
-μ-lookup-commutes : ∀ ι
-                  → {cons : S.ADTCons nₐ ℓ}
-                  → (consδs : All (Γˢ ⊢[ E ]_) cons)
-                  → (δ : Γˢ ⊢[ E ] lookup cons ι)
-                  → μ-τ δ ≡ lookup (μ-cons consδs) ι
-μ-lookup-commutes zero (δ' ∷ _) δ = cong μ-τ (unique-Γ⊢τ δ δ')
-μ-lookup-commutes (suc ι) (_ ∷ consδs) δ = μ-lookup-commutes ι consδs δ
 
 mutual
   μ-b-P-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
