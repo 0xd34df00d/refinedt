@@ -65,7 +65,11 @@ mutual
   μ-τ-well-typed (TWF-Conj τ₁δ τ₂δ) = let μ-τ₂δ-well-typed = μ-τ-well-typed τ₂δ
                                           μ-τ₂δ-well-typed' = subst-Γ (Γ⊢τ-⇒-Γok τ₂δ) (Γ⊢τ-⇒-Γok τ₁δ) μ-τ₂δ-well-typed
                                        in ×-well-typed (μ-τ-well-typed τ₁δ) μ-τ₂δ-well-typed'
-  μ-τ-well-typed (TWF-Arr δ₁ δ₂) = {! !}
+  μ-τ-well-typed (TWF-Arr domδ codδ) = let μ-τ-domδ = μ-τ-well-typed domδ
+                                           μ-τ-codδ = μ-τ-well-typed codδ
+                                           μ-Γ-≡ = μ-Γ-distributes-over-, (Γ⊢τ-⇒-Γok codδ) (Γ⊢τ-⇒-Γok domδ) domδ
+                                           μ-τ-codδ' = subst (_⊢ᶜ μ-τ codδ ⦂ ⋆ₑ) μ-Γ-≡ μ-τ-codδ
+                                        in CT-Form μ-τ-domδ μ-τ-codδ'
   μ-τ-well-typed (TWF-ADT consδs) = {! !}
 
   μ-ε-well-typed : (εδ : Γˢ ⊢[ E of κ ] εˢ ⦂ τˢ)
