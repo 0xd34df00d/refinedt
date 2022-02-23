@@ -6,6 +6,7 @@ open import Data.Fin using (zero; suc)
 open import Data.Vec using (Vec; _∷_; []; lookup)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; subst; sym)
 
+open import Core.Syntax as C renaming (Γ to Γᶜ; ε to εᶜ; τ to τᶜ)
 open import Core.Syntax.Membership as C renaming (_∈_at_ to _∈ᶜ_at_)
 open import Surface.Syntax as S renaming (Γ to Γˢ; τ to τˢ; τ' to τ'ˢ; ε to εˢ)
 open import Surface.Syntax.Membership as S renaming (_∈_at_ to _∈ˢ_at_)
@@ -30,3 +31,12 @@ open import Translation.μ-weakening(oracles-equal)
                   → μ-τ δ ≡ lookup (μ-cons consδs) ι
 μ-lookup-commutes zero (δ' ∷ _) δ = cong μ-τ (unique-Γ⊢τ δ δ')
 μ-lookup-commutes (suc ι) (_ ∷ consδs) δ = μ-lookup-commutes ι consδs δ
+
+μ-Γ-distributes-over-, : (Γ,τδ : (Γˢ , τˢ) ok[ E ])
+                       → (Γδ : Γˢ ok[ E ])
+                       → (τδ : Γˢ ⊢[ E ] τˢ)
+                       → μ-Γ Γ,τδ ≡ μ-Γ Γδ , μ-τ τδ
+μ-Γ-distributes-over-, (TCTX-Bind Γδ₁ τδ₁) Γδ₂ τδ₂
+  rewrite unique-Γok Γδ₁ Γδ₂
+        | unique-Γ⊢τ τδ₁ τδ₂
+        = refl
