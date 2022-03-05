@@ -87,7 +87,7 @@ mutual
              → S.BranchesHaveType E Γˢ cons branches τˢ
              → C.CaseBranches nₐ ℓ
   μ-branches NoBranches = []
-  μ-branches (OneMoreBranch εδ bs) = {- TODO this is a placeholder proper proof -} Cunit ∷ μ-branches bs
+  μ-branches (OneMoreBranch εδ bs) = {- TODO placeholder proper proof -} Cunit ∷ μ-branches bs
 
 μ-Γ : {Γˢ : S.Ctx ℓ}
     → Γˢ ok[ E ]
