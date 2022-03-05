@@ -70,7 +70,14 @@ mutual
                                            μ-Γ-≡ = μ-Γ-distributes-over-, (Γ⊢τ-⇒-Γok codδ) (Γ⊢τ-⇒-Γok domδ) domδ
                                            μ-τ-codδ' = subst (_⊢ᶜ μ-τ codδ ⦂ ⋆ₑ) μ-Γ-≡ μ-τ-codδ
                                         in CT-Form μ-τ-domδ μ-τ-codδ'
-  μ-τ-well-typed (TWF-ADT consδs) = {! !}
+  μ-τ-well-typed (TWF-ADT consδs@(τδ ∷ _)) = CT-ADTForm (μ-cons-well-typed consδs (Γ⊢τ-⇒-Γok τδ))
+
+  μ-cons-well-typed : {cons : S.ADTCons nₐ ℓ}
+                    → (consδs : All (Γˢ ⊢[ E ]_) cons)
+                    → (Γok : Γˢ ok[ E ])
+                    → All (λ con → μ-Γ Γok ⊢ᶜ con ⦂ ⋆ₑ) (μ-cons consδs)
+  μ-cons-well-typed [] _ = []
+  μ-cons-well-typed (τδ ∷ consδs) Γok = subst-Γ _ _ (μ-τ-well-typed τδ) ∷ μ-cons-well-typed consδs Γok
 
   μ-ε-well-typed : (εδ : Γˢ ⊢[ E of κ ] εˢ ⦂ τˢ)
                  → μ-Γ (Γ⊢ε⦂τ-⇒-Γok εδ) ⊢ᶜ μ-ε εδ ⦂ μ-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ)
