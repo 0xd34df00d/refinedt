@@ -44,15 +44,15 @@ open import Translation.Helpers(oracles-equal)
   Γ⊢CUnit = CT-UnitType Γᶜok
   Γ,CUnit-ok = Γ⊢τ-⇒-Γ,τ-ok Γ⊢CUnit
 
-mutual
-  μ-b-P-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
-                   → Γᶜ ⊢ᶜ CΠ (⌊μ⌋-b b) ⋆ₑ ⦂ □ₑ
-  μ-b-P-well-typed Γᶜok
-    = let μ-b-ok = μ-b-well-typed Γᶜok
-       in CT-Form
-            μ-b-ok
-            (Γ⊢τ-⇒-Γ,τ-ok μ-b-ok)
+μ-b-P-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
+                 → Γᶜ ⊢ᶜ CΠ (⌊μ⌋-b b) ⋆ₑ ⦂ □ₑ
+μ-b-P-well-typed Γᶜok
+  = let μ-b-ok = μ-b-well-typed Γᶜok
+     in CT-Form
+          μ-b-ok
+          (Γ⊢τ-⇒-Γ,τ-ok μ-b-ok)
 
+mutual
   μ-Γ-well-typed : (Γok : Γˢ ok[ E ])
                  → μ-Γ Γok ⊢ᶜ ⋆ₑ ⦂ □ₑ
   μ-Γ-well-typed TCTX-Empty = CT-Sort
