@@ -80,7 +80,7 @@ mutual
          → All (Γˢ ⊢[ E ]_) cons
          → C.ADTCons nₐ ℓ
   μ-cons [] = []
-  μ-cons (τ ∷ cons) = μ-τ τ ∷ μ-cons cons
+  μ-cons (τδ ∷ consδ) = μ-τ τδ ∷ μ-cons consδ
 
   μ-branches : {branches : S.CaseBranches nₐ ℓ}
              → {cons : S.ADTCons nₐ ℓ}
