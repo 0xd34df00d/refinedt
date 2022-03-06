@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Intermediate.Syntax where
 
 open import Data.Fin public using (Fin)
