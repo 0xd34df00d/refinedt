@@ -119,9 +119,6 @@ mutual
           εδᶜ = μ-ε-well-typed δ
           τδᶜ = subst-Γ _ _ (μ-τ-well-typed τδ)
        in CT-ADTCon ≡-prf εδᶜ τδᶜ
-  μ-ε-well-typed (T-Sub εδ τδ <:δ) = ⇒'-·-well-typed
-                                      (μ-<:-well-typed (Γ⊢ε⦂τ-⇒-Γok εδ) (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ) τδ <:δ)
-                                      (μ-ε-well-typed εδ)
 
   μ-<:-well-typed : (Γok : Γˢ ok[ E ])
                   → (τδ : Γˢ ⊢[ E ] τˢ)
