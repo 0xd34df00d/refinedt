@@ -2,6 +2,7 @@
 
 module Surface.Derivations.Common where
 
+-- Minimal and enriched type system flavours
 data TSFlavour : Set where
   M E : TSFlavour
 
