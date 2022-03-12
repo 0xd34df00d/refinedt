@@ -2,7 +2,7 @@
 
 open import Surface.Syntax
 
-module Surface.Syntax.ActionsLemmas (act : VarAction) (props : VarActionProps act) where
+module Surface.Syntax.Actions.Lemmas (act : VarAction) (props : VarActionProps act) where
 
 open import Data.Fin using (zero; suc)
 open import Data.Vec

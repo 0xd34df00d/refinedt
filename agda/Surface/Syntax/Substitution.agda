@@ -62,12 +62,12 @@ ext-id : ∀ {f : Fin ℓ → STerm ℓ}
 ext-id f-≡ zero = refl
 ext-id f-≡ (suc x) rewrite f-≡ x = refl
 
-open import Surface.Syntax.ActionsLemmas var-action-record
-                                         record { ≡-ext = λ where x-≡ zero → refl
-                                                                  x-≡ (suc x) → cong R.weaken-ε (x-≡ x)
-                                                ; ext-id = ext-id
-                                                }
-                                         public
+open import Surface.Syntax.Actions.Lemmas var-action-record
+                                          record { ≡-ext = λ where x-≡ zero → refl
+                                                                   x-≡ (suc x) → cong R.weaken-ε (x-≡ x)
+                                                 ; ext-id = ext-id
+                                                 }
+                                          public
 
 ext-replace-comm : ∀ ε (ι : Fin (suc ℓ))
                  → ext (replace-at ι ε) f≡ replace-at (suc ι) (R.act-ε suc ε)

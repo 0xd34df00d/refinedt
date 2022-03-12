@@ -60,13 +60,13 @@ SVar-inj : SVar ι₁ ≡ SVar ι₂
          → ι₁ ≡ ι₂
 SVar-inj refl = refl
 
-open import Surface.Syntax.ActionsLemmas var-action-record
-                                         record { ≡-ext = λ where x-≡ zero → refl
-                                                                  x-≡ (suc x) → cong suc (x-≡ x)
-                                                ; ext-id = λ where f-≡ zero → refl
-                                                                   f-≡ (suc x) → cong (SVar ∘ suc) (SVar-inj (f-≡ x))
-                                                }
-                                         public
+open import Surface.Syntax.Actions.Lemmas var-action-record
+                                          record { ≡-ext = λ where x-≡ zero → refl
+                                                                   x-≡ (suc x) → cong suc (x-≡ x)
+                                                 ; ext-id = λ where f-≡ zero → refl
+                                                                    f-≡ (suc x) → cong (SVar ∘ suc) (SVar-inj (f-≡ x))
+                                                 }
+                                          public
 
 
 -- A composition of renamings is a renaming by the composition
