@@ -6,6 +6,9 @@ open import Data.Fin using (zero; suc)
 open import Data.Vec using (Vec; _∷_; []; lookup)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; subst; sym)
 
+open import Common.Helpers
+open import Data.Fin.Extra
+
 open import Core.Syntax as C renaming (Γ to Γᶜ; ε to εᶜ; τ to τᶜ)
 open import Core.Syntax.Derived as C
 open import Core.Syntax.Derived.Typing as C
