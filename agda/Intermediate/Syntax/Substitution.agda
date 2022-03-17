@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Intermediate.Syntax.Substitution where
 
 open import Data.Nat using (ℕ; suc; zero; _+_)
