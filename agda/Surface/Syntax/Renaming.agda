@@ -68,12 +68,6 @@ ActDistributivity {Ty} act = ∀ {ℓ₀ ℓ₁ ℓ₂}
                              → (r₂ : Fin ℓ₁ → Fin ℓ₂)
                              → act r₂ ∘ act r₁ f≡ act (r₂ ∘ r₁)
 
-ext-distr : (r₁ : Fin ℓ₀ → Fin ℓ₁)
-          → (r₂ : Fin ℓ₁ → Fin ℓ₂)
-          → ext r₂ ∘ ext r₁ f≡ ext (r₂ ∘ r₁)
-ext-distr _ _ zero = refl
-ext-distr _ _ (suc x) = refl
-
 mutual
   act-τ-distr : ActDistributivity act-τ
   act-τ-distr r₁ r₂ ⟨ b ∣ ρ ⟩

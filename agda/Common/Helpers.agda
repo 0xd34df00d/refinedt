@@ -4,7 +4,8 @@ module Common.Helpers where
 
 open import Data.Nat.Base using (ℕ; suc; zero; _+_)
 open import Data.Fin.Base using (Fin; suc; zero)
-open import Relation.Binary.PropositionalEquality using (_≡_)
+open import Function using (_∘_)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Data.Fin.Extra
 
@@ -30,6 +31,13 @@ ext-ρ : ∀ {ℓ ℓ'}
       → Fin (suc ℓ) → Fin (suc ℓ')
 ext-ρ ρ zero = zero
 ext-ρ ρ (suc ι) = suc (ρ ι)
+
+ext-distr : ∀ {ℓ₀ ℓ₁ ℓ₂}
+          → (ρ₁ : Fin ℓ₀ → Fin ℓ₁)
+          → (ρ₂ : Fin ℓ₁ → Fin ℓ₂)
+          → ext-ρ ρ₂ ∘ ext-ρ ρ₁ f≡ ext-ρ (ρ₂ ∘ ρ₁)
+ext-distr _ _ zero = refl
+ext-distr _ _ (suc x) = refl
 
 -- This has a slightly different (and less generic) type
 -- than the ext-k version from the Actions modules,

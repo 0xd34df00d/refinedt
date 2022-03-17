@@ -22,12 +22,6 @@ act-ε-distr : ActDistributivity act-ε
 act-cons-distr : ActDistributivity {ADTCons nₐ} act-cons
 act-branches-distr : ActDistributivity {CaseBranches nₐ} act-branches
 
-ext-distr : (ρ₁ : Fin ℓ₀ → Fin ℓ₁)
-          → (ρ₂ : Fin ℓ₁ → Fin ℓ₂)
-          → ext ρ₂ ∘ ext ρ₁ f≡ ext (ρ₂ ∘ ρ₁)
-ext-distr ρ₁ ρ₂ zero = refl
-ext-distr ρ₁ ρ₂ (suc ι) = refl
-
 act-ε-distr ρ₁ ρ₂ (CVar ι) = refl
 act-ε-distr ρ₁ ρ₂ (CSort s) = refl
 act-ε-distr ρ₁ ρ₂ (CΠ τ₁ τ₂)
