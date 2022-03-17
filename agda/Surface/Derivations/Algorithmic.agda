@@ -13,9 +13,9 @@ open import Common.Helpers
 
 open import Surface.Syntax
 open import Surface.Syntax.CtxSuffix
-open import Surface.Syntax.Subcontext
-open import Surface.Syntax.Substitution using ([_↦τ_]_; [_↦Γ_]_)
 open import Surface.Syntax.Membership
+open import Surface.Syntax.Subcontext
+open import Surface.Syntax.Substitution using ([_↦τ_]_)
 import Surface.Syntax.Renaming as R
 import Surface.Syntax.Substitution as S
 open import Surface.Derivations.Common public
