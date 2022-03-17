@@ -48,14 +48,6 @@ cons-lookup-comm : (ρ : Fin ℓ → Fin ℓ')
 cons-lookup-comm ρ zero (τ ∷ _) = refl
 cons-lookup-comm ρ (suc ι) (_ ∷ cons) = cons-lookup-comm ρ ι cons
 
-ext-monotonic : ∀ {ρ : Fin ℓ → Fin ℓ'}
-              → Monotonic ρ
-              → Monotonic (ext ρ)
-ext-monotonic ρ-mono {x = zero} {y = zero} ()
-ext-monotonic ρ-mono {x = zero} {y = suc y} (<-zero .y) = <-zero _
-ext-monotonic ρ-mono {x = suc x} {y = zero} ()
-ext-monotonic ρ-mono {x = suc x} {y = suc y} (<-suc x<y) = <-suc (ρ-mono x<y)
-
 SVar-inj : SVar ι₁ ≡ SVar ι₂
          → ι₁ ≡ ι₂
 SVar-inj refl = refl
