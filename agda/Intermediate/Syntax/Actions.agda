@@ -41,7 +41,7 @@ mutual
   act-ε f (SApp ε₁ ε₂) = SApp (act-ε f ε₁) (act-ε f ε₂)
   act-ε f (SCase scrut branches) = SCase (act-ε f scrut) (act-branches f branches)
   act-ε f (SCon ι body adt-cons) = SCon ι (act-ε f body) (act-cons f adt-cons)
-  act-ε f (τ' S<: τ) = act-τ f τ' S<: act-τ f τ
+  act-ε f (ε S<: τ) = act-ε f ε S<: act-τ f τ
 
 
 ext-k : ∀ k

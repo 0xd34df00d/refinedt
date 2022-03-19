@@ -111,8 +111,8 @@ mutual
     rewrite act-ε-distr r₁ r₂ ε
           | act-cons-distr r₁ r₂ cons
           = refl
-  act-ε-distr r₁ r₂ (τ' S<: τ)
-    rewrite act-τ-distr r₁ r₂ τ'
+  act-ε-distr r₁ r₂ (ε S<: τ)
+    rewrite act-ε-distr r₁ r₂ ε
           | act-τ-distr r₁ r₂ τ
           = refl
 

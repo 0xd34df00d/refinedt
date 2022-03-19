@@ -57,7 +57,8 @@ data STerm ℓ where
         → (body : STerm ℓ)
         → (adt-cons : ADTCons (Mkℕₐ n) ℓ)
         → STerm ℓ
-  _S<:_ : (τ' τ : SType ℓ)
+  _S<:_ : (ε : STerm ℓ)
+        → (τ : SType ℓ)
         → STerm ℓ
 
 data Refinement ℓ where

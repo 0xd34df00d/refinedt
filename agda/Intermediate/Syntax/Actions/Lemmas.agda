@@ -58,8 +58,8 @@ mutual
     rewrite act-ε-extensionality x-≡ ε
           | act-cons-extensionality x-≡ cons
           = refl
-  act-ε-extensionality x-≡ (τ' S<: τ)
-    rewrite act-τ-extensionality x-≡ τ'
+  act-ε-extensionality x-≡ (ε S<: τ)
+    rewrite act-ε-extensionality x-≡ ε
           | act-τ-extensionality x-≡ τ
           = refl
 
@@ -132,8 +132,8 @@ mutual
     rewrite act-ε-id f-id ε
           | act-cons-id f-id cons
           = refl
-  act-ε-id f-id (τ' S<: τ)
-    rewrite act-τ-id f-id τ'
+  act-ε-id f-id (ε S<: τ)
+    rewrite act-ε-id f-id ε
           | act-τ-id f-id τ
           = refl
 
