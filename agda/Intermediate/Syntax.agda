@@ -60,6 +60,11 @@ data STerm ℓ where
   _S<:_ : (ε : STerm ℓ)
         → (τ : SType ℓ)
         → STerm ℓ
+-- NOTE: ε S<: τ is a syntactic witness that subtyping was used to assign type τ to a term ε,
+-- where Γ ⊢ ε : τ' and τ' <: τ.
+-- I'm not sure whether the original type τ' shall be carried around on the syntax level:
+-- uniqueness of types, which shall hold for this type system, guarantees that at most one type
+-- can be assigned to ε, so I think there's no need to, but I might be wrong.
 
 data Refinement ℓ where
   _≈_of_ : (ε₁ ε₂ : STerm ℓ) → (τ : SType ℓ) → Refinement ℓ
