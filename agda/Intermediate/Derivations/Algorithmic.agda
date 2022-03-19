@@ -89,6 +89,9 @@ data [_]_⊢_⦂_ {ℓ} θ Γ where
               → (conArg : [ θ ] Γ ⊢ ε ⦂ τⱼ)
               → (adtτ : [ θ ] Γ ⊢ ⊍ cons)
               → [ θ ] Γ ⊢ SCon ι ε cons ⦂ ⊍ cons
+  T-SubW      : (<: : [ θ ] Γ ⊢ τ' <: τ)
+              → (εδ : [ θ ] Γ ⊢ ε ⦂ τ')
+              → [ θ ] Γ ⊢ ε S<: τ ⦂ τ
 
 record PositiveDecision (ℓ : ℕ) : Set where
   constructor MkPD
