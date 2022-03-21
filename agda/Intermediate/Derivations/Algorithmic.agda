@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Intermediate.Derivations.Algorithmic where
 
 open import Data.Fin using (zero; suc)
