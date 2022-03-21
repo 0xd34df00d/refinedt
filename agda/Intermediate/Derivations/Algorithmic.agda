@@ -24,6 +24,9 @@ open import Core.Syntax.Renaming as CR using (act-ε)
 
 record Oracle : Set
 
+variable
+  θ : Oracle
+
 data [_]_ok     (Θ : Oracle) : (Γ : Ctx ℓ) → Set
 data [_]_⊢_⦂_   (θ : Oracle) (Γ : Ctx ℓ) : (ε : STerm ℓ) → (τ : SType ℓ) → Set
 data [_]_⊢_<:_  (θ : Oracle) (Γ : Ctx ℓ) : (τ τ' : SType ℓ) → Set
