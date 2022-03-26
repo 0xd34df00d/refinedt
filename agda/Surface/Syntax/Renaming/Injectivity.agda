@@ -15,19 +15,6 @@ open import Surface.Syntax
 open import Surface.Syntax.Injectivity
 open import Surface.Syntax.Renaming
 
-ext-inj : {f : Fin ℓ → Fin ℓ'}
-        → Injective f
-        → Injective (ext f)
-ext-inj f-inj {zero} {zero} ext-≡ = refl
-ext-inj f-inj {suc x₁} {suc x₂} ext-≡ rewrite f-inj (suc-injective ext-≡) = refl
-
-ext-k'-inj : {f : Fin ℓ → Fin (suc ℓ)}
-           → ∀ k
-           → Injective f
-           → Injective (ext-k' k f)
-ext-k'-inj zero f-inj = f-inj
-ext-k'-inj (suc k) f-inj = ext-inj (ext-k'-inj k f-inj)
-
 ActInjectivity : {Ty : ℕ → Set} → ActionOn Ty → Set
 ActInjectivity {Ty} act = ∀ {ℓ ℓ'} {f : Fin ℓ → Fin ℓ'}
                           → Injective f

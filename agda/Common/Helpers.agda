@@ -4,9 +4,11 @@ module Common.Helpers where
 
 open import Data.Nat.Base using (ℕ; suc; zero; _+_)
 open import Data.Fin.Base using (Fin; suc; zero)
+open import Data.Fin.Properties using (suc-injective)
 open import Function using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
+open import Common.Types
 open import Data.Fin.Extra
 
 infix 2 _f≡_
@@ -39,6 +41,12 @@ ext-distr : ∀ {ℓ₀ ℓ₁ ℓ₂}
 ext-distr _ _ zero = refl
 ext-distr _ _ (suc x) = refl
 
+ext-inj : {f : Fin ℓ → Fin ℓ'}
+        → Injective f
+        → Injective (ext-ρ f)
+ext-inj f-inj {zero} {zero} ext-≡ = refl
+ext-inj f-inj {suc x₁} {suc x₂} ext-≡ rewrite f-inj (suc-injective ext-≡) = refl
+
 -- This has a slightly different (and less generic) type
 -- than the ext-k version from the Actions modules,
 -- so it normalizes slightly differently
@@ -49,6 +57,13 @@ ext-k' : ∀ {ℓ}
        → Fin (k + ℓ) → Fin (suc k + ℓ)
 ext-k' zero ρ = ρ
 ext-k' (suc k) ρ = ext-ρ (ext-k' k ρ)
+
+ext-k'-inj : {f : Fin ℓ → Fin (suc ℓ)}
+           → ∀ k
+           → Injective f
+           → Injective (ext-k' k f)
+ext-k'-inj zero f-inj = f-inj
+ext-k'-inj (suc k) f-inj = ext-inj (ext-k'-inj k f-inj)
 
 ctx-idx : ∀ {ℓ} k → Fin (suc (k + ℓ))
 ctx-idx zero = zero
