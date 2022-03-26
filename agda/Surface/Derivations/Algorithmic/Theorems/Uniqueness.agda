@@ -77,7 +77,9 @@ mutual
     rewrite unique-Γ⊢τ arrδ₁ arrδ₂
           | unique-Γ⊢ε⦂τ δ₁ δ₂
           = refl
-  unique-Γ⊢ε⦂τ (T-App δ₁₁ (T-Sub δ₂₁ τ₁'δ <:₁) refl resτδ₁) (T-App δ₁₂ (T-Sub δ₂₂ τ₂'δ <:₂) resτ-≡₂ resτδ₂) with typing-uniqueness δ₁₁ δ₁₂ | typing-uniqueness δ₂₁ δ₂₂ | resτ-≡₂
+  unique-Γ⊢ε⦂τ (T-App δ₁₁ (T-Sub δ₂₁ τ₁'δ <:₁) refl resτδ₁) (T-App δ₁₂ (T-Sub δ₂₂ τ₂'δ <:₂) resτ-≡₂ resτδ₂) with typing-uniqueness δ₁₁ δ₁₂
+                                                                                                               | typing-uniqueness δ₂₁ δ₂₂
+                                                                                                               | resτ-≡₂
   ... | refl | refl | refl
     rewrite unique-Γ⊢ε⦂τ δ₁₁ δ₁₂
           | unique-Γ⊢ε⦂τ δ₂₁ δ₂₂
