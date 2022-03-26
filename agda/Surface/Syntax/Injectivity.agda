@@ -126,6 +126,7 @@ SCon-inj₃ : ∀ {n} {ι₁ ι₂ : Fin n}
             → SCon ι₁ ε₁ cons₁ ≡ SCon ι₂ ε₂ cons₂
             → cons₁ ≡ cons₂
 SCon-inj₃ refl = refl
+
 ∷-inj₁ : ∀ {A : Set} {a b : A} {as bs : Vec A n}
        → a ∷ as ≡ b ∷ bs
        → a ≡ b
