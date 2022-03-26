@@ -81,6 +81,8 @@ data [_]_⊢_⦂_ {ℓ} θ Γ where
               → [ θ ] Γ ⊢ SLam τ₁ ε ⦂ τ₁ ⇒ τ₂
   T-App       : (δ₁ : [ θ ] Γ ⊢ ε₁ ⦂ τ₁ ⇒ τ₂)
               → (δ₂ : [ θ ] Γ ⊢ ε₂ ⦂ τ₁)
+              → (resτ-≡ : τ ≡ [ zero ↦τ ε₂ ] τ₂)
+              → (resτδ : [ θ ] Γ ⊢ τ) -- TODO double-check it's really needed
               → [ θ ] Γ ⊢ SApp ε₁ ε₂ ⦂ ([ zero ↦τ ε₂ ] τ₂)
   T-Case      : {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
               → {bs : CaseBranches (Mkℕₐ (suc n)) ℓ}
