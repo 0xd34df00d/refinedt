@@ -10,9 +10,9 @@ open import Core.Syntax as C
 open import Core.Syntax.Derived as C
 open import Core.Syntax.Renaming as C
 open import Core.Derivations as C
-open import Surface.Syntax as S renaming (Γ to Γˢ; τ to τˢ; ε to εˢ)
-open import Surface.Syntax.CtxSuffix
-open import Surface.Derivations.Algorithmic as S
+open import Intermediate.Syntax as I renaming (Γ to Γⁱ; τ to τⁱ; ε to εⁱ)
+open import Intermediate.Syntax.CtxSuffix
+open import Intermediate.Derivations.Algorithmic as I renaming ([_]_⊢_⦂_ to [_]_⊢ⁱ_⦂_)
 
 open import Translation.Untyped
 
@@ -24,11 +24,11 @@ mutual
   τ ⇒ τ'
   -}
   μ-<: : {τ τ' : SType ℓ}
-       → Γˢ ⊢[ E ] τ <: τ'
+       → [ θ ] Γⁱ ⊢ τ <: τ'
        → CExpr ℓ
-  μ-<: (ST-Base oracle positive) with to-witness positive
+  μ-<: (ST-Base positive) with to-witness positive
   ... | MkPD <:-ε = <:-ε
-  μ-<: (ST-Arr <:₁ <:₂ (enriched τδ) (enriched τ₁'δ))
+  μ-<: (ST-Arr <:₁ <:₂ τδ τ₁'δ)
     {-
     We need to build a function of type (τ₁ ⇒ τ₂) ⇒ (τ₁' ⇒ τ₂')
     Thus, we do the following:
@@ -50,7 +50,7 @@ mutual
             )
 
   μ-τ : {τ : SType ℓ}
-      → Γˢ ⊢[ E ] τ
+      → [ θ ] Γⁱ ⊢ τ
       → CExpr ℓ
   μ-τ (TWF-TrueRef {b = b} Γok) = ⌊μ⌋-b b
   μ-τ (TWF-Base {b = b} {b' = b'} ε₁δ ε₂δ)
@@ -61,7 +61,7 @@ mutual
   μ-τ (TWF-ADT consδs) = CADT (μ-cons consδs)
 
   μ-ε : ∀ {ε : STerm ℓ} {τ}
-      → Γˢ ⊢[ E of κ ] ε ⦂ τ
+      → [ θ ] Γⁱ ⊢ⁱ ε ⦂ τ
       → CExpr ℓ
   μ-ε (T-Unit Γok) = [ Cunit ⦂ CUnit ∣ eq-refl CUnit Cunit of CLam CUnit ⌊μ⌋-Τ ]
   μ-ε (T-Var {ι = ι} _ _) = CVar ι
@@ -69,28 +69,28 @@ mutual
   μ-ε (T-App ε₁δ ε₂δ _ _) = μ-ε ε₁δ · μ-ε ε₂δ
   μ-ε (T-Case resδ εδ branches) = CCase (μ-ε εδ) (μ-branches branches)
   μ-ε (T-Con {ι = ι} _ εδ adtτ) = CCon ι (μ-ε εδ) (μ-cons' adtτ)
-  μ-ε (T-Sub εδ _ <:) = μ-<: <: · μ-ε εδ
+  μ-ε (T-SubW <: εδ) = μ-<: <: · μ-ε εδ
 
-  μ-cons' : {cons : S.ADTCons nₐ ℓ}
-          → Γˢ ⊢[ E ] ⊍ cons
+  μ-cons' : {cons : I.ADTCons nₐ ℓ}
+          → [ θ ] Γⁱ ⊢ ⊍ cons
           → C.ADTCons nₐ ℓ
   μ-cons' (TWF-ADT consδs) = μ-cons consδs
 
-  μ-cons : {cons : S.ADTCons nₐ ℓ}
-         → All (Γˢ ⊢[ E ]_) cons
+  μ-cons : {cons : I.ADTCons nₐ ℓ}
+         → All ([ θ ] Γⁱ ⊢_) cons
          → C.ADTCons nₐ ℓ
   μ-cons [] = []
   μ-cons (τδ ∷ consδ) = μ-τ τδ ∷ μ-cons consδ
 
-  μ-branches : {branches : S.CaseBranches nₐ ℓ}
-             → {cons : S.ADTCons nₐ ℓ}
-             → S.BranchesHaveType E Γˢ cons branches τˢ
+  μ-branches : {branches : I.CaseBranches nₐ ℓ}
+             → {cons : I.ADTCons nₐ ℓ}
+             → I.BranchesHaveType θ Γⁱ cons branches τⁱ
              → C.CaseBranches nₐ ℓ
   μ-branches NoBranches = []
   μ-branches (OneMoreBranch εδ bs) = {- TODO placeholder proper proof -} Cunit ∷ μ-branches bs
 
-μ-Γ : {Γˢ : S.Ctx ℓ}
-    → Γˢ ok[ E ]
+μ-Γ : {Γⁱ : I.Ctx ℓ}
+    → [ θ ] Γⁱ ok
     → C.Ctx ℓ
 μ-Γ TCTX-Empty = ⊘
 μ-Γ (TCTX-Bind Γok τδ) = μ-Γ Γok , μ-τ τδ
