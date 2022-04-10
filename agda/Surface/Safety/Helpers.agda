@@ -9,7 +9,6 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Surface.Syntax
 open import Surface.Syntax.CtxSuffix
-open import Surface.Syntax.Shape
 open import Surface.Derivations
 open import Surface.Operational
 open import Surface.Theorems.Subtyping

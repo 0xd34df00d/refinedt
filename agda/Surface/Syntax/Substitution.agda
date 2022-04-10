@@ -11,7 +11,6 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 open import Common.Helpers
 open import Data.Fin.Extra
 open import Surface.Syntax
-open import Surface.Syntax.Shape
 import      Surface.Syntax.Renaming as R
 open import Surface.Syntax.Actions (record { Target = STerm
                                            ; var-action = λ ε → ε
