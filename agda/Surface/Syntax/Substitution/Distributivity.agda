@@ -107,66 +107,66 @@ ext-Rext-distr : (σ : Fin ℓ₁ → STerm ℓ₂)
 ext-Rext-distr σ ρ zero = refl
 ext-Rext-distr σ ρ (suc x) = refl
 
-σ-ρ-distr-τ : σ-ρ-Distributivity act-τ R.act-τ
-σ-ρ-distr-ρ : σ-ρ-Distributivity act-ρ R.act-ρ
-σ-ρ-distr-ε : σ-ρ-Distributivity act-ε R.act-ε
-σ-ρ-distr-cons : σ-ρ-Distributivity {ADTCons nₐ} act-cons R.act-cons
-σ-ρ-distr-branches : σ-ρ-Distributivity {CaseBranches nₐ} act-branches R.act-branches
+mutual
+  σ-ρ-distr-τ : σ-ρ-Distributivity act-τ R.act-τ
+  σ-ρ-distr-τ σ ρ ⟨ b ∣ ρ' ⟩
+    rewrite σ-ρ-distr-ρ (ext σ) (R.ext ρ) ρ'
+          | act-ρ-extensionality (ext-Rext-distr σ ρ) ρ'
+          = refl
+  σ-ρ-distr-τ σ ρ (τ₁ ⇒ τ₂)
+    rewrite σ-ρ-distr-τ σ ρ τ₁
+          | σ-ρ-distr-τ (ext σ) (R.ext ρ) τ₂
+          | act-τ-extensionality (ext-Rext-distr σ ρ) τ₂
+          = refl
+  σ-ρ-distr-τ σ ρ (⊍ cons) rewrite σ-ρ-distr-cons σ ρ cons = refl
 
-σ-ρ-distr-τ σ ρ ⟨ b ∣ ρ' ⟩
-  rewrite σ-ρ-distr-ρ (ext σ) (R.ext ρ) ρ'
-        | act-ρ-extensionality (ext-Rext-distr σ ρ) ρ'
-        = refl
-σ-ρ-distr-τ σ ρ (τ₁ ⇒ τ₂)
-  rewrite σ-ρ-distr-τ σ ρ τ₁
-        | σ-ρ-distr-τ (ext σ) (R.ext ρ) τ₂
-        | act-τ-extensionality (ext-Rext-distr σ ρ) τ₂
-        = refl
-σ-ρ-distr-τ σ ρ (⊍ cons) rewrite σ-ρ-distr-cons σ ρ cons = refl
+  σ-ρ-distr-ρ : σ-ρ-Distributivity act-ρ R.act-ρ
+  σ-ρ-distr-ρ σ ρ (ε₁ ≈ ε₂ of τ)
+    rewrite σ-ρ-distr-ε σ ρ ε₁
+          | σ-ρ-distr-ε σ ρ ε₂
+          | σ-ρ-distr-τ σ ρ τ
+          = refl
+  σ-ρ-distr-ρ σ ρ (ρ₁ ∧ ρ₂)
+    rewrite σ-ρ-distr-ρ σ ρ ρ₁
+          | σ-ρ-distr-ρ σ ρ ρ₂
+          = refl
+  σ-ρ-distr-ρ _ _ Τ = refl
 
-σ-ρ-distr-ρ σ ρ (ε₁ ≈ ε₂ of τ)
-  rewrite σ-ρ-distr-ε σ ρ ε₁
-        | σ-ρ-distr-ε σ ρ ε₂
-        | σ-ρ-distr-τ σ ρ τ
-        = refl
-σ-ρ-distr-ρ σ ρ (ρ₁ ∧ ρ₂)
-  rewrite σ-ρ-distr-ρ σ ρ ρ₁
-        | σ-ρ-distr-ρ σ ρ ρ₂
-        = refl
-σ-ρ-distr-ρ _ _ Τ = refl
+  σ-ρ-distr-ε : σ-ρ-Distributivity act-ε R.act-ε
+  σ-ρ-distr-ε σ ρ SUnit = refl
+  σ-ρ-distr-ε σ ρ (SVar ι) = refl
+  σ-ρ-distr-ε σ ρ (SLam τ ε)
+    rewrite σ-ρ-distr-τ σ ρ τ
+          | σ-ρ-distr-ε (ext σ) (R.ext ρ) ε
+          | act-ε-extensionality (ext-Rext-distr σ ρ) ε
+          = refl
+  σ-ρ-distr-ε σ ρ (SApp ε₁ ε₂)
+    rewrite σ-ρ-distr-ε σ ρ ε₁
+          | σ-ρ-distr-ε σ ρ ε₂
+          = refl
+  σ-ρ-distr-ε σ ρ (SCase ε branches)
+    rewrite σ-ρ-distr-ε σ ρ ε
+          | σ-ρ-distr-branches σ ρ branches
+          = refl
+  σ-ρ-distr-ε σ ρ (SCon ι ε cons)
+    rewrite σ-ρ-distr-ε σ ρ ε
+          | σ-ρ-distr-cons σ ρ cons
+          = refl
 
-σ-ρ-distr-ε σ ρ SUnit = refl
-σ-ρ-distr-ε σ ρ (SVar ι) = refl
-σ-ρ-distr-ε σ ρ (SLam τ ε)
-  rewrite σ-ρ-distr-τ σ ρ τ
-        | σ-ρ-distr-ε (ext σ) (R.ext ρ) ε
-        | act-ε-extensionality (ext-Rext-distr σ ρ) ε
-        = refl
-σ-ρ-distr-ε σ ρ (SApp ε₁ ε₂)
-  rewrite σ-ρ-distr-ε σ ρ ε₁
-        | σ-ρ-distr-ε σ ρ ε₂
-        = refl
-σ-ρ-distr-ε σ ρ (SCase ε branches)
-  rewrite σ-ρ-distr-ε σ ρ ε
-        | σ-ρ-distr-branches σ ρ branches
-        = refl
-σ-ρ-distr-ε σ ρ (SCon ι ε cons)
-  rewrite σ-ρ-distr-ε σ ρ ε
-        | σ-ρ-distr-cons σ ρ cons
-        = refl
+  σ-ρ-distr-cons : σ-ρ-Distributivity {ADTCons nₐ} act-cons R.act-cons
+  σ-ρ-distr-cons σ ρ [] = refl
+  σ-ρ-distr-cons σ ρ (τ ∷ cons)
+    rewrite σ-ρ-distr-τ σ ρ τ
+          | σ-ρ-distr-cons σ ρ cons
+          = refl
 
-σ-ρ-distr-cons σ ρ [] = refl
-σ-ρ-distr-cons σ ρ (τ ∷ cons)
-  rewrite σ-ρ-distr-τ σ ρ τ
-        | σ-ρ-distr-cons σ ρ cons
-        = refl
-
-σ-ρ-distr-branches σ ρ [] = refl
-σ-ρ-distr-branches σ ρ (MkCaseBranch ε ∷ bs)
-  rewrite σ-ρ-distr-ε (ext σ) (R.ext ρ) ε
-        | σ-ρ-distr-branches σ ρ bs
-        | act-ε-extensionality (ext-Rext-distr σ ρ) ε
-        = refl
+  σ-ρ-distr-branches : σ-ρ-Distributivity {CaseBranches nₐ} act-branches R.act-branches
+  σ-ρ-distr-branches σ ρ [] = refl
+  σ-ρ-distr-branches σ ρ (MkCaseBranch ε ∷ bs)
+    rewrite σ-ρ-distr-ε (ext σ) (R.ext ρ) ε
+          | σ-ρ-distr-branches σ ρ bs
+          | act-ε-extensionality (ext-Rext-distr σ ρ) ε
+          = refl
 
 
 act-ε-ext-distr : (σ₁ : Fin ℓ₀ → STerm ℓ₁)
