@@ -75,7 +75,7 @@ size-t (T-Case resδ scrutτδ branches) = suc (size-t scrutτδ ⊕ size-twf re
 size-t (T-Con _ conArg adtτ) = suc (size-t conArg ⊕ size-twf adtτ)
 size-t (T-SubW <: εδ) = suc (size-t εδ ⊕ size-<: <:)
 
-size-<: (ST-Base _) = 0
+size-<: (ST-Base _ τδ) = suc (size-twf τδ)
 size-<: (ST-Arr sub₁ sub₂ δτ₁⇒τ₂ δτ₁') = suc (size-<: sub₁ ⊕ size-<: sub₂ ⊕ size-twf δτ₁⇒τ₂ ⊕ size-twf δτ₁')
 
 size-bs NoBranches = 0

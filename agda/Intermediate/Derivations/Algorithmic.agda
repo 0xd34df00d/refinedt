@@ -141,6 +141,7 @@ record Oracle where
 
 data [_]_⊢_<:_ {ℓ} θ Γ where
   ST-Base : Is-just (Oracle.decide θ Γ b ρ₁ ρ₂)
+          → [ θ ] Γ ⊢ ⟨ b ∣ ρ₂ ⟩
           → [ θ ] Γ ⊢ ⟨ b ∣ ρ₁ ⟩ <: ⟨ b ∣ ρ₂ ⟩
   ST-Arr  : [ θ ] Γ ⊢ τ₁' <: τ₁
           → [ θ ] Γ , τ₁' ⊢ τ₂ <: τ₂'
