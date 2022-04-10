@@ -42,12 +42,6 @@ infixr 6 [_↦τ_]_ [_↦ρ_]_ [_↦ε_]_ [_↦c_]_ [_↦bs_]_
 [_↦bs_]_ : SubstOn (CaseBranches nₐ)
 [_↦bs_]_ ι ε = act-branches (replace-at ι ε)
 
-↦τ-preserves-shape : ∀ ι (ε : STerm ℓ)
-                   → ShapePreserving (λ τ' τ → τ' ≡ [ ι ↦τ ε ] τ)
-↦τ-preserves-shape _ _ {τ₂ = ⟨ _ ∣ _ ⟩} refl = refl
-↦τ-preserves-shape _ _ {τ₂ = _ ⇒ _} refl = refl
-↦τ-preserves-shape _ _ {τ₂ = ⊍ _} refl = refl
-
 branch-lookup-comm : (σ : Fin (suc ℓ) → STerm ℓ)
                    → (ι : Fin n)
                    → (bs : CaseBranches (Mkℕₐ n) (suc ℓ))
