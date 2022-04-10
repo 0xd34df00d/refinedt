@@ -41,4 +41,67 @@ infixr 6 [_↦τ_]_ [_↦ρ_]_ [_↦ε_]_ [_↦c_]_ [_↦bs_]_
 [_↦bs_]_ : SubstOn (CaseBranches nₐ)
 [_↦bs_]_ ι ε = act-branches (replace-at ι ε)
 
--- TODO port the rest
+branch-lookup-comm : (σ : Fin (suc ℓ) → STerm ℓ)
+                   → (ι : Fin n)
+                   → (bs : CaseBranches (Mkℕₐ n) (suc ℓ))
+                   → act-ε (ext σ) (CaseBranch.body (lookup bs ι)) ≡ CaseBranch.body (lookup (act-branches σ bs) ι)
+branch-lookup-comm σ zero (_ ∷ _) = refl
+branch-lookup-comm σ (suc ι) (_ ∷ bs) = branch-lookup-comm σ ι bs
+
+
+ext-id : ∀ {f : Fin ℓ → STerm ℓ}
+       → (∀ x → var-action (f x) ≡ SVar x)
+       → (∀ x → var-action (ext f x) ≡ SVar x)
+ext-id f-≡ zero = refl
+ext-id f-≡ (suc x) rewrite f-≡ x = refl
+
+open import Intermediate.Syntax.Actions.Lemmas var-action-record
+                                               record { ≡-ext = λ where x-≡ zero → refl
+                                                                        x-≡ (suc x) → cong R.weaken-ε (x-≡ x)
+                                                      ; ext-id = ext-id
+                                                      }
+                                               public
+
+ext-replace-comm : ∀ ε (ι : Fin (suc ℓ))
+                 → ext (replace-at ι ε) f≡ replace-at (suc ι) (R.act-ε suc ε)
+ext-replace-comm _ zero zero = refl
+ext-replace-comm _ (suc ι) zero = refl
+ext-replace-comm _ zero (suc var-idx) with zero <>? var-idx
+... | less m<n rewrite m<n-n-pred-cancel m<n = refl
+... | equal refl = refl
+ext-replace-comm _ (suc ι) (suc var-idx) with suc ι <>? var-idx
+... | less m<n rewrite m<n-n-pred-cancel m<n = refl
+... | equal refl = refl
+... | greater m>n = refl
+
+R-ext-replace-comm : ∀ ε (ρ : Fin ℓ → Fin ℓ') ι
+                   → ext (replace-at (R.ext ρ ι) (R.act-ε ρ ε)) f≡ replace-at (suc (R.ext ρ ι)) (R.act-ε (R.ext ρ) (R.act-ε suc ε))
+R-ext-replace-comm ε ρ zero zero = refl
+R-ext-replace-comm ε ρ (suc ι) zero = refl
+R-ext-replace-comm ε ρ zero (suc var-idx) with zero <>? var-idx
+... | less m<n rewrite m<n-n-pred-cancel m<n = refl
+... | equal refl rewrite R.weaken-ε-comm ρ ε = refl
+R-ext-replace-comm ε ρ (suc ι) (suc var-idx) with suc (ρ ι) <>? var-idx
+... | less m<n rewrite m<n-n-pred-cancel m<n = refl
+... | equal refl rewrite R.weaken-ε-comm ρ ε = refl
+... | greater m>n = refl
+
+weaken-replace-comm : ∀ ε (ι : Fin (suc ℓ))
+                    → R.weaken-ε ∘ replace-at ι ε f≡ replace-at (suc ι) (R.weaken-ε ε) ∘ suc
+weaken-replace-comm ε zero zero = refl
+weaken-replace-comm ε zero (suc x) = refl
+weaken-replace-comm ε (suc ι) zero = refl
+weaken-replace-comm ε (suc ι) (suc x) with ι <>? x
+... | less m<n = refl
+... | equal refl = refl
+... | greater m>n = refl
+
+
+-- Substitution on contexts: this is essentially replacing Γ, x ⦂ σ, Δ with Γ, [ x ↦ ε ] Δ
+-- Here, ℓ is the length of Γ (which ε must live in), and k is the length of Δ.
+[_↦Γ_]_ : ∀ ℓ
+        → (ε : STerm ℓ)
+        → Ctx (suc k + ℓ)
+        → Ctx (k + ℓ)
+[_↦Γ_]_ {k = zero} ℓ ε (Γ , _) = Γ
+[_↦Γ_]_ {k = suc k} ℓ ε (Γ,Δ , τ) = ([ ℓ ↦Γ ε ] Γ,Δ) , ([ ctx-idx k ↦τ R.weaken-ε-k k ε ] τ)
