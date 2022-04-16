@@ -26,7 +26,7 @@ mutual
   μ-<: : {τ τ' : SType ℓ}
        → [ θ ] Γⁱ ⊢ τ <: τ'
        → CExpr ℓ
-  μ-<: (ST-Base positive) with to-witness positive
+  μ-<: (ST-Base positive _) with to-witness positive
   ... | MkPD <:-ε = <:-ε
   μ-<: (ST-Arr <:₁ <:₂ τδ τ₁'δ)
     {-
