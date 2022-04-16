@@ -1,8 +1,6 @@
 {-# OPTIONS --allow-unsolved-metas #-}
 
-open import Surface.Derivations.Algorithmic using (UniquenessOfOracles)
-
-module Translation.μ-subst(oracles-equal : UniquenessOfOracles) where
+module Translation.μ-subst where
 
 open import Data.Fin.Base using (zero; suc; raise)
 open import Data.Nat.Base using (zero; suc)
@@ -18,40 +16,39 @@ open import Core.Syntax.Renaming as CR
 open import Core.Syntax.Substitution as CS
 open import Core.Syntax.Derived.Substitution as CS
 open import Core.Derivations as C renaming (_⊢_⦂_ to _⊢ᶜ_⦂_)
-open import Surface.Syntax as S renaming (Γ to Γˢ;
-                                          τ to τˢ; τ' to τ'ˢ; τ₁ to τ₁ˢ; τ₁' to τ₁'ˢ; τ₂ to τ₂ˢ; σ to σˢ;
-                                          ε to εˢ; ε' to ε'ˢ; ε₁ to ε₁ˢ; ε₂ to ε₂ˢ)
-open import Surface.Syntax.CtxSuffix as S
-open import Surface.Syntax.Renaming as SR
-open import Surface.Syntax.Substitution as SS
-open import Surface.Derivations.Algorithmic as S
-open import Surface.Derivations.Algorithmic.Theorems.Uniqueness(oracles-equal)
-open import Surface.Theorems.Substitution as S
+open import Intermediate.Syntax as I renaming (Γ to Γⁱ;
+                                          τ to τⁱ; τ' to τ'ⁱ; τ₁ to τ₁ⁱ; τ₁' to τ₁'ⁱ; τ₂ to τ₂ⁱ; σ to σⁱ;
+                                          ε to εⁱ; ε' to ε'ⁱ; ε₁ to ε₁ⁱ; ε₂ to ε₂ⁱ)
+open import Intermediate.Syntax.CtxSuffix as I
+open import Intermediate.Syntax.Renaming as SR
+open import Intermediate.Syntax.Substitution as SS
+open import Intermediate.Derivations.Algorithmic as I
+open import Intermediate.Derivations.Algorithmic.Theorems.Uniqueness
+--open import Intermediate.Theorems.Substitution as I
 
 open import Translation.Untyped
 open import Translation.Typed
-open import Translation.SubstUnique(oracles-equal)
+open import Translation.SubstUnique
 
 ⌊μ⌋-b-sub-id : ∀ k ε b
              → ⌊μ⌋-b {ℓ = k + ℓ} b ≡ [ ℓ ↦' ε ] (⌊μ⌋-b b)
 ⌊μ⌋-b-sub-id _ _ BUnit = refl
 
-μ-Var-sub-distributes : (Δ : ,-CtxSuffix ℓ σˢ k)
-                      → (argδ : Γˢ ⊢[ E of t-sub ] εˢ ⦂ σˢ)
-                      → (codδ : Γˢ ,σ, Δ ⊢[ E of not-t-sub ] SVar ι ⦂ τˢ)
-                      → (resδ : Γˢ ++ [↦Δ εˢ ] Δ ⊢[ E of not-t-sub ] [ ℓ ↦ε< εˢ ] SVar ι ⦂ [ ℓ ↦τ< εˢ ] τˢ)
+μ-Var-sub-distributes : (Δ : ,-CtxSuffix ℓ σⁱ k)
+                      → (argδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ σⁱ)
+                      → (codδ : [ θ ] Γⁱ ,σ, Δ ⊢ SVar ι ⦂ τⁱ)
+                      → (resδ : [ θ ] Γⁱ ++ [↦Δ εⁱ ] Δ ⊢ [ ℓ ↦ε< εⁱ ] SVar ι ⦂ [ ℓ ↦τ< εⁱ ] τⁱ)
                       → μ-ε resδ ≡ [ ℓ ↦' μ-ε argδ ] μ-ε codδ
 μ-Var-sub-distributes {k = k} Δ argδ (T-Var {ι = ι} Γok ∈) resδ with ctx-idx k <>? ι | resδ
 ... | less _ | T-Var _ _ = refl
 ... | greater _ | T-Var _ _ = refl
-... | equal refl | resδ with argδ
-...                        | T-Sub argδ' _ <: = {! !}
+... | equal refl | resδ = {! !}
 
 mutual
-  μ-ε-sub-distributes : (Δ : ,-CtxSuffix ℓ σˢ k)
-                      → (argδ : Γˢ ⊢[ E of t-sub ] εˢ ⦂ σˢ)
-                      → (codδ : Γˢ ,σ, Δ ⊢[ E of κ' ] ε'ˢ ⦂ τˢ)
-                      → (resδ : Γˢ ++ [↦Δ εˢ ] Δ ⊢[ E of κ' ] [ ℓ ↦ε< εˢ ] ε'ˢ ⦂ [ ℓ ↦τ< εˢ ] τˢ)
+  μ-ε-sub-distributes : (Δ : ,-CtxSuffix ℓ σⁱ k)
+                      → (argδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ σⁱ)
+                      → (codδ : [ θ ] Γⁱ ,σ, Δ ⊢ ε'ⁱ ⦂ τⁱ)
+                      → (resδ : [ θ ] Γⁱ ++ [↦Δ εⁱ ] Δ ⊢ [ ℓ ↦ε< εⁱ ] ε'ⁱ ⦂ [ ℓ ↦τ< εⁱ ] τⁱ)
                       → μ-ε resδ ≡ [ ℓ ↦' μ-ε argδ ] μ-ε codδ
   μ-ε-sub-distributes Δ argδ (T-Unit _) (T-Unit _) = refl
   μ-ε-sub-distributes Δ argδ codδ@(T-Var _ _) resδ = μ-Var-sub-distributes Δ argδ codδ resδ
@@ -59,15 +56,15 @@ mutual
   μ-ε-sub-distributes Δ argδ (T-App domδ domδ₁ resτ-≡ resτδ) codδ = {! !}
   μ-ε-sub-distributes Δ argδ (T-Case resδ domδ branches-well-typed) codδ = {! !}
   μ-ε-sub-distributes Δ argδ (T-Con ≡-prf domδ adtτ) codδ = {! !}
-  μ-ε-sub-distributes Δ argδ (T-Sub domδ τ'δ <:) codδ = {! !}
+  μ-ε-sub-distributes Δ argδ (T-SubW <: εδ) codδ = {! !}
 
-  μ-τ-sub-distributes : (Δ : ,-CtxSuffix ℓ σˢ k)
-                      → (argδ : Γˢ ⊢[ E of t-sub ] εˢ ⦂ σˢ)
-                      → (codδ : Γˢ ,σ, Δ ⊢[ E ] τˢ)
-                      → (resδ : Γˢ ++ [↦Δ εˢ ] Δ ⊢[ E ] [ ℓ ↦τ< εˢ ] τˢ)
+  μ-τ-sub-distributes : (Δ : ,-CtxSuffix ℓ σⁱ k)
+                      → (argδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ σⁱ)
+                      → (codδ : [ θ ] Γⁱ ,σ, Δ ⊢ τⁱ)
+                      → (resδ : [ θ ] Γⁱ ++ [↦Δ εⁱ ] Δ ⊢ [ ℓ ↦τ< εⁱ ] τⁱ)
                       → μ-τ resδ ≡ [ ℓ ↦' μ-ε argδ ] μ-τ codδ
   μ-τ-sub-distributes {k = k} Δ argδ (TWF-TrueRef Γok) (TWF-TrueRef Γok₂) = ⌊μ⌋-b-sub-id k _ _
-  μ-τ-sub-distributes {ℓ = ℓ} {k = k} {εˢ = εˢ} Δ argδ (TWF-Base {b = b} {ε₁ = ε₁} {b' = b'} {ε₂ = ε₂} ε₁δ₁ ε₂δ₁) (TWF-Base ε₁δ₂ ε₂δ₂)
+  μ-τ-sub-distributes {ℓ = ℓ} {k = k} {εⁱ = εⁱ} Δ argδ (TWF-Base {b = b} {ε₁ = ε₁} {b' = b'} {ε₂ = ε₂} ε₁δ₁ ε₂δ₁) (TWF-Base ε₁δ₂ ε₂δ₂)
     = begin
 
         Σ[ ⌊μ⌋-b b ] CLam (⌊μ⌋-b b) (μ-ε ε₁δ₂ ≡̂ μ-ε ε₂δ₂ of ⌊μ⌋-b b')
@@ -89,14 +86,14 @@ mutual
     where
     ε₁δ-distributes : μ-ε ε₁δ₂ ≡ [ ℓ ↦' μ-ε argδ ] μ-ε ε₁δ₁
     ε₁δ-distributes
-      rewrite SS.act-ε-extensionality (SS.ext-replace-comm (SR.weaken-ε-k k εˢ) (ctx-idx k)) ε₁
-            | SR.act-ε-distr (raise k) suc εˢ
+      rewrite SS.act-ε-extensionality (SS.ext-replace-comm (SR.weaken-ε-k k εⁱ) (ctx-idx k)) ε₁
+            | SR.act-ε-distr (raise k) suc εⁱ
             = μ-ε-sub-distributes (Δ , _) argδ ε₁δ₁ ε₁δ₂
 
     ε₂δ-distributes : μ-ε ε₂δ₂ ≡ [ ℓ ↦' μ-ε argδ ] μ-ε ε₂δ₁
     ε₂δ-distributes
-      rewrite SS.act-ε-extensionality (SS.ext-replace-comm (SR.weaken-ε-k k εˢ) (ctx-idx k)) ε₂
-            | SR.act-ε-distr (raise k) suc εˢ
+      rewrite SS.act-ε-extensionality (SS.ext-replace-comm (SR.weaken-ε-k k εⁱ) (ctx-idx k)) ε₂
+            | SR.act-ε-distr (raise k) suc εⁱ
             = μ-ε-sub-distributes (Δ , _) argδ ε₂δ₁ ε₂δ₂
 
     CLam≡-distr : CLam (⌊μ⌋-b b) (μ-ε ε₁δ₂ ≡̂ μ-ε ε₂δ₂ of ⌊μ⌋-b b')
@@ -134,7 +131,7 @@ mutual
       rewrite μ-τ-sub-distributes Δ argδ ρ₁δ₁ ρ₁δ₂
             | μ-τ-sub-distributes Δ argδ ρ₂δ₁ ρ₂δ₂
             = refl
-  μ-τ-sub-distributes {ℓ = ℓ} {k = k} {εˢ = εˢ} Δ argδ (TWF-Arr {τ₂ = τ₂} argδ₁ resδ₁) (TWF-Arr argδ₂ resδ₂)
+  μ-τ-sub-distributes {ℓ = ℓ} {k = k} {εⁱ = εⁱ} Δ argδ (TWF-Arr {τ₂ = τ₂} argδ₁ resδ₁) (TWF-Arr argδ₂ resδ₂)
     = begin
         CΠ (μ-τ argδ₂) (μ-τ resδ₂)
       ≡⟨ cong (λ argδ → CΠ argδ (μ-τ resδ₂)) (μ-τ-sub-distributes Δ argδ argδ₁ argδ₂) ⟩
@@ -147,24 +144,24 @@ mutual
     where
     resδ-subst-massage : μ-τ resδ₂ ≡ [ ℓ ↦' μ-ε argδ ] μ-τ resδ₁
     resδ-subst-massage
-      rewrite SS.act-τ-extensionality (SS.ext-replace-comm (SR.weaken-ε-k k εˢ) (ctx-idx k)) τ₂
-            | SR.act-ε-distr (raise k) suc εˢ
+      rewrite SS.act-τ-extensionality (SS.ext-replace-comm (SR.weaken-ε-k k εⁱ) (ctx-idx k)) τ₂
+            | SR.act-ε-distr (raise k) suc εⁱ
             = μ-τ-sub-distributes (Δ , _) argδ resδ₁ resδ₂
   μ-τ-sub-distributes Δ argδ (TWF-ADT consδs₁) (TWF-ADT consδs₂) = {! !}
 
-μ-τ-sub-front-distributes : {Γˢ : S.Ctx ℓ}
-                          → (argδ : Γˢ ⊢[ E of t-sub ] ε₂ˢ ⦂ τ₁ˢ)
-                          → (codδ : Γˢ , τ₁ˢ ⊢[ E ] τ₂ˢ)
-                          → (resτδ : Γˢ ⊢[ E ] [ zero ↦τ ε₂ˢ ] τ₂ˢ)
+μ-τ-sub-front-distributes : {Γⁱ : I.Ctx ℓ}
+                          → (argδ : [ θ ] Γⁱ ⊢ ε₂ⁱ ⦂ τ₁ⁱ)
+                          → (codδ : [ θ ] Γⁱ , τ₁ⁱ ⊢ τ₂ⁱ)
+                          → (resτδ : [ θ ] Γⁱ ⊢ [ zero ↦τ ε₂ⁱ ] τ₂ⁱ)
                           → μ-τ resτδ ≡ [ zero ↦  μ-ε argδ ] μ-τ codδ
-μ-τ-sub-front-distributes {ε₂ˢ = ε₂ˢ} {τ₂ˢ = τ₂ˢ} argδ codδ resτδ
-  = let act-ε-refl = sym (SR.act-ε-id (λ _ → refl) ε₂ˢ)
-        resτδ' = subst (λ ε → _ ⊢[ E ] [ zero ↦τ ε ] τ₂ˢ) act-ε-refl resτδ
-     in trans (helper (cong ([ zero ↦τ_] τ₂ˢ) act-ε-refl) resτδ resτδ') (μ-τ-sub-distributes [ _ ] argδ codδ resτδ')
+μ-τ-sub-front-distributes {ε₂ⁱ = ε₂ⁱ} {τ₂ⁱ = τ₂ⁱ} argδ codδ resτδ
+  = let act-ε-refl = sym (SR.act-ε-id (λ _ → refl) ε₂ⁱ)
+        resτδ' = subst (λ ε → [ _ ] _ ⊢ [ zero ↦τ ε ] τ₂ⁱ) act-ε-refl resτδ
+     in trans (helper (cong ([ zero ↦τ_] τ₂ⁱ) act-ε-refl) resτδ resτδ') (μ-τ-sub-distributes [ _ ] argδ codδ resτδ')
   where
   helper : {τ₁ τ₂ : SType ℓ}
          → τ₁ ≡ τ₂
-         → (Γ⊢τ₁ : Γˢ ⊢[ E ] τ₁)
-         → (Γ⊢τ₂ : Γˢ ⊢[ E ] τ₂)
+         → (Γ⊢τ₁ : [ θ ] Γⁱ ⊢ τ₁)
+         → (Γ⊢τ₂ : [ θ ] Γⁱ ⊢ τ₂)
          → μ-τ Γ⊢τ₁ ≡ μ-τ Γ⊢τ₂
   helper refl Γ⊢τ₁ Γ⊢τ₂ = cong μ-τ (unique-Γ⊢τ Γ⊢τ₁ Γ⊢τ₂)
