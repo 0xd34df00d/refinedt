@@ -1,6 +1,4 @@
-open import Surface.Derivations.Algorithmic using (UniquenessOfOracles)
-
-module Translation(oracles-equal : UniquenessOfOracles) where
+module Translation where
 
 open import Data.Fin using (zero; suc)
 open import Data.Vec using (Vec; _∷_; []; lookup)
@@ -19,16 +17,16 @@ open import Core.Derivations as C renaming (_⊢_⦂_ to _⊢ᶜ_⦂_)
 open import Core.Derivations.Lemmas
 open import Core.Operational as C
 open import Core.Operational.BetaEquivalence as C
-open import Surface.Syntax as S renaming (Γ to Γˢ; τ to τˢ; τ' to τ'ˢ; ε to εˢ)
-open import Surface.Syntax.Membership as S renaming (_∈_at_ to _∈ˢ_at_)
-open import Surface.Syntax.Substitution as SS
-open import Surface.Derivations.Algorithmic as S
-open import Surface.Derivations.Algorithmic.Theorems.Agreement as S
+open import Intermediate.Syntax as S renaming (Γ to Γⁱ; τ to τⁱ; τ' to τ'ⁱ; ε to εⁱ)
+open import Intermediate.Syntax.Membership as S renaming (_∈_at_ to _∈ⁱ_at_)
+open import Intermediate.Syntax.Substitution as SS
+open import Intermediate.Derivations.Algorithmic as S
+open import Intermediate.Derivations.Algorithmic.Theorems.Agreement as S
 
 open import Translation.Untyped
 open import Translation.Typed
-open import Translation.SubstUnique(oracles-equal)
-open import Translation.Helpers(oracles-equal)
+open import Translation.SubstUnique
+open import Translation.Helpers
 
 μ-Τ-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
                → Γᶜ ⊢ᶜ ⌊μ⌋-Τ ⦂ ⋆ₑ
@@ -56,12 +54,12 @@ open import Translation.Helpers(oracles-equal)
           (Γ⊢τ-⇒-Γ,τ-ok μ-b-ok)
 
 mutual
-  μ-Γ-well-typed : (Γok : Γˢ ok[ E ])
+  μ-Γ-well-typed : (Γok : [ θ ] Γⁱ ok)
                  → μ-Γ Γok ⊢ᶜ ⋆ₑ ⦂ □ₑ
   μ-Γ-well-typed TCTX-Empty = CT-Sort
   μ-Γ-well-typed (TCTX-Bind Γok τδ) = CT-Weaken (μ-Γ-well-typed Γok) (subst-Γ _ _ (μ-τ-well-typed τδ))
 
-  μ-τ-well-typed : (τδ : Γˢ ⊢[ E ] τˢ)
+  μ-τ-well-typed : (τδ : [ θ ] Γⁱ ⊢ τⁱ)
                  → μ-Γ (Γ⊢τ-⇒-Γok τδ) ⊢ᶜ μ-τ τδ ⦂ ⋆ₑ
   μ-τ-well-typed (TWF-TrueRef Γok) = μ-b-well-typed (μ-Γ-well-typed Γok)
   μ-τ-well-typed (TWF-Base ε₁δ ε₂δ) = {! !}
@@ -76,13 +74,13 @@ mutual
   μ-τ-well-typed (TWF-ADT consδs@(τδ ∷ _)) = CT-ADTForm (μ-cons-well-typed consδs (Γ⊢τ-⇒-Γok τδ))
 
   μ-cons-well-typed : {cons : S.ADTCons nₐ ℓ}
-                    → (consδs : All (Γˢ ⊢[ E ]_) cons)
-                    → (Γok : Γˢ ok[ E ])
+                    → (consδs : All ([ θ ] Γⁱ ⊢_) cons)
+                    → (Γok : [ θ ] Γⁱ ok)
                     → All (λ con → μ-Γ Γok ⊢ᶜ con ⦂ ⋆ₑ) (μ-cons consδs)
   μ-cons-well-typed [] _ = []
   μ-cons-well-typed (τδ ∷ consδs) Γok = subst-Γ _ _ (μ-τ-well-typed τδ) ∷ μ-cons-well-typed consδs Γok
 
-  μ-ε-well-typed : (εδ : Γˢ ⊢[ E of not-t-sub ] εˢ ⦂ τˢ)
+  μ-ε-well-typed : (εδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ τⁱ)
                  → μ-Γ (Γ⊢ε⦂τ-⇒-Γok εδ) ⊢ᶜ μ-ε εδ ⦂ μ-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ)
   μ-ε-well-typed (T-Unit Γok)
     = let Γᶜok = μ-Γ-well-typed Γok
@@ -105,15 +103,11 @@ mutual
                   (subst-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ) codδ
                     (μ-ε-well-typed εδ))
        in CT-Abs εδᶜ (μ-τ-well-typed arrδ)
-  μ-ε-well-typed (T-App ε₁δ (T-Sub {τ = τ₁'} ε₂δ τ'δ <:δ) refl resτδ) with Γ⊢ε⦂τ-⇒-Γ⊢τ ε₁δ
+  μ-ε-well-typed (T-App ε₁δ ε₂δ refl resτδ) with Γ⊢ε⦂τ-⇒-Γ⊢τ ε₁δ
   ... | TWF-Arr τ₁δ τ₂δ
     = let ε₁δᶜ = subst-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ ε₁δ) (TWF-Arr τ₁δ τ₂δ) (μ-ε-well-typed ε₁δ)
-          ε₂δᶜ = ⇒'-·-well-typed {τ₂ = μ-τ τ'δ}
-                  (μ-<:-well-typed (Γ⊢ε⦂τ-⇒-Γok ε₂δ) (Γ⊢ε⦂τ-⇒-Γ⊢τ ε₂δ) τ'δ <:δ) 
-                  (μ-ε-well-typed ε₂δ)
-          ε₂δᶜ = subst-Γ (Γ⊢ε⦂τ-⇒-Γok ε₂δ) (Γ⊢ε⦂τ-⇒-Γok ε₁δ)
-                   (subst-τ τ'δ τ₁δ
-                     ε₂δᶜ)
+          ε₂δᶜ = subst-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ ε₂δ) τ₁δ               (μ-ε-well-typed ε₂δ)
+          ε₂δᶜ = subst-Γ (Γ⊢ε⦂τ-⇒-Γok ε₂δ) (Γ⊢ε⦂τ-⇒-Γok ε₁δ) ε₂δᶜ
           app = CT-App ε₁δᶜ ε₂δᶜ
        in {! !}
   μ-ε-well-typed (T-Case resδ δ branches-well-typed) = {! !}
@@ -122,10 +116,11 @@ mutual
           εδᶜ = μ-ε-well-typed δ
           τδᶜ = subst-Γ _ _ (μ-τ-well-typed τδ)
        in CT-ADTCon ≡-prf εδᶜ τδᶜ
+  μ-ε-well-typed (T-SubW <: εδ) = {! !}
 
-  μ-<:-well-typed : (Γok : Γˢ ok[ E ])
-                  → (τδ : Γˢ ⊢[ E ] τˢ)
-                  → (τ'δ : Γˢ ⊢[ E ] τ'ˢ)
-                  → (<:δ : Γˢ ⊢[ E ] τˢ <: τ'ˢ)
+  μ-<:-well-typed : (Γok : [ θ ] Γⁱ ok)
+                  → (τδ : [ θ ] Γⁱ ⊢ τⁱ)
+                  → (τ'δ : [ θ ] Γⁱ ⊢ τ'ⁱ)
+                  → (<:δ : [ θ ] Γⁱ ⊢ τⁱ <: τ'ⁱ)
                   → μ-Γ Γok ⊢ᶜ μ-<: <:δ ⦂ μ-τ τδ ⇒' μ-τ τ'δ
   μ-<:-well-typed = {! !}
