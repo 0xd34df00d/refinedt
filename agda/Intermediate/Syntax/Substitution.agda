@@ -105,3 +105,19 @@ weaken-replace-comm ε (suc ι) (suc x) with ι <>? x
         → Ctx (k + ℓ)
 [_↦Γ_]_ {k = zero} ℓ ε (Γ , _) = Γ
 [_↦Γ_]_ {k = suc k} ℓ ε (Γ,Δ , τ) = ([ ℓ ↦Γ ε ] Γ,Δ) , ([ ctx-idx k ↦τ R.weaken-ε-k k ε ] τ)
+
+[_↦τ<_]_ : ∀ ℓ
+         → (ε : STerm ℓ) → SType (suc k + ℓ) → SType (k + ℓ)
+[_↦τ<_]_ {k = k} _ ε τ = [ ctx-idx k ↦τ R.weaken-ε-k _ ε ] τ
+
+[_↦ε<_]_ : ∀ ℓ
+         → (ε : STerm ℓ) → STerm (suc k + ℓ) → STerm (k + ℓ)
+[_↦ε<_]_ {k = k} _ ε ε' = [ ctx-idx k ↦ε R.weaken-ε-k _ ε ] ε'
+
+[_↦c<_]_ : ∀ ℓ
+         → (ε : STerm ℓ) → ADTCons nₐ (suc k + ℓ) → ADTCons nₐ (k + ℓ)
+[_↦c<_]_ {k = k} _ ε cons = [ ctx-idx k ↦c R.weaken-ε-k _ ε ] cons
+
+[_↦bs<_]_ : ∀ ℓ
+         → (ε : STerm ℓ) → CaseBranches nₐ (suc k + ℓ) → CaseBranches nₐ (k + ℓ)
+[_↦bs<_]_ {k = k} _ ε bs = [ ctx-idx k ↦bs R.weaken-ε-k _ ε ] bs
