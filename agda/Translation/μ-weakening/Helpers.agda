@@ -10,7 +10,7 @@ open import Common.Helpers
 open import Core.Syntax
 open import Core.Syntax.Renaming
 open import Core.Syntax.Renaming.Distributivity
-open import Surface.Syntax using (BUnit)
+open import Intermediate.Syntax using (BUnit)
 
 open import Translation.Untyped
 
