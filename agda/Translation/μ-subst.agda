@@ -20,8 +20,8 @@ open import Intermediate.Syntax as I renaming (Γ to Γⁱ;
                                           τ to τⁱ; τ' to τ'ⁱ; τ₁ to τ₁ⁱ; τ₁' to τ₁'ⁱ; τ₂ to τ₂ⁱ; σ to σⁱ;
                                           ε to εⁱ; ε' to ε'ⁱ; ε₁ to ε₁ⁱ; ε₂ to ε₂ⁱ)
 open import Intermediate.Syntax.CtxSuffix as I
-open import Intermediate.Syntax.Renaming as SR
-open import Intermediate.Syntax.Substitution as SS
+open import Intermediate.Syntax.Renaming as IR
+open import Intermediate.Syntax.Substitution as IS
 open import Intermediate.Derivations.Algorithmic as I
 open import Intermediate.Derivations.Algorithmic.Theorems.Uniqueness
 --open import Intermediate.Theorems.Substitution as I
@@ -86,14 +86,14 @@ mutual
     where
     ε₁δ-distributes : μ-ε ε₁δ₂ ≡ [ ℓ ↦' μ-ε argδ ] μ-ε ε₁δ₁
     ε₁δ-distributes
-      rewrite SS.act-ε-extensionality (SS.ext-replace-comm (SR.weaken-ε-k k εⁱ) (ctx-idx k)) ε₁
-            | SR.act-ε-distr (raise k) suc εⁱ
+      rewrite IS.act-ε-extensionality (IS.ext-replace-comm (IR.weaken-ε-k k εⁱ) (ctx-idx k)) ε₁
+            | IR.act-ε-distr (raise k) suc εⁱ
             = μ-ε-sub-distributes (Δ , _) argδ ε₁δ₁ ε₁δ₂
 
     ε₂δ-distributes : μ-ε ε₂δ₂ ≡ [ ℓ ↦' μ-ε argδ ] μ-ε ε₂δ₁
     ε₂δ-distributes
-      rewrite SS.act-ε-extensionality (SS.ext-replace-comm (SR.weaken-ε-k k εⁱ) (ctx-idx k)) ε₂
-            | SR.act-ε-distr (raise k) suc εⁱ
+      rewrite IS.act-ε-extensionality (IS.ext-replace-comm (IR.weaken-ε-k k εⁱ) (ctx-idx k)) ε₂
+            | IR.act-ε-distr (raise k) suc εⁱ
             = μ-ε-sub-distributes (Δ , _) argδ ε₂δ₁ ε₂δ₂
 
     CLam≡-distr : CLam (⌊μ⌋-b b) (μ-ε ε₁δ₂ ≡̂ μ-ε ε₂δ₂ of ⌊μ⌋-b b')
@@ -144,8 +144,8 @@ mutual
     where
     resδ-subst-massage : μ-τ resδ₂ ≡ [ ℓ ↦' μ-ε argδ ] μ-τ resδ₁
     resδ-subst-massage
-      rewrite SS.act-τ-extensionality (SS.ext-replace-comm (SR.weaken-ε-k k εⁱ) (ctx-idx k)) τ₂
-            | SR.act-ε-distr (raise k) suc εⁱ
+      rewrite IS.act-τ-extensionality (IS.ext-replace-comm (IR.weaken-ε-k k εⁱ) (ctx-idx k)) τ₂
+            | IR.act-ε-distr (raise k) suc εⁱ
             = μ-τ-sub-distributes (Δ , _) argδ resδ₁ resδ₂
   μ-τ-sub-distributes Δ argδ (TWF-ADT consδs₁) (TWF-ADT consδs₂) = {! !}
 
@@ -155,7 +155,7 @@ mutual
                           → (resτδ : [ θ ] Γⁱ ⊢ [ zero ↦τ ε₂ⁱ ] τ₂ⁱ)
                           → μ-τ resτδ ≡ [ zero ↦  μ-ε argδ ] μ-τ codδ
 μ-τ-sub-front-distributes {ε₂ⁱ = ε₂ⁱ} {τ₂ⁱ = τ₂ⁱ} argδ codδ resτδ
-  = let act-ε-refl = sym (SR.act-ε-id (λ _ → refl) ε₂ⁱ)
+  = let act-ε-refl = sym (IR.act-ε-id (λ _ → refl) ε₂ⁱ)
         resτδ' = subst (λ ε → [ _ ] _ ⊢ [ zero ↦τ ε ] τ₂ⁱ) act-ε-refl resτδ
      in trans (helper (cong ([ zero ↦τ_] τ₂ⁱ) act-ε-refl) resτδ resτδ') (μ-τ-sub-distributes [ _ ] argδ codδ resτδ')
   where
