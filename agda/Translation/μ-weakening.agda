@@ -203,3 +203,17 @@ mutual
                        → (τδ : [ θ ] Γⁱ ⊢ τⁱ)
                        → μ-τ (Γ⊢τ-weakening Γok τ'δ τδ) ≡ CR.weaken-ε (μ-τ τδ)
 μ-τ-weakening-commutes Γok τ'δ = μ-τ-thinning-commutes ignore-head (TCTX-Bind Γok τ'δ)
+
+
+μ-ε-thinning-commutes : {Γⁱ : I.Ctx (k + ℓ)}
+                      → (Γ⊂Γ' : k by Γⁱ ⊂' Γⁱ')
+                      → (Γ'ok : [ θ ] Γⁱ' ok)
+                      → (εδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ τⁱ)
+                      → μ-ε (Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok εδ) ≡ CR.act-ε (ext-k' k suc) (μ-ε εδ)
+μ-ε-thinning-commutes Γ⊂Γ' Γ'ok εδ = μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok εδ (<-wellFounded _)
+
+μ-ε-weakening-commutes : (Γok : [ θ ] Γⁱ ok)
+                       → (τ'δ : [ θ ] Γⁱ ⊢ τⁱ')
+                       → (εδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ τⁱ)
+                       → μ-ε (Γ⊢ε⦂τ-weakening Γok τ'δ εδ) ≡ CR.weaken-ε (μ-ε εδ)
+μ-ε-weakening-commutes Γok τ'δ = μ-ε-thinning-commutes ignore-head (TCTX-Bind Γok τ'δ)
