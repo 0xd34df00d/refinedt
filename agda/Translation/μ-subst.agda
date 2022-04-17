@@ -23,26 +23,36 @@ open import Intermediate.Syntax.CtxSuffix as I
 open import Intermediate.Syntax.Renaming as IR
 open import Intermediate.Syntax.Substitution as IS
 open import Intermediate.Derivations.Algorithmic as I
+open import Intermediate.Derivations.Algorithmic.Theorems.Agreement
+open import Intermediate.Derivations.Algorithmic.Theorems.Thinning
 open import Intermediate.Derivations.Algorithmic.Theorems.Uniqueness
 --open import Intermediate.Theorems.Substitution as I
 
-open import Translation.Untyped
-open import Translation.Typed
 open import Translation.SubstUnique
+open import Translation.Typed
+open import Translation.Untyped
+open import Translation.μ-weakening
 
 ⌊μ⌋-b-sub-id : ∀ k ε b
              → ⌊μ⌋-b {ℓ = k + ℓ} b ≡ [ ℓ ↦' ε ] (⌊μ⌋-b b)
 ⌊μ⌋-b-sub-id _ _ BUnit = refl
+
+μ-ε-cong-unique : (εδ₁ : [ θ ] Γⁱ ⊢ εⁱ ⦂ τ₁ⁱ)
+                → (εδ₂ : [ θ ] Γⁱ ⊢ εⁱ ⦂ τ₂ⁱ)
+                → μ-ε εδ₁ ≡ μ-ε εδ₂
+μ-ε-cong-unique εδ₁ εδ₂ with refl ← typing-uniqueness εδ₁ εδ₂ = cong μ-ε (unique-Γ⊢ε⦂τ εδ₁ εδ₂)
 
 μ-Var-sub-distributes : (Δ : ,-CtxSuffix ℓ σⁱ k)
                       → (argδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ σⁱ)
                       → (codδ : [ θ ] Γⁱ ,σ, Δ ⊢ SVar ι ⦂ τⁱ)
                       → (resδ : [ θ ] Γⁱ ++ [↦Δ εⁱ ] Δ ⊢ [ ℓ ↦ε< εⁱ ] SVar ι ⦂ [ ℓ ↦τ< εⁱ ] τⁱ)
                       → μ-ε resδ ≡ [ ℓ ↦' μ-ε argδ ] μ-ε codδ
-μ-Var-sub-distributes {k = k} Δ argδ (T-Var {ι = ι} Γok ∈) resδ with ctx-idx k <>? ι | resδ
+μ-Var-sub-distributes {k = k} {εⁱ = εⁱ} Δ argδ (T-Var {ι = ι} Γok ∈) resδ with ctx-idx k <>? ι | resδ
 ... | less _ | T-Var _ _ = refl
 ... | greater _ | T-Var _ _ = refl
-... | equal refl | resδ = {! !}
+... | equal refl | resδ = trans
+                            (μ-ε-cong-unique resδ (Γ⊢ε⦂τ-weakening-suffix (Γ⊢ε⦂τ-⇒-Γok resδ) argδ))
+                            (μ-ε-weakening-suffix-commutes _ argδ)
 
 mutual
   μ-ε-sub-distributes : (Δ : ,-CtxSuffix ℓ σⁱ k)
