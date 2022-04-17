@@ -19,7 +19,7 @@ open import Core.Syntax.Derived.Renaming as CR
 open import Core.Operational as C
 open import Intermediate.Syntax as I renaming (Γ to Γⁱ; Γ' to Γⁱ'; τ to τⁱ; τ' to τⁱ'; ε to εⁱ)
 open import Intermediate.Syntax.Subcontext as I
-open import Intermediate.Syntax.Renaming as SR
+open import Intermediate.Syntax.Renaming as IR
 open import Intermediate.Syntax.Substitution.Distributivity
 open import Intermediate.Derivations.Algorithmic as I
 open import Intermediate.Derivations.Algorithmic.Theorems.Agreement.Γok
@@ -145,7 +145,7 @@ mutual
           | μ-branches-thinning↓-commutes Γ⊂Γ' Γ'ok branchesδ (rec _ (s≤s (₃≤₃ (size-t εδ) (size-twf resδ) (size-bs branchesδ))))
           = refl
   μ-ε-thinning↓-commutes {k = k} Γ⊂Γ' Γ'ok (T-Con {ι = ι} {cons = cons} refl εδ adtτ@(TWF-ADT consδs)) (acc rec)
-    rewrite μ-ε-subst (SR.cons-lookup-comm (ext-k' k suc) ι cons) (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _))))
+    rewrite μ-ε-subst (IR.cons-lookup-comm (ext-k' k suc) ι cons) (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _))))
           | μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _)))
           | μ-cons'-thinning↓-commutes Γ⊂Γ' Γ'ok consδs (rec _ (s≤s (₂≤₂ _ _)))
           = refl
