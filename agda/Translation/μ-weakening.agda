@@ -2,11 +2,11 @@
 
 module Translation.μ-weakening where
 
-open import Data.Fin using (zero; suc)
+open import Data.Fin using (zero; suc; raise)
 open import Data.Nat.Base
 open import Data.Nat.Induction
 open import Data.Nat.Properties
-open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst; cong; trans)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst; cong; trans; sym)
 
 open import Common.Inequalities
 open import Common.Helpers
@@ -18,6 +18,7 @@ open import Core.Syntax.Derived as CR
 open import Core.Syntax.Derived.Renaming as CR
 open import Core.Operational as C
 open import Intermediate.Syntax as I renaming (Γ to Γⁱ; Γ' to Γⁱ'; τ to τⁱ; τ' to τⁱ'; ε to εⁱ)
+open import Intermediate.Syntax.CtxSuffix as I renaming (Δ to Δⁱ)
 open import Intermediate.Syntax.Subcontext as I
 open import Intermediate.Syntax.Renaming as IR
 open import Intermediate.Syntax.Substitution.Distributivity
@@ -217,3 +218,18 @@ mutual
                        → (εδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ τⁱ)
                        → μ-ε (Γ⊢ε⦂τ-weakening Γok τ'δ εδ) ≡ CR.weaken-ε (μ-ε εδ)
 μ-ε-weakening-commutes Γok τ'δ = μ-ε-thinning-commutes ignore-head (TCTX-Bind Γok τ'δ)
+
+μ-ε-weakening-suffix-commutes : {Δⁱ : CtxSuffix ℓ k}
+                              → (Γ++Δok : [ θ ] (Γⁱ ++ Δⁱ) ok)
+                              → (εδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ τⁱ)
+                              → μ-ε (Γ⊢ε⦂τ-weakening-suffix Γ++Δok εδ) ≡ CR.weaken-ε-k k (μ-ε εδ)
+μ-ε-weakening-suffix-commutes {εⁱ = εⁱ} {τⁱ = τⁱ} {Δⁱ = ⊘} Γ++Δok εδ
+  rewrite IR.act-ε-id (λ _ → refl) εⁱ
+        | IR.act-τ-id (λ _ → refl) τⁱ
+        = refl
+μ-ε-weakening-suffix-commutes {k = suc k} {εⁱ = εⁱ} {τⁱ = τⁱ} {Δⁱ = Δⁱ , _} (TCTX-Bind Γ++Δok τδ) εδ
+  rewrite sym (IR.act-ε-distr (raise k) suc εⁱ)
+        | sym (IR.act-τ-distr (raise k) suc τⁱ)
+        = trans
+            (μ-ε-weakening-commutes Γ++Δok τδ (Γ⊢ε⦂τ-weakening-suffix Γ++Δok εδ))
+            (cong CR.weaken-ε (μ-ε-weakening-suffix-commutes Γ++Δok εδ))
