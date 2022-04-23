@@ -55,19 +55,6 @@ open import Translation.μ-weakening
                             (μ-ε-cong-unique resδ (Γ⊢ε⦂τ-weakening-suffix (Γ⊢ε⦂τ-⇒-Γok resδ) argδ))
                             (μ-ε-weakening-suffix-commutes _ argδ)
 
-private
-  lemma₁-codδ : (εⁱ : STerm (suc (suc k) + ℓ))
-              → (ε'ⁱ : STerm ℓ)
-              → [ θ ] Γⁱ
-                ⊢ IS.act-ε (IS.ext (IS.replace-at (ctx-idx k) (IR.weaken-ε-k k ε'ⁱ))) εⁱ 
-                ⦂ IS.act-τ (IS.ext (IS.replace-at (ctx-idx k) (IR.weaken-ε-k k ε'ⁱ))) τⁱ
-              → [ θ ] Γⁱ ⊢ [ ℓ ↦ε< ε'ⁱ ] εⁱ ⦂ [ ℓ ↦τ< ε'ⁱ ] τⁱ
-  lemma₁-codδ {k = k} {τⁱ = τⁱ} εⁱ ε'ⁱ εδ
-    rewrite IS.act-ε-extensionality (IS.ext-replace-comm (IR.weaken-ε-k k ε'ⁱ) (ctx-idx k)) εⁱ
-          | IS.act-τ-extensionality (IS.ext-replace-comm (IR.weaken-ε-k k ε'ⁱ) (ctx-idx k)) τⁱ
-          | IR.act-ε-distr (raise k) suc ε'ⁱ
-          = εδ
-
 mutual
   μ-ε-sub-distributes : (Δ : ,-CtxSuffix ℓ σⁱ k)
                       → (argδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ σⁱ)
@@ -76,7 +63,14 @@ mutual
                       → μ-ε resδ ≡ [ ℓ ↦' μ-ε argδ ] μ-ε codδ
   μ-ε-sub-distributes Δ argδ (T-Unit _) (T-Unit _) = refl
   μ-ε-sub-distributes Δ argδ codδ@(T-Var _ _) resδ = μ-Var-sub-distributes Δ argδ codδ resδ
-  μ-ε-sub-distributes Δ argδ (T-Abs dom-arrδ dom-argδ) (T-Abs cod-arrδ cod-argδ) = {! !}
+  μ-ε-sub-distributes {k = k} {εⁱ = εⁱ} Δ argδ (T-Abs {ε = bodyδ} (TWF-Arr {τ₁ = τ₁ⁱ} {τ₂ = τ₂ⁱ} dom-dom-arrδ _) dom-argδ) (T-Abs (TWF-Arr cod-dom-arrδ _) cod-argδ)
+    rewrite IS.act-ε-extensionality (IS.ext-replace-comm (IR.weaken-ε-k k εⁱ) (ctx-idx k)) bodyδ
+          | IS.act-τ-extensionality (IS.ext-replace-comm (IR.weaken-ε-k k εⁱ) (ctx-idx k)) τ₂ⁱ
+          | IR.act-ε-distr (raise k) suc εⁱ
+          | μ-τ-sub-distributes Δ         argδ dom-dom-arrδ cod-dom-arrδ
+          | μ-ε-sub-distributes (Δ , τ₁ⁱ) argδ dom-argδ     cod-argδ
+          | CS.act-ε-extensionality (CS.ext-replace-comm (CR.weaken-ε-k k (μ-ε argδ)) (ctx-idx k)) (μ-ε dom-argδ)
+          = refl
   μ-ε-sub-distributes Δ argδ (T-App domδ domδ₁ resτ-≡ resτδ) codδ = {! !}
   μ-ε-sub-distributes Δ argδ (T-Case resδ domδ branches-well-typed) codδ = {! !}
   μ-ε-sub-distributes Δ argδ (T-Con ≡-prf domδ adtτ) codδ = {! !}
