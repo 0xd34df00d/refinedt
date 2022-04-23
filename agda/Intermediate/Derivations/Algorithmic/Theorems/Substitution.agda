@@ -113,8 +113,8 @@ mutual
                  = sub-Γ⊢ε⦂τ ( Δ , _ ) εδ bodyδ
   sub-Γ⊢ε⦂τ {ℓ = ℓ} {k = k} {θ = θ} {Γ = Γ} {ε = ε}
             Δ εδ (T-App {ε₁ = ε₁} {τ₁} {τ₂} {ε₂} ε₁δ ε₂δ refl τδ)
-    rewrite subst-commutes-τ-zero (ctx-idx k) (R.weaken-ε-k k ε) ε₂ τ₂
-          = T-App ε₁δ' (sub-Γ⊢ε⦂τ Δ εδ ε₂δ) refl {! !}
+    = let comm-prf = subst-commutes-τ-zero (ctx-idx k) (R.weaken-ε-k k ε) ε₂ τ₂
+       in T-App ε₁δ' (sub-Γ⊢ε⦂τ Δ εδ ε₂δ) comm-prf (sub-Γ⊢τ Δ εδ τδ)
     where
     ε₁δ' : [ θ ] Γ ++ [↦Δ ε ] Δ ⊢
            [ ℓ ↦ε< ε ] ε₁ ⦂
