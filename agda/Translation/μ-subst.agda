@@ -22,6 +22,7 @@ open import Intermediate.Syntax as I renaming (Γ to Γⁱ;
 open import Intermediate.Syntax.CtxSuffix as I
 open import Intermediate.Syntax.Renaming as IR
 open import Intermediate.Syntax.Substitution as IS
+open import Intermediate.Syntax.Substitution.Distributivity as IS
 open import Intermediate.Derivations.Algorithmic as I
 open import Intermediate.Derivations.Algorithmic.Theorems.Agreement
 open import Intermediate.Derivations.Algorithmic.Theorems.Thinning
@@ -53,6 +54,19 @@ open import Translation.μ-weakening
 ... | equal refl | resδ = trans
                             (μ-ε-cong-unique resδ (Γ⊢ε⦂τ-weakening-suffix (Γ⊢ε⦂τ-⇒-Γok resδ) argδ))
                             (μ-ε-weakening-suffix-commutes _ argδ)
+
+private
+  lemma₁-codδ : (εⁱ : STerm (suc (suc k) + ℓ))
+              → (ε'ⁱ : STerm ℓ)
+              → [ θ ] Γⁱ
+                ⊢ IS.act-ε (IS.ext (IS.replace-at (ctx-idx k) (IR.weaken-ε-k k ε'ⁱ))) εⁱ 
+                ⦂ IS.act-τ (IS.ext (IS.replace-at (ctx-idx k) (IR.weaken-ε-k k ε'ⁱ))) τⁱ
+              → [ θ ] Γⁱ ⊢ [ ℓ ↦ε< ε'ⁱ ] εⁱ ⦂ [ ℓ ↦τ< ε'ⁱ ] τⁱ
+  lemma₁-codδ {k = k} {τⁱ = τⁱ} εⁱ ε'ⁱ εδ
+    rewrite IS.act-ε-extensionality (IS.ext-replace-comm (IR.weaken-ε-k k ε'ⁱ) (ctx-idx k)) εⁱ
+          | IS.act-τ-extensionality (IS.ext-replace-comm (IR.weaken-ε-k k ε'ⁱ) (ctx-idx k)) τⁱ
+          | IR.act-ε-distr (raise k) suc ε'ⁱ
+          = εδ
 
 mutual
   μ-ε-sub-distributes : (Δ : ,-CtxSuffix ℓ σⁱ k)
