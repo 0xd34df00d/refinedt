@@ -10,8 +10,8 @@ open import Data.Product renaming (_,_ to _,'_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; subst)
 
 open import Common.Helpers
-
 open import Data.Fin.Extra
+
 open import Surface.Syntax
 open import Surface.Syntax.CtxSuffix
 open import Surface.Syntax.Membership

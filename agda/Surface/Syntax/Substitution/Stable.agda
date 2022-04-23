@@ -7,8 +7,8 @@ open import Data.Nat using (ℕ; suc; zero; _+_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Common.Helpers
-
 open import Data.Fin.Extra
+
 open import Surface.Syntax
 open import Surface.Syntax.Substitution as S
 open import Surface.Syntax.Substitution.FromRenaming
