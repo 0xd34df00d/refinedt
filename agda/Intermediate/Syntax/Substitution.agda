@@ -48,6 +48,12 @@ branch-lookup-comm : (σ : Fin (suc ℓ) → STerm ℓ)
 branch-lookup-comm σ zero (_ ∷ _) = refl
 branch-lookup-comm σ (suc ι) (_ ∷ bs) = branch-lookup-comm σ ι bs
 
+cons-lookup-comm : (σ : Fin (suc ℓ) -> STerm ℓ)
+                 → (ι : Fin n)
+                 → (cons : ADTCons (Mkℕₐ n) (suc ℓ))
+                 → act-τ σ (lookup cons ι) ≡ lookup (act-cons σ cons) ι
+cons-lookup-comm σ zero (_ ∷ _) = refl
+cons-lookup-comm σ (suc ι) (_ ∷ cons) = cons-lookup-comm σ ι cons
 
 ext-id : ∀ {f : Fin ℓ → STerm ℓ}
        → (∀ x → var-action (f x) ≡ SVar x)
