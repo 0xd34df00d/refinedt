@@ -76,9 +76,9 @@ mutual
     rewrite (let argδ₁' = sub-Γ⊢ε⦂τ Δ argδ argδ₁ in trans (μ-ε-cong-unique argδ₂ argδ₁') (μ-ε-sub-distributes Δ argδ argδ₁ argδ₁'))
           | (let funδ₁' = sub-Γ⊢ε⦂τ Δ argδ funδ₁ in trans (μ-ε-cong-unique funδ₂ funδ₁') (μ-ε-sub-distributes Δ argδ funδ₁ funδ₁'))
           = refl
-  μ-ε-sub-distributes Δ argδ (T-Case resδ domδ branches-well-typed) codδ = {! !}
-  μ-ε-sub-distributes Δ argδ (T-Con ≡-prf domδ adtτ) codδ = {! !}
-  μ-ε-sub-distributes Δ argδ (T-SubW <: εδ) codδ = {! !}
+  μ-ε-sub-distributes Δ argδ (T-Case resδ₁ domδ₁ branchesδ₁) (T-Case resδ₂ domδ₂ branchesδ₂) = {! !}
+  μ-ε-sub-distributes Δ argδ (T-Con refl domδ₁ adtτ₁) (T-Con refl domδ₂ adtτ₂) = {! !}
+  μ-ε-sub-distributes Δ argδ (T-SubW <:₁ εδ₂) (T-SubW <:₂ codδ₂) = {! !}
 
   μ-τ-sub-distributes : (Δ : ,-CtxSuffix ℓ σⁱ k)
                       → (argδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ σⁱ)
