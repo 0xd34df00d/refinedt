@@ -25,6 +25,7 @@ open import Intermediate.Syntax.Substitution as IS
 open import Intermediate.Syntax.Substitution.Distributivity as IS
 open import Intermediate.Derivations.Algorithmic as I
 open import Intermediate.Derivations.Algorithmic.Theorems.Agreement
+open import Intermediate.Derivations.Algorithmic.Theorems.Substitution
 open import Intermediate.Derivations.Algorithmic.Theorems.Thinning
 open import Intermediate.Derivations.Algorithmic.Theorems.Uniqueness
 --open import Intermediate.Theorems.Substitution as I
@@ -71,7 +72,10 @@ mutual
           | μ-ε-sub-distributes (Δ , τ₁ⁱ) argδ dom-argδ     cod-argδ
           | CS.act-ε-extensionality (CS.ext-replace-comm (CR.weaken-ε-k k (μ-ε argδ)) (ctx-idx k)) (μ-ε dom-argδ)
           = refl
-  μ-ε-sub-distributes Δ argδ (T-App domδ domδ₁ resτ-≡ resτδ) codδ = {! !}
+  μ-ε-sub-distributes Δ argδ (T-App funδ₁ argδ₁ _ _) (T-App funδ₂ argδ₂ _ _)
+    rewrite (let argδ₁' = sub-Γ⊢ε⦂τ Δ argδ argδ₁ in trans (μ-ε-cong-unique argδ₂ argδ₁') (μ-ε-sub-distributes Δ argδ argδ₁ argδ₁'))
+          | (let funδ₁' = sub-Γ⊢ε⦂τ Δ argδ funδ₁ in trans (μ-ε-cong-unique funδ₂ funδ₁') (μ-ε-sub-distributes Δ argδ funδ₁ funδ₁'))
+          = refl
   μ-ε-sub-distributes Δ argδ (T-Case resδ domδ branches-well-typed) codδ = {! !}
   μ-ε-sub-distributes Δ argδ (T-Con ≡-prf domδ adtτ) codδ = {! !}
   μ-ε-sub-distributes Δ argδ (T-SubW <: εδ) codδ = {! !}
