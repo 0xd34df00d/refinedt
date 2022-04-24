@@ -72,7 +72,7 @@ size-t (T-Var gok _) = suc (size-ok gok)
 size-t (T-Abs arrδ bodyδ) = suc (size-twf arrδ ⊕ size-t bodyδ)
 size-t (T-App δ₁ δ₂ _ resτδ) = suc (size-t δ₁ ⊕ size-t δ₂ ⊕ size-twf resτδ)
 size-t (T-Case resδ scrutτδ branches) = suc (size-t scrutτδ ⊕ size-twf resδ ⊕ size-bs branches)
-size-t (T-Con _ conArg adtτ) = suc (size-t conArg ⊕ size-twf adtτ)
+size-t (T-Con _ conArg (TWF-ADT consδs)) = suc (size-t conArg ⊕ size-all-cons consδs)
 size-t (T-SubW <: εδ) = suc (size-t εδ ⊕ size-<: <:)
 
 size-<: (ST-Base _ τδ) = suc (size-twf τδ)

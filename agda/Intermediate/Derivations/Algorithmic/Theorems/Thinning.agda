@@ -114,7 +114,7 @@ mutual
           (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok resδ acc₁)
           (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ acc₂)
           (branches-thinning↓ Γ⊂Γ' Γ'ok branchesδ acc₃)
-  Γ⊢ε⦂τ-thinning↓ {k = k} {θ = θ} Γ⊂Γ' Γ'ok (T-Con {ε = ε} {ι = ι} {cons = cons} refl δ adtτ) (acc rec) =
+  Γ⊢ε⦂τ-thinning↓ {k = k} {θ = θ} Γ⊂Γ' Γ'ok (T-Con {ε = ε} {ι = ι} {cons = cons} refl δ (TWF-ADT consδs)) (acc rec) =
     let acc₁ = rec _ (s≤s (₁≤₂ _ _))
         acc₂ = rec _ (s≤s (₂≤₂ _ _))
         δ' = Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ acc₁
@@ -122,7 +122,7 @@ mutual
      in T-Con
           refl
           δ-substed
-          (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok adtτ acc₂)
+          (TWF-ADT (cons-thinning↓ Γ⊂Γ' Γ'ok consδs acc₂))
   Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-SubW <: εδ) (acc rec) =
     let acc₁ = rec _ (s≤s (₂≤₂ _ _))
         acc₂ = rec _ (s≤s (₁≤₂ _ _))

@@ -50,7 +50,7 @@ abstract
     Γ⊢ε⦂τ-⇒-Γok-smaller (T-Abs arrδ _) = a<b-⇒-a<b⊕c (Γ⊢τ-⇒-Γok-smaller arrδ)
     Γ⊢ε⦂τ-⇒-Γok-smaller (T-App δ₁ _ _ _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller δ₁)
     Γ⊢ε⦂τ-⇒-Γok-smaller (T-Case _ scrutδ _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller scrutδ)
-    Γ⊢ε⦂τ-⇒-Γok-smaller (T-Con _ conArg _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller conArg)
+    Γ⊢ε⦂τ-⇒-Γok-smaller (T-Con _ conArg (TWF-ADT _)) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller conArg)
     Γ⊢ε⦂τ-⇒-Γok-smaller (T-SubW _ εδ) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller εδ)
 
     Γ⊢ε⦂τ-⇒-Γok-tail-smaller : (δ : [ θ ] (Γ , τ') ⊢ ε ⦂ τ)
