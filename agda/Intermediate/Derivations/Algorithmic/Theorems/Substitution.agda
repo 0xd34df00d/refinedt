@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Intermediate.Derivations.Algorithmic.Theorems.Substitution where
 
 open import Data.Empty using (⊥; ⊥-elim)
