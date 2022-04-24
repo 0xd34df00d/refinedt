@@ -68,13 +68,8 @@ mutual
   μ-ε (T-Abs (TWF-Arr domδ _) εδ) = CLam (μ-τ domδ) (μ-ε εδ)
   μ-ε (T-App ε₁δ ε₂δ _ _) = μ-ε ε₁δ · μ-ε ε₂δ
   μ-ε (T-Case resδ εδ branches) = CCase (μ-ε εδ) (μ-branches branches)
-  μ-ε (T-Con {ι = ι} _ εδ adtτ) = CCon ι (μ-ε εδ) (μ-cons' adtτ)
+  μ-ε (T-Con {ι = ι} _ εδ (TWF-ADT adtτ)) = CCon ι (μ-ε εδ) (μ-cons adtτ)
   μ-ε (T-SubW <: εδ) = μ-<: <: · μ-ε εδ
-
-  μ-cons' : {cons : I.ADTCons nₐ ℓ}
-          → [ θ ] Γⁱ ⊢ ⊍ cons
-          → C.ADTCons nₐ ℓ
-  μ-cons' (TWF-ADT consδs) = μ-cons consδs
 
   μ-cons : {cons : I.ADTCons nₐ ℓ}
          → All ([ θ ] Γⁱ ⊢_) cons
