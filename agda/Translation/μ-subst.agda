@@ -77,7 +77,8 @@ mutual
           | (let funδ₁' = sub-Γ⊢ε⦂τ Δ argδ funδ₁ in trans (μ-ε-cong-unique funδ₂ funδ₁') (μ-ε-sub-distributes Δ argδ funδ₁ funδ₁'))
           = refl
   μ-ε-sub-distributes Δ argδ (T-Case resδ₁ domδ₁ branchesδ₁) (T-Case resδ₂ domδ₂ branchesδ₂) = {! !}
-  μ-ε-sub-distributes Δ argδ (T-Con refl domδ₁ adtτ₁) (T-Con refl domδ₂ adtτ₂) = {! !}
+  μ-ε-sub-distributes {k = k} {εⁱ = εⁱ} Δ argδ (T-Con {ι = ι} {cons = cons} refl domδ₁ (TWF-ADT consδs₁))
+                                               (T-Con refl domδ₂ (TWF-ADT consδs₂)) = {! !}
   μ-ε-sub-distributes Δ argδ (T-SubW <:₁ εδ₂) (T-SubW <:₂ codδ₂) = {! !}
 
   μ-τ-sub-distributes : (Δ : ,-CtxSuffix ℓ σⁱ k)
