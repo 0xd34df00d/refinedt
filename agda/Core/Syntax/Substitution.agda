@@ -61,6 +61,10 @@ ext-replace-comm _ (suc ι) (suc var-idx) with suc ι <>? var-idx
         → (ε : CExpr ℓ) → CExpr (suc k + ℓ) → CExpr (k + ℓ)
 [_↦'_]_ {k = k} _ ε τ = [ ctx-idx k ↦ R.weaken-ε-k _ ε ] τ
 
+[_↦c'_]_ : ∀ ℓ
+         → (ε : CExpr ℓ) → ADTCons nₐ (suc k + ℓ) → ADTCons nₐ (k + ℓ)
+[_↦c'_]_ {k = k} _ ε cons = [ ctx-idx k ↦c R.weaken-ε-k _ ε ] cons
+
 CΠ-↦'-distr : ∀ ℓ (ε : CExpr ℓ) (ε₁ : CExpr (suc k + ℓ)) ε₂
             → [ ℓ ↦' ε ] CΠ ε₁ ε₂ ≡ CΠ ([ ℓ ↦' ε ] ε₁) ([ ℓ ↦' ε ] ε₂)
 CΠ-↦'-distr {k = k} _ ε _ ε₂
