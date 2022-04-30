@@ -73,8 +73,8 @@ mutual
           | CS.act-ε-extensionality (CS.ext-replace-comm (CR.weaken-ε-k k (μ-ε argδ)) (ctx-idx k)) (μ-ε dom-argδ)
           = refl
   μ-ε-sub-distributes Δ argδ (T-App funδ₁ argδ₁ _ _) (T-App funδ₂ argδ₂ _ _)
-    rewrite (let argδ₁' = sub-Γ⊢ε⦂τ Δ argδ argδ₁ in trans (μ-ε-cong-unique argδ₂ argδ₁') (μ-ε-sub-distributes Δ argδ argδ₁ argδ₁'))
-          | (let funδ₁' = sub-Γ⊢ε⦂τ Δ argδ funδ₁ in trans (μ-ε-cong-unique funδ₂ funδ₁') (μ-ε-sub-distributes Δ argδ funδ₁ funδ₁'))
+    rewrite μ-ε-sub-distributes-any-τ Δ argδ argδ₁ argδ₂
+          | μ-ε-sub-distributes-any-τ Δ argδ funδ₁ funδ₂
           = refl
   μ-ε-sub-distributes Δ argδ (T-Case resδ₁ domδ₁ branchesδ₁) (T-Case resδ₂ domδ₂ branchesδ₂) = {! !}
   μ-ε-sub-distributes {k = k} {εⁱ = εⁱ} Δ argδ (T-Con {ι = ι} {cons = cons} refl domδ₁ (TWF-ADT consδs₁))
@@ -84,8 +84,17 @@ mutual
           | μ-cons-sub-distributes Δ argδ consδs₁ consδs₂
           = refl
   μ-ε-sub-distributes Δ argδ (T-SubW <:₁ εδ₁) (T-SubW <:₂ εδ₂)
-    rewrite (let εδ₂' = sub-Γ⊢ε⦂τ Δ argδ εδ₁ in trans (μ-ε-cong-unique εδ₂ εδ₂') (μ-ε-sub-distributes Δ argδ εδ₁ εδ₂'))
+    rewrite μ-ε-sub-distributes-any-τ Δ argδ εδ₁ εδ₂
           = {! !}
+
+  μ-ε-sub-distributes-any-τ : (Δ : ,-CtxSuffix ℓ σⁱ k)
+                            → (argδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ σⁱ)
+                            → (codδ : [ θ ] Γⁱ ,σ, Δ ⊢ ε'ⁱ ⦂ τⁱ)
+                            → (resδ : [ θ ] Γⁱ ++ [↦Δ εⁱ ] Δ ⊢ [ ℓ ↦ε< εⁱ ] ε'ⁱ ⦂ τ'ⁱ)
+                            → μ-ε resδ ≡ [ ℓ ↦' μ-ε argδ ] μ-ε codδ
+  μ-ε-sub-distributes-any-τ Δ argδ codδ resδ
+    = let resδ' = sub-Γ⊢ε⦂τ Δ argδ codδ
+       in trans (μ-ε-cong-unique resδ resδ') (μ-ε-sub-distributes Δ argδ codδ resδ')
 
   μ-τ-sub-distributes : (Δ : ,-CtxSuffix ℓ σⁱ k)
                       → (argδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ σⁱ)
