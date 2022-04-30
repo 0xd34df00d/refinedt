@@ -83,7 +83,9 @@ mutual
           | μ-ε-sub-distributes Δ argδ domδ₁ domδ₂
           | μ-cons-sub-distributes Δ argδ consδs₁ consδs₂
           = refl
-  μ-ε-sub-distributes Δ argδ (T-SubW <:₁ εδ₂) (T-SubW <:₂ codδ₂) = {! !}
+  μ-ε-sub-distributes Δ argδ (T-SubW <:₁ εδ₁) (T-SubW <:₂ εδ₂)
+    rewrite (let εδ₂' = sub-Γ⊢ε⦂τ Δ argδ εδ₁ in trans (μ-ε-cong-unique εδ₂ εδ₂') (μ-ε-sub-distributes Δ argδ εδ₁ εδ₂'))
+          = {! !}
 
   μ-τ-sub-distributes : (Δ : ,-CtxSuffix ℓ σⁱ k)
                       → (argδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ σⁱ)
