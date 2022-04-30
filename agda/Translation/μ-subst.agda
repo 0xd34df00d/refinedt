@@ -170,7 +170,7 @@ mutual
       rewrite IS.act-τ-extensionality (IS.ext-replace-comm (IR.weaken-ε-k k εⁱ) (ctx-idx k)) τ₂
             | IR.act-ε-distr (raise k) suc εⁱ
             = μ-τ-sub-distributes (Δ , _) argδ resδ₁ resδ₂
-  μ-τ-sub-distributes Δ argδ (TWF-ADT consδs₁) (TWF-ADT consδs₂) = {! !}
+  μ-τ-sub-distributes Δ argδ (TWF-ADT consδs₁) (TWF-ADT consδs₂) = cong CADT (μ-cons-sub-distributes Δ argδ consδs₁ consδs₂)
 
   μ-cons-sub-distributes : (Δ : ,-CtxSuffix ℓ σⁱ k)
                          → (argδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ σⁱ)
