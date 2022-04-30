@@ -78,7 +78,11 @@ mutual
           = refl
   μ-ε-sub-distributes Δ argδ (T-Case resδ₁ domδ₁ branchesδ₁) (T-Case resδ₂ domδ₂ branchesδ₂) = {! !}
   μ-ε-sub-distributes {k = k} {εⁱ = εⁱ} Δ argδ (T-Con {ι = ι} {cons = cons} refl domδ₁ (TWF-ADT consδs₁))
-                                               (T-Con refl domδ₂ (TWF-ADT consδs₂)) = {! !}
+                                               (T-Con refl domδ₂ (TWF-ADT consδs₂))
+    rewrite sym (IS.cons-lookup-comm (IS.replace-at (ctx-idx k) (IR.weaken-ε-k k εⁱ)) ι cons)
+          | μ-ε-sub-distributes Δ argδ domδ₁ domδ₂
+          | μ-cons-sub-distributes Δ argδ consδs₁ consδs₂
+          = refl
   μ-ε-sub-distributes Δ argδ (T-SubW <:₁ εδ₂) (T-SubW <:₂ codδ₂) = {! !}
 
   μ-τ-sub-distributes : (Δ : ,-CtxSuffix ℓ σⁱ k)
