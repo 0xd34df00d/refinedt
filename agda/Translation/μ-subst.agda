@@ -85,7 +85,16 @@ mutual
           = refl
   μ-ε-sub-distributes Δ argδ (T-SubW <:₁ εδ₁) (T-SubW <:₂ εδ₂)
     rewrite μ-ε-sub-distributes-any-τ Δ argδ εδ₁ εδ₂
-          = {! !}
+          | sym (typing-uniqueness (sub-Γ⊢ε⦂τ Δ argδ εδ₁) εδ₂)
+          | μ-<:-sub-distributes Δ argδ <:₁ <:₂
+          = refl
+
+  μ-<:-sub-distributes : (Δ : ,-CtxSuffix ℓ σⁱ k)
+                       → (argδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ σⁱ)
+                       → (codδ : [ θ ] Γⁱ ,σ, Δ ⊢ τ'ⁱ <: τⁱ)
+                       → (resδ : [ θ ] Γⁱ ++ [↦Δ εⁱ ] Δ ⊢ [ ℓ ↦τ< εⁱ ] τ'ⁱ <: [ ℓ ↦τ< εⁱ ] τⁱ )
+                       → μ-<: resδ ≡ [ ℓ ↦' μ-ε argδ ] μ-<: codδ
+  μ-<:-sub-distributes Δ argδ codδ resδ = {! !}
 
   μ-ε-sub-distributes-any-τ : (Δ : ,-CtxSuffix ℓ σⁱ k)
                             → (argδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ σⁱ)
