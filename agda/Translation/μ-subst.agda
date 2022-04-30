@@ -91,10 +91,20 @@ mutual
 
   μ-<:-sub-distributes : (Δ : ,-CtxSuffix ℓ σⁱ k)
                        → (argδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ σⁱ)
-                       → (codδ : [ θ ] Γⁱ ,σ, Δ ⊢ τ'ⁱ <: τⁱ)
-                       → (resδ : [ θ ] Γⁱ ++ [↦Δ εⁱ ] Δ ⊢ [ ℓ ↦τ< εⁱ ] τ'ⁱ <: [ ℓ ↦τ< εⁱ ] τⁱ )
-                       → μ-<: resδ ≡ [ ℓ ↦' μ-ε argδ ] μ-<: codδ
-  μ-<:-sub-distributes Δ argδ codδ resδ = {! !}
+                       → (cod-<: : [ θ ] Γⁱ ,σ, Δ ⊢ τ'ⁱ <: τⁱ)
+                       → (res-<: : [ θ ] Γⁱ ++ [↦Δ εⁱ ] Δ ⊢ [ ℓ ↦τ< εⁱ ] τ'ⁱ <: [ ℓ ↦τ< εⁱ ] τⁱ )
+                       → μ-<: res-<: ≡ [ ℓ ↦' μ-ε argδ ] μ-<: cod-<:
+  μ-<:-sub-distributes Δ argδ (ST-Base is-just₁ _) (ST-Base is-just₂ _) = {! !}
+  μ-<:-sub-distributes {k = k} {εⁱ = εⁱ} Δ argδ (ST-Arr {τ₂ = τ₂ⁱ} {τ₂' = τ₂'ⁱ} cod-<:₁ cod-<:₂ cod-τδ cod-τ₁'δ)
+                                                (ST-Arr                         res-<:₁ res-<:₂ res-τδ res-τ₁'δ)
+    rewrite μ-τ-sub-distributes Δ argδ cod-τδ res-τδ
+          | μ-τ-sub-distributes Δ argδ cod-τ₁'δ res-τ₁'δ
+          | μ-<:-sub-distributes Δ argδ cod-<:₁ res-<:₁
+          | IS.act-τ-extensionality (IS.ext-replace-comm (IR.weaken-ε-k k εⁱ) (ctx-idx k)) τ₂ⁱ
+          | IS.act-τ-extensionality (IS.ext-replace-comm (IR.weaken-ε-k k εⁱ) (ctx-idx k)) τ₂'ⁱ
+          | IR.act-ε-distr (raise k) suc εⁱ
+          | μ-<:-sub-distributes (Δ , _) argδ cod-<:₂ res-<:₂
+          = {! !}
 
   μ-ε-sub-distributes-any-τ : (Δ : ,-CtxSuffix ℓ σⁱ k)
                             → (argδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ σⁱ)
