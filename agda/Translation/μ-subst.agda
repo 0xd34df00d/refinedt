@@ -172,6 +172,18 @@ mutual
             = μ-τ-sub-distributes (Δ , _) argδ resδ₁ resδ₂
   μ-τ-sub-distributes Δ argδ (TWF-ADT consδs₁) (TWF-ADT consδs₂) = {! !}
 
+  μ-cons-sub-distributes : (Δ : ,-CtxSuffix ℓ σⁱ k)
+                         → (argδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ σⁱ)
+                         → {cons : I.ADTCons nₐ (suc k + ℓ)}
+                         → (codδs : All ([ θ ] Γⁱ ,σ, Δ ⊢_) cons)
+                         → (resδs : All ([ θ ] Γⁱ ++ [↦Δ εⁱ ] Δ ⊢_) ([ ℓ ↦c< εⁱ ] cons))
+                         → μ-cons resδs ≡ [ ℓ ↦c' μ-ε argδ ] μ-cons codδs
+  μ-cons-sub-distributes Δ argδ [] [] = refl
+  μ-cons-sub-distributes Δ argδ (codδ ∷ codδs) (resδ ∷ resδs)
+    rewrite μ-τ-sub-distributes Δ argδ codδ resδ
+          | μ-cons-sub-distributes Δ argδ codδs resδs
+          = refl
+
 μ-τ-sub-front-distributes : {Γⁱ : I.Ctx ℓ}
                           → (argδ : [ θ ] Γⁱ ⊢ ε₂ⁱ ⦂ τ₁ⁱ)
                           → (codδ : [ θ ] Γⁱ , τ₁ⁱ ⊢ τ₂ⁱ)
