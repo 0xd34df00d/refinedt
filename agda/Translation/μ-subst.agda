@@ -14,6 +14,7 @@ open import Core.Syntax as C renaming (Γ to Γᶜ; ε to εᶜ; τ to τᶜ)
 open import Core.Syntax.Derived as C
 open import Core.Syntax.Renaming as CR
 open import Core.Syntax.Substitution as CS
+open import Core.Syntax.Substitution.Distributivity as CS
 open import Core.Syntax.Derived.Substitution as CS
 open import Core.Derivations as C renaming (_⊢_⦂_ to _⊢ᶜ_⦂_)
 open import Intermediate.Syntax as I renaming (Γ to Γⁱ;
@@ -104,6 +105,8 @@ mutual
           | IS.act-τ-extensionality (IS.ext-replace-comm (IR.weaken-ε-k k εⁱ) (ctx-idx k)) τ₂'ⁱ
           | IR.act-ε-distr (raise k) suc εⁱ
           | μ-<:-sub-distributes (Δ , _) argδ cod-<:₂ res-<:₂
+          | CS.ρ-σ-distr-ε suc (CS.replace-at (ctx-idx k) (CR.weaken-ε-k k (μ-ε argδ))) (μ-τ cod-τ₁'δ)
+          | CS.σ-ρ-distr-ε (CS.ext (CS.replace-at (ctx-idx k) (CR.weaken-ε-k k (μ-ε argδ)))) suc (μ-τ cod-τ₁'δ)
           = {! !}
 
   μ-ε-sub-distributes-any-τ : (Δ : ,-CtxSuffix ℓ σⁱ k)
