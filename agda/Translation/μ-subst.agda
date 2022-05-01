@@ -98,15 +98,17 @@ mutual
   μ-<:-sub-distributes Δ argδ (ST-Base is-just₁ _) (ST-Base is-just₂ _) = {! !}
   μ-<:-sub-distributes {k = k} {εⁱ = εⁱ} Δ argδ (ST-Arr {τ₂ = τ₂ⁱ} {τ₂' = τ₂'ⁱ} cod-<:₁ cod-<:₂ cod-τδ cod-τ₁'δ)
                                                 (ST-Arr                         res-<:₁ res-<:₂ res-τδ res-τ₁'δ)
+    with ext-replace-comm ← IS.ext-replace-comm (IR.weaken-ε-k k εⁱ) (ctx-idx k)
+       | replace-at-μ-argδ ← CS.replace-at (ctx-idx k) (CR.weaken-ε-k k (μ-ε argδ))
     rewrite μ-τ-sub-distributes Δ argδ cod-τδ res-τδ
           | μ-τ-sub-distributes Δ argδ cod-τ₁'δ res-τ₁'δ
           | μ-<:-sub-distributes Δ argδ cod-<:₁ res-<:₁
-          | IS.act-τ-extensionality (IS.ext-replace-comm (IR.weaken-ε-k k εⁱ) (ctx-idx k)) τ₂ⁱ
-          | IS.act-τ-extensionality (IS.ext-replace-comm (IR.weaken-ε-k k εⁱ) (ctx-idx k)) τ₂'ⁱ
+          | IS.act-τ-extensionality ext-replace-comm τ₂ⁱ
+          | IS.act-τ-extensionality ext-replace-comm τ₂'ⁱ
           | IR.act-ε-distr (raise k) suc εⁱ
           | μ-<:-sub-distributes (Δ , _) argδ cod-<:₂ res-<:₂
-          | CS.ρ-σ-distr-ε suc (CS.replace-at (ctx-idx k) (CR.weaken-ε-k k (μ-ε argδ))) (μ-τ cod-τ₁'δ)
-          | CS.σ-ρ-distr-ε (CS.ext (CS.replace-at (ctx-idx k) (CR.weaken-ε-k k (μ-ε argδ)))) suc (μ-τ cod-τ₁'δ)
+          | CS.ρ-σ-distr-ε suc replace-at-μ-argδ (μ-τ cod-τ₁'δ)
+          | CS.σ-ρ-distr-ε (CS.ext replace-at-μ-argδ) suc (μ-τ cod-τ₁'δ)
           = {! !}
 
   μ-ε-sub-distributes-any-τ : (Δ : ,-CtxSuffix ℓ σⁱ k)
