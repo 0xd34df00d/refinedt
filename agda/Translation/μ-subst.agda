@@ -35,6 +35,7 @@ open import Translation.SubstUnique
 open import Translation.Typed
 open import Translation.Untyped
 open import Translation.μ-weakening
+open import Translation.μ-subst.Helpers
 
 ⌊μ⌋-b-sub-id : ∀ k ε b
              → ⌊μ⌋-b {ℓ = k + ℓ} b ≡ [ ℓ ↦' ε ] (⌊μ⌋-b b)
@@ -106,8 +107,13 @@ mutual
           | IS.act-τ-extensionality ext-replace-comm τ₂'ⁱ
           | IR.act-ε-distr (raise k) suc εⁱ
           | μ-<:-sub-distributes (Δ , _) argδ cod-<:₂ res-<:₂
+
           | CS.ρ-σ-distr-ε suc (CS.replace-at (ctx-idx k) (CR.weaken-ε-k k (μ-ε argδ))) (μ-τ cod-τ₁'δ)
           | CS.σ-ρ-distr-ε (CS.ext (CS.replace-at (ctx-idx k) (CR.weaken-ε-k k (μ-ε argδ)))) suc (μ-τ cod-τ₁'δ)
+
+          | CS.ρ-σ-distr-ε (CR.ext suc) (CS.replace-at (suc (ctx-idx k)) (CR.act-ε suc (CR.weaken-ε-k k (μ-ε argδ)))) (μ-<: cod-<:₂)
+          | CS.σ-ρ-distr-ε (CS.ext (CS.ext (CS.replace-at (ctx-idx k) (CR.weaken-ε-k k (μ-ε argδ))))) (CR.ext suc) (μ-<: cod-<:₂)
+          | CS.act-ε-extensionality (act-ε-lemma₁ (ctx-idx k) (CR.weaken-ε-k k (μ-ε argδ))) (μ-<: cod-<:₂)
           = {! !}
 
   μ-ε-sub-distributes-any-τ : (Δ : ,-CtxSuffix ℓ σⁱ k)
