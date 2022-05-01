@@ -13,6 +13,15 @@ open import Core.Syntax.Substitution as S
 import Core.Syntax.Renaming as R
 import Core.Syntax.Renaming.Distributivity as R
 
+Rext-ext-commutes : (ρ : Fin ℓ₁ → Fin ℓ₂)
+                  → (σ : Fin ℓ₀ → CExpr ℓ₁)
+                  → R.act-ε (R.ext ρ) ∘ ext σ f≡ ext (R.act-ε ρ ∘ σ)
+Rext-ext-commutes ρ σ zero = refl
+Rext-ext-commutes ρ σ (suc ι)
+  rewrite R.act-ε-distr suc (R.ext ρ) (σ ι)
+        | R.act-ε-distr ρ suc (σ ι)
+        = refl
+
 ρ-σ-Distributivity : {Ty : ℕ → Set} → R.ActionOn Ty → ActionOn Ty → Set
 ρ-σ-Distributivity {Ty} ρ-act σ-act = ∀ {ℓ₀ ℓ₁ ℓ₂}
                                       → (ρ : Fin ℓ₁ → Fin ℓ₂)
@@ -23,15 +32,6 @@ import Core.Syntax.Renaming.Distributivity as R
 ρ-σ-distr-ε : ρ-σ-Distributivity R.act-ε act-ε
 ρ-σ-distr-cons : ρ-σ-Distributivity {ADTCons nₐ} R.act-cons act-cons
 ρ-σ-distr-branches : ρ-σ-Distributivity {CaseBranches nₐ} R.act-branches act-branches
-
-Rext-ext-commutes : (ρ : Fin ℓ₁ → Fin ℓ₂)
-                  → (σ : Fin ℓ₀ → CExpr ℓ₁)
-                  → R.act-ε (R.ext ρ) ∘ ext σ f≡ ext (R.act-ε ρ ∘ σ)
-Rext-ext-commutes ρ σ zero = refl
-Rext-ext-commutes ρ σ (suc ι)
-  rewrite R.act-ε-distr suc (R.ext ρ) (σ ι)
-        | R.act-ε-distr ρ suc (σ ι)
-        = refl
 
 ρ-σ-distr-ε ρ σ (CVar ι) = refl
 ρ-σ-distr-ε ρ σ (CSort s) = refl
