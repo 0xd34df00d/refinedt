@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Translation.μ-subst.Helpers where
 
 open import Data.Fin.Base using (zero; suc; raise)
