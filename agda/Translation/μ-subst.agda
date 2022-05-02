@@ -97,8 +97,8 @@ mutual
                        → (res-<: : [ θ ] Γⁱ ++ [↦Δ εⁱ ] Δ ⊢ [ ℓ ↦τ< εⁱ ] τ'ⁱ <: [ ℓ ↦τ< εⁱ ] τⁱ )
                        → μ-<: res-<: ≡ [ ℓ ↦' μ-ε argδ ] μ-<: cod-<:
   μ-<:-sub-distributes Δ argδ (ST-Base is-just₁ _) (ST-Base is-just₂ _) = {! !}
-  μ-<:-sub-distributes {k = k} {εⁱ = εⁱ} Δ argδ (ST-Arr {τ₂ = τ₂ⁱ} {τ₂' = τ₂'ⁱ} cod-<:₁ cod-<:₂ cod-τδ cod-τ₁'δ)
-                                                (ST-Arr                         res-<:₁ res-<:₂ res-τδ res-τ₁'δ)
+  μ-<:-sub-distributes {ℓ = ℓ} {k = k} {εⁱ = εⁱ} Δ argδ (ST-Arr {τ₂ = τ₂ⁱ} {τ₂' = τ₂'ⁱ} cod-<:₁ cod-<:₂ cod-τδ cod-τ₁'δ)
+                                                        (ST-Arr                         res-<:₁ res-<:₂ res-τδ res-τ₁'δ)
     with ext-replace-comm ← IS.ext-replace-comm (IR.weaken-ε-k k εⁱ) (ctx-idx k)
     rewrite μ-τ-sub-distributes Δ argδ cod-τδ res-τδ
           | μ-τ-sub-distributes Δ argδ cod-τ₁'δ res-τ₁'δ
@@ -114,7 +114,13 @@ mutual
           | CS.ρ-σ-distr-ε (CR.ext suc) (CS.replace-at (suc (ctx-idx k)) (CR.act-ε suc (CR.weaken-ε-k k (μ-ε argδ)))) (μ-<: cod-<:₂)
           | CS.σ-ρ-distr-ε (CS.ext (CS.ext (CS.replace-at (ctx-idx k) (CR.weaken-ε-k k (μ-ε argδ))))) (CR.ext suc) (μ-<: cod-<:₂)
           | CS.act-ε-extensionality (act-ε-lemma₁ (ctx-idx k) (CR.weaken-ε-k k (μ-ε argδ))) (μ-<: cod-<:₂)
-          = {! !}
+
+          | CR.act-ε-distr suc suc ([ ℓ ↦' μ-ε argδ ] (μ-<: cod-<:₁))
+          | CR.act-ε-distr suc suc (μ-<: cod-<:₁)
+          | CS.σ-ρ-distr-ε (CS.ext (CS.ext (CS.replace-at (ctx-idx k) (CR.weaken-ε-k k (μ-ε argδ))))) (λ ι → suc (suc ι)) (μ-<: cod-<:₁)
+          | CS.ρ-σ-distr-ε (λ ι → suc (suc ι)) (CS.replace-at (ctx-idx k) (CR.weaken-ε-k k (μ-ε argδ))) (μ-<: cod-<:₁)
+          | CS.act-ε-extensionality (λ x → CR.act-ε-distr suc suc (CS.replace-at (ctx-idx k) (CR.weaken-ε-k k (μ-ε argδ)) x)) (μ-<: cod-<:₁)
+          = refl
 
   μ-ε-sub-distributes-any-τ : (Δ : ,-CtxSuffix ℓ σⁱ k)
                             → (argδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ σⁱ)
