@@ -22,7 +22,45 @@ import Intermediate.Syntax.Substitution as S
 open import Core.Syntax using (CExpr)
 open import Core.Syntax.Renaming as CR using (act-ε)
 
-record Oracle : Set
+record PositiveDecision (ℓ : ℕ) : Set where
+  constructor MkPD
+  field
+    <:-ε : CExpr ℓ
+
+record Oracle : Set where
+  inductive
+  constructor MkOracle
+  open R
+  field
+    decide : (Γ : Ctx ℓ)
+           → (b : BaseType)
+           → (ρ₁ ρ₂ : Refinement (suc ℓ))
+           → Maybe (PositiveDecision ℓ)
+    thin   : ∀ {Γ : Ctx (k + ℓ)} {Γ' : Ctx (suc k + ℓ)} {ρ₁ ρ₂ : Refinement (suc k + ℓ)}
+           → (Γ⊂Γ' : k by Γ ⊂' Γ')
+           → Is-just (decide Γ b ρ₁ ρ₂)
+           → Is-just (decide Γ' b (R.act-ρ (ext-k' (suc k) suc) ρ₁) (act-ρ (ext-k' (suc k) suc) ρ₂))
+    subst  : ∀ {Δ : ,-CtxSuffix ℓ σ k} {ρ₁ ρ₂ : Refinement (suc (suc k + ℓ))}
+           -- TODO add this back when parametrizing everything by an oracle: → Γ ⊢ ε ⦂ σ
+           → Is-just (decide (Γ ,σ, Δ) b ρ₁ ρ₂)
+           → Is-just (decide (Γ ++ ([↦Δ ε ] Δ)) b
+                        (S.act-ρ (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ρ₁)
+                        (S.act-ρ (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ρ₂))
+    trans : Is-just (decide Γ b ρ₁ ρ₂)
+          → Is-just (decide Γ b ρ₂ ρ₃)
+          → Is-just (decide Γ b ρ₁ ρ₃)
+    narrowing
+          -- TODO add this back when parametrizing everything by an oracle: → Γ ⊢ σ' <: σ
+          : Is-just (decide (Γ , σ  ++ Δ) b ρ₁ ρ₂)
+          → Is-just (decide (Γ , σ' ++ Δ) b ρ₁ ρ₂)
+
+    thin-ε : ∀ {Γ : Ctx (k + ℓ)} {Γ' : Ctx (suc k + ℓ)} {ρ₁ ρ₂ : Refinement (suc k + ℓ)}
+           → (is-just : Is-just (decide Γ b ρ₁ ρ₂))
+           → (Γ⊂Γ' : k by Γ ⊂' Γ')
+           → PositiveDecision.<:-ε (to-witness (thin Γ⊂Γ' is-just))
+             ≡
+             CR.act-ε (ext-k' k suc) (PositiveDecision.<:-ε (to-witness is-just))
+
 
 variable
   θ : Oracle
@@ -99,45 +137,6 @@ data [_]_⊢_⦂_ {ℓ} θ Γ where
   T-SubW      : (<: : [ θ ] Γ ⊢ τ' <: τ)
               → (εδ : [ θ ] Γ ⊢ ε ⦂ τ')
               → [ θ ] Γ ⊢ ε S<: τ ⦂ τ
-
-record PositiveDecision (ℓ : ℕ) : Set where
-  constructor MkPD
-  field
-    <:-ε : CExpr ℓ
-
-record Oracle where
-  inductive
-  constructor MkOracle
-  open R
-  field
-    decide : (Γ : Ctx ℓ)
-           → (b : BaseType)
-           → (ρ₁ ρ₂ : Refinement (suc ℓ))
-           → Maybe (PositiveDecision ℓ)
-    thin   : ∀ {Γ : Ctx (k + ℓ)} {Γ' : Ctx (suc k + ℓ)} {ρ₁ ρ₂ : Refinement (suc k + ℓ)}
-           → (Γ⊂Γ' : k by Γ ⊂' Γ')
-           → Is-just (decide Γ b ρ₁ ρ₂)
-           → Is-just (decide Γ' b (R.act-ρ (ext-k' (suc k) suc) ρ₁) (act-ρ (ext-k' (suc k) suc) ρ₂))
-    subst  : ∀ {Δ : ,-CtxSuffix ℓ σ k} {ρ₁ ρ₂ : Refinement (suc (suc k + ℓ))}
-           -- TODO add this back when parametrizing everything by an oracle: → Γ ⊢ ε ⦂ σ
-           → Is-just (decide (Γ ,σ, Δ) b ρ₁ ρ₂)
-           → Is-just (decide (Γ ++ ([↦Δ ε ] Δ)) b
-                        (S.act-ρ (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ρ₁)
-                        (S.act-ρ (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ρ₂))
-    trans : Is-just (decide Γ b ρ₁ ρ₂)
-          → Is-just (decide Γ b ρ₂ ρ₃)
-          → Is-just (decide Γ b ρ₁ ρ₃)
-    narrowing
-          -- TODO add this back when parametrizing everything by an oracle: → Γ ⊢ σ' <: σ
-          : Is-just (decide (Γ , σ  ++ Δ) b ρ₁ ρ₂)
-          → Is-just (decide (Γ , σ' ++ Δ) b ρ₁ ρ₂)
-
-    thin-ε : ∀ {Γ : Ctx (k + ℓ)} {Γ' : Ctx (suc k + ℓ)} {ρ₁ ρ₂ : Refinement (suc k + ℓ)}
-           → (is-just : Is-just (decide Γ b ρ₁ ρ₂))
-           → (Γ⊂Γ' : k by Γ ⊂' Γ')
-           → PositiveDecision.<:-ε (to-witness (thin Γ⊂Γ' is-just))
-             ≡
-             CR.act-ε (ext-k' k suc) (PositiveDecision.<:-ε (to-witness is-just))
 
 data [_]_⊢_<:_ {ℓ} θ Γ where
   ST-Base : Is-just (Oracle.decide θ Γ b ρ₁ ρ₂)
