@@ -13,6 +13,7 @@ open import Data.Fin.Extra
 open import Core.Syntax as C renaming (Γ to Γᶜ; ε to εᶜ; τ to τᶜ)
 open import Core.Syntax.Derived as C
 open import Core.Syntax.Renaming as CR
+open import Core.Syntax.Renaming.Distributivity as CR
 open import Core.Syntax.Substitution as CS
 open import Core.Syntax.Substitution.Distributivity as CS
 open import Core.Syntax.Derived.Substitution as CS
