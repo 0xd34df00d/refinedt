@@ -24,7 +24,6 @@ record PositiveDecision (ℓ : ℕ) : Set where
     <:-ε : CExpr ℓ
 
 record Oracle : Set where
-  inductive
   constructor MkOracle
   open R
   field
