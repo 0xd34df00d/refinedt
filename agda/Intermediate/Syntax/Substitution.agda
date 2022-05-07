@@ -116,6 +116,10 @@ weaken-replace-comm ε (suc ι) (suc x) with ι <>? x
          → (ε : STerm ℓ) → SType (suc k + ℓ) → SType (k + ℓ)
 [_↦τ<_]_ {k = k} _ ε τ = [ ctx-idx k ↦τ R.weaken-ε-k _ ε ] τ
 
+[_↦ρ<_]_ : ∀ ℓ
+         → (ε : STerm ℓ) → Refinement (suc k + ℓ) → Refinement (k + ℓ)
+[_↦ρ<_]_ {k = k} _ ε ρ = [ ctx-idx k ↦ρ R.weaken-ε-k _ ε ] ρ
+
 [_↦ε<_]_ : ∀ ℓ
          → (ε : STerm ℓ) → STerm (suc k + ℓ) → STerm (k + ℓ)
 [_↦ε<_]_ {k = k} _ ε ε' = [ ctx-idx k ↦ε R.weaken-ε-k _ ε ] ε'
