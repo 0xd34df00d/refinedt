@@ -1,4 +1,4 @@
-{-# OPTIONS --allow-unsolved-metas #-}
+{-# OPTIONS --safe #-}
 
 open import Intermediate.Oracle hiding (θ)
 open import Translation.θ-Props renaming (Props to T-Props)
