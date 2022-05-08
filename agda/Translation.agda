@@ -30,6 +30,7 @@ open import Translation.Untyped
 open import Translation.Typed
 open import Translation.SubstUnique
 open import Translation.Helpers
+open import Translation.μ-subst(θ)(θ-props)
 
 μ-Τ-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
                → Γᶜ ⊢ᶜ ⌊μ⌋-Τ ⦂ ⋆ₑ
@@ -111,7 +112,7 @@ mutual
           ε₂δᶜ = subst-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ ε₂δ) τ₁δ               (μ-ε-well-typed ε₂δ)
           ε₂δᶜ = subst-Γ (Γ⊢ε⦂τ-⇒-Γok ε₂δ) (Γ⊢ε⦂τ-⇒-Γok ε₁δ) ε₂δᶜ
           app = CT-App ε₁δᶜ ε₂δᶜ
-       in {! !}
+       in subst (_ ⊢ᶜ _ ⦂_) (sym (μ-τ-sub-front-distributes ε₂δ τ₂δ resτδ)) app
   μ-ε-well-typed (T-Case resδ δ branches-well-typed) = {! !}
   μ-ε-well-typed (T-Con refl δ τδ@(TWF-ADT consδs))
     = let ≡-prf = μ-lookup-commutes _ consδs (Γ⊢ε⦂τ-⇒-Γ⊢τ δ)
