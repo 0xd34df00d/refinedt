@@ -103,8 +103,7 @@ mutual
                   (subst-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ) codδ
                     (μ-ε-well-typed εδ))
        in CT-Abs εδᶜ (μ-τ-well-typed arrδ)
-  μ-ε-well-typed (T-App ε₁δ ε₂δ refl resτδ) with Γ⊢ε⦂τ-⇒-Γ⊢τ ε₁δ
-  ... | TWF-Arr τ₁δ τ₂δ
+  μ-ε-well-typed (T-App ε₁δ ε₂δ refl resτδ) with TWF-Arr τ₁δ τ₂δ ← Γ⊢ε⦂τ-⇒-Γ⊢τ ε₁δ
     = let ε₁δᶜ = subst-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ ε₁δ) (TWF-Arr τ₁δ τ₂δ) (μ-ε-well-typed ε₁δ)
           ε₂δᶜ = subst-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ ε₂δ) τ₁δ               (μ-ε-well-typed ε₂δ)
           ε₂δᶜ = subst-Γ (Γ⊢ε⦂τ-⇒-Γok ε₂δ) (Γ⊢ε⦂τ-⇒-Γok ε₁δ) ε₂δᶜ
