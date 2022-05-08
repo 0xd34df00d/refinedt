@@ -1,5 +1,15 @@
 {-# OPTIONS --safe #-}
 
+{-
+This module lists requirements on an Oracle
+needed to prove that the translation is well-behaved.
+
+Since the properties here depend both on typing derivations in Intermediate.Derivations.*
+as well as on the translation function definitions in Translation.Typed,
+they cannot be (easily) defined in Intermediate.Oracle without introducing circular deps.
+Hence, they are defined separately here.
+-}
+
 open import Intermediate.Oracle hiding (θ)
 
 module Translation.θ-Props(θ : Oracle) where
