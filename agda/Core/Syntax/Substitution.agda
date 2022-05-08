@@ -66,6 +66,9 @@ TailInvariantSubstOn Ty = ∀ {k} ℓ → (ε : CExpr ℓ) → Ty (suc k + ℓ) 
 [_↦c'_]_ : TailInvariantSubstOn (ADTCons nₐ)
 [_↦c'_]_ {k = k} _ ε cons = [ ctx-idx k ↦c R.weaken-ε-k _ ε ] cons
 
+[_↦bs'_]_ : TailInvariantSubstOn (CaseBranches nₐ)
+[_↦bs'_]_ {k = k} _ ε bs = [ ctx-idx k ↦bs R.weaken-ε-k _ ε ] bs
+
 CΠ-↦'-distr : ∀ ℓ (ε : CExpr ℓ) (ε₁ : CExpr (suc k + ℓ)) ε₂
             → [ ℓ ↦' ε ] CΠ ε₁ ε₂ ≡ CΠ ([ ℓ ↦' ε ] ε₁) ([ ℓ ↦' ε ] ε₂)
 CΠ-↦'-distr {k = k} _ ε _ ε₂
