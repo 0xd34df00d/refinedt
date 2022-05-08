@@ -82,7 +82,11 @@ mutual
     rewrite μ-ε-sub-distributes-any-τ Δ argδ argδ₁ argδ₂
           | μ-ε-sub-distributes-any-τ Δ argδ funδ₁ funδ₂
           = refl
-  μ-ε-sub-distributes Δ argδ (T-Case resδ₁ domδ₁ branchesδ₁) (T-Case resδ₂ domδ₂ branchesδ₂) = {! !}
+  μ-ε-sub-distributes Δ argδ (T-Case resδ₁ domδ₁ branchesδ₁) (T-Case resδ₂ domδ₂ branchesδ₂)
+    with refl ← typing-uniqueness domδ₂ (sub-Γ⊢ε⦂τ Δ argδ domδ₁)
+    rewrite μ-ε-sub-distributes Δ argδ domδ₁ domδ₂
+          | μ-branches-sub-distributes Δ argδ branchesδ₁ branchesδ₂
+          = refl
   μ-ε-sub-distributes {k = k} {εⁱ = εⁱ} Δ argδ (T-Con {ι = ι} {cons = cons} refl domδ₁ (TWF-ADT consδs₁))
                                                (T-Con refl domδ₂ (TWF-ADT consδs₂))
     rewrite sym (IS.cons-lookup-comm (IS.replace-at (ctx-idx k) (IR.weaken-ε-k k εⁱ)) ι cons)
@@ -241,6 +245,14 @@ mutual
     rewrite μ-τ-sub-distributes Δ argδ codδ resδ
           | μ-cons-sub-distributes Δ argδ codδs resδs
           = refl
+
+  μ-branches-sub-distributes : (Δ : ,-CtxSuffix ℓ σⁱ k)
+                             → (argδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ σⁱ)
+                             → {cons : I.ADTCons nₐ (suc k + ℓ)}
+                             → {bs : I.CaseBranches nₐ (suc k + ℓ)}
+                             → (codδs : I.BranchesHaveType θ (Γⁱ ,σ, Δ) cons bs τⁱ)
+                             → (resδs : I.BranchesHaveType θ (Γⁱ ++ [↦Δ εⁱ ] Δ) ([ ℓ ↦c< εⁱ ] cons) ([ ℓ ↦bs< εⁱ ] bs) ([ ℓ ↦τ< εⁱ ] τⁱ))
+                             → μ-branches resδs ≡ [ ℓ ↦bs' μ-ε argδ ] μ-branches codδs
 
 μ-τ-sub-front-distributes : {Γⁱ : I.Ctx ℓ}
                           → (argδ : [ θ ] Γⁱ ⊢ ε₂ⁱ ⦂ τ₁ⁱ)
