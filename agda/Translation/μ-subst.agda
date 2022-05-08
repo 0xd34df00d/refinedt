@@ -1,6 +1,9 @@
 {-# OPTIONS --allow-unsolved-metas #-}
 
-module Translation.μ-subst where
+open import Intermediate.Oracle hiding (θ)
+open import Translation.θ-Props renaming (Props to T-Props)
+
+module Translation.μ-subst(θ : Oracle)(θ-props : T-Props θ) where
 
 open import Data.Fin.Base using (zero; suc; raise)
 open import Data.Nat.Base using (zero; suc)
@@ -26,12 +29,11 @@ open import Intermediate.Syntax.CtxSuffix as I
 open import Intermediate.Syntax.Renaming as IR
 open import Intermediate.Syntax.Substitution as IS
 open import Intermediate.Syntax.Substitution.Distributivity as IS
-open import Intermediate.Derivations.Algorithmic as I
+open import Intermediate.Derivations.Algorithmic as I hiding (θ)
 open import Intermediate.Derivations.Algorithmic.Theorems.Agreement
 open import Intermediate.Derivations.Algorithmic.Theorems.Substitution
 open import Intermediate.Derivations.Algorithmic.Theorems.Thinning
 open import Intermediate.Derivations.Algorithmic.Theorems.Uniqueness
---open import Intermediate.Theorems.Substitution as I
 
 open import Translation.SubstUnique
 open import Translation.Typed
@@ -98,7 +100,11 @@ mutual
                        → (cod-<: : [ θ ] Γⁱ ,σ, Δ ⊢ τ'ⁱ <: τⁱ)
                        → (res-<: : [ θ ] Γⁱ ++ [↦Δ εⁱ ] Δ ⊢ [ ℓ ↦τ< εⁱ ] τ'ⁱ <: [ ℓ ↦τ< εⁱ ] τⁱ )
                        → μ-<: res-<: ≡ [ ℓ ↦' μ-ε argδ ] μ-<: cod-<:
-  μ-<:-sub-distributes Δ argδ (ST-Base is-just₁ _) (ST-Base is-just₂ _) = {! !}
+  μ-<:-sub-distributes {k = k} {εⁱ = εⁱ} Δ argδ (ST-Base {ρ₁ = ρ₁} {ρ₂ = ρ₂} is-just₁ _) (ST-Base is-just₂ _)
+    rewrite IS.act-ρ-extensionality (IS.ext-replace-comm (IR.act-ε (raise k) εⁱ) (ctx-idx k)) ρ₁
+          | IS.act-ρ-extensionality (IS.ext-replace-comm (IR.act-ε (raise k) εⁱ) (ctx-idx k)) ρ₂
+          | IR.act-ε-distr (raise k) suc εⁱ
+          = T-Props.sub-<: θ-props Δ argδ is-just₁ is-just₂
   μ-<:-sub-distributes {ℓ = ℓ} {k = k} {εⁱ = εⁱ} Δ argδ (ST-Arr {τ₂ = τ₂ⁱ} {τ₂' = τ₂'ⁱ} cod-<:₁ cod-<:₂ cod-τδ cod-τ₁'δ)
                                                         (ST-Arr                         res-<:₁ res-<:₂ res-τδ res-τ₁'δ)
     with ext-replace-comm ← IS.ext-replace-comm (IR.weaken-ε-k k εⁱ) (ctx-idx k)
