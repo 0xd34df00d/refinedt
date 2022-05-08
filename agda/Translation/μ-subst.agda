@@ -253,6 +253,12 @@ mutual
                              → (codδs : I.BranchesHaveType θ (Γⁱ ,σ, Δ) cons bs τⁱ)
                              → (resδs : I.BranchesHaveType θ (Γⁱ ++ [↦Δ εⁱ ] Δ) ([ ℓ ↦c< εⁱ ] cons) ([ ℓ ↦bs< εⁱ ] bs) ([ ℓ ↦τ< εⁱ ] τⁱ))
                              → μ-branches resδs ≡ [ ℓ ↦bs' μ-ε argδ ] μ-branches codδs
+  μ-branches-sub-distributes Δ argδ NoBranches NoBranches = refl
+  μ-branches-sub-distributes Δ argδ (OneMoreBranch codδ codδs) (OneMoreBranch resδ resδs)
+    rewrite μ-branches-sub-distributes Δ argδ codδs resδs
+          = refl
+    -- TODO right now this doesn't handle proper proofs for path sensitivity,
+    -- so this (meta)proof will break once they are added.
 
 μ-τ-sub-front-distributes : {Γⁱ : I.Ctx ℓ}
                           → (argδ : [ θ ] Γⁱ ⊢ ε₂ⁱ ⦂ τ₁ⁱ)
