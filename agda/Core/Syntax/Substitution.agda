@@ -57,12 +57,13 @@ ext-replace-comm _ (suc ι) (suc var-idx) with suc ι <>? var-idx
 
 
 -- Tail-invariant substitution
-[_↦'_]_ : ∀ ℓ
-        → (ε : CExpr ℓ) → CExpr (suc k + ℓ) → CExpr (k + ℓ)
+TailInvariantSubstOn : (ℕ → Set) → Set
+TailInvariantSubstOn Ty = ∀ {k} ℓ → (ε : CExpr ℓ) → Ty (suc k + ℓ) → Ty (k + ℓ)
+
+[_↦'_]_ : TailInvariantSubstOn CExpr
 [_↦'_]_ {k = k} _ ε τ = [ ctx-idx k ↦ R.weaken-ε-k _ ε ] τ
 
-[_↦c'_]_ : ∀ ℓ
-         → (ε : CExpr ℓ) → ADTCons nₐ (suc k + ℓ) → ADTCons nₐ (k + ℓ)
+[_↦c'_]_ : TailInvariantSubstOn (ADTCons nₐ)
 [_↦c'_]_ {k = k} _ ε cons = [ ctx-idx k ↦c R.weaken-ε-k _ ε ] cons
 
 CΠ-↦'-distr : ∀ ℓ (ε : CExpr ℓ) (ε₁ : CExpr (suc k + ℓ)) ε₂
