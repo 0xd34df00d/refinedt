@@ -1,4 +1,7 @@
-module Translation where
+open import Intermediate.Oracle hiding (θ)
+open import Translation.θ-Props renaming (Props to T-Props)
+
+module Translation(θ : Oracle)(θ-props : T-Props θ) where
 
 open import Data.Fin using (zero; suc)
 open import Data.Vec using (Vec; _∷_; []; lookup)
@@ -20,7 +23,7 @@ open import Core.Operational.BetaEquivalence as C
 open import Intermediate.Syntax as S renaming (Γ to Γⁱ; τ to τⁱ; τ' to τ'ⁱ; ε to εⁱ)
 open import Intermediate.Syntax.Membership as S renaming (_∈_at_ to _∈ⁱ_at_)
 open import Intermediate.Syntax.Substitution as SS
-open import Intermediate.Derivations.Algorithmic as S
+open import Intermediate.Derivations.Algorithmic as S hiding (θ)
 open import Intermediate.Derivations.Algorithmic.Theorems.Agreement as S
 
 open import Translation.Untyped
