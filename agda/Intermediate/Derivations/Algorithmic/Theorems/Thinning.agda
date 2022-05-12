@@ -2,11 +2,11 @@
 
 module Intermediate.Derivations.Algorithmic.Theorems.Thinning where
 
-open import Data.Fin.Base using (zero; suc; raise)
+open import Data.Fin using (zero; suc; raise; #_)
 open import Data.Nat.Base
 open import Data.Nat.Induction
 open import Data.Nat.Properties using (≤-refl; ≤-trans; n≤1+n; ≤-stepsˡ)
-open import Data.Vec.Base using (lookup; _∷_)
+open import Data.Vec.Base using (lookup; _∷_; [])
 open import Function
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst; sym)
 
@@ -43,10 +43,11 @@ mutual
       (Oracle.thin θ Γ⊂Γ' is-just)
       (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τδ (rec _ ≤-refl))
   <:-thinning↓ Γ⊂Γ' Γ'ok (ST-Arr <:₁δ <:₂δ δτ₁⇒τ₂ δτ₁') (acc rec) =
-    let acc₁ = rec _ (s≤s (₄≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf δτ₁⇒τ₂) (size-twf δτ₁')))
-        acc₂ = rec _ (s≤s (₁≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf δτ₁⇒τ₂) (size-twf δτ₁')))
-        acc₃ = rec _ (s≤s (₂≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf δτ₁⇒τ₂) (size-twf δτ₁')))
-        acc₄ = rec _ (s≤s (₃≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf δτ₁⇒τ₂) (size-twf δτ₁')))
+    let rec-args = size-<: <:₁δ ∷ size-<: <:₂δ ∷ size-twf δτ₁⇒τ₂ ∷ size-twf δτ₁' ∷ []
+        acc₁ = rec _ (<₄ rec-args (# 3))
+        acc₂ = rec _ (<₄ rec-args (# 0))
+        acc₃ = rec _ (<₄ rec-args (# 1))
+        acc₄ = rec _ (<₄ rec-args (# 2))
         τ₁'δ' = Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok δτ₁' acc₁
      in ST-Arr
           (<:-thinning↓ Γ⊂Γ' Γ'ok <:₁δ acc₂)
