@@ -2,7 +2,7 @@
 
 module Translation.μ-weakening where
 
-open import Data.Fin using (zero; suc; raise)
+open import Data.Fin using (zero; suc; raise; #_)
 open import Data.Nat.Base
 open import Data.Nat.Induction
 open import Data.Nat.Properties
@@ -45,19 +45,19 @@ mutual
                           → (δ↓ : Acc _<_ (size-<: δ))
                           → μ-<: (<:-thinning↓ Γ⊂Γ' Γ'ok δ δ↓) ≡ CR.act-ε (ext-k' k suc) (μ-<: δ)
   μ-<:-thinning↓-commutes {θ = θ} Γ⊂Γ' Γ'ok (ST-Base is-just _) (acc rec) = Oracle.thin-ε θ is-just Γ⊂Γ'
-  μ-<:-thinning↓-commutes {k = k} Γ⊂Γ' Γ'ok (ST-Arr <:₁δ <:₂δ δτ₁⇒τ₂ δτ₁') (acc rec)
-    rewrite μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok δτ₁⇒τ₂ (rec _ (s≤s (₃≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf δτ₁⇒τ₂) (size-twf δτ₁'))))
-          | μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok δτ₁'   (rec _ (s≤s (₄≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf δτ₁⇒τ₂) (size-twf δτ₁'))))
+  μ-<:-thinning↓-commutes {k = k} Γ⊂Γ' Γ'ok arr@(ST-Arr <:₁δ <:₂δ δτ₁⇒τ₂ δτ₁') (acc rec)
+    rewrite μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok δτ₁⇒τ₂ (rec _ (<₄ (ST-Arr-size-vec arr) (# 2)))
+          | μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok δτ₁'   (rec _ (<₄ (ST-Arr-size-vec arr) (# 3)))
           | μ-<:-thinning↓-commutes
                   Γ⊂Γ'
                   Γ'ok
                   <:₁δ
-                  (rec _ (s≤s (₁≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf δτ₁⇒τ₂) (size-twf δτ₁'))))
+                  (rec _ (<₄ (ST-Arr-size-vec arr) (# 0)))
           | μ-<:-thinning↓-commutes
                   (append-both Γ⊂Γ')
-                  (TCTX-Bind Γ'ok (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok δτ₁' (rec _ (s≤s (₄≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf δτ₁⇒τ₂) (size-twf δτ₁'))))))
+                  (TCTX-Bind Γ'ok (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok δτ₁' (rec _ (<₄ (ST-Arr-size-vec arr) (# 3)))))
                   <:₂δ
-                  (rec _ (s≤s (₂≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf δτ₁⇒τ₂) (size-twf δτ₁'))))
+                  (rec _ (<₄ (ST-Arr-size-vec arr) (# 1)))
        -- |
           | CR.act-ε-distr suc (ext-k' (1 + k) suc) (μ-τ δτ₁')
           | CR.act-ε-distr (ext-k' k suc) suc (μ-τ δτ₁')
