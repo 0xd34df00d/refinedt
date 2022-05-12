@@ -19,26 +19,26 @@ open import Translation.Untyped
 mutual
   {-
   A witness of
-  τ <: τ'
+  τ' <: τ
   gets translated to a function of type
-  τ ⇒ τ'
+  τ' ⇒ τ
   -}
-  μ-<: : {τ τ' : SType ℓ}
-       → [ θ ] Γⁱ ⊢ τ <: τ'
+  μ-<: : {τ' τ : SType ℓ}
+       → [ θ ] Γⁱ ⊢ τ' <: τ
        → CExpr ℓ
   μ-<: (ST-Base positive _) = PositiveDecision.<:-ε (to-witness positive)
   μ-<: (ST-Arr <:₁ <:₂ τδ τ₁'δ)
     {-
-    We need to build a function of type (τ₁ ⇒ τ₂) ⇒ (τ₁' ⇒ τ₂')
+    We need to build a function of type (τ₁ ⇒ τ₂') ⇒ (τ₁' ⇒ τ₂)
     Thus, we do the following:
-    λ (τ₁ ⇒ τ₂).
+    λ (τ₁ ⇒ τ₂').
       λ τ₁'.
         μ(<:₂)
           (#1
             (μ(<:₁) (#0)))
     -}
     = let arg-ε = μ-<: <:₁  -- ⦂ τ₁' ⇒ τ₁
-          res-ε = μ-<: <:₂  -- ⦂ τ₂ ⇒ τ₂'
+          res-ε = μ-<: <:₂  -- ⦂ τ₂' ⇒ τ₂
        in CLam
             (μ-τ τδ)
             (CLam
