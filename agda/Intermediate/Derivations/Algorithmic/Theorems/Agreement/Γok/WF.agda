@@ -100,3 +100,7 @@ size-<: (ST-Arr sub₁ sub₂ δτ₁⇒τ₂ δτ₁') = suc (size-<: sub₁ �
 
 size-bs NoBranches = 0
 size-bs (OneMoreBranch εδ rest) = suc (size-t εδ ⊕ size-bs rest)
+
+ST-Arr-size-vec : [ θ ] Γ ⊢ τ₁ ⇒ τ₂' <: τ₁' ⇒ τ₂
+                → Vec ℕ 4
+ST-Arr-size-vec (ST-Arr <:₁δ <:₂δ τ₁⇒τ₂'δ τ₁'⇒τ₂δ) = size-<: <:₁δ ∷ size-<: <:₂δ ∷ size-twf τ₁⇒τ₂'δ ∷ size-twf τ₁'⇒τ₂δ ∷ []
