@@ -8,8 +8,11 @@ but not strong enough to prove the lemma `Γ ⊢ ε ⦂ τ → Γ ⊢ τ`.
 
 module Intermediate.Derivations.Algorithmic.Theorems.Agreement.Γok.WF where
 
+open import Data.Fin using (zero; suc; #_)
 open import Data.Nat.Base using (_⊔_; _≤_)
 open import Data.Nat.Properties
+open import Data.Vec
+open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Intermediate.Syntax
 open import Intermediate.Derivations.Algorithmic
@@ -54,6 +57,16 @@ abstract
 
   ₄≤₄ : ∀ n₁ n₂ n₃ n₄ → n₄ ≤ n₁ ⊕ n₂ ⊕ n₃ ⊕ n₄
   ₄≤₄ n₁ n₂ n₃ n₄ = ≤-trans (₂≤₂ n₃ n₄) (₃≤₃ n₁ n₂ (n₃ ⊔ n₄))
+
+  ≤₄ : ∀ {n₁ n₂ n₃ n₄}
+     → (v : Vec ℕ 4)
+     → ⦃ v ≡ n₁ ∷ n₂ ∷ n₃ ∷ n₄ ∷ [] ⦄
+     → (ι : Fin 4)
+     → lookup v ι ≤ n₁ ⊕ n₂ ⊕ n₃ ⊕ n₄
+  ≤₄ {n₁} {n₂} {n₃} {n₄} _ ⦃ refl ⦄ = λ where zero                   → ₁≤₄ n₁ n₂ n₃ n₄
+                                              (suc zero)             → ₂≤₄ n₁ n₂ n₃ n₄
+                                              (suc (suc zero))       → ₃≤₄ n₁ n₂ n₃ n₄
+                                              (suc (suc (suc zero))) → ₄≤₄ n₁ n₂ n₃ n₄
 
 size-ok TCTX-Empty = 0
 size-ok (TCTX-Bind prevOk τδ) = suc (size-ok prevOk ⊕ size-twf τδ)
