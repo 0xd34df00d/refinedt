@@ -146,14 +146,14 @@ mutual
               → [ θ ] Γ ,σ, Δ ⊢ τ <: τ'
               → [ θ ] Γ ++ [↦Δ ε ] Δ ⊢ [ ℓ ↦τ< ε ] τ <: [ ℓ ↦τ< ε ] τ'
   sub-Γ⊢τ<:τ' {θ = θ} Δ εδ (ST-Base is-just τδ) = ST-Base (Oracle.subst θ is-just) (sub-Γ⊢τ Δ εδ τδ)
-  sub-Γ⊢τ<:τ' {k = k} {θ = θ} {Γ = Γ} {ε = ε} Δ εδ (ST-Arr {τ₂ = τ₂} {τ₂' = τ₂'} <:₁ <:₂ δτ₁⇒τ₂ δτ₁')
+  sub-Γ⊢τ<:τ' {k = k} {θ = θ} {Γ = Γ} {ε = ε} Δ εδ (ST-Arr {τ₂' = τ₂'} {τ₂ = τ₂} <:₁ <:₂ δτ₁⇒τ₂ δτ₁')
     = ST-Arr (sub-Γ⊢τ<:τ' Δ εδ <:₁) <:₂' (sub-Γ⊢τ Δ εδ δτ₁⇒τ₂) (sub-Γ⊢τ Δ εδ δτ₁')
     where
     <:₂' : [ θ ] (Γ ++ ([↦Δ ε ] (Δ , _))) ⊢
-           S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂ <:
-           S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂'
-    <:₂' rewrite S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂
-               | S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂'
+           S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂' <:
+           S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂
+    <:₂' rewrite S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂'
+               | S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂
                | R.act-ε-distr (raise k) suc ε
                = sub-Γ⊢τ<:τ' (Δ , _) εδ <:₂
 

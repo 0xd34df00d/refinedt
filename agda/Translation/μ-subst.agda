@@ -109,7 +109,7 @@ mutual
           | IS.act-ρ-extensionality (IS.ext-replace-comm (IR.act-ε (raise k) εⁱ) (ctx-idx k)) ρ₂
           | IR.act-ε-distr (raise k) suc εⁱ
           = T-Props.sub-<: θ-props Δ argδ is-just₁ is-just₂
-  μ-<:-sub-distributes {ℓ = ℓ} {k = k} {εⁱ = εⁱ} Δ argδ (ST-Arr {τ₂ = τ₂ⁱ} {τ₂' = τ₂'ⁱ} cod-<:₁ cod-<:₂ cod-τδ cod-τ₁'δ)
+  μ-<:-sub-distributes {ℓ = ℓ} {k = k} {εⁱ = εⁱ} Δ argδ (ST-Arr {τ₂' = τ₂'ⁱ} {τ₂ = τ₂ⁱ} cod-<:₁ cod-<:₂ cod-τδ cod-τ₁'δ)
                                                         (ST-Arr                         res-<:₁ res-<:₂ res-τδ res-τ₁'δ)
     with ext-replace-comm ← IS.ext-replace-comm (IR.weaken-ε-k k εⁱ) (ctx-idx k)
     rewrite μ-τ-sub-distributes Δ argδ cod-τδ res-τδ
