@@ -96,7 +96,7 @@ size-t (T-Con _ conArg (TWF-ADT consδs)) = suc (size-t conArg ⊕ size-all-cons
 size-t (T-SubW <: εδ) = suc (size-t εδ ⊕ size-<: <:)
 
 size-<: (ST-Base _ τ'δ τδ) = suc (size-twf τ'δ ⊕ size-twf τδ)
-size-<: (ST-Arr sub₁ sub₂ δτ₁⇒τ₂ δτ₁') = suc (size-<: sub₁ ⊕ size-<: sub₂ ⊕ size-twf δτ₁⇒τ₂ ⊕ size-twf δτ₁')
+size-<: (ST-Arr sub₁ sub₂ τ₁⇒τ₂'δ τ₁'⇒τ₂δ) = suc (size-<: sub₁ ⊕ size-<: sub₂ ⊕ size-twf τ₁⇒τ₂'δ ⊕ size-twf τ₁'⇒τ₂δ)
 
 size-bs NoBranches = 0
 size-bs (OneMoreBranch εδ rest) = suc (size-t εδ ⊕ size-bs rest)
