@@ -27,7 +27,7 @@ mutual
        → [ θ ] Γⁱ ⊢ τ' <: τ
        → CExpr ℓ
   μ-<: (ST-Base positive _ _) = PositiveDecision.<:-ε (to-witness positive)
-  μ-<: (ST-Arr <:₁δ <:₂δ τδ τ₁'δ)
+  μ-<: (ST-Arr <:₁δ <:₂δ τ₁⇒τ₂'δ (TWF-Arr τ₁'δ _))
     {-
     We need to build a function of type (τ₁ ⇒ τ₂') ⇒ (τ₁' ⇒ τ₂)
     Thus, we do the following:
@@ -40,7 +40,7 @@ mutual
     = let arg-ε = μ-<: <:₁δ  -- ⦂ τ₁' ⇒ τ₁
           res-ε = μ-<: <:₂δ  -- ⦂ τ₂' ⇒ τ₂
        in CLam
-            (μ-τ τδ)
+            (μ-τ τ₁⇒τ₂'δ)
             (CLam
               (weaken-ε (μ-τ τ₁'δ))
               (act-ε (ext suc) res-ε ·
