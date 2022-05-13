@@ -44,7 +44,7 @@ mutual
                           → (δ : [ θ ] Γⁱ ⊢ τⁱ <: τⁱ')
                           → (δ↓ : Acc _<_ (size-<: δ))
                           → μ-<: (<:-thinning↓ Γ⊂Γ' Γ'ok δ δ↓) ≡ CR.act-ε (ext-k' k suc) (μ-<: δ)
-  μ-<:-thinning↓-commutes {θ = θ} Γ⊂Γ' Γ'ok (ST-Base is-just _) (acc rec) = Oracle.thin-ε θ is-just Γ⊂Γ'
+  μ-<:-thinning↓-commutes {θ = θ} Γ⊂Γ' Γ'ok (ST-Base is-just _ _) (acc rec) = Oracle.thin-ε θ is-just Γ⊂Γ'
   μ-<:-thinning↓-commutes {k = k} Γ⊂Γ' Γ'ok arr@(ST-Arr <:₁δ <:₂δ δτ₁⇒τ₂ δτ₁') (acc rec)
     rewrite μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok δτ₁⇒τ₂ (rec _ (<₄ (ST-Arr-size-vec arr) (# 2)))
           | μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok δτ₁'   (rec _ (<₄ (ST-Arr-size-vec arr) (# 3)))

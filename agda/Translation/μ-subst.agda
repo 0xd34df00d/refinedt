@@ -104,7 +104,7 @@ mutual
                        → (cod-<: : [ θ ] Γⁱ ,σ, Δ ⊢ τ'ⁱ <: τⁱ)
                        → (res-<: : [ θ ] Γⁱ ++ [↦Δ εⁱ ] Δ ⊢ [ ℓ ↦τ< εⁱ ] τ'ⁱ <: [ ℓ ↦τ< εⁱ ] τⁱ )
                        → μ-<: res-<: ≡ [ ℓ ↦' μ-ε argδ ] μ-<: cod-<:
-  μ-<:-sub-distributes {k = k} {εⁱ = εⁱ} Δ argδ (ST-Base {ρ₁ = ρ₁} {ρ₂ = ρ₂} is-just₁ _) (ST-Base is-just₂ _)
+  μ-<:-sub-distributes {k = k} {εⁱ = εⁱ} Δ argδ (ST-Base {ρ₁ = ρ₁} {ρ₂ = ρ₂} is-just₁ _ _) (ST-Base is-just₂ _ _)
     rewrite IS.act-ρ-extensionality (IS.ext-replace-comm (IR.act-ε (raise k) εⁱ) (ctx-idx k)) ρ₁
           | IS.act-ρ-extensionality (IS.ext-replace-comm (IR.act-ε (raise k) εⁱ) (ctx-idx k)) ρ₂
           | IR.act-ε-distr (raise k) suc εⁱ

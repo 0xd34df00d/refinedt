@@ -26,7 +26,7 @@ mutual
   μ-<: : {τ' τ : SType ℓ}
        → [ θ ] Γⁱ ⊢ τ' <: τ
        → CExpr ℓ
-  μ-<: (ST-Base positive _) = PositiveDecision.<:-ε (to-witness positive)
+  μ-<: (ST-Base positive _ _) = PositiveDecision.<:-ε (to-witness positive)
   μ-<: (ST-Arr <:₁δ <:₂δ τδ τ₁'δ)
     {-
     We need to build a function of type (τ₁ ⇒ τ₂') ⇒ (τ₁' ⇒ τ₂)

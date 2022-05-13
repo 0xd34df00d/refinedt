@@ -101,8 +101,9 @@ mutual
           = refl
 
   unique-<: : Irrelevant ([ θ ] Γ ⊢ τ' <: τ)
-  unique-<: (ST-Base is-just₁ τδ₁) (ST-Base is-just₂ τδ₂)
+  unique-<: (ST-Base is-just₁ τ'δ₁ τδ₁) (ST-Base is-just₂ τ'δ₂ τδ₂)
     rewrite irrelevant (λ _ _ → refl) is-just₁ is-just₂
+          | unique-Γ⊢τ τ'δ₁ τ'δ₂
           | unique-Γ⊢τ τδ₁ τδ₂
           = refl
   unique-<: (ST-Arr <:₁₁ <:₂₁ δ₁₁ δ₂₁) (ST-Arr <:₁₂ <:₂₂ δ₁₂ δ₂₂)
