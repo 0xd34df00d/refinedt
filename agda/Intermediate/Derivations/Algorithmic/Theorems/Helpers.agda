@@ -10,3 +10,7 @@ open import Intermediate.Derivations.Algorithmic
 
 Γok-head : [ θ ] (Γ , τ) ok → [ θ ] Γ ⊢ τ
 Γok-head (TCTX-Bind _ δ) = δ
+
+dom-well-formed : [ θ ] Γ ⊢ τ₁ ⇒ τ₂
+                → [ θ ] Γ ⊢ τ₁
+dom-well-formed (TWF-Arr τ₁δ _) = τ₁δ
