@@ -22,7 +22,7 @@ open import Intermediate.Derivations.Algorithmic.Theorems.Thinning
 Γ⊢τ'<:τ-⇒-Γ⊢τ : [ θ ] Γ ⊢ τ' <: τ
               → [ θ ] Γ ⊢ τ
 Γ⊢τ'<:τ-⇒-Γ⊢τ (ST-Base _ _ τδ) = τδ
-Γ⊢τ'<:τ-⇒-Γ⊢τ (ST-Arr _ <:₂δ _ τ₁δ) = TWF-Arr τ₁δ (Γ⊢τ'<:τ-⇒-Γ⊢τ <:₂δ)
+Γ⊢τ'<:τ-⇒-Γ⊢τ (ST-Arr _ _ _ τδ) = τδ
 
 -- Referred to as T-implies-TWF in the paper
 Γ⊢ε⦂τ-⇒-Γ⊢τ : [ θ ] Γ ⊢ ε ⦂ τ
