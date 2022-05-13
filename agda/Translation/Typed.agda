@@ -29,7 +29,10 @@ mutual
   μ-<: (ST-Base positive _ _) = PositiveDecision.<:-ε (to-witness positive)
   μ-<: (ST-Arr <:₁δ <:₂δ τ₁⇒τ₂'δ (TWF-Arr τ₁'δ _))
     {-
-    We need to build a function of type (τ₁ ⇒ τ₂') ⇒ (τ₁' ⇒ τ₂)
+    Here, τ' ~ τ₁  ⇒ τ₂'
+          τ  ~ τ₁' ⇒ τ₂
+    and we need to build a function of type (τ₁ ⇒ τ₂') ⇒ (τ₁' ⇒ τ₂)
+
     Thus, we do the following:
     λ (τ₁ ⇒ τ₂').
       λ τ₁'.
