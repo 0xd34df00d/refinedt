@@ -29,8 +29,9 @@ open import Intermediate.Derivations.Algorithmic.Theorems.Helpers
 open import Intermediate.Derivations.Algorithmic.Theorems.Thinning
 open import Intermediate.Derivations.Algorithmic.Theorems.Uniqueness
 
-open import Translation.Untyped
+open import Translation.SubstUnique
 open import Translation.Typed
+open import Translation.Untyped
 open import Translation.μ-weakening.Helpers
 
 μ-ε-subst : (eq : τⁱ ≡ τⁱ')
@@ -46,7 +47,8 @@ mutual
                           → (δ↓ : Acc _<_ (size-<: δ))
                           → μ-<: (<:-thinning↓ Γ⊂Γ' Γ'ok δ δ↓) ≡ CR.act-ε (ext-k' k suc) (μ-<: δ)
   μ-<:-thinning↓-commutes {θ = θ} Γ⊂Γ' Γ'ok (ST-Base is-just _ _) (acc rec) = Oracle.thin-ε θ is-just Γ⊂Γ'
-  μ-<:-thinning↓-commutes {k = k} Γ⊂Γ' Γ'ok arr@(ST-Arr <:₁δ <:₂δ τ₁⇒τ₂'δ τ₁'⇒τ₂δ) (acc rec)
+  μ-<:-thinning↓-commutes {k = k} Γ⊂Γ' Γ'ok arr@(ST-Arr <:₁δ <:₂δ τ₁⇒τ₂'δ τ₁'⇒τ₂δ@(TWF-Arr τ₁'δ _)) (acc rec)
+    with τ₁'⇒τ₂δ'@(TWF-Arr τ₁'δ' _) ← Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁'⇒τ₂δ (rec _ (<₄ (ST-Arr-size-vec arr) (# 3)))
     rewrite μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok τ₁⇒τ₂'δ (rec _ (<₄ (ST-Arr-size-vec arr) (# 2)))
           | μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok τ₁'⇒τ₂δ (rec _ (<₄ (ST-Arr-size-vec arr) (# 3)))
           | μ-<:-thinning↓-commutes
@@ -56,12 +58,15 @@ mutual
                   (rec _ (<₄ (ST-Arr-size-vec arr) (# 0)))
           | μ-<:-thinning↓-commutes
                   (append-both Γ⊂Γ')
-                  (TCTX-Bind Γ'ok (dom-well-formed (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁'⇒τ₂δ (rec _ (<₄ (ST-Arr-size-vec arr) (# 3))))))
+                  (TCTX-Bind Γ'ok τ₁'δ')
                   <:₂δ
                   (rec _ (<₄ (ST-Arr-size-vec arr) (# 1)))
        -- |
-          | CR.act-ε-distr suc (ext-k' (1 + k) suc) (μ-τ τ₁'⇒τ₂δ)
-          | CR.act-ε-distr (ext-k' k suc) suc (μ-τ τ₁'⇒τ₂δ)
+          | trans
+              (μ-τ-cong-unique τ₁'δ' (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁'δ (rec _ (ST-Arr-τ₁'-smaller arr))))
+              (μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok τ₁'δ (rec _ (ST-Arr-τ₁'-smaller arr)))
+          | CR.act-ε-distr suc (ext-k' (1 + k) suc) (μ-τ τ₁'δ)
+          | CR.act-ε-distr (ext-k' k suc) suc (μ-τ τ₁'δ)
        -- |
           | lemma₅ k (μ-<: <:₂δ)
        -- |
