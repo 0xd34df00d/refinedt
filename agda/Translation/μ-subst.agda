@@ -22,7 +22,9 @@ open import Core.Syntax.Substitution.Distributivity as CS
 open import Core.Syntax.Derived.Substitution as CS
 open import Core.Derivations as C renaming (_⊢_⦂_ to _⊢ᶜ_⦂_)
 open import Intermediate.Syntax as I renaming (Γ to Γⁱ;
-                                               τ to τⁱ; τ' to τ'ⁱ; τ₁ to τ₁ⁱ; τ₁' to τ₁'ⁱ; τ₂ to τ₂ⁱ; σ to σⁱ;
+                                               τ to τⁱ; τ' to τ'ⁱ; σ to σⁱ;
+                                               τ₁ to τ₁ⁱ; τ₁' to τ₁'ⁱ;
+                                               τ₂ to τ₂ⁱ; τ₂' to τ₂'ⁱ;
                                                ε to εⁱ; ε' to ε'ⁱ; ε₁ to ε₁ⁱ; ε₂ to ε₂ⁱ)
 
 open import Intermediate.Syntax.CtxSuffix as I
