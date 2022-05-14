@@ -71,7 +71,7 @@ data [_]_⊢_⦂_ {ℓ} θ Γ where
   T-App       : (δ₁ : [ θ ] Γ ⊢ ε₁ ⦂ τ₁ ⇒ τ₂)
               → (δ₂ : [ θ ] Γ ⊢ ε₂ ⦂ τ₁)
               → (resτ-≡ : τ ≡ [ zero ↦τ ε₂ ] τ₂)
-              → (resτδ : [ θ ] Γ ⊢ τ) -- TODO double-check it's really needed
+              → (resτδ : [ θ ] Γ ⊢ τ)
               → [ θ ] Γ ⊢ SApp ε₁ ε₂ ⦂ τ
   T-Case      : {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
               → {bs : CaseBranches (Mkℕₐ (suc n)) ℓ}
