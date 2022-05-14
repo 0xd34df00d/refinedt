@@ -43,15 +43,14 @@ mutual
       (Oracle.thin θ Γ⊂Γ' is-just)
       (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok ρ₁δ (rec _ (s≤s (₁≤₂ _ _))))
       (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok ρ₂δ (rec _ (s≤s (₂≤₂ _ _))))
-  <:-thinning↓ Γ⊂Γ' Γ'ok arr@(ST-Arr <:₁δ <:₂δ τ₁⇒τ₂'δ τ₁'⇒τ₂δ) (acc rec) =
-    let rec-args = ST-Arr-size-vec arr
-        τ₁'⇒τ₂δ' = Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁'⇒τ₂δ (rec _ (<₄ rec-args (# 3)))
-        τ₁'δ' = dom-well-formed τ₁'⇒τ₂δ'
-     in ST-Arr
-          (<:-thinning↓ Γ⊂Γ' Γ'ok <:₁δ (rec _ (<₄ rec-args (# 0))))
-          (<:-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok τ₁'δ') <:₂δ (rec _ (<₄ rec-args (# 1))))
-          (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁⇒τ₂'δ (rec _ (<₄ rec-args (# 2))))
-          τ₁'⇒τ₂δ'
+  <:-thinning↓ Γ⊂Γ' Γ'ok arr@(ST-Arr <:₁δ <:₂δ τ₁⇒τ₂'δ τ₁'⇒τ₂δ) (acc rec)
+    with τ₁'⇒τ₂δ'@(TWF-Arr τ₁'δ' _) ← Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁'⇒τ₂δ (rec _ (<₄ (ST-Arr-size-vec arr) (# 3)))
+       = let rec-args = ST-Arr-size-vec arr
+          in ST-Arr
+              (<:-thinning↓ Γ⊂Γ' Γ'ok <:₁δ (rec _ (<₄ rec-args (# 0))))
+              (<:-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok τ₁'δ') <:₂δ (rec _ (<₄ rec-args (# 1))))
+              (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁⇒τ₂'δ (rec _ (<₄ rec-args (# 2))))
+              τ₁'⇒τ₂δ'
 
   Γ⊢τ-thinning↓ : {Γ : Ctx (k + ℓ)}
                 → (Γ⊂Γ' : k by Γ ⊂' Γ')
