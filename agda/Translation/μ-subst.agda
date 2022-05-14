@@ -96,6 +96,20 @@ mutual
           | μ-<:-sub-distributes Δ argδ <:₁ <:₂
           = refl
 
+  μ-<:-sub-distributes-ext : (Δ : ,-CtxSuffix ℓ σⁱ k)
+                           → (argδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ σⁱ)
+                           → (cod-<: : [ θ ] Γⁱ ,σ, Δ , τ₁'ⁱ ⊢ τ₂'ⁱ <: τ₂ⁱ)
+                           → (res-<: : [ θ ] Γⁱ ++ [↦Δ εⁱ ] (Δ  , τ₁'ⁱ)
+                                           ⊢  IS.act-τ (IS.ext (IS.replace-at (ctx-idx k) (IR.weaken-ε-k k εⁱ))) τ₂'ⁱ
+                                           <: IS.act-τ (IS.ext (IS.replace-at (ctx-idx k) (IR.weaken-ε-k k εⁱ))) τ₂ⁱ)
+                           → μ-<: res-<: ≡ [ ℓ ↦' μ-ε argδ ] μ-<: cod-<:
+  μ-<:-sub-distributes-ext {k = k} {εⁱ = εⁱ} {τ₂'ⁱ = τ₂'ⁱ} {τ₂ⁱ = τ₂ⁱ} Δ argδ cod-<: res-<:
+    with ext-replace-comm ← IS.ext-replace-comm (IR.weaken-ε-k k εⁱ) (ctx-idx k)
+    rewrite IS.act-τ-extensionality ext-replace-comm τ₂ⁱ
+          | IS.act-τ-extensionality ext-replace-comm τ₂'ⁱ
+          | IR.act-ε-distr (raise k) suc εⁱ
+          = μ-<:-sub-distributes (Δ , _) argδ cod-<: res-<:
+
   μ-<:-sub-distributes : (Δ : ,-CtxSuffix ℓ σⁱ k)
                        → (argδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ σⁱ)
                        → (cod-<: : [ θ ] Γⁱ ,σ, Δ ⊢ τ'ⁱ <: τⁱ)
@@ -106,16 +120,13 @@ mutual
           | IS.act-ρ-extensionality (IS.ext-replace-comm (IR.act-ε (raise k) εⁱ) (ctx-idx k)) ρ₂
           | IR.act-ε-distr (raise k) suc εⁱ
           = T-Props.sub-<: θ-props Δ argδ is-just₁ is-just₂
-  μ-<:-sub-distributes {ℓ = ℓ} {k = k} {εⁱ = εⁱ} Δ argδ (ST-Arr {τ₂' = τ₂'ⁱ} {τ₂ = τ₂ⁱ} cod-<:₁ cod-<:₂ cod-τδ cod-τ₁'δ)
-                                                        (ST-Arr                         res-<:₁ res-<:₂ res-τδ res-τ₁'δ)
-    with ext-replace-comm ← IS.ext-replace-comm (IR.weaken-ε-k k εⁱ) (ctx-idx k)
-    rewrite μ-τ-sub-distributes Δ argδ cod-τδ res-τδ
+  μ-<:-sub-distributes {ℓ = ℓ} {k = k} {εⁱ = εⁱ} Δ argδ
+                      (ST-Arr {τ₂' = τ₂'ⁱ} {τ₂ = τ₂ⁱ} cod-<:₁ cod-<:₂ cod-τ₁⇒τ₂'δ cod-τ₁'⇒τ₂δ@(TWF-Arr cod-τ₁'δ _))
+                      (ST-Arr                         res-<:₁ res-<:₂ res-τ₁⇒τ₂'δ res-τ₁'⇒τ₂δ@(TWF-Arr res-τ₁'δ _))
+    rewrite μ-τ-sub-distributes Δ argδ cod-τ₁⇒τ₂'δ res-τ₁⇒τ₂'δ
           | μ-τ-sub-distributes Δ argδ cod-τ₁'δ res-τ₁'δ
           | μ-<:-sub-distributes Δ argδ cod-<:₁ res-<:₁
-          | IS.act-τ-extensionality ext-replace-comm τ₂ⁱ
-          | IS.act-τ-extensionality ext-replace-comm τ₂'ⁱ
-          | IR.act-ε-distr (raise k) suc εⁱ
-          | μ-<:-sub-distributes (Δ , _) argδ cod-<:₂ res-<:₂
+          | μ-<:-sub-distributes-ext Δ argδ cod-<:₂ res-<:₂
 
           | CS.ρ-σ-distr-ε suc (CS.replace-at (ctx-idx k) (CR.weaken-ε-k k (μ-ε argδ))) (μ-τ cod-τ₁'δ)
           | CS.σ-ρ-distr-ε (CS.ext (CS.replace-at (ctx-idx k) (CR.weaken-ε-k k (μ-ε argδ)))) suc (μ-τ cod-τ₁'δ)
