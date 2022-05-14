@@ -45,11 +45,6 @@ open import Translation.μ-subst.Helpers
              → ⌊μ⌋-b {ℓ = k + ℓ} b ≡ [ ℓ ↦' ε ] (⌊μ⌋-b b)
 ⌊μ⌋-b-sub-id _ _ BUnit = refl
 
-μ-ε-cong-unique : (εδ₁ : [ θ ] Γⁱ ⊢ εⁱ ⦂ τ₁ⁱ)
-                → (εδ₂ : [ θ ] Γⁱ ⊢ εⁱ ⦂ τ₂ⁱ)
-                → μ-ε εδ₁ ≡ μ-ε εδ₂
-μ-ε-cong-unique εδ₁ εδ₂ with refl ← typing-uniqueness εδ₁ εδ₂ = cong μ-ε (unique-Γ⊢ε⦂τ εδ₁ εδ₂)
-
 μ-Var-sub-distributes : (Δ : ,-CtxSuffix ℓ σⁱ k)
                       → (argδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ σⁱ)
                       → (codδ : [ θ ] Γⁱ ,σ, Δ ⊢ SVar ι ⦂ τⁱ)
