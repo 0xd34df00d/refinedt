@@ -28,3 +28,7 @@ subst-τ Γ⊢τ₁ Γ⊢τ₂ = subst (_ ⊢ᶜ _ ⦂_) (cong μ-τ (unique-Γ�
                 → (εδ₂ : [ θ ] Γⁱ ⊢ εⁱ ⦂ τ₂ⁱ)
                 → μ-ε εδ₁ ≡ μ-ε εδ₂
 μ-ε-cong-unique εδ₁ εδ₂ with refl ← typing-uniqueness εδ₁ εδ₂ = cong μ-ε (unique-Γ⊢ε⦂τ εδ₁ εδ₂)
+
+μ-τ-cong-unique : (τδ₁ τδ₂ : [ θ ] Γⁱ ⊢ τⁱ)
+                → μ-τ τδ₁ ≡ μ-τ τδ₂
+μ-τ-cong-unique τδ₁ τδ₂ = cong μ-τ (unique-Γ⊢τ τδ₁ τδ₂)
