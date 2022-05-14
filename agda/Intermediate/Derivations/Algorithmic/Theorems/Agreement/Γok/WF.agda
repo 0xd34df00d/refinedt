@@ -106,7 +106,8 @@ ST-Arr-size-vec : [ θ ] Γ ⊢ τ₁ ⇒ τ₂' <: τ₁' ⇒ τ₂
 ST-Arr-size-vec (ST-Arr <:₁δ <:₂δ τ₁⇒τ₂'δ τ₁'⇒τ₂δ) = size-<: <:₁δ ∷ size-<: <:₂δ ∷ size-twf τ₁⇒τ₂'δ ∷ size-twf τ₁'⇒τ₂δ ∷ []
 
 -- A trivial lemma that's a bit annoying to spell out and that'll be needed in a couple of other places
-ST-Arr-τ₁'-smaller : ∀ <:₁δ <:₂δ τ₁⇒τ₂'δ (τ₁'δ : [ θ ] Γ ⊢ τ₁') τ₂δ
-                   → size-twf τ₁'δ < size-<: (ST-Arr {τ₁' = τ₁'} {τ₁ = τ₁} {τ₂' = τ₂'} {τ₂ = τ₂} <:₁δ <:₂δ τ₁⇒τ₂'δ (TWF-Arr τ₁'δ τ₂δ))
-ST-Arr-τ₁'-smaller <:₁δ <:₂δ τ₁⇒τ₂'δ τ₁'δ τ₂δ = let <:δ = ST-Arr <:₁δ <:₂δ τ₁⇒τ₂'δ (TWF-Arr τ₁'δ τ₂δ)
-                                                 in ≤-trans (s≤s (≤-trans (₁≤₂ _ _) (n≤1+n _))) (<₄ (ST-Arr-size-vec <:δ) (# 3))
+ST-Arr-τ₁'-smaller : ∀ {<:₁δ} {<:₂δ} {τ₁⇒τ₂'δ} {τ₁'δ : [ θ ] Γ ⊢ τ₁'} {τ₂δ}
+                   → (<:δ : [ θ ] Γ ⊢ τ₁ ⇒ τ₂' <: τ₁' ⇒ τ₂)
+                   → ⦃ <:δ ≡ ST-Arr <:₁δ <:₂δ τ₁⇒τ₂'δ (TWF-Arr τ₁'δ τ₂δ) ⦄
+                   → size-twf τ₁'δ < size-<: <:δ
+ST-Arr-τ₁'-smaller <:δ ⦃ refl ⦄ = ≤-trans (s≤s (≤-trans (₁≤₂ _ _) (n≤1+n _))) (<₄ (ST-Arr-size-vec <:δ) (# 3))
