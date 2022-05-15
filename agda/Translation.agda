@@ -127,4 +127,24 @@ mutual
   μ-<:-well-typed : (Γok : [ θ ] Γⁱ ok)
                   → (<:δ : [ θ ] Γⁱ ⊢ τ'ⁱ <: τⁱ)
                   → μ-Γ Γok ⊢ᶜ μ-<: <:δ ⦂ μ-τ (Γ⊢τ'<:τ-⇒-Γ⊢τ' <:δ) ⇒' μ-τ (Γ⊢τ'<:τ-⇒-Γ⊢τ <:δ)
-  μ-<:-well-typed = {! !}
+  μ-<:-well-typed Γok (ST-Base is-just ρ₁δ ρ₂δ) = {! !}
+  μ-<:-well-typed Γok (ST-Arr <:₁δ <:₂δ τ₁⇒τ₂'δ τ₁'⇒τ₂δ@(TWF-Arr τ₁'δ τ₂δ))
+          = let <:δ₁ᶜ = μ-<:-well-typed Γok <:₁δ
+                <:δ₂ᶜ = μ-<:-well-typed (TCTX-Bind Γok τ₁'δ) <:₂δ
+                weaken-μ-τ₁'δ = {! !}
+                app₀ = CT-Weaken {τ₂ = CR.act-ε suc (μ-τ (Γ⊢τ'<:τ-⇒-Γ⊢τ' <:₁δ))}
+                        (CT-Weaken <:δ₁ᶜ {! !})
+                        weaken-μ-τ₁'δ
+                app₁ = CT-App {ε₁ = weaken-ε (weaken-ε (μ-<: <:₁δ))} {ε₂ = CVar zero}
+                        app₀
+                        (CT-Var weaken-μ-τ₁'δ)
+                app₂ = CT-App {ε₁ = CVar (suc zero)}
+                        {! !}
+                        app₁
+                abs = CT-Abs {τ₁ = μ-τ τ₁⇒τ₂'δ}
+                        (CT-Abs {τ₁ = CR.weaken-ε (μ-τ τ₁'δ)}
+                          {! !}
+                          {! !}
+                        )
+                        {! !}
+             in {! !}
