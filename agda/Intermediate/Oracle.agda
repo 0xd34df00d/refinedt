@@ -44,3 +44,5 @@ record Oracle : Set where
              ≡
              CR.act-ε (ext-k' k suc) (PositiveDecision.<:-ε (to-witness is-just))
 -- TODO when all is done, check if any of the above properties are not needed anymore
+-- See also .θ-Props modules elsewhere for any additional properties
+-- not expressed here due to strict positivity or similar reasons.
