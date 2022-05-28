@@ -44,10 +44,6 @@ record Oracle : Set where
     trans : Is-just (decide Γ b ρ₁ ρ₂)
           → Is-just (decide Γ b ρ₂ ρ₃)
           → Is-just (decide Γ b ρ₁ ρ₃)
-    narrowing
-          -- TODO add this back when parametrizing everything by an oracle: → Γ ⊢ σ' <: σ
-          : Is-just (decide (Γ , σ  ++ Δ) b ρ₁ ρ₂)
-          → Is-just (decide (Γ , σ' ++ Δ) b ρ₁ ρ₂)
 
     thin-ε : ∀ {Γ : Ctx (k + ℓ)} {Γ' : Ctx (suc k + ℓ)} {ρ₁ ρ₂ : Refinement (suc k + ℓ)}
            → (is-just : Is-just (decide Γ b ρ₁ ρ₂))
