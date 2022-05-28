@@ -10,10 +10,8 @@ open import Relation.Binary.PropositionalEquality using (_≡_)
 open import Common.Helpers
 
 open import Intermediate.Syntax
-open import Intermediate.Syntax.CtxSuffix
 open import Intermediate.Syntax.Subcontext
 import Intermediate.Syntax.Renaming as R
-import Intermediate.Syntax.Substitution as S
 
 open import Core.Syntax using (CExpr)
 open import Core.Syntax.Renaming as CR using (act-ε)
@@ -35,12 +33,6 @@ record Oracle : Set where
            → (Γ⊂Γ' : k by Γ ⊂' Γ')
            → Is-just (decide Γ b ρ₁ ρ₂)
            → Is-just (decide Γ' b (R.act-ρ (ext-k' (suc k) suc) ρ₁) (act-ρ (ext-k' (suc k) suc) ρ₂))
-    subst  : ∀ {Δ : ,-CtxSuffix ℓ σ k} {ρ₁ ρ₂ : Refinement (suc (suc k + ℓ))}
-           -- TODO add this back when parametrizing everything by an oracle: → Γ ⊢ ε ⦂ σ
-           → Is-just (decide (Γ ,σ, Δ) b ρ₁ ρ₂)
-           → Is-just (decide (Γ ++ ([↦Δ ε ] Δ)) b
-                        (S.act-ρ (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ρ₁)
-                        (S.act-ρ (S.ext (S.replace-at (ctx-idx k) (R.weaken-ε-k k ε))) ρ₂))
     trans : Is-just (decide Γ b ρ₁ ρ₂)
           → Is-just (decide Γ b ρ₂ ρ₃)
           → Is-just (decide Γ b ρ₁ ρ₃)

@@ -1,6 +1,9 @@
 {-# OPTIONS --safe #-}
 
-module Intermediate.Derivations.Algorithmic.Theorems.Substitution where
+open import Intermediate.Oracle
+open import Intermediate.Derivations.Algorithmic.Theorems.Substitution.θ-Props renaming (Props to S-Props)
+
+module Intermediate.Derivations.Algorithmic.Theorems.Substitution(θ : Oracle)(θ-props : S-Props θ) where
 
 open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Fin.Base using (suc; zero; fromℕ<; raise)
@@ -21,7 +24,7 @@ open import Intermediate.Syntax.Substitution using ([_↦τ_]_; [_↦ε_]_; [_�
 open import Intermediate.Syntax.Substitution.Stable
 open import Intermediate.Syntax.Substitution.Distributivity as S
 open import Intermediate.Syntax.Substitution.Commutativity
-open import Intermediate.Derivations.Algorithmic
+open import Intermediate.Derivations.Algorithmic hiding (θ)
 open import Intermediate.Derivations.Algorithmic.Theorems.Thinning
 
 -- Substitution lemmas
@@ -103,7 +106,7 @@ mutual
                          | replace-weakened-τ k (weaken-ε-k k ε) σ
                          = Γ⊢ε⦂τ-weakening-suffix (sub-Γok Δ εδ Γok) εδ
   ... | greater rep>var = T-Var (sub-Γok Δ εδ Γok) (var-later-in-Γ-remains Δ τ-∈ rep>var)
-  sub-Γ⊢ε⦂τ {k = k} {θ = θ} {Γ = Γ} {ε = ε}
+  sub-Γ⊢ε⦂τ {k = k} {Γ = Γ} {ε = ε}
             Δ εδ (T-Abs {τ₁ = τ₁} {τ₂ = τ₂} {ε = ε'} arrδ bodyδ) = T-Abs (sub-Γ⊢τ Δ εδ arrδ) bodyδ'
     where
     bodyδ' : [ θ ] Γ ++ [↦Δ ε ] (Δ , τ₁) ⊢
@@ -113,7 +116,7 @@ mutual
                  | S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
                  | R.act-ε-distr (raise k) suc ε
                  = sub-Γ⊢ε⦂τ ( Δ , _ ) εδ bodyδ
-  sub-Γ⊢ε⦂τ {ℓ = ℓ} {k = k} {θ = θ} {Γ = Γ} {ε = ε}
+  sub-Γ⊢ε⦂τ {ℓ = ℓ} {k = k} {Γ = Γ} {ε = ε}
             Δ εδ (T-App {ε₁ = ε₁} {τ₁} {τ₂} {ε₂} ε₁δ ε₂δ refl τδ)
     = let comm-prf = subst-commutes-τ-zero (ctx-idx k) (R.weaken-ε-k k ε) ε₂ τ₂
        in T-App ε₁δ' (sub-Γ⊢ε⦂τ Δ εδ ε₂δ) comm-prf (sub-Γ⊢τ Δ εδ τδ)
@@ -122,7 +125,7 @@ mutual
            [ ℓ ↦ε< ε ] ε₁ ⦂
            ([ ℓ ↦τ< ε ] τ₁) ⇒ ([ suc (ctx-idx k) ↦τ R.weaken-ε (R.weaken-ε-k k ε) ] τ₂)
     ε₁δ' rewrite sym (S.act-τ-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂) = sub-Γ⊢ε⦂τ Δ εδ ε₁δ
-  sub-Γ⊢ε⦂τ {ℓ = ℓ} {k = k} {θ = θ} {Γ = Γ} {ε = ε} Δ εδ (T-Case resδ ε₀δ branches)
+  sub-Γ⊢ε⦂τ {ℓ = ℓ} {k = k} {Γ = Γ} {ε = ε} Δ εδ (T-Case resδ ε₀δ branches)
     = T-Case (sub-Γ⊢τ Δ εδ resδ) (sub-Γ⊢ε⦂τ Δ εδ ε₀δ) (sub-branches branches)
     where
     sub-branches : ∀ {bs : CaseBranches nₐ (suc k + ℓ)} {cons : ADTCons nₐ (suc k + ℓ)}
@@ -145,8 +148,8 @@ mutual
               → [ θ ] Γ ⊢ ε ⦂ σ
               → [ θ ] Γ ,σ, Δ ⊢ τ <: τ'
               → [ θ ] Γ ++ [↦Δ ε ] Δ ⊢ [ ℓ ↦τ< ε ] τ <: [ ℓ ↦τ< ε ] τ'
-  sub-Γ⊢τ<:τ' {θ = θ} Δ εδ (ST-Base is-just ρ₁δ ρ₂δ) = ST-Base (Oracle.subst θ is-just) (sub-Γ⊢τ Δ εδ ρ₁δ) (sub-Γ⊢τ Δ εδ ρ₂δ)
-  sub-Γ⊢τ<:τ' {k = k} {θ = θ} {Γ = Γ} {ε = ε} Δ εδ (ST-Arr {τ₂' = τ₂'} {τ₂ = τ₂} <:₁ <:₂ τ₁⇒τ₂'δ τ₁'⇒τ₂δ)
+  sub-Γ⊢τ<:τ' Δ εδ (ST-Base is-just ρ₁δ ρ₂δ) = ST-Base (S-Props.subst θ-props εδ is-just) (sub-Γ⊢τ Δ εδ ρ₁δ) (sub-Γ⊢τ Δ εδ ρ₂δ)
+  sub-Γ⊢τ<:τ' {k = k} {Γ = Γ} {ε = ε} Δ εδ (ST-Arr {τ₂' = τ₂'} {τ₂ = τ₂} <:₁ <:₂ τ₁⇒τ₂'δ τ₁'⇒τ₂δ)
     = ST-Arr (sub-Γ⊢τ<:τ' Δ εδ <:₁) <:₂' (sub-Γ⊢τ Δ εδ τ₁⇒τ₂'δ) (sub-Γ⊢τ Δ εδ τ₁'⇒τ₂δ)
     where
     <:₂' : [ θ ] (Γ ++ ([↦Δ ε ] (Δ , _))) ⊢

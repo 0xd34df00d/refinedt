@@ -2,8 +2,9 @@
 
 open import Intermediate.Oracle
 open import Intermediate.Translation.θ-Props renaming (Props to T-Props)
+open import Intermediate.Derivations.Algorithmic.Theorems.Substitution.θ-Props renaming (Props to S-Props)
 
-module Intermediate.Translation.μ-subst(θ : Oracle)(θ-props : T-Props θ) where
+module Intermediate.Translation.μ-subst(θ : Oracle)(θ-μ-props : T-Props θ)(θ-σ-props : S-Props θ) where
 
 open import Data.Fin.Base using (zero; suc; raise)
 open import Data.Nat.Base using (zero; suc)
@@ -33,7 +34,7 @@ open import Intermediate.Syntax.Substitution as IS
 open import Intermediate.Syntax.Substitution.Distributivity as IS
 open import Intermediate.Derivations.Algorithmic as I hiding (θ)
 open import Intermediate.Derivations.Algorithmic.Theorems.Agreement
-open import Intermediate.Derivations.Algorithmic.Theorems.Substitution
+open import Intermediate.Derivations.Algorithmic.Theorems.Substitution(θ)(θ-σ-props)
 open import Intermediate.Derivations.Algorithmic.Theorems.Thinning
 open import Intermediate.Derivations.Algorithmic.Theorems.Uniqueness
 
@@ -119,7 +120,7 @@ mutual
     rewrite IS.act-ρ-extensionality (IS.ext-replace-comm (IR.act-ε (raise k) εⁱ) (ctx-idx k)) ρ₁
           | IS.act-ρ-extensionality (IS.ext-replace-comm (IR.act-ε (raise k) εⁱ) (ctx-idx k)) ρ₂
           | IR.act-ε-distr (raise k) suc εⁱ
-          = T-Props.sub-<: θ-props Δ argδ is-just₁ is-just₂
+          = T-Props.sub-<: θ-μ-props Δ argδ is-just₁ is-just₂
   μ-<:-sub-distributes {ℓ = ℓ} {k = k} {εⁱ = εⁱ} Δ argδ
                       (ST-Arr {τ₂' = τ₂'ⁱ} {τ₂ = τ₂ⁱ} cod-<:₁ cod-<:₂ cod-τ₁⇒τ₂'δ cod-τ₁'⇒τ₂δ@(TWF-Arr cod-τ₁'δ _))
                       (ST-Arr                         res-<:₁ res-<:₂ res-τ₁⇒τ₂'δ res-τ₁'⇒τ₂δ@(TWF-Arr res-τ₁'δ _))
