@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Translation.Untyped where
+module Intermediate.Translation.Untyped where
 
 open import Data.Vec using (Vec; _∷_; [])
 

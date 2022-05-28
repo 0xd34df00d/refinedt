@@ -1,9 +1,9 @@
 {-# OPTIONS --safe #-}
 
 open import Intermediate.Oracle hiding (θ)
-open import Translation.θ-Props renaming (Props to T-Props)
+open import Intermediate.Translation.θ-Props renaming (Props to T-Props)
 
-module Translation.μ-subst(θ : Oracle)(θ-props : T-Props θ) where
+module Intermediate.Translation.μ-subst(θ : Oracle)(θ-props : T-Props θ) where
 
 open import Data.Fin.Base using (zero; suc; raise)
 open import Data.Nat.Base using (zero; suc)
@@ -37,11 +37,11 @@ open import Intermediate.Derivations.Algorithmic.Theorems.Substitution
 open import Intermediate.Derivations.Algorithmic.Theorems.Thinning
 open import Intermediate.Derivations.Algorithmic.Theorems.Uniqueness
 
-open import Translation.SubstUnique
-open import Translation.Typed
-open import Translation.Untyped
-open import Translation.μ-weakening
-open import Translation.μ-subst.Helpers
+open import Intermediate.Translation.SubstUnique
+open import Intermediate.Translation.Typed
+open import Intermediate.Translation.Untyped
+open import Intermediate.Translation.μ-weakening
+open import Intermediate.Translation.μ-subst.Helpers
 
 ⌊μ⌋-b-sub-id : ∀ k ε b
              → ⌊μ⌋-b {ℓ = k + ℓ} b ≡ [ ℓ ↦' ε ] (⌊μ⌋-b b)

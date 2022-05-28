@@ -12,7 +12,7 @@ Hence, they are defined separately here.
 
 open import Intermediate.Oracle hiding (θ)
 
-module Translation.θ-Props(θ : Oracle) where
+module Intermediate.Translation.θ-Props(θ : Oracle) where
 
 open import Data.Maybe
 open import Relation.Binary.PropositionalEquality using (_≡_)
@@ -25,7 +25,7 @@ open import Intermediate.Syntax.Substitution as IS
 open import Core.Syntax
 open import Core.Syntax.Substitution
 
-open import Translation.Typed
+open import Intermediate.Translation.Typed
 
 record Props : Set where
   constructor MkProps

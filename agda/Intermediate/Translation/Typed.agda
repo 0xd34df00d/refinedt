@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Translation.Typed where
+module Intermediate.Translation.Typed where
 
 open import Data.Fin using (zero; suc)
 open import Data.Maybe using (Is-just; just; to-witness)
@@ -14,7 +14,7 @@ open import Intermediate.Syntax as I renaming (Γ to Γⁱ; τ to τⁱ; ε to �
 open import Intermediate.Syntax.CtxSuffix
 open import Intermediate.Derivations.Algorithmic as I renaming ([_]_⊢_⦂_ to [_]_⊢ⁱ_⦂_)
 
-open import Translation.Untyped
+open import Intermediate.Translation.Untyped
 
 mutual
   {-

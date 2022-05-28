@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Translation.μ-subst.Helpers where
+module Intermediate.Translation.μ-subst.Helpers where
 
 open import Data.Fin.Base using (zero; suc; raise)
 open import Data.Nat.Base using (zero; suc)

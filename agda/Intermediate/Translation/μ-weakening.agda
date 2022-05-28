@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Translation.μ-weakening where
+module Intermediate.Translation.μ-weakening where
 
 open import Data.Fin using (zero; suc; raise; #_)
 open import Data.Nat.Base
@@ -29,10 +29,10 @@ open import Intermediate.Derivations.Algorithmic.Theorems.Helpers
 open import Intermediate.Derivations.Algorithmic.Theorems.Thinning
 open import Intermediate.Derivations.Algorithmic.Theorems.Uniqueness
 
-open import Translation.SubstUnique
-open import Translation.Typed
-open import Translation.Untyped
-open import Translation.μ-weakening.Helpers
+open import Intermediate.Translation.SubstUnique
+open import Intermediate.Translation.Typed
+open import Intermediate.Translation.Untyped
+open import Intermediate.Translation.μ-weakening.Helpers
 
 μ-ε-subst : (eq : τⁱ ≡ τⁱ')
           → (δ : [ θ ] Γⁱ ⊢ εⁱ ⦂ τⁱ)

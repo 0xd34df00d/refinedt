@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Translation.SubstUnique where
+module Intermediate.Translation.SubstUnique where
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst; cong)
 
@@ -12,7 +12,7 @@ open import Intermediate.Syntax as I renaming (Γ to Γⁱ;
 open import Intermediate.Derivations.Algorithmic as I
 open import Intermediate.Derivations.Algorithmic.Theorems.Uniqueness
 
-open import Translation.Typed
+open import Intermediate.Translation.Typed
 
 subst-Γ : (Γok₁ Γok₂ : [ θ ] Γⁱ ok)
         → μ-Γ Γok₁ ⊢ᶜ εᶜ ⦂ τᶜ

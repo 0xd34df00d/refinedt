@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Translation.μ-weakening.Helpers where
+module Intermediate.Translation.μ-weakening.Helpers where
 
 open import Data.Fin using (zero; suc)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
@@ -12,7 +12,7 @@ open import Core.Syntax.Renaming
 open import Core.Syntax.Renaming.Distributivity
 open import Intermediate.Syntax using (BUnit)
 
-open import Translation.Untyped
+open import Intermediate.Translation.Untyped
 
 ⌊μ⌋-b-weaken-id : ∀ k b
                 → ⌊μ⌋-b b ≡ act-ε (ext-k' {ℓ} k suc) (⌊μ⌋-b b)

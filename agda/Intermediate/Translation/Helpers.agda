@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Translation.Helpers where
+module Intermediate.Translation.Helpers where
 
 open import Data.Fin using (zero; suc)
 open import Data.Vec using (Vec; _∷_; []; lookup)
@@ -14,9 +14,9 @@ open import Intermediate.Derivations.Algorithmic as I
 open import Intermediate.Derivations.Algorithmic.Theorems.Agreement as I
 open import Intermediate.Derivations.Algorithmic.Theorems.Uniqueness
 
-open import Translation.Typed
-open import Translation.SubstUnique
-open import Translation.μ-weakening
+open import Intermediate.Translation.Typed
+open import Intermediate.Translation.SubstUnique
+open import Intermediate.Translation.μ-weakening
 
 μ-preserves-∈ : (Γok : [ θ ] Γˢ ok)
               → (∈ : τˢ ∈ˢ Γˢ at ι)

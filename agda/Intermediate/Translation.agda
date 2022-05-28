@@ -1,7 +1,7 @@
 open import Intermediate.Oracle hiding (θ)
-open import Translation.θ-Props renaming (Props to T-Props)
+open import Intermediate.Translation.θ-Props renaming (Props to T-Props)
 
-module Translation(θ : Oracle)(θ-props : T-Props θ) where
+module Intermediate.Translation(θ : Oracle)(θ-props : T-Props θ) where
 
 open import Data.Fin using (zero; suc)
 open import Data.Vec using (Vec; _∷_; []; lookup)
@@ -26,11 +26,11 @@ open import Intermediate.Syntax.Substitution as SS
 open import Intermediate.Derivations.Algorithmic as S hiding (θ)
 open import Intermediate.Derivations.Algorithmic.Theorems.Agreement as S
 
-open import Translation.Untyped
-open import Translation.Typed
-open import Translation.SubstUnique
-open import Translation.Helpers
-open import Translation.μ-subst(θ)(θ-props)
+open import Intermediate.Translation.Untyped
+open import Intermediate.Translation.Typed
+open import Intermediate.Translation.SubstUnique
+open import Intermediate.Translation.Helpers
+open import Intermediate.Translation.μ-subst(θ)(θ-props)
 
 μ-Τ-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
                → Γᶜ ⊢ᶜ ⌊μ⌋-Τ ⦂ ⋆ₑ
