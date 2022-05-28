@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-open import Intermediate.Oracle hiding (θ)
+open import Intermediate.Oracle
 open import Intermediate.Translation.θ-Props renaming (Props to T-Props)
 
 module Intermediate.Translation.μ-subst(θ : Oracle)(θ-props : T-Props θ) where

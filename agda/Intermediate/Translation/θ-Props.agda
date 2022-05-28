@@ -10,7 +10,7 @@ they cannot be (easily) defined in Intermediate.Oracle without introducing circu
 Hence, they are defined separately here.
 -}
 
-open import Intermediate.Oracle hiding (θ)
+open import Intermediate.Oracle
 
 module Intermediate.Translation.θ-Props(θ : Oracle) where
 
