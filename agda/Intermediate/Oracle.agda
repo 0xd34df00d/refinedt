@@ -52,6 +52,3 @@ record Oracle : Set where
              ≡
              CR.act-ε (ext-k' k suc) (PositiveDecision.<:-ε (to-witness is-just))
 -- TODO when all is done, check if any of the above properties are not needed anymore
-
-variable
-  θ : Oracle
