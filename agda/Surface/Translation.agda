@@ -24,6 +24,7 @@ open import Surface.Translation.Untyped
 open import Surface.Translation.Typed
 open import Surface.Translation.SubstUnique
 open import Surface.Translation.Helpers
+open import Surface.Translation.μ-subst
 
 μ-Τ-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
                → Γᶜ ⊢ᶜ ⌊μ⌋-Τ ⦂ ⋆ₑ
@@ -100,8 +101,7 @@ mutual
                   (subst-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ) codδ
                     (μ-ε-well-typed εδ))
        in CT-Abs εδᶜ (μ-τ-well-typed arrδ)
-  μ-ε-well-typed (T-App ε₁δ (T-Sub {τ = τ₁'} ε₂δ τ'δ <:δ) refl resτδ) with Γ⊢ε⦂τ-⇒-Γ⊢τ ε₁δ
-  ... | TWF-Arr τ₁δ τ₂δ
+  μ-ε-well-typed (T-App ε₁δ (T-Sub {τ = τ₁'} ε₂δ τ'δ <:δ) refl resτδ) with TWF-Arr τ₁δ τ₂δ ← Γ⊢ε⦂τ-⇒-Γ⊢τ ε₁δ
     = let ε₁δᶜ = subst-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ ε₁δ) (TWF-Arr τ₁δ τ₂δ) (μ-ε-well-typed ε₁δ)
           ε₂δᶜ = ⇒'-·-well-typed {τ₂ = μ-τ τ'δ}
                   (μ-<:-well-typed (Γ⊢ε⦂τ-⇒-Γok ε₂δ) (Γ⊢ε⦂τ-⇒-Γ⊢τ ε₂δ) τ'δ <:δ) 
@@ -110,7 +110,8 @@ mutual
                    (subst-τ τ'δ τ₁δ
                      ε₂δᶜ)
           app = CT-App ε₁δᶜ ε₂δᶜ
-       in {! !}
+          ret-eq = μ-τ-sub-front-distributes ε₂δ <:δ τ₂δ resτδ
+       in {! !} -- subst (_ ⊢ᶜ _ ⦂_) (sym (ret-eq)) app
   μ-ε-well-typed (T-Case resδ δ branches-well-typed) = {! !}
   μ-ε-well-typed (T-Con refl δ τδ@(TWF-ADT consδs))
     = let ≡-prf = μ-lookup-commutes _ consδs (Γ⊢ε⦂τ-⇒-Γ⊢τ δ)
