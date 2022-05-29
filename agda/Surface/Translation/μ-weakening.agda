@@ -2,11 +2,11 @@
 
 module Surface.Translation.μ-weakening where
 
-open import Data.Fin using (zero; suc)
+open import Data.Fin using (zero; suc; raise)
 open import Data.Nat.Base
 open import Data.Nat.Induction
 open import Data.Nat.Properties
-open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst; cong; trans)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst; cong; trans; sym)
 
 open import Common.Inequalities
 open import Common.Helpers
@@ -18,6 +18,7 @@ open import Core.Syntax.Derived as CR
 open import Core.Syntax.Derived.Renaming as CR
 open import Core.Operational as C
 open import Surface.Syntax as S renaming (Γ to Γˢ; Γ' to Γˢ'; τ to τˢ; τ' to τˢ'; ε to εˢ)
+open import Surface.Syntax.CtxSuffix as S renaming (Δ to Δˢ)
 open import Surface.Syntax.Subcontext as S
 open import Surface.Syntax.Renaming as SR
 open import Surface.Syntax.Substitution.Distributivity
@@ -204,3 +205,32 @@ mutual
                        → (τδ : Γˢ ⊢[ θ , E ] τˢ)
                        → μ-τ (Γ⊢τ-weakening Γok τ'δ τδ) ≡ CR.weaken-ε (μ-τ τδ)
 μ-τ-weakening-commutes Γok τ'δ = μ-τ-thinning-commutes ignore-head (TCTX-Bind Γok τ'δ)
+
+
+μ-ε-thinning-commutes : {Γˢ : S.Ctx (k + ℓ)}
+                      → (Γ⊂Γ' : k by Γˢ ⊂' Γˢ')
+                      → (Γ'ok : Γˢ' ok[ θ , E ])
+                      → (εδ : Γˢ ⊢[ θ , E of κ ] εˢ ⦂ τˢ)
+                      → μ-ε (Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok εδ) ≡ CR.act-ε (ext-k' k suc) (μ-ε εδ)
+μ-ε-thinning-commutes Γ⊂Γ' Γ'ok εδ = μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok εδ (<-wellFounded _)
+
+μ-ε-weakening-commutes : (Γok : Γˢ ok[ θ , E ])
+                       → (τ'δ : Γˢ ⊢[ θ , E ] τˢ')
+                       → (εδ : Γˢ ⊢[ θ , E of κ ] εˢ ⦂ τˢ)
+                       → μ-ε (Γ⊢ε⦂τ-weakening Γok τ'δ εδ) ≡ CR.weaken-ε (μ-ε εδ)
+μ-ε-weakening-commutes Γok τ'δ = μ-ε-thinning-commutes ignore-head (TCTX-Bind Γok τ'δ)
+
+μ-ε-weakening-suffix-commutes : {Δˢ : CtxSuffix ℓ k}
+                              → (Γ++Δok : (Γˢ ++ Δˢ) ok[ θ , E ])
+                              → (εδ : Γˢ ⊢[ θ , E of κ ] εˢ ⦂ τˢ)
+                              → μ-ε (Γ⊢ε⦂τ-weakening-suffix Γ++Δok εδ) ≡ CR.weaken-ε-k k (μ-ε εδ)
+μ-ε-weakening-suffix-commutes {εˢ = εˢ} {τˢ = τˢ} {Δˢ = ⊘} Γ++Δok εδ
+  rewrite SR.act-ε-id (λ _ → refl) εˢ
+        | SR.act-τ-id (λ _ → refl) τˢ
+        = refl
+μ-ε-weakening-suffix-commutes {k = suc k} {εˢ = εˢ} {τˢ = τˢ} {Δˢ = Δˢ , _} (TCTX-Bind Γ++Δok τδ) εδ
+  rewrite sym (SR.act-ε-distr (raise k) suc εˢ)
+        | sym (SR.act-τ-distr (raise k) suc τˢ)
+        = trans
+            (μ-ε-weakening-commutes Γ++Δok τδ (Γ⊢ε⦂τ-weakening-suffix Γ++Δok εδ))
+            (cong CR.weaken-ε (μ-ε-weakening-suffix-commutes Γ++Δok εδ))
