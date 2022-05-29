@@ -24,11 +24,14 @@ open import Surface.Syntax.CtxSuffix as S
 open import Surface.Syntax.Renaming as SR
 open import Surface.Syntax.Substitution as SS
 open import Surface.Derivations.Algorithmic as S
+open import Surface.Derivations.Algorithmic.Theorems.Agreement
+open import Surface.Derivations.Algorithmic.Theorems.Thinning
 open import Surface.Derivations.Algorithmic.Theorems.Uniqueness
 
-open import Surface.Translation.Untyped
-open import Surface.Translation.Typed
 open import Surface.Translation.SubstUnique
+open import Surface.Translation.Typed
+open import Surface.Translation.Untyped
+open import Surface.Translation.μ-weakening
 
 ⌊μ⌋-b-sub-id : ∀ k ε b
              → ⌊μ⌋-b {ℓ = k + ℓ} b ≡ [ ℓ ↦' ε ] (⌊μ⌋-b b)
@@ -43,7 +46,9 @@ open import Surface.Translation.SubstUnique
 μ-Var-sub-distributes {k = k} Δ argδ <:δ (T-Var {ι = ι} Γok ∈) resδ with ctx-idx k <>? ι | resδ
 ... | less _ | T-Var _ _ = refl
 ... | greater _ | T-Var _ _ = refl
-... | equal refl | resδ = {! !}
+... | equal refl | resδ = trans
+                            (μ-ε-cong-unique resδ (Γ⊢ε⦂τ-weakening-suffix (Γ⊢ε⦂τ-⇒-Γok resδ) argδ))
+                            (μ-ε-weakening-suffix-commutes _ argδ)
 
 mutual
   μ-ε-sub-distributes : (Δ : ,-CtxSuffix ℓ σˢ k)
