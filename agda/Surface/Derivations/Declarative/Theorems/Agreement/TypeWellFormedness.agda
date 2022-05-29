@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Surface.Theorems.Agreement.TypeWellFormedness where
+module Surface.Derivations.Declarative.Theorems.Agreement.TypeWellFormedness where
 
 open import Data.Nat.Base
 open import Data.Nat.Properties
@@ -8,10 +8,10 @@ open import Relation.Binary.PropositionalEquality using (refl)
 
 open import Surface.Syntax
 open import Surface.Syntax.Membership
-open import Surface.Derivations
-open import Surface.Theorems.Helpers
-open import Surface.Theorems.Thinning
-open import Surface.Theorems.Substitution
+open import Surface.Derivations.Declarative
+open import Surface.Derivations.Declarative.Theorems.Helpers
+open import Surface.Derivations.Declarative.Theorems.Thinning
+open import Surface.Derivations.Declarative.Theorems.Substitution
 
 τ∈Γ-⇒-Γ⊢τ : Γ ok[ φ ]
           → τ ∈ Γ at ι
@@ -31,8 +31,8 @@ open import Surface.Theorems.Substitution
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Sub _ superδ _) = superδ
 
 {-
-open import Surface.Theorems.Thinning.WF
-open import Surface.Theorems.Agreement.TypeWellFormedness.WF
+open import Surface.Derivations.Declarative.Theorems.Thinning.WF
+open import Surface.Derivations.Declarative.Theorems.Agreement.TypeWellFormedness.WF
 
 τ∈Γ-⇒-Γ⊢τ-smaller : (Γok : Γ ok[ φ ])
                   → (∈ : τ ∈ Γ at ι)

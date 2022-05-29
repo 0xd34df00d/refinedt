@@ -1,14 +1,14 @@
 {-# OPTIONS --safe #-}
 
-module Surface.Theorems.Subtyping where
+module Surface.Derivations.Declarative.Theorems.Subtyping where
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Surface.Syntax
 open import Surface.Syntax.CtxSuffix
 open import Surface.Syntax.Membership
-open import Surface.Derivations
-open import Surface.Theorems.Thinning
+open import Surface.Derivations.Declarative
+open import Surface.Derivations.Declarative.Theorems.Thinning
 
 -- Referred to as typing-narrowing in the paper
 mutual

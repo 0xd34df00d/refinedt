@@ -12,9 +12,9 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 open import Surface.Syntax
 open import Surface.Syntax.Membership
 open import Surface.Syntax.Renaming
-open import Surface.Derivations
+open import Surface.Derivations.Declarative
 open import Surface.Operational
-open import Surface.Theorems.Thinning
+open import Surface.Derivations.Declarative.Theorems.Thinning
 
 unit : SType 0
 unit = ⟨ BUnit ∣ Τ ⟩

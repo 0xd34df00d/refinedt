@@ -10,11 +10,11 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 open import Surface.Syntax
 open import Surface.Syntax.Renaming as R
 open import Surface.Syntax.Substitution.Stable
-open import Surface.Derivations
+open import Surface.Derivations.Declarative
 open import Surface.Operational
-open import Surface.Theorems.Agreement
-open import Surface.Theorems.Substitution
-open import Surface.Theorems.Helpers
+open import Surface.Derivations.Declarative.Theorems.Agreement
+open import Surface.Derivations.Declarative.Theorems.Substitution
+open import Surface.Derivations.Declarative.Theorems.Helpers
 open import Surface.Safety.Helpers
 
 data Progress (ε : STerm ℓ) : Set where

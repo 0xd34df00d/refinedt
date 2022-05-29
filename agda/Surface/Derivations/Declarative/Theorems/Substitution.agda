@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Surface.Theorems.Substitution where
+module Surface.Derivations.Declarative.Theorems.Substitution where
 
 open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Fin.Base using (suc; zero; fromℕ<; raise)
@@ -21,8 +21,8 @@ open import Surface.Syntax.Substitution using ([_↦τ_]_; [_↦ε_]_; [_↦c_]_
 open import Surface.Syntax.Substitution.Stable
 open import Surface.Syntax.Substitution.Distributivity as S
 open import Surface.Syntax.Substitution.Commutativity
-open import Surface.Derivations
-open import Surface.Theorems.Thinning
+open import Surface.Derivations.Declarative
+open import Surface.Derivations.Declarative.Theorems.Thinning
 
 -- Substitution lemmas
 

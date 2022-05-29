@@ -1,7 +1,7 @@
 -- {-# OPTIONS --safe #-}
 {-# OPTIONS --allow-unsolved-metas #-}
 
-module Surface.Theorems.Thinning.WF where
+module Surface.Derivations.Declarative.Theorems.Thinning.WF where
 
 open import Data.Nat.Base
 open import Data.Nat.Induction
@@ -11,9 +11,9 @@ open import Data.Fin.Properties
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 
 open import Surface.Syntax
-open import Surface.Derivations
-open import Surface.Theorems.Agreement.TypeWellFormedness.WF
-open import Surface.Theorems.Thinning
+open import Surface.Derivations.Declarative
+open import Surface.Derivations.Declarative.Theorems.Agreement.TypeWellFormedness.WF
+open import Surface.Derivations.Declarative.Theorems.Thinning
 open import Surface.Syntax.Membership
 open import Surface.Syntax.Subcontext
 open import Surface.Syntax.Renaming as R

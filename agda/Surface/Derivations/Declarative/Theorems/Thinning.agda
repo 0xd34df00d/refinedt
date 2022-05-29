@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Surface.Theorems.Thinning where
+module Surface.Derivations.Declarative.Theorems.Thinning where
 
 open import Data.Fin.Base using (zero; suc; raise)
 open import Data.Nat.Base
@@ -18,10 +18,10 @@ open import Surface.Syntax.Membership
 open import Surface.Syntax.Renaming as R
 open import Surface.Syntax.Substitution as S
 open import Surface.Syntax.Substitution.Distributivity
-open import Surface.Derivations
-open import Surface.Theorems.Helpers
-open import Surface.Theorems.Agreement.Γok
-open import Surface.Theorems.Agreement.Γok.WF
+open import Surface.Derivations.Declarative
+open import Surface.Derivations.Declarative.Theorems.Helpers
+open import Surface.Derivations.Declarative.Theorems.Agreement.Γok
+open import Surface.Derivations.Declarative.Theorems.Agreement.Γok.WF
 
 ∈-thinning : {Γ : Ctx (k + ℓ)}
            → k by Γ ⊂' Γ'

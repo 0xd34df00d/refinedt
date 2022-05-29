@@ -1,15 +1,15 @@
 {-# OPTIONS --safe #-}
 
-module Surface.Theorems.Agreement.Γok where
+module Surface.Derivations.Declarative.Theorems.Agreement.Γok where
 
 open import Relation.Binary.PropositionalEquality using (refl)
 open import Data.Nat.Base
 open import Data.Nat.Properties
 
 open import Surface.Syntax
-open import Surface.Derivations
-open import Surface.Theorems.Helpers
-open import Surface.Theorems.Agreement.Γok.WF
+open import Surface.Derivations.Declarative
+open import Surface.Derivations.Declarative.Theorems.Helpers
+open import Surface.Derivations.Declarative.Theorems.Agreement.Γok.WF
 
 Γok-tail-smaller : (δ : (Γ , τ) ok[ φ ]) → size-ok (Γok-tail δ) < size-ok δ
 Γok-tail-smaller (TCTX-Bind prevOk τδ) = s≤s (₁≤₂ (size-ok prevOk) (size-twf τδ))

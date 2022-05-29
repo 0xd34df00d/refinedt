@@ -1,9 +1,9 @@
 {-# OPTIONS --safe #-}
 
-module Surface.Theorems.Helpers where
+module Surface.Derivations.Declarative.Theorems.Helpers where
 
 open import Surface.Syntax
-open import Surface.Derivations
+open import Surface.Derivations.Declarative
 
 Γok-tail : (Γ , τ) ok[ φ ] → Γ ok[ φ ]
 Γok-tail (TCTX-Bind prev _) = prev

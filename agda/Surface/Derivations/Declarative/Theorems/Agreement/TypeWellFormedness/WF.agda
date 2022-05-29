@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Surface.Theorems.Agreement.TypeWellFormedness.WF where
+module Surface.Derivations.Declarative.Theorems.Agreement.TypeWellFormedness.WF where
 
 open import Data.Nat.Base
 open import Data.Nat.Properties
@@ -8,7 +8,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Surface.Syntax
 open import Surface.Syntax.Membership
-open import Surface.Derivations
+open import Surface.Derivations.Declarative
 
 infixr 20 _⊕_
 _⊕_ : ℕ → ℕ → ℕ

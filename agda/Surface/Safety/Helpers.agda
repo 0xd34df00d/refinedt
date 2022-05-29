@@ -9,9 +9,9 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Surface.Syntax
 open import Surface.Syntax.CtxSuffix
-open import Surface.Derivations
+open import Surface.Derivations.Declarative
 open import Surface.Operational
-open import Surface.Theorems.Subtyping
+open import Surface.Derivations.Declarative.Theorems.Subtyping
 
 data Canonical : STerm ℓ → SType ℓ → Set where
   C-Lam  : Canonical (SLam τ ε) (τ₁ ⇒ τ₂)

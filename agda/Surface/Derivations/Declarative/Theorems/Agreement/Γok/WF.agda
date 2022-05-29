@@ -6,12 +6,12 @@ strong enough to prove agreement lemmas yielding a witness of `Γ ok`,
 but not strong enough to prove the lemma `Γ ⊢ ε ⦂ τ → Γ ⊢ τ`.
 -}
 
-module Surface.Theorems.Agreement.Γok.WF where
+module Surface.Derivations.Declarative.Theorems.Agreement.Γok.WF where
 
 open import Data.Nat.Base using (_⊔_; _≤_)
 open import Data.Nat.Properties
 
-open import Surface.Derivations
+open import Surface.Derivations.Declarative
 open import Surface.Syntax
 
 size-ok  : Γ ok[ φ ]         → ℕ

@@ -27,7 +27,6 @@ open import Surface.Syntax.Renaming as SR
 open import Surface.Syntax.Substitution as SS
 open import Surface.Derivations.Algorithmic as S
 open import Surface.Derivations.Algorithmic.Theorems.Uniqueness(oracles-equal)
-open import Surface.Theorems.Substitution as S
 
 open import Surface.Translation.Untyped
 open import Surface.Translation.Typed
