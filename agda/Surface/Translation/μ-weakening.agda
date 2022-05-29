@@ -1,8 +1,6 @@
 {-# OPTIONS --safe #-}
 
-open import Surface.Derivations.Algorithmic using (UniquenessOfOracles)
-
-module Surface.Translation.μ-weakening(oracles-equal : UniquenessOfOracles) where
+module Surface.Translation.μ-weakening where
 
 open import Data.Fin using (zero; suc)
 open import Data.Nat.Base
@@ -27,25 +25,25 @@ open import Surface.Derivations.Algorithmic as S
 open import Surface.Derivations.Algorithmic.Theorems.Agreement.Γok
 open import Surface.Derivations.Algorithmic.Theorems.Agreement.Γok.WF
 open import Surface.Derivations.Algorithmic.Theorems.Thinning
-open import Surface.Derivations.Algorithmic.Theorems.Uniqueness(oracles-equal)
+open import Surface.Derivations.Algorithmic.Theorems.Uniqueness
 
 open import Surface.Translation.Untyped
 open import Surface.Translation.Typed
 open import Surface.Translation.μ-weakening.Helpers
 
 μ-ε-subst : (eq : τˢ ≡ τˢ')
-          → (δ : Γˢ ⊢[ E of κ ] εˢ ⦂ τˢ)
-          → μ-ε (subst (λ τ → Γˢ ⊢[ E of κ ] εˢ ⦂ τ) eq δ) ≡ μ-ε δ
+          → (δ : Γˢ ⊢[ θ , E of κ ] εˢ ⦂ τˢ)
+          → μ-ε (subst (λ τ → Γˢ ⊢[ θ , E of κ ] εˢ ⦂ τ) eq δ) ≡ μ-ε δ
 μ-ε-subst refl δ = refl
 
 mutual
   μ-<:-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
                           → (Γ⊂Γ' : k by Γˢ ⊂' Γˢ')
-                          → (Γ'ok : Γˢ' ok[ E ])
-                          → (δ : Γˢ ⊢[ E ] τˢ <: τˢ')
+                          → (Γ'ok : Γˢ' ok[ θ , E ])
+                          → (δ : Γˢ ⊢[ θ , E ] τˢ <: τˢ')
                           → (δ↓ : Acc _<_ (size-<: δ))
                           → μ-<: (<:-thinning↓ Γ⊂Γ' (enriched Γ'ok) δ δ↓) ≡ CR.act-ε (ext-k' k suc) (μ-<: δ)
-  μ-<:-thinning↓-commutes Γ⊂Γ' Γ'ok (ST-Base oracle is-just) (acc rec) = Oracle.thin-ε oracle is-just Γ⊂Γ'
+  μ-<:-thinning↓-commutes {θ = θ} Γ⊂Γ' Γ'ok (ST-Base is-just) (acc rec) = Oracle.thin-ε θ is-just Γ⊂Γ'
   μ-<:-thinning↓-commutes {k = k} Γ⊂Γ' Γ'ok (ST-Arr <:₁δ <:₂δ (enriched δτ₁⇒τ₂) (enriched δτ₁')) (acc rec)
     rewrite μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok δτ₁⇒τ₂ (rec _ (s≤s (₃≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf δτ₁⇒τ₂) (size-twf δτ₁'))))
           | μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok δτ₁'   (rec _ (s≤s (₄≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf δτ₁⇒τ₂) (size-twf δτ₁'))))
@@ -73,8 +71,8 @@ mutual
 
   μ-τ-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
                          → (Γ⊂Γ' : k by Γˢ ⊂' Γˢ')
-                         → (Γ'ok : Γˢ' ok[ E ])
-                         → (τδ : Γˢ ⊢[ E ] τˢ)
+                         → (Γ'ok : Γˢ' ok[ θ , E ])
+                         → (τδ : Γˢ ⊢[ θ , E ] τˢ)
                          → (τδ↓ : Acc _<_ (size-twf τδ))
                          → μ-τ (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τδ τδ↓) ≡ CR.act-ε (ext-k' k suc) (μ-τ τδ)
   μ-τ-thinning↓-commutes {k = k} Γ⊂Γ' Γ'ok (TWF-TrueRef _) _ = ⌊μ⌋-b-weaken-id k _
@@ -122,8 +120,8 @@ mutual
 
   μ-ε-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
                          → (Γ⊂Γ' : k by Γˢ ⊂' Γˢ')
-                         → (Γ'ok : Γˢ' ok[ E ])
-                         → (εδ : Γˢ ⊢[ E of κ ] εˢ ⦂ τˢ)
+                         → (Γ'ok : Γˢ' ok[ θ , E ])
+                         → (εδ : Γˢ ⊢[ θ , E of κ ] εˢ ⦂ τˢ)
                          → (εδ↓ : Acc _<_ (size-t εδ))
                          → μ-ε (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok εδ εδ↓) ≡ CR.act-ε (ext-k' k suc) (μ-ε εδ)
   μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok (T-Unit _) _ = refl
@@ -160,8 +158,8 @@ mutual
   μ-cons'-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
                              → {cons : S.ADTCons (Mkℕₐ (suc n)) (k + ℓ)}
                              → (Γ⊂Γ' : k by Γˢ ⊂' Γˢ')
-                             → (Γ'ok : Γˢ' ok[ E ])
-                             → (consδs : All (Γˢ ⊢[ E ]_) cons)
+                             → (Γ'ok : Γˢ' ok[ θ , E ])
+                             → (consδs : All (Γˢ ⊢[ θ , E ]_) cons)
                              → (consδs↓ : Acc _<_ (suc (size-all-cons consδs)))
                              → μ-cons' (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok (TWF-ADT consδs) consδs↓) ≡ CR.act-cons (ext-k' k suc) (μ-cons consδs)
   μ-cons'-thinning↓-commutes Γ⊂Γ' Γ'ok consδs (acc rec) = μ-cons-thinning↓-commutes Γ⊂Γ' Γ'ok consδs (rec _ ≤-refl)
@@ -169,8 +167,8 @@ mutual
   μ-cons-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
                             → {cons : S.ADTCons nₐ (k + ℓ)}
                             → (Γ⊂Γ' : k by Γˢ ⊂' Γˢ')
-                            → (Γ'ok : Γˢ' ok[ E ])
-                            → (consδs : All (Γˢ ⊢[ E ]_) cons)
+                            → (Γ'ok : Γˢ' ok[ θ , E ])
+                            → (consδs : All (Γˢ ⊢[ θ , E ]_) cons)
                             → (consδs↓ : Acc _<_ (size-all-cons consδs))
                             → μ-cons (cons-thinning↓ Γ⊂Γ' Γ'ok consδs consδs↓) ≡ CR.act-cons (ext-k' k suc) (μ-cons consδs)
   μ-cons-thinning↓-commutes Γ⊂Γ' Γ'ok [] (acc rec) = refl
@@ -183,8 +181,8 @@ mutual
                                 → {cons : S.ADTCons nₐ (k + ℓ)}
                                 → {bs : S.CaseBranches nₐ (k + ℓ)}
                                 → (Γ⊂Γ' : k by Γˢ ⊂' Γˢ')
-                                → (Γ'ok : Γˢ' ok[ E ])
-                                → (δs : BranchesHaveType E Γˢ cons bs τˢ)
+                                → (Γ'ok : Γˢ' ok[ θ , E ])
+                                → (δs : BranchesHaveType θ E Γˢ cons bs τˢ)
                                 → (δs↓ : Acc _<_ (size-bs δs))
                                 → μ-branches (branches-thinning↓ Γ⊂Γ' Γ'ok δs δs↓) ≡ CR.act-branches (ext-k' k suc) (μ-branches δs)
   μ-branches-thinning↓-commutes Γ⊂Γ' Γ'ok NoBranches (acc rec) = refl
@@ -196,13 +194,13 @@ mutual
 
 μ-τ-thinning-commutes : {Γˢ : S.Ctx (k + ℓ)}
                       → (Γ⊂Γ' : k by Γˢ ⊂' Γˢ')
-                      → (Γ'ok : Γˢ' ok[ E ])
-                      → (τδ : Γˢ ⊢[ E ] τˢ)
+                      → (Γ'ok : Γˢ' ok[ θ , E ])
+                      → (τδ : Γˢ ⊢[ θ , E ] τˢ)
                       → μ-τ (Γ⊢τ-thinning Γ⊂Γ' Γ'ok τδ) ≡ CR.act-ε (ext-k' k suc) (μ-τ τδ)
 μ-τ-thinning-commutes Γ⊂Γ' Γ'ok τδ = μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok τδ (<-wellFounded _)
 
-μ-τ-weakening-commutes : (Γok : Γˢ ok[ E ])
-                       → (τ'δ : Γˢ ⊢[ E ] τˢ')
-                       → (τδ : Γˢ ⊢[ E ] τˢ)
+μ-τ-weakening-commutes : (Γok : Γˢ ok[ θ , E ])
+                       → (τ'δ : Γˢ ⊢[ θ , E ] τˢ')
+                       → (τδ : Γˢ ⊢[ θ , E ] τˢ)
                        → μ-τ (Γ⊢τ-weakening Γok τ'δ τδ) ≡ CR.weaken-ε (μ-τ τδ)
 μ-τ-weakening-commutes Γok τ'δ = μ-τ-thinning-commutes ignore-head (TCTX-Bind Γok τ'δ)

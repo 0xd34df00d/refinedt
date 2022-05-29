@@ -1,8 +1,6 @@
 {-# OPTIONS --safe #-}
 
-open import Surface.Derivations.Algorithmic using (UniquenessOfOracles)
-
-module Surface.Derivations.Algorithmic.Theorems.Uniqueness(oracles-equal : UniquenessOfOracles) where
+module Surface.Derivations.Algorithmic.Theorems.Uniqueness where
 
 open import Data.Maybe.Relation.Unary.Any using (irrelevant)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
@@ -20,8 +18,8 @@ open import Surface.Derivations.Algorithmic
 ∈-uniqueness (∈-zero refl) (∈-zero ≡-prf) = sym ≡-prf
 ∈-uniqueness (∈-suc refl ∈₁) (∈-suc ≡-prf ∈₂) rewrite ∈-uniqueness ∈₁ ∈₂ = sym ≡-prf
 
-typing-uniqueness : Γ ⊢[ φ of not-t-sub ] ε ⦂ τ₁
-                  → Γ ⊢[ φ of not-t-sub ] ε ⦂ τ₂
+typing-uniqueness : Γ ⊢[ θ , φ of not-t-sub ] ε ⦂ τ₁
+                  → Γ ⊢[ θ , φ of not-t-sub ] ε ⦂ τ₂
                   → τ₁ ≡ τ₂
 typing-uniqueness (T-Unit _) (T-Unit _) = refl
 typing-uniqueness (T-Var _ ∈₁) (T-Var _ ∈₂) = ∈-uniqueness ∈₁ ∈₂
@@ -38,14 +36,14 @@ unique-∈ (∈-suc {τ = τ₁} refl ∈₁) (∈-suc {τ = τ₂} ≡-prf ∈�
 ... | refl | refl rewrite unique-∈ ∈₁ ∈₂ = refl
 
 mutual
-  unique-Γok : Irrelevant (Γ ok[ φ ])
+  unique-Γok : Irrelevant (Γ ok[ θ , φ ])
   unique-Γok TCTX-Empty TCTX-Empty = refl
   unique-Γok (TCTX-Bind δ₁ τδ₁) (TCTX-Bind δ₂ τδ₂)
     rewrite unique-Γok δ₁ δ₂
           | unique-Γ⊢τ τδ₁ τδ₂
           = refl
 
-  unique-Γ⊢τ : Irrelevant (Γ ⊢[ φ ] τ)
+  unique-Γ⊢τ : Irrelevant (Γ ⊢[ θ , φ ] τ)
   unique-Γ⊢τ (TWF-TrueRef Γok₁) (TWF-TrueRef Γok₂)
     rewrite unique-Γok Γok₁ Γok₂
           = refl
@@ -65,7 +63,7 @@ mutual
     rewrite unique-cons consδs₁ consδs₂
           = refl
 
-  unique-Γ⊢ε⦂τ : Irrelevant (Γ ⊢[ φ of κ ] ε ⦂ τ)
+  unique-Γ⊢ε⦂τ : Irrelevant (Γ ⊢[ θ , φ of κ ] ε ⦂ τ)
   unique-Γ⊢ε⦂τ (T-Unit Γok₁) (T-Unit Γok₂)
     rewrite unique-Γok Γok₁ Γok₂
           = refl
@@ -104,9 +102,8 @@ mutual
           | unique-<: <:₁ <:₂
           = refl
 
-  unique-<: : Irrelevant (Γ ⊢[ φ ] τ' <: τ)
-  unique-<: (ST-Base oracle₁ is-just₁) (ST-Base oracle₂ is-just₂) with oracles-equal oracle₁ oracle₂
-  ... | refl
+  unique-<: : Irrelevant (Γ ⊢[ θ , φ ] τ' <: τ)
+  unique-<: (ST-Base is-just₁) (ST-Base is-just₂)
     rewrite irrelevant (λ _ _ → refl) is-just₁ is-just₂
           = refl
   unique-<: (ST-Arr <:₁₁ <:₂₁ omitted omitted) (ST-Arr <:₁₂ <:₂₂ omitted omitted)
@@ -121,7 +118,7 @@ mutual
           = refl
 
   unique-cons : ∀ {cons : ADTCons nₐ ℓ}
-              → Irrelevant (All (Γ ⊢[ φ ]_) cons)
+              → Irrelevant (All (Γ ⊢[ θ , φ ]_) cons)
   unique-cons [] [] = refl
   unique-cons (δ₁ ∷ δs₁) (δ₂ ∷ δs₂)
     rewrite unique-Γ⊢τ δ₁ δ₂
@@ -129,7 +126,7 @@ mutual
           = refl
 
   unique-bs : ∀ {cons : ADTCons nₐ ℓ} {bs}
-            → Irrelevant (BranchesHaveType φ Γ cons bs τ)
+            → Irrelevant (BranchesHaveType θ φ Γ cons bs τ)
   unique-bs NoBranches NoBranches = refl
   unique-bs (OneMoreBranch εδ₁ δs₁) (OneMoreBranch εδ₂ δs₂)
     rewrite unique-Γ⊢ε⦂τ εδ₁ εδ₂

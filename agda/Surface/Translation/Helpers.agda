@@ -1,6 +1,4 @@
-open import Surface.Derivations.Algorithmic using (UniquenessOfOracles)
-
-module Surface.Translation.Helpers(oracles-equal : UniquenessOfOracles) where
+module Surface.Translation.Helpers where
 
 open import Data.Fin using (zero; suc)
 open import Data.Vec using (Vec; _∷_; []; lookup)
@@ -12,13 +10,13 @@ open import Surface.Syntax as S renaming (Γ to Γˢ; τ to τˢ; τ' to τ'ˢ; 
 open import Surface.Syntax.Membership as S renaming (_∈_at_ to _∈ˢ_at_)
 open import Surface.Derivations.Algorithmic as S
 open import Surface.Derivations.Algorithmic.Theorems.Agreement as S
-open import Surface.Derivations.Algorithmic.Theorems.Uniqueness(oracles-equal)
+open import Surface.Derivations.Algorithmic.Theorems.Uniqueness
 
 open import Surface.Translation.Typed
-open import Surface.Translation.SubstUnique(oracles-equal)
-open import Surface.Translation.μ-weakening(oracles-equal)
+open import Surface.Translation.SubstUnique
+open import Surface.Translation.μ-weakening
 
-μ-preserves-∈ : (Γok : Γˢ ok[ E ])
+μ-preserves-∈ : (Γok : Γˢ ok[ θ , E ])
               → (∈ : τˢ ∈ˢ Γˢ at ι)
               → μ-τ (τ∈Γ-⇒-Γ⊢τ Γok ∈) ∈ᶜ μ-Γ Γok at ι
 μ-preserves-∈ (TCTX-Bind Γok τδ) (∈-zero refl) = ∈-zero (μ-τ-weakening-commutes Γok τδ τδ)
@@ -26,15 +24,15 @@ open import Surface.Translation.μ-weakening(oracles-equal)
 
 μ-lookup-commutes : ∀ ι
                   → {cons : S.ADTCons nₐ ℓ}
-                  → (consδs : All (Γˢ ⊢[ E ]_) cons)
-                  → (δ : Γˢ ⊢[ E ] lookup cons ι)
+                  → (consδs : All (Γˢ ⊢[ θ , E ]_) cons)
+                  → (δ : Γˢ ⊢[ θ , E ] lookup cons ι)
                   → μ-τ δ ≡ lookup (μ-cons consδs) ι
 μ-lookup-commutes zero (δ' ∷ _) δ = cong μ-τ (unique-Γ⊢τ δ δ')
 μ-lookup-commutes (suc ι) (_ ∷ consδs) δ = μ-lookup-commutes ι consδs δ
 
-μ-Γ-distributes-over-, : (Γ,τδ : (Γˢ , τˢ) ok[ E ])
-                       → (Γδ : Γˢ ok[ E ])
-                       → (τδ : Γˢ ⊢[ E ] τˢ)
+μ-Γ-distributes-over-, : (Γ,τδ : (Γˢ , τˢ) ok[ θ , E ])
+                       → (Γδ : Γˢ ok[ θ , E ])
+                       → (τδ : Γˢ ⊢[ θ , E ] τˢ)
                        → μ-Γ Γ,τδ ≡ μ-Γ Γδ , μ-τ τδ
 μ-Γ-distributes-over-, (TCTX-Bind Γδ₁ τδ₁) Γδ₂ τδ₂
   rewrite unique-Γok Γδ₁ Γδ₂

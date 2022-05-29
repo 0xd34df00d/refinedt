@@ -14,14 +14,14 @@ open import Data.Nat.Properties
 open import Surface.Syntax
 open import Surface.Derivations.Algorithmic
 
-size-ok  : Γ ok[ φ ]         → ℕ
-size-twf : Γ ⊢[ φ ] τ        → ℕ
-size-t   : Γ ⊢[ φ of κ ] ε ⦂ τ    → ℕ
-size-<:  : Γ ⊢[ φ ] τ₁ <: τ₂ → ℕ
+size-ok  : Γ ok[ θ , φ ]         → ℕ
+size-twf : Γ ⊢[ θ , φ ] τ        → ℕ
+size-t   : Γ ⊢[ θ , φ of κ ] ε ⦂ τ    → ℕ
+size-<:  : Γ ⊢[ θ , φ ] τ₁ <: τ₂ → ℕ
 size-bs  : ∀ {τ cons} {bs : CaseBranches nₐ ℓ}
-         → BranchesHaveType φ Γ cons bs τ
+         → BranchesHaveType θ φ Γ cons bs τ
          → ℕ
-size-all-cons : {cons : ADTCons nₐ ℓ} → All (Γ ⊢[ φ ]_) cons → ℕ
+size-all-cons : {cons : ADTCons nₐ ℓ} → All (Γ ⊢[ θ , φ ]_) cons → ℕ
 
 infixr 20 _⊕_
 _⊕_ : ℕ → ℕ → ℕ
@@ -75,7 +75,7 @@ size-t (T-Case resδ scrutτδ branches) = suc (size-t scrutτδ ⊕ size-twf re
 size-t (T-Con _ conArg adtτ) = suc (size-t conArg ⊕ size-twf adtτ)
 size-t (T-Sub δ superδ sub) = suc (size-t δ ⊕ size-twf superδ ⊕ size-<: sub)
 
-size-<: (ST-Base _ _) = 0
+size-<: (ST-Base _) = 0
 size-<: (ST-Arr sub₁ sub₂ omitted omitted) = suc (size-<: sub₁ ⊕ size-<: sub₂)
 size-<: (ST-Arr sub₁ sub₂ (enriched δτ₁⇒τ₂) (enriched δτ₁')) = suc (size-<: sub₁ ⊕ size-<: sub₂ ⊕ size-twf δτ₁⇒τ₂ ⊕ size-twf δτ₁')
 

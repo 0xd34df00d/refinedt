@@ -1,6 +1,4 @@
-open import Surface.Derivations.Algorithmic using (UniquenessOfOracles)
-
-module Surface.Translation(oracles-equal : UniquenessOfOracles) where
+module Surface.Translation where
 
 open import Data.Fin using (zero; suc)
 open import Data.Vec using (Vec; _∷_; []; lookup)
@@ -24,8 +22,8 @@ open import Surface.Derivations.Algorithmic.Theorems.Agreement as S
 
 open import Surface.Translation.Untyped
 open import Surface.Translation.Typed
-open import Surface.Translation.SubstUnique(oracles-equal)
-open import Surface.Translation.Helpers(oracles-equal)
+open import Surface.Translation.SubstUnique
+open import Surface.Translation.Helpers
 
 μ-Τ-well-typed : Γᶜ ⊢ᶜ ⋆ₑ ⦂ □ₑ
                → Γᶜ ⊢ᶜ ⌊μ⌋-Τ ⦂ ⋆ₑ
@@ -53,12 +51,12 @@ open import Surface.Translation.Helpers(oracles-equal)
           (Γ⊢τ-⇒-Γ,τ-ok μ-b-ok)
 
 mutual
-  μ-Γ-well-typed : (Γok : Γˢ ok[ E ])
+  μ-Γ-well-typed : (Γok : Γˢ ok[ θ , E ])
                  → μ-Γ Γok ⊢ᶜ ⋆ₑ ⦂ □ₑ
   μ-Γ-well-typed TCTX-Empty = CT-Sort
   μ-Γ-well-typed (TCTX-Bind Γok τδ) = CT-Weaken (μ-Γ-well-typed Γok) (subst-Γ _ _ (μ-τ-well-typed τδ))
 
-  μ-τ-well-typed : (τδ : Γˢ ⊢[ E ] τˢ)
+  μ-τ-well-typed : (τδ : Γˢ ⊢[ θ , E ] τˢ)
                  → μ-Γ (Γ⊢τ-⇒-Γok τδ) ⊢ᶜ μ-τ τδ ⦂ ⋆ₑ
   μ-τ-well-typed (TWF-TrueRef Γok) = μ-b-well-typed (μ-Γ-well-typed Γok)
   μ-τ-well-typed (TWF-Base ε₁δ ε₂δ) = {! !}
@@ -73,13 +71,13 @@ mutual
   μ-τ-well-typed (TWF-ADT consδs@(τδ ∷ _)) = CT-ADTForm (μ-cons-well-typed consδs (Γ⊢τ-⇒-Γok τδ))
 
   μ-cons-well-typed : {cons : S.ADTCons nₐ ℓ}
-                    → (consδs : All (Γˢ ⊢[ E ]_) cons)
-                    → (Γok : Γˢ ok[ E ])
+                    → (consδs : All (Γˢ ⊢[ θ , E ]_) cons)
+                    → (Γok : Γˢ ok[ θ , E ])
                     → All (λ con → μ-Γ Γok ⊢ᶜ con ⦂ ⋆ₑ) (μ-cons consδs)
   μ-cons-well-typed [] _ = []
   μ-cons-well-typed (τδ ∷ consδs) Γok = subst-Γ _ _ (μ-τ-well-typed τδ) ∷ μ-cons-well-typed consδs Γok
 
-  μ-ε-well-typed : (εδ : Γˢ ⊢[ E of not-t-sub ] εˢ ⦂ τˢ)
+  μ-ε-well-typed : (εδ : Γˢ ⊢[ θ , E of not-t-sub ] εˢ ⦂ τˢ)
                  → μ-Γ (Γ⊢ε⦂τ-⇒-Γok εδ) ⊢ᶜ μ-ε εδ ⦂ μ-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ)
   μ-ε-well-typed (T-Unit Γok)
     = let Γᶜok = μ-Γ-well-typed Γok
@@ -120,9 +118,9 @@ mutual
           τδᶜ = subst-Γ _ _ (μ-τ-well-typed τδ)
        in CT-ADTCon ≡-prf εδᶜ τδᶜ
 
-  μ-<:-well-typed : (Γok : Γˢ ok[ E ])
-                  → (τδ : Γˢ ⊢[ E ] τˢ)
-                  → (τ'δ : Γˢ ⊢[ E ] τ'ˢ)
-                  → (<:δ : Γˢ ⊢[ E ] τˢ <: τ'ˢ)
+  μ-<:-well-typed : (Γok : Γˢ ok[ θ , E ])
+                  → (τδ : Γˢ ⊢[ θ , E ] τˢ)
+                  → (τ'δ : Γˢ ⊢[ θ , E ] τ'ˢ)
+                  → (<:δ : Γˢ ⊢[ θ , E ] τˢ <: τ'ˢ)
                   → μ-Γ Γok ⊢ᶜ μ-<: <:δ ⦂ μ-τ τδ ⇒' μ-τ τ'δ
   μ-<:-well-typed = {! !}

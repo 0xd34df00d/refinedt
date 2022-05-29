@@ -24,9 +24,9 @@ mutual
   τ ⇒ τ'
   -}
   μ-<: : {τ τ' : SType ℓ}
-       → Γˢ ⊢[ E ] τ <: τ'
+       → Γˢ ⊢[ θ , E ] τ <: τ'
        → CExpr ℓ
-  μ-<: (ST-Base oracle positive) with to-witness positive
+  μ-<: (ST-Base positive) with to-witness positive
   ... | MkPD <:-ε = <:-ε
   μ-<: (ST-Arr <:₁ <:₂ (enriched τδ) (enriched τ₁'δ))
     {-
@@ -50,7 +50,7 @@ mutual
             )
 
   μ-τ : {τ : SType ℓ}
-      → Γˢ ⊢[ E ] τ
+      → Γˢ ⊢[ θ , E ] τ
       → CExpr ℓ
   μ-τ (TWF-TrueRef {b = b} Γok) = ⌊μ⌋-b b
   μ-τ (TWF-Base {b = b} {b' = b'} ε₁δ ε₂δ)
@@ -61,7 +61,7 @@ mutual
   μ-τ (TWF-ADT consδs) = CADT (μ-cons consδs)
 
   μ-ε : ∀ {ε : STerm ℓ} {τ}
-      → Γˢ ⊢[ E of κ ] ε ⦂ τ
+      → Γˢ ⊢[ θ , E of κ ] ε ⦂ τ
       → CExpr ℓ
   μ-ε (T-Unit Γok) = [ Cunit ⦂ CUnit ∣ eq-refl CUnit Cunit of CLam CUnit ⌊μ⌋-Τ ]
   μ-ε (T-Var {ι = ι} _ _) = CVar ι
@@ -72,25 +72,25 @@ mutual
   μ-ε (T-Sub εδ _ <:) = μ-<: <: · μ-ε εδ
 
   μ-cons' : {cons : S.ADTCons nₐ ℓ}
-          → Γˢ ⊢[ E ] ⊍ cons
+          → Γˢ ⊢[ θ , E ] ⊍ cons
           → C.ADTCons nₐ ℓ
   μ-cons' (TWF-ADT consδs) = μ-cons consδs
 
   μ-cons : {cons : S.ADTCons nₐ ℓ}
-         → All (Γˢ ⊢[ E ]_) cons
+         → All (Γˢ ⊢[ θ , E ]_) cons
          → C.ADTCons nₐ ℓ
   μ-cons [] = []
   μ-cons (τδ ∷ consδ) = μ-τ τδ ∷ μ-cons consδ
 
   μ-branches : {branches : S.CaseBranches nₐ ℓ}
              → {cons : S.ADTCons nₐ ℓ}
-             → S.BranchesHaveType E Γˢ cons branches τˢ
+             → S.BranchesHaveType θ E Γˢ cons branches τˢ
              → C.CaseBranches nₐ ℓ
   μ-branches NoBranches = []
   μ-branches (OneMoreBranch εδ bs) = {- TODO placeholder proper proof -} Cunit ∷ μ-branches bs
 
 μ-Γ : {Γˢ : S.Ctx ℓ}
-    → Γˢ ok[ E ]
+    → Γˢ ok[ θ , E ]
     → C.Ctx ℓ
 μ-Γ TCTX-Empty = ⊘
 μ-Γ (TCTX-Bind Γok τδ) = μ-Γ Γok , μ-τ τδ

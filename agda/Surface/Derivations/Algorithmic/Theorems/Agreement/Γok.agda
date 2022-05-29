@@ -11,12 +11,12 @@ open import Surface.Derivations.Algorithmic
 open import Surface.Derivations.Algorithmic.Theorems.Helpers
 open import Surface.Derivations.Algorithmic.Theorems.Agreement.Γok.WF
 
-Γok-tail-smaller : (δ : (Γ , τ) ok[ φ ]) → size-ok (Γok-tail δ) < size-ok δ
+Γok-tail-smaller : (δ : (Γ , τ) ok[ θ , φ ]) → size-ok (Γok-tail δ) < size-ok δ
 Γok-tail-smaller (TCTX-Bind prevOk τδ) = s≤s (₁≤₂ (size-ok prevOk) (size-twf τδ))
 
 -- Referred to as T-implies-TCTX in the paper
 mutual
-  Γ⊢ε⦂τ-⇒-Γok : Γ ⊢[ φ of κ ] ε ⦂ τ → Γ ok[ φ ]
+  Γ⊢ε⦂τ-⇒-Γok : Γ ⊢[ θ , φ of κ ] ε ⦂ τ → Γ ok[ θ , φ ]
   Γ⊢ε⦂τ-⇒-Γok (T-Unit gok) = gok
   Γ⊢ε⦂τ-⇒-Γok (T-Var gok _) = gok
   Γ⊢ε⦂τ-⇒-Γok (T-Abs arrδ _) = Γ⊢τ-⇒-Γok arrδ
@@ -26,7 +26,7 @@ mutual
   Γ⊢ε⦂τ-⇒-Γok (T-Sub δ _ _) = Γ⊢ε⦂τ-⇒-Γok δ
 
   -- Referred to as TWF-implies-TCTX in the paper
-  Γ⊢τ-⇒-Γok : Γ ⊢[ φ ] τ → Γ ok[ φ ]
+  Γ⊢τ-⇒-Γok : Γ ⊢[ θ , φ ] τ → Γ ok[ θ , φ ]
   Γ⊢τ-⇒-Γok (TWF-TrueRef gok) = gok
   Γ⊢τ-⇒-Γok (TWF-Base ε₁δ _) = Γok-tail (Γ⊢ε⦂τ-⇒-Γok ε₁δ)
   Γ⊢τ-⇒-Γok (TWF-Conj ρ₁δ _) = Γ⊢τ-⇒-Γok ρ₁δ
@@ -42,7 +42,7 @@ private
 
 abstract
   mutual
-    Γ⊢ε⦂τ-⇒-Γok-smaller : (δ : Γ ⊢[ φ of κ ] ε ⦂ τ)
+    Γ⊢ε⦂τ-⇒-Γok-smaller : (δ : Γ ⊢[ θ , φ of κ ] ε ⦂ τ)
                         → size-ok (Γ⊢ε⦂τ-⇒-Γok δ) < size-t δ
     Γ⊢ε⦂τ-⇒-Γok-smaller (T-Unit _) = s≤s (≤-step ≤-refl)
     Γ⊢ε⦂τ-⇒-Γok-smaller (T-Var _ _) = s≤s ≤-refl
@@ -52,11 +52,11 @@ abstract
     Γ⊢ε⦂τ-⇒-Γok-smaller (T-Con _ conArg _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller conArg)
     Γ⊢ε⦂τ-⇒-Γok-smaller (T-Sub δ _ _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller δ)
 
-    Γ⊢ε⦂τ-⇒-Γok-tail-smaller : (δ : (Γ , τ') ⊢[ φ of κ ] ε ⦂ τ)
+    Γ⊢ε⦂τ-⇒-Γok-tail-smaller : (δ : (Γ , τ') ⊢[ θ , φ of κ ] ε ⦂ τ)
                              → size-ok (Γok-tail (Γ⊢ε⦂τ-⇒-Γok δ)) < size-t δ
     Γ⊢ε⦂τ-⇒-Γok-tail-smaller δ = <-trans (Γok-tail-smaller (Γ⊢ε⦂τ-⇒-Γok δ)) (Γ⊢ε⦂τ-⇒-Γok-smaller δ)
 
-    Γ⊢τ-⇒-Γok-smaller : (δ : Γ ⊢[ φ ] τ)
+    Γ⊢τ-⇒-Γok-smaller : (δ : Γ ⊢[ θ , φ ] τ)
                       → size-ok (Γ⊢τ-⇒-Γok δ) < size-twf δ
     Γ⊢τ-⇒-Γok-smaller (TWF-TrueRef _) = s≤s ≤-refl
     Γ⊢τ-⇒-Γok-smaller (TWF-Base ε₁δ _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-tail-smaller ε₁δ)
