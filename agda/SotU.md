@@ -26,7 +26,7 @@ and, in short, when proving the translation `μ-ε` makes sense,
 we need to prove that `εδ₁ : Γ ⊢ ε ⦂ τ` and `εδ₂ : Γ ⊢ ε ⦂ τ` implies `μ-ε εδ₁ ≡ μ-ε εδ₂`.
 Without uniqueness of typing this clearly doesn't hold.
 
-In fact, an even weaker property is needed here:
+In fact, an even weaker property is required here:
 uniqueness of typing _derivations_ (further named UoT-δ) is sufficient.
 That is, it's sufficient to have `εδ₁ ≡ εδ₂` given `εδ₁ : Γ ⊢ ε ⦂ τ` and `εδ₂ : Γ ⊢ ε ⦂ τ`.
 
@@ -40,7 +40,7 @@ f : {ν : Int | ν > 0} → {ν : Int | ν > 0}
 f x = x
 ```
 (the identity function restricted to positive integers), the type of `f 5` is `{ν : Int | ν > 0}`,
-while `f 5` evaulates to `5`, whose type is more precise: `{ν : Int | ν = 5}`.
+while `f 5` evaluates to `5`, whose type is more precise: `{ν : Int | ν = 5}`.
 
 ##### Can we regain these properties in the Surface language?
 
@@ -56,6 +56,7 @@ _except_ the function application, where the RHS _must be_ `t-sub`), we can prov
    given `Γ ⊢[ not-t-sub ] ε ⦂ τ₁` and `Γ ⊢[ not-t-sub ] ε ⦂ τ₂`, we know `τ₁ ≡ τ₂`.
 2. UoT-δ for `t-sub`:
    given `εδ₁ : Γ ⊢[ t-sub ] ε ⦂ τ` and `εδ₂ : Γ ⊢[ t-sub ] ε ⦂ τ`, we know that `εδ₁ ≡ εδ₂`.
+   This obviously holds for `not-t-sub` as well, so it could be generalized to arbitrary `κ`.
 3. Full typing preservation: if `Γ ⊢[ t-sub ] ε ⦂ τ` and `ε ↝ ε'`, then `Γ ⊢[ t-sub ] ε' ⦂ τ`.
 
 Note that (3) doesn't hold for `not-t-sub`: evaluation there produces a _subtype_ of the original type.
