@@ -71,3 +71,58 @@ and it's sufficiently close to be a proper algorithmic type system (especially w
 In a sense, we haven't made our lifes harder:
 all the problems we might have with this formalization would have arisen with some usual unindexed one,
 since they would be just a special case of the usual one.
+
+Anyway, all this almost does the trick. _Almost_.
+
+#### What translation properties do we need?
+
+One useful property is that if we have `εδ : Γ ⊢ ε ⦂ τ`
+(and, consequently, `Γok : Γ ok` and `τδ : Γ ⊢ τ` due to the agreement lemmas),
+then the translated term in the translated context has translated type.
+Or, in funny symbols, `μ-Γ Γok ⊢ᶜ μ-ε εδ ⦂ μ-τ τδ`
+(where `_⊢ᶜ_⦂_` is the Core derivation relation).
+
+In fact, I see this as the only reasonable way to express "a translation of a well-typed surface term is well-typed".
+
+#### Translating the subtyping witness
+
+Now, how does the translation of the `T-App` Surface typing rule work out?
+The rule itself states, modulo technicalities,
+```agda
+  T-App : (ε₁δ : Γ ⊢[ not-t-sub ] ε₁ ⦂ τ₁ ⇒ τ₂)
+        → (ε₂δ : Γ ⊢[ t-sub ] ε₂ ⦂ τ₁)
+        → Γ ⊢[ not-t-sub ] SApp ε₁ ε₂ ⦂ [ zero ↦τ ε₂ ] τ₂
+```
+Due to the `κ` indices we know that `ε₂δ` ends with a `T-Sub`, where `T-Sub` is roughly
+```agda
+  T-Sub : (εδ : Γ ⊢[ not-t-sub ] ε ⦂ τ')
+        → (<:δ : Γ ⊢ τ' <: τ)
+        → Γ ⊢[ t-sub ] ε ⦂ τ
+```
+The subtyping relation `<:δ : Γ ⊢ τ' <: τ` gets translated to a (Core) function `μ-<: <:δ` of the type `Π τ'ᶜ. τᶜ`,
+(where `τᶜ` is the translation of the witness of (surface) type `τ` being well-formed).
+
+Overall, `ε₂δ` gets translated to `μ-<: <:δ · μ-ε εδ`
+(I'm using `·` for Core application `CApp` because there will be more of them).
+
+On the other hand, how do we translate `SApp ε₁ ε₂`?
+I see no other way except `μ-ε ε₁δ · μ-ε ε₂δ`.
+Expanding the translation for `μ-ε ε₂δ` we get `μ-ε ε₁δ · (μ-<: <:δ · μ-ε εδ)`.
+
+What's the type of `μ-ε ε₁δ`?
+Of course, it's `μ-τ τ₁⇒τ₂δ`, where `τ₁⇒τ₂δ` is the derivation of `τ₁ ⇒ τ₂` being well-formed.
+How do we translate the (dependent) arrow type in this case?
+Well, again there's no other reasonable choice but `Π τ₁ᶜ. τ₂ᶜ`.
+
+Thus what's the type of `μ-ε ε₁δ · (μ-<: <:δ · μ-ε εδ)`?
+It's going to be `[ zero ↦ μ-<: <:δ · μ-ε εδ] τ₂ᶜ`.
+
+What's the type of `T-App`? `[ zero ↦τ ε₂ ] τ₂`.
+What's its translation?
+It can be shown that substitution distributes over translation: `[ zero ↦ ε₂ᶜ ] τ₂ᶜ`,
+where `ε₂ᶜ` is `μ-ε ε₂δ`.
+
+And here's the problem: the goal is to show `μ-ε ε₁δ · (μ-<: <:δ · μ-ε εδ) ⦂ [ zero ↦ ε₂ᶜ ] τ₂ᶜ`,
+while its type is clearly `μ-ε ε₁δ · (μ-<: <:δ · μ-ε εδ) ⦂ [ zero ↦ <:ᶜ · ε₂ᶜ ] τ₂ᶜ`.
+
+Alas, mismatch. This won't work.
