@@ -64,3 +64,9 @@ Also, (1) and (2) also extend to the type well-formedness (`Γ ⊢ τ`) and cont
 
 This is almost like algorithmic typing for a type system with subtyping (as described in TAPL, for instance),
 but it allows for some freedom at the root of the tree if `κ ~ t-sub`, which enables type preservation to hold.
+
+Also, note that the type system indexed by this `κ` thing is a (strict) subset of a usual declarative typing system,
+and it's sufficiently close to be a proper algorithmic type system (especially when one considers `κ ~ not-t-sub`).
+In a sense, we haven't made our lifes harder:
+all the problems we might have with this formalization would have arisen with some usual unindexed one,
+since they would be just a special case of the usual one.
