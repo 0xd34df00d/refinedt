@@ -61,3 +61,6 @@ _except_ the function application, where the RHS _must be_ `t-sub`), we can prov
 Note that (3) doesn't hold for `not-t-sub`: evaluation there produces a _subtype_ of the original type.
 
 Also, (1) and (2) also extend to the type well-formedness (`Γ ⊢ τ`) and context well-formedness (`Γ ok`) judgements.
+
+This is almost like algorithmic typing for a type system with subtyping (as described in TAPL, for instance),
+but it allows for some freedom at the root of the tree if `κ ~ t-sub`, which enables type preservation to hold.
