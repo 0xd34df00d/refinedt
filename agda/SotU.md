@@ -244,3 +244,34 @@ But we certainly want to allow the dependency!
 
 1. Somehow slap `S<:` into `T-App` (unexplored).
 2. Don't have subtyping on function types (unexplored).
+
+What can we say about these?
+
+For the first one, I have a gut feel it won't work.
+In particular, we might have something like, in surface language
+```idris
+f : {ν : Int | ν > 0} → {ν : Int | ν > 0}
+f x = x
+
+case f 5 of ...
+```
+which gets desugared to
+```idris
+case f (5 S<: {ν : Int | ν > 0}) of ...
+```
+which gets evaluated to
+```idris
+case 5 S<: {ν : Int | ν > 0} of ...
+```
+and we need to be able to type `5 S<: {ν : Int | ν > 0}` irrespective of whether it's a function argument.
+There are probably ways to thread this through constructor/destructor pairs, but it gets hairy really soon.
+
+The second point is also worth a couple extra words.
+Indeed, our refinement types happen only on base types, and we emulate refinements on functions via dummy arguments.
+Moreover, the subtyping relation on function types is derived from the subtyping of individual non-functional values.
+Thus, when translating from Surface to Intermediate,
+we can translate the subtyping witness on the individual (non-function) values into the right syntactic thing,
+and then translate the subtyping on functions by η-expanding everything and applying the syntactic witness to the 
+function arguments.
+
+In a sense, we don't need a separate subtyping relation in the intermediate language at all.
