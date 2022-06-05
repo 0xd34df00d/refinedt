@@ -133,3 +133,107 @@ There are several possibilities.
 
 1. An intermediate language.
 2. Computing the return type differently, as opposed to relying on `μ-τ τδ` (unexplored).
+
+### Intermediate
+
+Let's throw up more type systems!
+
+In particular, let's introduce an Intermediate language, having an evidence of subtyping at the syntax level.
+Broadly speaking, it'll have another piece of syntax:
+```agda
+  _S<:_ : (ε : STerm ℓ)
+        → (τ : SType ℓ)
+        → STerm ℓ
+```
+where `ε S<: τ` is a syntactic witness that subtyping was used to assign type `τ` to a term `ε`.
+This is well-typed iff `Γ ⊢ ε : τ'` and `Γ ⊢ τ' <: τ`:
+```agda
+  T-SubW : (<:δ : Γ ⊢ τ' <: τ)
+         → (εδ : Γ ⊢ ε ⦂ τ')
+         → Γ ⊢ ε S<: τ ⦂ τ
+```
+
+`T-App` doesn't care about subtyping anymore: it's all delegated to `T-SubW`.
+
+Now we don't have the above problem with goal mismatch in `T-App` translation,
+but there is another, subtle but serious problem.
+You see, once we add syntactic witnesses of subtyping, narrowing doesn't hold anymore.
+What I call the narrowing lemma is that if
+```agda
+Γ , σ , Δ ⊢ ε ⦂ τ
+Γ ⊢ σ' <: σ
+```
+then
+```agda
+Γ , σ' , Δ ⊢ ε ⦂ τ
+```
+and this does hold for the Surface language above (especially if `κ` in its output is existential).
+
+But for the Intermediate language, suppose `ε ~ SVar 0` (so `0`th de Bruijn index) and `Δ` the empty context.
+That is, we have
+```agda
+Γ , σ ⊢ SVar 0 ⦂ σ
+Γ ⊢ σ' <: σ
+```
+Clearly, without implicit subtyping the only thing we can derive about `SVar 0` in `Γ , σ` is
+```agda
+Γ , σ' ⊢ SVar 0 ⦂ σ'
+```
+and there's no way to assign `σ` to `SVar 0` without slapping a `S<:` on top, changing the _syntax_.
+
+Why do we care?
+Consider the subtyping relation for arrows:
+```agda
+  ST-Arr  : (<:₁δ : Γ ⊢ τ₁' <: τ₁)
+          → (<:₂δ : Γ , τ₁? ⊢ τ₂' <: τ₂)
+          → Γ ⊢ τ₁ ⇒ τ₂' <: τ₁' ⇒ τ₂
+
+```
+Here, in the `<:₂δ` premise, should the extended context be `Γ , τ₁` or `Γ , τ₁'`?
+If we had narrowing, we could've blindly gone with the former — the latter would've been derivable.
+But now we have to actually think, so let's think.
+
+Generally, if we have `Γ ⊢ τ' <: τ`, it's very desirable to have both `Γ ⊢ τ'` and `Γ ⊢ τ`.
+I'd even argue that any of these types not being well-formed just does not make sense.
+
+Now, let's apply this reasoning to the conclusion: `Γ ⊢ τ₁ ⇒ τ₂' <: τ₁' ⇒ τ₂`.
+We get that both of these should hold:
+```agda
+Γ ⊢ τ₁ ⇒ τ₂'
+Γ ⊢ τ₁' ⇒ τ₂
+```
+implying that function codomains are well-formed too in the respective contexts:
+```agda
+Γ , τ₁  ⊢ τ₂'
+Γ , τ₁' ⊢ τ₂
+```
+
+Now let's apply this very reasoning to the `<:₂δ` premise.
+It should _also_ hold that
+```agda
+Γ , τ₁? ⊢ τ₂'
+Γ , τ₁? ⊢ τ₂
+```
+
+Now, should `τ₁?` be `τ₁` or `τ₁'`? Let's consider both cases.
+
+1. `τ₁? ~ τ₁`. Then we shall have simultaneously
+   ```agda
+   Γ , τ₁' ⊢ τ₂
+   Γ , τ₁  ⊢ τ₂
+   ```
+2. `τ₁? ~ τ₁'`. Then we shall have simultaneously
+   ```agda
+   Γ , τ₁  ⊢ τ₂'
+   Γ , τ₁' ⊢ τ₂'
+   ```
+
+Either way, either `τ₂` or `τ₂'` shall be well-formed in contexts with both `τ₁` and `τ₁'` at the top.
+Again, if we have narrowing, that's no big deal — one implies the other.
+
+But, if we don't, and if the witness is syntactic,
+the only way this can work is if the result of the function (`τ₂` or `τ₂'`)
+doesn't depend on its argument (`τ₁`, primed or not).
+But we certainly want to allow the dependency!
+
+**This won't work.**
