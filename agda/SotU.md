@@ -237,3 +237,8 @@ doesn't depend on its argument (`τ₁`, primed or not).
 But we certainly want to allow the dependency!
 
 **This won't work.**
+
+#### How can this be fixed?
+
+1. Somehow slap `S<:` into `T-App` (unexplored).
+2. Don't have subtyping on function types (unexplored).
