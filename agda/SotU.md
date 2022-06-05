@@ -125,4 +125,11 @@ where `ε₂ᶜ` is `μ-ε ε₂δ`.
 And here's the problem: the goal is to show `μ-ε ε₁δ · (μ-<: <:δ · μ-ε εδ) ⦂ [ zero ↦ ε₂ᶜ ] τ₂ᶜ`,
 while its type is clearly `μ-ε ε₁δ · (μ-<: <:δ · μ-ε εδ) ⦂ [ zero ↦ <:ᶜ · ε₂ᶜ ] τ₂ᶜ`.
 
-Alas, mismatch. This won't work.
+Alas, mismatch. **This won't work.**
+
+What can be done about it?
+
+There are several possibilities.
+
+1. An intermediate language.
+2. Computing the return type differently, as opposed to relying on `μ-τ τδ` (unexplored).
