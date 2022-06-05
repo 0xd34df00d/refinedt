@@ -234,6 +234,8 @@ Again, if we have narrowing, that's no big deal — one implies the other.
 But, if we don't, and if the witness is syntactic,
 the only way this can work is if the result of the function (`τ₂` or `τ₂'`)
 doesn't depend on its argument (`τ₁`, primed or not).
+(More precisely, there are still forms of dependencies that are allowed,
+but they are much more limited now, and it's not obvious what the proper restriction is.)
 But we certainly want to allow the dependency!
 
 **This won't work.**
