@@ -15,7 +15,7 @@ open import Surface.Syntax
 open import Surface.Syntax.Substitution using ([_↦τ_]_; [_↦Γ_]_)
 open import Surface.Syntax.Membership
 import Surface.Syntax.Renaming as R
-open import Surface.Oracle
+open import Surface.Oracle public
 open import Surface.Derivations.Common public
 
 open import Core.Syntax using (CExpr)
