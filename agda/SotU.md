@@ -266,6 +266,12 @@ case 5 S<: {ν : Int | ν > 0} of ...
 and we need to be able to type `5 S<: {ν : Int | ν > 0}` irrespective of whether it's a function argument.
 There are probably ways to thread this through intro/elim pairs, but it gets hairy really soon.
 
+On the other hand, we might take middle ground.
+We might both allow having `_S<:_` anywhere, as well as _require_ it to be present in function applications
+(where subtyping actually makes a difference).
+In this case, some form of narrowing might hold.
+Or it might not, it's still hairy.
+
 The second point is also worth a couple extra words.
 Indeed, our refinement types happen only on base types, and we emulate refinements on functions via dummy arguments.
 Moreover, the subtyping relation on function types is derived from the subtyping of individual non-functional values.
