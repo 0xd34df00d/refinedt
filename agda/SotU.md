@@ -16,7 +16,7 @@ Subtyping breaks either uniqueness of typing (further named UoT) or type preserv
 ##### Why is it important?
 
 Clearly, translating any type system without type preservation to λC is doomed to fail,
-since evaluation in λC preserves typing (modulo β-conversion, which is, unlike subtyping, a symmetric relation).
+since evaluation in λC preserves typing (modulo β-equivalence, which is, unlike subtyping, a symmetric relation).
 Thus, translation/evaluation commutativity just won't hold.
 
 Translating a type system without the former is not provably impossible,
@@ -100,7 +100,7 @@ Due to the `κ` indices we know that `ε₂δ` ends with a `T-Sub`, where `T-Sub
         → Γ ⊢[ t-sub ] ε ⦂ τ
 ```
 The subtyping relation `<:δ : Γ ⊢ τ' <: τ` gets translated to a (Core) function `μ-<: <:δ` of the type `Π τ'ᶜ. τᶜ`,
-(where `τᶜ` is the translation of the witness of (surface) type `τ` being well-formed).
+where `τᶜ` is the translation of the witness of (surface) type `τ` being well-formed.
 
 Overall, `ε₂δ` gets translated to `μ-<: <:δ · μ-ε εδ`
 (I'm using `·` for Core application `CApp` because there will be more of them).
@@ -175,7 +175,7 @@ That is, we have
 Γ , σ ⊢ SVar 0 ⦂ σ
 Γ ⊢ σ' <: σ
 ```
-Clearly, without implicit subtyping the only thing we can derive about `SVar 0` in `Γ , σ` is
+Clearly, without implicit subtyping the only thing we can derive about `SVar 0` in `Γ , σ'` is
 ```agda
 Γ , σ' ⊢ SVar 0 ⦂ σ'
 ```
@@ -264,7 +264,7 @@ which gets evaluated to
 case 5 S<: {ν : Int | ν > 0} of ...
 ```
 and we need to be able to type `5 S<: {ν : Int | ν > 0}` irrespective of whether it's a function argument.
-There are probably ways to thread this through constructor/destructor pairs, but it gets hairy really soon.
+There are probably ways to thread this through intro/elim pairs, but it gets hairy really soon.
 
 The second point is also worth a couple extra words.
 Indeed, our refinement types happen only on base types, and we emulate refinements on functions via dummy arguments.
