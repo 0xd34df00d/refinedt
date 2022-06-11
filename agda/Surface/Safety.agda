@@ -39,7 +39,7 @@ progress (T-Case resδ εδ branches) with progress εδ
 progress (T-Con _ εδ adtτ) with progress εδ
 ... | step ε↝ε' = step (E-ADT ε↝ε')
 ... | done is-value = done (IV-ADT is-value)
-progress (T-Sub εδ τδ τ<:τ') = progress εδ
+progress (T-Sub εδ _ _) = progress εδ
 
 
 preservation : ε ↝ ε'

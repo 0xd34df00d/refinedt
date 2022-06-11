@@ -47,16 +47,16 @@ mutual
           (<:-thinning↓ (append-both Γ⊂Γ') omitted <:₂δ acc₂)
           omitted
           omitted
-  <:-thinning↓ Γ⊂Γ' (enriched Γ'ok) (ST-Arr <:₁δ <:₂δ (enriched δτ₁⇒τ₂) (enriched δτ₁')) (acc rec) =
-    let acc₁ = rec _ (s≤s (₄≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf δτ₁⇒τ₂) (size-twf δτ₁')))
-        acc₂ = rec _ (s≤s (₁≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf δτ₁⇒τ₂) (size-twf δτ₁')))
-        acc₃ = rec _ (s≤s (₂≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf δτ₁⇒τ₂) (size-twf δτ₁')))
-        acc₄ = rec _ (s≤s (₃≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf δτ₁⇒τ₂) (size-twf δτ₁')))
-        τ₁'δ' = Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok δτ₁' acc₁
+  <:-thinning↓ Γ⊂Γ' (enriched Γ'ok) (ST-Arr <:₁δ <:₂δ (enriched τ₁⇒τ₂'δ) (enriched τ₁'δ)) (acc rec) =
+    let acc₁ = rec _ (s≤s (₄≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf τ₁⇒τ₂'δ) (size-twf τ₁'δ)))
+        acc₂ = rec _ (s≤s (₁≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf τ₁⇒τ₂'δ) (size-twf τ₁'δ)))
+        acc₃ = rec _ (s≤s (₂≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf τ₁⇒τ₂'δ) (size-twf τ₁'δ)))
+        acc₄ = rec _ (s≤s (₃≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf τ₁⇒τ₂'δ) (size-twf τ₁'δ)))
+        τ₁'δ' = Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁'δ acc₁
      in ST-Arr
           (<:-thinning↓ Γ⊂Γ' (enriched Γ'ok) <:₁δ acc₂)
           (<:-thinning↓ (append-both Γ⊂Γ') (enriched (TCTX-Bind Γ'ok τ₁'δ')) <:₂δ acc₃)
-          (as-enrichment (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok δτ₁⇒τ₂ acc₄))
+          (as-enrichment (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁⇒τ₂'δ acc₄))
           (as-enrichment τ₁'δ')
 
   Γ⊢τ-thinning↓ : {Γ : Ctx (k + ℓ)}

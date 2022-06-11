@@ -77,7 +77,7 @@ size-t (T-Sub δ superδ sub) = suc (size-t δ ⊕ size-twf superδ ⊕ size-<: 
 
 size-<: (ST-Base _ _) = 0
 size-<: (ST-Arr sub₁ sub₂ omitted omitted) = suc (size-<: sub₁ ⊕ size-<: sub₂)
-size-<: (ST-Arr sub₁ sub₂ (enriched δτ₁⇒τ₂) (enriched δτ₁')) = suc (size-<: sub₁ ⊕ size-<: sub₂ ⊕ size-twf δτ₁⇒τ₂ ⊕ size-twf δτ₁')
+size-<: (ST-Arr sub₁ sub₂ (enriched τ₁⇒τ₂'δ) (enriched τ₁'δ)) = suc (size-<: sub₁ ⊕ size-<: sub₂ ⊕ size-twf τ₁⇒τ₂'δ ⊕ size-twf τ₁'δ)
 
 size-bs NoBranches = 0
 size-bs (OneMoreBranch εδ rest) = suc (size-t εδ ⊕ size-bs rest)

@@ -30,16 +30,16 @@ mutual
   ... | MkPD <:-ε = <:-ε
   μ-<: (ST-Arr <:₁ <:₂ (enriched τδ) (enriched τ₁'δ))
     {-
-    We need to build a function of type (τ₁ ⇒ τ₂) ⇒ (τ₁' ⇒ τ₂')
+    We need to build a function of type (τ₁ ⇒ τ₂') ⇒ (τ₁' ⇒ τ₂)
     Thus, we do the following:
-    λ (τ₁ ⇒ τ₂).
+    λ (τ₁ ⇒ τ₂').
       λ τ₁'.
         μ(<:₂)
           (#1
             (μ(<:₁) (#0)))
     -}
     = let arg-ε = μ-<: <:₁  -- ⦂ τ₁' ⇒ τ₁
-          res-ε = μ-<: <:₂  -- ⦂ τ₂ ⇒ τ₂'
+          res-ε = μ-<: <:₂  -- ⦂ τ₂' ⇒ τ₂
        in CLam
             (μ-τ τδ)
             (CLam

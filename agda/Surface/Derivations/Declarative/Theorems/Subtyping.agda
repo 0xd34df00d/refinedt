@@ -24,12 +24,12 @@ mutual
         (<:-narrowing (Δ , _) σ-<: [Γ⊢σ'] <:₂)
         omitted
         omitted
-  <:-narrowing Δ σ-<: (enriched Γ⊢σ') (ST-Arr <:₁ <:₂ (enriched δτ₁⇒τ₂) (enriched δτ₁'))
+  <:-narrowing Δ σ-<: (enriched Γ⊢σ') (ST-Arr <:₁ <:₂ (enriched τ₁⇒τ₂'δ) (enriched τ₁'δ))
     = ST-Arr
         (<:-narrowing Δ σ-<: (enriched Γ⊢σ') <:₁)
         (<:-narrowing (Δ , _) σ-<: (enriched Γ⊢σ') <:₂)
-        (enriched (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' δτ₁⇒τ₂))
-        (enriched (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' δτ₁'))
+        (enriched (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' τ₁⇒τ₂'δ))
+        (enriched (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' τ₁'δ))
 
   <:-trans : Γ ⊢[ φ ] τ₁ <: τ₂
            → Γ ⊢[ φ ] τ₂ <: τ₃
@@ -37,7 +37,7 @@ mutual
   <:-trans (ST-Base oracle ⦃ UoO ⦄ is-just₁) (ST-Base oracle' is-just₂)
     rewrite UniquenessOfOracles.oracles-equal UoO oracle' oracle
           = ST-Base oracle ⦃ UoO ⦄ (Oracle.trans oracle is-just₁ is-just₂)
-  <:-trans (ST-Arr <:₁ <:₂ δτ₁⇒τ₂ _) (ST-Arr <:₁' <:₂' _ δτ₁') = ST-Arr (<:-trans <:₁' <:₁) (<:-trans (<:-narrowing ⊘ <:₁' δτ₁' <:₂) <:₂') δτ₁⇒τ₂ δτ₁'
+  <:-trans (ST-Arr <:₁ <:₂ τ₁⇒τ₂'δ _) (ST-Arr <:₁' <:₂' _ τ₁'δ) = ST-Arr (<:-trans <:₁' <:₁) (<:-trans (<:-narrowing ⊘ <:₁' τ₁'δ <:₂) <:₂') τ₁⇒τ₂'δ τ₁'δ
 
   Γok-narrowing : (Δ : CtxSuffix (suc ℓ) k)
                 → Γ ⊢[ φ ] σ' <: σ

@@ -27,7 +27,7 @@ variable
 
 data _ok[_,_]        : (Γ : Ctx ℓ) → Oracle → TSFlavour → Set
 data _⊢[_,_of_]_⦂_   (Γ : Ctx ℓ) (θ : Oracle) (φ : TSFlavour) : (κ : RuleKind) → (ε : STerm ℓ) → (τ : SType ℓ) → Set
-data _⊢[_,_]_<:_     (Γ : Ctx ℓ) (θ : Oracle) (φ : TSFlavour) : (τ τ' : SType ℓ) → Set
+data _⊢[_,_]_<:_     (Γ : Ctx ℓ) (θ : Oracle) (φ : TSFlavour) : (τ' τ : SType ℓ) → Set
 data _⊢[_,_]_        (Γ : Ctx ℓ) (θ : Oracle) (φ : TSFlavour) : (τ : SType ℓ) → Set
 
 infix 2 _⊢[_,_of_]_⦂_
@@ -94,16 +94,16 @@ data _⊢[_,_of_]_⦂_ {ℓ} Γ θ φ where
               → (conArg : Γ ⊢[ θ , φ of not-t-sub ] ε ⦂ τⱼ)
               → (adtτ : Γ ⊢[ θ , φ ] ⊍ cons)
               → Γ ⊢[ θ , φ of not-t-sub ] SCon ι ε cons ⦂ ⊍ cons
-  T-Sub       : (εδ : Γ ⊢[ θ , φ of not-t-sub ] ε ⦂ τ)
-              → (τ'δ : Γ ⊢[ θ , φ ] τ')
-              → (<: : Γ ⊢[ θ , φ ] τ <: τ')
-              → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ'
+  T-Sub       : (εδ : Γ ⊢[ θ , φ of not-t-sub ] ε ⦂ τ')
+              → (τ'δ : Γ ⊢[ θ , φ ] τ)
+              → (<: : Γ ⊢[ θ , φ ] τ' <: τ)
+              → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ
 
 data _⊢[_,_]_<:_ {ℓ} Γ θ φ where
   ST-Base : Is-just (Oracle.decide θ Γ b ρ₁ ρ₂)
           → Γ ⊢[ θ , φ ] ⟨ b ∣ ρ₁ ⟩ <: ⟨ b ∣ ρ₂ ⟩
   ST-Arr  : Γ ⊢[ θ , φ ] τ₁' <: τ₁
-          → Γ , τ₁' ⊢[ θ , φ ] τ₂ <: τ₂'
-          → Enrich (Γ ⊢[ θ , φ ] τ₁ ⇒ τ₂) φ
+          → Γ , τ₁' ⊢[ θ , φ ] τ₂' <: τ₂
+          → Enrich (Γ ⊢[ θ , φ ] τ₁ ⇒ τ₂') φ
           → Enrich (Γ ⊢[ θ , φ ] τ₁') φ
-          → Γ ⊢[ θ , φ ] τ₁ ⇒ τ₂ <: τ₁' ⇒ τ₂'
+          → Γ ⊢[ θ , φ ] τ₁ ⇒ τ₂' <: τ₁' ⇒ τ₂

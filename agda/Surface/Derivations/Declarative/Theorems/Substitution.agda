@@ -146,24 +146,24 @@ mutual
               → Γ ,σ, Δ ⊢[ φ ] τ <: τ'
               → Γ ++ [↦Δ ε ] Δ ⊢[ φ ] [ ℓ ↦τ< ε ] τ <: [ ℓ ↦τ< ε ] τ'
   sub-Γ⊢τ<:τ' Δ εδ (ST-Base oracle x) = ST-Base oracle (Oracle.subst oracle x)
-  sub-Γ⊢τ<:τ' {k = k} {Γ = Γ} {φ = φ} {ε = ε} Δ εδ (ST-Arr {τ₂ = τ₂} {τ₂' = τ₂'} <:₁ <:₂ omitted omitted)
+  sub-Γ⊢τ<:τ' {k = k} {Γ = Γ} {φ = φ} {ε = ε} Δ εδ (ST-Arr {τ₂' = τ₂'} {τ₂ = τ₂} <:₁ <:₂ omitted omitted)
     = ST-Arr (sub-Γ⊢τ<:τ' Δ εδ <:₁) <:₂' omitted omitted
     where
     <:₂' : (Γ ++ ([↦Δ ε ] (Δ , _))) ⊢[ φ ]
-           S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂ <:
-           S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂'
-    <:₂' rewrite S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂
-               | S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂'
+           S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂' <:
+           S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂
+    <:₂' rewrite S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂'
+               | S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂
                | R.act-ε-distr (raise k) suc ε
                = sub-Γ⊢τ<:τ' (Δ , _) εδ <:₂
-  sub-Γ⊢τ<:τ' {k = k} {Γ = Γ} {φ = φ} {ε = ε} Δ εδ (ST-Arr {τ₂ = τ₂} {τ₂' = τ₂'} <:₁ <:₂ (enriched δτ₁⇒τ₂) (enriched δτ₁'))
-    = ST-Arr (sub-Γ⊢τ<:τ' Δ εδ <:₁) <:₂' (enriched (sub-Γ⊢τ Δ εδ δτ₁⇒τ₂)) (enriched (sub-Γ⊢τ Δ εδ δτ₁'))
+  sub-Γ⊢τ<:τ' {k = k} {Γ = Γ} {φ = φ} {ε = ε} Δ εδ (ST-Arr {τ₂' = τ₂'} {τ₂ = τ₂} <:₁ <:₂ (enriched τ₁⇒τ₂'δ) (enriched τ₁'δ))
+    = ST-Arr (sub-Γ⊢τ<:τ' Δ εδ <:₁) <:₂' (enriched (sub-Γ⊢τ Δ εδ τ₁⇒τ₂'δ)) (enriched (sub-Γ⊢τ Δ εδ τ₁'δ))
     where
     <:₂' : (Γ ++ ([↦Δ ε ] (Δ , _))) ⊢[ φ ]
-           S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂ <:
-           S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂'
-    <:₂' rewrite S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂
-               | S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂'
+           S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂' <:
+           S.act-τ (S.ext (replace-at (ctx-idx k) (weaken-ε-k k ε))) τ₂
+    <:₂' rewrite S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂'
+               | S.act-τ-extensionality (ext-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ₂
                | R.act-ε-distr (raise k) suc ε
                = sub-Γ⊢τ<:τ' (Δ , _) εδ <:₂
 
