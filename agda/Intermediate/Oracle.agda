@@ -27,9 +27,9 @@ record Oracle : Set where
   field
     decide : (Γ : Ctx ℓ)
            → (b : BaseType)
-           → (ρ₁ ρ₂ : Refinement (suc ℓ))
+           → (ρ₁ ρ₂ : IRefinement (suc ℓ))
            → Maybe (PositiveDecision ℓ)
-    thin   : ∀ {Γ : Ctx (k + ℓ)} {Γ' : Ctx (suc k + ℓ)} {ρ₁ ρ₂ : Refinement (suc k + ℓ)}
+    thin   : ∀ {Γ : Ctx (k + ℓ)} {Γ' : Ctx (suc k + ℓ)} {ρ₁ ρ₂ : IRefinement (suc k + ℓ)}
            → (Γ⊂Γ' : k by Γ ⊂' Γ')
            → Is-just (decide Γ b ρ₁ ρ₂)
            → Is-just (decide Γ' b (R.act-ρ (ext-k' (suc k) suc) ρ₁) (act-ρ (ext-k' (suc k) suc) ρ₂))
@@ -37,7 +37,7 @@ record Oracle : Set where
           → Is-just (decide Γ b ρ₂ ρ₃)
           → Is-just (decide Γ b ρ₁ ρ₃)
 
-    thin-ε : ∀ {Γ : Ctx (k + ℓ)} {Γ' : Ctx (suc k + ℓ)} {ρ₁ ρ₂ : Refinement (suc k + ℓ)}
+    thin-ε : ∀ {Γ : Ctx (k + ℓ)} {Γ' : Ctx (suc k + ℓ)} {ρ₁ ρ₂ : IRefinement (suc k + ℓ)}
            → (is-just : Is-just (decide Γ b ρ₁ ρ₂))
            → (Γ⊂Γ' : k by Γ ⊂' Γ')
            → PositiveDecision.<:-ε (to-witness (thin Γ⊂Γ' is-just))

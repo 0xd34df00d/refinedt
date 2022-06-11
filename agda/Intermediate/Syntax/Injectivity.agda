@@ -9,9 +9,9 @@ open import Intermediate.Syntax
 
 private
   variable
-    τ₁₁ τ₁₂ τ₂₁ τ₂₂ : SType ℓ
-    ε₁₁ ε₁₂ ε₂₁ ε₂₂ : STerm ℓ
-    ρ₁₁ ρ₁₂ ρ₂₁ ρ₂₂ : Refinement ℓ
+    τ₁₁ τ₁₂ τ₂₁ τ₂₂ : IType ℓ
+    ε₁₁ ε₁₂ ε₂₁ ε₂₂ : ITerm ℓ
+    ρ₁₁ ρ₁₂ ρ₂₁ ρ₂₂ : IRefinement ℓ
 
 -- Types
 ⟨∣⟩-inj₁ : ⟨ b₁ ∣ ρ₁ ⟩ ≡ ⟨ b₂ ∣ ρ₂ ⟩
@@ -43,7 +43,7 @@ private
 ⊍-inj-cons refl = refl
 
 
--- Refinements
+-- IRefinements
 ≈-inj₁ : ε₁₁ ≈ ε₁₂ of τ₁ ≡ ε₂₁ ≈ ε₂₂ of τ₂
        → ε₁₁ ≡ ε₂₁
 ≈-inj₁ refl = refl
@@ -66,74 +66,74 @@ private
 
 
 -- Terms
-SLam-inj₁ : SLam τ₁ ε₁ ≡ SLam τ₂ ε₂
+ILam-inj₁ : ILam τ₁ ε₁ ≡ ILam τ₂ ε₂
           → τ₁ ≡ τ₂
-SLam-inj₁ refl = refl
+ILam-inj₁ refl = refl
 
-SLam-inj₂ : SLam τ₁ ε₁ ≡ SLam τ₂ ε₂
+ILam-inj₂ : ILam τ₁ ε₁ ≡ ILam τ₂ ε₂
           → ε₁ ≡ ε₂
-SLam-inj₂ refl = refl
+ILam-inj₂ refl = refl
 
-SApp-inj₁ : SApp ε₁₁ ε₁₂ ≡ SApp ε₂₁ ε₂₂
+IApp-inj₁ : IApp ε₁₁ ε₁₂ ≡ IApp ε₂₁ ε₂₂
           → ε₁₁ ≡ ε₂₁
-SApp-inj₁ refl = refl
+IApp-inj₁ refl = refl
 
-SApp-inj₂ : SApp ε₁₁ ε₁₂ ≡ SApp ε₂₁ ε₂₂
+IApp-inj₂ : IApp ε₁₁ ε₁₂ ≡ IApp ε₂₁ ε₂₂
           → ε₁₂ ≡ ε₂₂
-SApp-inj₂ refl = refl
+IApp-inj₂ refl = refl
 
-SCase-inj-len : ∀ {nₐ₁ nₐ₂}
+ICase-inj-len : ∀ {nₐ₁ nₐ₂}
                   {branches₁ : CaseBranches nₐ₁ ℓ}
                   {branches₂ : CaseBranches nₐ₂ ℓ}
-              → SCase ε₁ branches₁ ≡ SCase ε₂ branches₂
+              → ICase ε₁ branches₁ ≡ ICase ε₂ branches₂
               → nₐ₁ ≡ nₐ₂
-SCase-inj-len refl = refl
+ICase-inj-len refl = refl
 
-SCase-inj₁ : ∀ {nₐ₁ nₐ₂}
+ICase-inj₁ : ∀ {nₐ₁ nₐ₂}
                {branches₁ : CaseBranches nₐ₁ ℓ}
                {branches₂ : CaseBranches nₐ₂ ℓ}
-           → SCase ε₁ branches₁ ≡ SCase ε₂ branches₂
+           → ICase ε₁ branches₁ ≡ ICase ε₂ branches₂
            → ε₁ ≡ ε₂
-SCase-inj₁ refl = refl
+ICase-inj₁ refl = refl
 
-SCase-inj₂ : ∀ {branches₁ branches₂ : CaseBranches nₐ ℓ}
-           → SCase ε₁ branches₁ ≡ SCase ε₂ branches₂
+ICase-inj₂ : ∀ {branches₁ branches₂ : CaseBranches nₐ ℓ}
+           → ICase ε₁ branches₁ ≡ ICase ε₂ branches₂
            → branches₁ ≡ branches₂
-SCase-inj₂ refl = refl
+ICase-inj₂ refl = refl
 
-SCon-inj-len : ∀ {n₁ n₂} {ι₁ : Fin n₁} {ι₂ : Fin n₂}
+ICon-inj-len : ∀ {n₁ n₂} {ι₁ : Fin n₁} {ι₂ : Fin n₂}
                  {cons₁ : ADTCons (Mkℕₐ n₁) ℓ}
                  {cons₂ : ADTCons (Mkℕₐ n₂) ℓ}
-             → SCon ι₁ ε₁ cons₁ ≡ SCon ι₂ ε₂ cons₂
+             → ICon ι₁ ε₁ cons₁ ≡ ICon ι₂ ε₂ cons₂
              → n₁ ≡ n₂
-SCon-inj-len refl = refl
+ICon-inj-len refl = refl
 
-SCon-inj₁ : ∀ {n} {ι₁ ι₂ : Fin n}
+ICon-inj₁ : ∀ {n} {ι₁ ι₂ : Fin n}
               {cons₁ cons₂ : ADTCons (Mkℕₐ n) ℓ}
-            → SCon ι₁ ε₁ cons₁ ≡ SCon ι₂ ε₂ cons₂
+            → ICon ι₁ ε₁ cons₁ ≡ ICon ι₂ ε₂ cons₂
             → ι₁ ≡ ι₂
-SCon-inj₁ refl = refl
+ICon-inj₁ refl = refl
 
-SCon-inj₂ : ∀ {n₁ n₂} {ι₁ : Fin n₁} {ι₂ : Fin n₂}
+ICon-inj₂ : ∀ {n₁ n₂} {ι₁ : Fin n₁} {ι₂ : Fin n₂}
               {cons₁ : ADTCons (Mkℕₐ n₁) ℓ}
               {cons₂ : ADTCons (Mkℕₐ n₂) ℓ}
-            → SCon ι₁ ε₁ cons₁ ≡ SCon ι₂ ε₂ cons₂
+            → ICon ι₁ ε₁ cons₁ ≡ ICon ι₂ ε₂ cons₂
             → ε₁ ≡ ε₂
-SCon-inj₂ refl = refl
+ICon-inj₂ refl = refl
 
-SCon-inj₃ : ∀ {n} {ι₁ ι₂ : Fin n}
+ICon-inj₃ : ∀ {n} {ι₁ ι₂ : Fin n}
               {cons₁ cons₂ : ADTCons (Mkℕₐ n) ℓ}
-            → SCon ι₁ ε₁ cons₁ ≡ SCon ι₂ ε₂ cons₂
+            → ICon ι₁ ε₁ cons₁ ≡ ICon ι₂ ε₂ cons₂
             → cons₁ ≡ cons₂
-SCon-inj₃ refl = refl
+ICon-inj₃ refl = refl
 
-S<:-inj₁ : ε₁ S<: τ₁ ≡ ε₂ S<: τ₂
+I<:-inj₁ : ε₁ I<: τ₁ ≡ ε₂ I<: τ₂
          → ε₁ ≡ ε₂
-S<:-inj₁ refl = refl
+I<:-inj₁ refl = refl
 
-S<:-inj₂ : ε₁ S<: τ₁ ≡ ε₂ S<: τ₂
+I<:-inj₂ : ε₁ I<: τ₁ ≡ ε₂ I<: τ₂
          → τ₁ ≡ τ₂
-S<:-inj₂ refl = refl
+I<:-inj₂ refl = refl
 
 ∷-inj₁ : ∀ {A : Set} {a b : A} {as bs : Vec A n}
        → a ∷ as ≡ b ∷ bs
@@ -145,7 +145,7 @@ S<:-inj₂ refl = refl
        → as ≡ bs
 ∷-inj₂ refl = refl
 
-CaseBranch-inj : ∀ {ε₁ ε₂ : STerm (suc ℓ)}
+CaseBranch-inj : ∀ {ε₁ ε₂ : ITerm (suc ℓ)}
                → MkCaseBranch ε₁ ≡ MkCaseBranch ε₂
                → ε₁ ≡ ε₂
 CaseBranch-inj refl = refl

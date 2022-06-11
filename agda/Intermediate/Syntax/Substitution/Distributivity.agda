@@ -18,7 +18,7 @@ open import Intermediate.Syntax.Substitution as S
 import Intermediate.Syntax.Renaming as R
 
 R-ext-ext-commutes-ε : (ρ : Fin ℓ₁ → Fin ℓ₂)
-                     → (σ : Fin ℓ₀ → STerm ℓ₁)
+                     → (σ : Fin ℓ₀ → ITerm ℓ₁)
                      → ∀ x → R.act-ε (R.ext ρ) (ext σ x) ≡ ext (R.act-ε ρ ∘ σ) x
 R-ext-ext-commutes-ε ρ σ zero = refl
 R-ext-ext-commutes-ε ρ σ (suc x)
@@ -29,7 +29,7 @@ R-ext-ext-commutes-ε ρ σ (suc x)
 ρ-σ-Distributivity : {Ty : ℕ → Set} → R.ActionOn Ty → ActionOn Ty → Set
 ρ-σ-Distributivity {Ty} ρ-act σ-act = ∀ {ℓ₀ ℓ₁ ℓ₂}
                                       → (ρ : Fin ℓ₁ → Fin ℓ₂)
-                                      → (σ : Fin ℓ₀ → STerm ℓ₁)
+                                      → (σ : Fin ℓ₀ → ITerm ℓ₁)
                                       → (v : Ty ℓ₀)
                                       → ρ-act ρ (σ-act σ v) ≡ σ-act (R.act-ε ρ ∘ σ) v
 
@@ -59,26 +59,26 @@ mutual
   ρ-σ-distr-ρ _ _ Τ = refl
 
   ρ-σ-distr-ε : ρ-σ-Distributivity R.act-ε act-ε
-  ρ-σ-distr-ε ρ σ SUnit = refl
-  ρ-σ-distr-ε ρ σ (SVar ι) = refl
-  ρ-σ-distr-ε ρ σ (SLam τ ε)
+  ρ-σ-distr-ε ρ σ IUnit = refl
+  ρ-σ-distr-ε ρ σ (IVar ι) = refl
+  ρ-σ-distr-ε ρ σ (ILam τ ε)
     rewrite ρ-σ-distr-τ ρ σ τ
           | ρ-σ-distr-ε (R.ext ρ) (ext σ) ε
           | act-ε-extensionality (R-ext-ext-commutes-ε ρ σ) ε
           = refl
-  ρ-σ-distr-ε ρ σ (SApp ε₁ ε₂)
+  ρ-σ-distr-ε ρ σ (IApp ε₁ ε₂)
     rewrite ρ-σ-distr-ε ρ σ ε₁
           | ρ-σ-distr-ε ρ σ ε₂
           = refl
-  ρ-σ-distr-ε ρ σ (SCase ε branches)
+  ρ-σ-distr-ε ρ σ (ICase ε branches)
     rewrite ρ-σ-distr-ε ρ σ ε
           | ρ-σ-distr-branches ρ σ branches
           = refl
-  ρ-σ-distr-ε ρ σ (SCon ι ε cons)
+  ρ-σ-distr-ε ρ σ (ICon ι ε cons)
     rewrite ρ-σ-distr-ε ρ σ ε
           | ρ-σ-distr-cons ρ σ cons
           = refl
-  ρ-σ-distr-ε ρ σ (ε S<: τ)
+  ρ-σ-distr-ε ρ σ (ε I<: τ)
     rewrite ρ-σ-distr-ε ρ σ ε
           | ρ-σ-distr-τ ρ σ τ
           = refl
@@ -100,12 +100,12 @@ mutual
 
 σ-ρ-Distributivity : {Ty : ℕ → Set} → ActionOn Ty → R.ActionOn Ty → Set
 σ-ρ-Distributivity {Ty} σ-act ρ-act = ∀ {ℓ₀ ℓ₁ ℓ₂}
-                                      → (σ : Fin ℓ₁ → STerm ℓ₂)
+                                      → (σ : Fin ℓ₁ → ITerm ℓ₂)
                                       → (ρ : Fin ℓ₀ → Fin ℓ₁)
                                       → (v : Ty ℓ₀)
                                       → σ-act σ (ρ-act ρ v) ≡ σ-act (σ ∘ ρ) v
 
-ext-Rext-distr : (σ : Fin ℓ₁ → STerm ℓ₂)
+ext-Rext-distr : (σ : Fin ℓ₁ → ITerm ℓ₂)
                → (ρ : Fin ℓ₀ → Fin ℓ₁)
                → (∀ x → ext σ (R.ext ρ x) ≡ ext (σ ∘ ρ) x)
 ext-Rext-distr σ ρ zero = refl
@@ -137,26 +137,26 @@ mutual
   σ-ρ-distr-ρ _ _ Τ = refl
 
   σ-ρ-distr-ε : σ-ρ-Distributivity act-ε R.act-ε
-  σ-ρ-distr-ε σ ρ SUnit = refl
-  σ-ρ-distr-ε σ ρ (SVar ι) = refl
-  σ-ρ-distr-ε σ ρ (SLam τ ε)
+  σ-ρ-distr-ε σ ρ IUnit = refl
+  σ-ρ-distr-ε σ ρ (IVar ι) = refl
+  σ-ρ-distr-ε σ ρ (ILam τ ε)
     rewrite σ-ρ-distr-τ σ ρ τ
           | σ-ρ-distr-ε (ext σ) (R.ext ρ) ε
           | act-ε-extensionality (ext-Rext-distr σ ρ) ε
           = refl
-  σ-ρ-distr-ε σ ρ (SApp ε₁ ε₂)
+  σ-ρ-distr-ε σ ρ (IApp ε₁ ε₂)
     rewrite σ-ρ-distr-ε σ ρ ε₁
           | σ-ρ-distr-ε σ ρ ε₂
           = refl
-  σ-ρ-distr-ε σ ρ (SCase ε branches)
+  σ-ρ-distr-ε σ ρ (ICase ε branches)
     rewrite σ-ρ-distr-ε σ ρ ε
           | σ-ρ-distr-branches σ ρ branches
           = refl
-  σ-ρ-distr-ε σ ρ (SCon ι ε cons)
+  σ-ρ-distr-ε σ ρ (ICon ι ε cons)
     rewrite σ-ρ-distr-ε σ ρ ε
           | σ-ρ-distr-cons σ ρ cons
           = refl
-  σ-ρ-distr-ε σ ρ (ε S<: τ)
+  σ-ρ-distr-ε σ ρ (ε I<: τ)
     rewrite σ-ρ-distr-ε σ ρ ε
           | σ-ρ-distr-τ σ ρ τ
           = refl
@@ -177,8 +177,8 @@ mutual
           = refl
 
 
-act-ε-ext-distr : (σ₁ : Fin ℓ₀ → STerm ℓ₁)
-                → (σ₂ : Fin ℓ₁ → STerm ℓ₂)
+act-ε-ext-distr : (σ₁ : Fin ℓ₀ → ITerm ℓ₁)
+                → (σ₂ : Fin ℓ₁ → ITerm ℓ₂)
                 → (x : Fin (suc ℓ₀))
                 → act-ε (ext σ₂) (ext σ₁ x) ≡ ext (act-ε σ₂ ∘ σ₁) x
 act-ε-ext-distr σ₁ σ₂ zero = refl
@@ -189,8 +189,8 @@ act-ε-ext-distr σ₁ σ₂ (suc x)
 
 ActDistributivity : {Ty : ℕ → Set} → ActionOn Ty → Set
 ActDistributivity {Ty} act = ∀ {ℓ₀ ℓ₁ ℓ₂}
-                             → (σ₁ : Fin ℓ₀ → STerm ℓ₁)
-                             → (σ₂ : Fin ℓ₁ → STerm ℓ₂)
+                             → (σ₁ : Fin ℓ₀ → ITerm ℓ₁)
+                             → (σ₂ : Fin ℓ₁ → ITerm ℓ₂)
                              → (v : Ty ℓ₀)
                              → act σ₂ (act σ₁ v) ≡ act (act-ε σ₂ ∘ σ₁) v
 
@@ -220,26 +220,26 @@ mutual
   act-ρ-distr _ _ Τ = refl
 
   act-ε-distr : ActDistributivity act-ε
-  act-ε-distr σ₁ σ₂ SUnit = refl
-  act-ε-distr σ₁ σ₂ (SVar ι) = refl
-  act-ε-distr σ₁ σ₂ (SLam τ ε)
+  act-ε-distr σ₁ σ₂ IUnit = refl
+  act-ε-distr σ₁ σ₂ (IVar ι) = refl
+  act-ε-distr σ₁ σ₂ (ILam τ ε)
     rewrite act-τ-distr σ₁ σ₂ τ
           | act-ε-distr (ext σ₁) (ext σ₂) ε
           | act-ε-extensionality (act-ε-ext-distr σ₁ σ₂) ε
           = refl
-  act-ε-distr σ₁ σ₂ (SApp ε₁ ε₂)
+  act-ε-distr σ₁ σ₂ (IApp ε₁ ε₂)
     rewrite act-ε-distr σ₁ σ₂ ε₁
           | act-ε-distr σ₁ σ₂ ε₂
           = refl
-  act-ε-distr σ₁ σ₂ (SCase ε branches)
+  act-ε-distr σ₁ σ₂ (ICase ε branches)
     rewrite act-ε-distr σ₁ σ₂ ε
           | act-branches-distr σ₁ σ₂ branches
           = refl
-  act-ε-distr σ₁ σ₂ (SCon ι ε cons)
+  act-ε-distr σ₁ σ₂ (ICon ι ε cons)
     rewrite act-ε-distr σ₁ σ₂ ε
           | act-cons-distr σ₁ σ₂ cons
           = refl
-  act-ε-distr σ₁ σ₂ (ε S<: τ)
+  act-ε-distr σ₁ σ₂ (ε I<: τ)
     rewrite act-ε-distr σ₁ σ₂ ε
           | act-τ-distr σ₁ σ₂ τ
           = refl
@@ -308,7 +308,7 @@ private
 ρ-SubstDistributivity {Ty} ρ-act [_↦_]_ = ∀ {ℓ ℓ'}
                                           → (ρ : Fin ℓ → Fin ℓ')
                                           → (ι : Fin (suc ℓ))
-                                          → (ε : STerm ℓ)
+                                          → (ε : ITerm ℓ)
                                           → (v : Ty (suc ℓ))
                                           → ρ-act ρ ([ ι ↦ ε ] v) ≡ [ zero ↦ R.act-ε ρ ε ] (ρ-act (ρ-ιth ρ ι) v)
 
@@ -334,16 +334,16 @@ private
         = refl
 
 ρ-subst-distr-τ-0 : (ρ : Fin ℓ → Fin ℓ')
-                  → (ε : STerm ℓ)
-                  → (τ : SType (suc ℓ))
+                  → (ε : ITerm ℓ)
+                  → (τ : IType (suc ℓ))
                   → R.act-τ ρ ([ zero ↦τ ε ] τ) ≡ [ zero ↦τ R.act-ε ρ ε ] (R.act-τ (R.ext ρ) τ)
 ρ-subst-distr-τ-0 ρ ε τ
   rewrite R.act-τ-extensionality (ρ-0th-is-ext ρ) τ
         = ρ-subst-distr-τ ρ zero ε τ
 
 ρ-subst-distr-ε-0 : (ρ : Fin ℓ → Fin ℓ')
-                  → (ε : STerm ℓ)
-                  → (ε' : STerm (suc ℓ))
+                  → (ε : ITerm ℓ)
+                  → (ε' : ITerm (suc ℓ))
                   → R.act-ε ρ ([ zero ↦ε ε ] ε') ≡ [ zero ↦ε R.act-ε ρ ε ] (R.act-ε (R.ext ρ) ε')
 ρ-subst-distr-ε-0 ρ ε ε'
   rewrite R.act-ε-extensionality (ρ-0th-is-ext ρ) ε'

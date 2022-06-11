@@ -10,7 +10,7 @@ open import Intermediate.Syntax
 open import Intermediate.Syntax.Renaming as R
 
 infix 4 _∈_at_
-data _∈_at_ : SType ℓ → Ctx ℓ → Fin ℓ → Set where
+data _∈_at_ : IType ℓ → Ctx ℓ → Fin ℓ → Set where
   ∈-zero : (≡-prf : τ₀ ≡ R.weaken-τ τ)
          → τ₀ ∈ Γ , τ at zero
   ∈-suc  : (≡-prf : τ₀ ≡ R.weaken-τ τ)
@@ -24,8 +24,8 @@ data _∈_at_ : SType ℓ → Ctx ℓ → Fin ℓ → Set where
 ∈-injective (∈-suc refl ∈₁) (∈-suc refl ∈₂) rewrite ∈-injective ∈₁ ∈₂ = refl
 
 infix 4 _ℕ-idx_∈_
-data _ℕ-idx_∈_ : (k : ℕ) → SType ℓ → Ctx (suc k + ℓ) → Set where
+data _ℕ-idx_∈_ : (k : ℕ) → IType ℓ → Ctx (suc k + ℓ) → Set where
   ∈-zero : zero ℕ-idx τ ∈ (Γ , τ)
-  ∈-suc  : ∀ {Γ : Ctx (suc k + ℓ)} {τ' : SType (suc k + ℓ)}
+  ∈-suc  : ∀ {Γ : Ctx (suc k + ℓ)} {τ' : IType (suc k + ℓ)}
          → k ℕ-idx τ ∈ Γ
          → suc k ℕ-idx τ ∈ (Γ , τ')

@@ -16,12 +16,12 @@ ActionOn : (ℕ → Set) → Set
 ActionOn Ty = ∀ {ℓ ℓ'} → (Fin ℓ → Target ℓ') → Ty ℓ → Ty ℓ'
 
 mutual
-  act-ρ : ActionOn Refinement
+  act-ρ : ActionOn IRefinement
   act-ρ f (ε₁ ≈ ε₂ of τ) = act-ε f ε₁ ≈ act-ε f ε₂ of act-τ f τ
   act-ρ f (ρ₁ ∧ ρ₂) = act-ρ f ρ₁ ∧ act-ρ f ρ₂
   act-ρ f Τ = Τ
 
-  act-τ : ActionOn SType
+  act-τ : ActionOn IType
   act-τ f ⟨ b ∣ ρ ⟩ = ⟨ b ∣ act-ρ (ext f) ρ ⟩
   act-τ f (τ₁ ⇒ τ₂) = act-τ f τ₁ ⇒ act-τ (ext f) τ₂
   act-τ f (⊍ cons)  = ⊍ (act-cons f cons)
@@ -34,14 +34,14 @@ mutual
   act-branches _ [] = []
   act-branches f (MkCaseBranch body ∷ bs) = MkCaseBranch (act-ε (ext f) body) ∷ act-branches f bs
 
-  act-ε : ActionOn STerm
-  act-ε f SUnit = SUnit
-  act-ε f (SVar ι) = var-action (f ι)
-  act-ε f (SLam τ ε) = SLam (act-τ f τ) (act-ε (ext f) ε)
-  act-ε f (SApp ε₁ ε₂) = SApp (act-ε f ε₁) (act-ε f ε₂)
-  act-ε f (SCase scrut branches) = SCase (act-ε f scrut) (act-branches f branches)
-  act-ε f (SCon ι body adt-cons) = SCon ι (act-ε f body) (act-cons f adt-cons)
-  act-ε f (ε S<: τ) = act-ε f ε S<: act-τ f τ
+  act-ε : ActionOn ITerm
+  act-ε f IUnit = IUnit
+  act-ε f (IVar ι) = var-action (f ι)
+  act-ε f (ILam τ ε) = ILam (act-τ f τ) (act-ε (ext f) ε)
+  act-ε f (IApp ε₁ ε₂) = IApp (act-ε f ε₁) (act-ε f ε₂)
+  act-ε f (ICase scrut branches) = ICase (act-ε f scrut) (act-branches f branches)
+  act-ε f (ICon ι body adt-cons) = ICon ι (act-ε f body) (act-cons f adt-cons)
+  act-ε f (ε I<: τ) = act-ε f ε I<: act-τ f τ
 
 
 ext-k : ∀ k

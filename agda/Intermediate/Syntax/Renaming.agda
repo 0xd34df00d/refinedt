@@ -14,23 +14,23 @@ open import Common.Types
 open import Data.Fin.Extra
 open import Intermediate.Syntax
 open import Intermediate.Syntax.Actions (record { Target = Fin
-                                                ; var-action = λ ι → SVar ι
+                                                ; var-action = λ ι → IVar ι
                                                 ; ext = ext-ρ
                                                 }) public
 
-weaken-τ : SType ℓ → SType (suc ℓ)
+weaken-τ : IType ℓ → IType (suc ℓ)
 weaken-τ = act-τ suc
 
-weaken-ε : STerm ℓ → STerm (suc ℓ)
+weaken-ε : ITerm ℓ → ITerm (suc ℓ)
 weaken-ε = act-ε suc
 
-weaken-ρ : Refinement ℓ → Refinement (suc ℓ)
+weaken-ρ : IRefinement ℓ → IRefinement (suc ℓ)
 weaken-ρ = act-ρ suc
 
-weaken-τ-k : ∀ k → SType ℓ → SType (k + ℓ)
+weaken-τ-k : ∀ k → IType ℓ → IType (k + ℓ)
 weaken-τ-k k = act-τ (raise k)
 
-weaken-ε-k : ∀ k → STerm ℓ → STerm (k + ℓ)
+weaken-ε-k : ∀ k → ITerm ℓ → ITerm (k + ℓ)
 weaken-ε-k k = act-ε (raise k)
 
 
@@ -48,15 +48,15 @@ cons-lookup-comm : (ρ : Fin ℓ → Fin ℓ')
 cons-lookup-comm ρ zero (τ ∷ _) = refl
 cons-lookup-comm ρ (suc ι) (_ ∷ cons) = cons-lookup-comm ρ ι cons
 
-SVar-inj : SVar ι₁ ≡ SVar ι₂
+IVar-inj : IVar ι₁ ≡ IVar ι₂
          → ι₁ ≡ ι₂
-SVar-inj refl = refl
+IVar-inj refl = refl
 
 open import Intermediate.Syntax.Actions.Lemmas var-action-record
                                                record { ≡-ext = λ where x-≡ zero → refl
                                                                         x-≡ (suc x) → cong suc (x-≡ x)
                                                       ; ext-id = λ where f-≡ zero → refl
-                                                                         f-≡ (suc x) → cong (SVar ∘ suc) (SVar-inj (f-≡ x))
+                                                                         f-≡ (suc x) → cong (IVar ∘ suc) (IVar-inj (f-≡ x))
                                                       }
                                                public
 
@@ -92,26 +92,26 @@ mutual
   act-ρ-distr _ _ Τ = refl
 
   act-ε-distr : ActDistributivity act-ε
-  act-ε-distr r₁ r₂ SUnit = refl
-  act-ε-distr r₁ r₂ (SVar ι) = refl
-  act-ε-distr r₁ r₂ (SLam τ ε)
+  act-ε-distr r₁ r₂ IUnit = refl
+  act-ε-distr r₁ r₂ (IVar ι) = refl
+  act-ε-distr r₁ r₂ (ILam τ ε)
     rewrite act-τ-distr r₁ r₂ τ
           | act-ε-distr (ext r₁) (ext r₂) ε
           | act-ε-extensionality (ext-distr r₁ r₂) ε
           = refl
-  act-ε-distr r₁ r₂ (SApp ε₁ ε₂)
+  act-ε-distr r₁ r₂ (IApp ε₁ ε₂)
     rewrite act-ε-distr r₁ r₂ ε₁
           | act-ε-distr r₁ r₂ ε₂
           = refl
-  act-ε-distr r₁ r₂ (SCase ε branches)
+  act-ε-distr r₁ r₂ (ICase ε branches)
     rewrite act-ε-distr r₁ r₂ ε
           | act-branches-distr r₁ r₂ branches
           = refl
-  act-ε-distr r₁ r₂ (SCon ι ε cons)
+  act-ε-distr r₁ r₂ (ICon ι ε cons)
     rewrite act-ε-distr r₁ r₂ ε
           | act-cons-distr r₁ r₂ cons
           = refl
-  act-ε-distr r₁ r₂ (ε S<: τ)
+  act-ε-distr r₁ r₂ (ε I<: τ)
     rewrite act-ε-distr r₁ r₂ ε
           | act-τ-distr r₁ r₂ τ
           = refl
@@ -132,14 +132,14 @@ mutual
           = refl
 
 
-weaken-τ-comm : ∀ (ρ : Fin ℓ → Fin ℓ') (τ : SType ℓ)
+weaken-τ-comm : ∀ (ρ : Fin ℓ → Fin ℓ') (τ : IType ℓ)
               → act-τ (ext ρ) (weaken-τ τ) ≡ weaken-τ (act-τ ρ τ)
 weaken-τ-comm ρ τ
   rewrite act-τ-distr suc (ext ρ) τ
         | act-τ-distr ρ suc τ
         = refl
 
-weaken-ε-comm : ∀ (ρ : Fin ℓ → Fin ℓ') (ε : STerm ℓ)
+weaken-ε-comm : ∀ (ρ : Fin ℓ → Fin ℓ') (ε : ITerm ℓ)
               → act-ε (ext ρ) (weaken-ε ε) ≡ weaken-ε (act-ε ρ ε)
 weaken-ε-comm ρ ε
   rewrite act-ε-distr suc (ext ρ) ε
@@ -147,10 +147,10 @@ weaken-ε-comm ρ ε
         = refl
 
 
-weaken-τ-suc-k : ∀ k (τ : SType ℓ)
+weaken-τ-suc-k : ∀ k (τ : IType ℓ)
                → weaken-τ-k (suc k) τ ≡ weaken-τ (weaken-τ-k k τ)
 weaken-τ-suc-k k τ = sym (act-τ-distr (raise k) suc τ)
 
-weaken-ε-suc-k : ∀ k (ε : STerm ℓ)
+weaken-ε-suc-k : ∀ k (ε : ITerm ℓ)
                → weaken-ε-k (suc k) ε ≡ weaken-ε (weaken-ε-k k ε)
 weaken-ε-suc-k k ε = sym (act-ε-distr (raise k) suc ε)

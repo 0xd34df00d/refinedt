@@ -16,7 +16,7 @@ infixl 5 _,_
 data CtxSuffix (ℓ : ℕ) : (k : ℕ) → Set where
   ⊘   : CtxSuffix ℓ zero
   _,_ : (Δ : CtxSuffix ℓ k)
-      → (τ : SType (k + ℓ))
+      → (τ : IType (k + ℓ))
       → CtxSuffix ℓ (suc k)
 
 infixl 4 _++_
@@ -29,11 +29,11 @@ variable
 
 
 -- Non-empty suffix, useful for the substitution lemmas
-data ,-CtxSuffix (ℓ : ℕ) : (σ : SType ℓ) → (k : ℕ) → Set where
+data ,-CtxSuffix (ℓ : ℕ) : (σ : IType ℓ) → (k : ℕ) → Set where
   [_] : ∀ σ
       → ,-CtxSuffix ℓ σ zero
   _,_ : (Δ : ,-CtxSuffix ℓ σ k)
-      → (τ : SType (suc k + ℓ))
+      → (τ : IType (suc k + ℓ))
       → ,-CtxSuffix ℓ σ (suc k)
 
 infixl 4 _,σ,_
@@ -44,7 +44,7 @@ _,σ,_ : Ctx ℓ → ,-CtxSuffix ℓ σ k → Ctx (suc k + ℓ)
 -- We only ever need to substitute on whole context suffixes,
 -- so there's no point in making this operator ternary and passing the index explicilty:
 -- it is always equal to the length of the suffix.
-[↦Δ_]_ : (ε : STerm ℓ)
+[↦Δ_]_ : (ε : ITerm ℓ)
        → ,-CtxSuffix ℓ σ k
        → CtxSuffix ℓ k
 [↦Δ ε ] [ σ ] = ⊘

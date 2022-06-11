@@ -17,7 +17,7 @@ open import Intermediate.Derivations.Algorithmic hiding (θ)
 record Props : Set where
   constructor MkProps
   field
-    subst  : ∀ {Δ : ,-CtxSuffix ℓ σ k} {ρ₁ ρ₂ : Refinement (suc (suc k + ℓ))}
+    subst  : ∀ {Δ : ,-CtxSuffix ℓ σ k} {ρ₁ ρ₂ : IRefinement (suc (suc k + ℓ))}
            → [ θ ] Γ ⊢ ε ⦂ σ
            → Is-just (Oracle.decide θ (Γ ,σ, Δ) b ρ₁ ρ₂)
            → Is-just (Oracle.decide θ (Γ ++ ([↦Δ ε ] Δ)) b

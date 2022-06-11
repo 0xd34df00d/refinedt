@@ -40,25 +40,25 @@ mutual
   act-ρ-extensionality _ Τ = refl
 
   act-ε-extensionality : ActExtensionality act-ε
-  act-ε-extensionality x-≡ SUnit = refl
-  act-ε-extensionality x-≡ (SVar ι) rewrite x-≡ ι = refl
-  act-ε-extensionality x-≡ (SLam τ ε)
+  act-ε-extensionality x-≡ IUnit = refl
+  act-ε-extensionality x-≡ (IVar ι) rewrite x-≡ ι = refl
+  act-ε-extensionality x-≡ (ILam τ ε)
     rewrite act-τ-extensionality x-≡ τ
           | act-ε-extensionality (≡-ext x-≡) ε
           = refl
-  act-ε-extensionality x-≡ (SApp ε₁ ε₂)
+  act-ε-extensionality x-≡ (IApp ε₁ ε₂)
     rewrite act-ε-extensionality x-≡ ε₁
           | act-ε-extensionality x-≡ ε₂
           = refl
-  act-ε-extensionality x-≡ (SCase ε branches)
+  act-ε-extensionality x-≡ (ICase ε branches)
     rewrite act-ε-extensionality x-≡ ε
           | act-branches-extensionality x-≡ branches
           = refl
-  act-ε-extensionality x-≡ (SCon ι ε cons)
+  act-ε-extensionality x-≡ (ICon ι ε cons)
     rewrite act-ε-extensionality x-≡ ε
           | act-cons-extensionality x-≡ cons
           = refl
-  act-ε-extensionality x-≡ (ε S<: τ)
+  act-ε-extensionality x-≡ (ε I<: τ)
     rewrite act-ε-extensionality x-≡ ε
           | act-τ-extensionality x-≡ τ
           = refl
@@ -88,7 +88,7 @@ act-cons-member (suc ι) (conτ ∷ cons) ≡-prf = act-cons-member ι cons ≡-
 
 ActIdentity : {Ty : ℕ → Set} → ActionOn Ty → Set
 ActIdentity {Ty} act = ∀ {ℓ} {f : Fin ℓ → Target ℓ}
-                       → (∀ x → var-action (f x) ≡ SVar x)
+                       → (∀ x → var-action (f x) ≡ IVar x)
                        → (v : Ty ℓ)
                        → act f v ≡ v
 
@@ -114,25 +114,25 @@ mutual
   act-ρ-id _ Τ = refl
 
   act-ε-id : ActIdentity act-ε
-  act-ε-id f-id SUnit = refl
-  act-ε-id f-id (SVar ι) rewrite f-id ι = refl
-  act-ε-id f-id (SLam τ ε)
+  act-ε-id f-id IUnit = refl
+  act-ε-id f-id (IVar ι) rewrite f-id ι = refl
+  act-ε-id f-id (ILam τ ε)
     rewrite act-τ-id f-id τ
           | act-ε-id (ext-id f-id) ε
           = refl
-  act-ε-id f-id (SApp ε₁ ε₂)
+  act-ε-id f-id (IApp ε₁ ε₂)
     rewrite act-ε-id f-id ε₁
           | act-ε-id f-id ε₂
           = refl
-  act-ε-id f-id (SCase ε branches)
+  act-ε-id f-id (ICase ε branches)
     rewrite act-ε-id f-id ε
           | act-branches-id f-id branches
           = refl
-  act-ε-id f-id (SCon ι ε cons)
+  act-ε-id f-id (ICon ι ε cons)
     rewrite act-ε-id f-id ε
           | act-cons-id f-id cons
           = refl
-  act-ε-id f-id (ε S<: τ)
+  act-ε-id f-id (ε I<: τ)
     rewrite act-ε-id f-id ε
           | act-τ-id f-id τ
           = refl

@@ -16,10 +16,10 @@ RenamingAsSubst : {Ty : ℕ → Set} → R.ActionOn Ty → S.ActionOn Ty → Set
 RenamingAsSubst {Ty} ρ-act σ-act = ∀ {ℓ ℓ'}
                                    → (ρ : Fin ℓ → Fin ℓ')
                                    → (v : Ty ℓ)
-                                   → ρ-act ρ v ≡ σ-act (SVar ∘ ρ) v
+                                   → ρ-act ρ v ≡ σ-act (IVar ∘ ρ) v
 
 var-ext-commutes : ∀ (ρ : Fin ℓ → Fin ℓ')
-                 → ∀ x → SVar (R.ext ρ x) ≡ ext (SVar ∘ ρ) x
+                 → ∀ x → IVar (R.ext ρ x) ≡ ext (IVar ∘ ρ) x
 var-ext-commutes ρ zero = refl
 var-ext-commutes ρ (suc x) = refl
 
@@ -49,26 +49,26 @@ mutual
   ρ-as-σ-ρ _ Τ = refl
 
   ρ-as-σ-ε : RenamingAsSubst R.act-ε act-ε
-  ρ-as-σ-ε ρ SUnit = refl
-  ρ-as-σ-ε ρ (SVar ι) = refl
-  ρ-as-σ-ε ρ (SLam τ ε)
+  ρ-as-σ-ε ρ IUnit = refl
+  ρ-as-σ-ε ρ (IVar ι) = refl
+  ρ-as-σ-ε ρ (ILam τ ε)
     rewrite ρ-as-σ-τ ρ τ
           | ρ-as-σ-ε (R.ext ρ) ε
           | act-ε-extensionality (var-ext-commutes ρ) ε
           = refl
-  ρ-as-σ-ε ρ (SApp ε₁ ε₂)
+  ρ-as-σ-ε ρ (IApp ε₁ ε₂)
     rewrite ρ-as-σ-ε ρ ε₁
           | ρ-as-σ-ε ρ ε₂
           = refl
-  ρ-as-σ-ε ρ (SCase ε branches)
+  ρ-as-σ-ε ρ (ICase ε branches)
     rewrite ρ-as-σ-ε ρ ε
           | ρ-as-σ-branches ρ branches
           = refl
-  ρ-as-σ-ε ρ (SCon ι ε cons)
+  ρ-as-σ-ε ρ (ICon ι ε cons)
     rewrite ρ-as-σ-ε ρ ε
           | ρ-as-σ-cons ρ cons
           = refl
-  ρ-as-σ-ε ρ (ε S<: τ)
+  ρ-as-σ-ε ρ (ε I<: τ)
     rewrite ρ-as-σ-ε ρ ε
           | ρ-as-σ-τ ρ τ
           = refl

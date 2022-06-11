@@ -31,7 +31,7 @@ open import Intermediate.Derivations.Algorithmic.Theorems.Thinning
 
 -- Some local helpers
 
-weaken-↦<-suc-comm-τ : ∀ {k ℓ} {τ : SType (suc k + ℓ)} (ε : STerm ℓ)
+weaken-↦<-suc-comm-τ : ∀ {k ℓ} {τ : IType (suc k + ℓ)} (ε : ITerm ℓ)
                      → [ ℓ ↦τ< ε ] weaken-τ τ ≡ weaken-τ ([ ℓ ↦τ< ε ] τ)
 weaken-↦<-suc-comm-τ {k} {ℓ} {τ} ε
   rewrite ρ-σ-distr-τ suc (replace-at (ctx-idx k) (weaken-ε-k k ε)) τ

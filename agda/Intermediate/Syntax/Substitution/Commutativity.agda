@@ -151,8 +151,8 @@ private
   lemma₁₀ {suc ℓ} {a = suc a} ≡-prf (<-suc b<c) = cong suc (lemma₁₀ (suc-injective ≡-prf) b<c)
 
   subst-make-room-id-var : (ι : Fin (suc ℓ))
-                         → (ε' ε : STerm ℓ)
-                         → ∀ var → replace-at ι ε' (make-room-for ι var) ≡ SVar var
+                         → (ε' ε : ITerm ℓ)
+                         → ∀ var → replace-at ι ε' (make-room-for ι var) ≡ IVar var
   subst-make-room-id-var ι ε' ε var with ι <>? inject₁ var
   ... | less ι<var rewrite <>?-< (<-trans ι<var (inject₁-n<suc-n var)) = refl
   ... | equal refl rewrite <>?-< (inject₁-n<suc-n var) = refl
@@ -170,20 +170,20 @@ private
                               = refl
 
   subst-make-room-id-ε : (ι : Fin (suc ℓ))
-                       → (ε' ε : STerm ℓ)
+                       → (ε' ε : ITerm ℓ)
                        → [ ι ↦ε ε' ] R.act-ε (make-room-for ι) ε ≡ ε
   subst-make-room-id-ε ι ε' ε
     rewrite σ-ρ-distr-ε (replace-at ι ε') (make-room-for ι) ε
           = act-ε-id (subst-make-room-id-var ι ε' ε) ε
 
-subst-commutes-var : (ε₁ : STerm ℓ)
-                   → (ε₂ : STerm (suc ℓ))
+subst-commutes-var : (ε₁ : ITerm ℓ)
+                   → (ε₂ : ITerm (suc ℓ))
                    → (ι₁ : Fin (suc ℓ))
                    → (ι₂ : Fin (suc (suc ℓ)))
                    → (var : Fin (suc (suc ℓ)))
                    → (let ι'₁ = compute-ι'₁ ι₁ ι₂)
                    → (let ι'₂ = compute-ι'₂ ι₁ ι₂)
-                   → [ ι₁ ↦ε ε₁ ] [ ι₂ ↦ε ε₂ ] (SVar var) ≡ [ ι'₂ ↦ε [ ι₁ ↦ε ε₁ ] ε₂ ] [ ι'₁ ↦ε R.act-ε (make-room-for ι'₂) ε₁ ] (SVar var)
+                   → [ ι₁ ↦ε ε₁ ] [ ι₂ ↦ε ε₂ ] (IVar var) ≡ [ ι'₂ ↦ε [ ι₁ ↦ε ε₁ ] ε₂ ] [ ι'₁ ↦ε R.act-ε (make-room-for ι'₂) ε₁ ] (IVar var)
 subst-commutes-var ε₁ ε₂ ι₁ ι₂ var with suc ι₁ <>? ι₂ | ι₂ <>? var
 ... | less m<n@(<-suc m<n') | less m<n₁@(<-suc m<n₁')
   rewrite <>?-< (lemma₁ m<n m<n₁)
@@ -262,7 +262,7 @@ subst-commutes-var ε₁ ε₂ ι₁ (suc ι₂) var | less m<n | greater m>n wi
 ...   | less m<n₁ rewrite <>?-< (lemma₇ m<n₁ m>n) with var | m>n
 ...                                                  | suc var' | <-suc m>n' rewrite <>?-> m>n' = refl
 
-subst-commutes-τ : ∀ ι₁ ι₂ ε₁ ε₂ (τ : SType (suc (suc ℓ)))
+subst-commutes-τ : ∀ ι₁ ι₂ ε₁ ε₂ (τ : IType (suc (suc ℓ)))
                  → (let ι'₁ = compute-ι'₁ ι₁ ι₂)
                  → (let ι'₂ = compute-ι'₂ ι₁ ι₂)
                  → [ ι₁ ↦τ ε₁ ] [ ι₂ ↦τ ε₂ ] τ ≡ [ ι'₂ ↦τ [ ι₁ ↦ε ε₁ ] ε₂ ] [ ι'₁ ↦τ R.act-ε (make-room-for ι'₂) ε₁ ] τ
@@ -273,7 +273,7 @@ subst-commutes-τ ι₁ ι₂ ε₁ ε₂ τ rewrite act-τ-distr (replace-at ι
                                      | act-τ-extensionality (subst-commutes-var ε₁ ε₂ ι₁ ι₂) τ
                                      = refl
 
-subst-commutes-ε : ∀ ι₁ ι₂ ε₁ ε₂ (ε : STerm (suc (suc ℓ)))
+subst-commutes-ε : ∀ ι₁ ι₂ ε₁ ε₂ (ε : ITerm (suc (suc ℓ)))
                  → (let ι'₁ = compute-ι'₁ ι₁ ι₂)
                  → (let ι'₂ = compute-ι'₂ ι₁ ι₂)
                  → [ ι₁ ↦ε ε₁ ] [ ι₂ ↦ε ε₂ ] ε ≡ [ ι'₂ ↦ε [ ι₁ ↦ε ε₁ ] ε₂ ] [ ι'₁ ↦ε R.act-ε (make-room-for ι'₂) ε₁ ] ε
@@ -284,10 +284,10 @@ subst-commutes-ε ι₁ ι₂ ε₁ ε₂ ε rewrite act-ε-distr (replace-at ι
                                      | act-ε-extensionality (subst-commutes-var ε₁ ε₂ ι₁ ι₂) ε
                                      = refl
 
-subst-commutes-τ-zero : ∀ ι ε₁ ε₂ (τ : SType (suc (suc ℓ)))
+subst-commutes-τ-zero : ∀ ι ε₁ ε₂ (τ : IType (suc (suc ℓ)))
                       → [ ι ↦τ ε₁ ] [ zero ↦τ ε₂ ] τ ≡ [ zero ↦τ [ ι ↦ε ε₁ ] ε₂ ] [ suc ι ↦τ R.weaken-ε ε₁ ] τ
 subst-commutes-τ-zero ι ε₁ ε₂ τ rewrite R.act-ε-extensionality (sym ∘ make-room-for-zero) ε₁ = subst-commutes-τ ι zero ε₁ ε₂ τ
 
-subst-commutes-ε-zero : ∀ ι ε₁ ε₂ (ε : STerm (suc (suc ℓ)))
+subst-commutes-ε-zero : ∀ ι ε₁ ε₂ (ε : ITerm (suc (suc ℓ)))
                       → [ ι ↦ε ε₁ ] [ zero ↦ε ε₂ ] ε ≡ [ zero ↦ε [ ι ↦ε ε₁ ] ε₂ ] [ suc ι ↦ε R.weaken-ε ε₁ ] ε
 subst-commutes-ε-zero ι ε₁ ε₂ ε rewrite R.act-ε-extensionality (sym ∘ make-room-for-zero) ε₁ = subst-commutes-ε ι zero ε₁ ε₂ ε

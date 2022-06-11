@@ -23,7 +23,7 @@ mutual
   gets translated to a function of type
   τ' ⇒ τ
   -}
-  μ-<: : {τ' τ : SType ℓ}
+  μ-<: : {τ' τ : IType ℓ}
        → [ θ ] Γⁱ ⊢ τ' <: τ
        → CExpr ℓ
   μ-<: (ST-Base positive _ _) = PositiveDecision.<:-ε (to-witness positive)
@@ -51,7 +51,7 @@ mutual
                   (weaken-ε-k 2 arg-ε · CVar zero)))
             )
 
-  μ-τ : {τ : SType ℓ}
+  μ-τ : {τ : IType ℓ}
       → [ θ ] Γⁱ ⊢ τ
       → CExpr ℓ
   μ-τ (TWF-TrueRef {b = b} Γok) = ⌊μ⌋-b b
@@ -62,7 +62,7 @@ mutual
   μ-τ (TWF-Arr τ₁δ τ₂δ) = CΠ (μ-τ τ₁δ) (μ-τ τ₂δ)
   μ-τ (TWF-ADT consδs) = CADT (μ-cons consδs)
 
-  μ-ε : ∀ {ε : STerm ℓ} {τ}
+  μ-ε : ∀ {ε : ITerm ℓ} {τ}
       → [ θ ] Γⁱ ⊢ⁱ ε ⦂ τ
       → CExpr ℓ
   μ-ε (T-Unit Γok) = [ Cunit ⦂ CUnit ∣ eq-refl CUnit Cunit of CLam CUnit ⌊μ⌋-Τ ]

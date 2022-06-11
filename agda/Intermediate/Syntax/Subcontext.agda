@@ -18,7 +18,7 @@ data _by_⊂'_ : (k : ℕ) → Ctx (k + ℓ) → Ctx (suc (k + ℓ)) → Set whe
               → suc k by Γ , τ ⊂' Γ' , act-τ (ext-k' k suc) τ
 
 ext-k'-suc-commute : (k : ℕ)
-                   → (τ : SType (k + ℓ))
+                   → (τ : IType (k + ℓ))
                    → act-τ (ext-k' (suc k) suc) (act-τ suc τ) ≡ act-τ suc (act-τ (ext-k' k suc) τ)
 ext-k'-suc-commute k τ
   rewrite act-τ-distr suc (ext (ext-k' k suc)) τ

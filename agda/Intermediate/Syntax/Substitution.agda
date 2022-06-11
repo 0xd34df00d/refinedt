@@ -12,27 +12,27 @@ open import Common.Helpers
 open import Data.Fin.Extra
 open import Intermediate.Syntax
 import      Intermediate.Syntax.Renaming as R
-open import Intermediate.Syntax.Actions (record { Target = STerm
+open import Intermediate.Syntax.Actions (record { Target = ITerm
                                                 ; var-action = λ ε → ε
-                                                ; ext = λ where _ zero → SVar zero
+                                                ; ext = λ where _ zero → IVar zero
                                                                 σ (suc n) → R.weaken-ε (σ n)
                                                 }
                                         ) public
 
-replace-at : Fin (suc ℓ) → STerm ℓ → Fin (suc ℓ) → STerm ℓ
-replace-at = replace-at-generic SVar
+replace-at : Fin (suc ℓ) → ITerm ℓ → Fin (suc ℓ) → ITerm ℓ
+replace-at = replace-at-generic IVar
 
 SubstOn : (ℕ → Set) → Set
-SubstOn Ty = ∀ {ℓ} → Fin (suc ℓ) → STerm ℓ → Ty (suc ℓ) → Ty ℓ
+SubstOn Ty = ∀ {ℓ} → Fin (suc ℓ) → ITerm ℓ → Ty (suc ℓ) → Ty ℓ
 
 infixr 6 [_↦τ_]_ [_↦ρ_]_ [_↦ε_]_ [_↦c_]_ [_↦bs_]_
-[_↦τ_]_ : SubstOn SType
+[_↦τ_]_ : SubstOn IType
 [_↦τ_]_ ι ε = act-τ (replace-at ι ε)
 
-[_↦ρ_]_ : SubstOn Refinement
+[_↦ρ_]_ : SubstOn IRefinement
 [_↦ρ_]_ ι ε = act-ρ (replace-at ι ε)
 
-[_↦ε_]_ : SubstOn STerm
+[_↦ε_]_ : SubstOn ITerm
 [_↦ε_]_ ι ε = act-ε (replace-at ι ε)
 
 [_↦c_]_ : SubstOn (ADTCons nₐ)
@@ -41,23 +41,23 @@ infixr 6 [_↦τ_]_ [_↦ρ_]_ [_↦ε_]_ [_↦c_]_ [_↦bs_]_
 [_↦bs_]_ : SubstOn (CaseBranches nₐ)
 [_↦bs_]_ ι ε = act-branches (replace-at ι ε)
 
-branch-lookup-comm : (σ : Fin (suc ℓ) → STerm ℓ)
+branch-lookup-comm : (σ : Fin (suc ℓ) → ITerm ℓ)
                    → (ι : Fin n)
                    → (bs : CaseBranches (Mkℕₐ n) (suc ℓ))
                    → act-ε (ext σ) (CaseBranch.body (lookup bs ι)) ≡ CaseBranch.body (lookup (act-branches σ bs) ι)
 branch-lookup-comm σ zero (_ ∷ _) = refl
 branch-lookup-comm σ (suc ι) (_ ∷ bs) = branch-lookup-comm σ ι bs
 
-cons-lookup-comm : (σ : Fin (suc ℓ) -> STerm ℓ)
+cons-lookup-comm : (σ : Fin (suc ℓ) -> ITerm ℓ)
                  → (ι : Fin n)
                  → (cons : ADTCons (Mkℕₐ n) (suc ℓ))
                  → act-τ σ (lookup cons ι) ≡ lookup (act-cons σ cons) ι
 cons-lookup-comm σ zero (_ ∷ _) = refl
 cons-lookup-comm σ (suc ι) (_ ∷ cons) = cons-lookup-comm σ ι cons
 
-ext-id : ∀ {f : Fin ℓ → STerm ℓ}
-       → (∀ x → var-action (f x) ≡ SVar x)
-       → (∀ x → var-action (ext f x) ≡ SVar x)
+ext-id : ∀ {f : Fin ℓ → ITerm ℓ}
+       → (∀ x → var-action (f x) ≡ IVar x)
+       → (∀ x → var-action (ext f x) ≡ IVar x)
 ext-id f-≡ zero = refl
 ext-id f-≡ (suc x) rewrite f-≡ x = refl
 
@@ -106,28 +106,28 @@ weaken-replace-comm ε (suc ι) (suc x) with ι <>? x
 -- Substitution on contexts: this is essentially replacing Γ, x ⦂ σ, Δ with Γ, [ x ↦ ε ] Δ
 -- Here, ℓ is the length of Γ (which ε must live in), and k is the length of Δ.
 [_↦Γ_]_ : ∀ ℓ
-        → (ε : STerm ℓ)
+        → (ε : ITerm ℓ)
         → Ctx (suc k + ℓ)
         → Ctx (k + ℓ)
 [_↦Γ_]_ {k = zero} ℓ ε (Γ , _) = Γ
 [_↦Γ_]_ {k = suc k} ℓ ε (Γ,Δ , τ) = ([ ℓ ↦Γ ε ] Γ,Δ) , ([ ctx-idx k ↦τ R.weaken-ε-k k ε ] τ)
 
 [_↦τ<_]_ : ∀ ℓ
-         → (ε : STerm ℓ) → SType (suc k + ℓ) → SType (k + ℓ)
+         → (ε : ITerm ℓ) → IType (suc k + ℓ) → IType (k + ℓ)
 [_↦τ<_]_ {k = k} _ ε τ = [ ctx-idx k ↦τ R.weaken-ε-k _ ε ] τ
 
 [_↦ρ<_]_ : ∀ ℓ
-         → (ε : STerm ℓ) → Refinement (suc k + ℓ) → Refinement (k + ℓ)
+         → (ε : ITerm ℓ) → IRefinement (suc k + ℓ) → IRefinement (k + ℓ)
 [_↦ρ<_]_ {k = k} _ ε ρ = [ ctx-idx k ↦ρ R.weaken-ε-k _ ε ] ρ
 
 [_↦ε<_]_ : ∀ ℓ
-         → (ε : STerm ℓ) → STerm (suc k + ℓ) → STerm (k + ℓ)
+         → (ε : ITerm ℓ) → ITerm (suc k + ℓ) → ITerm (k + ℓ)
 [_↦ε<_]_ {k = k} _ ε ε' = [ ctx-idx k ↦ε R.weaken-ε-k _ ε ] ε'
 
 [_↦c<_]_ : ∀ ℓ
-         → (ε : STerm ℓ) → ADTCons nₐ (suc k + ℓ) → ADTCons nₐ (k + ℓ)
+         → (ε : ITerm ℓ) → ADTCons nₐ (suc k + ℓ) → ADTCons nₐ (k + ℓ)
 [_↦c<_]_ {k = k} _ ε cons = [ ctx-idx k ↦c R.weaken-ε-k _ ε ] cons
 
 [_↦bs<_]_ : ∀ ℓ
-         → (ε : STerm ℓ) → CaseBranches nₐ (suc k + ℓ) → CaseBranches nₐ (k + ℓ)
+         → (ε : ITerm ℓ) → CaseBranches nₐ (suc k + ℓ) → CaseBranches nₐ (k + ℓ)
 [_↦bs<_]_ {k = k} _ ε bs = [ ctx-idx k ↦bs R.weaken-ε-k _ ε ] bs

@@ -50,8 +50,8 @@ open import Intermediate.Translation.μ-subst.Helpers
 
 μ-Var-sub-distributes : (Δ : ,-CtxSuffix ℓ σⁱ k)
                       → (argδ : [ θ ] Γⁱ ⊢ εⁱ ⦂ σⁱ)
-                      → (codδ : [ θ ] Γⁱ ,σ, Δ ⊢ SVar ι ⦂ τⁱ)
-                      → (resδ : [ θ ] Γⁱ ++ [↦Δ εⁱ ] Δ ⊢ [ ℓ ↦ε< εⁱ ] SVar ι ⦂ [ ℓ ↦τ< εⁱ ] τⁱ)
+                      → (codδ : [ θ ] Γⁱ ,σ, Δ ⊢ IVar ι ⦂ τⁱ)
+                      → (resδ : [ θ ] Γⁱ ++ [↦Δ εⁱ ] Δ ⊢ [ ℓ ↦ε< εⁱ ] IVar ι ⦂ [ ℓ ↦τ< εⁱ ] τⁱ)
                       → μ-ε resδ ≡ [ ℓ ↦' μ-ε argδ ] μ-ε codδ
 μ-Var-sub-distributes {k = k} {εⁱ = εⁱ} Δ argδ (T-Var {ι = ι} Γok ∈) resδ with ctx-idx k <>? ι | resδ
 ... | less _ | T-Var _ _ = refl
@@ -279,7 +279,7 @@ mutual
         resτδ' = subst (λ ε → [ _ ] _ ⊢ [ zero ↦τ ε ] τ₂ⁱ) act-ε-refl resτδ
      in trans (helper (cong ([ zero ↦τ_] τ₂ⁱ) act-ε-refl) resτδ resτδ') (μ-τ-sub-distributes [ _ ] argδ codδ resτδ')
   where
-  helper : {τ₁ τ₂ : SType ℓ}
+  helper : {τ₁ τ₂ : IType ℓ}
          → τ₁ ≡ τ₂
          → (Γ⊢τ₁ : [ θ ] Γⁱ ⊢ τ₁)
          → (Γ⊢τ₂ : [ θ ] Γⁱ ⊢ τ₂)

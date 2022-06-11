@@ -46,30 +46,30 @@ mutual
   act-ρ-injectivity f-inj {Τ} {Τ} ≡-prf = refl
 
   act-ε-injectivity : ActInjectivity act-ε
-  act-ε-injectivity f-inj {SUnit} {SUnit} ≡-prf = refl
-  act-ε-injectivity f-inj {SVar ι₁} {SVar ι₂} ≡-prf rewrite f-inj (SVar-inj ≡-prf) = refl
-  act-ε-injectivity f-inj {SLam τ₁ ε₁} {SLam τ₂ ε₂} ≡-prf
-    rewrite act-τ-injectivity f-inj (SLam-inj₁ ≡-prf)
-          | act-ε-injectivity (ext-inj f-inj) {ε₁} {ε₂} (SLam-inj₂ ≡-prf)
+  act-ε-injectivity f-inj {IUnit} {IUnit} ≡-prf = refl
+  act-ε-injectivity f-inj {IVar ι₁} {IVar ι₂} ≡-prf rewrite f-inj (IVar-inj ≡-prf) = refl
+  act-ε-injectivity f-inj {ILam τ₁ ε₁} {ILam τ₂ ε₂} ≡-prf
+    rewrite act-τ-injectivity f-inj (ILam-inj₁ ≡-prf)
+          | act-ε-injectivity (ext-inj f-inj) {ε₁} {ε₂} (ILam-inj₂ ≡-prf)
           = refl
-  act-ε-injectivity f-inj {SApp ε₁₁ ε₁₂} {SApp ε₂₁ ε₂₂} ≡-prf
-    rewrite act-ε-injectivity f-inj {ε₁₁} {ε₂₁} (SApp-inj₁ ≡-prf)
-          | act-ε-injectivity f-inj {ε₁₂} {ε₂₂} (SApp-inj₂ ≡-prf)
+  act-ε-injectivity f-inj {IApp ε₁₁ ε₁₂} {IApp ε₂₁ ε₂₂} ≡-prf
+    rewrite act-ε-injectivity f-inj {ε₁₁} {ε₂₁} (IApp-inj₁ ≡-prf)
+          | act-ε-injectivity f-inj {ε₁₂} {ε₂₂} (IApp-inj₂ ≡-prf)
           = refl
-  act-ε-injectivity f-inj {SCase ε₁ branches₁} {SCase ε₂ branches₂} ≡-prf with SCase-inj-len ≡-prf
+  act-ε-injectivity f-inj {ICase ε₁ branches₁} {ICase ε₂ branches₂} ≡-prf with ICase-inj-len ≡-prf
   ... | refl
-        rewrite act-ε-injectivity f-inj {ε₁} {ε₂} (SCase-inj₁ ≡-prf)
-              | act-branches-injectivity f-inj (SCase-inj₂ ≡-prf)
+        rewrite act-ε-injectivity f-inj {ε₁} {ε₂} (ICase-inj₁ ≡-prf)
+              | act-branches-injectivity f-inj (ICase-inj₂ ≡-prf)
               = refl
-  act-ε-injectivity f-inj {SCon idx ε₁ cons₁} {SCon idx₁ ε₂ cons₂} ≡-prf with SCon-inj-len ≡-prf
+  act-ε-injectivity f-inj {ICon idx ε₁ cons₁} {ICon idx₁ ε₂ cons₂} ≡-prf with ICon-inj-len ≡-prf
   ... | refl
-        rewrite SCon-inj₁ ≡-prf
-              | act-ε-injectivity f-inj {ε₁} {ε₂} (SCon-inj₂ ≡-prf)
-              | act-cons-injectivity f-inj (SCon-inj₃ ≡-prf)
+        rewrite ICon-inj₁ ≡-prf
+              | act-ε-injectivity f-inj {ε₁} {ε₂} (ICon-inj₂ ≡-prf)
+              | act-cons-injectivity f-inj (ICon-inj₃ ≡-prf)
               = refl
-  act-ε-injectivity f-inj {ε₁ S<: τ₁} {ε₂ S<: τ₂} ≡-prf
-    rewrite act-ε-injectivity f-inj {ε₁} {ε₂} (S<:-inj₁ ≡-prf)
-          | act-τ-injectivity f-inj (S<:-inj₂ ≡-prf)
+  act-ε-injectivity f-inj {ε₁ I<: τ₁} {ε₂ I<: τ₂} ≡-prf
+    rewrite act-ε-injectivity f-inj {ε₁} {ε₂} (I<:-inj₁ ≡-prf)
+          | act-τ-injectivity f-inj (I<:-inj₂ ≡-prf)
           = refl
 
   act-cons-injectivity : ActInjectivity {ADTCons nₐ} act-cons
@@ -86,8 +86,8 @@ mutual
           | act-branches-injectivity f-inj (∷-inj₂ ≡-prf)
           = refl
 
-weaken-τ-injective : Injective {SType ℓ} {SType (suc ℓ)} weaken-τ
+weaken-τ-injective : Injective {IType ℓ} {IType (suc ℓ)} weaken-τ
 weaken-τ-injective = act-τ-injectivity suc-injective
 
-weaken-ε-injective : Injective {STerm ℓ} {STerm (suc ℓ)} weaken-ε
+weaken-ε-injective : Injective {ITerm ℓ} {ITerm (suc ℓ)} weaken-ε
 weaken-ε-injective = act-ε-injectivity suc-injective

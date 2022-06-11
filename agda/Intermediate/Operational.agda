@@ -8,39 +8,39 @@ open import Data.Vec
 open import Intermediate.Syntax
 open import Intermediate.Syntax.Substitution
 
-data IsValue : STerm ℓ → Set where
-  IV-Abs  : IsValue (SLam τ ε)
-  IV-Unit : IsValue (SUnit {ℓ})
+data IsValue : ITerm ℓ → Set where
+  IV-Abs  : IsValue (ILam τ ε)
+  IV-Unit : IsValue (IUnit {ℓ})
   IV-ADT  : ∀ {cons} {ι : Fin n}
           → IsValue ϖ
-          → IsValue (SCon ι ϖ cons)
-  IV-S<:  : IsValue ϖ
-          → IsValue (ϖ S<: τ)
+          → IsValue (ICon ι ϖ cons)
+  IV-I<:  : IsValue ϖ
+          → IsValue (ϖ I<: τ)
 
 infix 6 [_↦ₘ_]_
-[_↦ₘ_]_ : Fin n → STerm ℓ → CaseBranches (Mkℕₐ n) ℓ → STerm ℓ
+[_↦ₘ_]_ : Fin n → ITerm ℓ → CaseBranches (Mkℕₐ n) ℓ → ITerm ℓ
 [ ι ↦ₘ ε ] bs = [ zero ↦ε ε ] body
   where open CaseBranch (lookup bs ι)
 
 infix 4 _↝_
-data _↝_ : STerm ℓ → STerm ℓ → Set where
+data _↝_ : ITerm ℓ → ITerm ℓ → Set where
   E-AppL      : ε₁ ↝ ε₁'
-              → SApp ε₁ ε₂ ↝ SApp ε₁' ε₂
-  E-AppAbs    : SApp (SLam τ ε) ε' ↝ [ zero ↦ε ε' ] ε
+              → IApp ε₁ ε₂ ↝ IApp ε₁' ε₂
+  E-AppAbs    : IApp (ILam τ ε) ε' ↝ [ zero ↦ε ε' ] ε
   E-ADT       : ∀ {cons} {ι : Fin n}
               → ε ↝ ε'
-              → SCon ι ε cons ↝ SCon ι ε' cons
+              → ICon ι ε cons ↝ ICon ι ε' cons
   E-CaseScrut : ∀ {branches : CaseBranches nₐ ℓ}
               → ε ↝ ε'
-              → SCase ε branches ↝ SCase ε' branches
+              → ICase ε branches ↝ ICase ε' branches
   E-CaseMatch : ∀ {cons : ADTCons (Mkℕₐ n) ℓ} {bs : CaseBranches (Mkℕₐ n) ℓ}
               → IsValue ϖ
               → (ι : Fin n)
-              → SCase (SCon ι ϖ cons) bs ↝ [ ι ↦ₘ ϖ ] bs
-  E-S<:       : ε ↝ ε'
-              → ε S<: τ ↝ ε' S<: τ
+              → ICase (ICon ι ϖ cons) bs ↝ [ ι ↦ₘ ϖ ] bs
+  E-I<:       : ε ↝ ε'
+              → ε I<: τ ↝ ε' I<: τ
 
-data _↝⋆_ : STerm ℓ → STerm ℓ → Set where
+data _↝⋆_ : ITerm ℓ → ITerm ℓ → Set where
   ↝-refl  : ε ↝⋆ ε
   ↝-trans : ε₁ ↝ ε₂
           → ε₂ ↝⋆ ε₃

@@ -17,9 +17,9 @@ open import Intermediate.Syntax.Substitution using ([_↦τ_]_; [_↦ρ<_]_)
 import Intermediate.Syntax.Renaming as R
 
 data [_]_ok     (Θ : Oracle) : (Γ : Ctx ℓ) → Set
-data [_]_⊢_⦂_   (θ : Oracle) (Γ : Ctx ℓ) : (ε : STerm ℓ) → (τ : SType ℓ) → Set
-data [_]_⊢_<:_  (θ : Oracle) (Γ : Ctx ℓ) : (τ τ' : SType ℓ) → Set
-data [_]_⊢_     (θ : Oracle) (Γ : Ctx ℓ) : (τ : SType ℓ) → Set
+data [_]_⊢_⦂_   (θ : Oracle) (Γ : Ctx ℓ) : (ε : ITerm ℓ) → (τ : IType ℓ) → Set
+data [_]_⊢_<:_  (θ : Oracle) (Γ : Ctx ℓ) : (τ τ' : IType ℓ) → Set
+data [_]_⊢_     (θ : Oracle) (Γ : Ctx ℓ) : (τ : IType ℓ) → Set
 
 infix 2 [_]_⊢_⦂_
 infix 2 [_]_⊢_<:_
@@ -28,7 +28,7 @@ infix 1 [_]_⊢_
 data BranchesHaveType (θ : Oracle) (Γ : Ctx ℓ)
                     : (cons : ADTCons nₐ ℓ)
                     → (bs : CaseBranches nₐ ℓ)
-                    → (τ' : SType ℓ)
+                    → (τ' : IType ℓ)
                     → Set
                     where
   NoBranches    : BranchesHaveType θ Γ [] [] τ'
@@ -61,33 +61,33 @@ data [_]_⊢_ {ℓ} θ Γ where
 
 data [_]_⊢_⦂_ {ℓ} θ Γ where
   T-Unit      : (Γok : [ θ ] Γ ok)
-              → [ θ ] Γ ⊢ SUnit ⦂ ⟨ BUnit ∣ Τ ⟩
+              → [ θ ] Γ ⊢ IUnit ⦂ ⟨ BUnit ∣ Τ ⟩
   T-Var       : (Γok : [ θ ] Γ ok)
               → τ ∈ Γ at ι
-              → [ θ ] Γ ⊢ SVar ι ⦂ τ
+              → [ θ ] Γ ⊢ IVar ι ⦂ τ
   T-Abs       : (arrδ : [ θ ] Γ ⊢ τ₁ ⇒ τ₂)
               → (bodyδ : [ θ ] Γ , τ₁ ⊢ ε ⦂ τ₂)
-              → [ θ ] Γ ⊢ SLam τ₁ ε ⦂ τ₁ ⇒ τ₂
+              → [ θ ] Γ ⊢ ILam τ₁ ε ⦂ τ₁ ⇒ τ₂
   T-App       : (δ₁ : [ θ ] Γ ⊢ ε₁ ⦂ τ₁ ⇒ τ₂)
               → (δ₂ : [ θ ] Γ ⊢ ε₂ ⦂ τ₁)
               → (resτ-≡ : τ ≡ [ zero ↦τ ε₂ ] τ₂)
               → (resτδ : [ θ ] Γ ⊢ τ)
-              → [ θ ] Γ ⊢ SApp ε₁ ε₂ ⦂ τ
+              → [ θ ] Γ ⊢ IApp ε₁ ε₂ ⦂ τ
   T-Case      : {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
               → {bs : CaseBranches (Mkℕₐ (suc n)) ℓ}
               → (resδ : [ θ ] Γ ⊢ τ')
               → (scrutτδ : [ θ ] Γ ⊢ ε ⦂ ⊍ cons)
               → (branches-well-typed : BranchesHaveType θ Γ cons bs τ')
-              → [ θ ] Γ ⊢ SCase ε bs ⦂ τ'
+              → [ θ ] Γ ⊢ ICase ε bs ⦂ τ'
   T-Con       : ∀ {ι}
               → {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
               → (≡-prf : τⱼ ≡ lookup cons ι)
               → (conArg : [ θ ] Γ ⊢ ε ⦂ τⱼ)
               → (adtτ : [ θ ] Γ ⊢ ⊍ cons)
-              → [ θ ] Γ ⊢ SCon ι ε cons ⦂ ⊍ cons
+              → [ θ ] Γ ⊢ ICon ι ε cons ⦂ ⊍ cons
   T-SubW      : (<: : [ θ ] Γ ⊢ τ' <: τ)
               → (εδ : [ θ ] Γ ⊢ ε ⦂ τ')
-              → [ θ ] Γ ⊢ ε S<: τ ⦂ τ
+              → [ θ ] Γ ⊢ ε I<: τ ⦂ τ
 
 data [_]_⊢_<:_ {ℓ} θ Γ where
   ST-Base : Is-just (Oracle.decide θ Γ b ρ₁ ρ₂)

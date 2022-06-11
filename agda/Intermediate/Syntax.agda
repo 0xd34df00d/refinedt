@@ -15,78 +15,78 @@ data BaseType : Set where
 variable
   b b' b₁ b₂ : BaseType
 
-data SType (ℓ : ℕ) : Set
-data STerm (ℓ : ℕ) : Set
-data Refinement (ℓ : ℕ) : Set
+data IType (ℓ : ℕ) : Set
+data ITerm (ℓ : ℕ) : Set
+data IRefinement (ℓ : ℕ) : Set
 
 ADTCons : ℕₐ → ℕ → Set
-ADTCons (Mkℕₐ n) ℓ = Vec (SType ℓ) n
+ADTCons (Mkℕₐ n) ℓ = Vec (IType ℓ) n
 
 record CaseBranch (ℓ : ℕ) : Set where
   constructor MkCaseBranch
   inductive
   field
-    body : STerm (suc ℓ)
+    body : ITerm (suc ℓ)
 
 CaseBranches : ℕₐ → ℕ → Set
 CaseBranches (Mkℕₐ n) ℓ = Vec (CaseBranch ℓ) n
 
-data SType ℓ where
+data IType ℓ where
   ⟨_∣_⟩ : (b : BaseType)
-        → (ρ : Refinement (suc ℓ))
-        → SType ℓ
-  _⇒_   : (τ₁ : SType ℓ)
-        → (τ₂ : SType (suc ℓ))
-        → SType ℓ
+        → (ρ : IRefinement (suc ℓ))
+        → IType ℓ
+  _⇒_   : (τ₁ : IType ℓ)
+        → (τ₂ : IType (suc ℓ))
+        → IType ℓ
   ⊍_    : (cons : ADTCons (Mkℕₐ n) ℓ)
-        → SType ℓ
+        → IType ℓ
 
-data STerm ℓ where
-  SUnit : STerm ℓ
-  SVar  : (ι : Fin ℓ)
-        → STerm ℓ
-  SLam  : (τ : SType ℓ)
-        → (ε : STerm (suc ℓ))
-        → STerm ℓ
-  SApp  : (ε₁ ε₂ : STerm ℓ)
-        → STerm ℓ
-  SCase : (scrut : STerm ℓ)
+data ITerm ℓ where
+  IUnit : ITerm ℓ
+  IVar  : (ι : Fin ℓ)
+        → ITerm ℓ
+  ILam  : (τ : IType ℓ)
+        → (ε : ITerm (suc ℓ))
+        → ITerm ℓ
+  IApp  : (ε₁ ε₂ : ITerm ℓ)
+        → ITerm ℓ
+  ICase : (scrut : ITerm ℓ)
         → (branches : CaseBranches nₐ ℓ)
-        → STerm ℓ
-  SCon  : (ι : Fin n)
-        → (body : STerm ℓ)
+        → ITerm ℓ
+  ICon  : (ι : Fin n)
+        → (body : ITerm ℓ)
         → (adt-cons : ADTCons (Mkℕₐ n) ℓ)
-        → STerm ℓ
-  _S<:_ : (ε : STerm ℓ)
-        → (τ : SType ℓ)
-        → STerm ℓ
--- NOTE: ε S<: τ is a syntactic witness that subtyping was used to assign type τ to a term ε,
+        → ITerm ℓ
+  _I<:_ : (ε : ITerm ℓ)
+        → (τ : IType ℓ)
+        → ITerm ℓ
+-- NOTE: ε I<: τ is a syntactic witness that subtyping was used to assign type τ to a term ε,
 -- where Γ ⊢ ε : τ' and τ' <: τ.
 -- I'm not sure whether the original type τ' shall be carried around on the syntax level:
 -- uniqueness of types, which shall hold for this type system, guarantees that at most one type
 -- can be assigned to ε, so I think there's no need to, but I might be wrong.
 
-data Refinement ℓ where
-  _≈_of_ : (ε₁ ε₂ : STerm ℓ) → (τ : SType ℓ) → Refinement ℓ
-  _∧_    : (ρ₁ ρ₂ : Refinement ℓ) → Refinement ℓ
-  Τ      : Refinement ℓ
+data IRefinement ℓ where
+  _≈_of_ : (ε₁ ε₂ : ITerm ℓ) → (τ : IType ℓ) → IRefinement ℓ
+  _∧_    : (ρ₁ ρ₂ : IRefinement ℓ) → IRefinement ℓ
+  Τ      : IRefinement ℓ
 
 
 infixl 5 _,_
 data Ctx : ℕ → Set where
   ⊘   : Ctx 0
-  _,_ : Ctx ℓ → SType ℓ → Ctx (suc ℓ)
+  _,_ : Ctx ℓ → IType ℓ → Ctx (suc ℓ)
 
 variable
   Γ Γ' : Ctx ℓ
-  τ τ' τ₀ τ₀' τ₁ τ₂ τ₁' τ₂' τ₃ τ₃' τᵢ τⱼ σ σ' : SType ℓ
-  ε ε' ε₀ ε₁ ε₁' ε₂ ε₂' ε₃ ε₃' ϖ : STerm ℓ
-  ρ₁ ρ₂ ρ₃ : Refinement ℓ
+  τ τ' τ₀ τ₀' τ₁ τ₂ τ₁' τ₂' τ₃ τ₃' τᵢ τⱼ σ σ' : IType ℓ
+  ε ε' ε₀ ε₁ ε₁' ε₂ ε₂' ε₃ ε₃' ϖ : ITerm ℓ
+  ρ₁ ρ₂ ρ₃ : IRefinement ℓ
 
 record VarAction : Set₁ where
   field
     Target : ℕ → Set
-    var-action : Target ℓ → STerm ℓ
+    var-action : Target ℓ → ITerm ℓ
     ext : (Fin ℓ → Target ℓ')
         → (Fin (suc ℓ) → Target (suc ℓ'))
 
@@ -97,5 +97,5 @@ record VarActionProps (act : VarAction) : Set where
           → (∀ x → f₁ x ≡ f₂ x)
           → (∀ x → ext f₁ x ≡ ext f₂ x)
     ext-id : ∀ {f : Fin ℓ → Target ℓ}
-           → (∀ x → var-action (f x) ≡ SVar x)
-           → (∀ x → var-action (ext f x) ≡ SVar x)
+           → (∀ x → var-action (f x) ≡ IVar x)
+           → (∀ x → var-action (ext f x) ≡ IVar x)
