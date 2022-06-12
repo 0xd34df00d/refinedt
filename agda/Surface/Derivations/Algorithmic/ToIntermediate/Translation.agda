@@ -3,6 +3,7 @@ module Surface.Derivations.Algorithmic.ToIntermediate.Translation where
 open import Data.Fin using (suc; zero)
 
 open import Surface.Syntax as S renaming (Γ to Γˢ;
+                                          b to bˢ; ρ to ρˢ;
                                           τ to τˢ; τ' to τ'ˢ; σ to σˢ;
                                           τ₁ to τ₁ˢ; τ₁' to τ₁'ˢ;
                                           τ₂ to τ₂ˢ; τ₂' to τ₂'ˢ;
