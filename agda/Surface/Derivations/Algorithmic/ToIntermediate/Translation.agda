@@ -18,11 +18,23 @@ open import Intermediate.Syntax.Short
 open import Intermediate.Syntax.Renaming as IR
 open import Intermediate.Derivations.Algorithmic as I renaming (θ to θⁱ)
 
+μ-b : S.BaseType → I.BaseType
+μ-b BUnit = BUnit
+
 mutual
+  μ-ρ : {ρˢ : Refinement (suc ℓ)}
+      → Γˢ ⊢[ θˢ , E ] ⟨ bˢ ∣ ρˢ ⟩
+      → IRefinement (suc ℓ)
+  μ-ρ (TWF-TrueRef _) = Τ
+  μ-ρ (TWF-Base {b' = b'ˢ} ε₁δ ε₂δ) = μ-ε ε₁δ ≈ μ-ε ε₂δ of ⟨ μ-b b'ˢ ∣ Τ ⟩
+  μ-ρ (TWF-Conj τ₁δ τ₂δ) = μ-ρ τ₁δ ∧ μ-ρ τ₂δ
+
   μ-τ : {τˢ : SType ℓ}
       → Γˢ ⊢[ θˢ , E ] τˢ
       → IType ℓ
-  μ-τ τδ = {! !}
+  μ-τ {τˢ = ⟨ b ∣ ρ ⟩} τδ = ⟨ μ-b b ∣ μ-ρ τδ ⟩
+  μ-τ {τˢ = _ ⇒ _} (TWF-Arr τ₁δ τ₂δ) = μ-τ τ₁δ ⇒ μ-τ τ₂δ
+  μ-τ {τˢ = ⊍ cons} τδ = {! !}
 
   μ-ε : {τˢ : SType ℓ}
       → Γˢ ⊢[ θˢ , E of κ ] εˢ ⦂ τˢ
@@ -58,3 +70,9 @@ mutual
        in ƛ τ₁⇒τ₂'ⁱ ․
             ƛ τ₁'ⁱ ․
               <:₂ⁱ ∙ (# 1 ∙ (<:₁ⁱ ∙ # 0))
+
+μ-Γ : {Γˢ : S.Ctx ℓ}
+    → Γˢ ok[ θˢ , E ]
+    → I.Ctx ℓ
+μ-Γ TCTX-Empty = ⊘
+μ-Γ (TCTX-Bind Γok τδ) = μ-Γ Γok , μ-τ τδ
