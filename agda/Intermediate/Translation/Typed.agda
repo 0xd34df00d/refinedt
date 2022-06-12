@@ -58,7 +58,7 @@ mutual
   μ-τ (TWF-Base {b = b} {b' = b'} ε₁δ ε₂δ)
     = let b̂ = ⌊μ⌋-b b
        in Σ[ b̂ ] CLam b̂ (μ-ε ε₁δ ≡̂ μ-ε ε₂δ of ⌊μ⌋-b b')
-  μ-τ (TWF-Conj δ₁ δ₂) = ⟨ μ-τ δ₁ × μ-τ δ₂ ⟩
+  μ-τ (TWF-Conj δ₁ δ₂) = ⟨ μ-τ δ₁ × μ-τ δ₂ ⟩ -- TODO isn't this obviously wrong?
   μ-τ (TWF-Arr τ₁δ τ₂δ) = CΠ (μ-τ τ₁δ) (μ-τ τ₂δ)
   μ-τ (TWF-ADT consδs) = CADT (μ-cons consδs)
 
