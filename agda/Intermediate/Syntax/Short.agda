@@ -12,9 +12,9 @@ infixl 25 _∙_
 _∙_ : ITerm ℓ → ITerm ℓ → ITerm ℓ
 _∙_ = IApp
 
-infixr 20 ƛ_․_
-ƛ_․_ : IType ℓ → ITerm (suc ℓ) → ITerm ℓ
-ƛ_․_ = ILam
+infixr 20 ƛ_⇉_
+ƛ_⇉_ : IType ℓ → ITerm (suc ℓ) → ITerm ℓ
+ƛ_⇉_ = ILam
 
 
 infix 30 #_
