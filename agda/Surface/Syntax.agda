@@ -76,7 +76,7 @@ variable
   Γ Γ' : Ctx ℓ
   τ τ' τ₀ τ₀' τ₁ τ₂ τ₁' τ₂' τ₃ τ₃' τᵢ τⱼ σ σ' : SType ℓ
   ε ε' ε₀ ε₁ ε₁' ε₂ ε₂' ε₃ ε₃' ϖ : STerm ℓ
-  ρ₁ ρ₂ ρ₃ : Refinement ℓ
+  ρ ρ₁ ρ₂ ρ₃ : Refinement ℓ
 
 record VarAction : Set₁ where
   field
