@@ -12,18 +12,28 @@ open import Surface.Derivations.Algorithmic.Theorems.Agreement
 open import Intermediate.Syntax as I
 open import Intermediate.Syntax.Short
 open import Intermediate.Syntax.Renaming as IR
+import Intermediate.Syntax.Membership as I
 import Intermediate.Derivations.Algorithmic as I
 
 open import Surface.Derivations.Algorithmic.ToIntermediate.Translation.Aliases
 open import Surface.Derivations.Algorithmic.ToIntermediate.Translation.Subst
 open import Surface.Derivations.Algorithmic.ToIntermediate.Translation.Typed
 
+μ-∈ : (Γok : Γˢ ok[ θˢ , E ])
+    → (τδ : Γˢ ⊢[ θˢ , E ] τˢ)
+    → (τˢ S.∈ Γˢ at ι)
+    → (μ-τ τδ I.∈ μ-Γ Γok at ι)
+μ-∈ (TCTX-Bind _ τδ') τδ (S.∈-zero refl) = I.∈-zero {! !}
+μ-∈ (TCTX-Bind Γok _) τδ' (S.∈-suc refl ∈)
+  = let τδ = τ∈Γ-⇒-Γ⊢τ Γok ∈
+     in I.∈-suc {! !} (μ-∈ Γok τδ ∈)
+
 mutual
   μ-ε-δ : {τˢ : SType ℓ}
         → (εδ : Γˢ ⊢[ θˢ , E of κ ] εˢ ⦂ τˢ)
         → [ θⁱ ] μ-Γ (Γ⊢ε⦂τ-⇒-Γok εδ) ⊢ μ-ε εδ ⦂ μ-τ (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ)
   μ-ε-δ (T-Unit Γok) = T-Unit {! !}
-  μ-ε-δ (T-Var Γok ∈) = T-Var {! !} {! !}
+  μ-ε-δ (T-Var Γok ∈) = T-Var (μ-Γ-δ Γok) (μ-∈ Γok (τ∈Γ-⇒-Γ⊢τ Γok ∈) ∈)
   μ-ε-δ (T-Abs τ₁⇒τ₂δ@(TWF-Arr τ₁δ τ₂δ) εδ)
     = let εδⁱ = μ-ε-δ εδ
           εδⁱ = subst-Γ⊢ε⦂[τ] _ τ₂δ εδⁱ
