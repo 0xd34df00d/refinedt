@@ -42,7 +42,7 @@ mutual
   μ-ε (T-App ε₁δ ε₂δ _ _) = μ-ε ε₁δ ∙ μ-ε ε₂δ
   μ-ε (T-Case resδ εδ branches-well-typed) = {! !}
   μ-ε (T-Con ≡-prf εδ adtτ) = {! !}
-  μ-ε (T-Sub εδ _ <:δ) = μ-ε εδ ∙ μ-<: <:δ
+  μ-ε (T-Sub εδ _ <:δ) = μ-<: <:δ ∙ μ-ε εδ
 
   {-
   A witness of τ' <: τ gets converted to a function τ' ⇒ τ.
