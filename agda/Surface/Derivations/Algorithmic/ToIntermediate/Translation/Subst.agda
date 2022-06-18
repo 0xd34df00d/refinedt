@@ -1,7 +1,6 @@
-module Surface.Derivations.Algorithmic.ToIntermediate.Translation where
+module Surface.Derivations.Algorithmic.ToIntermediate.Translation.Subst where
 
-open import Data.Fin using (suc; zero)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Relation.Binary.PropositionalEquality using (refl)
 
 open import Surface.Syntax as S renaming (Γ to Γˢ;
                                           b to bˢ; ρ to ρˢ;
@@ -9,18 +8,24 @@ open import Surface.Syntax as S renaming (Γ to Γˢ;
                                           τ₁ to τ₁ˢ; τ₁' to τ₁'ˢ;
                                           τ₂ to τ₂ˢ; τ₂' to τ₂'ˢ;
                                           ε to εˢ; ε' to ε'ˢ; ε₁ to ε₁ˢ; ε₂ to ε₂ˢ)
-import Surface.Syntax.Substitution as S
 open import Surface.Derivations.Algorithmic as S renaming (θ to θˢ)
-open import Surface.Derivations.Algorithmic.Theorems.Agreement
+open import Surface.Derivations.Algorithmic.Theorems.Uniqueness
 
 open import Intermediate.Syntax as I renaming (Γ to Γⁱ;
                                                τ to τⁱ; τ' to τ'ⁱ; σ to σⁱ;
                                                τ₁ to τ₁ⁱ; τ₁' to τ₁'ⁱ;
                                                τ₂ to τ₂ⁱ; τ₂' to τ₂'ⁱ;
                                                ε to εⁱ; ε' to ε'ⁱ; ε₁ to ε₁ⁱ; ε₂ to ε₂ⁱ)
-open import Intermediate.Syntax.Short
-open import Intermediate.Syntax.Renaming as IR
 open import Intermediate.Derivations.Algorithmic as I renaming (θ to θⁱ)
 
 open import Surface.Derivations.Algorithmic.ToIntermediate.Translation.Typed
-open import Surface.Derivations.Algorithmic.ToIntermediate.Translation.Subst
+
+subst-Γ⊢ε⦂[τ] : (τδ₁ τδ₂ : Γˢ ⊢[ θˢ , E ] τˢ)
+              → [ θⁱ ] Γⁱ ⊢ εⁱ ⦂ μ-τ τδ₁
+              → [ θⁱ ] Γⁱ ⊢ εⁱ ⦂ μ-τ τδ₂
+subst-Γ⊢ε⦂[τ] τδ₁ τδ₂ δ with refl ← unique-Γ⊢τ τδ₁ τδ₂ = δ
+
+subst-[Γ]⊢ε⦂τ : (Γok₁ Γok₂ : Γˢ ok[ θˢ , E ])
+              → [ θⁱ ] μ-Γ Γok₁ ⊢ εⁱ ⦂ τⁱ
+              → [ θⁱ ] μ-Γ Γok₂ ⊢ εⁱ ⦂ τⁱ
+subst-[Γ]⊢ε⦂τ Γok₁ Γok₂ δ with refl ← unique-Γok Γok₁ Γok₂ = δ
