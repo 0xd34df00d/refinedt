@@ -16,3 +16,8 @@ subst-[Γ]⊢ε⦂τ : (Γok₁ Γok₂ : Γˢ ok[ θˢ , E ])
               → [ θⁱ ] μ-Γ Γok₁ ⊢ εⁱ ⦂ τⁱ
               → [ θⁱ ] μ-Γ Γok₂ ⊢ εⁱ ⦂ τⁱ
 subst-[Γ]⊢ε⦂τ Γok₁ Γok₂ δ with refl ← unique-Γok Γok₁ Γok₂ = δ
+
+subst-[Γ]⊢τ : (Γok₁ Γok₂ : Γˢ ok[ θˢ , E ])
+            → [ θⁱ ] μ-Γ Γok₁ ⊢ τⁱ
+            → [ θⁱ ] μ-Γ Γok₂ ⊢ τⁱ
+subst-[Γ]⊢τ Γok₁ Γok₂ δ with refl ← unique-Γok Γok₁ Γok₂ = δ
