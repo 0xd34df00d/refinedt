@@ -1,6 +1,7 @@
 module Surface.Derivations.Algorithmic.ToIntermediate.Translation where
 
 open import Data.Fin using (suc; zero)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Surface.Syntax as S renaming (Γ to Γˢ;
                                           b to bˢ; ρ to ρˢ;
@@ -9,6 +10,7 @@ open import Surface.Syntax as S renaming (Γ to Γˢ;
                                           τ₂ to τ₂ˢ; τ₂' to τ₂'ˢ;
                                           ε to εˢ; ε' to ε'ˢ; ε₁ to ε₁ˢ; ε₂ to ε₂ˢ)
 open import Surface.Derivations.Algorithmic as S renaming (θ to θˢ)
+open import Surface.Derivations.Algorithmic.Theorems.Uniqueness
 
 open import Intermediate.Syntax as I renaming (Γ to Γⁱ;
                                                τ to τⁱ; τ' to τ'ⁱ; σ to σⁱ;
@@ -77,3 +79,13 @@ mutual
     → I.Ctx ℓ
 μ-Γ TCTX-Empty = ⊘
 μ-Γ (TCTX-Bind Γok τδ) = μ-Γ Γok , μ-τ τδ
+
+subst-Γ⊢ε⦂[τ] : (τδ₁ τδ₂ : Γˢ ⊢[ θˢ , E ] τˢ)
+              → [ θⁱ ] Γⁱ ⊢ εⁱ ⦂ μ-τ τδ₁
+              → [ θⁱ ] Γⁱ ⊢ εⁱ ⦂ μ-τ τδ₂
+subst-Γ⊢ε⦂[τ] τδ₁ τδ₂ δ with refl ← unique-Γ⊢τ τδ₁ τδ₂ = δ
+
+subst-[Γ]⊢ε⦂τ : (Γok₁ Γok₂ : Γˢ ok[ θˢ , E ])
+              → [ θⁱ ] μ-Γ Γok₁ ⊢ εⁱ ⦂ τⁱ
+              → [ θⁱ ] μ-Γ Γok₂ ⊢ εⁱ ⦂ τⁱ
+subst-[Γ]⊢ε⦂τ Γok₁ Γok₂ δ with refl ← unique-Γok Γok₁ Γok₂ = δ
