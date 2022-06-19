@@ -16,7 +16,6 @@ open import Core.Syntax.Renaming as CR
 open import Core.Syntax.Renaming.Distributivity as CR
 open import Core.Syntax.Derived as CR
 open import Core.Syntax.Derived.Renaming as CR
-open import Core.Operational as C
 open import Intermediate.Syntax as I renaming (Γ to Γⁱ; Γ' to Γⁱ'; τ to τⁱ; τ' to τⁱ'; ε to εⁱ)
 open import Intermediate.Syntax.CtxSuffix as I renaming (Δ to Δⁱ)
 open import Intermediate.Syntax.Subcontext as I
