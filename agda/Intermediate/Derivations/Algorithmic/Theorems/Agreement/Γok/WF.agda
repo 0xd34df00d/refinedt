@@ -56,7 +56,12 @@ size-bs (OneMoreBranch εδ rest) = suc (size-t εδ ⊕ size-bs rest)
 
 ST-Arr-size-vec : [ θ ] Γ ⊢ τ₁ ⇒ τ₂' <: τ₁' ⇒ τ₂
                 → Vec ℕ 4
-ST-Arr-size-vec (ST-Arr <:₁δ <:₂δ τ₁⇒τ₂'δ τ₁'⇒τ₂δ) = size-<: <:₁δ ∷ size-<: <:₂δ ∷ size-twf τ₁⇒τ₂'δ ∷ size-twf τ₁'⇒τ₂δ ∷ []
+ST-Arr-size-vec (ST-Arr <:₁δ <:₂δ τ₁⇒τ₂'δ τ₁'⇒τ₂δ)
+  = size-<: <:₁δ
+  ∷ size-<: <:₂δ
+  ∷ size-twf τ₁⇒τ₂'δ
+  ∷ size-twf τ₁'⇒τ₂δ
+  ∷ []
 
 -- A trivial lemma that's a bit annoying to spell out and that'll be needed in a couple of other places
 ST-Arr-τ₁'-smaller : ∀ {<:₁δ} {<:₂δ} {τ₁⇒τ₂'δ} {τ₁'δ : [ θ ] Γ ⊢ τ₁'} {τ₂δ}

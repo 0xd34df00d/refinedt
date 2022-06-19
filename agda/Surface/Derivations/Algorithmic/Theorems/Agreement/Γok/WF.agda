@@ -10,6 +10,7 @@ module Surface.Derivations.Algorithmic.Theorems.Agreement.Γok.WF where
 
 open import Data.Nat.Base using (_⊔_; _≤_)
 open import Data.Nat.Properties
+open import Data.Vec
 
 open import Common.WF public
 
@@ -51,3 +52,12 @@ size-<: (ST-Arr sub₁ sub₂ (enriched τ₁⇒τ₂'δ) (enriched τ₁'δ)) =
 
 size-bs NoBranches = 0
 size-bs (OneMoreBranch εδ rest) = suc (size-t εδ ⊕ size-bs rest)
+
+ST-Arr-size-vec : Γ ⊢[ θ , E ] τ₁ ⇒ τ₂' <: τ₁' ⇒ τ₂
+                → Vec ℕ 4
+ST-Arr-size-vec (ST-Arr <:₁δ <:₂δ (enriched τ₁⇒τ₂'δ) (enriched τ₁'δ))
+  = size-<: <:₁δ
+  ∷ size-<: <:₂δ
+  ∷ size-twf τ₁⇒τ₂'δ
+  ∷ size-twf τ₁'δ
+  ∷ []
