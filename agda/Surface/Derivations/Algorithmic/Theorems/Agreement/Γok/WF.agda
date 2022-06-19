@@ -48,16 +48,16 @@ size-t (T-Sub δ superδ sub) = suc (size-t δ ⊕ size-twf superδ ⊕ size-<: 
 
 size-<: (ST-Base _) = 0
 size-<: (ST-Arr sub₁ sub₂ omitted omitted) = suc (size-<: sub₁ ⊕ size-<: sub₂)
-size-<: (ST-Arr sub₁ sub₂ (enriched τ₁⇒τ₂'δ) (enriched τ₁'δ)) = suc (size-<: sub₁ ⊕ size-<: sub₂ ⊕ size-twf τ₁⇒τ₂'δ ⊕ size-twf τ₁'δ)
+size-<: (ST-Arr sub₁ sub₂ (enriched τ₁⇒τ₂'δ) (enriched τ₁'⇒τ₂δ)) = suc (size-<: sub₁ ⊕ size-<: sub₂ ⊕ size-twf τ₁⇒τ₂'δ ⊕ size-twf τ₁'⇒τ₂δ)
 
 size-bs NoBranches = 0
 size-bs (OneMoreBranch εδ rest) = suc (size-t εδ ⊕ size-bs rest)
 
 ST-Arr-size-vec : Γ ⊢[ θ , E ] τ₁ ⇒ τ₂' <: τ₁' ⇒ τ₂
                 → Vec ℕ 4
-ST-Arr-size-vec (ST-Arr <:₁δ <:₂δ (enriched τ₁⇒τ₂'δ) (enriched τ₁'δ))
+ST-Arr-size-vec (ST-Arr <:₁δ <:₂δ (enriched τ₁⇒τ₂'δ) (enriched τ₁'⇒τ₂δ))
   = size-<: <:₁δ
   ∷ size-<: <:₂δ
   ∷ size-twf τ₁⇒τ₂'δ
-  ∷ size-twf τ₁'δ
+  ∷ size-twf τ₁'⇒τ₂δ
   ∷ []

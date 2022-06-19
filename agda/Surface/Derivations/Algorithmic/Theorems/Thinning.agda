@@ -47,14 +47,15 @@ mutual
           (<:-thinning↓ (append-both Γ⊂Γ') omitted <:₂δ acc₂)
           omitted
           omitted
-  <:-thinning↓ Γ⊂Γ' (enriched Γ'ok) <:δ@(ST-Arr <:₁δ <:₂δ (enriched τ₁⇒τ₂'δ) (enriched τ₁'δ)) (acc rec) =
+  <:-thinning↓ Γ⊂Γ' (enriched Γ'ok) <:δ@(ST-Arr <:₁δ <:₂δ (enriched τ₁⇒τ₂'δ) (enriched τ₁'⇒τ₂δ)) (acc rec) =
     let rec-args = ST-Arr-size-vec <:δ
-        τ₁'δ' = Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁'δ (rec _ (<₄ rec-args (# 3)))
+        τ₁'⇒τ₂δ' = Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁'⇒τ₂δ (rec _ (<₄ rec-args (# 3)))
+        τ₁'δ' = case τ₁'⇒τ₂δ' of λ where (TWF-Arr τ₁'δ' _) → τ₁'δ'
      in ST-Arr
           (<:-thinning↓ Γ⊂Γ' (enriched Γ'ok) <:₁δ (rec _ (<₄ rec-args (# 0))))
           (<:-thinning↓ (append-both Γ⊂Γ') (enriched (TCTX-Bind Γ'ok τ₁'δ')) <:₂δ (rec _ (<₄ rec-args (# 1))))
           (as-enrichment (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁⇒τ₂'δ (rec _ (<₄ rec-args (# 2)))))
-          (as-enrichment τ₁'δ')
+          (as-enrichment τ₁'⇒τ₂δ')
 
   Γ⊢τ-thinning↓ : {Γ : Ctx (k + ℓ)}
                 → (Γ⊂Γ' : k by Γ ⊂' Γ')
