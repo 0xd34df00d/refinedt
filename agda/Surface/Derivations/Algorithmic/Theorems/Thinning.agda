@@ -2,7 +2,7 @@
 
 module Surface.Derivations.Algorithmic.Theorems.Thinning where
 
-open import Data.Fin.Base using (zero; suc; raise)
+open import Data.Fin using (zero; suc; raise; #_)
 open import Data.Nat.Base
 open import Data.Nat.Induction
 open import Data.Nat.Properties using (≤-refl; ≤-trans; n≤1+n; ≤-stepsˡ)
@@ -47,16 +47,13 @@ mutual
           (<:-thinning↓ (append-both Γ⊂Γ') omitted <:₂δ acc₂)
           omitted
           omitted
-  <:-thinning↓ Γ⊂Γ' (enriched Γ'ok) (ST-Arr <:₁δ <:₂δ (enriched τ₁⇒τ₂'δ) (enriched τ₁'δ)) (acc rec) =
-    let acc₁ = rec _ (s≤s (₄≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf τ₁⇒τ₂'δ) (size-twf τ₁'δ)))
-        acc₂ = rec _ (s≤s (₁≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf τ₁⇒τ₂'δ) (size-twf τ₁'δ)))
-        acc₃ = rec _ (s≤s (₂≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf τ₁⇒τ₂'δ) (size-twf τ₁'δ)))
-        acc₄ = rec _ (s≤s (₃≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf τ₁⇒τ₂'δ) (size-twf τ₁'δ)))
-        τ₁'δ' = Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁'δ acc₁
+  <:-thinning↓ Γ⊂Γ' (enriched Γ'ok) <:δ@(ST-Arr <:₁δ <:₂δ (enriched τ₁⇒τ₂'δ) (enriched τ₁'δ)) (acc rec) =
+    let rec-args = ST-Arr-size-vec <:δ
+        τ₁'δ' = Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁'δ (rec _ (<₄ rec-args (# 3)))
      in ST-Arr
-          (<:-thinning↓ Γ⊂Γ' (enriched Γ'ok) <:₁δ acc₂)
-          (<:-thinning↓ (append-both Γ⊂Γ') (enriched (TCTX-Bind Γ'ok τ₁'δ')) <:₂δ acc₃)
-          (as-enrichment (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁⇒τ₂'δ acc₄))
+          (<:-thinning↓ Γ⊂Γ' (enriched Γ'ok) <:₁δ (rec _ (<₄ rec-args (# 0))))
+          (<:-thinning↓ (append-both Γ⊂Γ') (enriched (TCTX-Bind Γ'ok τ₁'δ')) <:₂δ (rec _ (<₄ rec-args (# 1))))
+          (as-enrichment (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁⇒τ₂'δ (rec _ (<₄ rec-args (# 2)))))
           (as-enrichment τ₁'δ')
 
   Γ⊢τ-thinning↓ : {Γ : Ctx (k + ℓ)}
