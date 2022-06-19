@@ -11,6 +11,8 @@ module Surface.Derivations.Algorithmic.Theorems.Agreement.Γok.WF where
 open import Data.Nat.Base using (_⊔_; _≤_)
 open import Data.Nat.Properties
 
+open import Common.WF public
+
 open import Surface.Syntax
 open import Surface.Derivations.Algorithmic
 
@@ -22,38 +24,6 @@ size-bs  : ∀ {τ cons} {bs : CaseBranches nₐ ℓ}
          → BranchesHaveType θ φ Γ cons bs τ
          → ℕ
 size-all-cons : {cons : ADTCons nₐ ℓ} → All (Γ ⊢[ θ , φ ]_) cons → ℕ
-
-infixr 20 _⊕_
-_⊕_ : ℕ → ℕ → ℕ
-_⊕_ = _⊔_
-
-abstract
-  ₁≤₂ : ∀ m n → m ≤ m ⊕ n
-  ₁≤₂ = m≤m⊔n
-
-  ₂≤₂ : ∀ m n → n ≤ m ⊕ n
-  ₂≤₂ = n≤m⊔n
-
-  ₁≤₃ : ∀ m n k → m ≤ m ⊕ n ⊕ k
-  ₁≤₃ m n k = ₁≤₂ _ _
-
-  ₂≤₃ : ∀ m n k → n ≤ m ⊕ n ⊕ k
-  ₂≤₃ m n k = ≤-trans (₁≤₂ n k) (₂≤₂ m (n ⊔ k))
-
-  ₃≤₃ : ∀ m n k → k ≤ m ⊕ n ⊕ k
-  ₃≤₃ m n k = ≤-trans (₂≤₂ n k) (₂≤₂ m (n ⊔ k))
-
-  ₁≤₄ : ∀ n₁ n₂ n₃ n₄ → n₁ ≤ n₁ ⊕ n₂ ⊕ n₃ ⊕ n₄
-  ₁≤₄ n₁ n₂ n₃ n₄ = ₁≤₂ _ _
-
-  ₂≤₄ : ∀ n₁ n₂ n₃ n₄ → n₂ ≤ n₁ ⊕ n₂ ⊕ n₃ ⊕ n₄
-  ₂≤₄ n₁ n₂ n₃ n₄ = ₂≤₃ n₁ n₂ (n₃ ⊔ n₄)
-
-  ₃≤₄ : ∀ n₁ n₂ n₃ n₄ → n₃ ≤ n₁ ⊕ n₂ ⊕ n₃ ⊕ n₄
-  ₃≤₄ n₁ n₂ n₃ n₄ = ≤-trans (₁≤₂ n₃ n₄) (₃≤₃ n₁ n₂ (n₃ ⊔ n₄))
-
-  ₄≤₄ : ∀ n₁ n₂ n₃ n₄ → n₄ ≤ n₁ ⊕ n₂ ⊕ n₃ ⊕ n₄
-  ₄≤₄ n₁ n₂ n₃ n₄ = ≤-trans (₂≤₂ n₃ n₄) (₃≤₃ n₁ n₂ (n₃ ⊔ n₄))
 
 size-ok TCTX-Empty = 0
 size-ok (TCTX-Bind prevOk τδ) = suc (size-ok prevOk ⊕ size-twf τδ)
