@@ -2,7 +2,7 @@
 
 module Surface.Derivations.Algorithmic.ToIntermediate.Translation.Aliases where
 
-open import Surface.Syntax as S renaming (Γ to Γˢ;
+open import Surface.Syntax as S renaming (Γ to Γˢ; _,_ to _,ˢ_;
                                           b to bˢ; ρ to ρˢ;
                                           τ to τˢ; τ' to τ'ˢ; σ to σˢ;
                                           τ₁ to τ₁ˢ; τ₁' to τ₁'ˢ;
@@ -12,7 +12,7 @@ open import Surface.Derivations.Algorithmic as S renaming (θ to θˢ)
                                                  hiding (BranchesHaveType; Oracle; PositiveDecision)
                                                  public
 
-open import Intermediate.Syntax as I renaming (Γ to Γⁱ;
+open import Intermediate.Syntax as I renaming (Γ to Γⁱ; _,_ to _,ⁱ_;
                                                τ to τⁱ; τ' to τ'ⁱ; σ to σⁱ;
                                                τ₁ to τ₁ⁱ; τ₁' to τ₁'ⁱ;
                                                τ₂ to τ₂ⁱ; τ₂' to τ₂'ⁱ;
