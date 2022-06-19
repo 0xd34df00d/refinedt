@@ -38,7 +38,12 @@ mutual
                → (δ : Γ ⊢[ θ , φ ] τ <: τ')
                → Acc _<_ (size-<: δ)
                → Γ' ⊢[ θ , φ ] R.act-τ (ext-k' k suc) τ <: R.act-τ (ext-k' k suc) τ'
-  <:-thinning↓ {θ = θ} Γ⊂Γ' _ (ST-Base is-just) _ = ST-Base (Oracle.thin θ Γ⊂Γ' is-just)
+  <:-thinning↓ {θ = θ} Γ⊂Γ' _ (ST-Base is-just omitted omitted) _ = ST-Base (Oracle.thin θ Γ⊂Γ' is-just) omitted omitted
+  <:-thinning↓ {θ = θ} Γ⊂Γ' (enriched Γ'ok) (ST-Base is-just (enriched ρ₁δ) (enriched ρ₂δ)) (acc rec)
+    = ST-Base
+        (Oracle.thin θ Γ⊂Γ' is-just)
+        (enriched (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok ρ₁δ (rec _ (s≤s (₁≤₂ _ _)))))
+        (enriched (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok ρ₂δ (rec _ (s≤s (₂≤₂ _ _)))))
   <:-thinning↓ Γ⊂Γ' _ (ST-Arr <:₁δ <:₂δ omitted omitted) (acc rec) =
     let acc₁ = rec _ (s≤s (₁≤₂ _ _))
         acc₂ = rec _ (s≤s (₂≤₂ _ _))

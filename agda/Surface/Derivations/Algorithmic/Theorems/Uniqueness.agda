@@ -103,8 +103,13 @@ mutual
           = refl
 
   unique-<: : Irrelevant (Γ ⊢[ θ , φ ] τ' <: τ)
-  unique-<: (ST-Base is-just₁) (ST-Base is-just₂)
+  unique-<: (ST-Base is-just₁ omitted omitted) (ST-Base is-just₂ omitted omitted)
     rewrite irrelevant (λ _ _ → refl) is-just₁ is-just₂
+          = refl
+  unique-<: (ST-Base is-just₁ (enriched δ₁₁) (enriched δ₂₁)) (ST-Base is-just₂ (enriched δ₁₂) (enriched δ₂₂))
+    rewrite irrelevant (λ _ _ → refl) is-just₁ is-just₂
+          | unique-Γ⊢τ δ₁₁ δ₁₂
+          | unique-Γ⊢τ δ₂₁ δ₂₂
           = refl
   unique-<: (ST-Arr <:₁₁ <:₂₁ omitted omitted) (ST-Arr <:₁₂ <:₂₂ omitted omitted)
     rewrite unique-<: <:₁₁ <:₁₂
