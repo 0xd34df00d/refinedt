@@ -58,8 +58,8 @@ mutual
   μ-<: : {τˢ : SType ℓ}
        → Γˢ ⊢[ θˢ , E ] τ'ˢ <: τˢ
        → ITerm ℓ
-  μ-<: (ST-Base is-just) = {! !}
-  μ-<: (ST-Arr <:₁δ <:₂δ (enriched τ₁⇒τ₂'δ) (enriched τ₁'δ))
+  μ-<: (ST-Base is-just _ _) = {! !}
+  μ-<: (ST-Arr <:₁δ <:₂δ (enriched τ₁⇒τ₂'δ) (enriched (TWF-Arr τ₁'δ _)))
     = let <:₁ⁱ = IR.weaken-ε-k _ (μ-<: <:₁δ)
           <:₂ⁱ = IR.weaken-ε (μ-<: <:₂δ)
           τ₁⇒τ₂'ⁱ = μ-τ τ₁⇒τ₂'δ
