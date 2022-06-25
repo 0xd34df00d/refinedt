@@ -123,3 +123,9 @@ weaken-replace-comm ε (suc ι) (suc x) with ι <>? x
 [_↦bs<_]_ : ∀ ℓ
          → (ε : STerm ℓ) → CaseBranches nₐ (suc k + ℓ) → CaseBranches nₐ (k + ℓ)
 [_↦bs<_]_ {k = k} _ ε bs = [ ctx-idx k ↦bs R.weaken-ε-k _ ε ] bs
+
+
+first-↦τ< : (ε : STerm ℓ)
+          → (τ : SType (suc ℓ))
+          → [ ℓ ↦τ< ε ] τ ≡ [ zero ↦τ ε ] τ
+first-↦τ< ε τ = act-τ-extensionality (λ ι → cong (λ ε → replace-at zero ε ι) (R.act-ε-id (λ _ → refl) ε)) τ
