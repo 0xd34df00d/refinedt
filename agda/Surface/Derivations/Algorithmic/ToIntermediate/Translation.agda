@@ -1,13 +1,17 @@
 module Surface.Derivations.Algorithmic.ToIntermediate.Translation where
 
 open import Data.Fin using (suc; zero)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Function using (case_of_)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; cong; trans)
 
 open import Surface.Syntax as S
 import Surface.Syntax.Membership as S
+import Surface.Syntax.Renaming as SR
 import Surface.Syntax.Substitution as S
 open import Surface.Derivations.Algorithmic as S
 open import Surface.Derivations.Algorithmic.Theorems.Agreement
+open import Surface.Derivations.Algorithmic.Theorems.Thinning
+open import Surface.Derivations.Algorithmic.Theorems.Uniqueness
 
 open import Intermediate.Syntax as I
 open import Intermediate.Syntax.Short
@@ -19,15 +23,28 @@ import Intermediate.Derivations.Algorithmic as I
 open import Surface.Derivations.Algorithmic.ToIntermediate.Translation.Aliases
 open import Surface.Derivations.Algorithmic.ToIntermediate.Translation.Subst
 open import Surface.Derivations.Algorithmic.ToIntermediate.Translation.Typed
+open import Surface.Derivations.Algorithmic.ToIntermediate.Translation.μ-weakening
 
-μ-∈ : (Γok : Γˢ ok[ θˢ , E ])
-    → (τδ : Γˢ ⊢[ θˢ , E ] τˢ)
-    → (τˢ S.∈ Γˢ at ι)
-    → (μ-τ τδ I.∈ μ-Γ Γok at ι)
-μ-∈ (TCTX-Bind _ τδ') τδ (S.∈-zero refl) = I.∈-zero {! !}
-μ-∈ (TCTX-Bind Γok _) τδ' (S.∈-suc refl ∈)
-  = let τδ = τ∈Γ-⇒-Γ⊢τ Γok ∈
-     in I.∈-suc {! !} (μ-∈ Γok τδ ∈)
+private
+  μ-τ-lemma₁ : (τδ : Γˢ ,ˢ τ'ˢ ⊢[ θˢ , E ] SR.weaken-τ τˢ)
+             → (τδ' : Γˢ ⊢[ θˢ , E ] τˢ)
+             → (τ'δ : Γˢ ⊢[ θˢ , E ] τ'ˢ)
+             → μ-τ τδ ≡ IR.weaken-τ (μ-τ τδ')
+  μ-τ-lemma₁ τδ τδ' τ'δ = let Γok = Γ⊢τ-⇒-Γok τδ'
+                           in trans
+                                (cong μ-τ (unique-Γ⊢τ τδ (Γ⊢τ-weakening Γok τ'δ τδ')))
+                                (μ-τ-weakening-commutes Γok τ'δ τδ')
+
+  μ-∈ : (Γok : Γˢ ok[ θˢ , E ])
+      → (τδ : Γˢ ⊢[ θˢ , E ] τˢ)
+      → (τˢ S.∈ Γˢ at ι)
+      → (μ-τ τδ I.∈ μ-Γ Γok at ι)
+  μ-∈ (TCTX-Bind _ τδ') τδ (S.∈-zero refl) = I.∈-zero (μ-τ-lemma₁ τδ τδ' τδ')
+  μ-∈ (TCTX-Bind Γok _) τδ (S.∈-suc refl ∈)
+    = let τδ' = τ∈Γ-⇒-Γ⊢τ Γok ∈
+          Γ,τ-ok = Γ⊢τ-⇒-Γok τδ
+          τ'δ = case Γ,τ-ok of λ where (TCTX-Bind _ τ'δ) → τ'δ
+       in I.∈-suc (μ-τ-lemma₁ τδ τδ' τ'δ) (μ-∈ Γok τδ' ∈)
 
 mutual
   μ-ε-δ : {τˢ : SType ℓ}
