@@ -12,6 +12,7 @@ open import Surface.Derivations.Algorithmic.Theorems.Agreement
 open import Intermediate.Syntax as I
 open import Intermediate.Syntax.Short
 open import Intermediate.Syntax.Renaming as IR
+open import Intermediate.Syntax.Substitution as IS
 import Intermediate.Syntax.Membership as I
 import Intermediate.Derivations.Algorithmic as I
 
@@ -52,7 +53,8 @@ mutual
   μ-ε-δ (T-Con ≡-prf εδ adtτ) = {! !}
   μ-ε-δ (T-Sub εδ τ'δ <:δ)
     = let εδⁱ = μ-ε-δ εδ
-          <:δⁱ = μ-<:-δ (Γ⊢ε⦂τ-⇒-Γok εδ) (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ) τ'δ <:δ
+          <:δⁱ = μ-<:-δ (Γ⊢ε⦂τ-⇒-Γok εδ) <:δ
+          <:δⁱ = subst-Γ⊢ε⦂[τ₁]⇒[τ₂] (Γ⊢τ'<:τ-⇒-Γ⊢τ' <:δ) (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ) (Γ⊢τ'<:τ-⇒-Γ⊢τ <:δ) τ'δ <:δⁱ
           τ'δⁱ = subst-[Γ]⊢τ _ _ (μ-τ-δ τ'δ)
        in T-App <:δⁱ εδⁱ {! !} τ'δⁱ
 
@@ -63,9 +65,9 @@ mutual
 
   μ-<:-δ : {τ'ˢ τˢ : SType ℓ}
          → (Γok : Γˢ ok[ θˢ , E ])
-         → (τ'δ : Γˢ ⊢[ θˢ , E ] τ'ˢ)
-         → (τδ : Γˢ ⊢[ θˢ , E ] τˢ)
          → (<:δ : Γˢ ⊢[ θˢ , E ] τ'ˢ <: τˢ)
+         → (let τ'δ = Γ⊢τ'<:τ-⇒-Γ⊢τ' <:δ)
+         → (let τδ  = Γ⊢τ'<:τ-⇒-Γ⊢τ  <:δ)
          → [ θⁱ ] μ-Γ Γok ⊢ μ-<: <:δ ⦂ μ-τ τ'δ ⇒ IR.weaken-τ (μ-τ τδ)
   μ-<:-δ = {! !}
 
