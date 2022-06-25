@@ -16,7 +16,10 @@ open import Surface.Derivations.Algorithmic as S public
 open import Surface.Syntax.Substitution public
                                         using ()
                                         renaming ([_↦τ_]_ to [_↦τˢ_]_;
-                                                  [_↦ε_]_ to [_↦εˢ_]_)
+                                                  [_↦ε_]_ to [_↦εˢ_]_;
+                                                  [_↦τ<_]_ to [_↦τ<ˢ_]_;
+                                                  [_↦ε<_]_ to [_↦ε<ˢ_]_
+                                                 )
 
 open import Intermediate.Syntax as I public
                                      renaming (Γ to Γⁱ; _,_ to _,ⁱ_;
@@ -29,5 +32,8 @@ open import Intermediate.Derivations.Algorithmic as I public
                                                       hiding (BranchesHaveType; Oracle; PositiveDecision)
 open import Intermediate.Syntax.Substitution public
                                              renaming ([_↦τ_]_ to [_↦τⁱ_]_;
-                                                       [_↦ε_]_ to [_↦εⁱ_]_)
+                                                       [_↦ε_]_ to [_↦εⁱ_]_;
+                                                       [_↦τ<_]_ to [_↦τ<ⁱ_]_;
+                                                       [_↦ε<_]_ to [_↦ε<ⁱ_]_
+                                                      )
                                              using ()
