@@ -79,7 +79,16 @@ mutual
         → (τδ : Γˢ ⊢[ θˢ , E ] τˢ)
         → [ θⁱ ] μ-Γ (Γ⊢τ-⇒-Γok τδ) ⊢ μ-τ τδ
   μ-τ-δ (TWF-TrueRef Γok) = TWF-TrueRef (μ-Γ-δ Γok)
-  μ-τ-δ {θⁱ = θⁱ} (TWF-Base ε₁δ ε₂δ) = {! !}
+  μ-τ-δ (TWF-Base ε₁δ ε₂δ)
+    with Γ,τ-ok@(TCTX-Bind Γok (TWF-TrueRef _)) ← Γ⊢ε⦂τ-⇒-Γok ε₁δ
+    = let ε₁δⁱ = μ-ε-δ ε₁δ
+          ε₁δⁱ = subst-[Γ]⊢ε⦂τ _ Γ,τ-ok ε₁δⁱ
+          ε₁δⁱ = subst-Γ⊢ε⦂[τ] _ (TWF-TrueRef Γ,τ-ok) ε₁δⁱ
+          --
+          ε₂δⁱ = μ-ε-δ ε₂δ
+          ε₂δⁱ = subst-[Γ]⊢ε⦂τ _ Γ,τ-ok ε₂δⁱ
+          ε₂δⁱ = subst-Γ⊢ε⦂[τ] _ (TWF-TrueRef Γ,τ-ok) ε₂δⁱ
+       in TWF-Base ε₁δⁱ ε₂δⁱ
   μ-τ-δ (TWF-Conj τ₁δ τ₂δ) = TWF-Conj (μ-τ-δ τ₁δ) (subst-[Γ]⊢τ _ _ (μ-τ-δ τ₂δ))
   μ-τ-δ (TWF-Arr τ₁δ τ₂δ) = TWF-Arr (μ-τ-δ τ₁δ) (subst-[Γ]⊢τ _ _ (μ-τ-δ τ₂δ))
   μ-τ-δ (TWF-ADT consδs) = {! !}
