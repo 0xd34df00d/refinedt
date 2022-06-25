@@ -24,6 +24,7 @@ open import Surface.Derivations.Algorithmic.ToIntermediate.Translation.Aliases
 open import Surface.Derivations.Algorithmic.ToIntermediate.Translation.Subst
 open import Surface.Derivations.Algorithmic.ToIntermediate.Translation.Typed
 open import Surface.Derivations.Algorithmic.ToIntermediate.Translation.μ-weakening
+open import Surface.Derivations.Algorithmic.ToIntermediate.Translation.μ-subst
 
 private
   μ-τ-lemma₁ : (τδ : Γˢ ,ˢ τ'ˢ ⊢[ θˢ , E ] SR.weaken-τ τˢ)
@@ -65,7 +66,7 @@ mutual
           ε₂δⁱ = subst-Γ⊢ε⦂[τ] _ τ₁δ ε₂δⁱ
           ε₂δⁱ = subst-[Γ]⊢ε⦂τ _ _   ε₂δⁱ
           resτδⁱ = subst-[Γ]⊢τ _ _ (μ-τ-δ resτδ)
-       in T-App ε₁δⁱ ε₂δⁱ {! !} resτδⁱ
+       in T-App ε₁δⁱ ε₂δⁱ (μ-τ-sub-front-distributes ε₂δ τ₂δ resτδ) resτδⁱ
   μ-ε-δ (T-Case resδ εδ branches-well-typed) = {! !}
   μ-ε-δ (T-Con ≡-prf εδ adtτ) = {! !}
   μ-ε-δ (T-Sub εδ τ'δ <:δ)
