@@ -26,9 +26,9 @@ mutual
   μ-<: : {τ τ' : SType ℓ}
        → Γˢ ⊢[ θ , E ] τ <: τ'
        → CExpr ℓ
-  μ-<: (ST-Base positive) with to-witness positive
+  μ-<: (ST-Base positive _ _) with to-witness positive
   ... | MkPD <:-ε = <:-ε
-  μ-<: (ST-Arr <:₁ <:₂ (enriched τδ) (enriched τ₁'δ))
+  μ-<: (ST-Arr <:₁ <:₂ (enriched τ₁⇒τ₂'δ) (enriched (TWF-Arr τ₁'δ _)))
     {-
     We need to build a function of type (τ₁ ⇒ τ₂') ⇒ (τ₁' ⇒ τ₂)
     Thus, we do the following:
@@ -41,7 +41,7 @@ mutual
     = let arg-ε = μ-<: <:₁  -- ⦂ τ₁' ⇒ τ₁
           res-ε = μ-<: <:₂  -- ⦂ τ₂' ⇒ τ₂
        in CLam
-            (μ-τ τδ)
+            (μ-τ τ₁⇒τ₂'δ)
             (CLam
               (weaken-ε (μ-τ τ₁'δ))
               (act-ε (ext suc) res-ε ·
