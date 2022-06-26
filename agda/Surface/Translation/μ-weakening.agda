@@ -2,7 +2,7 @@
 
 module Surface.Translation.μ-weakening where
 
-open import Data.Fin using (zero; suc; raise)
+open import Data.Fin using (zero; suc; raise; #_)
 open import Data.Nat.Base
 open import Data.Nat.Induction
 open import Data.Nat.Properties
@@ -28,8 +28,9 @@ open import Surface.Derivations.Algorithmic.Theorems.Agreement.Γok.WF
 open import Surface.Derivations.Algorithmic.Theorems.Thinning
 open import Surface.Derivations.Algorithmic.Theorems.Uniqueness
 
-open import Surface.Translation.Untyped
+open import Surface.Translation.SubstUnique
 open import Surface.Translation.Typed
+open import Surface.Translation.Untyped
 open import Surface.Translation.μ-weakening.Helpers
 
 μ-ε-subst : (eq : τˢ ≡ τˢ')
@@ -44,21 +45,24 @@ mutual
                           → (δ : Γˢ ⊢[ θ , E ] τˢ <: τˢ')
                           → (δ↓ : Acc _<_ (size-<: δ))
                           → μ-<: (<:-thinning↓ Γ⊂Γ' (enriched Γ'ok) δ δ↓) ≡ CR.act-ε (ext-k' k suc) (μ-<: δ)
-  μ-<:-thinning↓-commutes {θ = θ} Γ⊂Γ' Γ'ok (ST-Base is-just) (acc rec) = Oracle.thin-ε θ is-just Γ⊂Γ'
-  μ-<:-thinning↓-commutes {k = k} Γ⊂Γ' Γ'ok (ST-Arr <:₁δ <:₂δ (enriched τ₁⇒τ₂'δ) (enriched τ₁'δ)) (acc rec)
-    rewrite μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok τ₁⇒τ₂'δ (rec _ (s≤s (₃≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf τ₁⇒τ₂'δ) (size-twf τ₁'δ))))
-          | μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok τ₁'δ    (rec _ (s≤s (₄≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf τ₁⇒τ₂'δ) (size-twf τ₁'δ))))
+  μ-<:-thinning↓-commutes {θ = θ} Γ⊂Γ' Γ'ok (ST-Base is-just (enriched _) (enriched _)) (acc rec) = Oracle.thin-ε θ is-just Γ⊂Γ'
+  μ-<:-thinning↓-commutes {k = k} Γ⊂Γ' Γ'ok arr@(ST-Arr <:₁δ <:₂δ (enriched τ₁⇒τ₂'δ) (enriched τ₁'⇒τ₂δ@(TWF-Arr τ₁'δ _))) (acc rec)
+    with τ₁'⇒τ₂δ'@(TWF-Arr τ₁'δ' _) ← Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁'⇒τ₂δ (rec _ (<₄ (ST-Arr-size-vec arr) (# 3)))
+    rewrite μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok τ₁⇒τ₂'δ (rec _ (<₄ (ST-Arr-size-vec arr) (# 2)))
           | μ-<:-thinning↓-commutes
                   Γ⊂Γ'
                   Γ'ok
                   <:₁δ
-                  (rec _ (s≤s (₁≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf τ₁⇒τ₂'δ) (size-twf τ₁'δ))))
+                  (rec _ (<₄ (ST-Arr-size-vec arr) (# 0)))
           | μ-<:-thinning↓-commutes
                   (append-both Γ⊂Γ')
-                  (TCTX-Bind Γ'ok (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁'δ (rec _ (s≤s (₄≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf τ₁⇒τ₂'δ) (size-twf τ₁'δ))))))
+                  (TCTX-Bind Γ'ok τ₁'δ')
                   <:₂δ
-                  (rec _ (s≤s (₂≤₄ (size-<: <:₁δ) (size-<: <:₂δ) (size-twf τ₁⇒τ₂'δ) (size-twf τ₁'δ))))
+                  (rec _ (<₄ (ST-Arr-size-vec arr) (# 1)))
        -- |
+          | trans
+              (μ-τ-cong-unique τ₁'δ' (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁'δ (rec _ (ST-Arr-τ₁'-smaller arr))))
+              (μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok τ₁'δ (rec _ (ST-Arr-τ₁'-smaller arr)))
           | CR.act-ε-distr suc (ext-k' (1 + k) suc) (μ-τ τ₁'δ)
           | CR.act-ε-distr (ext-k' k suc) suc (μ-τ τ₁'δ)
        -- |
