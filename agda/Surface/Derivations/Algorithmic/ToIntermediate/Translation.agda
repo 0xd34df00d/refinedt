@@ -66,7 +66,7 @@ mutual
           ε₂δⁱ = subst-Γ⊢ε⦂[τ] _ τ₁δ ε₂δⁱ
           ε₂δⁱ = subst-[Γ]⊢ε⦂τ _ _   ε₂δⁱ
           resτδⁱ = subst-[Γ]⊢τ _ _ (μ-τ-δ resτδ)
-       in T-App ε₁δⁱ ε₂δⁱ (μ-τ-sub-front-distr ε₂δ τ₂δ resτδ) resτδⁱ
+       in T-App ε₁δⁱ ε₂δⁱ (μ-τ-sub-front-distr {! ε₂δ !} τ₂δ resτδ) resτδⁱ
   μ-ε-δ (T-Case resδ εδ branches-well-typed) = {! !}
   μ-ε-δ (T-Con ≡-prf εδ adtτ) = {! !}
   μ-ε-δ (T-Sub εδ τ'δ <:δ)
@@ -100,7 +100,8 @@ mutual
          → (let τ'δ = Γ⊢τ'<:τ-⇒-Γ⊢τ' <:δ)
          → (let τδ  = Γ⊢τ'<:τ-⇒-Γ⊢τ  <:δ)
          → [ θⁱ ] μ-Γ Γok ⊢ μ-<: <:δ ⦂ μ-τ τ'δ ⇒ IR.weaken-τ (μ-τ τδ)
-  μ-<:-δ = {! !}
+  μ-<:-δ Γok (ST-Base is-just ρ₁δ ρ₂δ) = {! !}
+  μ-<:-δ Γok (ST-Arr <:δ <:δ₁ (enriched τ₁⇒τ₂'δ) (enriched τ₁'⇒τ₂δ@(TWF-Arr _ _))) = {! !}
 
   μ-Γ-δ : (Γok : Γˢ ok[ θˢ , E ])
         → [ θⁱ ] μ-Γ Γok ok
