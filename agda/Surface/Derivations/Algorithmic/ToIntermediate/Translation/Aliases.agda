@@ -6,7 +6,7 @@ open import Surface.Syntax as S public
                                 using ()
                                 renaming (Γ to Γˢ; _,_ to _,ˢ_;
                                           b to bˢ; ρ to ρˢ;
-                                          τ to τˢ; τ' to τ'ˢ; σ to σˢ;
+                                          τ to τˢ; τ' to τ'ˢ; σ to σˢ; σ' to σ'ˢ;
                                           τ₁ to τ₁ˢ; τ₁' to τ₁'ˢ;
                                           τ₂ to τ₂ˢ; τ₂' to τ₂'ˢ;
                                           ε to εˢ; ε' to ε'ˢ; ε₁ to ε₁ˢ; ε₂ to ε₂ˢ)
@@ -23,7 +23,7 @@ open import Surface.Syntax.Substitution public
 
 open import Intermediate.Syntax as I public
                                      renaming (Γ to Γⁱ; _,_ to _,ⁱ_;
-                                               τ to τⁱ; τ' to τ'ⁱ; σ to σⁱ;
+                                               τ to τⁱ; τ' to τ'ⁱ; σ to σⁱ; σ' to σ'ⁱ;
                                                τ₁ to τ₁ⁱ; τ₁' to τ₁'ⁱ;
                                                τ₂ to τ₂ⁱ; τ₂' to τ₂'ⁱ;
                                                ε to εⁱ; ε' to ε'ⁱ; ε₁ to ε₁ⁱ; ε₂ to ε₂ⁱ)
