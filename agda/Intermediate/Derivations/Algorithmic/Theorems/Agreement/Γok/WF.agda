@@ -8,7 +8,7 @@ but not strong enough to prove the lemma `Γ ⊢ ε ⦂ τ → Γ ⊢ τ`.
 
 module Intermediate.Derivations.Algorithmic.Theorems.Agreement.Γok.WF where
 
-open import Data.Fin using (zero; suc; #_)
+open import Data.Fin using (#_)
 open import Data.Nat.Base using (_⊔_; _≤_; _<_; s≤s)
 open import Data.Nat.Properties
 open import Data.Vec

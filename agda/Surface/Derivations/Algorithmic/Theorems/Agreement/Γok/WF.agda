@@ -8,9 +8,11 @@ but not strong enough to prove the lemma `Γ ⊢ ε ⦂ τ → Γ ⊢ τ`.
 
 module Surface.Derivations.Algorithmic.Theorems.Agreement.Γok.WF where
 
-open import Data.Nat.Base using (_⊔_; _≤_)
+open import Data.Fin using (#_)
+open import Data.Nat.Base using (_⊔_; _≤_; _<_; s≤s)
 open import Data.Nat.Properties
 open import Data.Vec
+open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Common.WF public
 
@@ -62,3 +64,10 @@ ST-Arr-size-vec (ST-Arr <:₁δ <:₂δ (enriched τ₁⇒τ₂'δ) (enriched τ
   ∷ size-twf τ₁⇒τ₂'δ
   ∷ size-twf τ₁'⇒τ₂δ
   ∷ []
+
+-- A trivial lemma that's a bit annoying to spell out and that'll be needed in a couple of other places
+ST-Arr-τ₁'-smaller : ∀ {<:₁δ} {<:₂δ} {τ₁⇒τ₂'δ} {τ₁'δ : Γ ⊢[ θ , E ] τ₁'} {τ₂δ}
+                   → (<:δ : Γ ⊢[ θ , E ] τ₁ ⇒ τ₂' <: τ₁' ⇒ τ₂)
+                   → ⦃ <:δ ≡ ST-Arr <:₁δ <:₂δ (enriched τ₁⇒τ₂'δ) (enriched (TWF-Arr τ₁'δ τ₂δ)) ⦄
+                   → size-twf τ₁'δ < size-<: <:δ
+ST-Arr-τ₁'-smaller <:δ ⦃ refl ⦄ = ≤-trans (s≤s (≤-trans (₁≤₂ _ _) (n≤1+n _))) (<₄ (ST-Arr-size-vec <:δ) (# 3))
