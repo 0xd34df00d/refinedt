@@ -1,6 +1,7 @@
 module Surface.Derivations.Algorithmic.ToIntermediate.Translation where
 
 open import Data.Fin using (suc; zero)
+open import Data.Product renaming (_,_ to ⟨_,_⟩)
 open import Function using (case_of_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; cong; trans)
 
@@ -26,6 +27,71 @@ open import Surface.Derivations.Algorithmic.ToIntermediate.Translation.Typed
 open import Surface.Derivations.Algorithmic.ToIntermediate.Translation.μ-weakening
 open import Surface.Derivations.Algorithmic.ToIntermediate.Translation.μ-subst
 
+-- A value of type μ-WellTyped εδˢ τⁱ is a witness that μ-ε εδˢ has type τⁱ.
+data μ-WellTyped {ℓ} {θˢ}
+                 : {τˢ : SType ℓ}
+                 → (εδ : Γˢ ⊢[ θˢ , E of κ ] εˢ ⦂ τˢ)
+                 → (τⁱ : IType ℓ)
+                 → Set where
+  μ-T-Unit : (Γok : Γˢ ok[ θˢ , E ])
+           → μ-WellTyped (T-Unit Γok) ⟨ BUnit ∣ Τ ⟩
+  μ-T-Var  : (Γok : Γˢ ok[ θˢ , E ])
+           → (∈ : τˢ S.∈ Γˢ at ι)
+           → (τⁱ-≡ : τⁱ ≡ μ-τ (τ∈Γ-⇒-Γ⊢τ Γok ∈))
+           → μ-WellTyped (T-Var Γok ∈) τⁱ
+  μ-Τ-Abs  : (arrδ : Γˢ ⊢[ θˢ , E ] τ₁ˢ ⇒ τ₂ˢ)
+           → (bodyδ : Γˢ , τ₁ˢ ⊢[ θˢ , E of not-t-sub ] εˢ ⦂ τ₂ˢ)
+           → (τⁱ-≡ : τⁱ ≡ μ-τ arrδ)
+           → μ-WellTyped (T-Abs arrδ bodyδ) τⁱ
+  μ-T-App  : (ε₁δ : Γˢ ⊢[ θˢ , E of not-t-sub ] ε₁ˢ ⦂ τ₁ˢ ⇒ τ₂ˢ)
+           → (ε₂δ : Γˢ ⊢[ θˢ , E of t-sub ] ε₂ˢ ⦂ τ₁ˢ)
+           → (resτˢ-≡ : τˢ ≡ [ zero ↦τˢ ε₂ˢ ] τ₂ˢ)
+           → (τδ : Γˢ ⊢[ θˢ , E ] τˢ)
+           → (τⁱ-≡ : τⁱ ≡ [ zero ↦τⁱ μ-ε ε₂δ ] τ₂ⁱ)
+           → μ-WellTyped ε₁δ (τ₁ⁱ ⇒ τ₂ⁱ)
+           → μ-WellTyped ε₂δ τ₁ⁱ
+           → μ-WellTyped (T-App ε₁δ ε₂δ resτˢ-≡ τδ) τⁱ
+  μ-T-Sub  : (εδ  : Γˢ ⊢[ θˢ , E of not-t-sub ] εˢ ⦂ τ'ˢ)
+           → (τδ : Γˢ ⊢[ θˢ , E ] τˢ)
+           → (<:δ : Γˢ ⊢[ θˢ , E ] τ'ˢ <: τˢ)
+           → (τⁱ-≡ : τⁱ ≡ μ-τ τδ)
+           → μ-WellTyped (T-Sub εδ τδ <:δ) τⁱ
+
+μ-τ-same : (τ₁δ τ₂δ : Γˢ ⊢[ θˢ , E ] τˢ)
+         → μ-τ τ₁δ ≡ μ-τ τ₂δ
+μ-τ-same τ₁δ τ₂δ = cong μ-τ (unique-Γ⊢τ τ₁δ τ₂δ)
+
+μ-WellTyped-lemma₁ : {ε₁δ : Γˢ ⊢[ θˢ , E of not-t-sub ] ε₁ˢ ⦂ τ₁ˢ ⇒ τ₂ˢ}
+                   → {ε₂δ : Γˢ ⊢[ θˢ , E of t-sub ] ε₂ˢ ⦂ τ₁ˢ}
+                   → μ-WellTyped ε₂δ τ₁'ⁱ
+                   → μ-WellTyped ε₁δ (τ₁ⁱ ⇒ τ₂ⁱ)
+                   → τ₁ⁱ ≡ τ₁'ⁱ
+μ-WellTyped-lemma₁ (μ-T-Sub _ τ₁δ _ refl) (μ-T-Var Γok ∈ τⁱ-≡)
+  with TWF-Arr τ₁δ' _ ← τ∈Γ-⇒-Γ⊢τ Γok ∈
+     | refl ← τⁱ-≡
+     = μ-τ-same τ₁δ' τ₁δ
+μ-WellTyped-lemma₁ (μ-T-Sub _ τ₁δ _ refl) (μ-Τ-Abs (TWF-Arr τ₁δ' _) _ refl) = μ-τ-same τ₁δ' τ₁δ
+μ-WellTyped-lemma₁ (μ-T-Sub _ τ₁δ _ refl) (μ-T-App {ε₂ˢ = ε₂ˢ} _ ε₂δ resτˢ-≡ τ₁δ' x _ _) = {! !}
+
+μ-ε-δ : {τˢ : SType ℓ}
+      → (εδ : Γˢ ⊢[ θˢ , E of κ ] εˢ ⦂ τˢ)
+      → ∃[ τⁱ ] (μ-WellTyped εδ τⁱ)
+μ-ε-δ (T-Unit Γok) = ⟨ _ , μ-T-Unit Γok ⟩
+μ-ε-δ (T-Var Γok ∈) = ⟨ _ , μ-T-Var Γok ∈ refl ⟩
+μ-ε-δ (T-Abs arrδ εδ) = {! !}
+μ-ε-δ (T-App ε₁δ ε₂δ refl _)
+  with μ-ε-δ ε₁δ
+     | μ-ε-δ ε₂δ
+... | ⟨ τ₁ⁱ ⇒ τ₂ⁱ , ε₁δ-δ ⟩
+    | ⟨ τ₁'ⁱ , ε₂δ-δ ⟩
+    = ⟨ _ , μ-T-App ε₁δ ε₂δ refl _ refl ε₁δ-δ {! !} ⟩
+... | ⟨ ⟨ b ∣ ρ ⟩ , ε₁δ-δ ⟩ | _ = {! !} -- provably absurd
+... | ⟨ ⊍ cons , ε₁δ-δ ⟩ | _ = {! !} -- ditto
+μ-ε-δ (T-Case resδ εδ branches-well-typed) = {! !}
+μ-ε-δ (T-Con ≡-prf εδ adtτ) = {! !}
+μ-ε-δ (T-Sub εδ τ'δ <:δ) = {! !}
+
+{-
 private
   μ-τ-lemma₁ : (τδ : Γˢ ,ˢ τ'ˢ ⊢[ θˢ , E ] SR.weaken-τ τˢ)
              → (τδ' : Γˢ ⊢[ θˢ , E ] τˢ)
@@ -107,3 +173,4 @@ mutual
         → [ θⁱ ] μ-Γ Γok ok
   μ-Γ-δ TCTX-Empty = TCTX-Empty
   μ-Γ-δ (TCTX-Bind Γok τδ) = TCTX-Bind (μ-Γ-δ Γok) (subst-[Γ]⊢τ _ _ (μ-τ-δ τδ))
+  -}
