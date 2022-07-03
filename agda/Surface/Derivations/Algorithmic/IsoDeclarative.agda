@@ -42,9 +42,7 @@ mutual
   from-ε (D.T-Abs arrδ εδ) with from-ε εδ
   ... | ⟨ not-t-sub , εδ' ⟩ = ⟨ _ , A.T-Abs (from-τ arrδ) εδ' ⟩
   ... | ⟨ t-sub , A.T-Sub εδ' τδ <:δ ⟩
-        = let Γ,τ₁⊢τ' = A.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ'
-              Γ,τ₁-ok = A.Γ⊢ε⦂τ-⇒-Γok εδ'
-              Γ⊢τ₁⇒τ' = A.TWF-Arr (case Γ,τ₁-ok of λ where (A.TCTX-Bind _ τ₁δ) → τ₁δ) Γ,τ₁⊢τ'
+        = let Γ⊢τ₁⇒τ' = A.Γ,τ₁⊢τ₂-⇒-Γ⊢τ₁⇒τ₂ (A.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ')
            in ⟨ _ , A.T-Sub (A.T-Abs Γ⊢τ₁⇒τ' εδ') (from-τ arrδ) {! !} ⟩
   from-ε εδ@(D.T-App ε₁δ ε₂δ) with from-ε ε₁δ
   ... | ⟨ t-sub , A.T-Sub ε₁δ' τδ <:δ@(A.ST-Arr _ _ _ _) ⟩ = ⟨ _ , A.T-Sub (A.T-App ε₁δ' {! !} refl {! !}) {! !} {! !} ⟩
