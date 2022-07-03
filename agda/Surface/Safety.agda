@@ -23,7 +23,7 @@ data Progress (ε : STerm ℓ) : Set where
   done : (is-value : IsValue ε)
        → Progress ε
 
-progress : ⊘ ⊢[ φ ] ε ⦂ τ
+progress : ⊘ ⊢[ θ , φ ] ε ⦂ τ
          → Progress ε
 progress (T-Unit _) = done IV-Unit
 progress (T-Abs _ _) = done IV-Abs
@@ -43,20 +43,20 @@ progress (T-Sub εδ _ _) = progress εδ
 
 
 preservation : ε ↝ ε'
-             → Γ ⊢[ φ ] ε ⦂ τ
-             → Γ ⊢[ φ ] ε' ⦂ τ
+             → Γ ⊢[ θ , φ ] ε ⦂ τ
+             → Γ ⊢[ θ , φ ] ε' ⦂ τ
 preservation ε↝ε' (T-Sub εδ Γ⊢τ' Γ⊢τ<:τ') = T-Sub (preservation ε↝ε' εδ) Γ⊢τ' Γ⊢τ<:τ'
 preservation (E-AppL ε↝ε') (T-App ε₁δ ε₂δ) = T-App (preservation ε↝ε' ε₁δ) ε₂δ
 preservation (E-AppAbs) (T-App ε₁δ ε₂δ) = sub-Γ⊢ε⦂τ-front ε₂δ (SLam-inv ε₁δ)
 preservation (E-ADT ε↝ε') (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (preservation ε↝ε' εδ) adtτ
 preservation (E-CaseScrut ε↝ε') (T-Case resδ εδ branches) = T-Case resδ (preservation ε↝ε' εδ) branches
-preservation {φ = φ} (E-CaseMatch ε-is-value ι) (T-Case resδ εδ branches)
+preservation (E-CaseMatch ε-is-value ι) (T-Case resδ εδ branches)
   = let branchδ = sub-Γ⊢ε⦂τ-front (con-has-type εδ) (branch-has-type ι branches)
      in subst-Γ⊢ε⦂τ-τ (replace-weakened-τ-zero _ _) branchδ
   where
   branch-has-type : ∀ {cons : ADTCons (Mkℕₐ n) ℓ} {bs : CaseBranches (Mkℕₐ n) ℓ} {τ}
                   → (ι : Fin n)
-                  → BranchesHaveType φ Γ cons bs τ
-                  → Γ , lookup cons ι ⊢[ φ ] CaseBranch.body (lookup bs ι) ⦂ R.weaken-τ τ
+                  → BranchesHaveType θ φ Γ cons bs τ
+                  → Γ , lookup cons ι ⊢[ θ , φ ] CaseBranch.body (lookup bs ι) ⦂ R.weaken-τ τ
   branch-has-type zero (OneMoreBranch εδ _) = εδ
   branch-has-type (suc ι) (OneMoreBranch _ bht) = branch-has-type ι bht

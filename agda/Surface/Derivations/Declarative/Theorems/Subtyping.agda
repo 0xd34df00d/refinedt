@@ -13,11 +13,11 @@ open import Surface.Derivations.Declarative.Theorems.Thinning
 -- Referred to as typing-narrowing in the paper
 mutual
   <:-narrowing : ∀ Δ
-               → Γ ⊢[ φ ] σ' <: σ
-               → Enrich (Γ ⊢[ φ ] σ') φ
-               → Γ , σ  ++ Δ ⊢[ φ ] τ₂ <: τ₂'
-               → Γ , σ' ++ Δ ⊢[ φ ] τ₂ <: τ₂'
-  <:-narrowing _ σ-<: [Γ⊢σ'] (ST-Base oracle is-just) = ST-Base oracle (Oracle.narrowing oracle {- TODO σ-<: -} is-just)
+               → Γ ⊢[ θ , φ ] σ' <: σ
+               → Enrich (Γ ⊢[ θ , φ ] σ') φ
+               → Γ , σ  ++ Δ ⊢[ θ , φ ] τ₂ <: τ₂'
+               → Γ , σ' ++ Δ ⊢[ θ , φ ] τ₂ <: τ₂'
+  <:-narrowing {θ = θ} _ σ-<: [Γ⊢σ'] (ST-Base is-just) = ST-Base (Oracle.narrowing θ {- TODO σ-<: -} is-just)
   <:-narrowing Δ σ-<: [Γ⊢σ'] (ST-Arr <:₁ <:₂ omitted omitted)
     = ST-Arr
         (<:-narrowing Δ σ-<: [Γ⊢σ'] <:₁)
@@ -31,27 +31,19 @@ mutual
         (enriched (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' τ₁⇒τ₂'δ))
         (enriched (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' τ₁'δ))
 
-  <:-trans : Γ ⊢[ φ ] τ₁ <: τ₂
-           → Γ ⊢[ φ ] τ₂ <: τ₃
-           → Γ ⊢[ φ ] τ₁ <: τ₃
-  <:-trans (ST-Base oracle ⦃ UoO ⦄ is-just₁) (ST-Base oracle' is-just₂)
-    rewrite UniquenessOfOracles.oracles-equal UoO oracle' oracle
-          = ST-Base oracle ⦃ UoO ⦄ (Oracle.trans oracle is-just₁ is-just₂)
-  <:-trans (ST-Arr <:₁ <:₂ τ₁⇒τ₂'δ _) (ST-Arr <:₁' <:₂' _ τ₁'δ) = ST-Arr (<:-trans <:₁' <:₁) (<:-trans (<:-narrowing ⊘ <:₁' τ₁'δ <:₂) <:₂') τ₁⇒τ₂'δ τ₁'δ
-
   Γok-narrowing : (Δ : CtxSuffix (suc ℓ) k)
-                → Γ ⊢[ φ ] σ' <: σ
-                → Γ ⊢[ φ ] σ'
-                → (Γ , σ  ++ Δ) ok[ φ ]
-                → (Γ , σ' ++ Δ) ok[ φ ]
+                → Γ ⊢[ θ , φ ] σ' <: σ
+                → Γ ⊢[ θ , φ ] σ'
+                → (Γ , σ  ++ Δ) ok[ θ , φ ]
+                → (Γ , σ' ++ Δ) ok[ θ , φ ]
   Γok-narrowing ⊘ σ-<: Γ⊢σ' (TCTX-Bind Γok _) = TCTX-Bind Γok Γ⊢σ'
   Γok-narrowing (Δ , τ) σ-<: Γ⊢σ' (TCTX-Bind Γ,σ,Δok τδ) = TCTX-Bind (Γok-narrowing Δ σ-<: Γ⊢σ' Γ,σ,Δok) (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' τδ)
 
   Γ⊢τ-narrowing : (Δ : CtxSuffix (suc ℓ) k)
-                → Γ ⊢[ φ ] σ' <: σ
-                → Γ ⊢[ φ ] σ'
-                → Γ , σ  ++ Δ ⊢[ φ ] τ
-                → Γ , σ' ++ Δ ⊢[ φ ] τ
+                → Γ ⊢[ θ , φ ] σ' <: σ
+                → Γ ⊢[ θ , φ ] σ'
+                → Γ , σ  ++ Δ ⊢[ θ , φ ] τ
+                → Γ , σ' ++ Δ ⊢[ θ , φ ] τ
   Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' (TWF-TrueRef Γok) = TWF-TrueRef (Γok-narrowing Δ σ-<: Γ⊢σ' Γok)
   Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' (TWF-Base ε₁δ ε₂δ) = TWF-Base (Γ⊢ε⦂τ-narrowing (Δ , _) σ-<: Γ⊢σ' ε₁δ) (Γ⊢ε⦂τ-narrowing (Δ , _) σ-<: Γ⊢σ' ε₂δ)
   Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' ρ₁δ) (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' ρ₂δ)
@@ -60,19 +52,19 @@ mutual
     where
     narrow-cons : {cons : ADTCons nₐ (k + suc ℓ)}
                 → (Δ : CtxSuffix (suc ℓ) k)
-                → Γ ⊢[ φ ] σ' <: σ
-                → Γ ⊢[ φ ] σ'
-                → All ((Γ , σ  ++ Δ) ⊢[ φ ]_) cons
-                → All ((Γ , σ' ++ Δ) ⊢[ φ ]_) cons
+                → Γ ⊢[ θ , φ ] σ' <: σ
+                → Γ ⊢[ θ , φ ] σ'
+                → All ((Γ , σ  ++ Δ) ⊢[ θ , φ ]_) cons
+                → All ((Γ , σ' ++ Δ) ⊢[ θ , φ ]_) cons
     narrow-cons Δ _ _ [] = []
     narrow-cons Δ σ-<: Γ⊢σ' (δ ∷ consδs) = Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' δ ∷ narrow-cons Δ σ-<: Γ⊢σ' consδs
 
   SVar-narrowing : (Δ : CtxSuffix (suc ℓ) k)
-                 → (Γ , σ ++ Δ) ok[ φ ]
-                 → Γ ⊢[ φ ] σ' <: σ
-                 → Γ ⊢[ φ ] σ'
+                 → (Γ , σ ++ Δ) ok[ θ , φ ]
+                 → Γ ⊢[ θ , φ ] σ' <: σ
+                 → Γ ⊢[ θ , φ ] σ'
                  → τ ∈ Γ , σ ++ Δ at ι
-                 → Γ , σ' ++ Δ ⊢[ φ ] SVar ι ⦂ τ
+                 → Γ , σ' ++ Δ ⊢[ θ , φ ] SVar ι ⦂ τ
   SVar-narrowing ⊘ (TCTX-Bind Γok τδ) σ-<: Γ⊢σ' (∈-zero refl) = T-Sub (T-Var (TCTX-Bind Γok Γ⊢σ') (∈-zero refl)) (Γ⊢τ-weakening Γok Γ⊢σ' τδ) (<:-weakening Γok Γ⊢σ' σ-<:)
   SVar-narrowing ⊘ (TCTX-Bind Γok _) σ-<: Γ⊢σ' (∈-suc refl ∈) = T-Var (TCTX-Bind Γok Γ⊢σ') (∈-suc refl ∈)
   SVar-narrowing (Δ , τ) Γ,σ,Δok σ-<: Γ⊢σ' (∈-zero refl) = T-Var (Γok-narrowing (Δ , _) σ-<: Γ⊢σ' Γ,σ,Δok) (∈-zero refl)
@@ -82,10 +74,10 @@ mutual
        in Γ⊢ε⦂τ-weakening Γ,σ',Δok Γ,σ',Δ⊢τ (SVar-narrowing Δ Γ,σ,Δok σ-<: Γ⊢σ' ∈)
 
   Γ⊢ε⦂τ-narrowing : (Δ : CtxSuffix (suc ℓ) k)
-                  → Γ ⊢[ φ ] σ' <: σ
-                  → Γ ⊢[ φ ] σ'
-                  → Γ , σ  ++ Δ ⊢[ φ ] ε ⦂ τ
-                  → Γ , σ' ++ Δ ⊢[ φ ] ε ⦂ τ
+                  → Γ ⊢[ θ , φ ] σ' <: σ
+                  → Γ ⊢[ θ , φ ] σ'
+                  → Γ , σ  ++ Δ ⊢[ θ , φ ] ε ⦂ τ
+                  → Γ , σ' ++ Δ ⊢[ θ , φ ] ε ⦂ τ
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Unit Γok) = T-Unit (Γok-narrowing Δ σ-<: Γ⊢σ' Γok)
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Var Γok ∈) = SVar-narrowing Δ Γok σ-<: Γ⊢σ' ∈
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Abs arrδ εδ) = T-Abs (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' arrδ) (Γ⊢ε⦂τ-narrowing (Δ , _) σ-<: Γ⊢σ' εδ)
@@ -97,10 +89,10 @@ mutual
     where
     narrow-branches : ∀ {cons : ADTCons nₐ (k + suc ℓ)} {bs : CaseBranches nₐ (k + suc ℓ)}
                     → (Δ : CtxSuffix (suc ℓ) k)
-                    → Γ ⊢[ φ ] σ' <: σ
-                    → Γ ⊢[ φ ] σ'
-                    → BranchesHaveType φ (Γ , σ  ++ Δ) cons bs τ
-                    → BranchesHaveType φ (Γ , σ' ++ Δ) cons bs τ
+                    → Γ ⊢[ θ , φ ] σ' <: σ
+                    → Γ ⊢[ θ , φ ] σ'
+                    → BranchesHaveType θ φ (Γ , σ  ++ Δ) cons bs τ
+                    → BranchesHaveType θ φ (Γ , σ' ++ Δ) cons bs τ
     narrow-branches Δ σ-<: Γ⊢σ' NoBranches = NoBranches
     narrow-branches Δ σ-<: Γ⊢σ' (OneMoreBranch εδ bs) = OneMoreBranch (Γ⊢ε⦂τ-narrowing (Δ , _) σ-<: Γ⊢σ' εδ) (narrow-branches Δ σ-<: Γ⊢σ' bs)
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ) (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' adtτ)
