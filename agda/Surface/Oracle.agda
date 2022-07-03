@@ -32,6 +32,10 @@ record Oracle : Set where
            → (b : BaseType)
            → (ρ₁ ρ₂ : Refinement (suc ℓ))
            → Maybe (PositiveDecision ℓ)
+    <:-refl : (Γ : Ctx ℓ)
+            → (b : BaseType)
+            → (ρ : Refinement (suc ℓ))
+            → Is-just (decide Γ b ρ ρ)
     thin : ∀ {Γ : Ctx (k + ℓ)} {Γ' : Ctx (suc k + ℓ)} {ρ₁ ρ₂ : Refinement (suc k + ℓ)}
          → (Γ⊂Γ' : k by Γ ⊂' Γ')
          → Is-just (decide Γ b ρ₁ ρ₂)
