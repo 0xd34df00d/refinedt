@@ -11,10 +11,10 @@ open import Surface.Syntax
 open import Surface.Syntax.Renaming as R
 open import Surface.Syntax.Substitution.Stable
 open import Surface.Derivations.Declarative
-open import Surface.Operational
 open import Surface.Derivations.Declarative.Theorems.Agreement
 open import Surface.Derivations.Declarative.Theorems.Substitution
 open import Surface.Derivations.Declarative.Theorems.Helpers
+open import Surface.Operational
 open import Surface.Safety.Helpers
 
 data Progress (ε : STerm ℓ) : Set where
@@ -25,18 +25,18 @@ data Progress (ε : STerm ℓ) : Set where
 
 progress : ⊘ ⊢[ φ ] ε ⦂ τ
          → Progress ε
-progress (T-Unit Γok) = done IV-Unit
-progress (T-Abs arrδ εδ) = done IV-Abs
-progress (T-App {ε₂ = ε₂} ε₁δ ε₂δ) with progress ε₁δ
+progress (T-Unit _) = done IV-Unit
+progress (T-Abs _ _) = done IV-Abs
+progress (T-App ε₁δ ε₂δ) with progress ε₁δ
 ... | step ε↝ε' = step (E-AppL ε↝ε')
 ... | done is-value-ε₁ with canonical-⇒ ε₁δ is-value-ε₁ refl
 ...   | C-Lam = step E-AppAbs
-progress (T-Case resδ εδ branches) with progress εδ
+progress (T-Case _ εδ _) with progress εδ
 ... | step ε↝ε' = step (E-CaseScrut ε↝ε')
 ... | done is-value with canonical-⊍ εδ is-value refl
 ...   | C-Con with is-value
 ...     | IV-ADT ε-value = step (E-CaseMatch ε-value _)
-progress (T-Con _ εδ adtτ) with progress εδ
+progress (T-Con _ εδ _) with progress εδ
 ... | step ε↝ε' = step (E-ADT ε↝ε')
 ... | done is-value = done (IV-ADT is-value)
 progress (T-Sub εδ _ _) = progress εδ
