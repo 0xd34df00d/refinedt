@@ -121,6 +121,10 @@ mutual
           | unique-Γ⊢τ δ₁₁ δ₁₂
           | unique-Γ⊢τ δ₂₁ δ₂₂
           = refl
+  unique-<: (ST-ADT omitted) (ST-ADT omitted) = refl
+  unique-<: (ST-ADT (enriched δ₁)) (ST-ADT (enriched δ₂))
+    rewrite unique-Γ⊢τ δ₁ δ₂
+          = refl
 
   unique-cons : ∀ {cons : ADTCons nₐ ℓ}
               → Irrelevant (All (Γ ⊢[ θ , φ ]_) cons)

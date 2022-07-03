@@ -23,11 +23,13 @@ open import Surface.Derivations.Algorithmic.Theorems.Thinning
                → Γ ⊢[ θ , E ] τ'
 Γ⊢τ'<:τ-⇒-Γ⊢τ' (ST-Base _ (enriched ρ₁δ) _) = ρ₁δ
 Γ⊢τ'<:τ-⇒-Γ⊢τ' (ST-Arr _ _ (enriched τ₁⇒τ₂'δ) _) = τ₁⇒τ₂'δ
+Γ⊢τ'<:τ-⇒-Γ⊢τ' (ST-ADT (enriched τδ)) = τδ
 
 Γ⊢τ'<:τ-⇒-Γ⊢τ : Γ ⊢[ θ , E ] τ' <: τ
               → Γ ⊢[ θ , E ] τ
 Γ⊢τ'<:τ-⇒-Γ⊢τ (ST-Base _ _ (enriched ρ₂δ)) = ρ₂δ
 Γ⊢τ'<:τ-⇒-Γ⊢τ (ST-Arr _ _ _ (enriched τ₁'⇒τ₂δ)) = τ₁'⇒τ₂δ
+Γ⊢τ'<:τ-⇒-Γ⊢τ (ST-ADT (enriched τδ)) = τδ
 
 -- Referred to as T-implies-TWF in the paper
 Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢[ θ , φ of κ ] ε ⦂ τ

@@ -61,6 +61,8 @@ mutual
             (<:-thinning↓ (append-both Γ⊂Γ') (enriched (TCTX-Bind Γ'ok τ₁'δ')) <:₂δ (rec _ (<₄ rec-args (# 1))))
             (as-enrichment (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁⇒τ₂'δ (rec _ (<₄ rec-args (# 2)))))
             (as-enrichment τ₁'⇒τ₂δ')
+  <:-thinning↓ _ _ (ST-ADT omitted) _ = ST-ADT omitted
+  <:-thinning↓ Γ⊂Γ' (enriched Γ'ok) (ST-ADT (enriched ⊍δ)) (acc rec) = ST-ADT (enriched (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok ⊍δ (rec _ ≤-refl)))
 
   Γ⊢τ-thinning↓ : {Γ : Ctx (k + ℓ)}
                 → (Γ⊂Γ' : k by Γ ⊂' Γ')

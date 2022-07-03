@@ -108,3 +108,6 @@ data _⊢[_,_]_<:_ {ℓ} Γ θ φ where
           → (τ₁⇒τ₂'δ : Enrich (Γ ⊢[ θ , φ ] τ₁ ⇒ τ₂') φ)
           → (τ₁'⇒τ₂δ : Enrich (Γ ⊢[ θ , φ ] τ₁' ⇒ τ₂) φ)
           → Γ ⊢[ θ , φ ] τ₁ ⇒ τ₂' <: τ₁' ⇒ τ₂
+  ST-ADT  : {adtCons : ADTCons (Mkℕₐ (suc n)) ℓ}
+          → (⊍δ : Enrich (Γ ⊢[ θ , φ ] ⊍ adtCons) φ)
+          → Γ ⊢[ θ , φ ] ⊍ adtCons <: ⊍ adtCons

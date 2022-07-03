@@ -52,6 +52,8 @@ size-<: (ST-Base _ omitted omitted) = 0
 size-<: (ST-Base _ (enriched ρ₁δ) (enriched ρ₂δ)) = suc (size-twf ρ₁δ ⊕ size-twf ρ₂δ)
 size-<: (ST-Arr sub₁ sub₂ omitted omitted) = suc (size-<: sub₁ ⊕ size-<: sub₂)
 size-<: (ST-Arr sub₁ sub₂ (enriched τ₁⇒τ₂'δ) (enriched τ₁'⇒τ₂δ)) = suc (size-<: sub₁ ⊕ size-<: sub₂ ⊕ size-twf τ₁⇒τ₂'δ ⊕ size-twf τ₁'⇒τ₂δ)
+size-<: (ST-ADT omitted) = 0
+size-<: (ST-ADT (enriched ⊍δ)) = suc (size-twf ⊍δ)
 
 size-bs NoBranches = 0
 size-bs (OneMoreBranch εδ rest) = suc (size-t εδ ⊕ size-bs rest)
