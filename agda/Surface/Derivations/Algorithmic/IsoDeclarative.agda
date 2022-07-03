@@ -1,6 +1,7 @@
 module Surface.Derivations.Algorithmic.IsoDeclarative where
 
 open import Data.Product renaming (_,_ to ⟨_,_⟩)
+open import Function using (case_of_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Surface.Syntax
@@ -9,6 +10,7 @@ open import Surface.Syntax.Renaming
 open import Surface.Syntax.Substitution
 
 import Surface.Derivations.Algorithmic as A
+import Surface.Derivations.Algorithmic.Theorems.Agreement as A
 open import Surface.Derivations.Algorithmic using (κ; t-sub; not-t-sub)
 import Surface.Derivations.Declarative as D
 import Surface.Derivations.Declarative.Theorems.Agreement as D
@@ -39,7 +41,11 @@ mutual
   from-ε (D.T-Var Γok ∈) = ⟨ _ , A.T-Var (from-Γ Γok) ∈ ⟩
   from-ε (D.T-Abs arrδ εδ) with from-ε εδ
   ... | ⟨ not-t-sub , εδ' ⟩ = ⟨ _ , A.T-Abs (from-τ arrδ) εδ' ⟩
-  ... | ⟨ t-sub , A.T-Sub εδ' τδ <:δ ⟩ = ⟨ _ , A.T-Sub (A.T-Abs {! !} εδ') (from-τ arrδ) {! !} ⟩
+  ... | ⟨ t-sub , A.T-Sub εδ' τδ <:δ ⟩
+        = let Γ,τ₁⊢τ' = A.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ'
+              Γ,τ₁-ok = A.Γ⊢ε⦂τ-⇒-Γok εδ'
+              Γ⊢τ₁⇒τ' = A.TWF-Arr (case Γ,τ₁-ok of λ where (A.TCTX-Bind _ τ₁δ) → τ₁δ) Γ,τ₁⊢τ'
+           in ⟨ _ , A.T-Sub (A.T-Abs Γ⊢τ₁⇒τ' εδ') (from-τ arrδ) {! !} ⟩
   from-ε εδ@(D.T-App ε₁δ ε₂δ) with from-ε ε₁δ
   ... | ⟨ t-sub , A.T-Sub ε₁δ' τδ <:δ@(A.ST-Arr _ _ _ _) ⟩ = ⟨ _ , A.T-Sub (A.T-App ε₁δ' {! !} refl {! !}) {! !} {! !} ⟩
   ... | ⟨ not-t-sub , ε₁δ' ⟩ = ⟨ _ , A.T-App ε₁δ' (to-sub (from-ε ε₂δ)) refl {! D.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ !} ⟩
