@@ -21,9 +21,6 @@ open import Surface.Derivations.Common public
 open import Core.Syntax using (CExpr)
 open import Core.Syntax.Renaming as CR using (act-ε)
 
-variable
-  θ : Oracle
-
 data _ok[_,_]     : (Γ : Ctx ℓ) → Oracle → TSFlavour → Set
 data _⊢[_,_]_⦂_   (Γ : Ctx ℓ) (θ : Oracle) (φ : TSFlavour) : (ε : STerm ℓ) → (τ : SType ℓ) → Set
 data _⊢[_,_]_<:_  (Γ : Ctx ℓ) (θ : Oracle) (φ : TSFlavour) : (τ τ' : SType ℓ) → Set

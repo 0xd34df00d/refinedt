@@ -23,7 +23,6 @@ data RuleKind : Set where
 
 variable
   κ κ' κ₁ κ₂ : RuleKind
-  θ : Oracle
 
 data _ok[_,_]        : (Γ : Ctx ℓ) → Oracle → TSFlavour → Set
 data _⊢[_,_of_]_⦂_   (Γ : Ctx ℓ) (θ : Oracle) (φ : TSFlavour) : (κ : RuleKind) → (ε : STerm ℓ) → (τ : SType ℓ) → Set

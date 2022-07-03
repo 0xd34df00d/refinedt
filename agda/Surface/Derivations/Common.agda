@@ -2,12 +2,15 @@
 
 module Surface.Derivations.Common where
 
+open import Surface.Oracle
+
 -- Minimal and enriched type system flavours
 data TSFlavour : Set where
   M E : TSFlavour
 
 variable
   φ : TSFlavour
+  θ : Oracle
 
 data Enrich (A : Set) : TSFlavour → Set where
   omitted   : Enrich A M
