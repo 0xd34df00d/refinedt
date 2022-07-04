@@ -21,8 +21,8 @@ open import Surface.Derivations.Algorithmic.Theorems.Thinning
 as-sub' : Γ ⊢[ θ , E ] τ' <: τ
         → ∃[ κ ] (Γ ⊢[ θ , E of κ ] ε ⦂ τ')
         → Γ ⊢[ θ , E of t-sub ] ε ⦂ τ
-as-sub' <:δ ⟨ t-sub , T-Sub εδ τδ <:'δ ⟩ = T-Sub εδ {! Γ⊢τ'<:τ-⇒-Γ⊢τ <:δ !} (<:-transitive <:'δ <:δ)
-as-sub' <:δ ⟨ not-t-sub , εδ ⟩ = T-Sub εδ {! Γ⊢τ'<:τ-⇒-Γ⊢τ <:δ !} <:δ
+as-sub' <:δ ⟨ t-sub , T-Sub εδ τδ <:'δ ⟩ = T-Sub εδ (Γ⊢τ'<:τ-⇒-Γ⊢τ <:δ) (<:-transitive <:'δ <:δ)
+as-sub' <:δ ⟨ not-t-sub , εδ ⟩ = T-Sub εδ (Γ⊢τ'<:τ-⇒-Γ⊢τ <:δ) <:δ
 
 module M {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ , E ] σ' <: σ) (Γ⊢σ' : Γ ⊢[ θ , E ] σ') where mutual
   <:-narrowing : ∀ Δ
@@ -89,10 +89,10 @@ module M {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ , E ] σ' <: σ) (Γ⊢σ' : Γ 
 open M public
 
 <:-transitive {θ = θ} (ST-Base is-just' ρ₁δ _) (ST-Base is-just _ ρ₃δ) = ST-Base (Oracle.trans θ is-just' is-just) ρ₁δ ρ₃δ
-<:-transitive (ST-Arr <:₁'δ <:₂'δ₁ τ₁⇒τ₂'δ _) (ST-Arr <:₁δ <:₂δ _ τ₁'⇒τ₂δ)
+<:-transitive (ST-Arr <:₁'δ <:₂'δ₁ τ₁⇒τ₂'δ _) (ST-Arr <:₁δ <:₂δ _ τ₁'⇒τ₂δ@(enriched (TWF-Arr τ₁'δ _)))
   = ST-Arr
       (<:-transitive <:₁δ <:₁'δ)
-      (<:-transitive (<:-narrowing <:₁δ {! !} ⊘ <:₂'δ₁) <:₂δ)
+      (<:-transitive (<:-narrowing <:₁δ τ₁'δ ⊘ <:₂'δ₁) <:₂δ)
       τ₁⇒τ₂'δ
       τ₁'⇒τ₂δ
 <:-transitive (ST-ADT ⊍δ) (ST-ADT _) = ST-ADT ⊍δ
