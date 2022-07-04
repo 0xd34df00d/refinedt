@@ -11,6 +11,7 @@ open import Surface.Syntax.Substitution
 
 import Surface.Derivations.Algorithmic as A
 import Surface.Derivations.Algorithmic.Theorems.Agreement as A
+import Surface.Derivations.Algorithmic.Theorems.Subtyping as A
 open import Surface.Derivations.Algorithmic using (κ; t-sub; not-t-sub)
 import Surface.Derivations.Declarative as D
 import Surface.Derivations.Declarative.Theorems.Agreement as D
@@ -19,7 +20,9 @@ open import Surface.Derivations.Common
 to-sub : ∃[ κ ] (Γ A.⊢[ θ , E of κ ] ε ⦂ τ)
        → Γ A.⊢[ θ , E of t-sub ] ε ⦂ τ
 to-sub ⟨ t-sub , εδ ⟩ = εδ
-to-sub ⟨ not-t-sub , εδ ⟩ = A.T-Sub εδ {! !} {! !}
+to-sub ⟨ not-t-sub , εδ ⟩
+  = let Γ⊢τ = A.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ
+     in A.T-Sub εδ Γ⊢τ (A.<:-reflexive Γ⊢τ)
 
 mutual
   from-Γ : Γ D.ok[ θ , E ]
