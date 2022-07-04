@@ -18,13 +18,6 @@ import Surface.Derivations.Declarative as D
 import Surface.Derivations.Declarative.Theorems.Agreement as D
 open import Surface.Derivations.Common
 
-as-sub : ∃[ κ ] (Γ A.⊢[ θ , E of κ ] ε ⦂ τ)
-       → Γ A.⊢[ θ , E of t-sub ] ε ⦂ τ
-as-sub ⟨ t-sub , εδ ⟩ = εδ
-as-sub ⟨ not-t-sub , εδ ⟩
-  = let Γ⊢τ = A.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ
-     in A.T-Sub εδ Γ⊢τ (A.<:-reflexive Γ⊢τ)
-
 as-sub' : Γ A.⊢[ θ , E ] τ' <: τ
         → ∃[ κ ] (Γ A.⊢[ θ , E of κ ] ε ⦂ τ')
         → Γ A.⊢[ θ , E of t-sub ] ε ⦂ τ
@@ -40,7 +33,7 @@ mutual
   from-τ : Γ D.⊢[ θ , E ] τ
          → Γ A.⊢[ θ , E ] τ
   from-τ (D.TWF-TrueRef Γok) = A.TWF-TrueRef (from-Γ Γok)
-  from-τ (D.TWF-Base ε₁δ ε₂δ) = A.TWF-Base (as-sub (from-ε ε₁δ)) (as-sub (from-ε ε₂δ))
+  from-τ (D.TWF-Base ε₁δ ε₂δ) = A.TWF-Base (A.as-sub (from-ε ε₁δ)) (A.as-sub (from-ε ε₂δ))
   from-τ (D.TWF-Conj τ₁δ τ₂δ) = A.TWF-Conj (from-τ τ₁δ) (from-τ τ₂δ)
   from-τ (D.TWF-Arr τ₁δ τ₂δ) = A.TWF-Arr (from-τ τ₁δ) (from-τ τ₂δ)
   from-τ (D.TWF-ADT consδs) = A.TWF-ADT (from-cons consδs)
@@ -68,7 +61,7 @@ mutual
               ⟩
   ... | ⟨ not-t-sub , ε₁δ' ⟩
         = let τ₂-subst-δ = {! D.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ!}
-           in ⟨ _ , A.T-App ε₁δ' (as-sub (from-ε ε₂δ)) refl τ₂-subst-δ ⟩
+           in ⟨ _ , A.T-App ε₁δ' (A.as-sub (from-ε ε₂δ)) refl τ₂-subst-δ ⟩
   from-ε (D.T-Case resδ εδ branches-well-typed) = {! !}
   from-ε (D.T-Con ≡-prf εδ adtτ) = {! !}
   from-ε (D.T-Sub εδ τδ <:δ) with Σεδ@(⟨ _ , εδ' ⟩) ← from-ε εδ = ⟨ _ , as-sub' (from-<: (A.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ') (from-τ τδ) <:δ) Σεδ ⟩
