@@ -35,7 +35,7 @@ mutual
   from-τ (D.TWF-TrueRef Γok) = A.TWF-TrueRef (from-Γ Γok)
   from-τ (D.TWF-Base ε₁δ ε₂δ) = A.TWF-Base (to-sub (from-ε ε₁δ)) (to-sub (from-ε ε₂δ))
   from-τ (D.TWF-Conj τ₁δ τ₂δ) = A.TWF-Conj (from-τ τ₁δ) (from-τ τ₂δ)
-  from-τ (D.TWF-Arr τ₁δ τ₂δ) = {! !}
+  from-τ (D.TWF-Arr τ₁δ τ₂δ) = A.TWF-Arr (from-τ τ₁δ) (from-τ τ₂δ)
   from-τ (D.TWF-ADT consδs) = {! !}
 
   from-ε : Γ D.⊢[ θ , E ] ε ⦂ τ
