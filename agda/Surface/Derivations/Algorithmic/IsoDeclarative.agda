@@ -47,8 +47,7 @@ mutual
   ... | ⟨ t-sub , A.T-Sub εδ' τδ <:δ ⟩
         = let Γ⊢τ₁⇒τ' = A.Γ,τ₁⊢τ₂-⇒-Γ⊢τ₁⇒τ₂ (A.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ')
               Γ⊢τ₁ = case Γ⊢τ₁⇒τ' of λ where (A.TWF-Arr τ₁δ _) → τ₁δ
-              Γ⊢τ₁⇒τ'<:τ₁⇒τ₂ = A.ST-Arr (A.<:-reflexive Γ⊢τ₁) <:δ (enriched Γ⊢τ₁⇒τ') (enriched (from-τ arrδ))
-           in ⟨ _ , A.T-Sub (A.T-Abs Γ⊢τ₁⇒τ' εδ') (from-τ arrδ) Γ⊢τ₁⇒τ'<:τ₁⇒τ₂ ⟩
+           in ⟨ _ , A.T-Sub (A.T-Abs Γ⊢τ₁⇒τ' εδ') (from-τ arrδ) (A.Γ⊢τ'<:τ-⇒-Γ⊢τ₀⇒τ'<:τ₀⇒τ Γ⊢τ₁ <:δ) ⟩
   from-ε εδ@(D.T-App ε₁δ ε₂δ) with from-ε ε₁δ
   ... | ⟨ t-sub , A.T-Sub ε₁δ' τδ <:δ@(A.ST-Arr <:₁δ <:₂δ _ _) ⟩
         = let τ₂-subst-δ = {! !}
