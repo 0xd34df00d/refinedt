@@ -1,6 +1,7 @@
 module Surface.Derivations.Algorithmic.IsoDeclarative where
 
 open import Data.Product renaming (_,_ to ⟨_,_⟩)
+open import Data.Vec.Relation.Unary.All using (All; _∷_; [])
 open import Function using (case_of_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
@@ -36,7 +37,7 @@ mutual
   from-τ (D.TWF-Base ε₁δ ε₂δ) = A.TWF-Base (to-sub (from-ε ε₁δ)) (to-sub (from-ε ε₂δ))
   from-τ (D.TWF-Conj τ₁δ τ₂δ) = A.TWF-Conj (from-τ τ₁δ) (from-τ τ₂δ)
   from-τ (D.TWF-Arr τ₁δ τ₂δ) = A.TWF-Arr (from-τ τ₁δ) (from-τ τ₂δ)
-  from-τ (D.TWF-ADT consδs) = {! !}
+  from-τ (D.TWF-ADT consδs) = A.TWF-ADT (from-cons consδs)
 
   from-ε : Γ D.⊢[ θ , E ] ε ⦂ τ
          → ∃[ κ ] (Γ A.⊢[ θ , E of κ ] ε ⦂ τ)
@@ -55,3 +56,9 @@ mutual
   from-ε (D.T-Case resδ εδ branches-well-typed) = {! !}
   from-ε (D.T-Con ≡-prf εδ adtτ) = {! !}
   from-ε (D.T-Sub εδ τ'δ <:) = {! !}
+
+  from-cons : {adtCons : ADTCons nₐ ℓ}
+            → All (Γ D.⊢[ θ , E ]_) adtCons
+            → All (Γ A.⊢[ θ , E ]_) adtCons
+  from-cons [] = []
+  from-cons (δ ∷ δs) = from-τ δ ∷ from-cons δs
