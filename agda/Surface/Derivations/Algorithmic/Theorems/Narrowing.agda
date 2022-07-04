@@ -33,6 +33,18 @@ module M {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ , φ ] σ' <: σ) (Γ⊢σ' : Γ
   Γ⊢τ-narrowing Δ (TWF-Arr τδ τδ₁) = {! !}
   Γ⊢τ-narrowing Δ (TWF-ADT consδs) = {! !}
 
+  SVar-narrowing : (Δ : CtxSuffix (suc ℓ) k)
+                 → (Γ , σ ++ Δ) ok[ θ , φ ]
+                 → τ ∈ Γ , σ ++ Δ at ι
+                 → ∃[ κ ] (Γ , σ' ++ Δ ⊢[ θ , φ of κ ] SVar ι ⦂ τ)
+  SVar-narrowing ⊘ (TCTX-Bind Γok τδ) (∈-zero refl)
+    = ⟨ _ , T-Sub (T-Var (TCTX-Bind Γok Γ⊢σ') (∈-zero refl)) (Γ⊢τ-weakening Γok Γ⊢σ' τδ) (<:-weakening Γok Γ⊢σ' σ-<:δ) ⟩
+  SVar-narrowing ⊘ (TCTX-Bind Γok τδ) (∈-suc refl ∈) = ⟨ _ , T-Var (TCTX-Bind Γok Γ⊢σ') (∈-suc refl ∈) ⟩
+  SVar-narrowing (Δ , τ) Γ,σ,Δ-ok (∈-zero refl) = ⟨ _ , T-Var (Γok-narrowing (Δ , _) Γ,σ,Δ-ok) (∈-zero refl) ⟩
+  SVar-narrowing (Δ , τ) (TCTX-Bind Γ,σ,Δ-ok Γ,σ,Δ⊢τ) (∈-suc refl ∈)
+    with ⟨ _ , εδ ⟩ ← SVar-narrowing Δ Γ,σ,Δ-ok ∈
+       = ⟨ _ , Γ⊢ε⦂τ-weakening (Γok-narrowing Δ Γ,σ,Δ-ok) (Γ⊢τ-narrowing Δ Γ,σ,Δ⊢τ) εδ ⟩
+
   Γ⊢ε⦂τ-narrowing : (Δ : CtxSuffix (suc ℓ) k)
                   → Γ , σ  ++ Δ ⊢[ θ , φ of κ ] ε ⦂ τ
                   → ∃[ κ' ] (Γ , σ' ++ Δ ⊢[ θ , φ of κ' ] ε ⦂ τ)
