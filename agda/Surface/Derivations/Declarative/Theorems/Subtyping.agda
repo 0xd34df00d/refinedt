@@ -12,22 +12,22 @@ open import Surface.Derivations.Declarative.Theorems.Thinning
 
 -- Referred to as typing-narrowing in the paper
 mutual
-  <:-narrowing : ∀ Δ
+  <:-narrowing : (Δ : CtxSuffix (suc ℓ) k)
                → Γ ⊢[ θ , φ ] σ' <: σ
-               → Enrich (Γ ⊢[ θ , φ ] σ') φ
+               → Γ ⊢[ θ , φ ] σ'
                → Γ , σ  ++ Δ ⊢[ θ , φ ] τ₂ <: τ₂'
                → Γ , σ' ++ Δ ⊢[ θ , φ ] τ₂ <: τ₂'
   <:-narrowing {θ = θ} _ σ-<: [Γ⊢σ'] (ST-Base is-just) = ST-Base (Oracle.narrowing θ {- TODO σ-<: -} is-just)
-  <:-narrowing Δ σ-<: [Γ⊢σ'] (ST-Arr <:₁ <:₂ omitted omitted)
+  <:-narrowing Δ σ-<: Γ⊢σ' (ST-Arr <:₁ <:₂ omitted omitted)
     = ST-Arr
-        (<:-narrowing Δ σ-<: [Γ⊢σ'] <:₁)
-        (<:-narrowing (Δ , _) σ-<: [Γ⊢σ'] <:₂)
+        (<:-narrowing Δ σ-<: Γ⊢σ' <:₁)
+        (<:-narrowing (Δ , _) σ-<: Γ⊢σ' <:₂)
         omitted
         omitted
-  <:-narrowing Δ σ-<: (enriched Γ⊢σ') (ST-Arr <:₁ <:₂ (enriched τ₁⇒τ₂'δ) (enriched τ₁'δ))
+  <:-narrowing Δ σ-<: Γ⊢σ' (ST-Arr <:₁ <:₂ (enriched τ₁⇒τ₂'δ) (enriched τ₁'δ))
     = ST-Arr
-        (<:-narrowing Δ σ-<: (enriched Γ⊢σ') <:₁)
-        (<:-narrowing (Δ , _) σ-<: (enriched Γ⊢σ') <:₂)
+        (<:-narrowing Δ σ-<: Γ⊢σ' <:₁)
+        (<:-narrowing (Δ , _) σ-<: Γ⊢σ' <:₂)
         (enriched (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' τ₁⇒τ₂'δ))
         (enriched (Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' τ₁'δ))
 
@@ -99,5 +99,5 @@ mutual
   Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' (T-Sub εδ τ'δ <:)
     = let εδ-narrowed = Γ⊢ε⦂τ-narrowing Δ σ-<: Γ⊢σ' εδ
           τ'δ-narrowed = Γ⊢τ-narrowing Δ σ-<: Γ⊢σ' τ'δ
-          <:-narrowed = <:-narrowing Δ σ-<: (as-enrichment Γ⊢σ') <:
+          <:-narrowed = <:-narrowing Δ σ-<: Γ⊢σ' <:
        in T-Sub εδ-narrowed τ'δ-narrowed <:-narrowed
