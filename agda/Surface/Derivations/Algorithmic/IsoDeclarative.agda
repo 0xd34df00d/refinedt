@@ -46,7 +46,9 @@ mutual
   ... | ⟨ not-t-sub , εδ' ⟩ = ⟨ _ , A.T-Abs (from-τ arrδ) εδ' ⟩
   ... | ⟨ t-sub , A.T-Sub εδ' τδ <:δ ⟩
         = let Γ⊢τ₁⇒τ' = A.Γ,τ₁⊢τ₂-⇒-Γ⊢τ₁⇒τ₂ (A.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ')
-           in ⟨ _ , A.T-Sub (A.T-Abs Γ⊢τ₁⇒τ' εδ') (from-τ arrδ) {! !} ⟩
+              Γ⊢τ₁ = case Γ⊢τ₁⇒τ' of λ where (A.TWF-Arr τ₁δ _) → τ₁δ
+              Γ⊢τ₁⇒τ'<:τ₁⇒τ₂ = A.ST-Arr (A.<:-reflexive Γ⊢τ₁) <:δ (enriched Γ⊢τ₁⇒τ') (enriched (from-τ arrδ))
+           in ⟨ _ , A.T-Sub (A.T-Abs Γ⊢τ₁⇒τ' εδ') (from-τ arrδ) Γ⊢τ₁⇒τ'<:τ₁⇒τ₂ ⟩
   from-ε εδ@(D.T-App ε₁δ ε₂δ) with from-ε ε₁δ
   ... | ⟨ t-sub , A.T-Sub ε₁δ' τδ <:δ@(A.ST-Arr _ _ _ _) ⟩ = ⟨ _ , A.T-Sub (A.T-App ε₁δ' {! !} refl {! !}) {! !} {! !} ⟩
   ... | ⟨ not-t-sub , ε₁δ' ⟩ = ⟨ _ , A.T-App ε₁δ' (to-sub (from-ε ε₂δ)) refl {! D.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ !} ⟩
