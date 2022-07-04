@@ -61,7 +61,15 @@ module M {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ , φ ] σ' <: σ) (Γ⊢σ' : Γ
               (Γ⊢τ'<:τ-⇒-Γ⊢τ₀⇒τ'<:τ₀⇒τ (Γok-head (Γ⊢τ-⇒-Γok τδ)) <:δ)
           ⟩
   ... | ⟨ not-t-sub , εδ' ⟩ = ⟨ _ , T-Abs (Γ⊢τ-narrowing Δ arrδ) εδ' ⟩
-  Γ⊢ε⦂τ-narrowing Δ (T-App εδ εδ₁ resτ-≡ resτδ) = {! !}
+  Γ⊢ε⦂τ-narrowing Δ (T-App ε₁δ ε₂δ refl resτδ) with Γ⊢ε⦂τ-narrowing Δ ε₁δ
+  ... | ⟨ t-sub , T-Sub ε₁δ' τ₁⇒τ₂δ <:δ@(ST-Arr _ _ _ _) ⟩
+         = ⟨ _
+           , T-Sub
+              (T-App ε₁δ' {! !} refl {! !})
+              (Γ⊢τ-narrowing Δ resτδ)
+              {! !}
+           ⟩
+  ... | ⟨ not-t-sub , ε₁δ' ⟩ = ⟨ _ , T-App ε₁δ' (as-sub (Γ⊢ε⦂τ-narrowing Δ ε₂δ)) refl (Γ⊢τ-narrowing Δ resτδ) ⟩
   Γ⊢ε⦂τ-narrowing Δ (T-Case resδ εδ branches-well-typed) = {! !}
   Γ⊢ε⦂τ-narrowing Δ (T-Con ≡-prf εδ adtτ) = {! !}
   Γ⊢ε⦂τ-narrowing Δ (T-Sub εδ τδ <:δ) = {! !}
