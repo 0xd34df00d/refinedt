@@ -6,11 +6,23 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 open import Surface.Syntax
 open import Surface.Syntax.CtxSuffix
 open import Surface.Syntax.Membership
+open import Surface.Syntax.Substitution
 open import Surface.Derivations.Algorithmic
 open import Surface.Derivations.Algorithmic.Theorems.Agreement
 open import Surface.Derivations.Algorithmic.Theorems.Helpers
 open import Surface.Derivations.Algorithmic.Theorems.Subtyping
 open import Surface.Derivations.Algorithmic.Theorems.Thinning
+
+<:-transitive : ∀ {τ''}
+              → Γ ⊢[ θ , φ ] τ'' <: τ'
+              → Γ ⊢[ θ , φ ] τ'  <: τ
+              → Γ ⊢[ θ , φ ] τ'' <: τ
+
+as-sub' : Γ ⊢[ θ , φ ] τ' <: τ
+        → ∃[ κ ] (Γ ⊢[ θ , φ of κ ] ε ⦂ τ')
+        → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ
+as-sub' <:δ ⟨ t-sub , T-Sub εδ τδ <:'δ ⟩ = T-Sub εδ {! Γ⊢τ'<:τ-⇒-Γ⊢τ <:δ !} (<:-transitive <:'δ <:δ)
+as-sub' <:δ ⟨ not-t-sub , εδ ⟩ = T-Sub εδ {! Γ⊢τ'<:τ-⇒-Γ⊢τ <:δ !} <:δ
 
 module M {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ , φ ] σ' <: σ) (Γ⊢σ' : Γ ⊢[ θ , φ ] σ') where mutual
   <:-narrowing : ∀ Δ
@@ -62,10 +74,10 @@ module M {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ , φ ] σ' <: σ) (Γ⊢σ' : Γ
           ⟩
   ... | ⟨ not-t-sub , εδ' ⟩ = ⟨ _ , T-Abs (Γ⊢τ-narrowing Δ arrδ) εδ' ⟩
   Γ⊢ε⦂τ-narrowing Δ (T-App ε₁δ ε₂δ refl resτδ) with Γ⊢ε⦂τ-narrowing Δ ε₁δ
-  ... | ⟨ t-sub , T-Sub ε₁δ' τ₁⇒τ₂δ <:δ@(ST-Arr _ _ _ _) ⟩
+  ... | ⟨ t-sub , T-Sub ε₁δ' τ₁⇒τ₂δ <:δ@(ST-Arr <:₁δ _ _ _) ⟩
          = ⟨ _
            , T-Sub
-              (T-App ε₁δ' {! !} refl {! !})
+              (T-App ε₁δ' (as-sub' <:₁δ (Γ⊢ε⦂τ-narrowing Δ ε₂δ)) refl {! !})
               (Γ⊢τ-narrowing Δ resτδ)
               {! !}
            ⟩
@@ -75,3 +87,12 @@ module M {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ , φ ] σ' <: σ) (Γ⊢σ' : Γ
   Γ⊢ε⦂τ-narrowing Δ (T-Sub εδ τδ <:δ) = {! !}
 
 open M public
+
+<:-transitive {θ = θ} (ST-Base is-just' ρ₁δ _) (ST-Base is-just _ ρ₃δ) = ST-Base (Oracle.trans θ is-just' is-just) ρ₁δ ρ₃δ
+<:-transitive (ST-Arr <:₁'δ <:₂'δ₁ τ₁⇒τ₂'δ _) (ST-Arr <:₁δ <:₂δ _ τ₁'⇒τ₂δ)
+  = ST-Arr
+      (<:-transitive <:₁δ <:₁'δ)
+      (<:-transitive (<:-narrowing <:₁δ {! !} ⊘ <:₂'δ₁) <:₂δ)
+      τ₁⇒τ₂'δ
+      τ₁'⇒τ₂δ
+<:-transitive (ST-ADT ⊍δ) (ST-ADT _) = ST-ADT ⊍δ

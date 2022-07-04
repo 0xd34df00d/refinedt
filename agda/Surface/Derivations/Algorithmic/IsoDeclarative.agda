@@ -18,12 +18,6 @@ import Surface.Derivations.Declarative as D
 import Surface.Derivations.Declarative.Theorems.Agreement as D
 open import Surface.Derivations.Common
 
-as-sub' : Γ A.⊢[ θ , E ] τ' <: τ
-        → ∃[ κ ] (Γ A.⊢[ θ , E of κ ] ε ⦂ τ')
-        → Γ A.⊢[ θ , E of t-sub ] ε ⦂ τ
-as-sub' <:δ ⟨ t-sub , A.T-Sub εδ τδ <:'δ ⟩ = A.T-Sub εδ (A.Γ⊢τ'<:τ-⇒-Γ⊢τ <:δ) {! !}
-as-sub' <:δ ⟨ not-t-sub , εδ ⟩ = A.T-Sub εδ (A.Γ⊢τ'<:τ-⇒-Γ⊢τ <:δ) <:δ
-
 mutual
   from-Γ : Γ D.ok[ θ , E ]
          → Γ A.ok[ θ , E ]
