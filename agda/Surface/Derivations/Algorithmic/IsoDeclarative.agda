@@ -18,18 +18,18 @@ import Surface.Derivations.Declarative as D
 import Surface.Derivations.Declarative.Theorems.Agreement as D
 open import Surface.Derivations.Common
 
-to-sub : ∃[ κ ] (Γ A.⊢[ θ , E of κ ] ε ⦂ τ)
+as-sub : ∃[ κ ] (Γ A.⊢[ θ , E of κ ] ε ⦂ τ)
        → Γ A.⊢[ θ , E of t-sub ] ε ⦂ τ
-to-sub ⟨ t-sub , εδ ⟩ = εδ
-to-sub ⟨ not-t-sub , εδ ⟩
+as-sub ⟨ t-sub , εδ ⟩ = εδ
+as-sub ⟨ not-t-sub , εδ ⟩
   = let Γ⊢τ = A.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ
      in A.T-Sub εδ Γ⊢τ (A.<:-reflexive Γ⊢τ)
 
-to-sub' : Γ A.⊢[ θ , E ] τ' <: τ
+as-sub' : Γ A.⊢[ θ , E ] τ' <: τ
         → ∃[ κ ] (Γ A.⊢[ θ , E of κ ] ε ⦂ τ')
         → Γ A.⊢[ θ , E of t-sub ] ε ⦂ τ
-to-sub' <:δ ⟨ t-sub , A.T-Sub εδ τδ <:'δ ⟩ = A.T-Sub εδ (A.Γ⊢τ'<:τ-⇒-Γ⊢τ <:δ) {! !}
-to-sub' <:δ ⟨ not-t-sub , εδ ⟩ = A.T-Sub εδ (A.Γ⊢τ'<:τ-⇒-Γ⊢τ <:δ) <:δ
+as-sub' <:δ ⟨ t-sub , A.T-Sub εδ τδ <:'δ ⟩ = A.T-Sub εδ (A.Γ⊢τ'<:τ-⇒-Γ⊢τ <:δ) {! !}
+as-sub' <:δ ⟨ not-t-sub , εδ ⟩ = A.T-Sub εδ (A.Γ⊢τ'<:τ-⇒-Γ⊢τ <:δ) <:δ
 
 mutual
   from-Γ : Γ D.ok[ θ , E ]
@@ -40,7 +40,7 @@ mutual
   from-τ : Γ D.⊢[ θ , E ] τ
          → Γ A.⊢[ θ , E ] τ
   from-τ (D.TWF-TrueRef Γok) = A.TWF-TrueRef (from-Γ Γok)
-  from-τ (D.TWF-Base ε₁δ ε₂δ) = A.TWF-Base (to-sub (from-ε ε₁δ)) (to-sub (from-ε ε₂δ))
+  from-τ (D.TWF-Base ε₁δ ε₂δ) = A.TWF-Base (as-sub (from-ε ε₁δ)) (as-sub (from-ε ε₂δ))
   from-τ (D.TWF-Conj τ₁δ τ₂δ) = A.TWF-Conj (from-τ τ₁δ) (from-τ τ₂δ)
   from-τ (D.TWF-Arr τ₁δ τ₂δ) = A.TWF-Arr (from-τ τ₁δ) (from-τ τ₂δ)
   from-τ (D.TWF-ADT consδs) = A.TWF-ADT (from-cons consδs)
@@ -62,16 +62,16 @@ mutual
               τ₂'-subst-δ = {! !}
            in ⟨ _
               , A.T-Sub
-                  (A.T-App ε₁δ' (to-sub' <:₁δ (from-ε ε₂δ)) refl τ₂'-subst-δ)
+                  (A.T-App ε₁δ' (as-sub' <:₁δ (from-ε ε₂δ)) refl τ₂'-subst-δ)
                   τ₂-subst-δ
                   {! !}
               ⟩
   ... | ⟨ not-t-sub , ε₁δ' ⟩
         = let τ₂-subst-δ = {! D.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ!}
-           in ⟨ _ , A.T-App ε₁δ' (to-sub (from-ε ε₂δ)) refl τ₂-subst-δ ⟩
+           in ⟨ _ , A.T-App ε₁δ' (as-sub (from-ε ε₂δ)) refl τ₂-subst-δ ⟩
   from-ε (D.T-Case resδ εδ branches-well-typed) = {! !}
   from-ε (D.T-Con ≡-prf εδ adtτ) = {! !}
-  from-ε (D.T-Sub εδ τδ <:δ) with Σεδ@(⟨ _ , εδ' ⟩) ← from-ε εδ = ⟨ _ , to-sub' (from-<: (A.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ') (from-τ τδ) <:δ) Σεδ ⟩
+  from-ε (D.T-Sub εδ τδ <:δ) with Σεδ@(⟨ _ , εδ' ⟩) ← from-ε εδ = ⟨ _ , as-sub' (from-<: (A.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ') (from-τ τδ) <:δ) Σεδ ⟩
 
   from-<: : Γ A.⊢[ θ , E ] τ'
           → Γ A.⊢[ θ , E ] τ
