@@ -38,7 +38,7 @@ canonical-⊍ (T-Sub εδ τ'δ ()) _ refl
 SLam-inv : Γ ⊢[ θ , φ ] SLam τ ε ⦂ τ₁ ⇒ τ₂
          → Γ , τ₁ ⊢[ θ , φ ] ε ⦂ τ₂
 SLam-inv (T-Abs _ εδ) = εδ
-SLam-inv (T-Sub εδ (TWF-Arr τ₁-ok τ₂-ok₁) (ST-Arr <:₁ <:₂ _ _)) = T-Sub (Γ⊢ε⦂τ-narrowing ⊘ <:₁ τ₁-ok (SLam-inv εδ)) τ₂-ok₁ <:₂
+SLam-inv (T-Sub εδ (TWF-Arr τ₁-ok τ₂-ok₁) (ST-Arr <:₁ <:₂ _ _)) = T-Sub (Γ⊢ε⦂τ-narrowing <:₁ τ₁-ok ⊘ (SLam-inv εδ)) τ₂-ok₁ <:₂
 
 
 lookup-preserves-Γ⊢τ : {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
