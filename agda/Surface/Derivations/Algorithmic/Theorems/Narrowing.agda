@@ -14,30 +14,30 @@ open import Surface.Derivations.Algorithmic.Theorems.Subtyping
 open import Surface.Derivations.Algorithmic.Theorems.Thinning
 
 <:-transitive : ∀ {τ''}
-              → Γ ⊢[ θ , φ ] τ'' <: τ'
-              → Γ ⊢[ θ , φ ] τ'  <: τ
-              → Γ ⊢[ θ , φ ] τ'' <: τ
+              → Γ ⊢[ θ , E ] τ'' <: τ'
+              → Γ ⊢[ θ , E ] τ'  <: τ
+              → Γ ⊢[ θ , E ] τ'' <: τ
 
-as-sub' : Γ ⊢[ θ , φ ] τ' <: τ
-        → ∃[ κ ] (Γ ⊢[ θ , φ of κ ] ε ⦂ τ')
-        → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ
+as-sub' : Γ ⊢[ θ , E ] τ' <: τ
+        → ∃[ κ ] (Γ ⊢[ θ , E of κ ] ε ⦂ τ')
+        → Γ ⊢[ θ , E of t-sub ] ε ⦂ τ
 as-sub' <:δ ⟨ t-sub , T-Sub εδ τδ <:'δ ⟩ = T-Sub εδ {! Γ⊢τ'<:τ-⇒-Γ⊢τ <:δ !} (<:-transitive <:'δ <:δ)
 as-sub' <:δ ⟨ not-t-sub , εδ ⟩ = T-Sub εδ {! Γ⊢τ'<:τ-⇒-Γ⊢τ <:δ !} <:δ
 
-module M {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ , φ ] σ' <: σ) (Γ⊢σ' : Γ ⊢[ θ , φ ] σ') where mutual
+module M {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ , E ] σ' <: σ) (Γ⊢σ' : Γ ⊢[ θ , E ] σ') where mutual
   <:-narrowing : ∀ Δ
-               → Γ , σ  ++ Δ ⊢[ θ , φ ] τ₂ <: τ₂'
-               → Γ , σ' ++ Δ ⊢[ θ , φ ] τ₂ <: τ₂'
+               → Γ , σ  ++ Δ ⊢[ θ , E ] τ₂ <: τ₂'
+               → Γ , σ' ++ Δ ⊢[ θ , E ] τ₂ <: τ₂'
   <:-narrowing Δ <:δ = {! !}
 
   Γok-narrowing : (Δ : CtxSuffix (suc ℓ) k)
-                → (Γ , σ  ++ Δ) ok[ θ , φ ]
-                → (Γ , σ' ++ Δ) ok[ θ , φ ]
+                → (Γ , σ  ++ Δ) ok[ θ , E ]
+                → (Γ , σ' ++ Δ) ok[ θ , E ]
   Γok-narrowing Δ Γδ = {! Γδ !}
 
   Γ⊢τ-narrowing : (Δ : CtxSuffix (suc ℓ) k)
-                → Γ , σ  ++ Δ ⊢[ θ , φ ] τ
-                → Γ , σ' ++ Δ ⊢[ θ , φ ] τ
+                → Γ , σ  ++ Δ ⊢[ θ , E ] τ
+                → Γ , σ' ++ Δ ⊢[ θ , E ] τ
   Γ⊢τ-narrowing Δ (TWF-TrueRef Γok) = TWF-TrueRef (Γok-narrowing Δ Γok)
   Γ⊢τ-narrowing Δ (TWF-Base ε₁δ ε₂δ)
     = let ε₁δ' = as-sub (Γ⊢ε⦂τ-narrowing (Δ , _) ε₁δ)
@@ -48,9 +48,9 @@ module M {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ , φ ] σ' <: σ) (Γ⊢σ' : Γ
   Γ⊢τ-narrowing Δ (TWF-ADT consδs) = {! !}
 
   SVar-narrowing : (Δ : CtxSuffix (suc ℓ) k)
-                 → (Γ , σ ++ Δ) ok[ θ , φ ]
+                 → (Γ , σ ++ Δ) ok[ θ , E ]
                  → τ ∈ Γ , σ ++ Δ at ι
-                 → ∃[ κ ] (Γ , σ' ++ Δ ⊢[ θ , φ of κ ] SVar ι ⦂ τ)
+                 → ∃[ κ ] (Γ , σ' ++ Δ ⊢[ θ , E of κ ] SVar ι ⦂ τ)
   SVar-narrowing ⊘ (TCTX-Bind Γok τδ) (∈-zero refl)
     = ⟨ _ , T-Sub (T-Var (TCTX-Bind Γok Γ⊢σ') (∈-zero refl)) (Γ⊢τ-weakening Γok Γ⊢σ' τδ) (<:-weakening Γok Γ⊢σ' σ-<:δ) ⟩
   SVar-narrowing ⊘ (TCTX-Bind Γok τδ) (∈-suc refl ∈) = ⟨ _ , T-Var (TCTX-Bind Γok Γ⊢σ') (∈-suc refl ∈) ⟩
@@ -60,8 +60,8 @@ module M {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ , φ ] σ' <: σ) (Γ⊢σ' : Γ
        = ⟨ _ , Γ⊢ε⦂τ-weakening (Γok-narrowing Δ Γ,σ,Δ-ok) (Γ⊢τ-narrowing Δ Γ,σ,Δ⊢τ) εδ ⟩
 
   Γ⊢ε⦂τ-narrowing : (Δ : CtxSuffix (suc ℓ) k)
-                  → Γ , σ  ++ Δ ⊢[ θ , φ of κ ] ε ⦂ τ
-                  → ∃[ κ' ] (Γ , σ' ++ Δ ⊢[ θ , φ of κ' ] ε ⦂ τ)
+                  → Γ , σ  ++ Δ ⊢[ θ , E of κ ] ε ⦂ τ
+                  → ∃[ κ' ] (Γ , σ' ++ Δ ⊢[ θ , E of κ' ] ε ⦂ τ)
   Γ⊢ε⦂τ-narrowing Δ (T-Unit Γok) = ⟨ _ , T-Unit (Γok-narrowing Δ Γok) ⟩
   Γ⊢ε⦂τ-narrowing Δ (T-Var Γok ∈) = SVar-narrowing Δ Γok ∈
   Γ⊢ε⦂τ-narrowing Δ (T-Abs arrδ εδ) with Γ⊢ε⦂τ-narrowing (Δ , _) εδ
