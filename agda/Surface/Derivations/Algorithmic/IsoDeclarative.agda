@@ -71,7 +71,19 @@ mutual
            in ⟨ _ , A.T-App ε₁δ' (to-sub (from-ε ε₂δ)) refl τ₂-subst-δ ⟩
   from-ε (D.T-Case resδ εδ branches-well-typed) = {! !}
   from-ε (D.T-Con ≡-prf εδ adtτ) = {! !}
-  from-ε (D.T-Sub εδ τ'δ <:) = {! !}
+  from-ε (D.T-Sub εδ τδ <:δ) with Σεδ@(⟨ _ , εδ' ⟩) ← from-ε εδ = ⟨ _ , to-sub' (from-<: (A.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ') (from-τ τδ) <:δ) Σεδ ⟩
+
+  from-<: : Γ A.⊢[ θ , E ] τ'
+          → Γ A.⊢[ θ , E ] τ
+          → Γ D.⊢[ θ , E ] τ' <: τ
+          → Γ A.⊢[ θ , E ] τ' <: τ
+  from-<: τ'δ τδ (D.ST-Base is-just) = A.ST-Base is-just (enriched τ'δ) (enriched τδ)
+  from-<: τ'δ@(A.TWF-Arr τ₁δ τ₂'δ) τδ@(A.TWF-Arr τ₁'δ τ₂δ) (D.ST-Arr <:₁δ <:₂δ x y)
+    = A.ST-Arr
+        (from-<: τ₁'δ τ₁δ <:₁δ)
+        (from-<: {! !} τ₂δ <:₂δ)
+        (enriched τ'δ)
+        (enriched τδ)
 
   from-cons : {adtCons : ADTCons nₐ ℓ}
             → All (Γ D.⊢[ θ , E ]_) adtCons
