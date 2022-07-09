@@ -96,7 +96,7 @@ mutual
                   → Acc _<_ (size-t δ)
                   → Γ' ⊢[ θ , φ of κ ] R.act-ε (ext-k' k suc) ε ⦂ R.act-τ (ext-k' k suc) τ
   Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Unit _) _ = T-Unit Γ'ok
-  Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Var Γok ∈) _ = T-Var Γ'ok (∈-thinning Γ⊂Γ' ∈)
+  Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Var _ ∈) _ = T-Var Γ'ok (∈-thinning Γ⊂Γ' ∈)
   Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Abs arrδ δ) (acc rec)
     = let acc₁ = rec _ (s≤s (₁≤₂ _ _))
           acc₃ = rec _ (s≤s (₂≤₂ _ _))
