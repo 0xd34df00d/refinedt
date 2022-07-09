@@ -24,6 +24,21 @@ open import Surface.Derivations.Algorithmic.Theorems.Agreement.Γok.WF
 open import Surface.Derivations.Algorithmic.Theorems.Thinning
 open import Surface.Derivations.Algorithmic.Theorems.Uniqueness
 
+lemma₀ : (τ₁δ : Γ ⊢[ θ , φ ] τ₁)
+       → (τ₂δ : Γ , τ₁ ⊢[ θ , φ ] τ₂)
+       → (τ₁⇒τ₂δ : Γ ⊢[ θ , φ ] τ₁ ⇒ τ₂)
+       → suc (size-twf τ₁δ ⊔ size-twf τ₂δ) ≡ size-twf τ₁⇒τ₂δ
+lemma₀ τ₁δ τ₂δ (TWF-Arr τ₁δ' τ₂δ')
+  rewrite unique-Γ⊢τ τ₁δ' τ₁δ
+        | unique-Γ⊢τ τ₂δ' τ₂δ
+        = refl
+
+lemma₁ : {[τ₁δ'] [τ₁δ] [εδ'] [εδ] [Γok'] [Γok] : ℕ}
+       → [τ₁δ'] + [Γok] ≡ [τ₁δ] + [Γok']
+       → [εδ'] + suc [τ₁δ] ≡ [εδ] + suc [τ₁δ']
+       → [εδ'] + [Γok] ≡ [εδ] + [Γok']
+lemma₁ ≡₁ ≡₂ = {! !}
+
 mutual
   Γ⊢ε⦂τ-thinning↓-size : (Γ⊂Γ' : k by Γ ⊂' Γ')
                        → (Γ'ok : Γ' ok[ θ , φ ])
@@ -32,7 +47,32 @@ mutual
                        → size-t (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok εδ acc) + size-ok (Γ⊢ε⦂τ-⇒-Γok εδ) ≡ size-t εδ + size-ok Γ'ok
   Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Unit Γok) _ = cong (2 +_) (+-comm (size-ok Γ'ok) (size-ok Γok))
   Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Var Γok _) _ = cong suc (+-comm (size-ok Γ'ok) (size-ok Γok))
-  Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Abs τ₁⇒τ₂δ εδ) (acc rec) = {! !}
+  Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Abs τ₁⇒τ₂δ εδ) (acc rec)
+    with τ₁⇒τ₂δ↓ ← Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok τ₁⇒τ₂δ (rec _ (s≤s (₁≤₂ _ _)))
+    with τ₁⇒τ₂δ'@(TWF-Arr τ₁δ' τ₂δ') ← Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁⇒τ₂δ (rec _ (s≤s (₁≤₂ _ _)))
+    with εδ↓ ← Γ⊢ε⦂τ-thinning↓-size (append-both Γ⊂Γ') (TCTX-Bind Γ'ok τ₁δ') εδ (rec _ (s≤s (₂≤₂ _ _)))
+    with εδ' ← Γ⊢ε⦂τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok τ₁δ') εδ (rec _ (s≤s (₂≤₂ _ _)))
+    with TCTX-Bind Γok τ₁δ ← Γ⊢ε⦂τ-⇒-Γok εδ
+    with TWF-Arr τ₁δ₀ τ₂δ₀ ← τ₁⇒τ₂δ
+    with acc-τ₁ ← rec _ (s≤s (≤-trans (≤-trans (₁≤₂ _ (size-twf τ₂δ₀)) (n≤1+n _)) (₁≤₂ _ (size-t εδ))))
+    with τ₁δ↓ ← Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok τ₁δ₀ acc-τ₁
+    rewrite ∥Γ,τ-ok∥≡∥τδ∥ (TCTX-Bind Γ'ok τ₁δ') τ₁δ'
+          | ∥Γ,τ-ok∥≡∥τδ∥ (TCTX-Bind Γok τ₁δ) τ₁δ
+          | unique-Γok (Γ⊢τ-⇒-Γok τ₁δ₀) Γok
+          | unique-Γ⊢τ (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁δ₀ acc-τ₁) τ₁δ'
+          | unique-Γ⊢τ τ₁δ₀ τ₁δ
+          | lemma₀ τ₁δ τ₂δ₀ τ₁⇒τ₂δ
+          | cong (_+ size-ok Γ'ok) (lemma₀ τ₁δ τ₂δ₀ τ₁⇒τ₂δ)
+          = cong suc $
+              begin
+                size-twf τ₁⇒τ₂δ' ⊔ size-t εδ' + size-ok Γok
+              ≡⟨ +-distribʳ-⊔ _ _ (size-t εδ') ⟩
+                (size-twf τ₁⇒τ₂δ' + size-ok Γok) ⊔ (size-t εδ' + size-ok Γok)
+              ≡⟨ cong₂ (_⊔_) τ₁⇒τ₂δ↓ (lemma₁ τ₁δ↓ εδ↓) ⟩
+                (size-twf τ₁⇒τ₂δ + size-ok Γ'ok) ⊔ (size-t εδ + size-ok Γ'ok)
+              ≡⟨ sym (+-distribʳ-⊔ _ _ (size-t εδ)) ⟩
+                size-twf τ₁⇒τ₂δ ⊔ size-t εδ + size-ok Γ'ok
+              ∎
   Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-App εδ εδ₁ resτ-≡ resτδ) (acc rec) = {! !}
   Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Case resδ εδ branches-well-typed) (acc rec) = {! !}
   Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Con ≡-prf εδ adtτ) (acc rec) = {! !}
