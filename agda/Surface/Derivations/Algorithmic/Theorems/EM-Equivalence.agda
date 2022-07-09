@@ -54,3 +54,53 @@ mutual
                 → BranchesHaveType θ M Γ cons bs τ
   to-M-branches NoBranches = NoBranches
   to-M-branches (OneMoreBranch εδ branchesδ) = OneMoreBranch (to-M-ε εδ) (to-M-branches branchesδ)
+
+mutual
+  to-E-Γok : Γ ok[ θ , M ]
+           → Γ ok[ θ , E ]
+  to-E-Γok TCTX-Empty = TCTX-Empty
+  to-E-Γok (TCTX-Bind Γok τδ) = TCTX-Bind (to-E-Γok Γok) (to-E-τ τδ)
+
+  to-E-τ : Γ ⊢[ θ , M ] τ
+         → Γ ⊢[ θ , E ] τ
+  to-E-τ (TWF-TrueRef Γok) = TWF-TrueRef (to-E-Γok Γok)
+  to-E-τ (TWF-Base ε₁δ ε₂δ) = TWF-Base (to-E-ε ε₁δ) (to-E-ε ε₂δ)
+  to-E-τ (TWF-Conj τ₁δ τ₂δ) = TWF-Conj (to-E-τ τ₁δ) (to-E-τ τ₂δ)
+  to-E-τ (TWF-Arr τ₁δ τ₂δ) = TWF-Arr (to-E-τ τ₁δ) (to-E-τ τ₂δ)
+  to-E-τ (TWF-ADT consδs) = TWF-ADT (to-E-cons consδs)
+
+  to-E-ε : Γ ⊢[ θ , M of κ ] ε ⦂ τ
+         → Γ ⊢[ θ , E of κ ] ε ⦂ τ
+  to-E-ε (T-Unit Γok) = T-Unit (to-E-Γok Γok)
+  to-E-ε (T-Var Γok ∈) = T-Var (to-E-Γok Γok) ∈
+  to-E-ε (T-Abs arrδ εδ) = T-Abs (to-E-τ arrδ) (to-E-ε εδ)
+  to-E-ε (T-App ε₁δ ε₂δ resτ-≡ resτδ) = T-App (to-E-ε ε₁δ) (to-E-ε ε₂δ) resτ-≡ (to-E-τ resτδ)
+  to-E-ε (T-Case resδ εδ branchesδ) = T-Case (to-E-τ resδ) (to-E-ε εδ) (to-E-branches branchesδ)
+  to-E-ε (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (to-E-ε εδ) (to-E-τ adtτ)
+  to-E-ε (T-Sub εδ τδ <:δ) = T-Sub (to-E-ε εδ) (to-E-τ τδ) (to-E-<: (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ) τδ <:δ)
+
+  to-E-<: : Γ ⊢[ θ , M ] τ'
+          → Γ ⊢[ θ , M ] τ
+          → Γ ⊢[ θ , M ] τ' <: τ
+          → Γ ⊢[ θ , E ] τ' <: τ
+  to-E-<: τ'δ τδ (ST-Base is-just _ _) = ST-Base is-just (enriched (to-E-τ τ'δ)) (enriched (to-E-τ τδ))
+  to-E-<: τ'δ@(TWF-Arr τ₁δ τ₂'δ) τδ@(TWF-Arr τ₁'δ τ₂δ) (ST-Arr <:₁δ <:₂δ _ _)
+    = ST-Arr
+        (to-E-<: τ₁'δ τ₁δ <:₁δ)
+        (to-E-<: {! !} τ₂δ <:₂δ)
+        (enriched (to-E-τ τ'δ))
+        (enriched (to-E-τ τδ))
+  to-E-<: _   τδ (ST-ADT ⊍δ) = ST-ADT (enriched (to-E-τ τδ))
+
+  to-E-cons : {cons : ADTCons nₐ ℓ}
+            → All (Γ ⊢[ θ , M ]_) cons
+            → All (Γ ⊢[ θ , E ]_) cons
+  to-E-cons [] = []
+  to-E-cons (τδ ∷ δs) = to-E-τ τδ ∷ to-E-cons δs
+
+  to-E-branches : {cons : ADTCons nₐ ℓ}
+                → {bs : CaseBranches nₐ ℓ}
+                → BranchesHaveType θ M Γ cons bs τ
+                → BranchesHaveType θ E Γ cons bs τ
+  to-E-branches NoBranches = NoBranches
+  to-E-branches (OneMoreBranch εδ branchesδ) = OneMoreBranch (to-E-ε εδ) (to-E-branches branchesδ)
