@@ -97,13 +97,14 @@ mutual
                   → Γ' ⊢[ θ , φ of κ ] R.act-ε (ext-k' k suc) ε ⦂ R.act-τ (ext-k' k suc) τ
   Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Unit _) _ = T-Unit Γ'ok
   Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Var Γok ∈) _ = T-Var Γ'ok (∈-thinning Γ⊂Γ' ∈)
-  Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Abs arrδ@(TWF-Arr domδ codδ) δ) (acc rec)
-    = let acc₁ = rec _ (s≤s (₁≤₂ _ (size-t δ)))
-          acc₂ = rec _ (s≤s (≤-trans (≤-trans (₁≤₂ _ (size-twf codδ)) (n≤1+n _)) (₁≤₂ _ (size-t δ))))
+  Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Abs arrδ δ) (acc rec)
+    = let acc₁ = rec _ (s≤s (₁≤₂ _ _))
           acc₃ = rec _ (s≤s (₂≤₂ _ _))
+          arrδ' = Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok arrδ acc₁
+          τ₁δ' = case arrδ' of λ where (TWF-Arr τ₁δ' _) → τ₁δ'
        in T-Abs
-            (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok arrδ acc₁)
-            (Γ⊢ε⦂τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok domδ acc₂)) δ acc₃)
+            arrδ'
+            (Γ⊢ε⦂τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok τ₁δ') δ acc₃)
   Γ⊢ε⦂τ-thinning↓ {k = k} Γ⊂Γ' Γ'ok (T-App {τ₂ = τ₂} {ε₂ = ε₂} δ₁ δ₂ refl resτδ) (acc rec)
     rewrite ρ-subst-distr-τ-0 (ext-k' k suc) ε₂ τ₂
           = let acc₁ = rec _ (s≤s (₁≤₂ _ _))
