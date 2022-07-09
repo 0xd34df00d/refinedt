@@ -5,11 +5,13 @@ module Surface.Derivations.Algorithmic.Theorems.Agreement.Γok where
 open import Relation.Binary.PropositionalEquality using (refl)
 open import Data.Nat.Base
 open import Data.Nat.Properties
+open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Surface.Syntax
 open import Surface.Derivations.Algorithmic
-open import Surface.Derivations.Algorithmic.Theorems.Helpers
 open import Surface.Derivations.Algorithmic.Theorems.Agreement.Γok.WF
+open import Surface.Derivations.Algorithmic.Theorems.Helpers
+open import Surface.Derivations.Algorithmic.Theorems.Uniqueness
 
 Γok-tail-smaller : (δ : (Γ , τ) ok[ θ , φ ]) → size-ok (Γok-tail δ) < size-ok δ
 Γok-tail-smaller (TCTX-Bind prevOk τδ) = s≤s (₁≤₂ (size-ok prevOk) (size-twf τδ))
@@ -65,3 +67,13 @@ abstract
     Γ⊢τ-⇒-Γok-smaller (TWF-ADT (px ∷ pxs)) = <-trans
                                                (a<b-⇒-a<b⊕c (Γ⊢τ-⇒-Γok-smaller px))
                                                (n<1+n (suc (size-twf px ⊔ size-all-cons pxs)))
+
+∥Γ,τ-ok∥≡∥τδ∥ : (Γ,τ-ok : (Γ , τ) ok[ θ , φ ])
+              → (τδ : Γ ⊢[ θ , φ ] τ)
+              → size-ok Γ,τ-ok ≡ suc (size-twf τδ)
+∥Γ,τ-ok∥≡∥τδ∥ (TCTX-Bind Γok τδ) τδ'
+  with ∥Γok∥<∥τδ∥ ← Γ⊢τ-⇒-Γok-smaller τδ
+  rewrite unique-Γ⊢τ τδ' τδ
+        | unique-Γok (Γ⊢τ-⇒-Γok τδ) Γok
+        | m≤n⇒m⊔n≡n (<⇒≤ ∥Γok∥<∥τδ∥)
+        = refl
