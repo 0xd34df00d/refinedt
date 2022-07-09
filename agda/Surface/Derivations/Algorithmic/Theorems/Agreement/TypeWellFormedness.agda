@@ -2,7 +2,6 @@
 
 module Surface.Derivations.Algorithmic.Theorems.Agreement.TypeWellFormedness where
 
-open import Data.Fin.Base
 open import Data.Nat.Base
 open import Data.Nat.Properties
 open import Relation.Binary.PropositionalEquality using (refl)
