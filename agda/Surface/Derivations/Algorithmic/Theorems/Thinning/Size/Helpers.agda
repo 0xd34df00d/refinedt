@@ -65,3 +65,13 @@ cong₃ : {A B C D : Set}
       → c₁ ≡ c₂
       → f a₁ b₁ c₁ ≡ f a₂ b₂ c₂
 cong₃ _ refl refl refl = refl
+
+⊔-+-pairwise-≡ : (c c' : ℕ)
+               → a' + c ≡ a + c'
+               → b' + c ≡ b + c'
+               → a' ⊔ b' + c ≡ a ⊔ b + c'
+⊔-+-pairwise-≡ {a'} {a} {b'} {b} c c' ≡₁ ≡₂ = begin
+  a' ⊔ b' + c           ≡⟨ +-distribʳ-⊔ c a' _ ⟩
+  (a' + c) ⊔ (b' + c)   ≡⟨ cong₂ (_⊔_) ≡₁ ≡₂ ⟩
+  (a + c') ⊔ (b + c')   ≡⟨ sym (+-distribʳ-⊔ c' a _) ⟩
+  a ⊔ b + c'            ∎
