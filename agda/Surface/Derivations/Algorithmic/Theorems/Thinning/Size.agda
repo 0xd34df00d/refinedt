@@ -23,6 +23,7 @@ open import Surface.Derivations.Algorithmic.Theorems.Helpers
 open import Surface.Derivations.Algorithmic.Theorems.Agreement.Γok
 open import Surface.Derivations.Algorithmic.Theorems.Agreement.Γok.WF
 open import Surface.Derivations.Algorithmic.Theorems.Thinning
+open import Surface.Derivations.Algorithmic.Theorems.Thinning.Size.Helpers
 open import Surface.Derivations.Algorithmic.Theorems.Uniqueness
 
 lemma₀ : (τ₁δ : Γ ⊢[ θ , φ ] τ₁)
@@ -33,30 +34,6 @@ lemma₀ τ₁δ τ₂δ (TWF-Arr τ₁δ' τ₂δ')
   rewrite unique-Γ⊢τ τ₁δ' τ₁δ
         | unique-Γ⊢τ τ₂δ' τ₂δ
         = refl
-
-lemma₁ : {[τ₁δ'] [τ₁δ] [εδ'] [εδ] [Γok'] [Γok] : ℕ}
-       → [τ₁δ'] + [Γok] ≡ [τ₁δ] + [Γok']
-       → [εδ'] + suc [τ₁δ] ≡ [εδ] + suc [τ₁δ']
-       → [εδ'] + [Γok] ≡ [εδ] + [Γok']
-lemma₁ {[τ₁δ']} {[τ₁δ]} {[εδ']} {[εδ]} {[Γok']} {[Γok]} ≡₁ ≡₂
-  = +-cancelʳ-≡ _ _ $
-          begin
-            ([εδ'] + [Γok]) + (suc [τ₁δ] + [τ₁δ'])
-          ≡⟨ lhs-prf [εδ'] _ _ _ ⟩
-            ([εδ'] + suc [τ₁δ]) + ([τ₁δ'] + [Γok])
-          ≡⟨ cong₂ _+_ ≡₂ ≡₁ ⟩
-            ([εδ] + suc [τ₁δ']) + ([τ₁δ] + [Γok'])
-          ≡⟨ rhs-prf [εδ]  _ _ _ ⟩
-            ([εδ] + [Γok']) + (suc [τ₁δ] + [τ₁δ'])
-          ∎
-  where
-  lhs-prf : (a' b c' d : ℕ)
-          → (a' + d) + (b + c') ≡ (a' + b) + (c' + d)
-  lhs-prf = solve-∀
-
-  rhs-prf : (a b' c d' : ℕ)
-          → (a + suc b') + (c + d') ≡ (a + d') + (suc c + b')
-  rhs-prf = solve-∀
 
 mutual
   Γ⊢ε⦂τ-thinning↓-size : (Γ⊂Γ' : k by Γ ⊂' Γ')
