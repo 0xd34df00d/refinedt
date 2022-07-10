@@ -27,6 +27,33 @@ open import Surface.Derivations.Algorithmic.Theorems.Thinning.Size.Helpers
 open import Surface.Derivations.Algorithmic.Theorems.Uniqueness
 
 mutual
+  Γ⊢τ-thinning↓-size : (Γ⊂Γ' : k by Γ ⊂' Γ')
+                     → (Γ'ok : Γ' ok[ θ , φ ])
+                     → (τδ : Γ ⊢[ θ , φ ] τ)
+                     → (acc : Acc _<_ (size-twf τδ))
+                     → size-twf (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τδ acc) + size-ok (Γ⊢τ-⇒-Γok τδ) ≡ size-twf τδ + size-ok Γ'ok
+  Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok (TWF-TrueRef Γok) (acc rec) = cong suc (+-comm (size-ok Γ'ok) (size-ok Γok))
+  Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok (TWF-Base ε₁δ ε₂δ) (acc rec) = {! !}
+  Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok (TWF-Conj τ₁δ τ₂δ) (acc rec)
+    with Γok ← Γ⊢τ-⇒-Γok τ₁δ
+       | τ₁δ' ← Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁δ (rec _ (s≤s (₁≤₂ _ _)))
+       | τ₂δ' ← Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₂δ (rec _ (s≤s (₂≤₂ _ _)))
+       | τ₁δ↓ ← Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok τ₁δ (rec _ (s≤s (₁≤₂ _ _)))
+       | τ₂δ↓ ← Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok τ₂δ (rec _ (s≤s (₂≤₂ _ _)))
+    rewrite unique-Γok (Γ⊢τ-⇒-Γok τ₂δ) Γok
+          = cong suc $
+              begin
+                size-twf τ₁δ' ⊔ size-twf τ₂δ' + size-ok Γok
+              ≡⟨ +-distribʳ-⊔ (size-ok Γok) (size-twf τ₁δ') _ ⟩
+                (size-twf τ₁δ' + size-ok Γok) ⊔ (size-twf τ₂δ' + size-ok Γok)
+              ≡⟨ cong₂ _⊔_ τ₁δ↓ τ₂δ↓ ⟩
+                (size-twf τ₁δ + size-ok Γ'ok) ⊔ (size-twf τ₂δ + size-ok Γ'ok)
+              ≡⟨ sym (+-distribʳ-⊔ (size-ok Γ'ok) (size-twf τ₁δ) _) ⟩
+                size-twf τ₁δ ⊔ size-twf τ₂δ + size-ok Γ'ok
+              ∎
+  Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok (TWF-Arr τ₁δ τ₂δ) (acc rec) = {! !}
+  Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok (TWF-ADT consδs) (acc rec) = {! !}
+
   Γ⊢ε⦂τ-thinning↓-size : (Γ⊂Γ' : k by Γ ⊂' Γ')
                        → (Γ'ok : Γ' ok[ θ , φ ])
                        → (εδ : Γ ⊢[ θ , φ of κ ] ε ⦂ τ)
@@ -84,10 +111,3 @@ mutual
   Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Case resδ εδ branches-well-typed) (acc rec) = {! !}
   Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Con ≡-prf εδ adtτ) (acc rec) = {! !}
   Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Sub εδ τδ <:δ) (acc rec) = {! !}
-
-  Γ⊢τ-thinning↓-size : (Γ⊂Γ' : k by Γ ⊂' Γ')
-                     → (Γ'ok : Γ' ok[ θ , φ ])
-                     → (τδ : Γ ⊢[ θ , φ ] τ)
-                     → (acc : Acc _<_ (size-twf τδ))
-                     → size-twf (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τδ acc) + size-ok (Γ⊢τ-⇒-Γok τδ) ≡ size-twf τδ + size-ok Γ'ok
-  Γ⊢τ-thinning↓-size = {! !}
