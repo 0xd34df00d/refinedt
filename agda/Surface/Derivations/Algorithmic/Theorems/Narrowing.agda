@@ -35,10 +35,10 @@ open import Surface.Derivations.Algorithmic.Theorems.Thinning
               → Γ ⊢[ θ , M ] τ'  <: τ
               → Γ ⊢[ θ , M ] τ'' <: τ
 <:-transitive {θ = θ} (ST-Base is-just' _ _) (ST-Base is-just _ _) = ST-Base (Oracle.trans θ is-just' is-just) omitted omitted
-<:-transitive x@(ST-Arr <:₁'δ <:₂'δ₁ _ _) y@(ST-Arr <:₁δ <:₂δ _ _)
+<:-transitive (ST-Arr <:₁'δ <:₂'δ _ _) (ST-Arr <:₁δ <:₂δ _ _)
   = ST-Arr
       (<:-transitive <:₁δ <:₁'δ)
-      (<:-transitive (<:-narrowing <:₁δ ⊘ <:₂'δ₁) <:₂δ)
+      (<:-transitive (<:-narrowing <:₁δ ⊘ <:₂'δ) <:₂δ)
       omitted
       omitted
 <:-transitive (ST-ADT ⊍δ) (ST-ADT _) = ST-ADT omitted
