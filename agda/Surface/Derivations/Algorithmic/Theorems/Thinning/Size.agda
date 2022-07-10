@@ -70,7 +70,28 @@ mutual
               ≡⟨ sym (+-distribʳ-⊔ (size-ok Γ'ok) (size-twf τ₁δ) _) ⟩
                 size-twf τ₁δ ⊔ size-twf τ₂δ + size-ok Γ'ok
               ∎
-  Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok (TWF-Arr τ₁δ τ₂δ) (acc rec) = {! !}
+  Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok (TWF-Arr τ₁δ τ₂δ) (acc rec)
+    with Γok ← Γ⊢τ-⇒-Γok τ₁δ
+       | τ₁δ' ← Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁δ (rec _ (s≤s (₁≤₂ _ _)))
+       | τ₁δ↓ ← Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok τ₁δ (rec _ (s≤s (₁≤₂ _ _)))
+    with Γ,τ₁-ok@(TCTX-Bind Γok' τ₁δ₀) ← Γ⊢τ-⇒-Γok τ₂δ
+       | τ₂δ' ← Γ⊢τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok τ₁δ') τ₂δ (rec _ (s≤s (₂≤₂ _ _)))
+       | τ₂δ↓ ← Γ⊢τ-thinning↓-size (append-both Γ⊂Γ') (TCTX-Bind Γ'ok τ₁δ') τ₂δ (rec _ (s≤s (₂≤₂ _ _)))
+    rewrite unique-Γ⊢τ τ₁δ₀ τ₁δ
+          | unique-Γok Γok' Γok
+          | m≤n⇒m⊔n≡n (<⇒≤ (∥Γok∥≤∥Γ⊢τ∥ Γok τ₁δ))
+          | m≤n⇒m⊔n≡n (<⇒≤ (∥Γok∥≤∥Γ⊢τ∥ Γ'ok τ₁δ'))
+          = let τ₂δ↓ = un-suc τ₂δ↓
+             in cong suc $
+                  begin
+                    size-twf τ₁δ' ⊔ size-twf τ₂δ' + size-ok Γok
+                  ≡⟨ +-distribʳ-⊔ (size-ok Γok) (size-twf τ₁δ') _ ⟩
+                    (size-twf τ₁δ' + size-ok Γok) ⊔ (size-twf τ₂δ' + size-ok Γok)
+                  ≡⟨ cong₂ (_⊔_) τ₁δ↓ (lemma₁ {a' = size-twf τ₁δ'} τ₁δ↓ τ₂δ↓) ⟩
+                    (size-twf τ₁δ + size-ok Γ'ok) ⊔ (size-twf τ₂δ + size-ok Γ'ok)
+                  ≡⟨ sym (+-distribʳ-⊔ (size-ok Γ'ok) (size-twf τ₁δ) _) ⟩
+                    size-twf τ₁δ ⊔ size-twf τ₂δ + size-ok Γ'ok
+                  ∎
   Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok (TWF-ADT consδs) (acc rec) = {! !}
 
   Γ⊢ε⦂τ-thinning↓-size : (Γ⊂Γ' : k by Γ ⊂' Γ')
