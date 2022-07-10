@@ -94,7 +94,44 @@ mutual
                   ≡⟨ sym (+-distribʳ-⊔ (size-ok Γ'ok) (size-twf τ₁δ) _) ⟩
                     size-twf τ₁δ ⊔ size-twf τ₂δ + size-ok Γ'ok
                   ∎
-  Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok (TWF-ADT consδs) (acc rec) = {! !}
+  Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok (TWF-ADT consδs@(τδ ∷ _)) (acc rec)
+    with Γok ← Γ⊢τ-⇒-Γok τδ
+    with consδs' ← cons-thinning↓      Γ⊂Γ'     Γ'ok consδs (rec _ ≤-refl)
+       | consδs↓ ← cons-thinning↓-size Γ⊂Γ' Γok Γ'ok consδs (rec _ ≤-refl)
+       = cong suc consδs↓
+
+  cons-thinning↓-size : {cons : ADTCons (Mkℕₐ (suc n)) (k + ℓ)}
+                      → (Γ⊂Γ' : k by Γ ⊂' Γ')
+                      → (Γok : Γ ok[ θ , φ ])
+                      → (Γ'ok : Γ' ok[ θ , φ ])
+                      → (consδs : All (Γ ⊢[ θ , φ ]_) cons)
+                      → (acc : Acc _<_ (size-all-cons consδs))
+                      → size-all-cons (cons-thinning↓ Γ⊂Γ' Γ'ok consδs acc) + size-ok Γok
+                        ≡
+                        size-all-cons consδs + size-ok Γ'ok
+  cons-thinning↓-size {n = zero} Γ⊂Γ' Γok Γ'ok (τδ ∷ []) (acc rec)
+    with τδ' ← Γ⊢τ-thinning↓      Γ⊂Γ' Γ'ok τδ (rec _ (s≤s (₁≤₂ _ _)))
+       | τδ↓ ← Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok τδ (rec _ (s≤s (₁≤₂ _ _)))
+    rewrite unique-Γok (Γ⊢τ-⇒-Γok τδ) Γok
+          | ⊔-identityʳ (size-twf τδ')
+          | ⊔-identityʳ (size-twf τδ)
+          = cong suc τδ↓
+  cons-thinning↓-size {n = suc _} Γ⊂Γ' Γok Γ'ok (τδ ∷ consδs) (acc rec)
+    with τδ' ← Γ⊢τ-thinning↓      Γ⊂Γ' Γ'ok τδ (rec _ (s≤s (₁≤₂ _ _)))
+       | τδ↓ ← Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok τδ (rec _ (s≤s (₁≤₂ _ _)))
+       | consδs' ← cons-thinning↓      Γ⊂Γ'     Γ'ok consδs (rec _ (s≤s (₂≤₂ _ _)))
+       | consδs↓ ← cons-thinning↓-size Γ⊂Γ' Γok Γ'ok consδs (rec _ (s≤s (₂≤₂ _ _)))
+    rewrite unique-Γok (Γ⊢τ-⇒-Γok τδ) Γok
+          = cong suc $
+                  begin
+                    size-twf τδ' ⊔ size-all-cons consδs' + size-ok Γok
+                  ≡⟨ +-distribʳ-⊔ (size-ok Γok) (size-twf τδ') _ ⟩
+                    (size-twf τδ' + size-ok Γok) ⊔ (size-all-cons consδs' + size-ok Γok)
+                  ≡⟨ cong₂ (_⊔_) τδ↓ consδs↓ ⟩
+                    (size-twf τδ + size-ok Γ'ok) ⊔ (size-all-cons consδs + size-ok Γ'ok)
+                  ≡⟨ sym (+-distribʳ-⊔ (size-ok Γ'ok) (size-twf τδ) _) ⟩
+                    size-twf τδ ⊔ size-all-cons consδs + size-ok Γ'ok
+                  ∎
 
   Γ⊢ε⦂τ-thinning↓-size : (Γ⊂Γ' : k by Γ ⊂' Γ')
                        → (Γ'ok : Γ' ok[ θ , φ ])
