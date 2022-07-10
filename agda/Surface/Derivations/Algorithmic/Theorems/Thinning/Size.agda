@@ -5,7 +5,6 @@ open import Data.Nat
 open import Data.Nat.Induction
 open import Data.Nat.Properties
 open import Data.Nat.Tactic.RingSolver
-open import Data.List as L using (_∷_; [])
 open import Data.Vec.Base using (lookup; _∷_)
 open import Function
 open import Relation.Binary.PropositionalEquality as Eq using (_≡_; refl; subst; sym; cong; cong₂)
@@ -40,7 +39,7 @@ lemma₁ : {[τ₁δ'] [τ₁δ] [εδ'] [εδ] [Γok'] [Γok] : ℕ}
        → [εδ'] + suc [τ₁δ] ≡ [εδ] + suc [τ₁δ']
        → [εδ'] + [Γok] ≡ [εδ] + [Γok']
 lemma₁ {[τ₁δ']} {[τ₁δ]} {[εδ']} {[εδ]} {[Γok']} {[Γok]} ≡₁ ≡₂
-  = let reshuffled =
+  = +-cancelʳ-≡ _ _ $
           begin
             ([εδ'] + [Γok]) + (suc [τ₁δ] + [τ₁δ'])
           ≡⟨ lhs-prf [εδ'] _ _ _ ⟩
@@ -50,7 +49,6 @@ lemma₁ {[τ₁δ']} {[τ₁δ]} {[εδ']} {[εδ]} {[Γok']} {[Γok]} ≡₁ �
           ≡⟨ rhs-prf [εδ]  _ _ _ ⟩
             ([εδ] + [Γok']) + (suc [τ₁δ] + [τ₁δ'])
           ∎
-     in +-cancelʳ-≡ ([εδ'] + [Γok]) ([εδ] + [Γok']) reshuffled
   where
   lhs-prf : (a' b c' d : ℕ)
           → (a' + d) + (b + c') ≡ (a' + b) + (c' + d)
