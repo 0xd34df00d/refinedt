@@ -22,20 +22,18 @@ open import Surface.Syntax.Substitution.Commutativity
 open import Surface.Derivations.Algorithmic
 open import Surface.Derivations.Algorithmic.Theorems.Thinning
 
-mutual
+module M {σ : SType ℓ} (εδ : Γ ⊢[ θ , φ of κ ] ε ⦂ σ) where mutual
   sub-Γok : (Δ : ,-CtxSuffix ℓ σ k)
-          → Γ ⊢[ θ , φ of κ ] ε ⦂ σ
           → (Γ ,σ, Δ) ok[ θ , φ ]
           → (Γ ++ [↦Δ ε ] Δ) ok[ θ , φ ]
-  sub-Γok [ _ ] εδ (TCTX-Bind Γ-ok _) = Γ-ok
-  sub-Γok (Δ , τ) εδ (TCTX-Bind Γ,σ,Δ-ok τδ) = TCTX-Bind (sub-Γok Δ εδ Γ,σ,Δ-ok) (sub-Γ⊢τ Δ εδ τδ)
+  sub-Γok [ _ ] (TCTX-Bind Γ-ok _) = Γ-ok
+  sub-Γok (Δ , τ) (TCTX-Bind Γ,σ,Δ-ok τδ) = TCTX-Bind (sub-Γok Δ Γ,σ,Δ-ok) (sub-Γ⊢τ Δ τδ)
 
   sub-Γ⊢τ : (Δ : ,-CtxSuffix ℓ σ k)
-          → Γ ⊢[ θ , φ of κ ] ε ⦂ σ
           → Γ ,σ, Δ ⊢[ θ , φ ] τ
           → Γ ++ [↦Δ ε ] Δ ⊢[ θ , φ ] [ ℓ ↦τ< ε ] τ
-  sub-Γ⊢τ Δ εδ (TWF-TrueRef Γok) = TWF-TrueRef (sub-Γok Δ εδ Γok)
-  sub-Γ⊢τ Δ εδ (TWF-Base ε₁δ ε₂δ) = {! !}
-  sub-Γ⊢τ Δ εδ (TWF-Conj τ₁δ τ₂δ) = TWF-Conj (sub-Γ⊢τ Δ εδ τ₁δ) (sub-Γ⊢τ Δ εδ τ₂δ)
-  sub-Γ⊢τ Δ εδ (TWF-Arr τ₁δ τ₂δ) = TWF-Arr (sub-Γ⊢τ Δ εδ τ₁δ) {! (sub-Γ⊢τ (Δ , _) εδ τ₂δ)!}
-  sub-Γ⊢τ Δ εδ (TWF-ADT consδs) = {! !}
+  sub-Γ⊢τ Δ (TWF-TrueRef Γok) = TWF-TrueRef (sub-Γok Δ Γok)
+  sub-Γ⊢τ Δ (TWF-Base ε₁δ ε₂δ) = {! !}
+  sub-Γ⊢τ Δ (TWF-Conj τ₁δ τ₂δ) = TWF-Conj (sub-Γ⊢τ Δ τ₁δ) (sub-Γ⊢τ Δ τ₂δ)
+  sub-Γ⊢τ Δ (TWF-Arr τ₁δ τ₂δ) = TWF-Arr (sub-Γ⊢τ Δ τ₁δ) {! (sub-Γ⊢τ (Δ , _) τ₂δ) !}
+  sub-Γ⊢τ Δ (TWF-ADT consδs) = {! !}
