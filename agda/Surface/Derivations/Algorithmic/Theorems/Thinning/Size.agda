@@ -31,12 +31,14 @@ mutual
                      → (Γ'ok : Γ' ok[ θ , φ ])
                      → (τδ : Γ ⊢[ θ , φ ] τ)
                      → (acc : Acc _<_ (size-twf τδ))
-                     → size-twf (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τδ acc) + size-ok (Γ⊢τ-⇒-Γok τδ) ≡ size-twf τδ + size-ok Γ'ok
+                     → size-twf (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τδ acc) + size-ok (Γ⊢τ-⇒-Γok τδ)
+                       ≡
+                       size-twf τδ + size-ok Γ'ok
   Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok (TWF-TrueRef Γok) _ = cong suc (+-comm (size-ok Γ'ok) (size-ok Γok))
   Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok (TWF-Base ε₁δ ε₂δ) (acc rec)
     with Γ,Τ-ok@(TCTX-Bind Γok (TWF-TrueRef Γok')) ← Γ⊢ε⦂τ-⇒-Γok ε₁δ
-       | ε₁δ' ← Γ⊢ε⦂τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)) ε₁δ (rec _ (s≤s (₁≤₂ _ _)))
-       | ε₂δ' ← Γ⊢ε⦂τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)) ε₂δ (rec _ (s≤s (₂≤₂ _ _)))
+       | ε₁δ' ← Γ⊢ε⦂τ-thinning↓      (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)) ε₁δ (rec _ (s≤s (₁≤₂ _ _)))
+       | ε₂δ' ← Γ⊢ε⦂τ-thinning↓      (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)) ε₂δ (rec _ (s≤s (₂≤₂ _ _)))
        | ε₁δ↓ ← Γ⊢ε⦂τ-thinning↓-size (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)) ε₁δ (rec _ (s≤s (₁≤₂ _ _)))
        | ε₂δ↓ ← Γ⊢ε⦂τ-thinning↓-size (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)) ε₂δ (rec _ (s≤s (₂≤₂ _ _)))
     rewrite unique-Γok (Γ⊢ε⦂τ-⇒-Γok ε₂δ) Γ,Τ-ok
@@ -55,8 +57,8 @@ mutual
               ∎
   Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok (TWF-Conj τ₁δ τ₂δ) (acc rec)
     with Γok ← Γ⊢τ-⇒-Γok τ₁δ
-       | τ₁δ' ← Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁δ (rec _ (s≤s (₁≤₂ _ _)))
-       | τ₂δ' ← Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₂δ (rec _ (s≤s (₂≤₂ _ _)))
+       | τ₁δ' ← Γ⊢τ-thinning↓      Γ⊂Γ' Γ'ok τ₁δ (rec _ (s≤s (₁≤₂ _ _)))
+       | τ₂δ' ← Γ⊢τ-thinning↓      Γ⊂Γ' Γ'ok τ₂δ (rec _ (s≤s (₂≤₂ _ _)))
        | τ₁δ↓ ← Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok τ₁δ (rec _ (s≤s (₁≤₂ _ _)))
        | τ₂δ↓ ← Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok τ₂δ (rec _ (s≤s (₂≤₂ _ _)))
     rewrite unique-Γok (Γ⊢τ-⇒-Γok τ₂δ) Γok
@@ -72,10 +74,10 @@ mutual
               ∎
   Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok (TWF-Arr τ₁δ τ₂δ) (acc rec)
     with Γok ← Γ⊢τ-⇒-Γok τ₁δ
-       | τ₁δ' ← Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁δ (rec _ (s≤s (₁≤₂ _ _)))
+       | τ₁δ' ← Γ⊢τ-thinning↓      Γ⊂Γ' Γ'ok τ₁δ (rec _ (s≤s (₁≤₂ _ _)))
        | τ₁δ↓ ← Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok τ₁δ (rec _ (s≤s (₁≤₂ _ _)))
     with Γ,τ₁-ok@(TCTX-Bind Γok' τ₁δ₀) ← Γ⊢τ-⇒-Γok τ₂δ
-       | τ₂δ' ← Γ⊢τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok τ₁δ') τ₂δ (rec _ (s≤s (₂≤₂ _ _)))
+       | τ₂δ' ← Γ⊢τ-thinning↓      (append-both Γ⊂Γ') (TCTX-Bind Γ'ok τ₁δ') τ₂δ (rec _ (s≤s (₂≤₂ _ _)))
        | τ₂δ↓ ← Γ⊢τ-thinning↓-size (append-both Γ⊂Γ') (TCTX-Bind Γ'ok τ₁δ') τ₂δ (rec _ (s≤s (₂≤₂ _ _)))
     rewrite unique-Γ⊢τ τ₁δ₀ τ₁δ
           | unique-Γok Γok' Γok
@@ -98,7 +100,9 @@ mutual
                        → (Γ'ok : Γ' ok[ θ , φ ])
                        → (εδ : Γ ⊢[ θ , φ of κ ] ε ⦂ τ)
                        → (acc : Acc _<_ (size-t εδ))
-                       → size-t (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok εδ acc) + size-ok (Γ⊢ε⦂τ-⇒-Γok εδ) ≡ size-t εδ + size-ok Γ'ok
+                       → size-t (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok εδ acc) + size-ok (Γ⊢ε⦂τ-⇒-Γok εδ)
+                         ≡
+                         size-t εδ + size-ok Γ'ok
   Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Unit Γok) _ = cong (2 +_) (+-comm (size-ok Γ'ok) (size-ok Γok))
   Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Var Γok _) _ = cong suc (+-comm (size-ok Γ'ok) (size-ok Γok))
   Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Abs τ₁⇒τ₂δ εδ) (acc rec)
@@ -132,8 +136,8 @@ mutual
        | Γok ← Γ⊢τ-⇒-Γok resτδ
        | resτδ↓ ← Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok resτδ (rec _ (s≤s (₃≤₃ (size-t ε₁δ) (size-t ε₂δ) _)))
     rewrite ρ-subst-distr-τ-0 (ext-k' k suc) ε₂ τ₂
-    with ε₁δ' ← Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok ε₁δ (rec _ (s≤s (₁≤₂ _ _)))
-       | ε₂δ' ← Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok ε₂δ (rec _ (s≤s (₂≤₃ (size-t ε₁δ) _ _)))
+    with ε₁δ' ← Γ⊢ε⦂τ-thinning↓      Γ⊂Γ' Γ'ok ε₁δ (rec _ (s≤s (₁≤₂ _ _)))
+       | ε₂δ' ← Γ⊢ε⦂τ-thinning↓      Γ⊂Γ' Γ'ok ε₂δ (rec _ (s≤s (₂≤₃ (size-t ε₁δ) _ _)))
        | ε₁δ↓ ← Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok ε₁δ (rec _ (s≤s (₁≤₂ _ _)))
        | ε₂δ↓ ← Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok ε₂δ (rec _ (s≤s (₂≤₃ (size-t ε₁δ) _ _)))
     rewrite unique-Γok (Γ⊢ε⦂τ-⇒-Γok ε₁δ) Γok
