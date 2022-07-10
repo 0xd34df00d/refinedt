@@ -11,10 +11,21 @@ open import Function
 open import Relation.Binary.PropositionalEquality as Eq using (_≡_; refl; cong; cong₂; sym)
 open Eq.≡-Reasoning
 
-open import Surface.Syntax
+open import Surface.Syntax hiding (b; b')
 open import Surface.Derivations.Algorithmic hiding (_∷_)
 open import Surface.Derivations.Algorithmic.Theorems.Agreement.Γok.WF
 open import Surface.Derivations.Algorithmic.Theorems.Uniqueness
+
+private variable
+  a a' b b' c c' : ℕ
+
+un-suc : a + (suc b) ≡ a' + (suc b')
+       → a + b ≡ a' + b'
+un-suc {a} {b} {a'} {b'} eq = suc-injective $ begin
+  1 + (a + b)     ≡⟨ solve (a ∷ b ∷ []) ⟩
+  a + (1 + b)     ≡⟨ eq ⟩
+  a' + (1 + b')   ≡⟨ solve (a' ∷ b' ∷ []) ⟩
+  1 + (a' + b')   ∎
 
 lemma₀ : (τ₁δ : Γ ⊢[ θ , φ ] τ₁)
        → (τ₂δ : Γ , τ₁ ⊢[ θ , φ ] τ₂)
@@ -25,20 +36,19 @@ lemma₀ τ₁δ τ₂δ (TWF-Arr τ₁δ' τ₂δ')
         | unique-Γ⊢τ τ₂δ' τ₂δ
         = refl
 
-lemma₁ : {[τ₁δ'] [τ₁δ] [εδ'] [εδ] [Γok'] [Γok] : ℕ}
-       → [τ₁δ'] + [Γok] ≡ [τ₁δ] + [Γok']
-       → [εδ'] + suc [τ₁δ] ≡ [εδ] + suc [τ₁δ']
-       → [εδ'] + [Γok] ≡ [εδ] + [Γok']
-lemma₁ {[τ₁δ']} {[τ₁δ]} {[εδ']} {[εδ]} {[Γok']} {[Γok]} ≡₁ ≡₂ = +-cancelʳ-≡ _ _ $
-  begin
-    ([εδ'] + [Γok]) + (suc [τ₁δ] + [τ₁δ'])
-  ≡⟨ solve ([εδ'] ∷ [Γok] ∷ [τ₁δ] ∷ [τ₁δ'] ∷ []) ⟩
-    ([εδ'] + suc [τ₁δ]) + ([τ₁δ'] + [Γok])
-  ≡⟨ cong₂ _+_ ≡₂ ≡₁ ⟩
-    ([εδ] + suc [τ₁δ']) + ([τ₁δ] + [Γok'])
-  ≡⟨ solve ([εδ] ∷ [Γok'] ∷ [τ₁δ'] ∷ [τ₁δ] ∷ []) ⟩
-    ([εδ] + [Γok']) + (suc [τ₁δ] + [τ₁δ'])
-  ∎
+lemma₁ : a' + c ≡ a + c'
+       → b' + a ≡ b + a'
+       → b' + c ≡ b + c'
+lemma₁ {a'} {c} {a} {c'} {b'} {b} ≡₁ ≡₂ = +-cancelʳ-≡ _ _ $ begin
+  (b' + c) + (a + a')   ≡⟨ solve (b' ∷ c ∷ a ∷ a' ∷ []) ⟩
+  (b' + a) + (a' + c)   ≡⟨ cong₂ _+_ ≡₂ ≡₁ ⟩
+  (b + a') + (a + c')   ≡⟨ solve (b ∷ c' ∷ a' ∷ a ∷ []) ⟩
+  (b + c') + (a + a')   ∎
+
+lemma₂ : a' + c ≡ a + c'
+       → b' + suc a ≡ b + suc a'
+       → b' + c ≡ b + c'
+lemma₂ {a'} {c} {a} {c'} {b'} {b} ≡₁ ≡₂ = lemma₁ {a'} {c} {a} {c'} {b'} {b} ≡₁ (un-suc ≡₂)
 
 +-distribʳ-⊔³ : (a b c z : ℕ)
               → a ⊔ (b ⊔ c) + z ≡ (a + z) ⊔ (b + z) ⊔ (c + z)
@@ -55,12 +65,3 @@ cong₃ : {A B C D : Set}
       → c₁ ≡ c₂
       → f a₁ b₁ c₁ ≡ f a₂ b₂ c₂
 cong₃ _ refl refl refl = refl
-
-un-suc-suc : ∀ {a b a' b'}
-           → a + (2 + b) ≡ a' + (2 + b')
-           → a + b ≡ a' + b'
-un-suc-suc {a} {b} {a'} {b'} eq = suc-injective $ suc-injective $ begin
-  2 + (a + b)     ≡⟨ solve (a ∷ b ∷ []) ⟩
-  a + (2 + b)     ≡⟨ eq ⟩
-  a' + (2 + b')   ≡⟨ solve (a' ∷ b' ∷ []) ⟩
-  2 + (a' + b')   ∎

@@ -48,7 +48,7 @@ mutual
                 size-t ε₁δ' ⊔ size-t ε₂δ' + size-ok Γok
               ≡⟨ +-distribʳ-⊔ (size-ok Γok) (size-t ε₁δ') _ ⟩
                 (size-t ε₁δ' + size-ok Γok) ⊔ (size-t ε₂δ' + size-ok Γok)
-              ≡⟨ cong₂ (_⊔_) (un-suc-suc ε₁δ↓) (un-suc-suc ε₂δ↓) ⟩
+              ≡⟨ cong₂ (_⊔_) (un-suc (un-suc ε₁δ↓)) (un-suc (un-suc ε₂δ↓)) ⟩
                 (size-t ε₁δ + size-ok Γ'ok) ⊔ (size-t ε₂δ + size-ok Γ'ok)
               ≡⟨ sym (+-distribʳ-⊔ (size-ok Γ'ok) (size-t ε₁δ) _) ⟩
                 size-t ε₁δ ⊔ size-t ε₂δ + size-ok Γ'ok
@@ -101,7 +101,7 @@ mutual
                 size-twf τ₁⇒τ₂δ' ⊔ size-t εδ' + size-ok Γok
               ≡⟨ +-distribʳ-⊔ _ _ (size-t εδ') ⟩
                 (size-twf τ₁⇒τ₂δ' + size-ok Γok) ⊔ (size-t εδ' + size-ok Γok)
-              ≡⟨ cong₂ (_⊔_) τ₁⇒τ₂δ↓ (lemma₁ τ₁δ↓ εδ↓) ⟩
+              ≡⟨ cong₂ (_⊔_) τ₁⇒τ₂δ↓ (lemma₂ τ₁δ↓ εδ↓) ⟩
                 (size-twf τ₁⇒τ₂δ + size-ok Γ'ok) ⊔ (size-t εδ + size-ok Γ'ok)
               ≡⟨ sym (+-distribʳ-⊔ _ _ (size-t εδ)) ⟩
                 size-twf τ₁⇒τ₂δ ⊔ size-t εδ + size-ok Γ'ok
