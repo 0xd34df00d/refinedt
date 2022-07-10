@@ -35,5 +35,15 @@ module M {σ : SType ℓ} (εδ : Γ ⊢[ θ , φ of κ ] ε ⦂ σ) where mutua
   sub-Γ⊢τ Δ (TWF-TrueRef Γok) = TWF-TrueRef (sub-Γok Δ Γok)
   sub-Γ⊢τ Δ (TWF-Base ε₁δ ε₂δ) = {! !}
   sub-Γ⊢τ Δ (TWF-Conj τ₁δ τ₂δ) = TWF-Conj (sub-Γ⊢τ Δ τ₁δ) (sub-Γ⊢τ Δ τ₂δ)
-  sub-Γ⊢τ Δ (TWF-Arr τ₁δ τ₂δ) = TWF-Arr (sub-Γ⊢τ Δ τ₁δ) {! (sub-Γ⊢τ (Δ , _) τ₂δ) !}
-  sub-Γ⊢τ Δ (TWF-ADT consδs) = {! !}
+  sub-Γ⊢τ {k = k} Δ (TWF-Arr {τ₂ = τ₂} τ₁δ τ₂δ)
+    rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
+          | R.act-ε-distr (raise k) suc ε
+          = TWF-Arr (sub-Γ⊢τ Δ τ₁δ) (sub-Γ⊢τ (Δ , _) τ₂δ)
+  sub-Γ⊢τ Δ (TWF-ADT consδs) = TWF-ADT (sub-cons Δ consδs)
+
+  sub-cons : {cons : ADTCons nₐ _}
+           → (Δ : ,-CtxSuffix ℓ σ k)
+           → All (λ conτ → Γ ,σ, Δ ⊢[ θ , φ ] conτ) cons
+           → All (λ conτ → Γ ++ [↦Δ ε ] Δ ⊢[ θ , φ ] conτ) ([ ctx-idx k ↦c R.weaken-ε-k k ε ] cons)
+  sub-cons Δ [] = []
+  sub-cons Δ (τδ ∷ τδs) = sub-Γ⊢τ Δ τδ ∷ sub-cons Δ τδs
