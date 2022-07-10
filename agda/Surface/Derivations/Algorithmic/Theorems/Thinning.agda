@@ -84,9 +84,10 @@ mutual
   Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok (TWF-Arr δ₁ δ₂) (acc rec)
     = let acc₁ = rec _ (s≤s (₁≤₂ _ _))
           acc₂ = rec _ (s≤s (₂≤₂ _ _))
+          δ₁' = Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok δ₁ acc₁
        in TWF-Arr
-            (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok δ₁ acc₁)
-            (Γ⊢τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok δ₁ acc₁)) δ₂ acc₂)
+            δ₁'
+            (Γ⊢τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok δ₁') δ₂ acc₂)
   Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok (TWF-ADT consδs) (acc rec) = TWF-ADT (cons-thinning↓ Γ⊂Γ' Γ'ok consδs (rec _ ≤-refl))
 
   Γ⊢ε⦂τ-thinning↓ : {Γ : Ctx (k + ℓ)}
