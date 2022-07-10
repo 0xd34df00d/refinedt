@@ -22,7 +22,7 @@ data RuleKind : Set where
   t-sub not-t-sub : RuleKind
 
 variable
-  κ κ' κ₁ κ₂ : RuleKind
+  κ κ' κ₀ κ₁ κ₂ : RuleKind
 
 data _ok[_,_]        : (Γ : Ctx ℓ) → Oracle → TSFlavour → Set
 data _⊢[_,_of_]_⦂_   (Γ : Ctx ℓ) (θ : Oracle) (φ : TSFlavour) : (κ : RuleKind) → (ε : STerm ℓ) → (τ : SType ℓ) → Set
