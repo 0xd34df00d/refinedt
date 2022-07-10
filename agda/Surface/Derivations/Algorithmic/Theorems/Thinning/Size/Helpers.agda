@@ -8,7 +8,7 @@ open import Data.Nat.Properties
 open import Data.Nat.Tactic.RingSolver
 open import Data.List
 open import Function
-open import Relation.Binary.PropositionalEquality as Eq using (_≡_; refl; cong; cong₂)
+open import Relation.Binary.PropositionalEquality as Eq using (_≡_; refl; cong; cong₂; sym)
 open Eq.≡-Reasoning
 
 open import Surface.Syntax
@@ -39,3 +39,19 @@ lemma₁ {[τ₁δ']} {[τ₁δ]} {[εδ']} {[εδ]} {[Γok']} {[Γok]} ≡₁ �
   ≡⟨ solve ([εδ] ∷ [Γok'] ∷ [τ₁δ'] ∷ [τ₁δ] ∷ []) ⟩
     ([εδ] + [Γok']) + (suc [τ₁δ] + [τ₁δ'])
   ∎
+
++-distribʳ-⊔³ : (a b c z : ℕ)
+              → a ⊔ (b ⊔ c) + z ≡ (a + z) ⊔ (b + z) ⊔ (c + z)
++-distribʳ-⊔³ a b c z
+  rewrite +-distribʳ-⊔ z a (b ⊔ c)
+        | +-distribʳ-⊔ z b c
+        = sym (⊔-assoc (a + z) (b + z) (c + z))
+
+cong₃ : {A B C D : Set}
+      → ∀ {a₁ a₂ b₁ b₂ c₁ c₂}
+      → (f : A → B → C → D)
+      → a₁ ≡ a₂
+      → b₁ ≡ b₂
+      → c₁ ≡ c₂
+      → f a₁ b₁ c₁ ≡ f a₂ b₂ c₂
+cong₃ _ refl refl refl = refl

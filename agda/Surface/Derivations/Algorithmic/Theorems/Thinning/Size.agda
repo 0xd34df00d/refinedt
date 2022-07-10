@@ -60,7 +60,27 @@ mutual
               ≡⟨ sym (+-distribʳ-⊔ _ _ (size-t εδ)) ⟩
                 size-twf τ₁⇒τ₂δ ⊔ size-t εδ + size-ok Γ'ok
               ∎
-  Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-App εδ εδ₁ resτ-≡ resτδ) (acc rec) = {! !}
+  Γ⊢ε⦂τ-thinning↓-size {k = k} Γ⊂Γ' Γ'ok (T-App {τ₂ = τ₂} {ε₂ = ε₂} ε₁δ ε₂δ refl resτδ) (acc rec)
+    with resτδ' ← Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok resτδ (rec _ (s≤s (₃≤₃ (size-t ε₁δ) (size-t ε₂δ) _)))
+       | Γok ← Γ⊢τ-⇒-Γok resτδ
+       | resτδ↓ ← Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok resτδ (rec _ (s≤s (₃≤₃ (size-t ε₁δ) (size-t ε₂δ) _)))
+    rewrite ρ-subst-distr-τ-0 (ext-k' k suc) ε₂ τ₂
+    with ε₁δ' ← Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok ε₁δ (rec _ (s≤s (₁≤₂ _ _)))
+       | ε₂δ' ← Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok ε₂δ (rec _ (s≤s (₂≤₃ (size-t ε₁δ) _ _)))
+       | ε₁δ↓ ← Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok ε₁δ (rec _ (s≤s (₁≤₂ _ _)))
+       | ε₂δ↓ ← Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok ε₂δ (rec _ (s≤s (₂≤₃ (size-t ε₁δ) _ _)))
+    rewrite unique-Γok (Γ⊢ε⦂τ-⇒-Γok ε₁δ) Γok
+          | unique-Γok (Γ⊢ε⦂τ-⇒-Γok ε₂δ) Γok
+          = cong suc $
+              begin
+                size-t ε₁δ' ⊔ (size-t ε₂δ' ⊔ size-twf resτδ') + size-ok Γok
+              ≡⟨ +-distribʳ-⊔³ (size-t ε₁δ') _ _ _ ⟩
+                (size-t ε₁δ' + size-ok Γok) ⊔ (size-t ε₂δ' + size-ok Γok) ⊔ (size-twf resτδ' + size-ok Γok)
+              ≡⟨ cong₃ (λ a b c → a ⊔ b ⊔ c) ε₁δ↓ ε₂δ↓ resτδ↓ ⟩
+                (size-t ε₁δ + size-ok Γ'ok) ⊔ (size-t ε₂δ + size-ok Γ'ok) ⊔ (size-twf resτδ + size-ok Γ'ok)
+              ≡⟨ sym (+-distribʳ-⊔³ (size-t ε₁δ) _ _ _) ⟩
+                size-t ε₁δ ⊔ (size-t ε₂δ ⊔ size-twf resτδ) + size-ok Γ'ok
+              ∎
   Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Case resδ εδ branches-well-typed) (acc rec) = {! !}
   Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Con ≡-prf εδ adtτ) (acc rec) = {! !}
   Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Sub εδ τδ <:δ) (acc rec) = {! !}
