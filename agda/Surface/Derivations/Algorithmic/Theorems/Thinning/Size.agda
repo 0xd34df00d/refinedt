@@ -32,8 +32,27 @@ mutual
                      → (τδ : Γ ⊢[ θ , φ ] τ)
                      → (acc : Acc _<_ (size-twf τδ))
                      → size-twf (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τδ acc) + size-ok (Γ⊢τ-⇒-Γok τδ) ≡ size-twf τδ + size-ok Γ'ok
-  Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok (TWF-TrueRef Γok) (acc rec) = cong suc (+-comm (size-ok Γ'ok) (size-ok Γok))
-  Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok (TWF-Base ε₁δ ε₂δ) (acc rec) = {! !}
+  Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok (TWF-TrueRef Γok) _ = cong suc (+-comm (size-ok Γ'ok) (size-ok Γok))
+  Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok (TWF-Base ε₁δ ε₂δ) (acc rec)
+    with Γ,Τ-ok@(TCTX-Bind Γok (TWF-TrueRef Γok')) ← Γ⊢ε⦂τ-⇒-Γok ε₁δ
+       | ε₁δ' ← Γ⊢ε⦂τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)) ε₁δ (rec _ (s≤s (₁≤₂ _ _)))
+       | ε₂δ' ← Γ⊢ε⦂τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)) ε₂δ (rec _ (s≤s (₂≤₂ _ _)))
+       | ε₁δ↓ ← Γ⊢ε⦂τ-thinning↓-size (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)) ε₁δ (rec _ (s≤s (₁≤₂ _ _)))
+       | ε₂δ↓ ← Γ⊢ε⦂τ-thinning↓-size (append-both Γ⊂Γ') (TCTX-Bind Γ'ok (TWF-TrueRef Γ'ok)) ε₂δ (rec _ (s≤s (₂≤₂ _ _)))
+    rewrite unique-Γok (Γ⊢ε⦂τ-⇒-Γok ε₂δ) Γ,Τ-ok
+          | unique-Γok Γok' Γok
+          | m≤n⇒m⊔n≡n (n≤1+n (size-ok Γok))
+          | m≤n⇒m⊔n≡n (n≤1+n (size-ok Γ'ok))
+          = cong suc $
+              begin
+                size-t ε₁δ' ⊔ size-t ε₂δ' + size-ok Γok
+              ≡⟨ +-distribʳ-⊔ (size-ok Γok) (size-t ε₁δ') _ ⟩
+                (size-t ε₁δ' + size-ok Γok) ⊔ (size-t ε₂δ' + size-ok Γok)
+              ≡⟨ cong₂ (_⊔_) (un-suc-suc ε₁δ↓) (un-suc-suc ε₂δ↓) ⟩
+                (size-t ε₁δ + size-ok Γ'ok) ⊔ (size-t ε₂δ + size-ok Γ'ok)
+              ≡⟨ sym (+-distribʳ-⊔ (size-ok Γ'ok) (size-t ε₁δ) _) ⟩
+                size-t ε₁δ ⊔ size-t ε₂δ + size-ok Γ'ok
+              ∎
   Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok (TWF-Conj τ₁δ τ₂δ) (acc rec)
     with Γok ← Γ⊢τ-⇒-Γok τ₁δ
        | τ₁δ' ← Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁δ (rec _ (s≤s (₁≤₂ _ _)))

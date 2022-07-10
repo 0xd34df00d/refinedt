@@ -55,3 +55,12 @@ cong₃ : {A B C D : Set}
       → c₁ ≡ c₂
       → f a₁ b₁ c₁ ≡ f a₂ b₂ c₂
 cong₃ _ refl refl refl = refl
+
+un-suc-suc : ∀ {a b a' b'}
+           → a + (2 + b) ≡ a' + (2 + b')
+           → a + b ≡ a' + b'
+un-suc-suc {a} {b} {a'} {b'} eq = suc-injective $ suc-injective $ begin
+  2 + (a + b)     ≡⟨ solve (a ∷ b ∷ []) ⟩
+  a + (2 + b)     ≡⟨ eq ⟩
+  a' + (2 + b')   ≡⟨ solve (a' ∷ b' ∷ []) ⟩
+  2 + (a' + b')   ∎
