@@ -106,12 +106,10 @@ mutual
             arrδ'
             (Γ⊢ε⦂τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok τ₁δ') δ acc₃)
   Γ⊢ε⦂τ-thinning↓ {k = k} Γ⊂Γ' Γ'ok (T-App {τ₂ = τ₂} {ε₂ = ε₂} δ₁ δ₂ refl resτδ) (acc rec)
+    with resτδ' ← Γ⊢τ-thinning↓  Γ⊂Γ' Γ'ok resτδ (rec _ (s≤s (₃≤₃ (size-t δ₁) (size-t δ₂) _)))
     rewrite ρ-subst-distr-τ-0 (ext-k' k suc) ε₂ τ₂
           = let acc₁ = rec _ (s≤s (₁≤₂ _ _))
                 acc₂ = rec _ (s≤s (₂≤₃ (size-t δ₁) _ _))
-                acc₃ = rec _ (s≤s (₃≤₃ (size-t δ₁) (size-t δ₂) _))
-                resτδ' = Γ⊢τ-thinning↓  Γ⊂Γ' Γ'ok resτδ acc₃
-                resτδ' = subst (_ ⊢[ _ , _ ]_) (ρ-subst-distr-τ-0 (ext-k' k suc) ε₂ τ₂) resτδ'
              in T-App
                   (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ₁ acc₁)
                   (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ₂ acc₂)
