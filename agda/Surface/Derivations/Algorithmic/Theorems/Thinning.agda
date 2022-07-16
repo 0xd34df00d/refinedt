@@ -115,22 +115,18 @@ mutual
                   refl
                   resτδ'
   Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Case resδ δ branchesδ) (acc rec)
-    = let acc₁ = rec _ (s≤s (₂≤₃ (size-t δ) (size-twf resδ) (size-bs branchesδ)))
+    = let acc₁ = rec _ (s≤s (₂≤₃ (size-t δ) _ _))
           acc₂ = rec _ (s≤s (₁≤₂ _ _))
-          acc₃ = rec _ (s≤s (₃≤₃ (size-t δ) (size-twf resδ) (size-bs branchesδ)))
+          acc₃ = rec _ (s≤s (₃≤₃ (size-t δ) _ _))
        in T-Case
             (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok resδ acc₁)
             (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ acc₂)
             (branches-thinning↓ Γ⊂Γ' Γ'ok branchesδ acc₃)
-  Γ⊢ε⦂τ-thinning↓ {k = k} {θ = θ} {φ = φ} {κ = κ} Γ⊂Γ' Γ'ok (T-Con {ε = ε} {ι = ι} {cons = cons} refl δ adtτ) (acc rec)
-    = let acc₁ = rec _ (s≤s (₁≤₂ _ _))
-          acc₂ = rec _ (s≤s (₂≤₂ _ _))
-          δ' = Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ acc₁
-          δ-substed = subst (λ τ → _ ⊢[ θ , φ of κ ] R.act-ε (ext-k' k suc) ε ⦂ τ) (R.cons-lookup-comm (ext-k' k suc) ι cons) δ'
-       in T-Con
-            refl
-            δ-substed
-            (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok adtτ acc₂)
+  Γ⊢ε⦂τ-thinning↓ {k = k} Γ⊂Γ' Γ'ok (T-Con {ι = ι} {cons = cons} refl δ adtτ) (acc rec)
+    with δ' ← Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ (rec _ (s≤s (₁≤₂ _ _)))
+    rewrite R.cons-lookup-comm (ext-k' k suc) ι cons
+          = let adtτ' = Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok adtτ (rec _ (s≤s (₂≤₂ _ _)))
+             in T-Con refl δ' adtτ'
   Γ⊢ε⦂τ-thinning↓ {φ = φ} Γ⊂Γ' Γ'ok (T-Sub εδ τ'δ <:δ) (acc rec)
     with εδ'  ← Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _)))
        | τ'δ' ← Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ'δ (rec _ (s≤s (₂≤₃ (size-t εδ) _ _)))
