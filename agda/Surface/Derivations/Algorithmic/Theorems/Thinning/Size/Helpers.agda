@@ -57,6 +57,21 @@ lemma₂ {a'} {c} {a} {c'} {b'} {b} ≡₁ ≡₂ = lemma₁ {a'} {c} {a} {c'} {
         | +-distribʳ-⊔ z b c
         = sym (⊔-assoc (a + z) (b + z) (c + z))
 
++-distribʳ-⊔⁴ : (a b c d z : ℕ)
+              → a ⊔ (b ⊔ (c ⊔ d)) + z ≡ (a + z) ⊔ (b + z) ⊔ (c + z) ⊔ (d + z)
++-distribʳ-⊔⁴ a b c d z
+  rewrite +-distribʳ-⊔ z a (b ⊔ (c ⊔ d))
+        | +-distribʳ-⊔ z b (c ⊔ d)
+        | +-distribʳ-⊔ z c d
+        = let a' = a + z
+              b' = b + z
+              c' = c + z
+              d' = d + z
+           in begin
+          a' ⊔ (b' ⊔ (c' ⊔ d')) ≡⟨ sym (⊔-assoc a' b' (c' ⊔ d')) ⟩
+          (a' ⊔ b') ⊔ (c' ⊔ d') ≡⟨ sym (⊔-assoc (a' ⊔ b') c' d')  ⟩
+          ((a' ⊔ b') ⊔ c') ⊔ d' ∎
+
 cong₃ : {A B C D : Set}
       → ∀ {a₁ a₂ b₁ b₂ c₁ c₂}
       → (f : A → B → C → D)
