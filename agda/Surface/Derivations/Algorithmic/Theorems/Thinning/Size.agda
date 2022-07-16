@@ -27,6 +27,25 @@ open import Surface.Derivations.Algorithmic.Theorems.Thinning.Size.Helpers
 open import Surface.Derivations.Algorithmic.Theorems.Uniqueness
 
 mutual
+  <:-thinning↓-size : (Γ⊂Γ' : k by Γ ⊂' Γ')
+                    → (Γok : Γ ok[ θ , E ])
+                    → (Γ'ok : Γ' ok[ θ , E ])
+                    → (<:δ : Γ ⊢[ θ , E ] τ' <: τ)
+                    → (acc : Acc _<_ (size-<: <:δ))
+                    → size-<: (<:-thinning↓ Γ⊂Γ' Γ'ok <:δ acc) + size-ok Γok
+                      ≡
+                      size-<: <:δ + size-ok Γ'ok
+  <:-thinning↓-size Γ⊂Γ' Γok Γ'ok (ST-Base is-just (enriched ρ₁δ) (enriched ρ₂δ)) (acc rec)
+    with ρ₁δ' ← Γ⊢τ-thinning↓       Γ⊂Γ' Γ'ok ρ₁δ (rec _ (s≤s (₁≤₂ _ _)))
+       | ρ₁δ↓ ← Γ⊢τ-thinning↓-size  Γ⊂Γ' Γ'ok ρ₁δ (rec _ (s≤s (₁≤₂ _ _)))
+       | ρ₂δ' ← Γ⊢τ-thinning↓       Γ⊂Γ' Γ'ok ρ₂δ (rec _ (s≤s (₂≤₂ _ _)))
+       | ρ₂δ↓ ← Γ⊢τ-thinning↓-size  Γ⊂Γ' Γ'ok ρ₂δ (rec _ (s≤s (₂≤₂ _ _)))
+    rewrite unique-Γok (Γ⊢τ-⇒-Γok ρ₁δ) Γok
+          | unique-Γok (Γ⊢τ-⇒-Γok ρ₂δ) Γok
+          = cong suc (⊔-+-pairwise-≡ (size-ok Γok) (size-ok Γ'ok) ρ₁δ↓ ρ₂δ↓)
+  <:-thinning↓-size Γ⊂Γ' Γok Γ'ok (ST-Arr <:δ <:δ₁ (enriched τ₁⇒τ₂'δ) (enriched τ₁'⇒τ₂δ)) (acc rec) = {! !}
+  <:-thinning↓-size Γ⊂Γ' Γok Γ'ok (ST-ADT (enriched ⊍δ)) (acc rec) = {! !}
+
   Γ⊢τ-thinning↓-size : (Γ⊂Γ' : k by Γ ⊂' Γ')
                      → (Γ'ok : Γ' ok[ θ , φ ])
                      → (τδ : Γ ⊢[ θ , φ ] τ)
