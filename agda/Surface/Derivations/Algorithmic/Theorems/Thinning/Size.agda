@@ -177,7 +177,15 @@ mutual
           | unique-Γok (Γ⊢ε⦂τ-⇒-Γok ε₂δ) Γok
           = cong suc (⊔-+-pairwise-≡³ (size-ok Γok) (size-ok Γ'ok) ε₁δ↓ ε₂δ↓ resτδ↓)
   Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Case resδ εδ branches-well-typed) (acc rec) = {! !}
-  Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Con ≡-prf εδ adtτ) (acc rec) = {! !}
+  Γ⊢ε⦂τ-thinning↓-size {k = k} Γ⊂Γ' Γ'ok (T-Con {ι = ι} {cons = cons} refl εδ adtτδ) (acc rec)
+    with Γok ← Γ⊢ε⦂τ-⇒-Γok εδ
+       | εδ' ← Γ⊢ε⦂τ-thinning↓      Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _)))
+       | εδ↓ ← Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _)))
+    rewrite R.cons-lookup-comm (ext-k' k suc) ι cons
+    with adtτδ' ← Γ⊢τ-thinning↓      Γ⊂Γ' Γ'ok adtτδ (rec _ (s≤s (₂≤₂ _ _)))
+       | adtτδ↓ ← Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok adtτδ (rec _ (s≤s (₂≤₂ _ _)))
+    rewrite unique-Γok (Γ⊢τ-⇒-Γok adtτδ) Γok
+          = cong suc (⊔-+-pairwise-≡ (size-ok Γok) (size-ok Γ'ok) εδ↓ adtτδ↓)
   Γ⊢ε⦂τ-thinning↓-size {φ = φ} Γ⊂Γ' Γ'ok (T-Sub εδ τδ <:δ) (acc rec)
     with Γok ← Γ⊢ε⦂τ-⇒-Γok εδ
        | εδ' ← Γ⊢ε⦂τ-thinning↓      Γ⊂Γ' Γ'ok εδ  (rec _ (s≤s (₁≤₂ _ _)))
