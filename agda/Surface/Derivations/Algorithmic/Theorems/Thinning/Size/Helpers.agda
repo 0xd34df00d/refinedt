@@ -6,6 +6,7 @@ open import Data.Nat
 open import Data.Nat.Induction
 open import Data.Nat.Properties
 open import Data.Nat.Tactic.RingSolver
+import Tactic.MonoidSolver as MS
 open import Data.List
 open import Function
 open import Relation.Binary.PropositionalEquality as Eq using (_≡_; refl; cong; cong₂; sym)
@@ -55,7 +56,7 @@ lemma₂ {a'} {c} {a} {c'} {b'} {b} ≡₁ ≡₂ = lemma₁ {a'} {c} {a} {c'} {
 +-distribʳ-⊔³ a b c z
   rewrite +-distribʳ-⊔ z a (b ⊔ c)
         | +-distribʳ-⊔ z b c
-        = sym (⊔-assoc (a + z) (b + z) (c + z))
+        = MS.solve ⊔-0-monoid
 
 +-distribʳ-⊔⁴ : (a b c d z : ℕ)
               → a ⊔ (b ⊔ (c ⊔ d)) + z ≡ (a + z) ⊔ (b + z) ⊔ (c + z) ⊔ (d + z)
@@ -63,14 +64,7 @@ lemma₂ {a'} {c} {a} {c'} {b'} {b} ≡₁ ≡₂ = lemma₁ {a'} {c} {a} {c'} {
   rewrite +-distribʳ-⊔ z a (b ⊔ (c ⊔ d))
         | +-distribʳ-⊔ z b (c ⊔ d)
         | +-distribʳ-⊔ z c d
-        = let a' = a + z
-              b' = b + z
-              c' = c + z
-              d' = d + z
-           in begin
-          a' ⊔ (b' ⊔ (c' ⊔ d')) ≡⟨ sym (⊔-assoc a' b' (c' ⊔ d')) ⟩
-          (a' ⊔ b') ⊔ (c' ⊔ d') ≡⟨ sym (⊔-assoc (a' ⊔ b') c' d')  ⟩
-          ((a' ⊔ b') ⊔ c') ⊔ d' ∎
+        = MS.solve ⊔-0-monoid
 
 cong₃ : {A B C D : Set}
       → ∀ {a₁ a₂ b₁ b₂ c₁ c₂}
