@@ -34,6 +34,12 @@ mutual
   Γ⊢τ-⇒-Γok (TWF-Arr argδ _) = Γ⊢τ-⇒-Γok argδ
   Γ⊢τ-⇒-Γok (TWF-ADT (px ∷ _)) = Γ⊢τ-⇒-Γok px
 
+Γ⊢τ'<:τ-⇒-Γok : (<:δ : Γ ⊢[ θ , E ] τ' <: τ)
+              → Γ ok[ θ , E ]
+Γ⊢τ'<:τ-⇒-Γok (ST-Base _ (enriched ρ₁δ) _) = Γ⊢τ-⇒-Γok ρ₁δ
+Γ⊢τ'<:τ-⇒-Γok (ST-Arr _ _ (enriched τ₁⇒τ₂'δ) _) = Γ⊢τ-⇒-Γok τ₁⇒τ₂'δ
+Γ⊢τ'<:τ-⇒-Γok (ST-ADT (enriched ⊍δ)) = Γ⊢τ-⇒-Γok ⊍δ
+
 private
   a<b-⇒-a<b⊕c : {b c a : ℕ} → a < b → a < suc (b ⊕ c)
   a<b-⇒-a<b⊕c {b} {c} a<b = <-trans a<b (s≤s (₁≤₂ b c))
