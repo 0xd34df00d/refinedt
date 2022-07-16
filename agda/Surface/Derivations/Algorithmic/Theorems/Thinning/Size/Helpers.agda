@@ -18,7 +18,7 @@ open import Surface.Derivations.Algorithmic.Theorems.Agreement.Γok.WF
 open import Surface.Derivations.Algorithmic.Theorems.Uniqueness
 
 private variable
-  a a' b b' c c' : ℕ
+  a a' b b' c c' d d' w w' : ℕ
 
 un-suc : a + (suc b) ≡ a' + (suc b')
        → a + b ≡ a' + b'
@@ -75,6 +75,16 @@ cong₃ : {A B C D : Set}
       → f a₁ b₁ c₁ ≡ f a₂ b₂ c₂
 cong₃ _ refl refl refl = refl
 
+cong₄ : {A B C D E : Set}
+      → ∀ {a₁ a₂ b₁ b₂ c₁ c₂ d₁ d₂}
+      → (f : A → B → C → D → E)
+      → a₁ ≡ a₂
+      → b₁ ≡ b₂
+      → c₁ ≡ c₂
+      → d₁ ≡ d₂
+      → f a₁ b₁ c₁ d₁ ≡ f a₂ b₂ c₂ d₂
+cong₄ _ refl refl refl refl = refl
+
 ⊔-+-pairwise-≡ : (c c' : ℕ)
                → a' + c ≡ a + c'
                → b' + c ≡ b + c'
@@ -84,3 +94,18 @@ cong₃ _ refl refl refl = refl
   (a' + c) ⊔ (b' + c)   ≡⟨ cong₂ (_⊔_) ≡₁ ≡₂ ⟩
   (a + c') ⊔ (b + c')   ≡⟨ sym (+-distribʳ-⊔ c' a _) ⟩
   a ⊔ b + c'            ∎
+
+lemma₃ : (z z' : ℕ)
+       → a' + z ≡ a + z'
+       → b' + suc w ≡ b + suc w'
+       → w' + z ≡ w + z'
+       → c' + z ≡ c + z'
+       → d' + z ≡ d + z'
+       → a' ⊔ (b' ⊔ (c' ⊔ d')) + z
+         ≡
+         a ⊔ (b ⊔ (c ⊔ d)) + z'
+lemma₃ {a'} {a} {b'} {w} {b} {w'} {c'} {c} {d'} {d} z z' ≡-a ≡-bw ≡-w ≡-c ≡-d = begin
+  a' ⊔ (b' ⊔ (c' ⊔ d')) + z                   ≡⟨ +-distribʳ-⊔⁴ a' b' c' d' z ⟩
+  (a' + z) ⊔ (b' + z) ⊔ (c' + z) ⊔ (d' + z)   ≡⟨ cong₄ (λ a b c d → a ⊔ b ⊔ c ⊔ d) ≡-a (lemma₂ ≡-w ≡-bw) ≡-c ≡-d ⟩
+  (a + z') ⊔ (b + z') ⊔ (c + z') ⊔ (d + z')   ≡⟨ sym (+-distribʳ-⊔⁴ a b c d z') ⟩
+  a ⊔ (b ⊔ (c ⊔ d)) + z'                      ∎
