@@ -66,7 +66,7 @@ mutual
           | ∥Γ,τ-ok∥≡∥τδ∥ (Γ⊢τ'<:τ-⇒-Γok <:₂δ) τ₁'δ
           | ∥Γ,τ-ok∥≡∥τδ∥ (TCTX-Bind Γ'ok τ₁δ') τ₁δ'
           = cong suc (lemma₃ (size-ok Γok) (size-ok Γ'ok) <:₁δ↓ <:₂δ↓ τ₁δ↓ τ₁'⇒τ₂δ↓ τ₁⇒τ₂'δ↓)
-  <:-thinning↓-size Γ⊂Γ' Γ'ok (ST-ADT (enriched ⊍δ)) (acc rec) = {! !}
+  <:-thinning↓-size Γ⊂Γ' Γ'ok (ST-ADT (enriched ⊍δ)) (acc rec) = cong suc (Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok ⊍δ (rec _ ≤-refl))
 
   Γ⊢τ-thinning↓-size : (Γ⊂Γ' : k by Γ ⊂' Γ')
                      → (Γ'ok : Γ' ok[ θ , φ ])
