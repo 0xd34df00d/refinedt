@@ -178,4 +178,18 @@ mutual
           = cong suc (⊔-+-pairwise-≡³ (size-ok Γok) (size-ok Γ'ok) ε₁δ↓ ε₂δ↓ resτδ↓)
   Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Case resδ εδ branches-well-typed) (acc rec) = {! !}
   Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Con ≡-prf εδ adtτ) (acc rec) = {! !}
-  Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Sub εδ τδ <:δ) (acc rec) = {! !}
+  Γ⊢ε⦂τ-thinning↓-size {φ = φ} Γ⊂Γ' Γ'ok (T-Sub εδ τδ <:δ) (acc rec)
+    with Γok ← Γ⊢ε⦂τ-⇒-Γok εδ
+       | εδ' ← Γ⊢ε⦂τ-thinning↓      Γ⊂Γ' Γ'ok εδ  (rec _ (s≤s (₁≤₂ _ _)))
+       | εδ↓ ← Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok εδ  (rec _ (s≤s (₁≤₂ _ _)))
+       | τδ' ← Γ⊢τ-thinning↓      Γ⊂Γ' Γ'ok τδ  (rec _ (s≤s (₂≤₃ (size-t εδ) _ _)))
+       | τδ↓ ← Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok τδ  (rec _ (s≤s (₂≤₃ (size-t εδ) _ _)))
+    rewrite unique-Γok (Γ⊢τ-⇒-Γok τδ) Γok
+    with φ
+  ... | M rewrite ⊔-identityʳ (size-twf τδ')
+                | ⊔-identityʳ (size-twf τδ)
+                = cong suc (⊔-+-pairwise-≡ (size-ok Γok) (size-ok Γ'ok) εδ↓ τδ↓)
+  ... | E with <:δ' ← <:-thinning↓      Γ⊂Γ' Γ'ok <:δ (rec _ (s≤s (₃≤₃ (size-t εδ) _ _)))
+             | <:δ↓ ← <:-thinning↓-size Γ⊂Γ' Γ'ok <:δ (rec _ (s≤s (₃≤₃ (size-t εδ) _ _)))
+          rewrite unique-Γok (Γ⊢τ'<:τ-⇒-Γok <:δ) Γok
+                = cong suc (⊔-+-pairwise-≡³ (size-ok Γok) (size-ok Γ'ok) εδ↓ τδ↓ <:δ↓)
