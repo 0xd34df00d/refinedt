@@ -31,38 +31,36 @@ open import Surface.Derivations.Algorithmic.Theorems.Agreement.Γok.WF
 ∈-thinning (append-both {k = k} {τ = τ} Γ⊂Γ') (∈-zero refl) = ∈-zero (ext-k'-suc-commute k τ)
 ∈-thinning (append-both {k = k} Γ⊂Γ') (∈-suc {τ = τ} refl ∈) = ∈-suc (ext-k'-suc-commute k τ) (∈-thinning Γ⊂Γ' ∈)
 
+<:-thinning-M : {Γ : Ctx (k + ℓ)}
+              → (Γ⊂Γ' : k by Γ ⊂' Γ')
+              → (δ : Γ ⊢[ θ , M ] τ' <: τ)
+              → Γ' ⊢[ θ , M ] R.act-τ (ext-k' k suc) τ' <: R.act-τ (ext-k' k suc) τ
+<:-thinning-M {θ = θ} Γ⊂Γ' (ST-Base is-just _ _) = ST-Base (Oracle.thin θ Γ⊂Γ' is-just) omitted omitted
+<:-thinning-M Γ⊂Γ' (ST-Arr <:₁δ <:₂δ _ _) = ST-Arr (<:-thinning-M Γ⊂Γ' <:₁δ) (<:-thinning-M (append-both Γ⊂Γ') <:₂δ) omitted omitted
+<:-thinning-M Γ⊂Γ' (ST-ADT _) = ST-ADT omitted
+
 mutual
   <:-thinning↓ : {Γ : Ctx (k + ℓ)}
                → (Γ⊂Γ' : k by Γ ⊂' Γ')
-               → Enrich (Γ' ok[ θ , φ ]) φ
-               → (δ : Γ ⊢[ θ , φ ] τ <: τ')
+               → Γ' ok[ θ , E ]
+               → (δ : Γ ⊢[ θ , E ] τ' <: τ)
                → Acc _<_ (size-<: δ)
-               → Γ' ⊢[ θ , φ ] R.act-τ (ext-k' k suc) τ <: R.act-τ (ext-k' k suc) τ'
-  <:-thinning↓ {θ = θ} Γ⊂Γ' _ (ST-Base is-just omitted omitted) _ = ST-Base (Oracle.thin θ Γ⊂Γ' is-just) omitted omitted
-  <:-thinning↓ {θ = θ} Γ⊂Γ' (enriched Γ'ok) (ST-Base is-just (enriched ρ₁δ) (enriched ρ₂δ)) (acc rec)
+               → Γ' ⊢[ θ , E ] R.act-τ (ext-k' k suc) τ' <: R.act-τ (ext-k' k suc) τ
+  <:-thinning↓ {θ = θ} Γ⊂Γ' Γ'ok (ST-Base is-just (enriched ρ₁δ) (enriched ρ₂δ)) (acc rec)
     = ST-Base
         (Oracle.thin θ Γ⊂Γ' is-just)
         (enriched (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok ρ₁δ (rec _ (s≤s (₁≤₂ _ _)))))
         (enriched (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok ρ₂δ (rec _ (s≤s (₂≤₂ _ _)))))
-  <:-thinning↓ Γ⊂Γ' _ (ST-Arr <:₁δ <:₂δ omitted omitted) (acc rec)
-    = let acc₁ = rec _ (s≤s (₁≤₂ _ _))
-          acc₂ = rec _ (s≤s (₂≤₂ _ _))
-       in ST-Arr
-            (<:-thinning↓ Γ⊂Γ' omitted <:₁δ acc₁)
-            (<:-thinning↓ (append-both Γ⊂Γ') omitted <:₂δ acc₂)
-            omitted
-            omitted
-  <:-thinning↓ Γ⊂Γ' (enriched Γ'ok) <:δ@(ST-Arr <:₁δ <:₂δ (enriched τ₁⇒τ₂'δ) (enriched τ₁'⇒τ₂δ)) (acc rec)
+  <:-thinning↓ Γ⊂Γ' Γ'ok <:δ@(ST-Arr <:₁δ <:₂δ (enriched τ₁⇒τ₂'δ) (enriched τ₁'⇒τ₂δ)) (acc rec)
     = let rec-args = ST-Arr-size-vec <:δ
           τ₁'⇒τ₂δ' = Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁'⇒τ₂δ (rec _ (<₄ rec-args (# 3)))
           τ₁'δ' = case τ₁'⇒τ₂δ' of λ where (TWF-Arr τ₁'δ' _) → τ₁'δ'
        in ST-Arr
-            (<:-thinning↓ Γ⊂Γ' (enriched Γ'ok) <:₁δ (rec _ (<₄ rec-args (# 0))))
-            (<:-thinning↓ (append-both Γ⊂Γ') (enriched (TCTX-Bind Γ'ok τ₁'δ')) <:₂δ (rec _ (<₄ rec-args (# 1))))
+            (<:-thinning↓ Γ⊂Γ' Γ'ok <:₁δ (rec _ (<₄ rec-args (# 0))))
+            (<:-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok τ₁'δ') <:₂δ (rec _ (<₄ rec-args (# 1))))
             (as-enrichment (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁⇒τ₂'δ (rec _ (<₄ rec-args (# 2)))))
             (as-enrichment τ₁'⇒τ₂δ')
-  <:-thinning↓ _ _ (ST-ADT omitted) _ = ST-ADT omitted
-  <:-thinning↓ Γ⊂Γ' (enriched Γ'ok) (ST-ADT (enriched ⊍δ)) (acc rec) = ST-ADT (enriched (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok ⊍δ (rec _ ≤-refl)))
+  <:-thinning↓ Γ⊂Γ' Γ'ok (ST-ADT (enriched ⊍δ)) (acc rec) = ST-ADT (enriched (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok ⊍δ (rec _ ≤-refl)))
 
   Γ⊢τ-thinning↓ : {Γ : Ctx (k + ℓ)}
                 → (Γ⊂Γ' : k by Γ ⊂' Γ')
@@ -133,14 +131,12 @@ mutual
             refl
             δ-substed
             (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok adtτ acc₂)
-  Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Sub δ τ'δ <:) (acc rec)
-    = let acc₁ = rec _ (s≤s (₁≤₂ _ _))
-          acc₂ = rec _ (s≤s (₂≤₃ (size-t δ) _ _))
-          acc₃ = rec _ (s≤s (₃≤₃ (size-t δ) _ _))
-       in T-Sub
-            (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ acc₁)
-            (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ'δ acc₂)
-            (<:-thinning↓ Γ⊂Γ' (as-enrichment Γ'ok) <: acc₃)
+  Γ⊢ε⦂τ-thinning↓ {φ = φ} Γ⊂Γ' Γ'ok (T-Sub εδ τ'δ <:δ) (acc rec)
+    with εδ'  ← Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _)))
+       | τ'δ' ← Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ'δ (rec _ (s≤s (₂≤₃ (size-t εδ) _ _)))
+    with φ
+  ... | E = T-Sub εδ' τ'δ' (<:-thinning↓ Γ⊂Γ' Γ'ok <:δ (rec _ (s≤s (₃≤₃ (size-t εδ) _ _))))
+  ... | M = T-Sub εδ' τ'δ' (<:-thinning-M Γ⊂Γ' <:δ)
 
   cons-thinning↓ : {Γ : Ctx (k + ℓ)}
                  → {cons : ADTCons nₐ (k + ℓ)}
@@ -184,7 +180,8 @@ mutual
             → Enrich (Γ' ok[ θ , φ ]) φ
             → Γ ⊢[ θ , φ ] τ <: τ'
             → Γ' ⊢[ θ , φ ] R.act-τ (ext-k' k suc) τ <: R.act-τ (ext-k' k suc) τ'
-<:-thinning Γ⊂Γ' [Γ'ok] δ = <:-thinning↓ Γ⊂Γ' [Γ'ok] δ (<-wellFounded _)
+<:-thinning {φ = M} Γ⊂Γ' _               δ = <:-thinning-M Γ⊂Γ' δ
+<:-thinning {φ = E} Γ⊂Γ' (enriched Γ'ok) δ = <:-thinning↓ Γ⊂Γ' Γ'ok δ (<-wellFounded _)
 
 Γ⊢τ-thinning : {Γ : Ctx (k + ℓ)}
              → (Γ⊂Γ' : k by Γ ⊂' Γ')
