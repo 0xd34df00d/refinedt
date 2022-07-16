@@ -65,8 +65,8 @@ module M {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ , M ] σ' <: σ) (Γ⊢σ' : Γ 
     = let ε₁δ' = as-sub (Γ⊢ε⦂τ-narrowing (Δ , _) ε₁δ)
           ε₂δ' = as-sub (Γ⊢ε⦂τ-narrowing (Δ , _) ε₂δ)
        in TWF-Base ε₁δ' ε₂δ'
-  Γ⊢τ-narrowing Δ (TWF-Conj τδ τδ₁) = {! !}
-  Γ⊢τ-narrowing Δ (TWF-Arr τδ τδ₁) = {! !}
+  Γ⊢τ-narrowing Δ (TWF-Conj τ₁δ τ₂δ) = {! !}
+  Γ⊢τ-narrowing Δ (TWF-Arr τ₁δ τ₂δ) = {! !}
   Γ⊢τ-narrowing Δ (TWF-ADT consδs) = {! !}
 
   SVar-narrowing : (Δ : CtxSuffix (suc ℓ) k)
