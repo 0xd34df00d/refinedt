@@ -42,7 +42,30 @@ mutual
        | ρ₂δ↓ ← Γ⊢τ-thinning↓-size  Γ⊂Γ' Γ'ok ρ₂δ (rec _ (s≤s (₂≤₂ _ _)))
     rewrite unique-Γok (Γ⊢τ-⇒-Γok ρ₂δ) Γok
           = cong suc (⊔-+-pairwise-≡ (size-ok Γok) (size-ok Γ'ok) ρ₁δ↓ ρ₂δ↓)
-  <:-thinning↓-size Γ⊂Γ' Γ'ok <:δ@(ST-Arr <:₁δ <:₂δ (enriched τ₁⇒τ₂'δ) (enriched τ₁'⇒τ₂δ)) (acc rec) = {! !}
+  <:-thinning↓-size Γ⊂Γ' Γ'ok <:δ@(ST-Arr <:₁δ <:₂δ (enriched τ₁⇒τ₂'δ) (enriched τ₁'⇒τ₂δ)) (acc rec)
+    with Γok ← Γ⊢τ-⇒-Γok τ₁⇒τ₂'δ
+       | τ₁⇒τ₂'δ' ← Γ⊢τ-thinning↓      Γ⊂Γ' Γ'ok τ₁'⇒τ₂δ (rec _ (<₄ (ST-Arr-size-vec <:δ) (# 3)))
+       | τ₁⇒τ₂'δ↓ ← Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok τ₁'⇒τ₂δ (rec _ (<₄ (ST-Arr-size-vec <:δ) (# 3)))
+       | τ₁'⇒τ₂δ' ← Γ⊢τ-thinning↓      Γ⊂Γ' Γ'ok τ₁⇒τ₂'δ (rec _ (<₄ (ST-Arr-size-vec <:δ) (# 2)))
+       | τ₁'⇒τ₂δ↓ ← Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok τ₁⇒τ₂'δ (rec _ (<₄ (ST-Arr-size-vec <:δ) (# 2)))
+       | <:₁δ' ← <:-thinning↓      Γ⊂Γ' Γ'ok <:₁δ (rec _ (<₄ (ST-Arr-size-vec <:δ) (# 0)))
+       | <:₁δ↓ ← <:-thinning↓-size Γ⊂Γ' Γ'ok <:₁δ (rec _ (<₄ (ST-Arr-size-vec <:δ) (# 0)))
+    with TWF-Arr τ₁δ' τ₂'δ' ← τ₁⇒τ₂'δ'
+    with <:₂δ' ← <:-thinning↓      (append-both Γ⊂Γ') (TCTX-Bind Γ'ok τ₁δ') <:₂δ (rec _ (<₄ (ST-Arr-size-vec <:δ) (# 1)))
+       | <:₂δ↓ ← <:-thinning↓-size (append-both Γ⊂Γ') (TCTX-Bind Γ'ok τ₁δ') <:₂δ (rec _ (<₄ (ST-Arr-size-vec <:δ) (# 1)))
+       | <₁ ← <₄ (ST-Arr-size-vec <:δ) (# 3)
+    with TWF-Arr τ₁'δ τ₂δ ← τ₁'⇒τ₂δ
+    with τ₁δ↓ ← Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok τ₁'δ (rec _ (≤-trans (s≤s (<⇒≤ (s≤s (₁≤₂ _ _)))) <₁))
+    rewrite unique-Γ⊢τ (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁'δ (rec _ (≤-trans (s≤s (<⇒≤ (s≤s (₁≤₂ _ _)))) <₁))) τ₁δ'
+          | unique-Γok (Γ⊢τ-⇒-Γok τ₁'δ) Γok
+          | unique-Γok (Γ⊢τ'<:τ-⇒-Γok <:₁δ) Γok
+          | lemma₀ τ₁δ' τ₂'δ' τ₁⇒τ₂'δ'
+          | cong (_+ size-ok Γok) (lemma₀ τ₁δ' τ₂'δ' τ₁⇒τ₂'δ')
+          | lemma₀ τ₁'δ τ₂δ τ₁'⇒τ₂δ
+          | cong (_+ size-ok Γ'ok) (lemma₀ τ₁'δ τ₂δ τ₁'⇒τ₂δ)
+          | ∥Γ,τ-ok∥≡∥τδ∥ (Γ⊢τ'<:τ-⇒-Γok <:₂δ) τ₁'δ
+          | ∥Γ,τ-ok∥≡∥τδ∥ (TCTX-Bind Γ'ok τ₁δ') τ₁δ'
+          = cong suc (lemma₃ (size-ok Γok) (size-ok Γ'ok) <:₁δ↓ <:₂δ↓ τ₁δ↓ τ₁'⇒τ₂δ↓ τ₁⇒τ₂'δ↓)
   <:-thinning↓-size Γ⊂Γ' Γ'ok (ST-ADT (enriched ⊍δ)) (acc rec) = {! !}
 
   Γ⊢τ-thinning↓-size : (Γ⊂Γ' : k by Γ ⊂' Γ')
