@@ -175,16 +175,7 @@ mutual
        | ε₂δ↓ ← Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok ε₂δ (rec _ (s≤s (₂≤₃ (size-t ε₁δ) _ _)))
     rewrite unique-Γok (Γ⊢ε⦂τ-⇒-Γok ε₁δ) Γok
           | unique-Γok (Γ⊢ε⦂τ-⇒-Γok ε₂δ) Γok
-          = cong suc $
-              begin
-                size-t ε₁δ' ⊔ (size-t ε₂δ' ⊔ size-twf resτδ') + size-ok Γok
-              ≡⟨ +-distribʳ-⊔³ (size-t ε₁δ') _ _ _ ⟩
-                (size-t ε₁δ' + size-ok Γok) ⊔ (size-t ε₂δ' + size-ok Γok) ⊔ (size-twf resτδ' + size-ok Γok)
-              ≡⟨ cong₃ (λ a b c → a ⊔ b ⊔ c) ε₁δ↓ ε₂δ↓ resτδ↓ ⟩
-                (size-t ε₁δ + size-ok Γ'ok) ⊔ (size-t ε₂δ + size-ok Γ'ok) ⊔ (size-twf resτδ + size-ok Γ'ok)
-              ≡⟨ sym (+-distribʳ-⊔³ (size-t ε₁δ) _ _ _) ⟩
-                size-t ε₁δ ⊔ (size-t ε₂δ ⊔ size-twf resτδ) + size-ok Γ'ok
-              ∎
+          = cong suc (⊔-+-pairwise-≡³ (size-ok Γok) (size-ok Γ'ok) ε₁δ↓ ε₂δ↓ resτδ↓)
   Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Case resδ εδ branches-well-typed) (acc rec) = {! !}
   Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Con ≡-prf εδ adtτ) (acc rec) = {! !}
   Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Sub εδ τδ <:δ) (acc rec) = {! !}

@@ -95,6 +95,17 @@ cong₄ _ refl refl refl refl = refl
   (a + c') ⊔ (b + c')   ≡⟨ sym (+-distribʳ-⊔ c' a _) ⟩
   a ⊔ b + c'            ∎
 
+⊔-+-pairwise-≡³ : (z z' : ℕ)
+                → a' + z ≡ a + z'
+                → b' + z ≡ b + z'
+                → c' + z ≡ c + z'
+                → a' ⊔ (b' ⊔ c') + z ≡ a ⊔ (b ⊔ c) + z'
+⊔-+-pairwise-≡³ {a'} {a} {b'} {b} {c'} {c} z z' ≡₁ ≡₂ ≡₃ = begin
+  a' ⊔ (b' ⊔ c') + z             ≡⟨ +-distribʳ-⊔³ a' _ _ _ ⟩
+  (a' + z) ⊔ (b' + z) ⊔ (c' + z) ≡⟨ cong₃ (λ a b c → a ⊔ b ⊔ c) ≡₁ ≡₂ ≡₃ ⟩
+  (a + z') ⊔ (b + z') ⊔ (c + z') ≡⟨ sym (+-distribʳ-⊔³ a _ _ _) ⟩
+  a ⊔ (b ⊔ c) + z'               ∎
+
 lemma₃ : (z z' : ℕ)
        → a' + z ≡ a + z'
        → b' + suc w ≡ b + suc w'
