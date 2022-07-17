@@ -31,4 +31,5 @@ canonical-⊍ : {cons : ADTCons (Mkℕₐ n) zero}
             → τ ≡ ⊍ cons
             → Canonical ε τ
 canonical-⊍ (T-Con ≡-prf₁ εδ adtτ) (IV-ADT is-value) ≡-prf = C-Con
-canonical-⊍ (T-Sub εδ τ'δ ()) _ refl
+canonical-⊍ (T-Sub εδ τ'δ ST-ADT) (IV-ADT iv) refl
+  with T-Con ≡-prf r adtτ ← εδ = C-Con
