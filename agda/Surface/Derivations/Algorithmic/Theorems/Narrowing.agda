@@ -36,9 +36,16 @@ module M {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ ] σ' <: σ) (Γ⊢σ' : Γ ⊢[
     = let ε₁δ' = as-sub (Γ⊢ε⦂τ-narrowing (Δ , _) ε₁δ)
           ε₂δ' = as-sub (Γ⊢ε⦂τ-narrowing (Δ , _) ε₂δ)
        in TWF-Base ε₁δ' ε₂δ'
-  Γ⊢τ-narrowing Δ (TWF-Conj τ₁δ τ₂δ) = {! !}
-  Γ⊢τ-narrowing Δ (TWF-Arr τ₁δ τ₂δ) = {! !}
-  Γ⊢τ-narrowing Δ (TWF-ADT consδs) = {! !}
+  Γ⊢τ-narrowing Δ (TWF-Conj τ₁δ τ₂δ) = TWF-Conj (Γ⊢τ-narrowing Δ τ₁δ) (Γ⊢τ-narrowing Δ τ₂δ)
+  Γ⊢τ-narrowing Δ (TWF-Arr τ₁δ τ₂δ) = TWF-Arr (Γ⊢τ-narrowing Δ τ₁δ) (Γ⊢τ-narrowing (Δ , _) τ₂δ)
+  Γ⊢τ-narrowing Δ (TWF-ADT consδs) = TWF-ADT (cons-narrowing Δ consδs)
+
+  cons-narrowing : {cons : ADTCons nₐ (k + suc ℓ)}
+                 → (Δ : CtxSuffix (suc ℓ) k)
+                 → All ((Γ , σ  ++ Δ) ⊢[ θ , M ]_) cons
+                 → All ((Γ , σ' ++ Δ) ⊢[ θ , M ]_) cons
+  cons-narrowing Δ [] = []
+  cons-narrowing Δ (τδ ∷ δs) = Γ⊢τ-narrowing Δ τδ ∷ cons-narrowing Δ δs
 
   SVar-narrowing : (Δ : CtxSuffix (suc ℓ) k)
                  → (Γ , σ ++ Δ) ok[ θ , M ]
