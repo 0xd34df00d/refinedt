@@ -17,42 +17,14 @@ open import Surface.Syntax.CtxSuffix
 open import Surface.Syntax.Membership
 open import Surface.Syntax.Renaming as R
 open import Surface.Syntax.Substitution as S
-open import Surface.Syntax.Substitution using ([_↦τ_]_; [_↦ε_]_; [_↦c_]_)
 open import Surface.Syntax.Substitution.Stable
 open import Surface.Syntax.Substitution.Distributivity as S
 open import Surface.Syntax.Substitution.Commutativity
+open import Surface.Derivations.Common.Theorems.Substitution.Helpers
 open import Surface.Derivations.Declarative
 open import Surface.Derivations.Declarative.Theorems.Thinning
 
 -- Substitution lemmas
-
--- Some local helpers
-
-weaken-↦<-suc-comm-τ : ∀ {k ℓ} {τ : SType (suc k + ℓ)} (ε : STerm ℓ)
-                     → [ ℓ ↦τ< ε ] weaken-τ τ ≡ weaken-τ ([ ℓ ↦τ< ε ] τ)
-weaken-↦<-suc-comm-τ {k} {ℓ} {τ} ε
-  rewrite ρ-σ-distr-τ suc (replace-at (ctx-idx k) (weaken-ε-k k ε)) τ
-        | σ-ρ-distr-τ (replace-at (suc (ctx-idx k)) (weaken-ε-k (suc k) ε)) suc τ
-        | S.act-τ-extensionality (weaken-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ
-        | weaken-ε-suc-k k ε
-        = refl
-
-var-earlier-in-Γ-remains : (Δ : ,-CtxSuffix ℓ σ k)
-                         → τ ∈ Γ ,σ, Δ at ι
-                         → (k<ι : ctx-idx k < ι)
-                         → [ ℓ ↦τ< ε ] τ ∈ Γ ++ [↦Δ ε ] Δ at m<n-n-pred k<ι
-var-earlier-in-Γ-remains {ε = ε}
-                         [ _ ]   (∈-suc {τ = τ} refl ∈) (<-zero _) rewrite replace-weakened-τ-zero (R.weaken-ε-k zero ε) τ = ∈
-var-earlier-in-Γ-remains {ι = (suc (suc _))} {ε = ε}
-                         (Δ , _) (∈-suc {τ = τ} refl ∈) (<-suc k<ι) = ∈-suc (weaken-↦<-suc-comm-τ ε) (var-earlier-in-Γ-remains Δ ∈ k<ι)
-
-var-later-in-Γ-remains : (Δ : ,-CtxSuffix ℓ σ k)
-                       → τ ∈ Γ ,σ, Δ at ι
-                       → (k>ι : ctx-idx k > ι)
-                       → [ ctx-idx k ↦τ R.weaken-ε-k k ε ] τ ∈ Γ ++ [↦Δ ε ] Δ at tighten k>ι
-var-later-in-Γ-remains {ε = ε} (Δ , τ) (∈-zero refl) (<-zero _) = ∈-zero (weaken-↦<-suc-comm-τ ε)
-var-later-in-Γ-remains {ε = ε} (Δ , _) (∈-suc {τ = τ} refl ∈) (<-suc k>ι) = ∈-suc (weaken-↦<-suc-comm-τ ε) (var-later-in-Γ-remains Δ ∈ k>ι)
-
 -- Referred to as typing-substitution in the paper
 mutual
   sub-Γok : (Δ : ,-CtxSuffix ℓ σ k)
