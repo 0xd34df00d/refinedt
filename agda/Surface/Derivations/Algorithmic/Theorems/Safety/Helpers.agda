@@ -22,7 +22,7 @@ canonical-⇒ : ⊘ ⊢[ θ , φ of κ ] ε ⦂ τ
             → τ ≡ τ₁ ⇒ τ₂
             → Canonical ε τ
 canonical-⇒ (T-Abs arrδ εδ) is-value ≡-prf = C-Lam
-canonical-⇒ (T-Sub εδ τ'δ (ST-Arr _ _ _ _)) is-value refl
+canonical-⇒ (T-Sub εδ τ'δ (ST-Arr _ _)) is-value refl
   with C-Lam ← canonical-⇒ εδ is-value refl = C-Lam
 
 canonical-⊍ : {cons : ADTCons (Mkℕₐ n) zero}

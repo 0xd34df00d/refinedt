@@ -34,13 +34,7 @@ mutual
   to-M-ε (T-App ε₁δ ε₂δ resτ-≡ resτδ) = T-App (to-M-ε ε₁δ) (to-M-ε ε₂δ) resτ-≡ (to-M-τ resτδ)
   to-M-ε (T-Case resδ εδ branchesδ) = T-Case (to-M-τ resδ) (to-M-ε εδ) (to-M-branches branchesδ)
   to-M-ε (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (to-M-ε εδ) (to-M-τ adtτ)
-  to-M-ε (T-Sub εδ τδ <:δ) = T-Sub (to-M-ε εδ) (to-M-τ τδ) (to-M-<: <:δ)
-
-  to-M-<: : Γ ⊢[ θ , E ] τ' <: τ
-          → Γ ⊢[ θ , M ] τ' <: τ
-  to-M-<: (ST-Base is-just _ _) = ST-Base is-just omitted omitted
-  to-M-<: (ST-Arr <:₁δ <:₂δ _ _) = ST-Arr (to-M-<: <:₁δ) (to-M-<: <:₂δ) omitted omitted
-  to-M-<: (ST-ADT _) = ST-ADT omitted
+  to-M-ε (T-Sub εδ τδ <:δ) = T-Sub (to-M-ε εδ) (to-M-τ τδ) <:δ
 
   to-M-cons : {cons : ADTCons nₐ ℓ}
             → All (Γ ⊢[ θ , E ]_) cons
@@ -77,20 +71,7 @@ mutual
   to-E-ε (T-App ε₁δ ε₂δ resτ-≡ resτδ) = T-App (to-E-ε ε₁δ) (to-E-ε ε₂δ) resτ-≡ (to-E-τ resτδ)
   to-E-ε (T-Case resδ εδ branchesδ) = T-Case (to-E-τ resδ) (to-E-ε εδ) (to-E-branches branchesδ)
   to-E-ε (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (to-E-ε εδ) (to-E-τ adtτ)
-  to-E-ε (T-Sub εδ τδ <:δ) = T-Sub (to-E-ε εδ) (to-E-τ τδ) (to-E-<: (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ) τδ <:δ)
-
-  to-E-<: : Γ ⊢[ θ , M ] τ'
-          → Γ ⊢[ θ , M ] τ
-          → Γ ⊢[ θ , M ] τ' <: τ
-          → Γ ⊢[ θ , E ] τ' <: τ
-  to-E-<: τ'δ τδ (ST-Base is-just _ _) = ST-Base is-just (enriched (to-E-τ τ'δ)) (enriched (to-E-τ τδ))
-  to-E-<: τ'δ@(TWF-Arr τ₁δ τ₂'δ) τδ@(TWF-Arr τ₁'δ τ₂δ) (ST-Arr <:₁δ <:₂δ _ _)
-    = ST-Arr
-        (to-E-<: τ₁'δ τ₁δ <:₁δ)
-        (to-E-<: {! !} τ₂δ <:₂δ)
-        (enriched (to-E-τ τ'δ))
-        (enriched (to-E-τ τδ))
-  to-E-<: _   τδ (ST-ADT ⊍δ) = ST-ADT (enriched (to-E-τ τδ))
+  to-E-ε (T-Sub εδ τδ <:δ) = T-Sub (to-E-ε εδ) (to-E-τ τδ) <:δ
 
   to-E-cons : {cons : ADTCons nₐ ℓ}
             → All (Γ ⊢[ θ , M ]_) cons

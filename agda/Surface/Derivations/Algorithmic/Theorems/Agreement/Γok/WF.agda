@@ -22,7 +22,6 @@ open import Surface.Derivations.Algorithmic
 size-ok  : Γ ok[ θ , φ ]         → ℕ
 size-twf : Γ ⊢[ θ , φ ] τ        → ℕ
 size-t   : Γ ⊢[ θ , φ of κ ] ε ⦂ τ    → ℕ
-size-<:  : Γ ⊢[ θ , φ ] τ₁ <: τ₂ → ℕ
 size-bs  : ∀ {τ cons} {bs : CaseBranches nₐ ℓ}
          → BranchesHaveType θ φ Γ cons bs τ
          → ℕ
@@ -46,28 +45,7 @@ size-t (T-Abs arrδ bodyδ) = suc (size-twf arrδ ⊕ size-t bodyδ)
 size-t (T-App δ₁ δ₂ _ resτδ) = suc (size-t δ₁ ⊕ size-t δ₂ ⊕ size-twf resτδ)
 size-t (T-Case resδ scrutτδ branches) = suc (size-t scrutτδ ⊕ size-twf resδ ⊕ size-bs branches)
 size-t (T-Con _ conArg adtτ) = suc (size-t conArg ⊕ size-twf adtτ)
-size-t (T-Sub δ superδ sub) = suc (size-t δ ⊕ size-twf superδ ⊕ size-<: sub)
-
-size-<: {φ = M} _ = 0
-size-<: {φ = E} (ST-Base _ (enriched ρ₁δ) (enriched ρ₂δ)) = suc (size-twf ρ₁δ ⊕ size-twf ρ₂δ)
-size-<: {φ = E} (ST-Arr sub₁ sub₂ (enriched τ₁⇒τ₂'δ) (enriched τ₁'⇒τ₂δ)) = suc (size-<: sub₁ ⊕ size-<: sub₂ ⊕ size-twf τ₁⇒τ₂'δ ⊕ size-twf τ₁'⇒τ₂δ)
-size-<: {φ = E} (ST-ADT (enriched ⊍δ)) = suc (size-twf ⊍δ)
+size-t (T-Sub δ superδ _) = suc (size-t δ ⊕ size-twf superδ)
 
 size-bs NoBranches = 0
 size-bs (OneMoreBranch εδ rest) = suc (size-t εδ ⊕ size-bs rest)
-
-ST-Arr-size-vec : Γ ⊢[ θ , E ] τ₁ ⇒ τ₂' <: τ₁' ⇒ τ₂
-                → Vec ℕ 4
-ST-Arr-size-vec (ST-Arr <:₁δ <:₂δ (enriched τ₁⇒τ₂'δ) (enriched τ₁'⇒τ₂δ))
-  = size-<: <:₁δ
-  ∷ size-<: <:₂δ
-  ∷ size-twf τ₁⇒τ₂'δ
-  ∷ size-twf τ₁'⇒τ₂δ
-  ∷ []
-
--- A trivial lemma that's a bit annoying to spell out and that'll be needed in a couple of other places
-ST-Arr-τ₁'-smaller : ∀ {<:₁δ} {<:₂δ} {τ₁⇒τ₂'δ} {τ₁'δ : Γ ⊢[ θ , E ] τ₁'} {τ₂δ}
-                   → (<:δ : Γ ⊢[ θ , E ] τ₁ ⇒ τ₂' <: τ₁' ⇒ τ₂)
-                   → ⦃ <:δ ≡ ST-Arr <:₁δ <:₂δ (enriched τ₁⇒τ₂'δ) (enriched (TWF-Arr τ₁'δ τ₂δ)) ⦄
-                   → size-twf τ₁'δ < size-<: <:δ
-ST-Arr-τ₁'-smaller <:δ ⦃ refl ⦄ = ≤-trans (s≤s (≤-trans (₁≤₂ _ _) (n≤1+n _))) (<₄ (ST-Arr-size-vec <:δ) (# 3))

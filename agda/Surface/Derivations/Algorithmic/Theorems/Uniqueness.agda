@@ -102,29 +102,15 @@ mutual
           | unique-<: <:₁ <:₂
           = refl
 
-  unique-<: : Irrelevant (Γ ⊢[ θ , φ ] τ' <: τ)
-  unique-<: (ST-Base is-just₁ omitted omitted) (ST-Base is-just₂ omitted omitted)
+  unique-<: : Irrelevant (Γ ⊢[ θ ] τ' <: τ)
+  unique-<: (ST-Base is-just₁) (ST-Base is-just₂)
     rewrite irrelevant (λ _ _ → refl) is-just₁ is-just₂
           = refl
-  unique-<: (ST-Base is-just₁ (enriched δ₁₁) (enriched δ₂₁)) (ST-Base is-just₂ (enriched δ₁₂) (enriched δ₂₂))
-    rewrite irrelevant (λ _ _ → refl) is-just₁ is-just₂
-          | unique-Γ⊢τ δ₁₁ δ₁₂
-          | unique-Γ⊢τ δ₂₁ δ₂₂
-          = refl
-  unique-<: (ST-Arr <:₁₁ <:₂₁ omitted omitted) (ST-Arr <:₁₂ <:₂₂ omitted omitted)
+  unique-<: (ST-Arr <:₁₁ <:₂₁) (ST-Arr <:₁₂ <:₂₂)
     rewrite unique-<: <:₁₁ <:₁₂
           | unique-<: <:₂₁ <:₂₂
           = refl
-  unique-<: (ST-Arr <:₁₁ <:₂₁ (enriched δ₁₁) (enriched δ₂₁)) (ST-Arr <:₁₂ <:₂₂ (enriched δ₁₂) (enriched δ₂₂))
-    rewrite unique-<: <:₁₁ <:₁₂
-          | unique-<: <:₂₁ <:₂₂
-          | unique-Γ⊢τ δ₁₁ δ₁₂
-          | unique-Γ⊢τ δ₂₁ δ₂₂
-          = refl
-  unique-<: (ST-ADT omitted) (ST-ADT omitted) = refl
-  unique-<: (ST-ADT (enriched δ₁)) (ST-ADT (enriched δ₂))
-    rewrite unique-Γ⊢τ δ₁ δ₂
-          = refl
+  unique-<: ST-ADT ST-ADT = refl
 
   unique-cons : ∀ {cons : ADTCons nₐ ℓ}
               → Irrelevant (All (Γ ⊢[ θ , φ ]_) cons)

@@ -26,11 +26,11 @@ variable
 
 data _ok[_,_]        : (Γ : Ctx ℓ) → Oracle → TSFlavour → Set
 data _⊢[_,_of_]_⦂_   (Γ : Ctx ℓ) (θ : Oracle) (φ : TSFlavour) : (κ : RuleKind) → (ε : STerm ℓ) → (τ : SType ℓ) → Set
-data _⊢[_,_]_<:_     (Γ : Ctx ℓ) (θ : Oracle) (φ : TSFlavour) : (τ' τ : SType ℓ) → Set
+data _⊢[_]_<:_       (Γ : Ctx ℓ) (θ : Oracle)                 : (τ' τ : SType ℓ) → Set
 data _⊢[_,_]_        (Γ : Ctx ℓ) (θ : Oracle) (φ : TSFlavour) : (τ : SType ℓ) → Set
 
 infix 2 _⊢[_,_of_]_⦂_
-infix 2 _⊢[_,_]_<:_
+infix 2 _⊢[_]_<:_
 infix 1 _⊢[_,_]_
 
 data BranchesHaveType (θ : Oracle) (φ : TSFlavour) (Γ : Ctx ℓ)
@@ -95,19 +95,14 @@ data _⊢[_,_of_]_⦂_ {ℓ} Γ θ φ where
               → Γ ⊢[ θ , φ of not-t-sub ] SCon ι ε cons ⦂ ⊍ cons
   T-Sub       : (εδ : Γ ⊢[ θ , φ of not-t-sub ] ε ⦂ τ')
               → (τδ : Γ ⊢[ θ , φ ] τ)
-              → (<:δ : Γ ⊢[ θ , φ ] τ' <: τ)
+              → (<:δ : Γ ⊢[ θ ] τ' <: τ)
               → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ
 
-data _⊢[_,_]_<:_ {ℓ} Γ θ φ where
+data _⊢[_]_<:_ {ℓ} Γ θ where
   ST-Base : (is-just : Is-just (Oracle.decide θ Γ b ρ₁ ρ₂))
-          → (ρ₁δ : Enrich (Γ ⊢[ θ , φ ] ⟨ b ∣ ρ₁ ⟩) φ)
-          → (ρ₂δ : Enrich (Γ ⊢[ θ , φ ] ⟨ b ∣ ρ₂ ⟩) φ)
-          → Γ ⊢[ θ , φ ] ⟨ b ∣ ρ₁ ⟩ <: ⟨ b ∣ ρ₂ ⟩
-  ST-Arr  : (<:₁δ : Γ ⊢[ θ , φ ] τ₁' <: τ₁)
-          → (<:₂δ : Γ , τ₁' ⊢[ θ , φ ] τ₂' <: τ₂)
-          → (τ₁⇒τ₂'δ : Enrich (Γ ⊢[ θ , φ ] τ₁ ⇒ τ₂') φ)
-          → (τ₁'⇒τ₂δ : Enrich (Γ ⊢[ θ , φ ] τ₁' ⇒ τ₂) φ)
-          → Γ ⊢[ θ , φ ] τ₁ ⇒ τ₂' <: τ₁' ⇒ τ₂
+          → Γ ⊢[ θ ] ⟨ b ∣ ρ₁ ⟩ <: ⟨ b ∣ ρ₂ ⟩
+  ST-Arr  : (<:₁δ : Γ ⊢[ θ ] τ₁' <: τ₁)
+          → (<:₂δ : Γ , τ₁' ⊢[ θ ] τ₂' <: τ₂)
+          → Γ ⊢[ θ ] τ₁ ⇒ τ₂' <: τ₁' ⇒ τ₂
   ST-ADT  : {adtCons : ADTCons nₐ ℓ}
-          → (⊍δ : Enrich (Γ ⊢[ θ , φ ] ⊍ adtCons) φ)
-          → Γ ⊢[ θ , φ ] ⊍ adtCons <: ⊍ adtCons
+          → Γ ⊢[ θ ] ⊍ adtCons <: ⊍ adtCons
