@@ -143,12 +143,16 @@ sub-Γ⊢ε⦂τ-front : {Γ : Ctx ℓ}
                 → Γ ⊢[ θ , φ ] ϖ ⦂ σ
                 → Γ , σ ⊢[ θ , φ ] ε ⦂ τ
                 → Γ ⊢[ θ , φ ] [ zero ↦ε ϖ ] ε ⦂ [ zero ↦τ ϖ ] τ
-sub-Γ⊢ε⦂τ-front {ϖ = ϖ} ϖδ εδ with sub-Γ⊢ε⦂τ [ _ ] ϖδ εδ
-... | full rewrite R.act-ε-id (λ _ → refl) ϖ = full
+sub-Γ⊢ε⦂τ-front {ϖ = ϖ} ϖδ εδ
+  with εδ' ← sub-Γ⊢ε⦂τ [ _ ] ϖδ εδ
+  rewrite R.act-ε-id (λ _ → refl) ϖ
+        = εδ'
 
 sub-Γ⊢τ-front : {Γ : Ctx ℓ}
               → Γ ⊢[ θ , φ ] ε ⦂ σ
               → Γ , σ ⊢[ θ , φ ] τ
               → Γ ⊢[ θ , φ ] [ zero ↦τ ε ] τ
-sub-Γ⊢τ-front {ε = ε} εδ τδ with sub-Γ⊢τ [ _ ] εδ τδ
-... | full rewrite R.act-ε-id (λ _ → refl) ε = full
+sub-Γ⊢τ-front {ε = ε} εδ τδ
+  with τδ' ← sub-Γ⊢τ [ _ ] εδ τδ
+  rewrite R.act-ε-id (λ _ → refl) ε
+        = τδ'

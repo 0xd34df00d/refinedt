@@ -1,3 +1,5 @@
+{-# OPTIONS --allow-unsolved-metas #-}
+
 module Surface.Derivations.Algorithmic.Theorems.Substitution where
 
 open import Data.Empty using (⊥; ⊥-elim)
@@ -19,8 +21,29 @@ open import Surface.Syntax.Substitution using ([_↦τ_]_; [_↦ε_]_; [_↦c_]_
 open import Surface.Syntax.Substitution.Stable
 open import Surface.Syntax.Substitution.Distributivity as S
 open import Surface.Syntax.Substitution.Commutativity
+open import Surface.Derivations.Common.Theorems.Substitution.Helpers
 open import Surface.Derivations.Algorithmic
 open import Surface.Derivations.Algorithmic.Theorems.Thinning
+
+sub-Γ⊢τ'<:τ : (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ)
+            → (Δ : ,-CtxSuffix ℓ σ k)
+            → Γ ,σ, Δ ⊢[ θ ] τ' <: τ
+            → Γ ++ [↦Δ ε ] Δ ⊢[ θ ] [ ℓ ↦τ< ε ] τ' <: [ ℓ ↦τ< ε ] τ
+sub-Γ⊢τ'<:τ {θ = θ} εδ Δ (ST-Base is-just) = ST-Base (Oracle.subst {- TODO εδ -} θ is-just)
+sub-Γ⊢τ'<:τ {ε = ε} {k = k} εδ Δ (ST-Arr {τ₂' = τ₂'} {τ₂ = τ₂} <:₁δ <:₂δ)
+  rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
+        | S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂'
+        | R.act-ε-distr (raise k) suc ε
+        = ST-Arr (sub-Γ⊢τ'<:τ εδ Δ <:₁δ) (sub-Γ⊢τ'<:τ εδ (Δ , _) <:₂δ)
+sub-Γ⊢τ'<:τ εδ Δ ST-ADT = ST-ADT
+
+sub-Γ⊢τ'<:τ-front : (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ)
+                  → Γ , σ ⊢[ θ ] τ' <: τ
+                  → Γ ⊢[ θ ] [ zero ↦τ ε ] τ' <: [ zero ↦τ ε ] τ
+sub-Γ⊢τ'<:τ-front {ε = ε} εδ <:δ
+  with <:δ' ← sub-Γ⊢τ'<:τ εδ [ _ ] <:δ
+  rewrite R.act-ε-id (λ _ → refl) ε
+        = <:δ'
 
 module M {σ : SType ℓ} (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) where mutual
   sub-Γok : (Δ : ,-CtxSuffix ℓ σ k)
@@ -57,11 +80,11 @@ module M {σ : SType ℓ} (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) where mu
             → Γ ++ [↦Δ ε ] Δ ⊢[ θ , φ of κ₀ ] [ ℓ ↦ε< ε ] ε₀ ⦂ [ ℓ ↦τ< ε ] τ
   sub-Γ⊢ε⦂τ Δ (T-Unit Γok) = T-Unit (sub-Γok Δ Γok)
   sub-Γ⊢ε⦂τ {k = k} Δ (T-Var {ι = ι} Γok ∈) with ctx-idx k <>? ι
-  ... | less k<ι = {! !}
+  ... | less k<ι = T-Var (sub-Γok Δ Γok) (var-earlier-in-Γ-remains Δ ∈ k<ι)
   ... | equal refl rewrite ∈-at-concat-point Δ ∈
                          | replace-weakened-τ k (weaken-ε-k k ε) σ
                          = {! !}
-  ... | greater k>ι = {! !}
+  ... | greater k>ι = T-Var (sub-Γok Δ Γok) (var-later-in-Γ-remains Δ ∈ k>ι)
   sub-Γ⊢ε⦂τ Δ (T-Abs arrδ δ) = {! !}
   sub-Γ⊢ε⦂τ Δ (T-App δ δ₁ resτ-≡ resτδ) = {! !}
   sub-Γ⊢ε⦂τ Δ (T-Case resδ δ branches-well-typed) = {! !}
@@ -76,3 +99,14 @@ module M {σ : SType ℓ} (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) where mu
   "higher" relation, which, in case of the enriched system, also pulls in
   narrowing for the type well-formedness witnesses that it carries.
   -}
+
+open M public
+
+sub-Γ⊢τ-front : {Γ : Ctx ℓ}
+              → Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ
+              → Γ , σ ⊢[ θ , φ ] τ
+              → Γ ⊢[ θ , φ ] [ zero ↦τ ε ] τ
+sub-Γ⊢τ-front {ε = ε} εδ τδ
+  with τδ' ← sub-Γ⊢τ εδ [ _ ] τδ
+  rewrite R.act-ε-id (λ _ → refl) ε
+        = τδ'
