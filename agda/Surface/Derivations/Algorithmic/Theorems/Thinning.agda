@@ -5,7 +5,7 @@ module Surface.Derivations.Algorithmic.Theorems.Thinning where
 open import Data.Fin using (zero; suc; raise; #_)
 open import Data.Nat.Base
 open import Data.Nat.Induction
-open import Data.Nat.Properties using (≤-refl; ≤-trans; n≤1+n; ≤-stepsˡ)
+open import Data.Nat.Properties using (≤-refl; ≤-trans; n≤1+n; m≤n⇒m≤n⊔o)
 open import Data.Vec.Base using (lookup; _∷_)
 open import Function
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst; sym)
@@ -156,19 +156,15 @@ mutual
                      → Acc _<_ (size-bs δs)
                      → BranchesHaveType θ φ Γ' (R.act-cons (ext-k' k suc) cons) (R.act-branches (ext-k' k suc) bs) (R.act-τ (ext-k' k suc) τ)
   branches-thinning↓ Γ⊂Γ' Γ'ok NoBranches _ = NoBranches
-  branches-thinning↓ {k = k} {Γ' = Γ'} {τ = τ} Γ⊂Γ' Γ'ok (OneMoreBranch {ε' = ε'} {conτ = conτ} εδ branchesδ) (acc rec)
+  branches-thinning↓ {k = k} {τ = τ} Γ⊂Γ' Γ'ok (OneMoreBranch εδ branchesδ) (acc rec)
     with TCTX-Bind _ conτδ ← Γ⊢ε⦂τ-⇒-Γok εδ
-       | sub-≤ ← Γ⊢ε⦂τ-⇒-Γok-smaller εδ
-       = let acc₁ = rec _ (s≤s (₁≤₂ _ _))
-             acc₂ = rec _ (s≤s (₂≤₂ _ _))
-             acc₃ = rec _ (s≤s (≤-trans (≤-trans (≤-stepsˡ 2 (₂≤₂ _ _)) sub-≤) (₁≤₂ _ _)))
-             conτδ-thinned = Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok conτδ acc₃
-             εδ' = Γ⊢ε⦂τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok conτδ-thinned) εδ acc₁
-             derivable τ = Γ' , R.act-τ (ext-k' k suc) conτ ⊢[ _ , _ of _ ] R.act-ε (R.ext (ext-k' k suc)) ε' ⦂ τ
-             εδ'-substed = subst derivable (ext-k'-suc-commute k τ) εδ'
-          in OneMoreBranch
-               εδ'-substed
-               (branches-thinning↓ Γ⊂Γ' Γ'ok branchesδ acc₂)
+    with εδ' ← (let conτ-acc = rec _ (s≤s (m≤n⇒m≤n⊔o _ (∥Γ⊢τ₁∥≤∥Γ,τ₁⊢ε⦂τ₂∥ conτδ εδ)))
+                    conτδ' = Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok conτδ conτ-acc
+                 in Γ⊢ε⦂τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok conτδ') εδ (rec _ (s≤s (₁≤₂ _ _))))
+    rewrite ext-k'-suc-commute k τ
+          = OneMoreBranch
+              εδ'
+              (branches-thinning↓ Γ⊂Γ' Γ'ok branchesδ (rec _ (s≤s (₂≤₂ _ _))))
 
 
 <:-thinning : {Γ : Ctx (k + ℓ)}

@@ -91,3 +91,12 @@ open import Surface.Derivations.Algorithmic.Theorems.Uniqueness
             → (τδ : Γ ⊢[ θ , φ ] τ)
             → size-ok Γok < size-twf τδ
 ∥Γok∥≤∥Γ⊢τ∥ Γok τδ rewrite unique-Γok Γok (Γ⊢τ-⇒-Γok τδ) = Γ⊢τ-⇒-Γok-smaller τδ
+
+∥Γ⊢τ₁∥≤∥Γ,τ₁⊢ε⦂τ₂∥ : (τδ : Γ ⊢[ θ , φ ] τ₁)
+                   → (εδ : Γ , τ₁ ⊢[ θ , φ of κ ] ε ⦂ τ₂)
+                   → size-twf τδ ≤ size-t εδ
+∥Γ⊢τ₁∥≤∥Γ,τ₁⊢ε⦂τ₂∥ τδ εδ
+  with TCTX-Bind _ τδ' ← Γ⊢ε⦂τ-⇒-Γok εδ
+     | smaller ← Γ⊢ε⦂τ-⇒-Γok-smaller εδ
+  rewrite unique-Γ⊢τ τδ τδ'
+        = ≤-trans (≤-stepsˡ 2 (m≤n⊔m _ _)) smaller
