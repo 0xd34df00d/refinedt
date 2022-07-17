@@ -4,8 +4,7 @@ open import Data.Fin using (zero; suc; raise; #_)
 open import Data.Nat
 open import Data.Nat.Induction
 open import Data.Nat.Properties
-open import Data.Nat.Tactic.RingSolver
-open import Data.Vec.Base using (lookup; _∷_)
+open import Data.Vec.Base using (lookup; _∷_; [])
 open import Function
 open import Relation.Binary.PropositionalEquality as Eq using (_≡_; refl; subst; sym; cong; cong₂)
 open Eq.≡-Reasoning
@@ -138,6 +137,38 @@ mutual
     rewrite unique-Γok (Γ⊢τ-⇒-Γok τδ) Γok
           = cong suc (⊔-+-pairwise-≡ (size-ok Γok) (size-ok Γ'ok) τδ↓ consδs↓)
 
+  branches-thinning↓-size : {cons : ADTCons (Mkℕₐ (suc n)) (k + ℓ)}
+                          → {bs : CaseBranches (Mkℕₐ (suc n)) (k + ℓ)}
+                          → (Γ⊂Γ' : k by Γ ⊂' Γ')
+                          → (Γok : Γ ok[ θ , φ ])
+                          → (Γ'ok : Γ' ok[ θ , φ ])
+                          → (δs : BranchesHaveType θ φ Γ cons bs τ)
+                          → (acc : Acc _<_ (size-bs δs))
+                          → size-bs (branches-thinning↓ Γ⊂Γ' Γ'ok δs acc) + size-ok Γok
+                            ≡
+                            size-bs δs + size-ok Γ'ok
+  branches-thinning↓-size {n = n} {k = k} {τ = τ} Γ⊂Γ' Γok Γ'ok (OneMoreBranch εδ δs) (acc rec)
+    with TCTX-Bind _ conτδ ← Γ⊢ε⦂τ-⇒-Γok εδ
+    with conτ-acc ← rec _ (s≤s (m≤n⇒m≤n⊔o _ (∥Γ⊢τ₁∥≤∥Γ,τ₁⊢ε⦂τ₂∥ conτδ εδ)))
+    with conτδ' ← Γ⊢τ-thinning↓      Γ⊂Γ' Γ'ok conτδ conτ-acc
+       | conτδ↓ ← Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok conτδ conτ-acc
+    with εδ' ← Γ⊢ε⦂τ-thinning↓      (append-both Γ⊂Γ') (TCTX-Bind Γ'ok conτδ') εδ (rec _ (s≤s (₁≤₂ _ _)))
+       | εδ↓ ← Γ⊢ε⦂τ-thinning↓-size (append-both Γ⊂Γ') (TCTX-Bind Γ'ok conτδ') εδ (rec _ (s≤s (₁≤₂ _ _)))
+    rewrite ext-k'-suc-commute k τ
+          | unique-Γok (Γ⊢τ-⇒-Γok conτδ) Γok
+          | unique-Γok (Γ⊢ε⦂τ-⇒-Γok εδ) (TCTX-Bind Γok conτδ)
+          | ∥Γ,τ-ok∥≡∥τδ∥ (TCTX-Bind Γok conτδ) conτδ
+          | ∥Γ,τ-ok∥≡∥τδ∥ (TCTX-Bind Γ'ok conτδ') conτδ'
+    with δs
+  ... | NoBranches
+        rewrite ⊔-identityʳ (size-t εδ')
+              | ⊔-identityʳ (size-t εδ)
+              = cong suc (lemma₂ conτδ↓ εδ↓)
+  ... | δs@(OneMoreBranch εδ₁ δs₁)
+        with δs'@(OneMoreBranch εδ₁' δs₁') ← branches-thinning↓      Γ⊂Γ'     Γ'ok δs (rec _ (s≤s (₂≤₂ _ _)))
+           | δs↓                           ← branches-thinning↓-size Γ⊂Γ' Γok Γ'ok δs (rec _ (s≤s (₂≤₂ _ _)))
+           = cong suc (⊔-+-pairwise-≡ (size-ok Γok) (size-ok Γ'ok) (lemma₂ conτδ↓ εδ↓) δs↓)
+
   Γ⊢ε⦂τ-thinning↓-size : (Γ⊂Γ' : k by Γ ⊂' Γ')
                        → (Γ'ok : Γ' ok[ θ , φ ])
                        → (εδ : Γ ⊢[ θ , φ of κ ] ε ⦂ τ)
@@ -176,7 +207,16 @@ mutual
     rewrite unique-Γok (Γ⊢ε⦂τ-⇒-Γok ε₁δ) Γok
           | unique-Γok (Γ⊢ε⦂τ-⇒-Γok ε₂δ) Γok
           = cong suc (⊔-+-pairwise-≡³ (size-ok Γok) (size-ok Γ'ok) ε₁δ↓ ε₂δ↓ resτδ↓)
-  Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Case resδ εδ branches-well-typed) (acc rec) = {! !}
+  Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Case resδ εδ branchesδ) (acc rec)
+    with εδ' ← Γ⊢ε⦂τ-thinning↓      Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _)))
+       | εδ↓ ← Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _)))
+       | resδ' ← Γ⊢τ-thinning↓      Γ⊂Γ' Γ'ok resδ (rec _ (s≤s (₂≤₃ (size-t εδ) _ _)))
+       | resδ↓ ← Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok resδ (rec _ (s≤s (₂≤₃ (size-t εδ) _ _)))
+    with Γok ← Γ⊢ε⦂τ-⇒-Γok εδ
+    with branchesδ' ← branches-thinning↓      Γ⊂Γ'     Γ'ok branchesδ (rec _ (s≤s (₃≤₃ (size-t εδ) _ _)))
+       | branchesδ↓ ← branches-thinning↓-size Γ⊂Γ' Γok Γ'ok branchesδ (rec _ (s≤s (₃≤₃ (size-t εδ) _ _)))
+    rewrite unique-Γok (Γ⊢τ-⇒-Γok resδ) Γok
+          = cong suc (⊔-+-pairwise-≡³ (size-ok Γok) (size-ok Γ'ok) εδ↓ resδ↓ branchesδ↓)
   Γ⊢ε⦂τ-thinning↓-size {k = k} Γ⊂Γ' Γ'ok (T-Con {ι = ι} {cons = cons} refl εδ adtτδ) (acc rec)
     with Γok ← Γ⊢ε⦂τ-⇒-Γok εδ
        | εδ' ← Γ⊢ε⦂τ-thinning↓      Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _)))
