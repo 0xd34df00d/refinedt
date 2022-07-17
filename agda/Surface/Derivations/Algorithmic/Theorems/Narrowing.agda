@@ -21,16 +21,16 @@ as-sub' : Γ ⊢[ θ ] τ' <: τ
 as-sub' <:δ τδ ⟨ t-sub , T-Sub εδ _ <:'δ ⟩ = T-Sub εδ τδ (<:-transitive <:'δ <:δ)
 as-sub' <:δ τδ ⟨ not-t-sub , εδ ⟩ = T-Sub εδ τδ <:δ
 
-module M {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ ] σ' <: σ) (Γ⊢σ' : Γ ⊢[ θ , M ] σ') where mutual
+module φ {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ ] σ' <: σ) (Γ⊢σ' : Γ ⊢[ θ , φ ] σ') where mutual
   Γok-narrowing : (Δ : CtxSuffix (suc ℓ) k)
-                → (Γ , σ  ++ Δ) ok[ θ , M ]
-                → (Γ , σ' ++ Δ) ok[ θ , M ]
+                → (Γ , σ  ++ Δ) ok[ θ , φ ]
+                → (Γ , σ' ++ Δ) ok[ θ , φ ]
   Γok-narrowing ⊘ (TCTX-Bind Γok τδ) = TCTX-Bind Γok Γ⊢σ'
   Γok-narrowing (Δ , _) (TCTX-Bind Γ,σ,Δ-ok τδ) = TCTX-Bind (Γok-narrowing Δ Γ,σ,Δ-ok) (Γ⊢τ-narrowing Δ τδ)
 
   Γ⊢τ-narrowing : (Δ : CtxSuffix (suc ℓ) k)
-                → Γ , σ  ++ Δ ⊢[ θ , M ] τ
-                → Γ , σ' ++ Δ ⊢[ θ , M ] τ
+                → Γ , σ  ++ Δ ⊢[ θ , φ ] τ
+                → Γ , σ' ++ Δ ⊢[ θ , φ ] τ
   Γ⊢τ-narrowing Δ (TWF-TrueRef Γok) = TWF-TrueRef (Γok-narrowing Δ Γok)
   Γ⊢τ-narrowing Δ (TWF-Base ε₁δ ε₂δ)
     = let ε₁δ' = as-sub (Γ⊢ε⦂τ-narrowing (Δ , _) ε₁δ)
@@ -42,15 +42,15 @@ module M {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ ] σ' <: σ) (Γ⊢σ' : Γ ⊢[
 
   cons-narrowing : {cons : ADTCons nₐ (k + suc ℓ)}
                  → (Δ : CtxSuffix (suc ℓ) k)
-                 → All ((Γ , σ  ++ Δ) ⊢[ θ , M ]_) cons
-                 → All ((Γ , σ' ++ Δ) ⊢[ θ , M ]_) cons
+                 → All ((Γ , σ  ++ Δ) ⊢[ θ , φ ]_) cons
+                 → All ((Γ , σ' ++ Δ) ⊢[ θ , φ ]_) cons
   cons-narrowing Δ [] = []
   cons-narrowing Δ (τδ ∷ δs) = Γ⊢τ-narrowing Δ τδ ∷ cons-narrowing Δ δs
 
   SVar-narrowing : (Δ : CtxSuffix (suc ℓ) k)
-                 → (Γ , σ ++ Δ) ok[ θ , M ]
+                 → (Γ , σ ++ Δ) ok[ θ , φ ]
                  → τ ∈ Γ , σ ++ Δ at ι
-                 → ∃[ κ ] (Γ , σ' ++ Δ ⊢[ θ , M of κ ] SVar ι ⦂ τ)
+                 → ∃[ κ ] (Γ , σ' ++ Δ ⊢[ θ , φ of κ ] SVar ι ⦂ τ)
   SVar-narrowing ⊘ (TCTX-Bind Γok τδ) (∈-zero refl)
     = ⟨ _ , T-Sub (T-Var (TCTX-Bind Γok Γ⊢σ') (∈-zero refl)) (Γ⊢τ-weakening Γok Γ⊢σ' τδ) (<:-weakening σ-<:δ) ⟩
   SVar-narrowing ⊘ (TCTX-Bind Γok τδ) (∈-suc refl ∈) = ⟨ _ , T-Var (TCTX-Bind Γok Γ⊢σ') (∈-suc refl ∈) ⟩
@@ -60,8 +60,8 @@ module M {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ ] σ' <: σ) (Γ⊢σ' : Γ ⊢[
        = ⟨ _ , Γ⊢ε⦂τ-weakening (Γok-narrowing Δ Γ,σ,Δ-ok) (Γ⊢τ-narrowing Δ Γ,σ,Δ⊢τ) εδ ⟩
 
   Γ⊢ε⦂τ-narrowing : (Δ : CtxSuffix (suc ℓ) k)
-                  → Γ , σ  ++ Δ ⊢[ θ , M of κ ] ε ⦂ τ
-                  → ∃[ κ' ] (Γ , σ' ++ Δ ⊢[ θ , M of κ' ] ε ⦂ τ)
+                  → Γ , σ  ++ Δ ⊢[ θ , φ of κ ] ε ⦂ τ
+                  → ∃[ κ' ] (Γ , σ' ++ Δ ⊢[ θ , φ of κ' ] ε ⦂ τ)
   Γ⊢ε⦂τ-narrowing Δ (T-Unit Γok) = ⟨ _ , T-Unit (Γok-narrowing Δ Γok) ⟩
   Γ⊢ε⦂τ-narrowing Δ (T-Var Γok ∈) = SVar-narrowing Δ Γok ∈
   Γ⊢ε⦂τ-narrowing Δ (T-Abs arrδ εδ) with Γ⊢ε⦂τ-narrowing (Δ , _) εδ
