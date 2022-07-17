@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Surface.Derivations.Algorithmic.Theorems.Subtyping where
 
 open import Data.Product renaming (_,_ to ⟨_,_⟩)
@@ -46,3 +48,10 @@ as-sub ⟨ not-t-sub , εδ ⟩
       (<:-transitive <:₁δ <:₁'δ)
       (<:-transitive (<:-narrowing <:₁δ ⊘ <:₂'δ) <:₂δ)
 <:-transitive ST-ADT ST-ADT = ST-ADT
+
+as-sub' : Γ ⊢[ θ ] τ' <: τ
+        → Γ ⊢[ θ , φ ] τ
+        → ∃[ κ ] (Γ ⊢[ θ , φ of κ ] ε ⦂ τ')
+        → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ
+as-sub' <:δ τδ ⟨ t-sub , T-Sub εδ _ <:'δ ⟩ = T-Sub εδ τδ (<:-transitive <:'δ <:δ)
+as-sub' <:δ τδ ⟨ not-t-sub , εδ ⟩ = T-Sub εδ τδ <:δ

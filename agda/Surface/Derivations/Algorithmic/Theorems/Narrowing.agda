@@ -14,13 +14,6 @@ open import Surface.Derivations.Algorithmic.Theorems.Helpers
 open import Surface.Derivations.Algorithmic.Theorems.Subtyping
 open import Surface.Derivations.Algorithmic.Theorems.Thinning
 
-as-sub' : Γ ⊢[ θ ] τ' <: τ
-        → Γ ⊢[ θ , φ ] τ
-        → ∃[ κ ] (Γ ⊢[ θ , φ of κ ] ε ⦂ τ')
-        → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ
-as-sub' <:δ τδ ⟨ t-sub , T-Sub εδ _ <:'δ ⟩ = T-Sub εδ τδ (<:-transitive <:'δ <:δ)
-as-sub' <:δ τδ ⟨ not-t-sub , εδ ⟩ = T-Sub εδ τδ <:δ
-
 module φ {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ ] σ' <: σ) (Γ⊢σ' : Γ ⊢[ θ , φ ] σ') where mutual
   Γok-narrowing : (Δ : CtxSuffix (suc ℓ) k)
                 → (Γ , σ  ++ Δ) ok[ θ , φ ]
