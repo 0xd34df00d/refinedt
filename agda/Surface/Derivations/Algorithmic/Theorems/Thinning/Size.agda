@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Surface.Derivations.Algorithmic.Theorems.Thinning.Size where
 
 open import Data.Fin using (zero; suc; raise; #_)
