@@ -67,3 +67,12 @@ module M {σ : SType ℓ} (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) where mu
   sub-Γ⊢ε⦂τ Δ (T-Case resδ δ branches-well-typed) = {! !}
   sub-Γ⊢ε⦂τ Δ (T-Con ≡-prf δ adtτ) = {! !}
   sub-Γ⊢ε⦂τ Δ (T-Sub δ τδ <:δ) = {! !}
+  {-
+  It seems to be impossible to prove the substitution lemma directly for the enriched type system.
+
+  Both systems require transitivity of subtyping relations to collapse
+  any possible nested T-Sub rules after the substitution. In turn,
+  transitivity of subtyping relations for ST-Arr requires narrowing of the
+  "higher" relation, which, in case of the enriched system, also pulls in
+  narrowing for the type well-formedness witnesses that it carries.
+  -}
