@@ -241,3 +241,51 @@ mutual
              | <:δ↓ ← <:-thinning↓-size Γ⊂Γ' Γ'ok <:δ (rec _ (s≤s (₃≤₃ (size-t εδ) _ _)))
           rewrite unique-Γok (Γ⊢τ'<:τ-⇒-Γok <:δ) Γok
                 = cong suc (⊔-+-pairwise-≡³ (size-ok Γok) (size-ok Γ'ok) εδ↓ τδ↓ <:δ↓)
+
+<:-thinning-size : (Γ⊂Γ' : k by Γ ⊂' Γ')
+                 → (Γ'ok : Γ' ok[ θ , E ])
+                 → (<:δ : Γ ⊢[ θ , E ] τ' <: τ)
+                 → size-<: (<:-thinning Γ⊂Γ' (enriched Γ'ok) <:δ) + size-ok (Γ⊢τ'<:τ-⇒-Γok <:δ)
+                   ≡
+                   size-<: <:δ + size-ok Γ'ok
+<:-thinning-size Γ⊂Γ' Γ'ok <:δ = <:-thinning↓-size Γ⊂Γ' Γ'ok <:δ (<-wellFounded _)
+
+Γ⊢τ-thinning-size : (Γ⊂Γ' : k by Γ ⊂' Γ')
+                  → (Γ'ok : Γ' ok[ θ , φ ])
+                  → (τδ : Γ ⊢[ θ , φ ] τ)
+                  → size-twf (Γ⊢τ-thinning Γ⊂Γ' Γ'ok τδ) + size-ok (Γ⊢τ-⇒-Γok τδ)
+                    ≡
+                    size-twf τδ + size-ok Γ'ok
+Γ⊢τ-thinning-size Γ⊂Γ' Γ'ok τδ = Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok τδ (<-wellFounded _)
+
+Γ⊢ε⦂τ-thinning-size : (Γ⊂Γ' : k by Γ ⊂' Γ')
+                    → (Γ'ok : Γ' ok[ θ , φ ])
+                    → (εδ : Γ ⊢[ θ , φ of κ ] ε ⦂ τ)
+                    → size-t (Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok εδ) + size-ok (Γ⊢ε⦂τ-⇒-Γok εδ)
+                      ≡
+                      size-t εδ + size-ok Γ'ok
+Γ⊢ε⦂τ-thinning-size Γ⊂Γ' Γ'ok εδ = Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok εδ (<-wellFounded _)
+
+Γ⊢τ-weakening-size : (Γok : Γ ok[ θ , φ ])
+                   → (τ'δ : Γ ⊢[ θ , φ ] τ')
+                   → (τδ : Γ ⊢[ θ , φ ] τ)
+                   → size-twf (Γ⊢τ-weakening Γok τ'δ τδ) + size-ok Γok
+                     ≡
+                     size-twf τδ + suc (size-twf τ'δ)
+Γ⊢τ-weakening-size Γok τ'δ τδ
+  with size-eq ← Γ⊢τ-thinning-size ignore-head (TCTX-Bind Γok τ'δ) τδ
+  rewrite ∥Γ,τ-ok∥≡∥τδ∥ (TCTX-Bind Γok τ'δ) τ'δ
+        | unique-Γok (Γ⊢τ-⇒-Γok τδ) Γok
+        = size-eq
+
+Γ⊢ε⦂τ-weakening-size : (Γok : Γ ok[ θ , φ ])
+                   → (τ'δ : Γ ⊢[ θ , φ ] τ')
+                   → (εδ : Γ ⊢[ θ , φ of κ ] ε ⦂ τ)
+                   → size-t (Γ⊢ε⦂τ-weakening Γok τ'δ εδ) + size-ok Γok
+                     ≡
+                     size-t εδ + suc (size-twf τ'δ)
+Γ⊢ε⦂τ-weakening-size Γok τ'δ εδ
+  with size-eq ← Γ⊢ε⦂τ-thinning-size ignore-head (TCTX-Bind Γok τ'δ) εδ
+  rewrite ∥Γ,τ-ok∥≡∥τδ∥ (TCTX-Bind Γok τ'δ) τ'δ
+        | unique-Γok (Γ⊢ε⦂τ-⇒-Γok εδ) Γok
+        = size-eq
