@@ -28,11 +28,11 @@ un-suc {a} {b} {a'} {b'} eq = suc-injective $ begin
   a' + (1 + b')   ≡⟨ solve (a' ∷ b' ∷ []) ⟩
   1 + (a' + b')   ∎
 
-lemma₀ : (τ₁δ : Γ ⊢[ θ , φ ] τ₁)
-       → (τ₂δ : Γ , τ₁ ⊢[ θ , φ ] τ₂)
-       → (τ₁⇒τ₂δ : Γ ⊢[ θ , φ ] τ₁ ⇒ τ₂)
-       → suc (size-twf τ₁δ ⊔ size-twf τ₂δ) ≡ size-twf τ₁⇒τ₂δ
-lemma₀ τ₁δ τ₂δ (TWF-Arr τ₁δ' τ₂δ')
+size-⇒-distr : (τ₁δ : Γ ⊢[ θ , φ ] τ₁)
+             → (τ₂δ : Γ , τ₁ ⊢[ θ , φ ] τ₂)
+             → (τ₁⇒τ₂δ : Γ ⊢[ θ , φ ] τ₁ ⇒ τ₂)
+             → suc (size-twf τ₁δ ⊔ size-twf τ₂δ) ≡ size-twf τ₁⇒τ₂δ
+size-⇒-distr τ₁δ τ₂δ (TWF-Arr τ₁δ' τ₂δ')
   rewrite unique-Γ⊢τ τ₁δ' τ₁δ
         | unique-Γ⊢τ τ₂δ' τ₂δ
         = refl

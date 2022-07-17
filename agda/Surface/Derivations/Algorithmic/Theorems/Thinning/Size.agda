@@ -59,10 +59,10 @@ mutual
     rewrite unique-Γ⊢τ (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁'δ (rec _ (≤-trans (s≤s (<⇒≤ (s≤s (₁≤₂ _ _)))) <₁))) τ₁δ'
           | unique-Γok (Γ⊢τ-⇒-Γok τ₁'δ) Γok
           | unique-Γok (Γ⊢τ'<:τ-⇒-Γok <:₁δ) Γok
-          | lemma₀ τ₁δ' τ₂'δ' τ₁⇒τ₂'δ'
-          | cong (_+ size-ok Γok) (lemma₀ τ₁δ' τ₂'δ' τ₁⇒τ₂'δ')
-          | lemma₀ τ₁'δ τ₂δ τ₁'⇒τ₂δ
-          | cong (_+ size-ok Γ'ok) (lemma₀ τ₁'δ τ₂δ τ₁'⇒τ₂δ)
+          | size-⇒-distr τ₁δ' τ₂'δ' τ₁⇒τ₂'δ'
+          | cong (_+ size-ok Γok) (size-⇒-distr τ₁δ' τ₂'δ' τ₁⇒τ₂'δ')
+          | size-⇒-distr τ₁'δ τ₂δ τ₁'⇒τ₂δ
+          | cong (_+ size-ok Γ'ok) (size-⇒-distr τ₁'δ τ₂δ τ₁'⇒τ₂δ)
           | ∥Γ,τ-ok∥≡∥τδ∥ (Γ⊢τ'<:τ-⇒-Γok <:₂δ) τ₁'δ
           | ∥Γ,τ-ok∥≡∥τδ∥ (TCTX-Bind Γ'ok τ₁δ') τ₁δ'
           = cong suc (lemma₃ (size-ok Γok) (size-ok Γ'ok) <:₁δ↓ <:₂δ↓ τ₁δ↓ τ₁'⇒τ₂δ↓ τ₁⇒τ₂'δ↓)
@@ -161,8 +161,8 @@ mutual
           | unique-Γok (Γ⊢τ-⇒-Γok τ₁δ₀) Γok
           | unique-Γ⊢τ (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁δ₀ acc-τ₁) τ₁δ'
           | unique-Γ⊢τ τ₁δ₀ τ₁δ
-          | lemma₀ τ₁δ τ₂δ₀ τ₁⇒τ₂δ
-          | cong (_+ size-ok Γ'ok) (lemma₀ τ₁δ τ₂δ₀ τ₁⇒τ₂δ)
+          | size-⇒-distr τ₁δ τ₂δ₀ τ₁⇒τ₂δ
+          | cong (_+ size-ok Γ'ok) (size-⇒-distr τ₁δ τ₂δ₀ τ₁⇒τ₂δ)
           = cong suc (⊔-+-pairwise-≡ (size-ok Γok) (size-ok Γ'ok) τ₁⇒τ₂δ↓ (lemma₂ τ₁δ↓ εδ↓))
   Γ⊢ε⦂τ-thinning↓-size {k = k} Γ⊂Γ' Γ'ok (T-App {τ₂ = τ₂} {ε₂ = ε₂} ε₁δ ε₂δ refl resτδ) (acc rec)
     with resτδ' ← Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok resτδ (rec _ (s≤s (₃≤₃ (size-t ε₁δ) (size-t ε₂δ) _)))
