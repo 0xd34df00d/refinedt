@@ -48,7 +48,7 @@ mutual
               τ₂'-subst-δ = {! !}
            in ⟨ _
               , A.T-Sub
-                  (A.T-App ε₁δ' (as-sub' <:₁δ (from-ε ε₂δ)) refl τ₂'-subst-δ)
+                  (A.T-App ε₁δ' (A.as-sub' <:₁δ (from-ε ε₂δ)) refl τ₂'-subst-δ)
                   τ₂-subst-δ
                   {! !}
               ⟩
