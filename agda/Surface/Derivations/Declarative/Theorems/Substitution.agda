@@ -6,7 +6,6 @@ open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Fin.Base using (suc; zero; fromℕ<; raise)
 open import Data.Nat.Base using (suc; zero; _+_)
 open import Data.Nat.Properties using (≤-stepsʳ; ≤-refl; m≢1+n+m; suc-injective)
-open import Data.Product renaming (_,_ to _,'_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; subst)
 
 open import Common.Helpers
@@ -85,15 +84,11 @@ mutual
                  | S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
                  | R.act-ε-distr (raise k) suc ε
                  = sub-Γ⊢ε⦂τ ( Δ , _ ) εδ bodyδ
-  sub-Γ⊢ε⦂τ {ℓ = ℓ} {k = k} {Γ = Γ} {θ = θ} {φ = φ} {ε = ε}
-            Δ εδ (T-App {ε₁ = ε₁} {τ₁} {τ₂} {ε₂} ε₁δ ε₂δ)
+  sub-Γ⊢ε⦂τ {k = k} {ε = ε} Δ εδ (T-App {ε₁ = ε₁} {τ₁} {τ₂} {ε₂} ε₁δ ε₂δ)
+    with ε₁δ' ← sub-Γ⊢ε⦂τ Δ εδ ε₁δ
     rewrite subst-commutes-τ-zero (ctx-idx k) (R.weaken-ε-k k ε) ε₂ τ₂
+          | S.act-τ-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
           = T-App ε₁δ' (sub-Γ⊢ε⦂τ Δ εδ ε₂δ)
-    where
-    ε₁δ' : Γ ++ [↦Δ ε ] Δ ⊢[ θ , φ ]
-           [ ℓ ↦ε< ε ] ε₁ ⦂
-           ([ ℓ ↦τ< ε ] τ₁) ⇒ ([ suc (ctx-idx k) ↦τ R.weaken-ε (R.weaken-ε-k k ε) ] τ₂)
-    ε₁δ' rewrite sym (S.act-τ-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂) = sub-Γ⊢ε⦂τ Δ εδ ε₁δ
   sub-Γ⊢ε⦂τ {ℓ = ℓ} {k = k} {Γ = Γ} {θ = θ} {φ = φ} {ε = ε} Δ εδ (T-Case resδ ε₀δ branches)
     = T-Case (sub-Γ⊢τ Δ εδ resδ) (sub-Γ⊢ε⦂τ Δ εδ ε₀δ) (sub-branches branches)
     where
