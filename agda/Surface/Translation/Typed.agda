@@ -19,12 +19,12 @@ open import Surface.Translation.Untyped
 mutual
   {-
   A witness of
-  τ <: τ'
+  τ' <: τ
   gets translated to a function of type
-  τ ⇒ τ'
+  τ' ⇒ τ
   -}
   μ-<: : {τ τ' : SType ℓ}
-       → Γˢ ⊢[ θ , E ] τ <: τ'
+       → Γˢ ⊢[ θ , E ] τ' <: τ
        → CExpr ℓ
   μ-<: (ST-Base positive _ _) with to-witness positive
   ... | MkPD <:-ε = <:-ε
