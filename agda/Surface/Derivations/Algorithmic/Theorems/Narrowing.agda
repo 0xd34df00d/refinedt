@@ -70,7 +70,7 @@ module φ {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ ] σ' <: σ) (Γ⊢σ' : Γ ⊢
   Γ⊢ε⦂τ-narrowing Δ (T-App ε₁δ ε₂δ refl resτδ) with Γ⊢ε⦂τ-narrowing Δ ε₁δ
   ... | ⟨ not-t-sub , ε₁δ' ⟩ = ⟨ _ , T-App ε₁δ' (as-sub (Γ⊢ε⦂τ-narrowing Δ ε₂δ)) refl (Γ⊢τ-narrowing Δ resτδ) ⟩
   ... | ⟨ t-sub , T-Sub ε₁δ' τ₁⇒τ₂δ (ST-Arr <:₁δ <:₂δ) ⟩
-    with (TWF-Arr τ₁δ' τ₂'δ') ← Γ⊢ε⦂τ-⇒-Γ⊢τ ε₁δ'
+    with TWF-Arr τ₁δ' τ₂'δ' ← Γ⊢ε⦂τ-⇒-Γ⊢τ ε₁δ'
         = let ε₂δ'¹ = as-sub (Γ⊢ε⦂τ-narrowing Δ ε₂δ)
               ε₂δ'³ = as-sub' <:₁δ τ₁δ' (Γ⊢ε⦂τ-narrowing Δ ε₂δ)
            in ⟨ _
