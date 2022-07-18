@@ -101,7 +101,18 @@ module M {σ : SType ℓ} (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) where mu
               arrδ'
               (Γ⊢τ'<:τ-⇒-Γ⊢τ₀⇒τ'<:τ₀⇒τ <:δ)
           ⟩
-  sub-Γ⊢ε⦂τ Δ (T-App δ δ₁ resτ-≡ resτδ) = {! !}
+  sub-Γ⊢ε⦂τ {k = k} Δ (T-App {ε₁ = ε₁} {τ₁} {τ₂} {ε₂} ε₁δ ε₂δ refl resτδ)
+    rewrite subst-commutes-τ-zero (ctx-idx k) (R.weaken-ε-k k ε) ε₂ τ₂
+    with ε₂δ' ← sub-Γ⊢ε⦂τ Δ ε₂δ
+    with sub-Γ⊢ε⦂τ Δ ε₁δ
+  ... | ⟨ not-t-sub , ε₁δ' ⟩
+    rewrite S.act-τ-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
+          | subst-commutes-τ-zero (ctx-idx k) (R.weaken-ε-k k ε) ε₂ τ₂
+          = let resτδ' = sub-Γ⊢τ Δ resτδ
+                resτδ' = subst (_ ⊢[ _ , _ ]_) (subst-commutes-τ-zero (ctx-idx k) (R.weaken-ε-k k ε) ε₂ τ₂) resτδ'
+             in ⟨ _ , T-App ε₁δ' (as-sub ε₂δ') refl resτδ' ⟩
+  ... | ⟨ t-sub , ε₁δ' ⟩
+        = ⟨ {! !} , {! !} ⟩
   sub-Γ⊢ε⦂τ Δ (T-Case resδ δ branches-well-typed) = {! !}
   sub-Γ⊢ε⦂τ Δ (T-Con ≡-prf δ adtτ) = {! !}
   sub-Γ⊢ε⦂τ Δ (T-Sub δ τδ <:δ) = {! !}
