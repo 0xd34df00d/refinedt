@@ -23,6 +23,7 @@ open import Surface.Syntax.Substitution.Distributivity as S
 open import Surface.Syntax.Substitution.Commutativity
 open import Surface.Derivations.Common.Theorems.Substitution.Helpers
 open import Surface.Derivations.Algorithmic
+open import Surface.Derivations.Algorithmic.Theorems.Agreement
 open import Surface.Derivations.Algorithmic.Theorems.Thinning
 open import Surface.Derivations.Algorithmic.Theorems.Subtyping
 
@@ -86,7 +87,20 @@ module M {σ : SType ℓ} (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) where mu
                          | replace-weakened-τ k (weaken-ε-k k ε) σ
                          = ⟨ t-sub , Γ⊢ε⦂τ-weakening-suffix (sub-Γok Δ Γok) εδ ⟩
   ... | greater k>ι = ⟨ _ , T-Var (sub-Γok Δ Γok) (var-later-in-Γ-remains Δ ∈ k>ι) ⟩
-  sub-Γ⊢ε⦂τ Δ (T-Abs arrδ δ) = {! !}
+  sub-Γ⊢ε⦂τ {k = k} Δ (T-Abs {τ₁ = τ₁} {τ₂ = τ₂} {ε = ε'} arrδ bodyδ)
+    with arrδ' ← sub-Γ⊢τ Δ arrδ
+    rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
+          | S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
+          | R.act-ε-distr (raise k) suc ε
+    with sub-Γ⊢ε⦂τ (Δ , _) bodyδ
+  ... | ⟨ not-t-sub , bodyδ' ⟩ = ⟨ _ , T-Abs arrδ' bodyδ' ⟩
+  ... | ⟨ t-sub , T-Sub bodyδ' τδ <:δ ⟩
+        = ⟨ _
+          , T-Sub
+              (T-Abs (Γ,τ₁⊢τ₂-⇒-Γ⊢τ₁⇒τ₂ (Γ⊢ε⦂τ-⇒-Γ⊢τ bodyδ')) bodyδ')
+              arrδ'
+              (Γ⊢τ'<:τ-⇒-Γ⊢τ₀⇒τ'<:τ₀⇒τ <:δ)
+          ⟩
   sub-Γ⊢ε⦂τ Δ (T-App δ δ₁ resτ-≡ resτδ) = {! !}
   sub-Γ⊢ε⦂τ Δ (T-Case resδ δ branches-well-typed) = {! !}
   sub-Γ⊢ε⦂τ Δ (T-Con ≡-prf δ adtτ) = {! !}
