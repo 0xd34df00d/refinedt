@@ -11,6 +11,7 @@ open import Surface.Syntax.Membership
 open import Surface.Derivations.Algorithmic
 open import Surface.Derivations.Algorithmic.Theorems.Helpers
 open import Surface.Derivations.Algorithmic.Theorems.Thinning
+open import Surface.Derivations.Algorithmic.Theorems.Agreement.Lemmas
 
 τ∈Γ-⇒-Γ⊢τ : Γ ok[ θ , φ ]
           → τ ∈ Γ at ι
@@ -23,7 +24,7 @@ open import Surface.Derivations.Algorithmic.Theorems.Thinning
             → Γ ⊢[ θ , φ ] τ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Unit Γok) = TWF-TrueRef Γok
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Var Γok ∈-prf) = τ∈Γ-⇒-Γ⊢τ Γok ∈-prf
-Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Abs arrδ _) = arrδ
+Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Abs εδ) = Γ,τ₁⊢τ₂-⇒-Γ⊢τ₁⇒τ₂ (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ)
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-App _ _ _ resτδ) = resτδ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Case resδ _ _) = resδ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Con _ _ adtτ) = adtτ

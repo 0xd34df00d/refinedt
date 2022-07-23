@@ -23,7 +23,7 @@ typing-uniqueness : Γ ⊢[ θ , φ of not-t-sub ] ε ⦂ τ₁
                   → τ₁ ≡ τ₂
 typing-uniqueness (T-Unit _) (T-Unit _) = refl
 typing-uniqueness (T-Var _ ∈₁) (T-Var _ ∈₂) = ∈-uniqueness ∈₁ ∈₂
-typing-uniqueness (T-Abs _ δ₁) (T-Abs _ δ₂) rewrite typing-uniqueness δ₁ δ₂ = refl
+typing-uniqueness (T-Abs δ₁) (T-Abs δ₂) rewrite typing-uniqueness δ₁ δ₂ = refl
 typing-uniqueness (T-App δ₁ _ refl _) (T-App δ₂ _ refl _) rewrite ⇒-inj₂ (typing-uniqueness δ₁ δ₂) = refl
 typing-uniqueness (T-Case resδ δ₁ (OneMoreBranch εδ₁ _)) (T-Case resδ₁ δ₂ (OneMoreBranch εδ₂ _)) with typing-uniqueness δ₁ δ₂
 ... | refl = weaken-τ-injective (typing-uniqueness εδ₁ εδ₂)
@@ -71,9 +71,8 @@ mutual
     rewrite unique-Γok Γok₁ Γok₂
           | unique-∈ ∈₁ ∈₂
           = refl
-  unique-Γ⊢ε⦂τ (T-Abs arrδ₁ δ₁) (T-Abs arrδ₂ δ₂)
-    rewrite unique-Γ⊢τ arrδ₁ arrδ₂
-          | unique-Γ⊢ε⦂τ δ₁ δ₂
+  unique-Γ⊢ε⦂τ (T-Abs δ₁) (T-Abs δ₂)
+    rewrite unique-Γ⊢ε⦂τ δ₁ δ₂
           = refl
   unique-Γ⊢ε⦂τ (T-App δ₁₁ (T-Sub δ₂₁ τ₁'δ <:₁) refl resτδ₁) (T-App δ₁₂ (T-Sub δ₂₂ τ₂'δ <:₂) resτ-≡₂ resτδ₂)
     with refl ← typing-uniqueness δ₁₁ δ₁₂

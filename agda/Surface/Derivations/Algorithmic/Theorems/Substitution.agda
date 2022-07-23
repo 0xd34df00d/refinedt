@@ -87,18 +87,17 @@ module M {σ : SType ℓ} (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) where mu
                          | replace-weakened-τ k (weaken-ε-k k ε) σ
                          = ⟨ t-sub , Γ⊢ε⦂τ-weakening-suffix (sub-Γok Δ Γok) εδ ⟩
   ... | greater k>ι = ⟨ _ , T-Var (sub-Γok Δ Γok) (var-later-in-Γ-remains Δ ∈ k>ι) ⟩
-  sub-Γ⊢ε⦂τ {k = k} Δ (T-Abs {τ₁ = τ₁} {τ₂ = τ₂} {ε = ε'} arrδ bodyδ)
-    with arrδ' ← sub-Γ⊢τ Δ arrδ
+  sub-Γ⊢ε⦂τ {k = k} Δ (T-Abs {τ₁ = τ₁} {ε = ε'} {τ₂ = τ₂} bodyδ)
     rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
           | S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
           | R.act-ε-distr (raise k) suc ε
     with sub-Γ⊢ε⦂τ (Δ , _) bodyδ
-  ... | ⟨ not-t-sub , bodyδ' ⟩ = ⟨ _ , T-Abs arrδ' bodyδ' ⟩
+  ... | ⟨ not-t-sub , bodyδ' ⟩ = ⟨ _ , T-Abs bodyδ' ⟩
   ... | ⟨ t-sub , T-Sub bodyδ' τδ <:δ ⟩
         = ⟨ _
           , T-Sub
-              (T-Abs (Γ,τ₁⊢τ₂-⇒-Γ⊢τ₁⇒τ₂ (Γ⊢ε⦂τ-⇒-Γ⊢τ bodyδ')) bodyδ')
-              arrδ'
+              (T-Abs bodyδ')
+              (Γ,τ₁⊢τ₂-⇒-Γ⊢τ₁⇒τ₂ τδ)
               (Γ⊢τ'<:τ-⇒-Γ⊢τ₀⇒τ'<:τ₀⇒τ <:δ)
           ⟩
   sub-Γ⊢ε⦂τ {k = k} Δ (T-App {ε₁ = ε₁} {τ₁} {τ₂} {ε₂} ε₁δ ε₂δ refl resτδ)

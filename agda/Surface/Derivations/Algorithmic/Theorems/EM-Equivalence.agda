@@ -30,7 +30,7 @@ mutual
          → Γ ⊢[ θ , M of κ ] ε ⦂ τ
   to-M-ε (T-Unit Γok) = T-Unit (to-M-Γok Γok)
   to-M-ε (T-Var Γok ∈) = T-Var (to-M-Γok Γok) ∈
-  to-M-ε (T-Abs arrδ εδ) = T-Abs (to-M-τ arrδ) (to-M-ε εδ)
+  to-M-ε (T-Abs εδ) = T-Abs (to-M-ε εδ)
   to-M-ε (T-App ε₁δ ε₂δ resτ-≡ resτδ) = T-App (to-M-ε ε₁δ) (to-M-ε ε₂δ) resτ-≡ (to-M-τ resτδ)
   to-M-ε (T-Case resδ εδ branchesδ) = T-Case (to-M-τ resδ) (to-M-ε εδ) (to-M-branches branchesδ)
   to-M-ε (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (to-M-ε εδ) (to-M-τ adtτ)
@@ -67,7 +67,7 @@ mutual
          → Γ ⊢[ θ , E of κ ] ε ⦂ τ
   to-E-ε (T-Unit Γok) = T-Unit (to-E-Γok Γok)
   to-E-ε (T-Var Γok ∈) = T-Var (to-E-Γok Γok) ∈
-  to-E-ε (T-Abs arrδ εδ) = T-Abs (to-E-τ arrδ) (to-E-ε εδ)
+  to-E-ε (T-Abs εδ) = T-Abs (to-E-ε εδ)
   to-E-ε (T-App ε₁δ ε₂δ resτ-≡ resτδ) = T-App (to-E-ε ε₁δ) (to-E-ε ε₂δ) resτ-≡ (to-E-τ resτδ)
   to-E-ε (T-Case resδ εδ branchesδ) = T-Case (to-E-τ resδ) (to-E-ε εδ) (to-E-branches branchesδ)
   to-E-ε (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (to-E-ε εδ) (to-E-τ adtτ)

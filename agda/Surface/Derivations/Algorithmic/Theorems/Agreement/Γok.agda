@@ -19,7 +19,7 @@ open import Surface.Derivations.Algorithmic.Theorems.Helpers
 Γ⊢ε⦂τ-⇒-Γok : Γ ⊢[ θ , φ of κ ] ε ⦂ τ → Γ ok[ θ , φ ]
 Γ⊢ε⦂τ-⇒-Γok (T-Unit Γok) = Γok
 Γ⊢ε⦂τ-⇒-Γok (T-Var Γok _) = Γok
-Γ⊢ε⦂τ-⇒-Γok (T-Abs _ εδ) with TCTX-Bind Γok _ ← Γ⊢ε⦂τ-⇒-Γok εδ = Γok
+Γ⊢ε⦂τ-⇒-Γok (T-Abs εδ) with TCTX-Bind Γok _ ← Γ⊢ε⦂τ-⇒-Γok εδ = Γok
 Γ⊢ε⦂τ-⇒-Γok (T-App ε₁δ _ _ _) = Γ⊢ε⦂τ-⇒-Γok ε₁δ
 Γ⊢ε⦂τ-⇒-Γok (T-Case _ scrut _) = Γ⊢ε⦂τ-⇒-Γok scrut
 Γ⊢ε⦂τ-⇒-Γok (T-Con _ conArg _) = Γ⊢ε⦂τ-⇒-Γok conArg
@@ -44,14 +44,10 @@ private
                     → size-ok (Γ⊢ε⦂τ-⇒-Γok δ) < size-t δ
 Γ⊢ε⦂τ-⇒-Γok-smaller (T-Unit _) = s≤s (≤-step ≤-refl)
 Γ⊢ε⦂τ-⇒-Γok-smaller (T-Var _ _) = s≤s ≤-refl
-Γ⊢ε⦂τ-⇒-Γok-smaller (T-Abs _ εδ)
+Γ⊢ε⦂τ-⇒-Γok-smaller (T-Abs εδ)
   with εδ-smaller ← Γ⊢ε⦂τ-⇒-Γok-smaller εδ
   with TCTX-Bind _ _ ← Γ⊢ε⦂τ-⇒-Γok εδ
-     = s≤s (≤-trans
-              (≤-trans
-                (≤-stepsˡ 2 (m≤m⊔n _ _))
-                εδ-smaller)
-              (m≤n⊔m _ _))
+     = s≤s (≤-trans (≤-stepsˡ 2 (m≤m⊔n _ _)) εδ-smaller)
 Γ⊢ε⦂τ-⇒-Γok-smaller (T-App ε₁δ _ _ _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller ε₁δ)
 Γ⊢ε⦂τ-⇒-Γok-smaller (T-Case _ scrutδ _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller scrutδ)
 Γ⊢ε⦂τ-⇒-Γok-smaller (T-Con _ conArg _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller conArg)

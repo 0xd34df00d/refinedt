@@ -5,7 +5,7 @@ module Surface.Derivations.Algorithmic.Theorems.Thinning where
 open import Data.Fin using (zero; suc; raise; #_)
 open import Data.Nat.Base
 open import Data.Nat.Induction
-open import Data.Nat.Properties using (≤-refl; ≤-trans; n≤1+n; m≤n⇒m≤n⊔o)
+open import Data.Nat.Properties
 open import Data.Vec.Base using (lookup; _∷_)
 open import Function
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst; sym)
@@ -74,14 +74,11 @@ mutual
                   → Γ' ⊢[ θ , φ of κ ] R.act-ε (ext-k' k suc) ε ⦂ R.act-τ (ext-k' k suc) τ
   Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Unit _) _ = T-Unit Γ'ok
   Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Var _ ∈) _ = T-Var Γ'ok (∈-thinning Γ⊂Γ' ∈)
-  Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Abs arrδ δ) (acc rec)
-    = let acc₁ = rec _ (s≤s (₁≤₂ _ _))
-          acc₃ = rec _ (s≤s (₂≤₂ _ _))
-          arrδ' = Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok arrδ acc₁
-          τ₁δ' = case arrδ' of λ where (TWF-Arr τ₁δ' _) → τ₁δ'
-       in T-Abs
-            arrδ'
-            (Γ⊢ε⦂τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok τ₁δ') δ acc₃)
+  Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Abs εδ) (acc rec)
+    with εδ-smaller ← Γ⊢ε⦂τ-⇒-Γok-smaller εδ
+    with TCTX-Bind _ τ₁δ ← Γ⊢ε⦂τ-⇒-Γok εδ
+       = let τ₁δ' = Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁δ (rec _ (s≤s (≤-trans (≤-stepsˡ 2 (m≤n⊔m _ _)) εδ-smaller)))
+          in T-Abs (Γ⊢ε⦂τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok τ₁δ') εδ (rec _ ≤-refl))
   Γ⊢ε⦂τ-thinning↓ {k = k} Γ⊂Γ' Γ'ok (T-App {τ₂ = τ₂} {ε₂ = ε₂} δ₁ δ₂ refl resτδ) (acc rec)
     with resτδ' ← Γ⊢τ-thinning↓  Γ⊂Γ' Γ'ok resτδ (rec _ (s≤s (₃≤₃ (size-t δ₁) (size-t δ₂) _)))
     rewrite ρ-subst-distr-τ-0 (ext-k' k suc) ε₂ τ₂

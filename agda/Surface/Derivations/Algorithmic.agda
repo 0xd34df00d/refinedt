@@ -73,8 +73,7 @@ data _⊢[_,_of_]_⦂_ {ℓ} Γ θ φ where
   T-Var       : (Γok : Γ ok[ θ , φ ])
               → τ ∈ Γ at ι
               → Γ ⊢[ θ , φ of not-t-sub ] SVar ι ⦂ τ
-  T-Abs       : (arrδ : Γ ⊢[ θ , φ ] τ₁ ⇒ τ₂)
-              → (bodyδ : Γ , τ₁ ⊢[ θ , φ of not-t-sub ] ε ⦂ τ₂)
+  T-Abs       : (bodyδ : Γ , τ₁ ⊢[ θ , φ of not-t-sub ] ε ⦂ τ₂)
               → Γ ⊢[ θ , φ of not-t-sub ] SLam τ₁ ε ⦂ τ₁ ⇒ τ₂
   T-App       : (δ₁ : Γ ⊢[ θ , φ of not-t-sub ] ε₁ ⦂ τ₁ ⇒ τ₂)
               → (δ₂ : Γ ⊢[ θ , φ of t-sub ] ε₂ ⦂ τ₁)

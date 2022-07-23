@@ -41,7 +41,7 @@ size-all-cons (px ∷ pxs) = suc (size-twf px ⊕ size-all-cons pxs)
 
 size-t (T-Unit Γok) = suc (suc (size-ok Γok))
 size-t (T-Var Γok _) = suc (size-ok Γok)
-size-t (T-Abs arrδ bodyδ) = suc (size-twf arrδ ⊕ size-t bodyδ)
+size-t (T-Abs εδ) = suc (size-t εδ)
 size-t (T-App δ₁ δ₂ _ resτδ) = suc (size-t δ₁ ⊕ size-t δ₂ ⊕ size-twf resτδ)
 size-t (T-Case resδ scrutτδ branches) = suc (size-t scrutτδ ⊕ size-twf resδ ⊕ size-bs branches)
 size-t (T-Con _ conArg adtτ) = suc (size-t conArg ⊕ size-twf adtτ)
