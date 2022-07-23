@@ -28,9 +28,9 @@ size-bs  : ∀ {τ cons} {bs : CaseBranches nₐ ℓ}
 size-all-cons : {cons : ADTCons nₐ ℓ} → All (Γ ⊢[ θ , φ ]_) cons → ℕ
 
 size-ok TCTX-Empty = 0
-size-ok (TCTX-Bind prevOk τδ) = suc (size-ok prevOk ⊕ size-twf τδ)
+size-ok (TCTX-Bind Γok τδ) = suc (size-ok Γok ⊕ size-twf τδ)
 
-size-twf (TWF-TrueRef gok) = suc (size-ok gok)
+size-twf (TWF-TrueRef Γok) = suc (size-ok Γok)
 size-twf (TWF-Base ε₁δ ε₂δ) = suc (size-t ε₁δ ⊕ size-t ε₂δ)
 size-twf (TWF-Conj ρ₁δ ρ₂δ) = suc (size-twf ρ₁δ ⊕ size-twf ρ₂δ)
 size-twf (TWF-Arr argδ resδ) = suc (size-twf argδ ⊕ size-twf resδ)
@@ -39,8 +39,8 @@ size-twf (TWF-ADT consδs) = suc (size-all-cons consδs)
 size-all-cons [] = 0
 size-all-cons (px ∷ pxs) = suc (size-twf px ⊕ size-all-cons pxs)
 
-size-t (T-Unit gok) = suc (suc (size-ok gok))
-size-t (T-Var gok _) = suc (size-ok gok)
+size-t (T-Unit Γok) = suc (suc (size-ok Γok))
+size-t (T-Var Γok _) = suc (size-ok Γok)
 size-t (T-Abs arrδ bodyδ) = suc (size-twf arrδ ⊕ size-t bodyδ)
 size-t (T-App δ₁ δ₂ _ resτδ) = suc (size-t δ₁ ⊕ size-t δ₂ ⊕ size-twf resτδ)
 size-t (T-Case resδ scrutτδ branches) = suc (size-t scrutτδ ⊕ size-twf resδ ⊕ size-bs branches)
