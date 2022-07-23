@@ -111,8 +111,20 @@ module M {σ : SType ℓ} (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) where mu
           = let resτδ' = sub-Γ⊢τ Δ resτδ
                 resτδ' = subst (_ ⊢[ _ , _ ]_) (subst-commutes-τ-zero (ctx-idx k) (R.weaken-ε-k k ε) ε₂ τ₂) resτδ'
              in ⟨ _ , T-App ε₁δ' (as-sub ε₂δ') refl resτδ' ⟩
-  ... | ⟨ t-sub , ε₁δ' ⟩
-        = ⟨ {! !} , {! !} ⟩
+  ... | ⟨ t-sub , T-Sub ε₁δ' τ₁⇒τ₂δ (ST-Arr <:₁δ <:₂δ) ⟩
+    with TWF-Arr τ₁δ' τ₂δ' ← Γ⊢ε⦂τ-⇒-Γ⊢τ ε₁δ'
+        = let resτδ' = sub-Γ⊢τ Δ resτδ
+              resτδ' = subst (_ ⊢[ _ , _ ]_) (subst-commutes-τ-zero (ctx-idx k) (R.weaken-ε-k k ε) ε₂ τ₂) resτδ'
+              <:₂δ' = sub-Γ⊢τ'<:τ-front (as-sub ε₂δ') <:₂δ
+              <:₂δ' = subst (λ δ → _ ⊢[ _ ] _ <: [ zero ↦τ _ ] δ)
+                            (S.act-τ-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂)
+                            <:₂δ'
+           in ⟨ _
+              , T-Sub
+                  (T-App ε₁δ' {! (as-sub' <:₁δ τ₁δ' ε₂δ') !} refl {! !})
+                  resτδ'
+                  <:₂δ'
+              ⟩
   sub-Γ⊢ε⦂τ Δ (T-Case resδ δ branches-well-typed) = {! !}
   sub-Γ⊢ε⦂τ Δ (T-Con ≡-prf δ adtτ) = {! !}
   sub-Γ⊢ε⦂τ Δ (T-Sub δ τδ <:δ) = {! !}
