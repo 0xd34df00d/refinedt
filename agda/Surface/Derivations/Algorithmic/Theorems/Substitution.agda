@@ -126,7 +126,9 @@ module M {σ : SType ℓ} (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) where mu
               ⟩
   sub-Γ⊢ε⦂τ Δ (T-Case resδ δ branches-well-typed) = {! !}
   sub-Γ⊢ε⦂τ Δ (T-Con ≡-prf δ adtτ) = {! !}
-  sub-Γ⊢ε⦂τ Δ (T-Sub δ τδ <:δ) = {! !}
+  sub-Γ⊢ε⦂τ Δ (T-Sub sub-εδ τδ <:δ)
+    with sub-εδ' ← sub-Γ⊢ε⦂τ Δ sub-εδ
+       = ⟨ _ , as-sub' (sub-Γ⊢τ'<:τ εδ Δ <:δ) (sub-Γ⊢τ Δ τδ) sub-εδ' ⟩
   {-
   It seems to be impossible to prove the substitution lemma directly for the enriched type system.
 
