@@ -79,16 +79,14 @@ mutual
     with TCTX-Bind _ τ₁δ ← Γ⊢ε⦂τ-⇒-Γok εδ
        = let τ₁δ' = Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ₁δ (rec _ (s≤s (≤-trans (≤-stepsˡ 2 (m≤n⊔m _ _)) εδ-smaller)))
           in T-Abs (Γ⊢ε⦂τ-thinning↓ (append-both Γ⊂Γ') (TCTX-Bind Γ'ok τ₁δ') εδ (rec _ ≤-refl))
-  Γ⊢ε⦂τ-thinning↓ {k = k} Γ⊂Γ' Γ'ok (T-App {τ₂ = τ₂} {ε₂ = ε₂} δ₁ δ₂ refl resτδ) (acc rec)
-    with resτδ' ← Γ⊢τ-thinning↓  Γ⊂Γ' Γ'ok resτδ (rec _ (s≤s (₃≤₃ (size-t δ₁) (size-t δ₂) _)))
+  Γ⊢ε⦂τ-thinning↓ {k = k} Γ⊂Γ' Γ'ok (T-App {τ₂ = τ₂} {ε₂ = ε₂} δ₁ δ₂ refl) (acc rec)
     rewrite ρ-subst-distr-τ-0 (ext-k' k suc) ε₂ τ₂
           = let acc₁ = rec _ (s≤s (₁≤₂ _ _))
-                acc₂ = rec _ (s≤s (₂≤₃ (size-t δ₁) _ _))
+                acc₂ = rec _ (s≤s (₂≤₂ _ _))
              in T-App
                   (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ₁ acc₁)
                   (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ₂ acc₂)
                   refl
-                  resτδ'
   Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Case resδ δ branchesδ) (acc rec)
     = let acc₁ = rec _ (s≤s (₂≤₃ (size-t δ) _ _))
           acc₂ = rec _ (s≤s (₁≤₂ _ _))

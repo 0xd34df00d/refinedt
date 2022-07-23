@@ -78,7 +78,6 @@ data _⊢[_,_of_]_⦂_ {ℓ} Γ θ φ where
   T-App       : (δ₁ : Γ ⊢[ θ , φ of not-t-sub ] ε₁ ⦂ τ₁ ⇒ τ₂)
               → (δ₂ : Γ ⊢[ θ , φ of t-sub ] ε₂ ⦂ τ₁)
               → (resτ-≡ : τ ≡ [ zero ↦τ ε₂ ] τ₂)
-              → (resτδ : Γ ⊢[ θ , φ ] τ) -- TODO double-check it's really needed
               → Γ ⊢[ θ , φ of not-t-sub ] SApp ε₁ ε₂ ⦂ τ
   T-Case      : {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
               → {bs : CaseBranches (Mkℕₐ (suc n)) ℓ}

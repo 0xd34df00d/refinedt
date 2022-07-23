@@ -1,4 +1,4 @@
-{-# OPTIONS --safe #-}
+-- {-# OPTIONS --safe #-}
 
 module Surface.Derivations.Algorithmic.Theorems.Agreement.TypeWellFormedness where
 
@@ -9,9 +9,10 @@ open import Relation.Binary.PropositionalEquality using (refl)
 open import Surface.Syntax
 open import Surface.Syntax.Membership
 open import Surface.Derivations.Algorithmic
-open import Surface.Derivations.Algorithmic.Theorems.Helpers
-open import Surface.Derivations.Algorithmic.Theorems.Thinning
 open import Surface.Derivations.Algorithmic.Theorems.Agreement.Lemmas
+open import Surface.Derivations.Algorithmic.Theorems.Helpers
+open import Surface.Derivations.Algorithmic.Theorems.Substitution
+open import Surface.Derivations.Algorithmic.Theorems.Thinning
 
 τ∈Γ-⇒-Γ⊢τ : Γ ok[ θ , φ ]
           → τ ∈ Γ at ι
@@ -25,6 +26,6 @@ open import Surface.Derivations.Algorithmic.Theorems.Agreement.Lemmas
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Unit Γok) = TWF-TrueRef Γok
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Var Γok ∈-prf) = τ∈Γ-⇒-Γ⊢τ Γok ∈-prf
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Abs εδ) = Γ,τ₁⊢τ₂-⇒-Γ⊢τ₁⇒τ₂ (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ)
-Γ⊢ε⦂τ-⇒-Γ⊢τ (T-App _ _ _ resτδ) = resτδ
+Γ⊢ε⦂τ-⇒-Γ⊢τ (T-App ε₁δ ε₂δ refl) with TWF-Arr _ τ₂δ ← Γ⊢ε⦂τ-⇒-Γ⊢τ ε₁δ = sub-Γ⊢τ-front ε₂δ τ₂δ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Case resδ _ _) = resδ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Con _ _ adtτ) = adtτ

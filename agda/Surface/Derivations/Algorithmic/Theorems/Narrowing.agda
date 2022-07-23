@@ -11,7 +11,7 @@ open import Surface.Syntax.Substitution
 open import Surface.Derivations.Algorithmic
 open import Surface.Derivations.Algorithmic.Theorems.Agreement
 open import Surface.Derivations.Algorithmic.Theorems.Helpers
-open import Surface.Derivations.Algorithmic.Theorems.Substitution
+--open import Surface.Derivations.Algorithmic.Theorems.Substitution
 open import Surface.Derivations.Algorithmic.Theorems.Subtyping
 open import Surface.Derivations.Algorithmic.Theorems.Thinning
 
@@ -66,8 +66,8 @@ module φ {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ ] σ' <: σ) (Γ⊢σ' : Γ ⊢
               (Γ⊢τ'<:τ-⇒-Γ⊢τ₀⇒τ'<:τ₀⇒τ <:δ)
           ⟩
   ... | ⟨ not-t-sub , εδ' ⟩ = ⟨ _ , T-Abs εδ' ⟩
-  Γ⊢ε⦂τ-narrowing Δ (T-App ε₁δ ε₂δ refl resτδ) with Γ⊢ε⦂τ-narrowing Δ ε₁δ
-  ... | ⟨ not-t-sub , ε₁δ' ⟩ = ⟨ _ , T-App ε₁δ' (as-sub (Γ⊢ε⦂τ-narrowing Δ ε₂δ)) refl (Γ⊢τ-narrowing Δ resτδ) ⟩
+  Γ⊢ε⦂τ-narrowing Δ (T-App ε₁δ ε₂δ refl) with Γ⊢ε⦂τ-narrowing Δ ε₁δ
+  ... | ⟨ not-t-sub , ε₁δ' ⟩ = ⟨ _ , T-App ε₁δ' (as-sub (Γ⊢ε⦂τ-narrowing Δ ε₂δ)) refl ⟩
   ... | ⟨ t-sub , T-Sub ε₁δ' (ST-Arr <:₁δ <:₂δ) ⟩
         = let ε₂δ'¹ = as-sub (Γ⊢ε⦂τ-narrowing Δ ε₂δ)
               ε₂δ'³ = as-sub' <:₁δ (Γ⊢ε⦂τ-narrowing Δ ε₂δ)
