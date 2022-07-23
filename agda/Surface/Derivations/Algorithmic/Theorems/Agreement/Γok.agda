@@ -16,23 +16,22 @@ open import Surface.Derivations.Algorithmic.Theorems.Helpers
 Γok-tail-smaller (TCTX-Bind prevOk τδ) = s≤s (₁≤₂ (size-ok prevOk) (size-twf τδ))
 
 -- Referred to as T-implies-TCTX in the paper
-mutual
-  Γ⊢ε⦂τ-⇒-Γok : Γ ⊢[ θ , φ of κ ] ε ⦂ τ → Γ ok[ θ , φ ]
-  Γ⊢ε⦂τ-⇒-Γok (T-Unit Γok) = Γok
-  Γ⊢ε⦂τ-⇒-Γok (T-Var Γok _) = Γok
-  Γ⊢ε⦂τ-⇒-Γok (T-Abs _ εδ) with TCTX-Bind Γok _ ← Γ⊢ε⦂τ-⇒-Γok εδ = Γok
-  Γ⊢ε⦂τ-⇒-Γok (T-App ε₁δ _ _ _) = Γ⊢ε⦂τ-⇒-Γok ε₁δ
-  Γ⊢ε⦂τ-⇒-Γok (T-Case _ scrut _) = Γ⊢ε⦂τ-⇒-Γok scrut
-  Γ⊢ε⦂τ-⇒-Γok (T-Con _ conArg _) = Γ⊢ε⦂τ-⇒-Γok conArg
-  Γ⊢ε⦂τ-⇒-Γok (T-Sub εδ _ _) = Γ⊢ε⦂τ-⇒-Γok εδ
+Γ⊢ε⦂τ-⇒-Γok : Γ ⊢[ θ , φ of κ ] ε ⦂ τ → Γ ok[ θ , φ ]
+Γ⊢ε⦂τ-⇒-Γok (T-Unit Γok) = Γok
+Γ⊢ε⦂τ-⇒-Γok (T-Var Γok _) = Γok
+Γ⊢ε⦂τ-⇒-Γok (T-Abs _ εδ) with TCTX-Bind Γok _ ← Γ⊢ε⦂τ-⇒-Γok εδ = Γok
+Γ⊢ε⦂τ-⇒-Γok (T-App ε₁δ _ _ _) = Γ⊢ε⦂τ-⇒-Γok ε₁δ
+Γ⊢ε⦂τ-⇒-Γok (T-Case _ scrut _) = Γ⊢ε⦂τ-⇒-Γok scrut
+Γ⊢ε⦂τ-⇒-Γok (T-Con _ conArg _) = Γ⊢ε⦂τ-⇒-Γok conArg
+Γ⊢ε⦂τ-⇒-Γok (T-Sub εδ _ _) = Γ⊢ε⦂τ-⇒-Γok εδ
 
-  -- Referred to as TWF-implies-TCTX in the paper
-  Γ⊢τ-⇒-Γok : Γ ⊢[ θ , φ ] τ → Γ ok[ θ , φ ]
-  Γ⊢τ-⇒-Γok (TWF-TrueRef Γok) = Γok
-  Γ⊢τ-⇒-Γok (TWF-Base ε₁δ _) = Γok-tail (Γ⊢ε⦂τ-⇒-Γok ε₁δ)
-  Γ⊢τ-⇒-Γok (TWF-Conj ρ₁δ _) = Γ⊢τ-⇒-Γok ρ₁δ
-  Γ⊢τ-⇒-Γok (TWF-Arr argδ _) = Γ⊢τ-⇒-Γok argδ
-  Γ⊢τ-⇒-Γok (TWF-ADT (τδ ∷ _)) = Γ⊢τ-⇒-Γok τδ
+-- Referred to as TWF-implies-TCTX in the paper
+Γ⊢τ-⇒-Γok : Γ ⊢[ θ , φ ] τ → Γ ok[ θ , φ ]
+Γ⊢τ-⇒-Γok (TWF-TrueRef Γok) = Γok
+Γ⊢τ-⇒-Γok (TWF-Base ε₁δ _) = Γok-tail (Γ⊢ε⦂τ-⇒-Γok ε₁δ)
+Γ⊢τ-⇒-Γok (TWF-Conj ρ₁δ _) = Γ⊢τ-⇒-Γok ρ₁δ
+Γ⊢τ-⇒-Γok (TWF-Arr argδ _) = Γ⊢τ-⇒-Γok argδ
+Γ⊢τ-⇒-Γok (TWF-ADT (τδ ∷ _)) = Γ⊢τ-⇒-Γok τδ
 
 private
   a<b-⇒-a<b⊕c : {b c a : ℕ} → a < b → a < suc (b ⊕ c)
@@ -41,38 +40,36 @@ private
   a<c-⇒-a<b⊕c : {b c a : ℕ} → a < c → a < suc (b ⊕ c)
   a<c-⇒-a<b⊕c {b} {c} a<c = <-trans a<c (s≤s (₂≤₂ b c))
 
-abstract
-  mutual
-    Γ⊢ε⦂τ-⇒-Γok-smaller : (δ : Γ ⊢[ θ , φ of κ ] ε ⦂ τ)
-                        → size-ok (Γ⊢ε⦂τ-⇒-Γok δ) < size-t δ
-    Γ⊢ε⦂τ-⇒-Γok-smaller (T-Unit _) = s≤s (≤-step ≤-refl)
-    Γ⊢ε⦂τ-⇒-Γok-smaller (T-Var _ _) = s≤s ≤-refl
-    Γ⊢ε⦂τ-⇒-Γok-smaller (T-Abs _ εδ)
-      with εδ-smaller ← Γ⊢ε⦂τ-⇒-Γok-smaller εδ
-      with TCTX-Bind _ _ ← Γ⊢ε⦂τ-⇒-Γok εδ
-         = s≤s (≤-trans
-                  (≤-trans
-                    (≤-stepsˡ 2 (m≤m⊔n _ _))
-                    εδ-smaller)
-                  (m≤n⊔m _ _))
-    Γ⊢ε⦂τ-⇒-Γok-smaller (T-App ε₁δ _ _ _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller ε₁δ)
-    Γ⊢ε⦂τ-⇒-Γok-smaller (T-Case _ scrutδ _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller scrutδ)
-    Γ⊢ε⦂τ-⇒-Γok-smaller (T-Con _ conArg _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller conArg)
-    Γ⊢ε⦂τ-⇒-Γok-smaller (T-Sub εδ _ _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller εδ)
+Γ⊢ε⦂τ-⇒-Γok-smaller : (δ : Γ ⊢[ θ , φ of κ ] ε ⦂ τ)
+                    → size-ok (Γ⊢ε⦂τ-⇒-Γok δ) < size-t δ
+Γ⊢ε⦂τ-⇒-Γok-smaller (T-Unit _) = s≤s (≤-step ≤-refl)
+Γ⊢ε⦂τ-⇒-Γok-smaller (T-Var _ _) = s≤s ≤-refl
+Γ⊢ε⦂τ-⇒-Γok-smaller (T-Abs _ εδ)
+  with εδ-smaller ← Γ⊢ε⦂τ-⇒-Γok-smaller εδ
+  with TCTX-Bind _ _ ← Γ⊢ε⦂τ-⇒-Γok εδ
+     = s≤s (≤-trans
+              (≤-trans
+                (≤-stepsˡ 2 (m≤m⊔n _ _))
+                εδ-smaller)
+              (m≤n⊔m _ _))
+Γ⊢ε⦂τ-⇒-Γok-smaller (T-App ε₁δ _ _ _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller ε₁δ)
+Γ⊢ε⦂τ-⇒-Γok-smaller (T-Case _ scrutδ _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller scrutδ)
+Γ⊢ε⦂τ-⇒-Γok-smaller (T-Con _ conArg _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller conArg)
+Γ⊢ε⦂τ-⇒-Γok-smaller (T-Sub εδ _ _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller εδ)
 
-    Γ⊢ε⦂τ-⇒-Γok-tail-smaller : (εδ : (Γ , τ') ⊢[ θ , φ of κ ] ε ⦂ τ)
-                             → size-ok (Γok-tail (Γ⊢ε⦂τ-⇒-Γok εδ)) < size-t εδ
-    Γ⊢ε⦂τ-⇒-Γok-tail-smaller εδ = <-trans (Γok-tail-smaller (Γ⊢ε⦂τ-⇒-Γok εδ)) (Γ⊢ε⦂τ-⇒-Γok-smaller εδ)
+Γ⊢ε⦂τ-⇒-Γok-tail-smaller : (εδ : (Γ , τ') ⊢[ θ , φ of κ ] ε ⦂ τ)
+                         → size-ok (Γok-tail (Γ⊢ε⦂τ-⇒-Γok εδ)) < size-t εδ
+Γ⊢ε⦂τ-⇒-Γok-tail-smaller εδ = <-trans (Γok-tail-smaller (Γ⊢ε⦂τ-⇒-Γok εδ)) (Γ⊢ε⦂τ-⇒-Γok-smaller εδ)
 
-    Γ⊢τ-⇒-Γok-smaller : (τδ : Γ ⊢[ θ , φ ] τ)
-                      → size-ok (Γ⊢τ-⇒-Γok τδ) < size-twf τδ
-    Γ⊢τ-⇒-Γok-smaller (TWF-TrueRef _) = s≤s ≤-refl
-    Γ⊢τ-⇒-Γok-smaller (TWF-Base ε₁δ _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-tail-smaller ε₁δ)
-    Γ⊢τ-⇒-Γok-smaller (TWF-Conj ρ₁δ _) = a<b-⇒-a<b⊕c (Γ⊢τ-⇒-Γok-smaller ρ₁δ)
-    Γ⊢τ-⇒-Γok-smaller (TWF-Arr argδ _) = a<b-⇒-a<b⊕c (Γ⊢τ-⇒-Γok-smaller argδ)
-    Γ⊢τ-⇒-Γok-smaller (TWF-ADT (τδ ∷ τδs)) = <-trans
-                                               (a<b-⇒-a<b⊕c (Γ⊢τ-⇒-Γok-smaller τδ))
-                                               (n<1+n (suc (size-twf τδ ⊔ size-all-cons τδs)))
+Γ⊢τ-⇒-Γok-smaller : (τδ : Γ ⊢[ θ , φ ] τ)
+                  → size-ok (Γ⊢τ-⇒-Γok τδ) < size-twf τδ
+Γ⊢τ-⇒-Γok-smaller (TWF-TrueRef _) = s≤s ≤-refl
+Γ⊢τ-⇒-Γok-smaller (TWF-Base ε₁δ _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-tail-smaller ε₁δ)
+Γ⊢τ-⇒-Γok-smaller (TWF-Conj ρ₁δ _) = a<b-⇒-a<b⊕c (Γ⊢τ-⇒-Γok-smaller ρ₁δ)
+Γ⊢τ-⇒-Γok-smaller (TWF-Arr argδ _) = a<b-⇒-a<b⊕c (Γ⊢τ-⇒-Γok-smaller argδ)
+Γ⊢τ-⇒-Γok-smaller (TWF-ADT (τδ ∷ τδs)) = <-trans
+                                           (a<b-⇒-a<b⊕c (Γ⊢τ-⇒-Γok-smaller τδ))
+                                           (n<1+n (suc (size-twf τδ ⊔ size-all-cons τδs)))
 
 -- Various properties useful elsewhere
 
