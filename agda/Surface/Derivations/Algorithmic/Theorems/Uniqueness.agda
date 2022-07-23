@@ -75,18 +75,18 @@ mutual
     rewrite unique-Γ⊢τ arrδ₁ arrδ₂
           | unique-Γ⊢ε⦂τ δ₁ δ₂
           = refl
-  unique-Γ⊢ε⦂τ (T-App δ₁₁ (T-Sub δ₂₁ τ₁'δ <:₁) refl resτδ₁) (T-App δ₁₂ (T-Sub δ₂₂ τ₂'δ <:₂) resτ-≡₂ resτδ₂) with typing-uniqueness δ₁₁ δ₁₂
-                                                                                                               | typing-uniqueness δ₂₁ δ₂₂
-                                                                                                               | resτ-≡₂
-  ... | refl | refl | refl
+  unique-Γ⊢ε⦂τ (T-App δ₁₁ (T-Sub δ₂₁ τ₁'δ <:₁) refl resτδ₁) (T-App δ₁₂ (T-Sub δ₂₂ τ₂'δ <:₂) resτ-≡₂ resτδ₂)
+    with refl ← typing-uniqueness δ₁₁ δ₁₂
+       | refl ← typing-uniqueness δ₂₁ δ₂₂
+       | refl ← resτ-≡₂
     rewrite unique-Γ⊢ε⦂τ δ₁₁ δ₁₂
           | unique-Γ⊢ε⦂τ δ₂₁ δ₂₂
           | unique-Γ⊢τ τ₁'δ τ₂'δ
           | unique-<: <:₁ <:₂
           | unique-Γ⊢τ resτδ₁ resτδ₂
           = refl
-  unique-Γ⊢ε⦂τ (T-Case resδ₁ δ₁ bsδ₁) (T-Case resδ₂ δ₂ bsδ₂) with typing-uniqueness δ₁ δ₂
-  ... | refl
+  unique-Γ⊢ε⦂τ (T-Case resδ₁ δ₁ bsδ₁) (T-Case resδ₂ δ₂ bsδ₂)
+    with refl ← typing-uniqueness δ₁ δ₂
     rewrite unique-Γ⊢τ resδ₁ resδ₂
           | unique-Γ⊢ε⦂τ δ₁ δ₂
           | unique-bs bsδ₁ bsδ₂
@@ -95,8 +95,8 @@ mutual
     rewrite unique-Γ⊢ε⦂τ δ₁ δ₂
           | unique-Γ⊢τ adtτ₁ adtτ₂
           = refl
-  unique-Γ⊢ε⦂τ (T-Sub εδ₁ τδ₁ <:₁) (T-Sub εδ₂ τδ₂ <:₂) with typing-uniqueness εδ₁ εδ₂
-  ... | refl
+  unique-Γ⊢ε⦂τ (T-Sub εδ₁ τδ₁ <:₁) (T-Sub εδ₂ τδ₂ <:₂)
+    with refl ← typing-uniqueness εδ₁ εδ₂
     rewrite unique-Γ⊢ε⦂τ εδ₁ εδ₂
           | unique-Γ⊢τ τδ₁ τδ₂
           | unique-<: <:₁ <:₂
