@@ -7,7 +7,6 @@ open import Data.Product renaming (_,_ to ⟨_,_⟩)
 open import Surface.Syntax
 open import Surface.Syntax.CtxSuffix
 open import Surface.Derivations.Algorithmic
-open import Surface.Derivations.Algorithmic.Theorems.Agreement
 
 <:-reflexive : Γ ⊢[ θ ] τ <: τ
 <:-reflexive {θ = θ} {τ = ⟨ _ ∣ _ ⟩} = ST-Base (Oracle.<:-refl θ _ _ _)
@@ -18,8 +17,7 @@ as-sub : ∃[ κ ] (Γ ⊢[ θ , φ of κ ] ε ⦂ τ)
        → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ
 as-sub ⟨ t-sub , εδ ⟩ = εδ
 as-sub ⟨ not-t-sub , εδ ⟩
-  = let Γ⊢τ = Γ⊢ε⦂τ-⇒-Γ⊢τ εδ
-     in T-Sub εδ Γ⊢τ <:-reflexive
+  = T-Sub εδ <:-reflexive
 
 Γ⊢τ'<:τ-⇒-Γ⊢τ₀⇒τ'<:τ₀⇒τ : Γ , τ₀ ⊢[ θ ] τ' <: τ
                         → Γ ⊢[ θ ] τ₀ ⇒ τ' <: τ₀ ⇒ τ
@@ -50,8 +48,7 @@ as-sub ⟨ not-t-sub , εδ ⟩
 <:-transitive ST-ADT ST-ADT = ST-ADT
 
 as-sub' : Γ ⊢[ θ ] τ' <: τ
-        → Γ ⊢[ θ , φ ] τ
         → ∃[ κ ] (Γ ⊢[ θ , φ of κ ] ε ⦂ τ')
         → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ
-as-sub' <:δ τδ ⟨ t-sub , T-Sub εδ _ <:'δ ⟩ = T-Sub εδ τδ (<:-transitive <:'δ <:δ)
-as-sub' <:δ τδ ⟨ not-t-sub , εδ ⟩ = T-Sub εδ τδ <:δ
+as-sub' <:δ ⟨ t-sub , T-Sub εδ <:'δ ⟩ = T-Sub εδ (<:-transitive <:'δ <:δ)
+as-sub' <:δ ⟨ not-t-sub , εδ ⟩ = T-Sub εδ <:δ

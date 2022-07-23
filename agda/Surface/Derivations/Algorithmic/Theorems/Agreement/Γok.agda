@@ -23,7 +23,7 @@ open import Surface.Derivations.Algorithmic.Theorems.Helpers
 Γ⊢ε⦂τ-⇒-Γok (T-App ε₁δ _ _ _) = Γ⊢ε⦂τ-⇒-Γok ε₁δ
 Γ⊢ε⦂τ-⇒-Γok (T-Case _ scrut _) = Γ⊢ε⦂τ-⇒-Γok scrut
 Γ⊢ε⦂τ-⇒-Γok (T-Con _ conArg _) = Γ⊢ε⦂τ-⇒-Γok conArg
-Γ⊢ε⦂τ-⇒-Γok (T-Sub εδ _ _) = Γ⊢ε⦂τ-⇒-Γok εδ
+Γ⊢ε⦂τ-⇒-Γok (T-Sub εδ _) = Γ⊢ε⦂τ-⇒-Γok εδ
 
 -- Referred to as TWF-implies-TCTX in the paper
 Γ⊢τ-⇒-Γok : Γ ⊢[ θ , φ ] τ → Γ ok[ θ , φ ]
@@ -51,7 +51,7 @@ private
 Γ⊢ε⦂τ-⇒-Γok-smaller (T-App ε₁δ _ _ _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller ε₁δ)
 Γ⊢ε⦂τ-⇒-Γok-smaller (T-Case _ scrutδ _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller scrutδ)
 Γ⊢ε⦂τ-⇒-Γok-smaller (T-Con _ conArg _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller conArg)
-Γ⊢ε⦂τ-⇒-Γok-smaller (T-Sub εδ _ _) = a<b-⇒-a<b⊕c (Γ⊢ε⦂τ-⇒-Γok-smaller εδ)
+Γ⊢ε⦂τ-⇒-Γok-smaller (T-Sub εδ _) = s≤s (<⇒≤ (Γ⊢ε⦂τ-⇒-Γok-smaller εδ))
 
 Γ⊢ε⦂τ-⇒-Γok-tail-smaller : (εδ : (Γ , τ') ⊢[ θ , φ of κ ] ε ⦂ τ)
                          → size-ok (Γok-tail (Γ⊢ε⦂τ-⇒-Γok εδ)) < size-t εδ

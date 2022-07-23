@@ -23,7 +23,7 @@ open import Surface.Syntax.Substitution.Distributivity as S
 open import Surface.Syntax.Substitution.Commutativity
 open import Surface.Derivations.Common.Theorems.Substitution.Helpers
 open import Surface.Derivations.Algorithmic
-open import Surface.Derivations.Algorithmic.Theorems.Agreement
+open import Surface.Derivations.Algorithmic.Theorems.Agreement.Lemmas
 open import Surface.Derivations.Algorithmic.Theorems.Thinning
 open import Surface.Derivations.Algorithmic.Theorems.Subtyping
 
@@ -93,11 +93,10 @@ module M {σ : SType ℓ} (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) where mu
           | R.act-ε-distr (raise k) suc ε
     with sub-Γ⊢ε⦂τ (Δ , _) bodyδ
   ... | ⟨ not-t-sub , bodyδ' ⟩ = ⟨ _ , T-Abs bodyδ' ⟩
-  ... | ⟨ t-sub , T-Sub bodyδ' τδ <:δ ⟩
+  ... | ⟨ t-sub , T-Sub bodyδ' <:δ ⟩
         = ⟨ _
           , T-Sub
               (T-Abs bodyδ')
-              (Γ,τ₁⊢τ₂-⇒-Γ⊢τ₁⇒τ₂ τδ)
               (Γ⊢τ'<:τ-⇒-Γ⊢τ₀⇒τ'<:τ₀⇒τ <:δ)
           ⟩
   sub-Γ⊢ε⦂τ {k = k} Δ (T-App {ε₁ = ε₁} {τ₁} {τ₂} {ε₂} ε₁δ ε₂δ refl resτδ)
@@ -110,34 +109,21 @@ module M {σ : SType ℓ} (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) where mu
           = let resτδ' = sub-Γ⊢τ Δ resτδ
                 resτδ' = subst (_ ⊢[ _ , _ ]_) (subst-commutes-τ-zero (ctx-idx k) (R.weaken-ε-k k ε) ε₂ τ₂) resτδ'
              in ⟨ _ , T-App ε₁δ' (as-sub ε₂δ') refl resτδ' ⟩
-  ... | ⟨ t-sub , T-Sub ε₁δ' τ₁⇒τ₂δ (ST-Arr <:₁δ <:₂δ) ⟩
-    with TWF-Arr τ₁δ' τ₂δ' ← Γ⊢ε⦂τ-⇒-Γ⊢τ ε₁δ'
-        = let resτδ' = sub-Γ⊢τ Δ resτδ
-              resτδ' = subst (_ ⊢[ _ , _ ]_) (subst-commutes-τ-zero (ctx-idx k) (R.weaken-ε-k k ε) ε₂ τ₂) resτδ'
-              <:₂δ' = sub-Γ⊢τ'<:τ-front (as-sub ε₂δ') <:₂δ
+  ... | ⟨ t-sub , T-Sub ε₁δ' (ST-Arr <:₁δ <:₂δ) ⟩
+        = let <:₂δ' = sub-Γ⊢τ'<:τ-front (as-sub ε₂δ') <:₂δ
               <:₂δ' = subst (λ δ → _ ⊢[ _ ] _ <: [ zero ↦τ _ ] δ)
                             (S.act-τ-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂)
                             <:₂δ'
            in ⟨ _
               , T-Sub
-                  (T-App ε₁δ' {! (as-sub' <:₁δ τ₁δ' ε₂δ') !} refl {! !})
-                  resτδ'
+                  (T-App ε₁δ' (as-sub' <:₁δ ε₂δ') refl {! !})
                   <:₂δ'
               ⟩
   sub-Γ⊢ε⦂τ Δ (T-Case resδ δ branches-well-typed) = {! !}
   sub-Γ⊢ε⦂τ Δ (T-Con ≡-prf δ adtτ) = {! !}
-  sub-Γ⊢ε⦂τ Δ (T-Sub sub-εδ τδ <:δ)
+  sub-Γ⊢ε⦂τ Δ (T-Sub sub-εδ <:δ)
     with sub-εδ' ← sub-Γ⊢ε⦂τ Δ sub-εδ
-       = ⟨ _ , as-sub' (sub-Γ⊢τ'<:τ εδ Δ <:δ) (sub-Γ⊢τ Δ τδ) sub-εδ' ⟩
-  {-
-  It seems to be impossible to prove the substitution lemma directly for the enriched type system.
-
-  Both systems require transitivity of subtyping relations to collapse
-  any possible nested T-Sub rules after the substitution. In turn,
-  transitivity of subtyping relations for ST-Arr requires narrowing of the
-  "higher" relation, which, in case of the enriched system, also pulls in
-  narrowing for the type well-formedness witnesses that it carries.
-  -}
+       = ⟨ _ , as-sub' (sub-Γ⊢τ'<:τ εδ Δ <:δ) sub-εδ' ⟩
 
 open M public
 

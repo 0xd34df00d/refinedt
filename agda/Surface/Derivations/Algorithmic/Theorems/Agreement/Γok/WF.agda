@@ -45,7 +45,7 @@ size-t (T-Abs εδ) = suc (size-t εδ)
 size-t (T-App δ₁ δ₂ _ resτδ) = suc (size-t δ₁ ⊕ size-t δ₂ ⊕ size-twf resτδ)
 size-t (T-Case resδ scrutτδ branches) = suc (size-t scrutτδ ⊕ size-twf resδ ⊕ size-bs branches)
 size-t (T-Con _ conArg adtτ) = suc (size-t conArg ⊕ size-twf adtτ)
-size-t (T-Sub δ superδ _) = suc (size-t δ ⊕ size-twf superδ)
+size-t (T-Sub εδ _) = suc (size-t εδ)
 
 size-bs NoBranches = 0
 size-bs (OneMoreBranch εδ rest) = suc (size-t εδ ⊕ size-bs rest)

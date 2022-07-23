@@ -102,10 +102,9 @@ mutual
     rewrite R.cons-lookup-comm (ext-k' k suc) ι cons
           = let adtτ' = Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok adtτ (rec _ (s≤s (₂≤₂ _ _)))
              in T-Con refl δ' adtτ'
-  Γ⊢ε⦂τ-thinning↓ {φ = φ} Γ⊂Γ' Γ'ok (T-Sub εδ τ'δ <:δ) (acc rec)
+  Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Sub εδ <:δ) (acc rec)
     = T-Sub
-        (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _))))
-        (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τ'δ (rec _ (s≤s (₂≤₂ _ _))))
+        (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok εδ (rec _ ≤-refl))
         (<:-thinning Γ⊂Γ' <:δ)
 
   cons-thinning↓ : {Γ : Ctx (k + ℓ)}

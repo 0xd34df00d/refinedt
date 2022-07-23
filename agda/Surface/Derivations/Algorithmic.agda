@@ -93,7 +93,6 @@ data _⊢[_,_of_]_⦂_ {ℓ} Γ θ φ where
               → (adtτ : Γ ⊢[ θ , φ ] ⊍ cons)
               → Γ ⊢[ θ , φ of not-t-sub ] SCon ι ε cons ⦂ ⊍ cons
   T-Sub       : (εδ : Γ ⊢[ θ , φ of not-t-sub ] ε ⦂ τ')
-              → (τδ : Γ ⊢[ θ , φ ] τ)
               → (<:δ : Γ ⊢[ θ ] τ' <: τ)
               → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ
 

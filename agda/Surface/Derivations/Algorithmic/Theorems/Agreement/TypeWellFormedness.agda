@@ -20,7 +20,7 @@ open import Surface.Derivations.Algorithmic.Theorems.Agreement.Lemmas
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind Γok τδ) (∈-suc refl ∈) = Γ⊢τ-weakening Γok τδ (τ∈Γ-⇒-Γ⊢τ Γok ∈)
 
 -- Referred to as T-implies-TWF in the paper
-Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢[ θ , φ of κ ] ε ⦂ τ
+Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢[ θ , φ of not-t-sub ] ε ⦂ τ
             → Γ ⊢[ θ , φ ] τ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Unit Γok) = TWF-TrueRef Γok
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Var Γok ∈-prf) = τ∈Γ-⇒-Γ⊢τ Γok ∈-prf
@@ -28,4 +28,3 @@ open import Surface.Derivations.Algorithmic.Theorems.Agreement.Lemmas
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-App _ _ _ resτδ) = resτδ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Case resδ _ _) = resδ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Con _ _ adtτ) = adtτ
-Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Sub _ superδ _) = superδ
