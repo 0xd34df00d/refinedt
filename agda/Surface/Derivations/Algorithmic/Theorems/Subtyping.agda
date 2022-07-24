@@ -2,9 +2,12 @@
 
 module Surface.Derivations.Algorithmic.Theorems.Subtyping where
 
+open import Data.Fin using (raise; zero; suc)
+open import Data.Nat using (zero; suc)
 open import Data.Product renaming (_,_ to ⟨_,_⟩)
 open import Data.Vec as V using (lookup; _∷_; []; zip; zipWith)
 open import Data.Vec.Relation.Unary.All as VA using (All; _∷_; []; tabulate)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Surface.Syntax
 open import Surface.Syntax.CtxSuffix
@@ -76,3 +79,36 @@ as-sub' : Γ ⊢[ θ ] τ' <: τ
         → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ
 as-sub' <:δ ⟨ t-sub , εδ ⟩ = trans-sub <:δ εδ
 as-sub' <:δ ⟨ not-t-sub , εδ ⟩ = T-Sub εδ <:δ
+
+
+open import Common.Helpers
+open import Surface.Syntax.Renaming as R
+open import Surface.Syntax.Substitution as S
+
+private module N {Γ : Ctx ℓ} (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) where
+  sub-Γ⊢τ'<:τ : (Δ : ,-CtxSuffix ℓ σ k)
+              → Γ ,σ, Δ ⊢[ θ ] τ' <: τ
+              → Γ ++ [↦Δ ε ] Δ ⊢[ θ ] [ ℓ ↦τ< ε ] τ' <: [ ℓ ↦τ< ε ] τ
+  sub-Γ⊢τ'<:τ Δ (ST-Base is-just) = ST-Base (Oracle.subst {- TODO εδ -} θ is-just)
+  sub-Γ⊢τ'<:τ {k = k} Δ (ST-Arr {τ₂' = τ₂'} {τ₂ = τ₂} <:₁δ <:₂δ)
+    rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
+          | S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂'
+          | R.act-ε-distr (raise k) suc ε
+          = ST-Arr (sub-Γ⊢τ'<:τ Δ <:₁δ) (sub-Γ⊢τ'<:τ (Δ , _) <:₂δ)
+  sub-Γ⊢τ'<:τ {k = k} Δ (ST-ADT cons-<:) = ST-ADT (go cons-<:)
+    where
+    go : {cons' cons : ADTCons nₐ (suc k + ℓ)}
+       → AllSubtypes (Γ ,σ, Δ) θ cons' cons
+       → AllSubtypes (Γ ++ [↦Δ ε ] Δ) θ ([ ℓ ↦c< ε ] cons') ([ ℓ ↦c< ε ] cons)
+    go {cons' = []}    {[]}    []              = []
+    go {cons' = _ ∷ _} {_ ∷ _} (<:δ ∷ cons-<:) = sub-Γ⊢τ'<:τ Δ <:δ ∷ go cons-<:
+
+open N public
+
+sub-Γ⊢τ'<:τ-front : (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ)
+                  → Γ , σ ⊢[ θ ] τ' <: τ
+                  → Γ ⊢[ θ ] [ zero ↦τ ε ] τ' <: [ zero ↦τ ε ] τ
+sub-Γ⊢τ'<:τ-front {ε = ε} εδ <:δ
+  with <:δ' ← sub-Γ⊢τ'<:τ εδ [ _ ] <:δ
+  rewrite R.act-ε-id (λ _ → refl) ε
+        = <:δ'
