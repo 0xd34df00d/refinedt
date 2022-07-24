@@ -9,9 +9,7 @@ open import Surface.Syntax.CtxSuffix
 open import Surface.Syntax.Membership
 open import Surface.Syntax.Substitution
 open import Surface.Derivations.Algorithmic
-open import Surface.Derivations.Algorithmic.Theorems.Agreement
 open import Surface.Derivations.Algorithmic.Theorems.Helpers
---open import Surface.Derivations.Algorithmic.Theorems.Substitution
 open import Surface.Derivations.Algorithmic.Theorems.Subtyping
 open import Surface.Derivations.Algorithmic.Theorems.Thinning
 
@@ -73,8 +71,8 @@ module φ {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ ] σ' <: σ) (Γ⊢σ' : Γ ⊢
               ε₂δ'³ = as-sub' <:₁δ (Γ⊢ε⦂τ-narrowing Δ ε₂δ)
            in ⟨ _
               , T-Sub
-                 (T-App ε₁δ' ε₂δ'³ refl {! (sub-Γ⊢τ-front ε₂δ'³ τ₂'δ') !})
-                 {! (sub-Γ⊢τ'<:τ-front ε₂δ'¹ <:₂δ) !}
+                 (T-App ε₁δ' ε₂δ'³ refl)
+                 (sub-Γ⊢τ'<:τ-front ε₂δ'¹ <:₂δ)
               ⟩
   Γ⊢ε⦂τ-narrowing Δ (T-Case resδ εδ branches-well-typed) = {! !}
   Γ⊢ε⦂τ-narrowing Δ (T-Con ≡-prf εδ adtτ) = {! !}
