@@ -117,8 +117,12 @@ private module M {σ : SType ℓ} (σεδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ
                 (T-App ε₁δ' (trans-sub <:₁δ ε₂δ') refl)
                 <:₂δ'
   sub-Γ⊢ε⦂τ Δ (T-Case resδ εδ branches-well-typed) = {! !}
-  sub-Γ⊢ε⦂τ Δ (T-Con ≡-prf εδ adtτ) = {! !}
-  sub-Γ⊢ε⦂τ Δ (T-Sub sub-εδ <:δ) = trans-sub (sub-Γ⊢τ'<:τ εδ Δ <:δ) (sub-Γ⊢ε⦂τ Δ sub-εδ)
+  sub-Γ⊢ε⦂τ {k = k} Δ (T-Con {ι = ι} {cons = cons} <:-lookup-δ εδ adtτ)
+    with T-Sub εδ' <:δ' ← sub-Γ⊢ε⦂τ Δ εδ
+       | <:-lookup-δ' ← sub-Γ⊢τ'<:τ σεδ Δ <:-lookup-δ
+    rewrite S.cons-lookup-comm (replace-at (ctx-idx k) (R.weaken-ε-k k ε)) ι cons
+          = T-Sub (T-Con (<:-transitive <:δ' <:-lookup-δ') εδ' (sub-Γ⊢τ Δ adtτ)) <:-reflexive
+  sub-Γ⊢ε⦂τ Δ (T-Sub εδ <:δ) = trans-sub (sub-Γ⊢τ'<:τ σεδ Δ <:δ) (sub-Γ⊢ε⦂τ Δ εδ)
 
 open M public
 
