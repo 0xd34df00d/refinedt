@@ -71,7 +71,7 @@ private module M {σ : SType ℓ} (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) 
     rewrite S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε₁
           | S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε₂
           | R.act-ε-distr (raise k) suc ε
-          = TWF-Base (as-sub (sub-Γ⊢ε⦂τ (Δ , _) ε₁δ)) (as-sub (sub-Γ⊢ε⦂τ (Δ , _) ε₂δ))
+          = TWF-Base (sub-Γ⊢ε⦂τ (Δ , _) ε₁δ) (sub-Γ⊢ε⦂τ (Δ , _) ε₂δ)
   sub-Γ⊢τ Δ (TWF-Conj τ₁δ τ₂δ) = TWF-Conj (sub-Γ⊢τ Δ τ₁δ) (sub-Γ⊢τ Δ τ₂δ)
   sub-Γ⊢τ {k = k} Δ (TWF-Arr {τ₂ = τ₂} τ₁δ τ₂δ)
     rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
@@ -88,49 +88,37 @@ private module M {σ : SType ℓ} (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) 
 
   sub-Γ⊢ε⦂τ : (Δ : ,-CtxSuffix ℓ σ k)
             → Γ ,σ, Δ ⊢[ θ , φ of κ ] ε₀ ⦂ τ
-            → ∃[ κ' ] (Γ ++ [↦Δ ε ] Δ ⊢[ θ , φ of κ' ] [ ℓ ↦ε< ε ] ε₀ ⦂ [ ℓ ↦τ< ε ] τ)
-  sub-Γ⊢ε⦂τ Δ (T-Unit Γok) = ⟨ _ , T-Unit (sub-Γok Δ Γok) ⟩
-  sub-Γ⊢ε⦂τ {k = k} Δ (T-Var {ι = ι} Γok ∈) with ctx-idx k <>? ι
-  ... | less k<ι = ⟨ _ , T-Var (sub-Γok Δ Γok) (var-earlier-in-Γ-remains Δ ∈ k<ι) ⟩
+            → Γ ++ [↦Δ ε ] Δ ⊢[ θ , φ of t-sub ] [ ℓ ↦ε< ε ] ε₀ ⦂ [ ℓ ↦τ< ε ] τ
+  sub-Γ⊢ε⦂τ Δ (T-Unit Γok) = T-Sub (T-Unit (sub-Γok Δ Γok)) <:-reflexive
+  sub-Γ⊢ε⦂τ {k = k} Δ (T-Var {ι = ι} Γok ∈)
+    with ctx-idx k <>? ι
+  ... | less k<ι = T-Sub (T-Var (sub-Γok Δ Γok) (var-earlier-in-Γ-remains Δ ∈ k<ι)) <:-reflexive
   ... | equal refl rewrite ∈-at-concat-point Δ ∈
                          | replace-weakened-τ k (weaken-ε-k k ε) σ
-                         = ⟨ t-sub , Γ⊢ε⦂τ-weakening-suffix (sub-Γok Δ Γok) εδ ⟩
-  ... | greater k>ι = ⟨ _ , T-Var (sub-Γok Δ Γok) (var-later-in-Γ-remains Δ ∈ k>ι) ⟩
+                         = Γ⊢ε⦂τ-weakening-suffix (sub-Γok Δ Γok) εδ
+  ... | greater k>ι = T-Sub (T-Var (sub-Γok Δ Γok) (var-later-in-Γ-remains Δ ∈ k>ι)) <:-reflexive
   sub-Γ⊢ε⦂τ {k = k} Δ (T-Abs {τ₁ = τ₁} {ε = ε'} {τ₂ = τ₂} bodyδ)
     rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
           | S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
           | R.act-ε-distr (raise k) suc ε
-    with sub-Γ⊢ε⦂τ (Δ , _) bodyδ
-  ... | ⟨ not-t-sub , bodyδ' ⟩ = ⟨ _ , T-Abs bodyδ' ⟩
-  ... | ⟨ t-sub , T-Sub bodyδ' <:δ ⟩
-        = ⟨ _
-          , T-Sub
-              (T-Abs bodyδ')
-              (Γ⊢τ'<:τ-⇒-Γ⊢τ₀⇒τ'<:τ₀⇒τ <:δ)
-          ⟩
+    with T-Sub bodyδ' <:δ ← sub-Γ⊢ε⦂τ (Δ , _) bodyδ
+       = T-Sub
+          (T-Abs bodyδ')
+          (Γ⊢τ'<:τ-⇒-Γ⊢τ₀⇒τ'<:τ₀⇒τ <:δ)
   sub-Γ⊢ε⦂τ {k = k} Δ (T-App {ε₁ = ε₁} {τ₁} {τ₂} {ε₂} ε₁δ ε₂δ refl)
     rewrite subst-commutes-τ-zero (ctx-idx k) (R.weaken-ε-k k ε) ε₂ τ₂
-    with ε₂δ' ← sub-Γ⊢ε⦂τ Δ ε₂δ
-    with sub-Γ⊢ε⦂τ Δ ε₁δ
-  ... | ⟨ not-t-sub , ε₁δ' ⟩
-    rewrite S.act-τ-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
-          | subst-commutes-τ-zero (ctx-idx k) (R.weaken-ε-k k ε) ε₂ τ₂
-          = ⟨ _ , T-App ε₁δ' (as-sub ε₂δ') refl ⟩
-  ... | ⟨ t-sub , T-Sub ε₁δ' (ST-Arr <:₁δ <:₂δ) ⟩
-        = let <:₂δ' = sub-Γ⊢τ'<:τ-front (as-sub ε₂δ') <:₂δ
+    with T-Sub ε₁δ' (ST-Arr <:₁δ <:₂δ) ← sub-Γ⊢ε⦂τ Δ ε₁δ
+        = let ε₂δ' = sub-Γ⊢ε⦂τ Δ ε₂δ
+              <:₂δ' = sub-Γ⊢τ'<:τ-front ε₂δ' <:₂δ
               <:₂δ' = subst (λ δ → _ ⊢[ _ ] _ <: [ zero ↦τ _ ] δ)
                             (S.act-τ-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂)
                             <:₂δ'
-           in ⟨ _
-              , T-Sub
-                  (T-App ε₁δ' (as-sub' <:₁δ ε₂δ') refl)
-                  <:₂δ'
-              ⟩
-  sub-Γ⊢ε⦂τ Δ (T-Case resδ δ branches-well-typed) = {! !}
-  sub-Γ⊢ε⦂τ Δ (T-Con ≡-prf δ adtτ) = {! !}
-  sub-Γ⊢ε⦂τ Δ (T-Sub sub-εδ <:δ)
-    with sub-εδ' ← sub-Γ⊢ε⦂τ Δ sub-εδ
-       = ⟨ _ , as-sub' (sub-Γ⊢τ'<:τ εδ Δ <:δ) sub-εδ' ⟩
+           in T-Sub
+                (T-App ε₁δ' (trans-sub <:₁δ ε₂δ') refl)
+                <:₂δ'
+  sub-Γ⊢ε⦂τ Δ (T-Case resδ εδ branches-well-typed) = {! !}
+  sub-Γ⊢ε⦂τ Δ (T-Con ≡-prf εδ adtτ) = {! !}
+  sub-Γ⊢ε⦂τ Δ (T-Sub sub-εδ <:δ) = trans-sub (sub-Γ⊢τ'<:τ εδ Δ <:δ) (sub-Γ⊢ε⦂τ Δ sub-εδ)
 
 open M public
 

@@ -66,8 +66,13 @@ open M public
   go {cons'' = []}    {[]}    {[]}    []                []                = []
   go {cons'' = _ ∷ _} {_ ∷ _} {_ ∷ _} (<:δ₁ ∷ cons-<:₁) (<:δ₂ ∷ cons-<:₂) = <:-transitive <:δ₁ <:δ₂ ∷ go cons-<:₁ cons-<:₂
 
+trans-sub : Γ ⊢[ θ ] τ' <: τ
+          → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ'
+          → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ
+trans-sub <:δ (T-Sub εδ <:'δ) = T-Sub εδ (<:-transitive <:'δ <:δ)
+
 as-sub' : Γ ⊢[ θ ] τ' <: τ
         → ∃[ κ ] (Γ ⊢[ θ , φ of κ ] ε ⦂ τ')
         → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ
-as-sub' <:δ ⟨ t-sub , T-Sub εδ <:'δ ⟩ = T-Sub εδ (<:-transitive <:'δ <:δ)
+as-sub' <:δ ⟨ t-sub , εδ ⟩ = trans-sub <:δ εδ
 as-sub' <:δ ⟨ not-t-sub , εδ ⟩ = T-Sub εδ <:δ
