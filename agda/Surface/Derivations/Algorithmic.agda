@@ -5,7 +5,8 @@ module Surface.Derivations.Algorithmic where
 open import Data.Fin using (zero; suc)
 open import Data.Maybe using (Is-just)
 open import Data.Nat.Base using (_+_)
-open import Data.Vec using (lookup; _∷_; [])
+open import Data.Product using () renaming (_,_ to ⟨_,_⟩)
+open import Data.Vec using (lookup; _∷_; []; zip)
 open import Data.Vec.Relation.Unary.All using (All; _∷_; []) public
 open import Relation.Binary.PropositionalEquality using (_≡_)
 
@@ -95,11 +96,19 @@ data _⊢[_,_of_]_⦂_ {ℓ} Γ θ φ where
               → (<:δ : Γ ⊢[ θ ] τ' <: τ)
               → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ
 
+AllSubtypes : Ctx ℓ
+            → Oracle
+            → ADTCons nₐ ℓ
+            → ADTCons nₐ ℓ
+            → Set
+AllSubtypes Γ θ cons' cons = All (λ where ⟨ con' , con ⟩ → Γ ⊢[ θ ] con' <: con) (zip cons' cons)
+
 data _⊢[_]_<:_ {ℓ} Γ θ where
   ST-Base : (is-just : Is-just (Oracle.decide θ Γ b ρ₁ ρ₂))
           → Γ ⊢[ θ ] ⟨ b ∣ ρ₁ ⟩ <: ⟨ b ∣ ρ₂ ⟩
   ST-Arr  : (<:₁δ : Γ ⊢[ θ ] τ₁' <: τ₁)
           → (<:₂δ : Γ , τ₁' ⊢[ θ ] τ₂' <: τ₂)
           → Γ ⊢[ θ ] τ₁ ⇒ τ₂' <: τ₁' ⇒ τ₂
-  ST-ADT  : {adtCons : ADTCons nₐ ℓ}
-          → Γ ⊢[ θ ] ⊍ adtCons <: ⊍ adtCons
+  ST-ADT  : {cons' cons : ADTCons nₐ ℓ}
+          → (cons-<: : AllSubtypes Γ θ cons' cons)
+          → Γ ⊢[ θ ] ⊍ cons' <: ⊍ cons

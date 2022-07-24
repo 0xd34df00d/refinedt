@@ -3,6 +3,7 @@
 module Surface.Derivations.Algorithmic.Theorems.Uniqueness where
 
 open import Data.Maybe.Relation.Unary.Any using (irrelevant)
+open import Data.Vec as V
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 open import Relation.Nullary using (Irrelevant)
 
@@ -106,7 +107,9 @@ mutual
     rewrite unique-<: <:₁₁ <:₁₂
           | unique-<: <:₂₁ <:₂₂
           = refl
-  unique-<: ST-ADT ST-ADT = refl
+  unique-<: (ST-ADT cons-<:₁) (ST-ADT cons-<:₂)
+    rewrite unique-all-subtypes cons-<:₁ cons-<:₂
+          = refl
 
   unique-cons : ∀ {cons : ADTCons nₐ ℓ}
               → Irrelevant (All (Γ ⊢[ θ , φ ]_) cons)
@@ -114,6 +117,14 @@ mutual
   unique-cons (δ₁ ∷ δs₁) (δ₂ ∷ δs₂)
     rewrite unique-Γ⊢τ δ₁ δ₂
           | unique-cons δs₁ δs₂
+          = refl
+
+  unique-all-subtypes : {cons' cons : ADTCons nₐ ℓ}
+                      → Irrelevant (AllSubtypes Γ θ cons' cons)
+  unique-all-subtypes {cons' = []}    {[]}    []              [] = refl
+  unique-all-subtypes {cons' = _ ∷ _} {_ ∷ _} (τδ₁ ∷ cons-<:₁) (τδ₂ ∷ cons-<:₂)
+    rewrite unique-<: τδ₁ τδ₂
+          | unique-all-subtypes cons-<:₁ cons-<:₂
           = refl
 
   unique-bs : ∀ {cons : ADTCons nₐ ℓ} {bs}

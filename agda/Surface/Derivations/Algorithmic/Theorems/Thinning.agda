@@ -6,7 +6,7 @@ open import Data.Fin using (zero; suc; raise; #_)
 open import Data.Nat.Base
 open import Data.Nat.Induction
 open import Data.Nat.Properties
-open import Data.Vec.Base using (lookup; _∷_)
+open import Data.Vec.Base using (lookup; _∷_; [])
 open import Function
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst; sym)
 
@@ -37,7 +37,13 @@ open import Surface.Derivations.Algorithmic.Theorems.Agreement.Γok.WF
             → Γ' ⊢[ θ ] R.act-τ (ext-k' k suc) τ' <: R.act-τ (ext-k' k suc) τ
 <:-thinning {θ = θ} Γ⊂Γ' (ST-Base is-just) = ST-Base (Oracle.thin θ Γ⊂Γ' is-just)
 <:-thinning Γ⊂Γ' (ST-Arr <:₁δ <:₂δ) = ST-Arr (<:-thinning Γ⊂Γ' <:₁δ) (<:-thinning (append-both Γ⊂Γ') <:₂δ)
-<:-thinning _    ST-ADT = ST-ADT
+<:-thinning {k = k} {ℓ = ℓ} {Γ' = Γ'} {Γ = Γ} Γ⊂Γ' (ST-ADT cons-<:) = ST-ADT (go cons-<:)
+  where
+  go : {cons' cons : ADTCons nₐ (k + ℓ)}
+     → AllSubtypes Γ  θ cons' cons
+     → AllSubtypes Γ' θ (R.act-cons (ext-k' k suc) cons') (R.act-cons (ext-k' k suc) cons)
+  go {cons' = []}    {[]}    []             = []
+  go {cons' = _ ∷ _} {_ ∷ _} (τδ ∷ cons-<:) = <:-thinning Γ⊂Γ' τδ ∷ go cons-<:
 
 mutual
   Γ⊢τ-thinning↓ : {Γ : Ctx (k + ℓ)}

@@ -7,6 +7,7 @@ open import Data.Fin.Base using (suc; zero; fromℕ<; raise)
 open import Data.Nat.Base using (suc; zero; _+_)
 open import Data.Nat.Properties using (≤-stepsʳ; ≤-refl; m≢1+n+m; suc-injective)
 open import Data.Product renaming (_,_ to ⟨_,_⟩)
+open import Data.Vec.Base using (_∷_; [])
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; subst)
 
 open import Common.Helpers
@@ -27,17 +28,25 @@ open import Surface.Derivations.Algorithmic.Theorems.Agreement.Lemmas
 open import Surface.Derivations.Algorithmic.Theorems.Thinning
 open import Surface.Derivations.Algorithmic.Theorems.Subtyping
 
-sub-Γ⊢τ'<:τ : (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ)
-            → (Δ : ,-CtxSuffix ℓ σ k)
-            → Γ ,σ, Δ ⊢[ θ ] τ' <: τ
-            → Γ ++ [↦Δ ε ] Δ ⊢[ θ ] [ ℓ ↦τ< ε ] τ' <: [ ℓ ↦τ< ε ] τ
-sub-Γ⊢τ'<:τ {θ = θ} εδ Δ (ST-Base is-just) = ST-Base (Oracle.subst {- TODO εδ -} θ is-just)
-sub-Γ⊢τ'<:τ {ε = ε} {k = k} εδ Δ (ST-Arr {τ₂' = τ₂'} {τ₂ = τ₂} <:₁δ <:₂δ)
-  rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
-        | S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂'
-        | R.act-ε-distr (raise k) suc ε
-        = ST-Arr (sub-Γ⊢τ'<:τ εδ Δ <:₁δ) (sub-Γ⊢τ'<:τ εδ (Δ , _) <:₂δ)
-sub-Γ⊢τ'<:τ εδ Δ ST-ADT = ST-ADT
+private module N {Γ : Ctx ℓ} (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) where
+  sub-Γ⊢τ'<:τ : (Δ : ,-CtxSuffix ℓ σ k)
+              → Γ ,σ, Δ ⊢[ θ ] τ' <: τ
+              → Γ ++ [↦Δ ε ] Δ ⊢[ θ ] [ ℓ ↦τ< ε ] τ' <: [ ℓ ↦τ< ε ] τ
+  sub-Γ⊢τ'<:τ Δ (ST-Base is-just) = ST-Base (Oracle.subst {- TODO εδ -} θ is-just)
+  sub-Γ⊢τ'<:τ {k = k} Δ (ST-Arr {τ₂' = τ₂'} {τ₂ = τ₂} <:₁δ <:₂δ)
+    rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
+          | S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂'
+          | R.act-ε-distr (raise k) suc ε
+          = ST-Arr (sub-Γ⊢τ'<:τ Δ <:₁δ) (sub-Γ⊢τ'<:τ (Δ , _) <:₂δ)
+  sub-Γ⊢τ'<:τ {k = k} Δ (ST-ADT cons-<:) = ST-ADT (go cons-<:)
+    where
+    go : {cons' cons : ADTCons nₐ (suc k + ℓ)}
+       → AllSubtypes (Γ ,σ, Δ) θ cons' cons
+       → AllSubtypes (Γ ++ [↦Δ ε ] Δ) θ ([ ℓ ↦c< ε ] cons') ([ ℓ ↦c< ε ] cons)
+    go {cons' = []}    {[]}    []              = []
+    go {cons' = _ ∷ _} {_ ∷ _} (<:δ ∷ cons-<:) = sub-Γ⊢τ'<:τ Δ <:δ ∷ go cons-<:
+
+open N public
 
 sub-Γ⊢τ'<:τ-front : (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ)
                   → Γ , σ ⊢[ θ ] τ' <: τ
@@ -47,7 +56,7 @@ sub-Γ⊢τ'<:τ-front {ε = ε} εδ <:δ
   rewrite R.act-ε-id (λ _ → refl) ε
         = <:δ'
 
-module M {σ : SType ℓ} (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) where mutual
+private module M {σ : SType ℓ} (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) where mutual
   sub-Γok : (Δ : ,-CtxSuffix ℓ σ k)
           → (Γ ,σ, Δ) ok[ θ , φ ]
           → (Γ ++ [↦Δ ε ] Δ) ok[ θ , φ ]
