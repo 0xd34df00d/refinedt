@@ -22,7 +22,7 @@ canonical-⇒ : ⊘ ⊢[ θ , φ of κ ] ε ⦂ τ
             → τ ≡ τ₁ ⇒ τ₂
             → Canonical ε τ
 canonical-⇒ (T-Abs εδ) is-value ≡-prf = C-Lam
-canonical-⇒ (T-Sub εδ τ'δ (ST-Arr _ _)) is-value refl
+canonical-⇒ (T-Sub εδ (ST-Arr _ _)) is-value refl
   with C-Lam ← canonical-⇒ εδ is-value refl = C-Lam
 
 canonical-⊍ : {cons : ADTCons (Mkℕₐ n) zero}
@@ -31,7 +31,7 @@ canonical-⊍ : {cons : ADTCons (Mkℕₐ n) zero}
             → τ ≡ ⊍ cons
             → Canonical ε τ
 canonical-⊍ (T-Con ≡-prf₁ εδ adtτ) (IV-ADT is-value) ≡-prf = C-Con
-canonical-⊍ (T-Sub εδ τ'δ ST-ADT) (IV-ADT iv) refl
+canonical-⊍ (T-Sub εδ (ST-ADT _)) (IV-ADT iv) refl
   with T-Con ≡-prf r adtτ ← εδ = C-Con
 
 
@@ -55,7 +55,7 @@ lookup-preserves-Γ⊢τ {φ = φ} ι (TWF-ADT consδs) = go ι consδs
 con-has-type : ∀ {cons cons' : ADTCons (Mkℕₐ (suc n)) ℓ} {ι}
              → Γ ⊢[ θ , φ of not-t-sub ] SCon ι ε cons ⦂ ⊍ cons'
              → Γ ⊢[ θ , φ of not-t-sub ] ε ⦂ lookup cons' ι
-con-has-type (T-Con refl conδ adtτ) = conδ
+con-has-type (T-Con <:δ conδ adtτ) = {! !}
 
 subst-Γ⊢ε⦂τ-τ : τ₁ ≡ τ₂
               → Γ ⊢[ θ , φ of κ ] ε ⦂ τ₁

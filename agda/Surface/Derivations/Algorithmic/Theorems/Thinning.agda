@@ -101,11 +101,12 @@ mutual
             (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok resδ acc₁)
             (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ acc₂)
             (branches-thinning↓ Γ⊂Γ' Γ'ok branchesδ acc₃)
-  Γ⊢ε⦂τ-thinning↓ {k = k} Γ⊂Γ' Γ'ok (T-Con {ι = ι} {cons = cons} refl δ adtτ) (acc rec)
-    with δ' ← Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok δ (rec _ (s≤s (₁≤₂ _ _)))
+  Γ⊢ε⦂τ-thinning↓ {k = k} Γ⊂Γ' Γ'ok (T-Con {ι = ι} {cons = cons} <:δ εδ adtτ) (acc rec)
+    with εδ' ← Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok εδ (rec _ (s≤s (₁≤₂ _ _)))
+       | <:δ' ← <:-thinning Γ⊂Γ' <:δ
     rewrite R.cons-lookup-comm (ext-k' k suc) ι cons
           = let adtτ' = Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok adtτ (rec _ (s≤s (₂≤₂ _ _)))
-             in T-Con refl δ' adtτ'
+             in T-Con <:δ' εδ' adtτ'
   Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Sub εδ <:δ) (acc rec)
     = T-Sub
         (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok εδ (rec _ ≤-refl))

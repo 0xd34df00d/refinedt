@@ -88,7 +88,7 @@ data _⊢[_,_of_]_⦂_ {ℓ} Γ θ φ where
               → Γ ⊢[ θ , φ of not-t-sub ] SCase ε bs ⦂ τ'
   T-Con       : ∀ {ι}
               → {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
-              → (≡-prf : τⱼ ≡ lookup cons ι)
+              → (<:δ : Γ ⊢[ θ ] τⱼ <: lookup cons ι)
               → (conArg : Γ ⊢[ θ , φ of not-t-sub ] ε ⦂ τⱼ)
               → (adtτ : Γ ⊢[ θ , φ ] ⊍ cons)
               → Γ ⊢[ θ , φ of not-t-sub ] SCon ι ε cons ⦂ ⊍ cons

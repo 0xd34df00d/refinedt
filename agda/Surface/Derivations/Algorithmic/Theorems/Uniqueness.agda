@@ -89,8 +89,10 @@ mutual
           | unique-Γ⊢ε⦂τ δ₁ δ₂
           | unique-bs bsδ₁ bsδ₂
           = refl
-  unique-Γ⊢ε⦂τ (T-Con refl δ₁ adtτ₁) (T-Con refl δ₂ adtτ₂)
-    rewrite unique-Γ⊢ε⦂τ δ₁ δ₂
+  unique-Γ⊢ε⦂τ (T-Con <:δ₁ εδ₁ adtτ₁) (T-Con <:δ₂ εδ₂ adtτ₂)
+    with refl ← typing-uniqueness εδ₁ εδ₂
+    rewrite unique-<: <:δ₁ <:δ₂
+          | unique-Γ⊢ε⦂τ εδ₁ εδ₂
           | unique-Γ⊢τ adtτ₁ adtτ₂
           = refl
   unique-Γ⊢ε⦂τ (T-Sub εδ₁ <:₁) (T-Sub εδ₂ <:₂)
