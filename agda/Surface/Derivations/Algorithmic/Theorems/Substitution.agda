@@ -56,7 +56,7 @@ sub-Γ⊢τ'<:τ-front {ε = ε} εδ <:δ
   rewrite R.act-ε-id (λ _ → refl) ε
         = <:δ'
 
-private module M {σ : SType ℓ} (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) where mutual
+private module M {σ : SType ℓ} (σεδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) where mutual
   sub-Γok : (Δ : ,-CtxSuffix ℓ σ k)
           → (Γ ,σ, Δ) ok[ θ , φ ]
           → (Γ ++ [↦Δ ε ] Δ) ok[ θ , φ ]
@@ -95,7 +95,7 @@ private module M {σ : SType ℓ} (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) 
   ... | less k<ι = T-Sub (T-Var (sub-Γok Δ Γok) (var-earlier-in-Γ-remains Δ ∈ k<ι)) <:-reflexive
   ... | equal refl rewrite ∈-at-concat-point Δ ∈
                          | replace-weakened-τ k (weaken-ε-k k ε) σ
-                         = Γ⊢ε⦂τ-weakening-suffix (sub-Γok Δ Γok) εδ
+                         = Γ⊢ε⦂τ-weakening-suffix (sub-Γok Δ Γok) σεδ
   ... | greater k>ι = T-Sub (T-Var (sub-Γok Δ Γok) (var-later-in-Γ-remains Δ ∈ k>ι)) <:-reflexive
   sub-Γ⊢ε⦂τ {k = k} Δ (T-Abs {τ₁ = τ₁} {ε = ε'} {τ₂ = τ₂} bodyδ)
     rewrite S.act-τ-extensionality (S.ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) τ₂
