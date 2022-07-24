@@ -22,10 +22,10 @@ open import Surface.Derivations.Algorithmic
   go [] = []
   go (con ∷ cons) = <:-reflexive ∷ go cons
 
-as-sub : ∃[ κ ] (Γ ⊢[ θ , φ of κ ] ε ⦂ τ)
+as-sub : Γ ⊢[ θ , φ of κ ] ε ⦂ τ
        → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ
-as-sub ⟨ t-sub , εδ ⟩ = εδ
-as-sub ⟨ not-t-sub , εδ ⟩ = T-Sub εδ <:-reflexive
+as-sub {κ = t-sub} εδ = εδ
+as-sub {κ = not-t-sub} εδ = T-Sub εδ <:-reflexive
 
 Γ⊢τ'<:τ-⇒-Γ⊢τ₀⇒τ'<:τ₀⇒τ : Γ , τ₀ ⊢[ θ ] τ' <: τ
                         → Γ ⊢[ θ ] τ₀ ⇒ τ' <: τ₀ ⇒ τ
@@ -73,12 +73,6 @@ trans-sub : Γ ⊢[ θ ] τ' <: τ
           → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ'
           → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ
 trans-sub <:δ (T-Sub εδ <:'δ) = T-Sub εδ (<:-transitive <:'δ <:δ)
-
-as-sub' : Γ ⊢[ θ ] τ' <: τ
-        → ∃[ κ ] (Γ ⊢[ θ , φ of κ ] ε ⦂ τ')
-        → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ
-as-sub' <:δ ⟨ t-sub , εδ ⟩ = trans-sub <:δ εδ
-as-sub' <:δ ⟨ not-t-sub , εδ ⟩ = T-Sub εδ <:δ
 
 
 open import Common.Helpers
