@@ -67,7 +67,9 @@ module φ {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ ] σ' <: σ) (Γ⊢σ' : Γ ⊢
               (T-App ε₁δ' ε₂δ'³ refl)
               (sub-Γ⊢τ'<:τ-front ε₂δ'¹ <:₂δ)
   Γ⊢ε⦂τ-narrowing Δ (T-Case resδ εδ branches-well-typed) = {! !}
-  Γ⊢ε⦂τ-narrowing Δ (T-Con <:δ εδ adtτ) = {! !}
+  Γ⊢ε⦂τ-narrowing Δ (T-Con <:δ εδ adtτ)
+    with T-Sub εδ' <:'δ ← Γ⊢ε⦂τ-narrowing Δ εδ
+       = as-sub (T-Con (<:-transitive <:'δ (<:-narrowing σ-<:δ Δ <:δ)) εδ' (Γ⊢τ-narrowing Δ adtτ))
   Γ⊢ε⦂τ-narrowing Δ (T-Sub εδ <:δ)
     with T-Sub εδ' <:'δ ← Γ⊢ε⦂τ-narrowing Δ εδ
        = T-Sub εδ' (<:-transitive <:'δ (<:-narrowing σ-<:δ Δ <:δ))
