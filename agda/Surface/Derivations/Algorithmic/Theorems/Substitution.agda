@@ -6,7 +6,6 @@ open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Fin.Base using (suc; zero; fromℕ<; raise)
 open import Data.Nat.Base using (suc; zero; _+_)
 open import Data.Nat.Properties using (≤-stepsʳ; ≤-refl; m≢1+n+m; suc-injective)
-open import Data.Product renaming (_,_ to ⟨_,_⟩)
 open import Data.Vec.Base using (_∷_; [])
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; subst)
 
