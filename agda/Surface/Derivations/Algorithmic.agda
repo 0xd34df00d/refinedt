@@ -48,7 +48,7 @@ data BranchesHaveType (θ : Oracle) (φ : TSFlavour) (Γ : Ctx ℓ)
 
 data _ok[_,_] where
   TCTX-Empty : ⊘ ok[ θ , φ ]
-  TCTX-Bind  : (prevOk : Γ ok[ θ , φ ])
+  TCTX-Bind  : (Γok : Γ ok[ θ , φ ])
              → (τδ : Γ ⊢[ θ , φ ] τ)
              → (Γ , τ) ok[ θ , φ ]
 
@@ -61,8 +61,8 @@ data _⊢[_,_]_ {ℓ} Γ θ φ where
   TWF-Conj    : (ρ₁δ : Γ ⊢[ θ , φ ] ⟨ b ∣ ρ₁ ⟩)
               → (ρ₂δ : Γ ⊢[ θ , φ ] ⟨ b ∣ ρ₂ ⟩)
               → Γ ⊢[ θ , φ ] ⟨ b ∣ ρ₁ ∧ ρ₂ ⟩
-  TWF-Arr     : (argδ : Γ ⊢[ θ , φ ] τ₁)
-              → (resδ : Γ , τ₁ ⊢[ θ , φ ] τ₂)
+  TWF-Arr     : (τ₁δ : Γ ⊢[ θ , φ ] τ₁)
+              → (τ₂δ : Γ , τ₁ ⊢[ θ , φ ] τ₂)
               → Γ ⊢[ θ , φ ] τ₁ ⇒ τ₂
   TWF-ADT     : {adtCons : ADTCons (Mkℕₐ (suc n)) ℓ}
               → (consδs : All (Γ ⊢[ θ , φ ]_) adtCons)
@@ -76,8 +76,8 @@ data _⊢[_,_of_]_⦂_ {ℓ} Γ θ φ where
               → Γ ⊢[ θ , φ of not-t-sub ] SVar ι ⦂ τ
   T-Abs       : (bodyδ : Γ , τ₁ ⊢[ θ , φ of not-t-sub ] ε ⦂ τ₂)
               → Γ ⊢[ θ , φ of not-t-sub ] SLam τ₁ ε ⦂ τ₁ ⇒ τ₂
-  T-App       : (δ₁ : Γ ⊢[ θ , φ of not-t-sub ] ε₁ ⦂ τ₁ ⇒ τ₂)
-              → (δ₂ : Γ ⊢[ θ , φ of t-sub ] ε₂ ⦂ τ₁)
+  T-App       : (ε₁δ : Γ ⊢[ θ , φ of not-t-sub ] ε₁ ⦂ τ₁ ⇒ τ₂)
+              → (ε₂δ : Γ ⊢[ θ , φ of t-sub ] ε₂ ⦂ τ₁)
               → (resτ-≡ : τ ≡ [ zero ↦τ ε₂ ] τ₂)
               → Γ ⊢[ θ , φ of not-t-sub ] SApp ε₁ ε₂ ⦂ τ
   T-Case      : {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
