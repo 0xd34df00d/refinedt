@@ -50,8 +50,10 @@ mutual
     rewrite act-ε-extensionality x-≡ ε₁
           | act-ε-extensionality x-≡ ε₂
           = refl
-  act-ε-extensionality x-≡ (SCase ε branches)
+  act-ε-extensionality x-≡ (SCase ε cons τ branches)
     rewrite act-ε-extensionality x-≡ ε
+          | act-cons-extensionality x-≡ cons
+          | act-τ-extensionality x-≡ τ
           | act-branches-extensionality x-≡ branches
           = refl
   act-ε-extensionality x-≡ (SCon ι ε cons)
@@ -120,8 +122,10 @@ mutual
     rewrite act-ε-id f-id ε₁
           | act-ε-id f-id ε₂
           = refl
-  act-ε-id f-id (SCase ε branches)
+  act-ε-id f-id (SCase ε cons τ branches)
     rewrite act-ε-id f-id ε
+          | act-cons-id f-id cons
+          | act-τ-id f-id τ
           | act-branches-id f-id branches
           = refl
   act-ε-id f-id (SCon ι ε cons)

@@ -41,7 +41,8 @@ data SType ℓ where
   ⊍_    : (cons : ADTCons (Mkℕₐ n) ℓ)
         → SType ℓ
 
--- NOTE having `SType ℓ` instead of `SType (suc ℓ)` in SLam's type prevents the type from referring the argument itself,
+-- NOTE having `SType ℓ` instead of `SType (suc ℓ)` in SLam's type
+-- prevents the type from referring the argument itself,
 -- which kinda breaks T-Exact and similar rules from the refinement reflection paper,
 -- but now I'm not sure if agreement holds for the type system in that paper.
 data STerm ℓ where
@@ -53,12 +54,14 @@ data STerm ℓ where
         → STerm ℓ
   SApp  : (ε₁ ε₂ : STerm ℓ)
         → STerm ℓ
-  SCase : (scrut : STerm ℓ)
+  SCase : (ε : STerm ℓ)
+        → (cons : ADTCons nₐ ℓ)
+        → (τ : SType ℓ)
         → (branches : CaseBranches nₐ ℓ)
         → STerm ℓ
   SCon  : (ι : Fin n)
         → (body : STerm ℓ)
-        → (adt-cons : ADTCons (Mkℕₐ n) ℓ)
+        → (cons : ADTCons (Mkℕₐ n) ℓ)
         → STerm ℓ
 
 data Refinement ℓ where

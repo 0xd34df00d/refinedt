@@ -83,23 +83,37 @@ SApp-inj₂ : SApp ε₁₁ ε₁₂ ≡ SApp ε₂₁ ε₂₂
 SApp-inj₂ refl = refl
 
 SCase-inj-len : ∀ {nₐ₁ nₐ₂}
-                  {branches₁ : CaseBranches nₐ₁ ℓ}
-                  {branches₂ : CaseBranches nₐ₂ ℓ}
-              → SCase ε₁ branches₁ ≡ SCase ε₂ branches₂
+                  {branches₁ : CaseBranches nₐ₁ ℓ} {cons₁ : ADTCons nₐ₁ ℓ}
+                  {branches₂ : CaseBranches nₐ₂ ℓ} {cons₂ : ADTCons nₐ₂ ℓ}
+              → SCase ε₁ cons₁ τ₁ branches₁ ≡ SCase ε₂ cons₂ τ₂ branches₂
               → nₐ₁ ≡ nₐ₂
 SCase-inj-len refl = refl
 
 SCase-inj₁ : ∀ {nₐ₁ nₐ₂}
-               {branches₁ : CaseBranches nₐ₁ ℓ}
-               {branches₂ : CaseBranches nₐ₂ ℓ}
-           → SCase ε₁ branches₁ ≡ SCase ε₂ branches₂
+               {branches₁ : CaseBranches nₐ₁ ℓ} {cons₁ : ADTCons nₐ₁ ℓ}
+               {branches₂ : CaseBranches nₐ₂ ℓ} {cons₂ : ADTCons nₐ₂ ℓ}
+           → SCase ε₁ cons₁ τ₁ branches₁ ≡ SCase ε₂ cons₂ τ₂ branches₂
            → ε₁ ≡ ε₂
 SCase-inj₁ refl = refl
 
 SCase-inj₂ : ∀ {branches₁ branches₂ : CaseBranches nₐ ℓ}
-           → SCase ε₁ branches₁ ≡ SCase ε₂ branches₂
-           → branches₁ ≡ branches₂
+               {cons₁ cons₂ : ADTCons nₐ ℓ}
+           → SCase ε₁ cons₁ τ₁ branches₁ ≡ SCase ε₂ cons₂ τ₂ branches₂
+           → cons₁ ≡ cons₂
 SCase-inj₂ refl = refl
+
+SCase-inj₃ : ∀ {nₐ₁ nₐ₂}
+               {branches₁ : CaseBranches nₐ₁ ℓ} {cons₁ : ADTCons nₐ₁ ℓ}
+               {branches₂ : CaseBranches nₐ₂ ℓ} {cons₂ : ADTCons nₐ₂ ℓ}
+           → SCase ε₁ cons₁ τ₁ branches₁ ≡ SCase ε₂ cons₂ τ₂ branches₂
+           → τ₁ ≡ τ₂
+SCase-inj₃ refl = refl
+
+SCase-inj₄ : ∀ {branches₁ branches₂ : CaseBranches nₐ ℓ}
+               {cons₁ cons₂ : ADTCons nₐ ℓ}
+           → SCase ε₁ cons₁ τ₁ branches₁ ≡ SCase ε₂ cons₂ τ₂ branches₂
+           → branches₁ ≡ branches₂
+SCase-inj₄ refl = refl
 
 SCon-inj-len : ∀ {n₁ n₂} {ι₁ : Fin n₁} {ι₂ : Fin n₂}
                  {cons₁ : ADTCons (Mkℕₐ n₁) ℓ}

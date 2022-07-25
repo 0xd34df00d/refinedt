@@ -18,9 +18,6 @@ import Surface.Syntax.Renaming as R
 open import Surface.Oracle public
 open import Surface.Derivations.Common public
 
-open import Core.Syntax using (CExpr)
-open import Core.Syntax.Renaming as CR using (act-ε)
-
 data _ok[_,_]     : (Γ : Ctx ℓ) → Oracle → TSFlavour → Set
 data _⊢[_,_]_⦂_   (Γ : Ctx ℓ) (θ : Oracle) (φ : TSFlavour) : (ε : STerm ℓ) → (τ : SType ℓ) → Set
 data _⊢[_,_]_<:_  (Γ : Ctx ℓ) (θ : Oracle) (φ : TSFlavour) : (τ τ' : SType ℓ) → Set
@@ -38,9 +35,9 @@ data BranchesHaveType (θ : Oracle) (φ : TSFlavour) (Γ : Ctx ℓ)
                     where
   NoBranches    : BranchesHaveType θ φ Γ [] [] τ'
   OneMoreBranch : ∀ {conτ} {cons' : ADTCons nₐ ℓ} {bs' : CaseBranches nₐ ℓ}
-                → (εδ : (Γ , conτ) ⊢[ θ , φ ] ε' ⦂ R.weaken-τ τ')
-                → (rest : BranchesHaveType θ φ Γ cons' bs' τ')
-                → BranchesHaveType θ φ Γ (conτ ∷ cons') (MkCaseBranch ε' ∷ bs') τ'
+                → (εδ : (Γ , conτ) ⊢[ θ , φ ] ε' ⦂ R.weaken-τ τ)
+                → (rest : BranchesHaveType θ φ Γ cons' bs' τ)
+                → BranchesHaveType θ φ Γ (conτ ∷ cons') (MkCaseBranch ε' ∷ bs') τ
 
 data _ok[_,_] where
   TCTX-Empty : ⊘ ok[ θ , φ ]
@@ -78,10 +75,10 @@ data _⊢[_,_]_⦂_ {ℓ} Γ θ φ where
               → Γ ⊢[ θ , φ ] SApp ε₁ ε₂ ⦂ [ zero ↦τ ε₂ ] τ₂
   T-Case      : {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
               → {bs : CaseBranches (Mkℕₐ (suc n)) ℓ}
-              → (resδ : Γ ⊢[ θ , φ ] τ')
+              → (resδ : Γ ⊢[ θ , φ ] τ)
               → (scrutτδ : Γ ⊢[ θ , φ ] ε ⦂ ⊍ cons)
-              → (branches-well-typed : BranchesHaveType θ φ Γ cons bs τ')
-              → Γ ⊢[ θ , φ ] SCase ε bs ⦂ τ'
+              → (branches-well-typed : BranchesHaveType θ φ Γ cons bs τ)
+              → Γ ⊢[ θ , φ ] SCase ε cons τ bs ⦂ τ
   T-Con       : ∀ {ι}
               → {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
               → (≡-prf : τⱼ ≡ lookup cons ι)

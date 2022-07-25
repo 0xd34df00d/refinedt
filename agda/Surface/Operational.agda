@@ -28,13 +28,13 @@ data _↝_ : STerm ℓ → STerm ℓ → Set where
   E-ADT       : ∀ {cons} {ι : Fin n}
               → ε ↝ ε'
               → SCon ι ε cons ↝ SCon ι ε' cons
-  E-CaseScrut : ∀ {branches : CaseBranches nₐ ℓ}
+  E-CaseScrut : ∀ {branches : CaseBranches nₐ ℓ} {cons : ADTCons nₐ ℓ}
               → ε ↝ ε'
-              → SCase ε branches ↝ SCase ε' branches
-  E-CaseMatch : ∀ {cons : ADTCons (Mkℕₐ n) ℓ} {bs : CaseBranches (Mkℕₐ n) ℓ}
+              → SCase ε cons τ branches ↝ SCase ε' cons τ branches
+  E-CaseMatch : ∀ {cons' cons : ADTCons (Mkℕₐ n) ℓ} {bs : CaseBranches (Mkℕₐ n) ℓ}
               → IsValue ϖ
               → (ι : Fin n)
-              → SCase (SCon ι ϖ cons) bs ↝ [ ι ↦ₘ ϖ ] bs
+              → SCase (SCon ι ϖ cons') cons τ bs ↝ [ ι ↦ₘ ϖ ] bs
 
 data _↝⋆_ : STerm ℓ → STerm ℓ → Set where
   ↝-refl  : ε ↝⋆ ε

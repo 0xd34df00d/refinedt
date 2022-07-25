@@ -37,14 +37,14 @@ infix 1 _⊢[_,_]_
 data BranchesHaveType (θ : Oracle) (φ : TSFlavour) (Γ : Ctx ℓ)
                     : (cons : ADTCons nₐ ℓ)
                     → (bs : CaseBranches nₐ ℓ)
-                    → (τ' : SType ℓ)
+                    → (τ : SType ℓ)
                     → Set
                     where
-  NoBranches    : BranchesHaveType θ φ Γ [] [] τ'
+  NoBranches    : BranchesHaveType θ φ Γ [] [] τ
   OneMoreBranch : ∀ {conτ} {cons' : ADTCons nₐ ℓ} {bs' : CaseBranches nₐ ℓ}
-                → (εδ : (Γ , conτ) ⊢[ θ , φ of not-t-sub ] ε' ⦂ R.weaken-τ τ')
-                → (rest : BranchesHaveType θ φ Γ cons' bs' τ')
-                → BranchesHaveType θ φ Γ (conτ ∷ cons') (MkCaseBranch ε' ∷ bs') τ'
+                → (εδ : (Γ , conτ) ⊢[ θ , φ of not-t-sub ] ε' ⦂ R.weaken-τ τ)
+                → (rest : BranchesHaveType θ φ Γ cons' bs' τ)
+                → BranchesHaveType θ φ Γ (conτ ∷ cons') (MkCaseBranch ε' ∷ bs') τ
 
 data _ok[_,_] where
   TCTX-Empty : ⊘ ok[ θ , φ ]
@@ -82,10 +82,10 @@ data _⊢[_,_of_]_⦂_ {ℓ} Γ θ φ where
               → Γ ⊢[ θ , φ of not-t-sub ] SApp ε₁ ε₂ ⦂ τ
   T-Case      : {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
               → {bs : CaseBranches (Mkℕₐ (suc n)) ℓ}
-              → (resδ : Γ ⊢[ θ , φ ] τ')
+              → (resδ : Γ ⊢[ θ , φ ] τ)
               → (scrutτδ : Γ ⊢[ θ , φ of not-t-sub ] ε ⦂ ⊍ cons)
-              → (branches-well-typed : BranchesHaveType θ φ Γ cons bs τ')
-              → Γ ⊢[ θ , φ of not-t-sub ] SCase ε bs ⦂ τ'
+              → (branches-well-typed : BranchesHaveType θ φ Γ cons bs τ)
+              → Γ ⊢[ θ , φ of not-t-sub ] SCase ε cons τ bs ⦂ τ
   T-Con       : ∀ {ι}
               → {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
               → (<:δ : Γ ⊢[ θ ] τⱼ <: lookup cons ι)

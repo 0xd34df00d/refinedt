@@ -70,8 +70,10 @@ mutual
     rewrite ρ-σ-distr-ε ρ σ ε₁
           | ρ-σ-distr-ε ρ σ ε₂
           = refl
-  ρ-σ-distr-ε ρ σ (SCase ε branches)
+  ρ-σ-distr-ε ρ σ (SCase ε cons τ branches)
     rewrite ρ-σ-distr-ε ρ σ ε
+          | ρ-σ-distr-cons ρ σ cons
+          | ρ-σ-distr-τ ρ σ τ
           | ρ-σ-distr-branches ρ σ branches
           = refl
   ρ-σ-distr-ε ρ σ (SCon ι ε cons)
@@ -144,8 +146,10 @@ mutual
     rewrite σ-ρ-distr-ε σ ρ ε₁
           | σ-ρ-distr-ε σ ρ ε₂
           = refl
-  σ-ρ-distr-ε σ ρ (SCase ε branches)
+  σ-ρ-distr-ε σ ρ (SCase ε cons τ branches)
     rewrite σ-ρ-distr-ε σ ρ ε
+          | σ-ρ-distr-cons σ ρ cons
+          | σ-ρ-distr-τ σ ρ τ
           | σ-ρ-distr-branches σ ρ branches
           = refl
   σ-ρ-distr-ε σ ρ (SCon ι ε cons)
@@ -223,8 +227,10 @@ mutual
     rewrite act-ε-distr σ₁ σ₂ ε₁
           | act-ε-distr σ₁ σ₂ ε₂
           = refl
-  act-ε-distr σ₁ σ₂ (SCase ε branches)
+  act-ε-distr σ₁ σ₂ (SCase ε cons τ branches)
     rewrite act-ε-distr σ₁ σ₂ ε
+          | act-cons-distr σ₁ σ₂ cons
+          | act-τ-distr σ₁ σ₂ τ
           | act-branches-distr σ₁ σ₂ branches
           = refl
   act-ε-distr σ₁ σ₂ (SCon ι ε cons)

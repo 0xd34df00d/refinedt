@@ -30,8 +30,10 @@ mutual
     rewrite act-τ-injectivity f-inj (⇒-inj₁ ≡-prf)
           | act-τ-injectivity (ext-inj f-inj) (⇒-inj₂ ≡-prf)
           = refl
-  act-τ-injectivity f-inj {⊍ cons₁} {⊍ cons₂} ≡-prf with ⊍-inj-len ≡-prf
-  ... | refl rewrite act-cons-injectivity f-inj (⊍-inj-cons ≡-prf) = refl
+  act-τ-injectivity f-inj {⊍ cons₁} {⊍ cons₂} ≡-prf
+    with refl ← ⊍-inj-len ≡-prf
+    rewrite act-cons-injectivity f-inj (⊍-inj-cons ≡-prf)
+          = refl
 
   act-ρ-injectivity : ActInjectivity act-ρ
   act-ρ-injectivity f-inj {ε₁₁ ≈ ε₁₂ of τ₁} {ε₂₁ ≈ ε₂₂ of τ₂} ≡-prf
@@ -56,17 +58,19 @@ mutual
     rewrite act-ε-injectivity f-inj {ε₁₁} {ε₂₁} (SApp-inj₁ ≡-prf)
           | act-ε-injectivity f-inj {ε₁₂} {ε₂₂} (SApp-inj₂ ≡-prf)
           = refl
-  act-ε-injectivity f-inj {SCase ε₁ branches₁} {SCase ε₂ branches₂} ≡-prf with SCase-inj-len ≡-prf
-  ... | refl
-        rewrite act-ε-injectivity f-inj {ε₁} {ε₂} (SCase-inj₁ ≡-prf)
-              | act-branches-injectivity f-inj (SCase-inj₂ ≡-prf)
-              = refl
-  act-ε-injectivity f-inj {SCon idx ε₁ cons₁} {SCon idx₁ ε₂ cons₂} ≡-prf with SCon-inj-len ≡-prf
-  ... | refl
-        rewrite SCon-inj₁ ≡-prf
-              | act-ε-injectivity f-inj {ε₁} {ε₂} (SCon-inj₂ ≡-prf)
-              | act-cons-injectivity f-inj (SCon-inj₃ ≡-prf)
-              = refl
+  act-ε-injectivity f-inj {SCase ε₁ cons₁ τ₁ branches₁} {SCase ε₂ cons₂ τ₂ branches₂} ≡-prf
+    with refl ← SCase-inj-len ≡-prf
+    rewrite act-ε-injectivity f-inj {ε₁} {ε₂} (SCase-inj₁ ≡-prf)
+          | act-cons-injectivity f-inj (SCase-inj₂ ≡-prf)
+          | act-τ-injectivity f-inj (SCase-inj₃ ≡-prf)
+          | act-branches-injectivity f-inj (SCase-inj₄ ≡-prf)
+          = refl
+  act-ε-injectivity f-inj {SCon idx ε₁ cons₁} {SCon idx₁ ε₂ cons₂} ≡-prf
+    with refl ← SCon-inj-len ≡-prf
+    rewrite SCon-inj₁ ≡-prf
+          | act-ε-injectivity f-inj {ε₁} {ε₂} (SCon-inj₂ ≡-prf)
+          | act-cons-injectivity f-inj (SCon-inj₃ ≡-prf)
+          = refl
 
   act-cons-injectivity : ActInjectivity {ADTCons nₐ} act-cons
   act-cons-injectivity f-inj {[]} {[]} ≡-prf = refl

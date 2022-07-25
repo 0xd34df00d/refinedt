@@ -60,8 +60,10 @@ mutual
     rewrite ρ-as-σ-ε ρ ε₁
           | ρ-as-σ-ε ρ ε₂
           = refl
-  ρ-as-σ-ε ρ (SCase ε branches)
+  ρ-as-σ-ε ρ (SCase ε cons τ branches)
     rewrite ρ-as-σ-ε ρ ε
+          | ρ-as-σ-cons ρ cons
+          | ρ-as-σ-τ ρ τ
           | ρ-as-σ-branches ρ branches
           = refl
   ρ-as-σ-ε ρ (SCon ι ε cons)

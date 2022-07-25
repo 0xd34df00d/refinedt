@@ -105,8 +105,10 @@ mutual
     rewrite act-ε-distr r₁ r₂ ε₁
           | act-ε-distr r₁ r₂ ε₂
           = refl
-  act-ε-distr r₁ r₂ (SCase ε branches)
+  act-ε-distr r₁ r₂ (SCase ε cons τ branches)
     rewrite act-ε-distr r₁ r₂ ε
+          | act-cons-distr r₁ r₂ cons
+          | act-τ-distr r₁ r₂ τ
           | act-branches-distr r₁ r₂ branches
           = refl
   act-ε-distr r₁ r₂ (SCon ι ε cons)
