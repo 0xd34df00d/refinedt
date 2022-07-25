@@ -25,7 +25,7 @@ data Progress (ε : STerm ℓ) : Set where
 progress : ⊘ ⊢[ θ , φ of κ ] ε ⦂ τ
          → Progress ε
 progress (T-Unit _) = done IV-Unit
-progress (T-Abs _ _) = done IV-Abs
+progress (T-Abs _) = done IV-Abs
 progress (T-App ε₁δ ε₂δ _ _) with progress ε₁δ
 ... | step ε↝ε' = step (E-AppL ε↝ε')
 ... | done is-value-ε₁
