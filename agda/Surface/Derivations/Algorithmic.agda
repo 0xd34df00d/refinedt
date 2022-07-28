@@ -42,7 +42,7 @@ data BranchesHaveType (θ : Oracle) (φ : TSFlavour) (Γ : Ctx ℓ)
                     where
   NoBranches    : BranchesHaveType θ φ Γ [] [] τ
   OneMoreBranch : ∀ {conτ} {cons' : ADTCons nₐ ℓ} {bs' : CaseBranches nₐ ℓ}
-                → (εδ : (Γ , conτ) ⊢[ θ , φ of not-t-sub ] ε' ⦂ R.weaken-τ τ)
+                → (εδ : (Γ , conτ) ⊢[ θ , φ of t-sub ] ε' ⦂ R.weaken-τ τ)
                 → (rest : BranchesHaveType θ φ Γ cons' bs' τ)
                 → BranchesHaveType θ φ Γ (conτ ∷ cons') (MkCaseBranch ε' ∷ bs') τ
 
@@ -80,10 +80,12 @@ data _⊢[_,_of_]_⦂_ {ℓ} Γ θ φ where
               → (ε₂δ : Γ ⊢[ θ , φ of t-sub ] ε₂ ⦂ τ₁)
               → (resτ-≡ : τ ≡ [ zero ↦τ ε₂ ] τ₂)
               → Γ ⊢[ θ , φ of not-t-sub ] SApp ε₁ ε₂ ⦂ τ
+  -- having t-sub on the scrutδ is not necessary,
+  -- but is helpful to avoid having to deal with parallel narrowing
   T-Case      : {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
               → {bs : CaseBranches (Mkℕₐ (suc n)) ℓ}
               → (resδ : Γ ⊢[ θ , φ ] τ)
-              → (scrutτδ : Γ ⊢[ θ , φ of not-t-sub ] ε ⦂ ⊍ cons)
+              → (scrutδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ ⊍ cons)
               → (branches-well-typed : BranchesHaveType θ φ Γ cons bs τ)
               → Γ ⊢[ θ , φ of not-t-sub ] SCase ε cons τ bs ⦂ τ
   T-Con       : ∀ {ι}
