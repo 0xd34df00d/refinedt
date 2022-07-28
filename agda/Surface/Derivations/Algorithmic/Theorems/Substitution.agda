@@ -57,6 +57,11 @@ private module M {σε : STerm ℓ} (σεδ : Γ ⊢[ θ , φ of t-sub ] σε �
   sub-cons Δ [] = []
   sub-cons Δ (τδ ∷ τδs) = sub-Γ⊢τ Δ τδ ∷ sub-cons Δ τδs
 
+  sub-branches : {cons : ADTCons nₐ _}
+               → {bs : CaseBranches nₐ _}
+               → (Δ : ,-CtxSuffix ℓ σ k)
+               → BranchesHaveType θ φ (Γ ,σ, Δ) cons bs τ
+               → BranchesHaveType θ φ (Γ ++ [↦Δ σε ] Δ) ([ ℓ ↦c< σε ] cons) ([ ℓ ↦bs< σε ] bs) ([ ℓ ↦τ< σε ] τ)
   sub-Γ⊢ε⦂τ : (Δ : ,-CtxSuffix ℓ σ k)
             → Γ ,σ, Δ ⊢[ θ , φ of κ ] ε₀ ⦂ τ
             → Γ ++ [↦Δ σε ] Δ ⊢[ θ , φ of t-sub ] [ ℓ ↦ε< σε ] ε₀ ⦂ [ ℓ ↦τ< σε ] τ
@@ -87,7 +92,7 @@ private module M {σε : STerm ℓ} (σεδ : Γ ⊢[ θ , φ of t-sub ] σε �
            in T-Sub
                 (T-App ε₁δ' (trans-sub <:₁δ ε₂δ') refl)
                 <:₂δ'
-  sub-Γ⊢ε⦂τ Δ (T-Case resδ εδ branches-well-typed) = {! !}
+  sub-Γ⊢ε⦂τ Δ (T-Case resδ εδ bsδ) = as-sub (T-Case (sub-Γ⊢τ Δ resδ) (sub-Γ⊢ε⦂τ Δ εδ) (sub-branches Δ bsδ))
   sub-Γ⊢ε⦂τ {k = k} Δ (T-Con {ι = ι} {cons = cons} <:-lookup-δ εδ adtτ)
     with T-Sub εδ' <:δ' ← sub-Γ⊢ε⦂τ Δ εδ
        | <:-lookup-δ' ← sub-Γ⊢τ'<:τ σεδ Δ <:-lookup-δ
