@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module Surface.Derivations.Algorithmic.Theorems.Narrowing where
 
 open import Data.Product renaming (_,_ to ⟨_,_⟩)
