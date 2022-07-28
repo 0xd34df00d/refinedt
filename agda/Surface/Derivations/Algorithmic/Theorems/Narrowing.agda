@@ -37,6 +37,14 @@ private module M {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ ] σ' <: σ) (Γ⊢σ' :
   cons-narrowing Δ [] = []
   cons-narrowing Δ (τδ ∷ δs) = Γ⊢τ-narrowing Δ τδ ∷ cons-narrowing Δ δs
 
+  branches-narrowing : {cons : ADTCons nₐ (k + suc ℓ)}
+                     → {bs : CaseBranches nₐ (k + suc ℓ)}
+                     → (Δ : CtxSuffix (suc ℓ) k)
+                     → BranchesHaveType θ φ (Γ , σ ++ Δ) cons bs τ
+                     → BranchesHaveType θ φ (Γ , σ' ++ Δ) cons bs τ
+  branches-narrowing Δ NoBranches = NoBranches
+  branches-narrowing Δ (OneMoreBranch εδ bsδ) = OneMoreBranch (Γ⊢ε⦂τ-narrowing (Δ , _) εδ) (branches-narrowing Δ bsδ)
+
   SVar-narrowing : (Δ : CtxSuffix (suc ℓ) k)
                  → (Γ , σ ++ Δ) ok[ θ , φ ]
                  → τ ∈ Γ , σ ++ Δ at ι
@@ -66,7 +74,8 @@ private module M {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ ] σ' <: σ) (Γ⊢σ' :
           in T-Sub
               (T-App ε₁δ' ε₂δ'³ refl)
               (sub-Γ⊢τ'<:τ-front ε₂δ'¹ <:₂δ)
-  Γ⊢ε⦂τ-narrowing Δ (T-Case resδ εδ branches-well-typed) = {! !}
+  Γ⊢ε⦂τ-narrowing Δ (T-Case resδ εδ branchesδ)
+    = as-sub (T-Case (Γ⊢τ-narrowing Δ resδ) (Γ⊢ε⦂τ-narrowing Δ εδ) (branches-narrowing Δ branchesδ))
   Γ⊢ε⦂τ-narrowing Δ (T-Con <:δ εδ adtτ)
     with T-Sub εδ' <:'δ ← Γ⊢ε⦂τ-narrowing Δ εδ
        = as-sub (T-Con (<:-transitive <:'δ (<:-narrowing σ-<:δ Δ <:δ)) εδ' (Γ⊢τ-narrowing Δ adtτ))
