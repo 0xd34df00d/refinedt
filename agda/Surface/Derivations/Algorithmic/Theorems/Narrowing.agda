@@ -13,7 +13,7 @@ open import Surface.Derivations.Algorithmic.Theorems.Helpers
 open import Surface.Derivations.Algorithmic.Theorems.Subtyping
 open import Surface.Derivations.Algorithmic.Theorems.Thinning
 
-module φ {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ ] σ' <: σ) (Γ⊢σ' : Γ ⊢[ θ , φ ] σ') where mutual
+private module M {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ ] σ' <: σ) (Γ⊢σ' : Γ ⊢[ θ , φ ] σ') where mutual
   Γok-narrowing : (Δ : CtxSuffix (suc ℓ) k)
                 → (Γ , σ  ++ Δ) ok[ θ , φ ]
                 → (Γ , σ' ++ Δ) ok[ θ , φ ]
@@ -73,3 +73,5 @@ module φ {σ : SType ℓ} (σ-<:δ : Γ ⊢[ θ ] σ' <: σ) (Γ⊢σ' : Γ ⊢
   Γ⊢ε⦂τ-narrowing Δ (T-Sub εδ <:δ)
     with T-Sub εδ' <:'δ ← Γ⊢ε⦂τ-narrowing Δ εδ
        = T-Sub εδ' (<:-transitive <:'δ (<:-narrowing σ-<:δ Δ <:δ))
+
+open M public
