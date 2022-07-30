@@ -62,6 +62,14 @@ private module M {σε : STerm ℓ} (σεδ : Γ ⊢[ θ , φ of t-sub ] σε �
                → (Δ : ,-CtxSuffix ℓ σ k)
                → BranchesHaveType θ φ (Γ ,σ, Δ) cons bs τ
                → BranchesHaveType θ φ (Γ ++ [↦Δ σε ] Δ) ([ ℓ ↦c< σε ] cons) ([ ℓ ↦bs< σε ] bs) ([ ℓ ↦τ< σε ] τ)
+  sub-branches Δ NoBranches = NoBranches
+  sub-branches {k = k} Δ (OneMoreBranch {ε = ε} {τ = τ} εδ bsδ)
+    with εδ' ← sub-Γ⊢ε⦂τ (Δ , _) εδ
+    rewrite S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k σε) (ctx-idx k)) ε
+          | R.act-ε-distr (raise k) suc σε
+          = let εδ' = subst (_ ⊢[ _ , _ of _ ] _ ⦂_) (weaken-↦<-suc-comm-τ τ σε) εδ'
+             in OneMoreBranch εδ' (sub-branches Δ bsδ)
+
   sub-Γ⊢ε⦂τ : (Δ : ,-CtxSuffix ℓ σ k)
             → Γ ,σ, Δ ⊢[ θ , φ of κ ] ε₀ ⦂ τ
             → Γ ++ [↦Δ σε ] Δ ⊢[ θ , φ of t-sub ] [ ℓ ↦ε< σε ] ε₀ ⦂ [ ℓ ↦τ< σε ] τ
