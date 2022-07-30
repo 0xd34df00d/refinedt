@@ -42,9 +42,9 @@ data BranchesHaveType (θ : Oracle) (φ : TSFlavour) (Γ : Ctx ℓ)
                     where
   NoBranches    : BranchesHaveType θ φ Γ [] [] τ
   OneMoreBranch : ∀ {conτ} {cons' : ADTCons nₐ ℓ} {bs' : CaseBranches nₐ ℓ}
-                → (εδ : (Γ , conτ) ⊢[ θ , φ of t-sub ] ε' ⦂ R.weaken-τ τ)
+                → (εδ : (Γ , conτ) ⊢[ θ , φ of t-sub ] ε ⦂ R.weaken-τ τ)
                 → (rest : BranchesHaveType θ φ Γ cons' bs' τ)
-                → BranchesHaveType θ φ Γ (conτ ∷ cons') (MkCaseBranch ε' ∷ bs') τ
+                → BranchesHaveType θ φ Γ (conτ ∷ cons') (MkCaseBranch ε ∷ bs') τ
 
 data _ok[_,_] where
   TCTX-Empty : ⊘ ok[ θ , φ ]
