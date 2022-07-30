@@ -27,7 +27,7 @@ open import Surface.Derivations.Algorithmic.Theorems.Agreement.Lemmas
 open import Surface.Derivations.Algorithmic.Theorems.Thinning
 open import Surface.Derivations.Algorithmic.Theorems.Subtyping
 
-private module M {σε : STerm ℓ} (σεδ : Γ ⊢[ θ , φ of t-sub ] σε ⦂ σ) where mutual
+module _ {σε : STerm ℓ} (σεδ : Γ ⊢[ θ , φ of t-sub ] σε ⦂ σ) where mutual
   sub-Γok : (Δ : ,-CtxSuffix ℓ σ k)
           → (Γ ,σ, Δ) ok[ θ , φ ]
           → (Γ ++ [↦Δ σε ] Δ) ok[ θ , φ ]
@@ -107,8 +107,6 @@ private module M {σε : STerm ℓ} (σεδ : Γ ⊢[ θ , φ of t-sub ] σε �
     rewrite S.cons-lookup-comm (replace-at (ctx-idx k) (R.weaken-ε-k k σε)) ι cons
           = as-sub (T-Con (<:-transitive <:δ' <:-lookup-δ') εδ' (sub-Γ⊢τ Δ adtτ))
   sub-Γ⊢ε⦂τ Δ (T-Sub εδ <:δ) = trans-sub (sub-Γ⊢τ'<:τ σεδ Δ <:δ) (sub-Γ⊢ε⦂τ Δ εδ)
-
-open M public
 
 sub-Γ⊢τ-front : {Γ : Ctx ℓ}
               → Γ ⊢[ θ , φ of t-sub ] σε ⦂ σ

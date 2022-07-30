@@ -31,7 +31,7 @@ as-sub {κ = not-t-sub} εδ = T-Sub εδ <:-reflexive
                         → Γ ⊢[ θ ] τ₀ ⇒ τ' <: τ₀ ⇒ τ
 Γ⊢τ'<:τ-⇒-Γ⊢τ₀⇒τ'<:τ₀⇒τ τ'<:τ = ST-Arr <:-reflexive τ'<:τ
 
-private module M {σ σ' : SType ℓ} {Γ : Ctx ℓ} (σ-<:δ : Γ ⊢[ θ ] σ' <: σ) where
+module _ {σ σ' : SType ℓ} {Γ : Ctx ℓ} (σ-<:δ : Γ ⊢[ θ ] σ' <: σ) where
   <:-narrowing : (Δ : CtxSuffix (suc ℓ) k)
                → Γ , σ  ++ Δ ⊢[ θ ] τ₂' <: τ₂
                → Γ , σ' ++ Δ ⊢[ θ ] τ₂' <: τ₂
@@ -48,8 +48,6 @@ private module M {σ σ' : SType ℓ} {Γ : Ctx ℓ} (σ-<:δ : Γ ⊢[ θ ] σ'
        → AllSubtypes (Γ , σ' ++ Δ) θ cons' cons
     go {cons' = []}    {[]}    []              = []
     go {cons' = _ ∷ _} {_ ∷ _} (<:δ ∷ cons-<:) = <:-narrowing Δ <:δ ∷ go cons-<:
-
-open M public
 
 <:-transitive : ∀ {τ''}
               → Γ ⊢[ θ ] τ'' <: τ'
@@ -79,7 +77,7 @@ open import Common.Helpers
 open import Surface.Syntax.Renaming as R
 open import Surface.Syntax.Substitution as S
 
-private module N {Γ : Ctx ℓ} (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) where
+module _ {Γ : Ctx ℓ} (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) where
   sub-Γ⊢τ'<:τ : (Δ : ,-CtxSuffix ℓ σ k)
               → Γ ,σ, Δ ⊢[ θ ] τ' <: τ
               → Γ ++ [↦Δ ε ] Δ ⊢[ θ ] [ ℓ ↦τ< ε ] τ' <: [ ℓ ↦τ< ε ] τ
@@ -96,8 +94,6 @@ private module N {Γ : Ctx ℓ} (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ) wh
        → AllSubtypes (Γ ++ [↦Δ ε ] Δ) θ ([ ℓ ↦c< ε ] cons') ([ ℓ ↦c< ε ] cons)
     go {cons' = []}    {[]}    []              = []
     go {cons' = _ ∷ _} {_ ∷ _} (<:δ ∷ cons-<:) = sub-Γ⊢τ'<:τ Δ <:δ ∷ go cons-<:
-
-open N public
 
 sub-Γ⊢τ'<:τ-front : (εδ : Γ ⊢[ θ , φ of t-sub ] ε ⦂ σ)
                   → Γ , σ ⊢[ θ ] τ' <: τ

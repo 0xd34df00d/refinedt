@@ -11,7 +11,7 @@ open import Surface.Derivations.Declarative
 open import Surface.Derivations.Declarative.Theorems.Thinning
 
 -- Referred to as typing-narrowing in the paper
-module M {σ : SType ℓ} (σ-<: : Γ ⊢[ θ , φ ] σ' <: σ) (Γ⊢σ' : Γ ⊢[ θ , φ ] σ') where mutual
+module _ {σ : SType ℓ} (σ-<: : Γ ⊢[ θ , φ ] σ' <: σ) (Γ⊢σ' : Γ ⊢[ θ , φ ] σ') where mutual
   <:-narrowing : (Δ : CtxSuffix (suc ℓ) k)
                → Γ , σ  ++ Δ ⊢[ θ , φ ] τ₂ <: τ₂'
                → Γ , σ' ++ Δ ⊢[ θ , φ ] τ₂ <: τ₂'
@@ -87,5 +87,3 @@ module M {σ : SType ℓ} (σ-<: : Γ ⊢[ θ , φ ] σ' <: σ) (Γ⊢σ' : Γ �
           τ'δ-narrowed = Γ⊢τ-narrowing Δ τ'δ
           <:-narrowed = <:-narrowing Δ <:
        in T-Sub εδ-narrowed τ'δ-narrowed <:-narrowed
-
-open M public
