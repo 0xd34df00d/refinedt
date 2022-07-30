@@ -17,9 +17,11 @@ open import Surface.Syntax.Substitution as S
 open import Surface.Syntax.Substitution.Distributivity as S
 open import Surface.Syntax.Substitution.Stable
 
-weaken-↦<-suc-comm-τ : ∀ {k ℓ} {τ : SType (suc k + ℓ)} (ε : STerm ℓ)
+weaken-↦<-suc-comm-τ : ∀ {k ℓ}
+                     → (τ : SType (suc k + ℓ))
+                     → (ε : STerm ℓ)
                      → [ ℓ ↦τ< ε ] weaken-τ τ ≡ weaken-τ ([ ℓ ↦τ< ε ] τ)
-weaken-↦<-suc-comm-τ {k} {ℓ} {τ} ε
+weaken-↦<-suc-comm-τ {k} {ℓ} τ ε
   rewrite ρ-σ-distr-τ suc (replace-at (ctx-idx k) (weaken-ε-k k ε)) τ
         | σ-ρ-distr-τ (replace-at (suc (ctx-idx k)) (weaken-ε-k (suc k) ε)) suc τ
         | S.act-τ-extensionality (weaken-replace-comm (weaken-ε-k k ε) (ctx-idx k)) τ
@@ -33,11 +35,11 @@ var-earlier-in-Γ-remains : (Δ : ,-CtxSuffix ℓ σ k)
 var-earlier-in-Γ-remains {ε = ε} [ _ ] (∈-suc {τ = τ} refl ∈) (<-zero _)
   rewrite replace-weakened-τ-zero (R.weaken-ε-k zero ε) τ = ∈
 var-earlier-in-Γ-remains {ι = (suc (suc _))} {ε = ε} (Δ , _) (∈-suc {τ = τ} refl ∈) (<-suc k<ι)
-  = ∈-suc (weaken-↦<-suc-comm-τ ε) (var-earlier-in-Γ-remains Δ ∈ k<ι)
+  = ∈-suc (weaken-↦<-suc-comm-τ _ ε) (var-earlier-in-Γ-remains Δ ∈ k<ι)
 
 var-later-in-Γ-remains : (Δ : ,-CtxSuffix ℓ σ k)
                        → τ ∈ Γ ,σ, Δ at ι
                        → (k>ι : ctx-idx k > ι)
                        → [ ctx-idx k ↦τ R.weaken-ε-k k ε ] τ ∈ Γ ++ [↦Δ ε ] Δ at tighten k>ι
-var-later-in-Γ-remains {ε = ε} (Δ , τ) (∈-zero refl) (<-zero _) = ∈-zero (weaken-↦<-suc-comm-τ ε)
-var-later-in-Γ-remains {ε = ε} (Δ , _) (∈-suc {τ = τ} refl ∈) (<-suc k>ι) = ∈-suc (weaken-↦<-suc-comm-τ ε) (var-later-in-Γ-remains Δ ∈ k>ι)
+var-later-in-Γ-remains {ε = ε} (Δ , τ) (∈-zero refl) (<-zero _) = ∈-zero (weaken-↦<-suc-comm-τ _ ε)
+var-later-in-Γ-remains {ε = ε} (Δ , _) (∈-suc {τ = τ} refl ∈) (<-suc k>ι) = ∈-suc (weaken-↦<-suc-comm-τ _ ε) (var-later-in-Γ-remains Δ ∈ k>ι)

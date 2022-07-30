@@ -103,7 +103,7 @@ mutual
                    weaken-τ ([ ℓ ↦τ< ε ] τ)
       branch-εδ' rewrite S.act-ε-extensionality (ext-replace-comm (R.weaken-ε-k k ε) (ctx-idx k)) ε'
                        | R.act-ε-distr (raise k) suc ε
-                       = subst (_ ⊢[ _ , _ ] _ ⦂_) (weaken-↦<-suc-comm-τ {τ = τ} ε) (sub-Γ⊢ε⦂τ (Δ , conτ) εδ branch-εδ)
+                       = subst (_ ⊢[ _ , _ ] _ ⦂_) (weaken-↦<-suc-comm-τ τ ε) (sub-Γ⊢ε⦂τ (Δ , conτ) εδ branch-εδ)
   sub-Γ⊢ε⦂τ Δ εδ (T-Con {cons = cons} ≡-prf conδ adtτ)
     = T-Con (S.act-cons-member _ cons ≡-prf) (sub-Γ⊢ε⦂τ Δ εδ conδ) (sub-Γ⊢τ Δ εδ adtτ)
   sub-Γ⊢ε⦂τ Δ εδ (T-Sub εδ' τ'δ <:) = T-Sub (sub-Γ⊢ε⦂τ Δ εδ εδ') (sub-Γ⊢τ Δ εδ τ'δ) (sub-Γ⊢τ<:τ' Δ εδ <:)
