@@ -1,4 +1,4 @@
--- {-# OPTIONS --safe #-}
+{-# OPTIONS --safe #-}
 
 module Surface.Derivations.Algorithmic.Theorems.Agreement.TypeWellFormedness where
 

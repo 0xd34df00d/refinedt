@@ -1,4 +1,4 @@
-{-# OPTIONS --allow-unsolved-metas #-}
+{-# OPTIONS --safe #-}
 
 module Surface.Derivations.Algorithmic.Theorems.Substitution where
 
