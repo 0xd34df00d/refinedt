@@ -4,12 +4,13 @@ module Surface.Derivations.Algorithmic.Theorems.Safety.Helpers where
 
 open import Data.Fin using (zero; suc)
 open import Data.Nat using (zero)
-open import Data.Vec.Base using (lookup)
+open import Data.Vec.Base using (lookup; _∷_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Surface.Syntax
 open import Surface.Syntax.CtxSuffix
 open import Surface.Derivations.Algorithmic
+open import Surface.Derivations.Algorithmic.Theorems.Subtyping
 open import Surface.Operational
 
 data Canonical : STerm ℓ → SType ℓ → Set where
@@ -48,12 +49,20 @@ lookup-preserves-Γ⊢τ {φ = φ} ι (TWF-ADT consδs) = go ι consδs
   go zero (τδ ∷ _) = τδ
   go (suc ι) (_ ∷ consδs) = go ι consδs
 
-con-has-type : ∀ {cons cons' : ADTCons (Mkℕₐ (suc n)) ℓ} {ι}
-             → Γ ⊢[ θ , φ of not-t-sub ] SCon ι ε cons ⦂ ⊍ cons'
-             → Γ ⊢[ θ , φ of not-t-sub ] ε ⦂ lookup cons' ι
-con-has-type (T-Con <:δ conδ adtτ) = {! !}
-
 subst-Γ⊢ε⦂τ-τ : τ₁ ≡ τ₂
               → Γ ⊢[ θ , φ of κ ] ε ⦂ τ₁
               → Γ ⊢[ θ , φ of κ ] ε ⦂ τ₂
 subst-Γ⊢ε⦂τ-τ refl εδ = εδ
+
+cons-lookup-<: : {cons' cons : ADTCons nₐ ℓ}
+               → ∀ ι
+               → AllSubtypes Γ θ cons' cons
+               → Γ ⊢[ θ ] lookup cons' ι <: lookup cons ι
+cons-lookup-<: {cons' = _ ∷ _} {cons = _ ∷ _} zero    (<:δ ∷ _) = <:δ
+cons-lookup-<: {cons' = _ ∷ _} {cons = _ ∷ _} (suc ι) (_ ∷ alls) = cons-lookup-<: ι alls
+
+con-has-type : {cons' cons : ADTCons nₐ ℓ}
+             → Γ ⊢[ θ , φ of t-sub ] SCon ι ε cons' ⦂ ⊍ cons
+             → Γ ⊢[ θ , φ of t-sub ] ε ⦂ lookup cons ι
+con-has-type (T-Sub (T-Con τⱼ-<:δ εδ _) (ST-ADT cons-<:))
+  = T-Sub εδ (<:-transitive τⱼ-<:δ (cons-lookup-<: _ cons-<:))
