@@ -5,7 +5,7 @@ module Surface.Derivations.Algorithmic.Theorems.Safety where
 open import Data.Fin using (zero; suc)
 open import Data.Nat using (zero)
 open import Data.Vec.Base using (lookup)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst)
 
 open import Surface.Syntax
 open import Surface.Syntax.Renaming as R
@@ -58,4 +58,13 @@ preservation (E-ADT ε↝ε') (T-Con <:δ εδ adtτ)
   with T-Sub εδ' <:δ' ← preservation ε↝ε' εδ
      = as-sub (T-Con (<:-transitive <:δ' <:δ) εδ' adtτ)
 preservation (E-CaseScrut ε↝ε') (T-Case resδ εδ bsδ) = as-sub (T-Case resδ (preservation ε↝ε' εδ) bsδ)
-preservation (E-CaseMatch ε-is-value ι) (T-Case resδ εδ bsδ) = {! !}
+preservation (E-CaseMatch ε-is-value ι) (T-Case resδ εδ bsδ)
+  = let branchδ = sub-Γ⊢ε⦂τ-front (con-has-type εδ) (branch-has-type ι bsδ)
+     in subst (_ ⊢[ _ , _ of _ ] _ ⦂_) (replace-weakened-τ-zero _ _) branchδ
+  where
+  branch-has-type : ∀ {cons : ADTCons (Mkℕₐ n) ℓ} {bs : CaseBranches (Mkℕₐ n) ℓ} {τ}
+                  → (ι : Fin n)
+                  → BranchesHaveType θ φ Γ cons bs τ
+                  → Γ , lookup cons ι ⊢[ θ , φ of t-sub ] CaseBranch.body (lookup bs ι) ⦂ R.weaken-τ τ
+  branch-has-type zero (OneMoreBranch εδ _) = εδ
+  branch-has-type (suc ι) (OneMoreBranch _ bsδ) = branch-has-type ι bsδ
