@@ -35,10 +35,6 @@ canonical-⊍ (T-Sub εδ (ST-ADT _)) (IV-ADT iv) refl
   with T-Con ≡-prf r adtτ ← εδ = C-Con
 
 
-SLam-inv : Γ ⊢[ θ , φ of not-t-sub ] SLam τ ε ⦂ τ₁ ⇒ τ₂
-         → Γ , τ₁ ⊢[ θ , φ of not-t-sub ] ε ⦂ τ₂
-SLam-inv (T-Abs εδ) = εδ
-
 lookup-preserves-Γ⊢τ : {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
                      → (ι : Fin (suc n))
                      → Γ ⊢[ θ , φ  ] ⊍ cons

@@ -53,7 +53,7 @@ preservation ε↝ε' (T-Sub εδ <:δ) = trans-sub <:δ (preservation ε↝ε' 
 preservation (E-AppL ε↝ε') (T-App {τ₁ = τ₁'} {τ₂ = τ₂} ε₁δ ε₂δ refl)
   with T-Sub {τ' = τ₁ ⇒ τ₂'} ε₁δ' <:δ@(ST-Arr <:₁δ <:₂δ) ← preservation ε↝ε' ε₁δ
      = T-Sub (T-App ε₁δ' (trans-sub <:₁δ ε₂δ) refl) (sub-Γ⊢τ'<:τ-front ε₂δ <:₂δ)
-preservation E-AppAbs (T-App ε₁δ ε₂δ refl) = {! !}
+preservation E-AppAbs (T-App (T-Abs ε₁-bodyδ) ε₂δ refl) = sub-Γ⊢ε⦂τ-front ε₂δ ε₁-bodyδ
 preservation (E-ADT ε↝ε') (T-Con ≡-prf εδ adtτ) = {! !}
 preservation (E-CaseScrut ε↝ε') (T-Case resδ εδ bsδ) = {! !}
 preservation (E-CaseMatch x ι) (T-Case resδ εδ bsδ) = {! !}
