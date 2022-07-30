@@ -41,5 +41,5 @@ var-later-in-Γ-remains : (Δ : ,-CtxSuffix ℓ σ k)
                        → τ ∈ Γ ,σ, Δ at ι
                        → (k>ι : ctx-idx k > ι)
                        → [ ctx-idx k ↦τ R.weaken-ε-k k ε ] τ ∈ Γ ++ [↦Δ ε ] Δ at tighten k>ι
-var-later-in-Γ-remains {ε = ε} (Δ , τ) (∈-zero refl) (<-zero _) = ∈-zero (weaken-↦<-suc-comm-τ _ ε)
-var-later-in-Γ-remains {ε = ε} (Δ , _) (∈-suc {τ = τ} refl ∈) (<-suc k>ι) = ∈-suc (weaken-↦<-suc-comm-τ _ ε) (var-later-in-Γ-remains Δ ∈ k>ι)
+var-later-in-Γ-remains {ε = ε} (Δ , _) (∈-zero refl) (<-zero _) = ∈-zero (weaken-↦<-suc-comm-τ _ ε)
+var-later-in-Γ-remains {ε = ε} (Δ , _) (∈-suc refl ∈) (<-suc k>ι) = ∈-suc (weaken-↦<-suc-comm-τ _ ε) (var-later-in-Γ-remains Δ ∈ k>ι)
