@@ -73,12 +73,14 @@ data _⊢[_,_of_]_⦂_ {ℓ} Γ θ φ where
               → Γ ⊢[ θ , φ of not-t-sub ] SUnit ⦂ ⟨ BUnit ∣ Τ ⟩
   T-Var       : (Γok : Γ ok[ θ , φ ])
               → τ ∈ Γ at ι
+              → ⦃ Γ ⊢[ θ , φ ] τ ?if φ ⦄
               → Γ ⊢[ θ , φ of not-t-sub ] SVar ι ⦂ τ
   T-Abs       : (bodyδ : Γ , τ₁ ⊢[ θ , φ of not-t-sub ] ε ⦂ τ₂)
               → Γ ⊢[ θ , φ of not-t-sub ] SLam τ₁ ε ⦂ τ₁ ⇒ τ₂
   T-App       : (ε₁δ : Γ ⊢[ θ , φ of not-t-sub ] ε₁ ⦂ τ₁ ⇒ τ₂)
               → (ε₂δ : Γ ⊢[ θ , φ of t-sub ] ε₂ ⦂ τ₁)
               → (resτ-≡ : τ ≡ [ zero ↦τ ε₂ ] τ₂)
+              → ⦃ Γ ⊢[ θ , φ ] τ ?if φ ⦄
               → Γ ⊢[ θ , φ of not-t-sub ] SApp ε₁ ε₂ ⦂ τ
   -- having t-sub on the scrutδ is not necessary,
   -- but is helpful to avoid having to deal with parallel narrowing
@@ -96,6 +98,7 @@ data _⊢[_,_of_]_⦂_ {ℓ} Γ θ φ where
               → Γ ⊢[ θ , φ of not-t-sub ] SCon ι ε cons ⦂ ⊍ cons
   T-Sub       : (εδ : Γ ⊢[ θ , φ of not-t-sub ] ε ⦂ τ')
               → (<:δ : Γ ⊢[ θ ] τ' <: τ)
+              → ⦃ Γ ⊢[ θ , φ ] τ ?if φ ⦄
               → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ
 
 AllSubtypes : Ctx ℓ

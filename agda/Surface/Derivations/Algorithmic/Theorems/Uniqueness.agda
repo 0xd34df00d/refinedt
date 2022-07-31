@@ -4,7 +4,7 @@ module Surface.Derivations.Algorithmic.Theorems.Uniqueness where
 
 open import Data.Maybe.Relation.Unary.Any using (irrelevant)
 open import Data.Vec as V
-open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; cong)
 open import Relation.Nullary using (Irrelevant)
 
 open import Surface.Syntax
@@ -63,24 +63,31 @@ mutual
     rewrite unique-cons consδs₁ consδs₂
           = refl
 
+  unique-Γ⊢τ-if-φ : Irrelevant (Γ ⊢[ θ , φ ] τ ?if φ)
+  unique-Γ⊢τ-if-φ omitted omitted = refl
+  unique-Γ⊢τ-if-φ (enriched τδ₁) (enriched τδ₂) = cong enriched (unique-Γ⊢τ τδ₁ τδ₂)
+
   unique-Γ⊢ε⦂τ : Irrelevant (Γ ⊢[ θ , φ of κ ] ε ⦂ τ)
   unique-Γ⊢ε⦂τ (T-Unit Γok₁) (T-Unit Γok₂)
     rewrite unique-Γok Γok₁ Γok₂
           = refl
-  unique-Γ⊢ε⦂τ (T-Var Γok₁ ∈₁) (T-Var Γok₂ ∈₂)
+  unique-Γ⊢ε⦂τ (T-Var Γok₁ ∈₁ ⦃ Γ⊢τ-?if₁ ⦄) (T-Var Γok₂ ∈₂ ⦃ Γ⊢τ-?if₂ ⦄)
     rewrite unique-Γok Γok₁ Γok₂
           | unique-∈ ∈₁ ∈₂
+          | unique-Γ⊢τ-if-φ Γ⊢τ-?if₁ Γ⊢τ-?if₂
           = refl
   unique-Γ⊢ε⦂τ (T-Abs δ₁) (T-Abs δ₂)
     rewrite unique-Γ⊢ε⦂τ δ₁ δ₂
           = refl
-  unique-Γ⊢ε⦂τ (T-App δ₁₁ (T-Sub δ₂₁ <:₁) refl) (T-App δ₁₂ (T-Sub δ₂₂ <:₂) resτ-≡₂)
+  unique-Γ⊢ε⦂τ (T-App δ₁₁ (T-Sub δ₂₁ <:₁ ⦃ Γ⊢τ₂-?if₁ ⦄) refl ⦃ Γ⊢τ-?if₁ ⦄) (T-App δ₁₂ (T-Sub δ₂₂ <:₂ ⦃ Γ⊢τ₂-?if₂ ⦄) resτ-≡₂ ⦃ Γ⊢τ-?if₂ ⦄)
     with refl ← typing-uniqueness δ₁₁ δ₁₂
        | refl ← typing-uniqueness δ₂₁ δ₂₂
        | refl ← resτ-≡₂
     rewrite unique-Γ⊢ε⦂τ δ₁₁ δ₁₂
           | unique-Γ⊢ε⦂τ δ₂₁ δ₂₂
           | unique-<: <:₁ <:₂
+          | unique-Γ⊢τ-if-φ Γ⊢τ-?if₁ Γ⊢τ-?if₂
+          | unique-Γ⊢τ-if-φ Γ⊢τ₂-?if₁ Γ⊢τ₂-?if₂
           = refl
   unique-Γ⊢ε⦂τ (T-Case resδ₁ δ₁ bsδ₁) (T-Case resδ₂ δ₂ bsδ₂)
     rewrite unique-Γ⊢τ resδ₁ resδ₂
@@ -93,10 +100,11 @@ mutual
           | unique-Γ⊢ε⦂τ εδ₁ εδ₂
           | unique-Γ⊢τ adtτ₁ adtτ₂
           = refl
-  unique-Γ⊢ε⦂τ (T-Sub εδ₁ <:₁) (T-Sub εδ₂ <:₂)
+  unique-Γ⊢ε⦂τ (T-Sub εδ₁ <:₁ ⦃ Γ⊢τ-?if₁ ⦄) (T-Sub εδ₂ <:₂ ⦃ Γ⊢τ-?if₂ ⦄)
     with refl ← typing-uniqueness εδ₁ εδ₂
     rewrite unique-Γ⊢ε⦂τ εδ₁ εδ₂
           | unique-<: <:₁ <:₂
+          | unique-Γ⊢τ-if-φ Γ⊢τ-?if₁ Γ⊢τ-?if₂
           = refl
 
   unique-<: : Irrelevant (Γ ⊢[ θ ] τ' <: τ)

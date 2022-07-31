@@ -62,7 +62,7 @@ cons-lookup-<: {cons' = _ ∷ _} {cons = _ ∷ _} zero    (<:δ ∷ _) = <:δ
 cons-lookup-<: {cons' = _ ∷ _} {cons = _ ∷ _} (suc ι) (_ ∷ alls) = cons-lookup-<: ι alls
 
 con-has-type : {cons' cons : ADTCons nₐ ℓ}
-             → Γ ⊢[ θ , φ of t-sub ] SCon ι ε cons' ⦂ ⊍ cons
-             → Γ ⊢[ θ , φ of t-sub ] ε ⦂ lookup cons ι
+             → Γ ⊢[ θ , M of t-sub ] SCon ι ε cons' ⦂ ⊍ cons
+             → Γ ⊢[ θ , M of t-sub ] ε ⦂ lookup cons ι
 con-has-type (T-Sub (T-Con τⱼ-<:δ εδ _) (ST-ADT cons-<:))
   = T-Sub εδ (<:-transitive τⱼ-<:δ (cons-lookup-<: _ cons-<:))

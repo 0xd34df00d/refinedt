@@ -48,10 +48,10 @@ open import Surface.Derivations.Algorithmic.Theorems.Agreement.Γok.WF
 mutual
   Γ⊢τ-thinning↓ : {Γ : Ctx (k + ℓ)}
                 → (Γ⊂Γ' : k by Γ ⊂' Γ')
-                → Γ' ok[ θ , φ ]
-                → (δ : Γ ⊢[ θ , φ ] τ)
+                → Γ' ok[ θ , M ]
+                → (δ : Γ ⊢[ θ , M ] τ)
                 → Acc _<_ (size-twf δ)
-                → Γ' ⊢[ θ , φ ] R.act-τ (ext-k' k suc) τ
+                → Γ' ⊢[ θ , M ] R.act-τ (ext-k' k suc) τ
   Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok (TWF-TrueRef _) _ = TWF-TrueRef Γ'ok
   Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok (TWF-Base ε₁δ ε₂δ) (acc rec)
     = let acc₁ = rec _ (s≤s (₁≤₂ _ _))
@@ -74,10 +74,10 @@ mutual
 
   Γ⊢ε⦂τ-thinning↓ : {Γ : Ctx (k + ℓ)}
                   → (Γ⊂Γ' : k by Γ ⊂' Γ')
-                  → Γ' ok[ θ , φ ]
-                  → (δ : Γ ⊢[ θ , φ of κ ] ε ⦂ τ)
+                  → Γ' ok[ θ , M ]
+                  → (δ : Γ ⊢[ θ , M of κ ] ε ⦂ τ)
                   → Acc _<_ (size-t δ)
-                  → Γ' ⊢[ θ , φ of κ ] R.act-ε (ext-k' k suc) ε ⦂ R.act-τ (ext-k' k suc) τ
+                  → Γ' ⊢[ θ , M of κ ] R.act-ε (ext-k' k suc) ε ⦂ R.act-τ (ext-k' k suc) τ
   Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Unit _) _ = T-Unit Γ'ok
   Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Var _ ∈) _ = T-Var Γ'ok (∈-thinning Γ⊂Γ' ∈)
   Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok (T-Abs εδ) (acc rec)
@@ -115,10 +115,10 @@ mutual
   cons-thinning↓ : {Γ : Ctx (k + ℓ)}
                  → {cons : ADTCons nₐ (k + ℓ)}
                  → (Γ⊂Γ' : k by Γ ⊂' Γ')
-                 → Γ' ok[ θ , φ ]
-                 → (δs : All (Γ ⊢[ θ , φ ]_) cons)
+                 → Γ' ok[ θ , M ]
+                 → (δs : All (Γ ⊢[ θ , M ]_) cons)
                  → Acc _<_ (size-all-cons δs)
-                 → All (Γ' ⊢[ θ , φ ]_) (R.act-cons (ext-k' k suc) cons)
+                 → All (Γ' ⊢[ θ , M ]_) (R.act-cons (ext-k' k suc) cons)
   cons-thinning↓ Γ⊂Γ' Γ'ok [] _ = []
   cons-thinning↓ Γ⊂Γ' Γ'ok (δ ∷ consδs) (acc rec)
     = let acc₁ = rec _ (s≤s (₁≤₂ _ _))
@@ -129,10 +129,10 @@ mutual
                      → {cons : ADTCons nₐ (k + ℓ)}
                      → {bs : CaseBranches nₐ (k + ℓ)}
                      → (Γ⊂Γ' : k by Γ ⊂' Γ')
-                     → Γ' ok[ θ , φ ]
-                     → (δs : BranchesHaveType θ φ Γ cons bs τ)
+                     → Γ' ok[ θ , M ]
+                     → (δs : BranchesHaveType θ M Γ cons bs τ)
                      → Acc _<_ (size-bs δs)
-                     → BranchesHaveType θ φ Γ' (R.act-cons (ext-k' k suc) cons) (R.act-branches (ext-k' k suc) bs) (R.act-τ (ext-k' k suc) τ)
+                     → BranchesHaveType θ M Γ' (R.act-cons (ext-k' k suc) cons) (R.act-branches (ext-k' k suc) bs) (R.act-τ (ext-k' k suc) τ)
   branches-thinning↓ Γ⊂Γ' Γ'ok NoBranches _ = NoBranches
   branches-thinning↓ {k = k} {τ = τ} Γ⊂Γ' Γ'ok (OneMoreBranch εδ branchesδ) (acc rec)
     with TCTX-Bind _ conτδ ← Γ⊢ε⦂τ-⇒-Γok εδ
@@ -147,38 +147,38 @@ mutual
 
 Γ⊢τ-thinning : {Γ : Ctx (k + ℓ)}
              → (Γ⊂Γ' : k by Γ ⊂' Γ')
-             → Γ' ok[ θ , φ ]
-             → Γ ⊢[ θ , φ ] τ
-             → Γ' ⊢[ θ , φ ] R.act-τ (ext-k' k suc) τ
+             → Γ' ok[ θ , M ]
+             → Γ ⊢[ θ , M ] τ
+             → Γ' ⊢[ θ , M ] R.act-τ (ext-k' k suc) τ
 Γ⊢τ-thinning Γ⊂Γ' [Γ'ok] δ = Γ⊢τ-thinning↓ Γ⊂Γ' [Γ'ok] δ (<-wellFounded _)
 
 Γ⊢ε⦂τ-thinning : {Γ : Ctx (k + ℓ)}
                → (Γ⊂Γ' : k by Γ ⊂' Γ')
-               → Γ' ok[ θ , φ ]
-               → Γ ⊢[ θ , φ of κ ] ε ⦂ τ
-               → Γ' ⊢[ θ , φ of κ ] R.act-ε (ext-k' k suc) ε ⦂ R.act-τ (ext-k' k suc) τ
+               → Γ' ok[ θ , M ]
+               → Γ ⊢[ θ , M of κ ] ε ⦂ τ
+               → Γ' ⊢[ θ , M of κ ] R.act-ε (ext-k' k suc) ε ⦂ R.act-τ (ext-k' k suc) τ
 Γ⊢ε⦂τ-thinning Γ⊂Γ' [Γ'ok] δ = Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' [Γ'ok] δ (<-wellFounded _)
 
 <:-weakening : Γ ⊢[ θ ] τ₁ <: τ₂
              → (Γ , τ') ⊢[ θ ] R.weaken-τ τ₁ <: R.weaken-τ τ₂
 <:-weakening = <:-thinning ignore-head
 
-Γ⊢τ-weakening : Γ ok[ θ , φ ]
-              → Γ ⊢[ θ , φ ] τ'
-              → Γ ⊢[ θ , φ ] τ
-              → (Γ , τ') ⊢[ θ , φ ] R.weaken-τ τ
+Γ⊢τ-weakening : Γ ok[ θ , M ]
+              → Γ ⊢[ θ , M ] τ'
+              → Γ ⊢[ θ , M ] τ
+              → (Γ , τ') ⊢[ θ , M ] R.weaken-τ τ
 Γ⊢τ-weakening Γok Γ⊢τ' = Γ⊢τ-thinning ignore-head (TCTX-Bind Γok Γ⊢τ')
 
-Γ⊢ε⦂τ-weakening : Γ ok[ θ , φ ]
-                → Γ ⊢[ θ , φ ] τ'
-                → Γ ⊢[ θ , φ of κ ] ε ⦂ τ
-                → (Γ , τ') ⊢[ θ , φ of κ ] R.weaken-ε ε ⦂ R.weaken-τ τ
+Γ⊢ε⦂τ-weakening : Γ ok[ θ , M ]
+                → Γ ⊢[ θ , M ] τ'
+                → Γ ⊢[ θ , M of κ ] ε ⦂ τ
+                → (Γ , τ') ⊢[ θ , M of κ ] R.weaken-ε ε ⦂ R.weaken-τ τ
 Γ⊢ε⦂τ-weakening Γok Γ⊢τ' = Γ⊢ε⦂τ-thinning ignore-head (TCTX-Bind Γok Γ⊢τ')
 
 Γ⊢ε⦂τ-weakening-suffix : {Δ : CtxSuffix ℓ k}
-                       → (Γ ++ Δ) ok[ θ , φ ]
-                       → Γ ⊢[ θ , φ of κ ] ε ⦂ τ
-                       → Γ ++ Δ ⊢[ θ , φ of κ ] R.weaken-ε-k k ε ⦂ R.weaken-τ-k k τ
+                       → (Γ ++ Δ) ok[ θ , M ]
+                       → Γ ⊢[ θ , M of κ ] ε ⦂ τ
+                       → Γ ++ Δ ⊢[ θ , M of κ ] R.weaken-ε-k k ε ⦂ R.weaken-τ-k k τ
 Γ⊢ε⦂τ-weakening-suffix {ε = ε} {τ = τ} {Δ = ⊘} Γ++Δok εδ
   rewrite R.act-ε-id (λ _ → refl) ε
         | R.act-τ-id (λ _ → refl) τ

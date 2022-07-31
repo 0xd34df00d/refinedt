@@ -22,8 +22,8 @@ open import Surface.Derivations.Algorithmic
   go [] = []
   go (con ∷ cons) = <:-reflexive ∷ go cons
 
-as-sub : Γ ⊢[ θ , φ of κ ] ε ⦂ τ
-       → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ
+as-sub : Γ ⊢[ θ , M of κ ] ε ⦂ τ
+       → Γ ⊢[ θ , M of t-sub ] ε ⦂ τ
 as-sub {κ = t-sub} εδ = εδ
 as-sub {κ = not-t-sub} εδ = T-Sub εδ <:-reflexive
 
@@ -68,8 +68,8 @@ module _ {σ σ' : SType ℓ} {Γ : Ctx ℓ} (σ-<:δ : Γ ⊢[ θ ] σ' <: σ) 
   go {cons'' = _ ∷ _} {_ ∷ _} {_ ∷ _} (<:δ₁ ∷ cons-<:₁) (<:δ₂ ∷ cons-<:₂) = <:-transitive <:δ₁ <:δ₂ ∷ go cons-<:₁ cons-<:₂
 
 trans-sub : Γ ⊢[ θ ] τ' <: τ
-          → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ'
-          → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ
+          → Γ ⊢[ θ , M of t-sub ] ε ⦂ τ'
+          → Γ ⊢[ θ , M of t-sub ] ε ⦂ τ
 trans-sub <:δ (T-Sub εδ <:'δ) = T-Sub εδ (<:-transitive <:'δ <:δ)
 
 

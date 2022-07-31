@@ -14,15 +14,15 @@ open import Surface.Derivations.Algorithmic.Theorems.Helpers
 open import Surface.Derivations.Algorithmic.Theorems.Substitution
 open import Surface.Derivations.Algorithmic.Theorems.Thinning
 
-τ∈Γ-⇒-Γ⊢τ : Γ ok[ θ , φ ]
+τ∈Γ-⇒-Γ⊢τ : Γ ok[ θ , M ]
           → τ ∈ Γ at ι
-          → Γ ⊢[ θ , φ ] τ
+          → Γ ⊢[ θ , M ] τ
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind Γok τδ) (∈-zero refl) = Γ⊢τ-weakening Γok τδ τδ
 τ∈Γ-⇒-Γ⊢τ (TCTX-Bind Γok τδ) (∈-suc refl ∈) = Γ⊢τ-weakening Γok τδ (τ∈Γ-⇒-Γ⊢τ Γok ∈)
 
 -- Referred to as T-implies-TWF in the paper
-Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢[ θ , φ of not-t-sub ] ε ⦂ τ
-            → Γ ⊢[ θ , φ ] τ
+Γ⊢ε⦂τ-⇒-Γ⊢τ : Γ ⊢[ θ , M of not-t-sub ] ε ⦂ τ
+            → Γ ⊢[ θ , M ] τ
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Unit Γok) = TWF-TrueRef Γok
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Var Γok ∈-prf) = τ∈Γ-⇒-Γ⊢τ Γok ∈-prf
 Γ⊢ε⦂τ-⇒-Γ⊢τ (T-Abs εδ) = Γ,τ₁⊢τ₂-⇒-Γ⊢τ₁⇒τ₂ (Γ⊢ε⦂τ-⇒-Γ⊢τ εδ)

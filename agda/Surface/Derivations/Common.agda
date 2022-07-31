@@ -12,13 +12,13 @@ variable
   φ : TSFlavour
   θ : Oracle
 
-data Enrich (A : Set) : TSFlavour → Set where
-  omitted   : Enrich A M
-  enriched  : (δ : A)
-            → Enrich A E
+infix 0 _?if_
 
-as-enrichment : ∀ {A}
-              → A
-              → Enrich A φ
-as-enrichment {φ = M} δ = omitted
-as-enrichment {φ = E} δ = enriched δ
+data _?if_ (A : Set) : TSFlavour → Set where
+  omitted   : A ?if M
+  enriched  : (δ : A)
+            → A ?if E
+
+instance
+  omitted-?if : {A : Set} → A ?if M
+  omitted-?if = omitted

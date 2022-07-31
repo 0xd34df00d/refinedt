@@ -47,12 +47,12 @@ progress (T-Sub εδ _) = progress εδ
 
 
 preservation : ε ↝ ε'
-             → Γ ⊢[ θ , φ of κ ] ε ⦂ τ
-             → Γ ⊢[ θ , φ of t-sub ] ε' ⦂ τ
+             → Γ ⊢[ θ , M of κ ] ε ⦂ τ
+             → Γ ⊢[ θ , M of t-sub ] ε' ⦂ τ
 preservation ε↝ε' (T-Sub εδ <:δ) = trans-sub <:δ (preservation ε↝ε' εδ)
 preservation (E-AppL ε↝ε') (T-App {τ₁ = τ₁'} {τ₂ = τ₂} ε₁δ ε₂δ refl)
   with T-Sub ε₁δ' <:δ@(ST-Arr <:₁δ <:₂δ) ← preservation ε↝ε' ε₁δ
-     = T-Sub (T-App ε₁δ' (trans-sub <:₁δ ε₂δ) refl) (sub-Γ⊢τ'<:τ-front ε₂δ <:₂δ)
+     = T-Sub (T-App ε₁δ' (trans-sub <:₁δ ε₂δ) refl) (sub-Γ⊢τ'<:τ-front ε₂δ <:₂δ) ⦃ omitted ⦄
 preservation E-AppAbs (T-App (T-Abs ε₁-bodyδ) ε₂δ refl) = sub-Γ⊢ε⦂τ-front ε₂δ ε₁-bodyδ
 preservation (E-ADT ε↝ε') (T-Con <:δ εδ adtτ)
   with T-Sub εδ' <:δ' ← preservation ε↝ε' εδ

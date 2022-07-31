@@ -27,16 +27,16 @@ open import Surface.Derivations.Algorithmic.Theorems.Agreement.Lemmas
 open import Surface.Derivations.Algorithmic.Theorems.Thinning
 open import Surface.Derivations.Algorithmic.Theorems.Subtyping
 
-module _ {σε : STerm ℓ} (σεδ : Γ ⊢[ θ , φ of t-sub ] σε ⦂ σ) where mutual
+module _ {σε : STerm ℓ} (σεδ : Γ ⊢[ θ , M of t-sub ] σε ⦂ σ) where mutual
   sub-Γok : (Δ : ,-CtxSuffix ℓ σ k)
-          → (Γ ,σ, Δ) ok[ θ , φ ]
-          → (Γ ++ [↦Δ σε ] Δ) ok[ θ , φ ]
+          → (Γ ,σ, Δ) ok[ θ , M ]
+          → (Γ ++ [↦Δ σε ] Δ) ok[ θ , M ]
   sub-Γok [ _ ] (TCTX-Bind Γ-ok _) = Γ-ok
   sub-Γok (Δ , τ) (TCTX-Bind Γ,σ,Δ-ok τδ) = TCTX-Bind (sub-Γok Δ Γ,σ,Δ-ok) (sub-Γ⊢τ Δ τδ)
 
   sub-Γ⊢τ : (Δ : ,-CtxSuffix ℓ σ k)
-          → Γ ,σ, Δ ⊢[ θ , φ ] τ
-          → Γ ++ [↦Δ σε ] Δ ⊢[ θ , φ ] [ ℓ ↦τ< σε ] τ
+          → Γ ,σ, Δ ⊢[ θ , M ] τ
+          → Γ ++ [↦Δ σε ] Δ ⊢[ θ , M ] [ ℓ ↦τ< σε ] τ
   sub-Γ⊢τ Δ (TWF-TrueRef Γok) = TWF-TrueRef (sub-Γok Δ Γok)
   sub-Γ⊢τ {k = k} Δ (TWF-Base {ε₁ = ε₁} {ε₂ = ε₂} ε₁δ ε₂δ)
     rewrite S.act-ε-extensionality (S.ext-replace-comm (R.weaken-ε-k k σε) (ctx-idx k)) ε₁
@@ -52,16 +52,16 @@ module _ {σε : STerm ℓ} (σεδ : Γ ⊢[ θ , φ of t-sub ] σε ⦂ σ) wh
 
   sub-cons : {cons : ADTCons nₐ _}
            → (Δ : ,-CtxSuffix ℓ σ k)
-           → All (λ conτ → Γ ,σ, Δ ⊢[ θ , φ ] conτ) cons
-           → All (λ conτ → Γ ++ [↦Δ σε ] Δ ⊢[ θ , φ ] conτ) ([ ctx-idx k ↦c R.weaken-ε-k k σε ] cons)
+           → All (λ conτ → Γ ,σ, Δ ⊢[ θ , M ] conτ) cons
+           → All (λ conτ → Γ ++ [↦Δ σε ] Δ ⊢[ θ , M ] conτ) ([ ctx-idx k ↦c R.weaken-ε-k k σε ] cons)
   sub-cons Δ [] = []
   sub-cons Δ (τδ ∷ τδs) = sub-Γ⊢τ Δ τδ ∷ sub-cons Δ τδs
 
   sub-branches : {cons : ADTCons nₐ _}
                → {bs : CaseBranches nₐ _}
                → (Δ : ,-CtxSuffix ℓ σ k)
-               → BranchesHaveType θ φ (Γ ,σ, Δ) cons bs τ
-               → BranchesHaveType θ φ (Γ ++ [↦Δ σε ] Δ) ([ ℓ ↦c< σε ] cons) ([ ℓ ↦bs< σε ] bs) ([ ℓ ↦τ< σε ] τ)
+               → BranchesHaveType θ M (Γ ,σ, Δ) cons bs τ
+               → BranchesHaveType θ M (Γ ++ [↦Δ σε ] Δ) ([ ℓ ↦c< σε ] cons) ([ ℓ ↦bs< σε ] bs) ([ ℓ ↦τ< σε ] τ)
   sub-branches Δ NoBranches = NoBranches
   sub-branches {k = k} Δ (OneMoreBranch {ε = ε} {τ = τ} εδ bsδ)
     with εδ' ← sub-Γ⊢ε⦂τ (Δ , _) εδ
@@ -71,8 +71,8 @@ module _ {σε : STerm ℓ} (σεδ : Γ ⊢[ θ , φ of t-sub ] σε ⦂ σ) wh
              in OneMoreBranch εδ' (sub-branches Δ bsδ)
 
   sub-Γ⊢ε⦂τ : (Δ : ,-CtxSuffix ℓ σ k)
-            → Γ ,σ, Δ ⊢[ θ , φ of κ ] ε₀ ⦂ τ
-            → Γ ++ [↦Δ σε ] Δ ⊢[ θ , φ of t-sub ] [ ℓ ↦ε< σε ] ε₀ ⦂ [ ℓ ↦τ< σε ] τ
+            → Γ ,σ, Δ ⊢[ θ , M of κ ] ε₀ ⦂ τ
+            → Γ ++ [↦Δ σε ] Δ ⊢[ θ , M of t-sub ] [ ℓ ↦ε< σε ] ε₀ ⦂ [ ℓ ↦τ< σε ] τ
   sub-Γ⊢ε⦂τ Δ (T-Unit Γok) = as-sub (T-Unit (sub-Γok Δ Γok))
   sub-Γ⊢ε⦂τ {k = k} Δ (T-Var {ι = ι} Γok ∈)
     with ctx-idx k <>? ι
@@ -109,18 +109,18 @@ module _ {σε : STerm ℓ} (σεδ : Γ ⊢[ θ , φ of t-sub ] σε ⦂ σ) wh
   sub-Γ⊢ε⦂τ Δ (T-Sub εδ <:δ) = trans-sub (sub-Γ⊢τ'<:τ σεδ Δ <:δ) (sub-Γ⊢ε⦂τ Δ εδ)
 
 sub-Γ⊢τ-front : {Γ : Ctx ℓ}
-              → Γ ⊢[ θ , φ of t-sub ] σε ⦂ σ
-              → Γ , σ ⊢[ θ , φ ] τ
-              → Γ ⊢[ θ , φ ] [ zero ↦τ σε ] τ
+              → Γ ⊢[ θ , M of t-sub ] σε ⦂ σ
+              → Γ , σ ⊢[ θ , M ] τ
+              → Γ ⊢[ θ , M ] [ zero ↦τ σε ] τ
 sub-Γ⊢τ-front {σε = σε} σεδ τδ
   with τδ' ← sub-Γ⊢τ σεδ [ _ ] τδ
   rewrite R.act-ε-id (λ _ → refl) σε
         = τδ'
 
 sub-Γ⊢ε⦂τ-front : {Γ : Ctx ℓ}
-                → Γ ⊢[ θ , φ of t-sub ] σε ⦂ σ
-                → Γ , σ ⊢[ θ , φ of κ ] ε ⦂ τ
-                → Γ ⊢[ θ , φ  of t-sub ] [ zero ↦ε σε ] ε ⦂ [ zero ↦τ σε ] τ
+                → Γ ⊢[ θ , M of t-sub ] σε ⦂ σ
+                → Γ , σ ⊢[ θ , M of κ ] ε ⦂ τ
+                → Γ ⊢[ θ , M  of t-sub ] [ zero ↦ε σε ] ε ⦂ [ zero ↦τ σε ] τ
 sub-Γ⊢ε⦂τ-front {σε = σε} σεδ εδ
   with εδ' ← sub-Γ⊢ε⦂τ σεδ [ _ ] εδ
   rewrite R.act-ε-id (λ _ → refl) σε
