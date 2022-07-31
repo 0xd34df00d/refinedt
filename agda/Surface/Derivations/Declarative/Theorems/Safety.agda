@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Surface.Safety where
+module Surface.Derivations.Declarative.Theorems.Safety where
 
 open import Data.Fin using (zero; suc)
 open import Data.Nat using (zero)
@@ -15,7 +15,8 @@ open import Surface.Derivations.Declarative.Theorems.Agreement
 open import Surface.Derivations.Declarative.Theorems.Substitution
 open import Surface.Derivations.Declarative.Theorems.Helpers
 open import Surface.Operational
-open import Surface.Safety.Helpers
+
+open import Surface.Derivations.Declarative.Theorems.Safety.Helpers
 
 data Progress (ε : STerm ℓ) : Set where
   step : (ε↝ε' : ε ↝ ε')

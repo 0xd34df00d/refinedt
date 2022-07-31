@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module Surface.Safety.Helpers where
+module Surface.Derivations.Declarative.Theorems.Safety.Helpers where
 
 open import Data.Fin using (zero; suc)
 open import Data.Nat using (zero)
