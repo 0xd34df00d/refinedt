@@ -68,3 +68,41 @@ module D-to-A where mutual
                → A.BranchesHaveType θ M Γ cons bs τ
   map-branches D.NoBranches = A.NoBranches
   map-branches (D.OneMoreBranch εδ bsδ) = A.OneMoreBranch (map-ε εδ) (map-branches bsδ)
+
+module A-to-D where mutual
+  map-Γ : Γ A.ok[ θ , φ ]
+        → Γ D.ok[ θ ]
+  map-Γ A.TCTX-Empty = D.TCTX-Empty
+  map-Γ (A.TCTX-Bind Γok τδ) = D.TCTX-Bind (map-Γ Γok) (map-τ τδ)
+
+  map-τ : Γ A.⊢[ θ , φ ] τ
+        → Γ D.⊢[ θ ] τ
+  map-τ (A.TWF-TrueRef Γok) = D.TWF-TrueRef (map-Γ Γok)
+  map-τ (A.TWF-Base ε₁δ ε₂δ) = D.TWF-Base (map-ε ε₁δ) (map-ε ε₂δ)
+  map-τ (A.TWF-Conj τ₁δ τ₂δ) = D.TWF-Conj (map-τ τ₁δ) (map-τ τ₂δ)
+  map-τ (A.TWF-Arr τ₁δ τ₂δ) = D.TWF-Arr (map-τ τ₁δ) (map-τ τ₂δ)
+  map-τ (A.TWF-ADT consδs) = D.TWF-ADT (map-cons consδs)
+
+  map-ε : Γ A.⊢[ θ , φ of κ ] ε ⦂ τ
+        → Γ D.⊢[ θ ] ε ⦂ τ
+  map-ε (A.T-Unit Γok) = {! !}
+  map-ε (A.T-Var Γok x) = {! !}
+  map-ε (A.T-Abs εδ) = {! !}
+  map-ε (A.T-App εδ εδ₁ resτ-≡) = {! !}
+  map-ε (A.T-Case resδ εδ bsδ) = {! !}
+  map-ε (A.T-Con <:δ εδ adtτ) = {! !}
+  map-ε (A.T-Sub εδ (A.ST-Base is-just)) = {! !}
+  map-ε (A.T-Sub εδ (A.ST-Arr <:₁δ <:₂δ)) = {! !}
+  map-ε (A.T-Sub εδ (A.ST-ADT cons-<:)) = {! !}
+
+  map-cons : {cons : ADTCons nₐ ℓ}
+           → All (Γ A.⊢[ θ , φ ]_) cons
+           → All (Γ D.⊢[ θ ]_) cons
+  map-cons [] = []
+  map-cons (τδ ∷ consδs) = map-τ τδ ∷ map-cons consδs
+
+  map-branches : {cons : ADTCons nₐ ℓ} {bs : CaseBranches nₐ ℓ}
+               → A.BranchesHaveType θ φ Γ cons bs τ
+               → D.BranchesHaveType θ Γ cons bs τ
+  map-branches A.NoBranches = D.NoBranches
+  map-branches (A.OneMoreBranch εδ bsδ) = D.OneMoreBranch (map-ε εδ) (map-branches bsδ)
