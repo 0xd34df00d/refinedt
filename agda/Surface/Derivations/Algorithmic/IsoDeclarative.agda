@@ -40,18 +40,12 @@ mutual
        = let Γ⊢τ₁⇒τ' = A.Γ,τ₁⊢τ₂-⇒-Γ⊢τ₁⇒τ₂ (A.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ')
              Γ⊢τ₁ = case Γ⊢τ₁⇒τ' of λ where (A.TWF-Arr τ₁δ _) → τ₁δ
           in A.T-Sub (A.T-Abs εδ') (A.Γ⊢τ'<:τ-⇒-Γ⊢τ₀⇒τ'<:τ₀⇒τ <:δ)
-  from-ε εδ@(D.T-App ε₁δ ε₂δ)
-    with A.T-Sub ε₁δ' <:δ@(A.ST-Arr <:₁δ <:₂δ) ← from-ε ε₁δ
-        = let τ₂-subst-δ = {! !}
-              τ₂'-subst-δ = {! !}
-           in A.T-Sub
-                (A.T-App ε₁δ' {! (A.as-sub' <:₁δ (from-ε ε₂δ)) !} refl)
-                τ₂-subst-δ
-              {-
-  ... | ⟨ not-t-sub , ε₁δ' ⟩
-        = let τ₂-subst-δ = {! D.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ!}
-           in ⟨ _ , A.T-App ε₁δ' (A.as-sub (from-ε ε₂δ)) refl τ₂-subst-δ ⟩
-           -}
+  from-ε (D.T-App ε₁δ ε₂δ)
+    with A.T-Sub ε₁δ' (A.ST-Arr <:₁δ <:₂δ) ← from-ε ε₁δ
+       = let ε₂δ' = from-ε ε₂δ
+          in A.T-Sub
+               (A.T-App ε₁δ' (A.trans-sub <:₁δ ε₂δ') refl)
+               (A.sub-Γ⊢τ'<:τ-front ε₂δ' <:₂δ)
   from-ε (D.T-Case resδ εδ branches-well-typed) = {! !}
   from-ε (D.T-Con ≡-prf εδ adtτ) = {! !}
   from-ε (D.T-Sub εδ τδ <:δ) with εδ' ← from-ε εδ = {! A.as-sub' (from-<: (A.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ') (from-τ τδ) <:δ) Σεδ !}
