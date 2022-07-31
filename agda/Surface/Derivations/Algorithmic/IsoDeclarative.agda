@@ -18,21 +18,21 @@ import Surface.Derivations.Declarative.Theorems.Agreement as D
 open import Surface.Derivations.Common
 
 module D-to-A where mutual
-  map-Γ : Γ D.ok[ θ , E ]
-        → Γ A.ok[ θ , E ]
+  map-Γ : Γ D.ok[ θ ]
+        → Γ A.ok[ θ , M ]
   map-Γ D.TCTX-Empty = A.TCTX-Empty
   map-Γ (D.TCTX-Bind Γok τδ) = A.TCTX-Bind (map-Γ Γok) (map-τ τδ)
 
-  map-τ : Γ D.⊢[ θ , E ] τ
-        → Γ A.⊢[ θ , E ] τ
+  map-τ : Γ D.⊢[ θ ] τ
+        → Γ A.⊢[ θ , M ] τ
   map-τ (D.TWF-TrueRef Γok) = A.TWF-TrueRef (map-Γ Γok)
   map-τ (D.TWF-Base ε₁δ ε₂δ) = A.TWF-Base (map-ε ε₁δ) (map-ε ε₂δ)
   map-τ (D.TWF-Conj τ₁δ τ₂δ) = A.TWF-Conj (map-τ τ₁δ) (map-τ τ₂δ)
   map-τ (D.TWF-Arr τ₁δ τ₂δ) = A.TWF-Arr (map-τ τ₁δ) (map-τ τ₂δ)
   map-τ (D.TWF-ADT consδs) = A.TWF-ADT (map-cons consδs)
 
-  map-ε : Γ D.⊢[ θ , E ] ε ⦂ τ
-        → Γ A.⊢[ θ , E of t-sub ] ε ⦂ τ
+  map-ε : Γ D.⊢[ θ ] ε ⦂ τ
+        → Γ A.⊢[ θ , M of t-sub ] ε ⦂ τ
   map-ε (D.T-Unit Γok) = A.as-sub (A.T-Unit (map-Γ Γok))
   map-ε (D.T-Var Γok ∈) = A.as-sub (A.T-Var (map-Γ Γok) ∈)
   map-ε (D.T-Abs arrδ εδ)
@@ -52,19 +52,19 @@ module D-to-A where mutual
        = A.as-sub (A.T-Con <:δ εδ' (map-τ adtτ))
   map-ε (D.T-Sub εδ _ <:δ) = A.trans-sub (map-<: <:δ) (map-ε εδ)
 
-  map-<: : Γ D.⊢[ θ , E ] τ' <: τ
+  map-<: : Γ D.⊢[ θ ] τ' <: τ
          → Γ A.⊢[ θ ] τ' <: τ
   map-<: (D.ST-Base is-just) = A.ST-Base is-just
-  map-<: (D.ST-Arr <:₁δ <:₂δ _ _) = A.ST-Arr (map-<: <:₁δ) (map-<: <:₂δ)
+  map-<: (D.ST-Arr <:₁δ <:₂δ) = A.ST-Arr (map-<: <:₁δ) (map-<: <:₂δ)
 
   map-cons : {cons : ADTCons nₐ ℓ}
-           → All (Γ D.⊢[ θ , E ]_) cons
-           → All (Γ A.⊢[ θ , E ]_) cons
+           → All (Γ D.⊢[ θ ]_) cons
+           → All (Γ A.⊢[ θ , M ]_) cons
   map-cons [] = []
   map-cons (δ ∷ δs) = map-τ δ ∷ map-cons δs
 
   map-branches : {cons : ADTCons nₐ ℓ} {bs : CaseBranches nₐ ℓ}
-               → D.BranchesHaveType θ E Γ cons bs τ
-               → A.BranchesHaveType θ E Γ cons bs τ
+               → D.BranchesHaveType θ Γ cons bs τ
+               → A.BranchesHaveType θ M Γ cons bs τ
   map-branches D.NoBranches = A.NoBranches
   map-branches (D.OneMoreBranch εδ bsδ) = A.OneMoreBranch (map-ε εδ) (map-branches bsδ)
