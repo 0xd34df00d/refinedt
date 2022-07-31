@@ -1,6 +1,5 @@
 module Surface.Derivations.Algorithmic.IsoDeclarative where
 
-open import Data.Product renaming (_,_ to ⟨_,_⟩)
 open import Data.Vec.Relation.Unary.All using (All; _∷_; [])
 open import Function using (case_of_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
@@ -27,49 +26,40 @@ mutual
   from-τ : Γ D.⊢[ θ , E ] τ
          → Γ A.⊢[ θ , E ] τ
   from-τ (D.TWF-TrueRef Γok) = A.TWF-TrueRef (from-Γ Γok)
-  from-τ (D.TWF-Base ε₁δ ε₂δ) = A.TWF-Base (A.as-sub (from-ε ε₁δ)) (A.as-sub (from-ε ε₂δ))
+  from-τ (D.TWF-Base ε₁δ ε₂δ) = A.TWF-Base (from-ε ε₁δ) (from-ε ε₂δ)
   from-τ (D.TWF-Conj τ₁δ τ₂δ) = A.TWF-Conj (from-τ τ₁δ) (from-τ τ₂δ)
   from-τ (D.TWF-Arr τ₁δ τ₂δ) = A.TWF-Arr (from-τ τ₁δ) (from-τ τ₂δ)
   from-τ (D.TWF-ADT consδs) = A.TWF-ADT (from-cons consδs)
 
   from-ε : Γ D.⊢[ θ , E ] ε ⦂ τ
-         → ∃[ κ ] (Γ A.⊢[ θ , E of κ ] ε ⦂ τ)
-  from-ε (D.T-Unit Γok) = ⟨ _ , A.T-Unit (from-Γ Γok) ⟩
-  from-ε (D.T-Var Γok ∈) = ⟨ _ , A.T-Var (from-Γ Γok) ∈ ⟩
-  from-ε (D.T-Abs arrδ εδ) with from-ε εδ
-  ... | ⟨ not-t-sub , εδ' ⟩ = ⟨ _ , A.T-Abs (from-τ arrδ) εδ' ⟩
-  ... | ⟨ t-sub , A.T-Sub εδ' τδ <:δ ⟩
-        = let Γ⊢τ₁⇒τ' = A.Γ,τ₁⊢τ₂-⇒-Γ⊢τ₁⇒τ₂ (A.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ')
-              Γ⊢τ₁ = case Γ⊢τ₁⇒τ' of λ where (A.TWF-Arr τ₁δ _) → τ₁δ
-           in ⟨ _ , A.T-Sub (A.T-Abs Γ⊢τ₁⇒τ' εδ') (from-τ arrδ) (A.Γ⊢τ'<:τ-⇒-Γ⊢τ₀⇒τ'<:τ₀⇒τ Γ⊢τ₁ <:δ) ⟩
-  from-ε εδ@(D.T-App ε₁δ ε₂δ) with from-ε ε₁δ
-  ... | ⟨ t-sub , A.T-Sub ε₁δ' τδ <:δ@(A.ST-Arr <:₁δ <:₂δ _ _) ⟩
+         → Γ A.⊢[ θ , E of t-sub ] ε ⦂ τ
+  from-ε (D.T-Unit Γok) = A.as-sub (A.T-Unit (from-Γ Γok))
+  from-ε (D.T-Var Γok ∈) = A.as-sub (A.T-Var (from-Γ Γok) ∈)
+  from-ε (D.T-Abs arrδ εδ)
+    with A.T-Sub εδ' <:δ ← from-ε εδ
+       = let Γ⊢τ₁⇒τ' = A.Γ,τ₁⊢τ₂-⇒-Γ⊢τ₁⇒τ₂ (A.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ')
+             Γ⊢τ₁ = case Γ⊢τ₁⇒τ' of λ where (A.TWF-Arr τ₁δ _) → τ₁δ
+          in A.T-Sub (A.T-Abs εδ') (A.Γ⊢τ'<:τ-⇒-Γ⊢τ₀⇒τ'<:τ₀⇒τ <:δ)
+  from-ε εδ@(D.T-App ε₁δ ε₂δ)
+    with A.T-Sub ε₁δ' <:δ@(A.ST-Arr <:₁δ <:₂δ) ← from-ε ε₁δ
         = let τ₂-subst-δ = {! !}
               τ₂'-subst-δ = {! !}
-           in ⟨ _
-              , A.T-Sub
-                  (A.T-App ε₁δ' (A.as-sub' <:₁δ (from-ε ε₂δ)) refl τ₂'-subst-δ)
-                  τ₂-subst-δ
-                  {! !}
-              ⟩
+           in A.T-Sub
+                (A.T-App ε₁δ' {! (A.as-sub' <:₁δ (from-ε ε₂δ)) !} refl)
+                τ₂-subst-δ
+              {-
   ... | ⟨ not-t-sub , ε₁δ' ⟩
         = let τ₂-subst-δ = {! D.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ!}
            in ⟨ _ , A.T-App ε₁δ' (A.as-sub (from-ε ε₂δ)) refl τ₂-subst-δ ⟩
+           -}
   from-ε (D.T-Case resδ εδ branches-well-typed) = {! !}
   from-ε (D.T-Con ≡-prf εδ adtτ) = {! !}
-  from-ε (D.T-Sub εδ τδ <:δ) with Σεδ@(⟨ _ , εδ' ⟩) ← from-ε εδ = ⟨ _ , as-sub' (from-<: (A.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ') (from-τ τδ) <:δ) Σεδ ⟩
+  from-ε (D.T-Sub εδ τδ <:δ) with εδ' ← from-ε εδ = {! A.as-sub' (from-<: (A.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ') (from-τ τδ) <:δ) Σεδ !}
 
-  from-<: : Γ A.⊢[ θ , E ] τ'
-          → Γ A.⊢[ θ , E ] τ
-          → Γ D.⊢[ θ , E ] τ' <: τ
-          → Γ A.⊢[ θ , E ] τ' <: τ
-  from-<: τ'δ τδ (D.ST-Base is-just) = A.ST-Base is-just (enriched τ'δ) (enriched τδ)
-  from-<: τ'δ@(A.TWF-Arr τ₁δ τ₂'δ) τδ@(A.TWF-Arr τ₁'δ τ₂δ) (D.ST-Arr <:₁δ <:₂δ x y)
-    = A.ST-Arr
-        (from-<: τ₁'δ τ₁δ <:₁δ)
-        (from-<: {! !} τ₂δ <:₂δ)
-        (enriched τ'δ)
-        (enriched τδ)
+  from-<: : Γ D.⊢[ θ , E ] τ' <: τ
+          → Γ A.⊢[ θ ] τ' <: τ
+  from-<: (D.ST-Base is-just) = A.ST-Base is-just
+  from-<: (D.ST-Arr <:₁δ <:₂δ _ _) = A.ST-Arr (from-<: <:₁δ) (from-<: <:₂δ)
 
   from-cons : {adtCons : ADTCons nₐ ℓ}
             → All (Γ D.⊢[ θ , E ]_) adtCons
