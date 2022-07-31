@@ -11,33 +11,25 @@ open import Surface.Derivations.Declarative
 open import Surface.Derivations.Declarative.Theorems.Thinning
 
 -- Referred to as typing-narrowing in the paper
-module _ {σ : SType ℓ} (σ-<: : Γ ⊢[ θ , φ ] σ' <: σ) (Γ⊢σ' : Γ ⊢[ θ , φ ] σ') where mutual
+module _ {σ : SType ℓ} (σ-<: : Γ ⊢[ θ ] σ' <: σ) (Γ⊢σ' : Γ ⊢[ θ ] σ') where mutual
   <:-narrowing : (Δ : CtxSuffix (suc ℓ) k)
-               → Γ , σ  ++ Δ ⊢[ θ , φ ] τ₂ <: τ₂'
-               → Γ , σ' ++ Δ ⊢[ θ , φ ] τ₂ <: τ₂'
+               → Γ , σ  ++ Δ ⊢[ θ ] τ₂ <: τ₂'
+               → Γ , σ' ++ Δ ⊢[ θ ] τ₂ <: τ₂'
   <:-narrowing _ (ST-Base is-just) = ST-Base (Oracle.narrowing θ {- TODO σ-<: -} is-just)
-  <:-narrowing Δ (ST-Arr <:₁ <:₂ omitted omitted)
+  <:-narrowing Δ (ST-Arr <:₁ <:₂)
     = ST-Arr
         (<:-narrowing Δ <:₁)
         (<:-narrowing (Δ , _) <:₂)
-        omitted
-        omitted
-  <:-narrowing Δ (ST-Arr <:₁ <:₂ (enriched τ₁⇒τ₂'δ) (enriched τ₁'δ))
-    = ST-Arr
-        (<:-narrowing Δ <:₁)
-        (<:-narrowing (Δ , _) <:₂)
-        (enriched (Γ⊢τ-narrowing Δ τ₁⇒τ₂'δ))
-        (enriched (Γ⊢τ-narrowing Δ τ₁'δ))
 
   Γok-narrowing : (Δ : CtxSuffix (suc ℓ) k)
-                → (Γ , σ  ++ Δ) ok[ θ , φ ]
-                → (Γ , σ' ++ Δ) ok[ θ , φ ]
+                → (Γ , σ  ++ Δ) ok[ θ ]
+                → (Γ , σ' ++ Δ) ok[ θ ]
   Γok-narrowing ⊘ (TCTX-Bind Γok _) = TCTX-Bind Γok Γ⊢σ'
   Γok-narrowing (Δ , τ) (TCTX-Bind Γ,σ,Δok τδ) = TCTX-Bind (Γok-narrowing Δ Γ,σ,Δok) (Γ⊢τ-narrowing Δ τδ)
 
   Γ⊢τ-narrowing : (Δ : CtxSuffix (suc ℓ) k)
-                → Γ , σ  ++ Δ ⊢[ θ , φ ] τ
-                → Γ , σ' ++ Δ ⊢[ θ , φ ] τ
+                → Γ , σ  ++ Δ ⊢[ θ ] τ
+                → Γ , σ' ++ Δ ⊢[ θ ] τ
   Γ⊢τ-narrowing Δ (TWF-TrueRef Γok) = TWF-TrueRef (Γok-narrowing Δ Γok)
   Γ⊢τ-narrowing Δ (TWF-Base ε₁δ ε₂δ) = TWF-Base (Γ⊢ε⦂τ-narrowing (Δ , _) ε₁δ) (Γ⊢ε⦂τ-narrowing (Δ , _) ε₂δ)
   Γ⊢τ-narrowing Δ (TWF-Conj ρ₁δ ρ₂δ) = TWF-Conj (Γ⊢τ-narrowing Δ ρ₁δ) (Γ⊢τ-narrowing Δ ρ₂δ)
@@ -46,15 +38,15 @@ module _ {σ : SType ℓ} (σ-<: : Γ ⊢[ θ , φ ] σ' <: σ) (Γ⊢σ' : Γ �
     where
     narrow-cons : {cons : ADTCons nₐ (k + suc ℓ)}
                 → (Δ : CtxSuffix (suc ℓ) k)
-                → All ((Γ , σ  ++ Δ) ⊢[ θ , φ ]_) cons
-                → All ((Γ , σ' ++ Δ) ⊢[ θ , φ ]_) cons
+                → All ((Γ , σ  ++ Δ) ⊢[ θ ]_) cons
+                → All ((Γ , σ' ++ Δ) ⊢[ θ ]_) cons
     narrow-cons Δ [] = []
     narrow-cons Δ (δ ∷ consδs) = Γ⊢τ-narrowing Δ δ ∷ narrow-cons Δ consδs
 
   SVar-narrowing : (Δ : CtxSuffix (suc ℓ) k)
-                 → (Γ , σ ++ Δ) ok[ θ , φ ]
+                 → (Γ , σ ++ Δ) ok[ θ ]
                  → τ ∈ Γ , σ ++ Δ at ι
-                 → Γ , σ' ++ Δ ⊢[ θ , φ ] SVar ι ⦂ τ
+                 → Γ , σ' ++ Δ ⊢[ θ ] SVar ι ⦂ τ
   SVar-narrowing ⊘ (TCTX-Bind Γok τδ) (∈-zero refl) = T-Sub (T-Var (TCTX-Bind Γok Γ⊢σ') (∈-zero refl)) (Γ⊢τ-weakening Γok Γ⊢σ' τδ) (<:-weakening Γok Γ⊢σ' σ-<:)
   SVar-narrowing ⊘ (TCTX-Bind Γok _) (∈-suc refl ∈) = T-Var (TCTX-Bind Γok Γ⊢σ') (∈-suc refl ∈)
   SVar-narrowing (Δ , τ) Γ,σ,Δok (∈-zero refl) = T-Var (Γok-narrowing (Δ , _) Γ,σ,Δok) (∈-zero refl)
@@ -64,8 +56,8 @@ module _ {σ : SType ℓ} (σ-<: : Γ ⊢[ θ , φ ] σ' <: σ) (Γ⊢σ' : Γ �
        in Γ⊢ε⦂τ-weakening Γ,σ',Δok Γ,σ',Δ⊢τ (SVar-narrowing Δ Γ,σ,Δok ∈)
 
   Γ⊢ε⦂τ-narrowing : (Δ : CtxSuffix (suc ℓ) k)
-                  → Γ , σ  ++ Δ ⊢[ θ , φ ] ε ⦂ τ
-                  → Γ , σ' ++ Δ ⊢[ θ , φ ] ε ⦂ τ
+                  → Γ , σ  ++ Δ ⊢[ θ ] ε ⦂ τ
+                  → Γ , σ' ++ Δ ⊢[ θ ] ε ⦂ τ
   Γ⊢ε⦂τ-narrowing Δ (T-Unit Γok) = T-Unit (Γok-narrowing Δ Γok)
   Γ⊢ε⦂τ-narrowing Δ (T-Var Γok ∈) = SVar-narrowing Δ Γok ∈
   Γ⊢ε⦂τ-narrowing Δ (T-Abs arrδ εδ) = T-Abs (Γ⊢τ-narrowing Δ arrδ) (Γ⊢ε⦂τ-narrowing (Δ , _) εδ)
@@ -77,8 +69,8 @@ module _ {σ : SType ℓ} (σ-<: : Γ ⊢[ θ , φ ] σ' <: σ) (Γ⊢σ' : Γ �
     where
     narrow-branches : ∀ {cons : ADTCons nₐ (k + suc ℓ)} {bs : CaseBranches nₐ (k + suc ℓ)}
                     → (Δ : CtxSuffix (suc ℓ) k)
-                    → BranchesHaveType θ φ (Γ , σ  ++ Δ) cons bs τ
-                    → BranchesHaveType θ φ (Γ , σ' ++ Δ) cons bs τ
+                    → BranchesHaveType θ (Γ , σ  ++ Δ) cons bs τ
+                    → BranchesHaveType θ (Γ , σ' ++ Δ) cons bs τ
     narrow-branches Δ NoBranches = NoBranches
     narrow-branches Δ (OneMoreBranch εδ bs) = OneMoreBranch (Γ⊢ε⦂τ-narrowing (Δ , _) εδ) (narrow-branches Δ bs)
   Γ⊢ε⦂τ-narrowing Δ (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (Γ⊢ε⦂τ-narrowing Δ εδ) (Γ⊢τ-narrowing Δ adtτ)

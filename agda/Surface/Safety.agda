@@ -23,7 +23,7 @@ data Progress (ε : STerm ℓ) : Set where
   done : (is-value : IsValue ε)
        → Progress ε
 
-progress : ⊘ ⊢[ θ , φ ] ε ⦂ τ
+progress : ⊘ ⊢[ θ ] ε ⦂ τ
          → Progress ε
 progress (T-Unit _) = done IV-Unit
 progress (T-Abs _ _) = done IV-Abs
@@ -43,8 +43,8 @@ progress (T-Sub εδ _ _) = progress εδ
 
 
 preservation : ε ↝ ε'
-             → Γ ⊢[ θ , φ ] ε ⦂ τ
-             → Γ ⊢[ θ , φ ] ε' ⦂ τ
+             → Γ ⊢[ θ ] ε ⦂ τ
+             → Γ ⊢[ θ ] ε' ⦂ τ
 preservation ε↝ε' (T-Sub εδ Γ⊢τ' Γ⊢τ<:τ') = T-Sub (preservation ε↝ε' εδ) Γ⊢τ' Γ⊢τ<:τ'
 preservation (E-AppL ε↝ε') (T-App ε₁δ ε₂δ) = T-App (preservation ε↝ε' ε₁δ) ε₂δ
 preservation (E-AppAbs) (T-App ε₁δ ε₂δ) = sub-Γ⊢ε⦂τ-front ε₂δ (SLam-inv ε₁δ)
@@ -56,7 +56,7 @@ preservation (E-CaseMatch ε-is-value ι) (T-Case resδ εδ branches)
   where
   branch-has-type : ∀ {cons : ADTCons (Mkℕₐ n) ℓ} {bs : CaseBranches (Mkℕₐ n) ℓ} {τ}
                   → (ι : Fin n)
-                  → BranchesHaveType θ φ Γ cons bs τ
-                  → Γ , lookup cons ι ⊢[ θ , φ ] CaseBranch.body (lookup bs ι) ⦂ R.weaken-τ τ
+                  → BranchesHaveType θ Γ cons bs τ
+                  → Γ , lookup cons ι ⊢[ θ ] CaseBranch.body (lookup bs ι) ⦂ R.weaken-τ τ
   branch-has-type zero (OneMoreBranch εδ _) = εδ
   branch-has-type (suc ι) (OneMoreBranch _ bht) = branch-has-type ι bht
