@@ -46,17 +46,25 @@ mutual
           in A.T-Sub
                (A.T-App ε₁δ' (A.trans-sub <:₁δ ε₂δ') refl)
                (A.sub-Γ⊢τ'<:τ-front ε₂δ' <:₂δ)
-  from-ε (D.T-Case resδ εδ branches-well-typed) = {! !}
-  from-ε (D.T-Con ≡-prf εδ adtτ) = {! !}
-  from-ε (D.T-Sub εδ τδ <:δ) with εδ' ← from-ε εδ = {! A.as-sub' (from-<: (A.Γ⊢ε⦂τ-⇒-Γ⊢τ εδ') (from-τ τδ) <:δ) Σεδ !}
+  from-ε (D.T-Case resδ εδ bsδ) = A.as-sub (A.T-Case (from-τ resδ) (from-ε εδ) (from-branches bsδ))
+  from-ε (D.T-Con refl εδ adtτ)
+    with A.T-Sub εδ' <:δ ← from-ε εδ
+       = A.as-sub (A.T-Con <:δ εδ' (from-τ adtτ))
+  from-ε (D.T-Sub εδ _ <:δ) = A.trans-sub (from-<: <:δ) (from-ε εδ)
 
   from-<: : Γ D.⊢[ θ , E ] τ' <: τ
           → Γ A.⊢[ θ ] τ' <: τ
   from-<: (D.ST-Base is-just) = A.ST-Base is-just
   from-<: (D.ST-Arr <:₁δ <:₂δ _ _) = A.ST-Arr (from-<: <:₁δ) (from-<: <:₂δ)
 
-  from-cons : {adtCons : ADTCons nₐ ℓ}
-            → All (Γ D.⊢[ θ , E ]_) adtCons
-            → All (Γ A.⊢[ θ , E ]_) adtCons
+  from-cons : {cons : ADTCons nₐ ℓ}
+            → All (Γ D.⊢[ θ , E ]_) cons
+            → All (Γ A.⊢[ θ , E ]_) cons
   from-cons [] = []
   from-cons (δ ∷ δs) = from-τ δ ∷ from-cons δs
+
+  from-branches : {cons : ADTCons nₐ ℓ} {bs : CaseBranches nₐ ℓ}
+                → D.BranchesHaveType θ E Γ cons bs τ
+                → A.BranchesHaveType θ E Γ cons bs τ
+  from-branches D.NoBranches = A.NoBranches
+  from-branches (D.OneMoreBranch εδ bsδ) = A.OneMoreBranch (from-ε εδ) (from-branches bsδ)
