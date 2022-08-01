@@ -6,9 +6,10 @@ The Enriched and the Minimal versions of the algorithmic type systems are equiva
 
 module Surface.Derivations.Algorithmic.Theorems.EM-Equivalence where
 
-open import Function.Inverse
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst)
 
 open import Surface.Syntax
+open import Surface.Syntax.Substitution
 open import Surface.Derivations.Algorithmic
 open import Surface.Derivations.Algorithmic.Theorems.Agreement
 
@@ -31,10 +32,10 @@ mutual
   to-M-ε (T-Unit Γok) = T-Unit (to-M-Γok Γok)
   to-M-ε (T-Var Γok ∈) = T-Var (to-M-Γok Γok) ∈
   to-M-ε (T-Abs εδ) = T-Abs (to-M-ε εδ)
-  to-M-ε (T-App ε₁δ ε₂δ resτ-≡ resτδ) = T-App (to-M-ε ε₁δ) (to-M-ε ε₂δ) resτ-≡ (to-M-τ resτδ)
+  to-M-ε (T-App ε₁δ ε₂δ resτ-≡) = T-App (to-M-ε ε₁δ) (to-M-ε ε₂δ) resτ-≡
   to-M-ε (T-Case resδ εδ branchesδ) = T-Case (to-M-τ resδ) (to-M-ε εδ) (to-M-branches branchesδ)
   to-M-ε (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (to-M-ε εδ) (to-M-τ adtτ)
-  to-M-ε (T-Sub εδ τδ <:δ) = T-Sub (to-M-ε εδ) (to-M-τ τδ) <:δ
+  to-M-ε (T-Sub εδ <:δ) = T-Sub (to-M-ε εδ) <:δ
 
   to-M-cons : {cons : ADTCons nₐ ℓ}
             → All (Γ ⊢[ θ , E ]_) cons
@@ -66,12 +67,12 @@ mutual
   to-E-ε : Γ ⊢[ θ , M of κ ] ε ⦂ τ
          → Γ ⊢[ θ , E of κ ] ε ⦂ τ
   to-E-ε (T-Unit Γok) = T-Unit (to-E-Γok Γok)
-  to-E-ε (T-Var Γok ∈) = T-Var (to-E-Γok Γok) ∈
+  to-E-ε (T-Var Γok ∈) = T-Var (to-E-Γok Γok) ∈ ⦃ {! !} ⦄
   to-E-ε (T-Abs εδ) = T-Abs (to-E-ε εδ)
-  to-E-ε (T-App ε₁δ ε₂δ resτ-≡ resτδ) = T-App (to-E-ε ε₁δ) (to-E-ε ε₂δ) resτ-≡ (to-E-τ resτδ)
+  to-E-ε (T-App ε₁δ ε₂δ refl ⦃ _ ⦄) = T-App (to-E-ε ε₁δ) (to-E-ε ε₂δ) refl ⦃ enriched {! !} ⦄
   to-E-ε (T-Case resδ εδ branchesδ) = T-Case (to-E-τ resδ) (to-E-ε εδ) (to-E-branches branchesδ)
   to-E-ε (T-Con ≡-prf εδ adtτ) = T-Con ≡-prf (to-E-ε εδ) (to-E-τ adtτ)
-  to-E-ε (T-Sub εδ τδ <:δ) = T-Sub (to-E-ε εδ) (to-E-τ τδ) <:δ
+  to-E-ε (T-Sub εδ <:δ) = T-Sub (to-E-ε εδ) <:δ ⦃ {! !} ⦄
 
   to-E-cons : {cons : ADTCons nₐ ℓ}
             → All (Γ ⊢[ θ , M ]_) cons
