@@ -4,7 +4,7 @@ github:              "0xd34df00d/toy"
 license:             BSD3
 author:              "Georg Rudoy"
 maintainer:          "0xd34df00d@gmail.com"
-copyright:           "2020 2021 Georg Rudoy"
+copyright:           "2020-2022 Georg Rudoy"
 
 extra-source-files:
 - README.md
