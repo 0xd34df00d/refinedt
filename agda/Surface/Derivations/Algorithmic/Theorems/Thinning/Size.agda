@@ -29,8 +29,8 @@ open import Surface.Derivations.Algorithmic.Theorems.Uniqueness
 
 mutual
   Γ⊢τ-thinning↓-size : (Γ⊂Γ' : k by Γ ⊂' Γ')
-                     → (Γ'ok : Γ' ok[ θ , φ ])
-                     → (τδ : Γ ⊢[ θ , φ ] τ)
+                     → (Γ'ok : Γ' ok[ θ , M ])
+                     → (τδ : Γ ⊢[ θ , M ] τ)
                      → (acc : Acc _<_ (size-twf τδ))
                      → size-twf (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τδ acc) + size-ok (Γ⊢τ-⇒-Γok τδ)
                        ≡
@@ -76,9 +76,9 @@ mutual
 
   cons-thinning↓-size : {cons : ADTCons (Mkℕₐ (suc n)) (k + ℓ)}
                       → (Γ⊂Γ' : k by Γ ⊂' Γ')
-                      → (Γok : Γ ok[ θ , φ ])
-                      → (Γ'ok : Γ' ok[ θ , φ ])
-                      → (consδs : All (Γ ⊢[ θ , φ ]_) cons)
+                      → (Γok : Γ ok[ θ , M ])
+                      → (Γ'ok : Γ' ok[ θ , M ])
+                      → (consδs : All (Γ ⊢[ θ , M ]_) cons)
                       → (acc : Acc _<_ (size-all-cons consδs))
                       → size-all-cons (cons-thinning↓ Γ⊂Γ' Γ'ok consδs acc) + size-ok Γok
                         ≡
@@ -101,9 +101,9 @@ mutual
   branches-thinning↓-size : {cons : ADTCons (Mkℕₐ (suc n)) (k + ℓ)}
                           → {bs : CaseBranches (Mkℕₐ (suc n)) (k + ℓ)}
                           → (Γ⊂Γ' : k by Γ ⊂' Γ')
-                          → (Γok : Γ ok[ θ , φ ])
-                          → (Γ'ok : Γ' ok[ θ , φ ])
-                          → (δs : BranchesHaveType θ φ Γ cons bs τ)
+                          → (Γok : Γ ok[ θ , M ])
+                          → (Γ'ok : Γ' ok[ θ , M ])
+                          → (δs : BranchesHaveType θ M Γ cons bs τ)
                           → (acc : Acc _<_ (size-bs δs))
                           → size-bs (branches-thinning↓ Γ⊂Γ' Γ'ok δs acc) + size-ok Γok
                             ≡
@@ -131,8 +131,8 @@ mutual
            = cong suc (⊔-+-pairwise-≡ (size-ok Γok) (size-ok Γ'ok) (lemma₂ conτδ↓ εδ↓) δs↓)
 
   Γ⊢ε⦂τ-thinning↓-size : (Γ⊂Γ' : k by Γ ⊂' Γ')
-                       → (Γ'ok : Γ' ok[ θ , φ ])
-                       → (εδ : Γ ⊢[ θ , φ of κ ] ε ⦂ τ)
+                       → (Γ'ok : Γ' ok[ θ , M ])
+                       → (εδ : Γ ⊢[ θ , M of κ ] ε ⦂ τ)
                        → (acc : Acc _<_ (size-t εδ))
                        → size-t (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok εδ acc) + size-ok (Γ⊢ε⦂τ-⇒-Γok εδ)
                          ≡
@@ -199,24 +199,24 @@ mutual
           = cong suc (⊔-+-pairwise-≡ (size-ok Γok) (size-ok Γ'ok) εδ↓ τδ↓)
 
 Γ⊢τ-thinning-size : (Γ⊂Γ' : k by Γ ⊂' Γ')
-                  → (Γ'ok : Γ' ok[ θ , φ ])
-                  → (τδ : Γ ⊢[ θ , φ ] τ)
+                  → (Γ'ok : Γ' ok[ θ , M ])
+                  → (τδ : Γ ⊢[ θ , M ] τ)
                   → size-twf (Γ⊢τ-thinning Γ⊂Γ' Γ'ok τδ) + size-ok (Γ⊢τ-⇒-Γok τδ)
                     ≡
                     size-twf τδ + size-ok Γ'ok
 Γ⊢τ-thinning-size Γ⊂Γ' Γ'ok τδ = Γ⊢τ-thinning↓-size Γ⊂Γ' Γ'ok τδ (<-wellFounded _)
 
 Γ⊢ε⦂τ-thinning-size : (Γ⊂Γ' : k by Γ ⊂' Γ')
-                    → (Γ'ok : Γ' ok[ θ , φ ])
-                    → (εδ : Γ ⊢[ θ , φ of κ ] ε ⦂ τ)
+                    → (Γ'ok : Γ' ok[ θ , M ])
+                    → (εδ : Γ ⊢[ θ , M of κ ] ε ⦂ τ)
                     → size-t (Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok εδ) + size-ok (Γ⊢ε⦂τ-⇒-Γok εδ)
                       ≡
                       size-t εδ + size-ok Γ'ok
 Γ⊢ε⦂τ-thinning-size Γ⊂Γ' Γ'ok εδ = Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok εδ (<-wellFounded _)
 
-Γ⊢τ-weakening-size : (Γok : Γ ok[ θ , φ ])
-                   → (τ'δ : Γ ⊢[ θ , φ ] τ')
-                   → (τδ : Γ ⊢[ θ , φ ] τ)
+Γ⊢τ-weakening-size : (Γok : Γ ok[ θ , M ])
+                   → (τ'δ : Γ ⊢[ θ , M ] τ')
+                   → (τδ : Γ ⊢[ θ , M ] τ)
                    → size-twf (Γ⊢τ-weakening Γok τ'δ τδ) + size-ok Γok
                      ≡
                      size-twf τδ + suc (size-twf τ'δ)
@@ -226,9 +226,9 @@ mutual
         | unique-Γok (Γ⊢τ-⇒-Γok τδ) Γok
         = size-eq
 
-Γ⊢ε⦂τ-weakening-size : (Γok : Γ ok[ θ , φ ])
-                   → (τ'δ : Γ ⊢[ θ , φ ] τ')
-                   → (εδ : Γ ⊢[ θ , φ of κ ] ε ⦂ τ)
+Γ⊢ε⦂τ-weakening-size : (Γok : Γ ok[ θ , M ])
+                   → (τ'δ : Γ ⊢[ θ , M ] τ')
+                   → (εδ : Γ ⊢[ θ , M of κ ] ε ⦂ τ)
                    → size-t (Γ⊢ε⦂τ-weakening Γok τ'δ εδ) + size-ok Γok
                      ≡
                      size-t εδ + suc (size-twf τ'δ)
