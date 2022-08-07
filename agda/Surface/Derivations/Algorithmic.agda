@@ -27,11 +27,11 @@ variable
 
 data _ok[_,_]        : (Γ : Ctx ℓ) → Oracle → TSFlavour → Set
 data _⊢[_,_of_]_⦂_   (Γ : Ctx ℓ) (θ : Oracle) (φ : TSFlavour) : (κ : RuleKind) → (ε : STerm ℓ) → (τ : SType ℓ) → Set
-data _⊢[_]_<:_       (Γ : Ctx ℓ) (θ : Oracle)                 : (τ' τ : SType ℓ) → Set
+data _⊢[_,_]_<:_     (Γ : Ctx ℓ) (θ : Oracle) (φ : TSFlavour) : (τ' τ : SType ℓ) → Set
 data _⊢[_,_]_        (Γ : Ctx ℓ) (θ : Oracle) (φ : TSFlavour) : (τ : SType ℓ) → Set
 
 infix 2 _⊢[_,_of_]_⦂_
-infix 2 _⊢[_]_<:_
+infix 2 _⊢[_,_]_<:_
 infix 1 _⊢[_,_]_
 
 data BranchesHaveType (θ : Oracle) (φ : TSFlavour) (Γ : Ctx ℓ)
@@ -93,28 +93,29 @@ data _⊢[_,_of_]_⦂_ {ℓ} Γ θ φ where
               → Γ ⊢[ θ , φ of not-t-sub ] SCase ε cons τ bs ⦂ τ
   T-Con       : ∀ {ι}
               → {cons : ADTCons (Mkℕₐ (suc n)) ℓ}
-              → (<:δ : Γ ⊢[ θ ] τⱼ <: lookup cons ι)
+              → (<:δ : Γ ⊢[ θ , φ ] τⱼ <: lookup cons ι)
               → (conArg : Γ ⊢[ θ , φ of not-t-sub ] ε ⦂ τⱼ)
               → (adtτ : Γ ⊢[ θ , φ ] ⊍ cons)
               → Γ ⊢[ θ , φ of not-t-sub ] SCon ι ε cons ⦂ ⊍ cons
   T-Sub       : (εδ : Γ ⊢[ θ , φ of not-t-sub ] ε ⦂ τ')
-              → (<:δ : Γ ⊢[ θ ] τ' <: τ)
+              → (<:δ : Γ ⊢[ θ , φ ] τ' <: τ)
               → ⦃ Γ ⊢[ θ , φ ] τ ?if φ ⦄
               → Γ ⊢[ θ , φ of t-sub ] ε ⦂ τ
 
 AllSubtypes : Ctx ℓ
             → Oracle
+            → TSFlavour
             → ADTCons nₐ ℓ
             → ADTCons nₐ ℓ
             → Set
-AllSubtypes Γ θ cons' cons = All (λ where ⟨ con' , con ⟩ → Γ ⊢[ θ ] con' <: con) (zip cons' cons)
+AllSubtypes Γ θ φ cons' cons = All (λ where ⟨ con' , con ⟩ → Γ ⊢[ θ , φ ] con' <: con) (zip cons' cons)
 
-data _⊢[_]_<:_ {ℓ} Γ θ where
+data _⊢[_,_]_<:_ {ℓ} Γ θ φ where
   ST-Base : (is-just : Is-just (Oracle.decide θ Γ b ρ₁ ρ₂))
-          → Γ ⊢[ θ ] ⟨ b ∣ ρ₁ ⟩ <: ⟨ b ∣ ρ₂ ⟩
-  ST-Arr  : (<:₁δ : Γ ⊢[ θ ] τ₁' <: τ₁)
-          → (<:₂δ : Γ , τ₁' ⊢[ θ ] τ₂' <: τ₂)
-          → Γ ⊢[ θ ] τ₁ ⇒ τ₂' <: τ₁' ⇒ τ₂
+          → Γ ⊢[ θ , φ ] ⟨ b ∣ ρ₁ ⟩ <: ⟨ b ∣ ρ₂ ⟩
+  ST-Arr  : (<:₁δ : Γ ⊢[ θ , φ ] τ₁' <: τ₁)
+          → (<:₂δ : Γ , τ₁' ⊢[ θ , φ ] τ₂' <: τ₂)
+          → Γ ⊢[ θ , φ ] τ₁ ⇒ τ₂' <: τ₁' ⇒ τ₂
   ST-ADT  : {cons' cons : ADTCons nₐ ℓ}
-          → (cons-<: : AllSubtypes Γ θ cons' cons)
-          → Γ ⊢[ θ ] ⊍ cons' <: ⊍ cons
+          → (cons-<: : AllSubtypes Γ θ φ cons' cons)
+          → Γ ⊢[ θ , φ ] ⊍ cons' <: ⊍ cons

@@ -111,7 +111,7 @@ mutual
           | unique-Γ⊢τ-if-φ Γ⊢τ-?if₁ Γ⊢τ-?if₂
           = refl
 
-  unique-<: : Irrelevant (Γ ⊢[ θ ] τ' <: τ)
+  unique-<: : Irrelevant (Γ ⊢[ θ , φ ] τ' <: τ)
   unique-<: (ST-Base is-just₁) (ST-Base is-just₂)
     rewrite irrelevant (λ _ _ → refl) is-just₁ is-just₂
           = refl
@@ -132,7 +132,7 @@ mutual
           = refl
 
   unique-all-subtypes : {cons' cons : ADTCons nₐ ℓ}
-                      → Irrelevant (AllSubtypes Γ θ cons' cons)
+                      → Irrelevant (AllSubtypes Γ θ φ cons' cons)
   unique-all-subtypes {cons' = []}    {[]}    []              [] = refl
   unique-all-subtypes {cons' = _ ∷ _} {_ ∷ _} (τδ₁ ∷ cons-<:₁) (τδ₂ ∷ cons-<:₂)
     rewrite unique-<: τδ₁ τδ₂

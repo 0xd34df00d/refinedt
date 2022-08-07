@@ -94,7 +94,7 @@ module _ {σε : STerm ℓ} (σεδ : Γ ⊢[ θ , M of t-sub ] σε ⦂ σ) whe
     with T-Sub ε₁δ' (ST-Arr <:₁δ <:₂δ) ← sub-Γ⊢ε⦂τ Δ ε₁δ
         = let ε₂δ' = sub-Γ⊢ε⦂τ Δ ε₂δ
               <:₂δ' = sub-Γ⊢τ'<:τ-front ε₂δ' <:₂δ
-              <:₂δ' = subst (λ δ → _ ⊢[ _ ] _ <: [ zero ↦τ _ ] δ)
+              <:₂δ' = subst (λ δ → _ ⊢[ _ , _ ] _ <: [ zero ↦τ _ ] δ)
                             (S.act-τ-extensionality (ext-replace-comm (R.weaken-ε-k k σε) (ctx-idx k)) τ₂)
                             <:₂δ'
            in T-Sub

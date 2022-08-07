@@ -51,8 +51,8 @@ lookup-preserves-Γ⊢τ {φ = φ} ι (TWF-ADT consδs) = go ι consδs
 
 cons-lookup-<: : {cons' cons : ADTCons nₐ ℓ}
                → ∀ ι
-               → AllSubtypes Γ θ cons' cons
-               → Γ ⊢[ θ ] lookup cons' ι <: lookup cons ι
+               → AllSubtypes Γ θ φ cons' cons
+               → Γ ⊢[ θ , φ ] lookup cons' ι <: lookup cons ι
 cons-lookup-<: {cons' = _ ∷ _} {cons = _ ∷ _} zero    (<:δ ∷ _) = <:δ
 cons-lookup-<: {cons' = _ ∷ _} {cons = _ ∷ _} (suc ι) (_ ∷ alls) = cons-lookup-<: ι alls
 

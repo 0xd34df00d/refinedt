@@ -33,15 +33,15 @@ open import Surface.Derivations.Algorithmic.Theorems.Agreement.Γok.WF
 
 <:-thinning : {Γ : Ctx (k + ℓ)}
             → (Γ⊂Γ' : k by Γ ⊂' Γ')
-            → (δ : Γ ⊢[ θ ] τ' <: τ)
-            → Γ' ⊢[ θ ] R.act-τ (ext-k' k suc) τ' <: R.act-τ (ext-k' k suc) τ
+            → (δ : Γ ⊢[ θ , M ] τ' <: τ)
+            → Γ' ⊢[ θ , M ] R.act-τ (ext-k' k suc) τ' <: R.act-τ (ext-k' k suc) τ
 <:-thinning {θ = θ} Γ⊂Γ' (ST-Base is-just) = ST-Base (Oracle.thin θ Γ⊂Γ' is-just)
 <:-thinning Γ⊂Γ' (ST-Arr <:₁δ <:₂δ) = ST-Arr (<:-thinning Γ⊂Γ' <:₁δ) (<:-thinning (append-both Γ⊂Γ') <:₂δ)
 <:-thinning {k = k} {ℓ = ℓ} {Γ' = Γ'} {Γ = Γ} Γ⊂Γ' (ST-ADT cons-<:) = ST-ADT (go cons-<:)
   where
   go : {cons' cons : ADTCons nₐ (k + ℓ)}
-     → AllSubtypes Γ  θ cons' cons
-     → AllSubtypes Γ' θ (R.act-cons (ext-k' k suc) cons') (R.act-cons (ext-k' k suc) cons)
+     → AllSubtypes Γ  θ M cons' cons
+     → AllSubtypes Γ' θ M (R.act-cons (ext-k' k suc) cons') (R.act-cons (ext-k' k suc) cons)
   go {cons' = []}    {[]}    []             = []
   go {cons' = _ ∷ _} {_ ∷ _} (τδ ∷ cons-<:) = <:-thinning Γ⊂Γ' τδ ∷ go cons-<:
 
@@ -159,8 +159,8 @@ mutual
                → Γ' ⊢[ θ , M of κ ] R.act-ε (ext-k' k suc) ε ⦂ R.act-τ (ext-k' k suc) τ
 Γ⊢ε⦂τ-thinning Γ⊂Γ' [Γ'ok] δ = Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' [Γ'ok] δ (<-wellFounded _)
 
-<:-weakening : Γ ⊢[ θ ] τ₁ <: τ₂
-             → (Γ , τ') ⊢[ θ ] R.weaken-τ τ₁ <: R.weaken-τ τ₂
+<:-weakening : Γ ⊢[ θ , M ] τ₁ <: τ₂
+             → (Γ , τ') ⊢[ θ , M ] R.weaken-τ τ₁ <: R.weaken-τ τ₂
 <:-weakening = <:-thinning ignore-head
 
 Γ⊢τ-weakening : Γ ok[ θ , M ]
