@@ -49,11 +49,6 @@ lookup-preserves-Γ⊢τ {φ = φ} ι (TWF-ADT consδs) = go ι consδs
   go zero (τδ ∷ _) = τδ
   go (suc ι) (_ ∷ consδs) = go ι consδs
 
-subst-Γ⊢ε⦂τ-τ : τ₁ ≡ τ₂
-              → Γ ⊢[ θ , φ of κ ] ε ⦂ τ₁
-              → Γ ⊢[ θ , φ of κ ] ε ⦂ τ₂
-subst-Γ⊢ε⦂τ-τ refl εδ = εδ
-
 cons-lookup-<: : {cons' cons : ADTCons nₐ ℓ}
                → ∀ ι
                → AllSubtypes Γ θ cons' cons
