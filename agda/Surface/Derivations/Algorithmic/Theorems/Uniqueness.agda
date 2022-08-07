@@ -79,8 +79,9 @@ mutual
           | unique-∈ ∈₁ ∈₂
           | unique-Γ⊢τ-if-φ Γ⊢τ-?if₁ Γ⊢τ-?if₂
           = refl
-  unique-Γ⊢ε⦂τ (T-Abs δ₁) (T-Abs δ₂)
+  unique-Γ⊢ε⦂τ (T-Abs δ₁ ⦃ Γ⊢τ₁⇒τ₂-?if₁ ⦄) (T-Abs δ₂ ⦃ Γ⊢τ₁⇒τ₂-?if₂ ⦄)
     rewrite unique-Γ⊢ε⦂τ δ₁ δ₂
+          | unique-Γ⊢τ-if-φ Γ⊢τ₁⇒τ₂-?if₁ Γ⊢τ₁⇒τ₂-?if₂
           = refl
   unique-Γ⊢ε⦂τ (T-App δ₁₁ (T-Sub δ₂₁ <:₁ ⦃ Γ⊢τ₂-?if₁ ⦄) refl ⦃ Γ⊢τ-?if₁ ⦄) (T-App δ₁₂ (T-Sub δ₂₂ <:₂ ⦃ Γ⊢τ₂-?if₂ ⦄) resτ-≡₂ ⦃ Γ⊢τ-?if₂ ⦄)
     with refl ← typing-uniqueness δ₁₁ δ₁₂

@@ -76,6 +76,7 @@ data _⊢[_,_of_]_⦂_ {ℓ} Γ θ φ where
               → ⦃ Γ ⊢[ θ , φ ] τ ?if φ ⦄
               → Γ ⊢[ θ , φ of not-t-sub ] SVar ι ⦂ τ
   T-Abs       : (bodyδ : Γ , τ₁ ⊢[ θ , φ of not-t-sub ] ε ⦂ τ₂)
+              → ⦃ Γ ⊢[ θ , φ ] τ₁ ⇒ τ₂ ?if φ ⦄
               → Γ ⊢[ θ , φ of not-t-sub ] SLam τ₁ ε ⦂ τ₁ ⇒ τ₂
   T-App       : (ε₁δ : Γ ⊢[ θ , φ of not-t-sub ] ε₁ ⦂ τ₁ ⇒ τ₂)
               → (ε₂δ : Γ ⊢[ θ , φ of t-sub ] ε₂ ⦂ τ₁)
