@@ -70,6 +70,7 @@ data _⊢[_,_]_ {ℓ} Γ θ φ where
 
 data _⊢[_,_of_]_⦂_ {ℓ} Γ θ φ where
   T-Unit      : (Γok : Γ ok[ θ , φ ])
+              → ⦃ Γ ⊢[ θ , φ ] ⟨ BUnit ∣ Τ ⟩ ?if φ ⦄
               → Γ ⊢[ θ , φ of not-t-sub ] SUnit ⦂ ⟨ BUnit ∣ Τ ⟩
   T-Var       : (Γok : Γ ok[ θ , φ ])
               → τ ∈ Γ at ι

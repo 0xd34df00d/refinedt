@@ -71,8 +71,9 @@ mutual
   unique-Γ⊢τ-if-φ (enriched τδ₁) (enriched τδ₂) = cong enriched (unique-Γ⊢τ τδ₁ τδ₂)
 
   unique-Γ⊢ε⦂τ : Irrelevant (Γ ⊢[ θ , φ of κ ] ε ⦂ τ)
-  unique-Γ⊢ε⦂τ (T-Unit Γok₁) (T-Unit Γok₂)
+  unique-Γ⊢ε⦂τ (T-Unit Γok₁ ⦃ Γ⊢τ-?if₁ ⦄) (T-Unit Γok₂ ⦃ Γ⊢τ-?if₂ ⦄)
     rewrite unique-Γok Γok₁ Γok₂
+          | unique-Γ⊢τ-if-φ Γ⊢τ-?if₁ Γ⊢τ-?if₂
           = refl
   unique-Γ⊢ε⦂τ (T-Var Γok₁ ∈₁ ⦃ Γ⊢τ-?if₁ ⦄) (T-Var Γok₂ ∈₂ ⦃ Γ⊢τ-?if₂ ⦄)
     rewrite unique-Γok Γok₁ Γok₂
