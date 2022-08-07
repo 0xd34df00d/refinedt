@@ -32,8 +32,11 @@ typing-uniqueness (T-Con _ _ _) (T-Con _ _ _) = refl
 
 unique-∈ : Irrelevant (τ ∈ Γ at ι)
 unique-∈ (∈-zero refl) (∈-zero refl) = refl
-unique-∈ (∈-suc {τ = τ₁} refl ∈₁) (∈-suc {τ = τ₂} ≡-prf ∈₂) with weaken-τ-injective ≡-prf | ≡-prf
-... | refl | refl rewrite unique-∈ ∈₁ ∈₂ = refl
+unique-∈ (∈-suc refl ∈₁) (∈-suc ≡-prf ∈₂)
+  with refl ← weaken-τ-injective ≡-prf
+     | refl ← ≡-prf
+  rewrite unique-∈ ∈₁ ∈₂
+        = refl
 
 mutual
   unique-Γok : Irrelevant (Γ ok[ θ , φ ])

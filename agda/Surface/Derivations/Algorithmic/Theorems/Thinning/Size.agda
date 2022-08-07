@@ -183,7 +183,7 @@ mutual
     rewrite unique-Γok (Γ⊢τ-⇒-Γok adtτδ) Γok
           = cong suc (⊔-+-pairwise-≡ (size-ok Γok) (size-ok Γ'ok) εδ↓ adtτδ↓)
   Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok (T-Sub εδ <:δ) (acc rec)
-        = cong suc (Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok εδ (rec _ ≤-refl))
+    = cong suc (Γ⊢ε⦂τ-thinning↓-size Γ⊂Γ' Γ'ok εδ (rec _ ≤-refl))
 
 Γ⊢τ-thinning-size : (Γ⊂Γ' : k by Γ ⊂' Γ')
                   → (Γ'ok : Γ' ok[ θ , M ])
