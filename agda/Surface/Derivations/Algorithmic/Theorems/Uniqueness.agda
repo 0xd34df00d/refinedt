@@ -112,12 +112,16 @@ mutual
           = refl
 
   unique-<: : Irrelevant (Γ ⊢[ θ , φ ] τ' <: τ)
-  unique-<: (ST-Base is-just₁) (ST-Base is-just₂)
+  unique-<: (ST-Base is-just₁ ⦃ δ₁₁ ⦄ ⦃ δ₁₂ ⦄) (ST-Base is-just₂ ⦃ δ₂₁ ⦄ ⦃ δ₂₂ ⦄)
     rewrite irrelevant (λ _ _ → refl) is-just₁ is-just₂
+          | unique-Γ⊢τ-if-φ δ₁₁ δ₂₁
+          | unique-Γ⊢τ-if-φ δ₁₂ δ₂₂
           = refl
-  unique-<: (ST-Arr <:₁₁ <:₂₁) (ST-Arr <:₁₂ <:₂₂)
+  unique-<: (ST-Arr <:₁₁ <:₂₁ ⦃ δ₁₁ ⦄ ⦃ δ₁₂ ⦄) (ST-Arr <:₁₂ <:₂₂ ⦃ δ₂₁ ⦄ ⦃ δ₂₂ ⦄)
     rewrite unique-<: <:₁₁ <:₁₂
           | unique-<: <:₂₁ <:₂₂
+          | unique-Γ⊢τ-if-φ δ₁₁ δ₂₁
+          | unique-Γ⊢τ-if-φ δ₁₂ δ₂₂
           = refl
   unique-<: (ST-ADT cons-<:₁) (ST-ADT cons-<:₂)
     rewrite unique-all-subtypes cons-<:₁ cons-<:₂

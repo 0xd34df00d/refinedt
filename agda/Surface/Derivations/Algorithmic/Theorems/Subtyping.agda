@@ -53,11 +53,13 @@ module _ {σ σ' : SType ℓ} {Γ : Ctx ℓ} (σ-<:δ : Γ ⊢[ θ , M ] σ' <: 
               → Γ ⊢[ θ , M ] τ'' <: τ'
               → Γ ⊢[ θ , M ] τ'  <: τ
               → Γ ⊢[ θ , M ] τ'' <: τ
-<:-transitive {θ = θ} (ST-Base is-just') (ST-Base is-just) = ST-Base (Oracle.trans θ is-just' is-just)
+<:-transitive {θ = θ} (ST-Base is-just') (ST-Base is-just) = ST-Base (Oracle.trans θ is-just' is-just) ⦃ omitted ⦄ ⦃ omitted ⦄
 <:-transitive (ST-Arr <:₁'δ <:₂'δ) (ST-Arr <:₁δ <:₂δ)
   = ST-Arr
       (<:-transitive <:₁δ <:₁'δ)
       (<:-transitive (<:-narrowing <:₁δ ⊘ <:₂'δ) <:₂δ)
+      ⦃ omitted ⦄
+      ⦃ omitted ⦄
 <:-transitive (ST-ADT cons-<:₁) (ST-ADT cons-<:₂) = ST-ADT (go cons-<:₁ cons-<:₂)
   where
   go : {cons'' cons' cons : ADTCons nₐ ℓ}
