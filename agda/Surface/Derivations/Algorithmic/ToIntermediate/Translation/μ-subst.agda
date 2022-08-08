@@ -50,11 +50,11 @@ mutual
                 → μ-ε resδ ≡ [ ℓ ↦ε<ⁱ μ-ε argδ ] μ-ε codδ
   μ-ε-sub-distr Δ argδ (T-Unit _) (T-Unit _) = refl
   μ-ε-sub-distr Δ argδ (T-Var Γok ∈) resδ = μ-Var-sub-distr Δ argδ (T-Var Γok ∈) resδ
-  μ-ε-sub-distr Δ argδ (T-Abs arrδ codδ) (T-Abs arrδ₁ resδ) = {! !}
-  μ-ε-sub-distr Δ argδ (T-App codδ codδ₁ resτ-≡ resτδ) (T-App resδ resδ₁ resτ-≡₁ resτδ₁) = {! !}
+  μ-ε-sub-distr Δ argδ (T-Abs codδ) (T-Abs resδ) = {! !}
+  μ-ε-sub-distr Δ argδ (T-App codδ codδ₁ resτ-≡) (T-App resδ resδ₁ resτ-≡₁) = {! !}
   μ-ε-sub-distr Δ argδ (T-Case resδ₁ codδ branches-well-typed) (T-Case resδ resδ₂ branches-well-typed₁) = {! !}
   μ-ε-sub-distr Δ argδ (T-Con ≡-prf codδ adtτ) (T-Con ≡-prf₁ resδ adtτ₁) = {! !}
-  μ-ε-sub-distr Δ argδ (T-Sub codδ τ'δ <:δ) (T-Sub resδ τ'δ₁ <:δ₁) = {! !}
+  μ-ε-sub-distr Δ argδ (T-Sub codδ <:δ) (T-Sub resδ <:δ₁) = {! !}
 
   μ-τ-sub-distr : (Δ : ,-CtxSuffix ℓ σˢ k)
                 → (argδ : Γˢ ⊢[ θˢ , E of not-t-sub ] εˢ ⦂ σ'ˢ)

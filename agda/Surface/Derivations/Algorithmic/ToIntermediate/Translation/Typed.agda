@@ -38,11 +38,11 @@ mutual
       → ITerm ℓ
   μ-ε (T-Unit _) = IUnit
   μ-ε (T-Var {ι = ι} _ _) = IVar ι
-  μ-ε (T-Abs (TWF-Arr τ₁δ τ₂δ) εδ) = ƛ μ-τ τ₁δ ⇉ μ-ε εδ
-  μ-ε (T-App ε₁δ ε₂δ _ _) = μ-ε ε₁δ ∙ μ-ε ε₂δ
-  μ-ε (T-Case resδ εδ branches-well-typed) = {! !}
-  μ-ε (T-Con ≡-prf εδ adtτ) = {! !}
-  μ-ε (T-Sub εδ _ <:δ) = μ-<: {! !} {! !} <:δ ∙ μ-ε εδ
+  μ-ε (T-Abs εδ ⦃ enriched (TWF-Arr τ₁δ _) ⦄) = ƛ μ-τ τ₁δ ⇉ μ-ε εδ
+  μ-ε (T-App ε₁δ ε₂δ _) = μ-ε ε₁δ ∙ μ-ε ε₂δ
+  μ-ε (T-Case resδ εδ bsδ) = {! !}
+  μ-ε (T-Con <:δ εδ adtτ) = {! !}
+  μ-ε (T-Sub εδ <:δ ⦃ enriched τδ ⦄) = μ-<: <:δ ∙ μ-ε εδ
 
   {-
   A witness of τ' <: τ gets converted to a function τ' ⇒ τ.
@@ -56,20 +56,18 @@ mutual
       <:₂ⁱ (#1 (<:₁ⁱ #0)).
   -}
   μ-<: : {τˢ : SType ℓ}
-       → Γˢ ⊢[ θˢ , E ] τ'ˢ
-       → Γˢ ⊢[ θˢ , E ] τˢ
        → Γˢ ⊢[ θˢ , E ] τ'ˢ <: τˢ
        → ITerm ℓ
-  μ-<: _ _ (ST-Base is-just) = {! !}
-  μ-<: τ₁⇒τ₂'δ (TWF-Arr τ₁'δ _) (ST-Arr <:₁δ <:₂δ)
-    = let <:₁ⁱ = IR.weaken-ε-k _ (μ-<: {! !} {! !} <:₁δ)
-          <:₂ⁱ = IR.weaken-ε (μ-<: {! !} {! !} <:₂δ)
+  μ-<: (ST-Base is-just) = {! !}
+  μ-<: (ST-Arr <:₁δ <:₂δ ⦃ enriched τ₁⇒τ₂'δ ⦄ ⦃ enriched (TWF-Arr τ₁'δ _) ⦄)
+    = let <:₁ⁱ = IR.weaken-ε-k _ (μ-<: <:₁δ)
+          <:₂ⁱ = IR.weaken-ε (μ-<: <:₂δ)
           τ₁⇒τ₂'ⁱ = μ-τ τ₁⇒τ₂'δ
           τ₁'ⁱ = IR.weaken-τ (μ-τ τ₁'δ)
        in ƛ τ₁⇒τ₂'ⁱ ⇉
             ƛ τ₁'ⁱ ⇉
               <:₂ⁱ ∙ (# 1 ∙ (<:₁ⁱ ∙ # 0))
-  μ-<: τδ _ ST-ADT = ƛ μ-τ τδ ⇉ # 0
+  μ-<: (ST-ADT _) = {! !}
 
 μ-Γ : {Γˢ : S.Ctx ℓ}
     → Γˢ ok[ θˢ , E ]
