@@ -20,59 +20,39 @@ open import Surface.Syntax.Subcontext as S
 open import Surface.Syntax.Renaming as SR
 open import Surface.Syntax.Substitution.Distributivity
 open import Surface.Derivations.Algorithmic as S renaming (θ to θˢ)
-open import Surface.Derivations.Algorithmic.Theorems.Agreement.Γok
-open import Surface.Derivations.Algorithmic.Theorems.Agreement.Γok.WF
-open import Surface.Derivations.Algorithmic.Theorems.Helpers
-open import Surface.Derivations.Algorithmic.Theorems.Thinning
+open import Surface.Derivations.Algorithmic.Theorems.Thinning.Enriched
 open import Surface.Derivations.Algorithmic.Theorems.Uniqueness
 
 open import Surface.Derivations.Algorithmic.ToIntermediate.Translation.Subst
 open import Surface.Derivations.Algorithmic.ToIntermediate.Translation.Typed
 
 mutual
-  μ-<:-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
-                          → (Γ⊂Γ' : k by Γˢ ⊂' Γ'ˢ)
-                          → (Γ'ok : Enrich (Γ'ˢ ok[ θˢ , E ]) E)
-                          → (δ : Γˢ ⊢[ θˢ , E ] τ'ˢ <: τˢ)
-                          → (δ↓ : Acc _<_ (size-<: δ))
-                          → μ-<: (<:-thinning↓ Γ⊂Γ' Γ'ok δ δ↓) ≡ IR.act-ε (ext-k' k suc) (μ-<: δ)
-  μ-<:-thinning↓-commutes = {! !}
-
-  μ-τ-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
+  μ-<:-thinning-commutes : {Γˢ : S.Ctx (k + ℓ)}
                          → (Γ⊂Γ' : k by Γˢ ⊂' Γ'ˢ)
                          → (Γ'ok : Γ'ˢ ok[ θˢ , E ])
-                         → (τδ : Γˢ ⊢[ θˢ , E ] τˢ)
-                         → (τδ↓ : Acc _<_ (size-twf τδ))
-                         → μ-τ (Γ⊢τ-thinning↓ Γ⊂Γ' Γ'ok τδ τδ↓) ≡ IR.act-τ (ext-k' k suc) (μ-τ τδ)
-  μ-τ-thinning↓-commutes = {! !}
+                         → (δ : Γˢ ⊢[ θˢ , E ] τ'ˢ <: τˢ)
+                         → μ-<: (<:-thinning Γ⊂Γ' Γ'ok δ) ≡ IR.act-ε (ext-k' k suc) (μ-<: δ)
+  μ-<:-thinning-commutes = {! !}
 
-  μ-ε-thinning↓-commutes : {Γˢ : S.Ctx (k + ℓ)}
-                         → (Γ⊂Γ' : k by Γˢ ⊂' Γ'ˢ)
-                         → (Γ'ok : Γ'ˢ ok[ θˢ , E ])
-                         → (εδ : Γˢ ⊢[ θˢ , E of κ ] εˢ ⦂ τˢ)
-                         → (εδ↓ : Acc _<_ (size-t εδ))
-                         → μ-ε (Γ⊢ε⦂τ-thinning↓ Γ⊂Γ' Γ'ok εδ εδ↓) ≡ IR.act-ε (ext-k' k suc) (μ-ε εδ)
-  μ-ε-thinning↓-commutes = {! !}
+  μ-τ-thinning-commutes : {Γˢ : S.Ctx (k + ℓ)}
+                        → (Γ⊂Γ' : k by Γˢ ⊂' Γ'ˢ)
+                        → (Γ'ok : Γ'ˢ ok[ θˢ , E ])
+                        → (τδ : Γˢ ⊢[ θˢ , E ] τˢ)
+                        → μ-τ (Γ⊢τ-thinning Γ⊂Γ' Γ'ok τδ) ≡ IR.act-τ (ext-k' k suc) (μ-τ τδ)
+  μ-τ-thinning-commutes = {! !}
 
-μ-τ-thinning-commutes : {Γˢ : S.Ctx (k + ℓ)}
-                      → (Γ⊂Γ' : k by Γˢ ⊂' Γ'ˢ)
-                      → (Γ'ok : Γ'ˢ ok[ θˢ , E ])
-                      → (τδ : Γˢ ⊢[ θˢ , E ] τˢ)
-                      → μ-τ (Γ⊢τ-thinning Γ⊂Γ' Γ'ok τδ) ≡ IR.act-τ (ext-k' k suc) (μ-τ τδ)
-μ-τ-thinning-commutes Γ⊂Γ' Γ'ok τδ = μ-τ-thinning↓-commutes Γ⊂Γ' Γ'ok τδ (<-wellFounded _)
+  μ-ε-thinning-commutes : {Γˢ : S.Ctx (k + ℓ)}
+                        → (Γ⊂Γ' : k by Γˢ ⊂' Γ'ˢ)
+                        → (Γ'ok : Γ'ˢ ok[ θˢ , E ])
+                        → (εδ : Γˢ ⊢[ θˢ , E of κ ] εˢ ⦂ τˢ)
+                        → μ-ε (Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok εδ) ≡ IR.act-ε (ext-k' k suc) (μ-ε εδ)
+  μ-ε-thinning-commutes = {! !}
 
 μ-τ-weakening-commutes : (Γok : Γˢ ok[ θˢ , E ])
                        → (τ'δ : Γˢ ⊢[ θˢ , E ] τ'ˢ)
                        → (τδ  : Γˢ ⊢[ θˢ , E ] τˢ)
                        → μ-τ (Γ⊢τ-weakening Γok τ'δ τδ) ≡ IR.weaken-τ (μ-τ τδ)
 μ-τ-weakening-commutes Γok τ'δ = μ-τ-thinning-commutes ignore-head (TCTX-Bind Γok τ'δ)
-
-μ-ε-thinning-commutes : {Γˢ : S.Ctx (k + ℓ)}
-                      → (Γ⊂Γ' : k by Γˢ ⊂' Γ'ˢ)
-                      → (Γ'ok : Γ'ˢ ok[ θˢ , E ])
-                      → (εδ : Γˢ ⊢[ θˢ , E of κ ] εˢ ⦂ τˢ)
-                      → μ-ε (Γ⊢ε⦂τ-thinning Γ⊂Γ' Γ'ok εδ) ≡ IR.act-ε (ext-k' k suc) (μ-ε εδ)
-μ-ε-thinning-commutes Γ⊂Γ' Γ'ok εδ = μ-ε-thinning↓-commutes Γ⊂Γ' Γ'ok εδ (<-wellFounded _)
 
 μ-ε-weakening-commutes : (Γok : Γˢ ok[ θˢ , E ])
                        → (τ'δ : Γˢ ⊢[ θˢ , E ] τ'ˢ)
